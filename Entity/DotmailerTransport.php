@@ -62,7 +62,7 @@ class DotmailerTransport extends Transport
      *
      * @return DotmailerTransport
      */
-    public function setApiKey($username)
+    public function setUsername($username)
     {
         $this->username = $username;
 
