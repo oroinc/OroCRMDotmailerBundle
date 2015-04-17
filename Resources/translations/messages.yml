@@ -1,0 +1,10 @@
+orocrm:
+    dotmailer:
+        channel_type.label: Dotmailer
+
+        integration_transport:
+            label: Dotmailer
+            username:
+                label: Username
+            password:
+                label: Password

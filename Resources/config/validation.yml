@@ -1,0 +1,8 @@
+OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransport:
+    properties:
+        username:
+            - NotBlank: ~
+            - Length: 255
+        password:
+            - NotBlank: ~
+            - Length: 255
