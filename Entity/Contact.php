@@ -401,6 +401,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
 
     /**
      * @param \DateTime $createdAt
+     *
      * @return Contact
      */
     public function setCreatedAt($createdAt)
@@ -420,6 +421,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
 
     /**
      * @param \DateTime $updatedAt
+     *
      * @return Contact
      */
     public function setUpdatedAt($updatedAt)
@@ -439,6 +441,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
 
     /**
      * @param Organization $owner
+     *
      * @return Contact
      */
     public function setOwner($owner)

@@ -82,9 +82,9 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addColumn('is_view_as_webpage_enabled', 'boolean', ['notnull' => false]);
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->addColumn('updated_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
-        $table->addIndex(['channel_id'], 'IDX_FC40E86C72F5A1AA', []);
+        $table->addIndex(['owner_id'], 'IDX_3D36193A7E3C61F9', []);
+        $table->addIndex(['channel_id'], 'IDX_3D36193A72F5A1AA', []);
         $table->addUniqueIndex(['origin_id', 'channel_id'], 'orocrm_dm_campaign_unq');
-        $table->addIndex(['owner_id'], 'IDX_FC40E86C7E3C61F9', []);
         $table->setPrimaryKey(['id']);
     }
 
@@ -105,8 +105,8 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->addColumn('updated_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->setPrimaryKey(['id']);
-        $table->addIndex(['owner_id'], 'IDX_55FBB6F07E3C61F9', []);
-        $table->addIndex(['channel_id'], 'IDX_55FBB6F072F5A1AA', []);
+        $table->addIndex(['owner_id'], 'IDX_9A9DD33F7E3C61F9', []);
+        $table->addIndex(['channel_id'], 'IDX_9A9DD33F72F5A1AA', []);
         $table->addUniqueIndex(['origin_id', 'channel_id'], 'orocrm_dm_address_book_unq');
     }
 
@@ -131,8 +131,9 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addColumn('merge_var_values', 'json_array', ['notnull' => false, 'comment' => '(DC2Type:json_array)']);
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->addColumn('updated_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
-        $table->addIndex(['channel_id'], 'IDX_7A9345B072F5A1AA', []);
-        $table->addIndex(['owner_id'], 'IDX_7A9345B07E3C61F9', []);
+        $table->addIndex(['owner_id'], 'IDX_6D7FB88E7E3C61F9', []);
+        $table->addIndex(['channel_id'], 'IDX_6D7FB88E72F5A1AA', []);
+        $table->addUniqueIndex(['origin_id', 'channel_id'], 'orocrm_dm_contact_unq');
         $table->setPrimaryKey(['id']);
     }
 
@@ -146,8 +147,8 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table = $schema->createTable('orocrm_dm_campaign_to_ab');
         $table->addColumn('campaign_id', 'integer', []);
         $table->addColumn('address_book_id', 'integer', []);
-        $table->addIndex(['address_book_id'], 'IDX_832907E34D474419', []);
-        $table->addIndex(['campaign_id'], 'IDX_832907E3F639F774', []);
+        $table->addIndex(['address_book_id'], 'IDX_AA5589424D474419', []);
+        $table->addIndex(['campaign_id'], 'IDX_AA558942F639F774', []);
         $table->setPrimaryKey(['campaign_id', 'address_book_id']);
     }
 
@@ -161,8 +162,8 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table = $schema->createTable('orocrm_dm_contact_to_ab');
         $table->addColumn('contact_id', 'integer', []);
         $table->addColumn('address_book_id', 'integer', []);
-        $table->addIndex(['address_book_id'], 'IDX_5275B6FC4D474419', []);
-        $table->addIndex(['contact_id'], 'IDX_5275B6FCE7A1254A', []);
+        $table->addIndex(['address_book_id'], 'IDX_ECE957004D474419', []);
+        $table->addIndex(['contact_id'], 'IDX_ECE95700E7A1254A', []);
         $table->setPrimaryKey(['contact_id', 'address_book_id']);
     }
 

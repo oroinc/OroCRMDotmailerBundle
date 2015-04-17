@@ -246,6 +246,7 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
 
     /**
      * @param Channel $channel
+     *
      * @return Campaign
      */
     public function setChannel($channel)
@@ -265,6 +266,7 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
 
     /**
      * @param \DateTime $createdAt
+     *
      * @return Campaign
      */
     public function setCreatedAt($createdAt)
@@ -284,6 +286,7 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
 
     /**
      * @param string $name
+     *
      * @return Campaign
      */
     public function setName($name)
@@ -303,6 +306,7 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
 
     /**
      * @param Organization $owner
+     *
      * @return Campaign
      */
     public function setOwner($owner)
@@ -322,6 +326,7 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
 
     /**
      * @param \DateTime $updatedAt
+     *
      * @return Campaign
      */
     public function setUpdatedAt($updatedAt)
