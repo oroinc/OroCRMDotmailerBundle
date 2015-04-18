@@ -1,0 +1,12 @@
+OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransport:
+    properties:
+        username:
+            - NotBlank: ~
+            - Length:
+                max: 255
+                maxMessage: "Your username cannot be longer than {{ limit }} characters long"
+        password:
+            - NotBlank: ~
+            - Length:
+                min: 8
+                max: 255

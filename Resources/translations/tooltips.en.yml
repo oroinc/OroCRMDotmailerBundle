@@ -1,0 +1,7 @@
+orocrm:
+    dotmailer:
+        form:
+            username:
+                tooltip: API User.
+            password:
+                tooltip: API User Password.

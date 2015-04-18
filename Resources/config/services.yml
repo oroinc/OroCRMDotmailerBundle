@@ -1,3 +1,31 @@
 parameters:
+    # Entities
+    orocrm.dotmailer.entity.transport.class:                          OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransport
+
+    # Integration related services
+    orocrm.dotmailer.provider.channel_type.class:                     OroCRM\Bundle\DotmailerBundle\Provider\ChannelType
+    orocrm.dotmailer.transport.integration_transport.class:           OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport
+
+    # Forms and Extensions
+    orocrm.dotmailer.form.type.integration_transport_settings.class:  OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSettingsType
 
 services:
+
+    # Forms and Extensions
+    orocrm.dotmailer.form.type.integration_transport_settings:
+        class: %orocrm.dotmailer.form.type.integration_transport_settings.class%
+        tags:
+            - { name: form.type, alias: "orocrm_dotmailer_transport_setting_type" }
+
+    # Integration related services
+    orocrm.dotmailer.provider.channel_type:
+        class: %orocrm.dotmailer.provider.channel_type.class%
+        tags:
+            - { name: oro_integration.channel, type: dotmailer }
+
+    orocrm.dotmailer.transport.integration_transport:
+        class: %orocrm.dotmailer.transport.integration_transport.class%
+        arguments:
+            - @doctrine
+        tags:
+            - { name: oro_integration.transport, type: dotmailer_api, channel_type: dotmailer }
