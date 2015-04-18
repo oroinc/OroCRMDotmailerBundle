@@ -5,6 +5,7 @@ parameters:
     # Integration related services
     orocrm.dotmailer.provider.channel_type.class:                     OroCRM\Bundle\DotmailerBundle\Provider\ChannelType
     orocrm.dotmailer.transport.integration_transport.class:           OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport
+    orocrm.dotmailer.transport.resources_factory.class:               OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory
 
     # Forms and Extensions
     orocrm.dotmailer.form.type.integration_transport_settings.class:  OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSettingsType
@@ -29,3 +30,6 @@ services:
             - @doctrine
         tags:
             - { name: oro_integration.transport, type: dotmailer_api, channel_type: dotmailer }
+
+    orocrm.dotmailer.transport.resources_factory:
+        class: %orocrm.dotmailer.transport.resources_factory.class%

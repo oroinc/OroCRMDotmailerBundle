@@ -4,6 +4,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
+use DotMailer\Api\Resources\IResources;
 use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
 
@@ -17,11 +18,23 @@ class DotmailerTransport implements TransportInterface
     protected $managerRegistry;
 
     /**
-     * @param ManagerRegistry $managerRegistry
+     * @var IResources
      */
-    public function __construct(ManagerRegistry $managerRegistry)
+    protected $dotmailerResources;
+
+    /**
+     * @var DotmailerResourcesFactory
+     */
+    protected $dotmailerResourcesFactory;
+
+    /**
+     * @param ManagerRegistry           $managerRegistry
+     * @param DotmailerResourcesFactory $dotmailerResourcesFactory
+     */
+    public function __construct(ManagerRegistry $managerRegistry, DotmailerResourcesFactory $dotmailerResourcesFactory)
     {
         $this->managerRegistry = $managerRegistry;
+        $this->dotmailerResourcesFactory = $dotmailerResourcesFactory;
     }
 
     /**
@@ -37,6 +50,8 @@ class DotmailerTransport implements TransportInterface
         if (!$password) {
             throw new RequiredOptionException('password');
         }
+
+        $this->dotmailerResources = $this->dotmailerResourcesFactory->createResources($username, $password);
     }
 
     /**
