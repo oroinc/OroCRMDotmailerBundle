@@ -72,7 +72,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
         $table->addColumn('owner_id', 'integer', ['notnull' => false]);
         $table->addColumn('channel_id', 'integer', ['notnull' => false]);
-        $table->addColumn('origin_id', 'integer', ['notnull' => false]);
+        $table->addColumn('origin_id', 'bigint', ['notnull' => false]);
         $table->addColumn('name', 'string', ['length' => 255]);
         $table->addColumn('subject', 'string', ['notnull' => false, 'length' => 255]);
         $table->addColumn('from_name', 'string', ['notnull' => false, 'length' => 255]);
@@ -81,7 +81,6 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addColumn('plain_text_content', 'text', ['notnull' => false]);
         $table->addColumn('reply_to_address', 'string', ['notnull' => false, 'length' => 255]);
         $table->addColumn('is_split_test', 'boolean', ['notnull' => false]);
-        $table->addColumn('is_view_as_webpage_enabled', 'boolean', ['notnull' => false]);
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->addColumn('updated_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->addIndex(['owner_id'], 'IDX_3D36193A7E3C61F9', []);
@@ -101,7 +100,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
         $table->addColumn('owner_id', 'integer', ['notnull' => false]);
         $table->addColumn('channel_id', 'integer', ['notnull' => false]);
-        $table->addColumn('origin_id', 'integer', ['notnull' => false]);
+        $table->addColumn('origin_id', 'bigint', ['notnull' => false]);
         $table->addColumn('name', 'string', ['length' => 255]);
         $table->addColumn('contact_count', 'integer', ['notnull' => false]);
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
@@ -123,7 +122,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
         $table->addColumn('owner_id', 'integer', ['notnull' => false]);
         $table->addColumn('channel_id', 'integer', ['notnull' => false]);
-        $table->addColumn('origin_id', 'integer', ['notnull' => false]);
+        $table->addColumn('origin_id', 'bigint', ['notnull' => false]);
         $table->addColumn('email', 'string', ['length' => 255]);
         $table->addColumn('first_name', 'string', ['notnull' => false, 'length' => 50]);
         $table->addColumn('last_name', 'string', ['notnull' => false, 'length' => 50]);
