@@ -485,11 +485,7 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
      */
     public function setAddressBooks($addressBooks)
     {
-        $this->getAddressBooks()->clear();
-
-        foreach ($addressBooks as $addressBook) {
-            $this->addAddressBook($addressBook);
-        }
+        $this->addressBooks = $addressBooks;
 
         return $this;
     }

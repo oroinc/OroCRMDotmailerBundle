@@ -459,11 +459,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
      */
     public function setAddressBooks($addressBooks)
     {
-        $this->getAddressBooks()->clear();
-
-        foreach ($addressBooks as $addressBook) {
-            $this->addAddressBook($addressBook);
-        }
+        $this->addressBooks = $addressBooks;
 
         return $this;
     }
