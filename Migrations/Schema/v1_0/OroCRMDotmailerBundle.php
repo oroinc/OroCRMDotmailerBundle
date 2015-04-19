@@ -36,6 +36,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $this->createOroCRMDotmailerCampaignTable($schema);
         $this->createOroCRMDotmailerAddressBookTable($schema);
         $this->createOroCRMDotmailerContactTable($schema);
+        $this->createOroCRMDotmailerActivityTable($schema);
         $this->createOroCRMDotmailerCampaignToABTable($schema);
         $this->createOroCRMDotmailerContactToABTable($schema);
 
@@ -43,6 +44,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $this->addOroCRMDotmailerCampaignForeignKeys($schema);
         $this->addOroCRMDotmailerAddressBookForeignKeys($schema);
         $this->addOroCRMDotmailerContactForeignKeys($schema);
+        $this->addOroCRMDotmailerActivityForeignKeys($schema);
         $this->addOroCRMDotmailerCampaignToABForeignKeys($schema);
         $this->addOroCRMDotmailerContactToABForeignKeys($schema);
     }
@@ -138,6 +140,39 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
     }
 
     /**
+     * Create orocrm_dm_activity table
+     *
+     * @param Schema $schema
+     */
+    protected function createOroCRMDotmailerActivityTable(Schema $schema)
+    {
+        $table = $schema->createTable('orocrm_dm_activity');
+        $table->addColumn('id', 'integer', ['autoincrement' => true]);
+        $table->addColumn('owner_id', 'integer', ['notnull' => false]);
+        $table->addColumn('channel_id', 'integer', ['notnull' => false]);
+        $table->addColumn('contact_id', 'integer', []);
+        $table->addColumn('email', 'string', ['length' => 255]);
+        $table->addColumn('num_opens', 'integer', ['notnull' => false]);
+        $table->addColumn('num_page_views', 'integer', ['notnull' => false]);
+        $table->addColumn('num_clicks', 'integer', ['notnull' => false]);
+        $table->addColumn('num_forwards', 'integer', ['notnull' => false]);
+        $table->addColumn('num_estimated_forwards', 'integer', ['notnull' => false]);
+        $table->addColumn('num_replies', 'integer', ['notnull' => false]);
+        $table->addColumn('date_sent', 'datetime', ['notnull' => false, 'comment' => '(DC2Type:datetime)']);
+        $table->addColumn('date_first_opened', 'datetime', ['notnull' => false, 'comment' => '(DC2Type:datetime)']);
+        $table->addColumn('date_last_opened', 'datetime', ['notnull' => false, 'comment' => '(DC2Type:datetime)']);
+        $table->addColumn('first_open_ip', 'string', ['notnull' => false, 'length' => 255]);
+        $table->addColumn('unsubscribed', 'boolean', ['notnull' => false]);
+        $table->addColumn('soft_bounced', 'boolean', ['notnull' => false]);
+        $table->addColumn('hard_bounced', 'boolean', ['notnull' => false]);
+        $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
+        $table->addColumn('updated_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
+        $table->addIndex(['channel_id'], 'IDX_8E5702BD72F5A1AA', []);
+        $table->addIndex(['owner_id'], 'IDX_8E5702BD7E3C61F9', []);
+        $table->setPrimaryKey(['id']);
+    }
+
+    /**
      * Create orocrm_dm_campaign_to_ab table
      *
      * @param Schema $schema
@@ -228,6 +263,34 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addForeignKeyConstraint(
             $schema->getTable('oro_integration_channel'),
             ['channel_id'],
+            ['id'],
+            ['onUpdate' => null, 'onDelete' => 'SET NULL']
+        );
+    }
+
+    /**
+     * Add orocrm_dm_activity foreign keys.
+     *
+     * @param Schema $schema
+     */
+    protected function addOroCRMDotmailerActivityForeignKeys(Schema $schema)
+    {
+        $table = $schema->getTable('orocrm_dm_activity');
+        $table->addForeignKeyConstraint(
+            $schema->getTable('oro_organization'),
+            ['owner_id'],
+            ['id'],
+            ['onUpdate' => null, 'onDelete' => 'SET NULL']
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('oro_integration_channel'),
+            ['channel_id'],
+            ['id'],
+            ['onUpdate' => null, 'onDelete' => 'SET NULL']
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('orocrm_dm_campaign'),
+            ['campaign_id'],
             ['id'],
             ['onUpdate' => null, 'onDelete' => 'SET NULL']
         );
