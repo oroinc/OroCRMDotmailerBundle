@@ -29,6 +29,8 @@ abstract class AbstractIterator implements \Iterator
      */
     protected $isValid = true;
 
+    protected $lastPage = false;
+
     /**
      * {@inheritdoc}
      */
@@ -44,6 +46,8 @@ abstract class AbstractIterator implements \Iterator
     {
         if (next($this->items) === false && !$this->tryToLoadItems()) {
             $this->isValid = false;
+        } else {
+            $this->currentItemIndex++;
         }
     }
 
@@ -52,8 +56,22 @@ abstract class AbstractIterator implements \Iterator
      */
     protected function tryToLoadItems()
     {
+        /** Requests count optimization */
+        if ($this->lastPage) {
+            return false;
+        }
+
         $this->items = $this->getItems($this->batchSize, $this->batchSize * $this->pageNumber);
-        return count($this->items) > 0;
+        if (count($this->items) == 0) {
+            return false;
+        }
+
+        $this->pageNumber++;
+        if (count($this->items) < $this->batchSize) {
+            $this->lastPage = true;
+        }
+
+        return true;
     }
 
     /**
@@ -78,6 +96,7 @@ abstract class AbstractIterator implements \Iterator
     public function rewind()
     {
         $this->isValid = true;
+        $this->lastPage = false;
         $this->items = [];
         $this->currentItemIndex = 0;
         $this->pageNumber = 0;
@@ -91,4 +110,22 @@ abstract class AbstractIterator implements \Iterator
      * @return array
      */
     abstract protected function getItems($select, $skip);
+
+    /**
+     * @return int
+     */
+    public function getBatchSize()
+    {
+        return $this->batchSize;
+    }
+
+    /**
+     * @param int $batchSize
+     * @return AbstractIterator
+     */
+    public function setBatchSize($batchSize)
+    {
+        $this->batchSize = $batchSize;
+        return $this;
+    }
 }

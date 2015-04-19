@@ -27,7 +27,7 @@ services:
     orocrm.dotmailer.transport.integration_transport:
         class: %orocrm.dotmailer.transport.integration_transport.class%
         arguments:
-            - @doctrine
+            - @orocrm.dotmailer.transport.resources_factory
         tags:
             - { name: oro_integration.transport, type: dotmailer_api, channel_type: dotmailer }
 

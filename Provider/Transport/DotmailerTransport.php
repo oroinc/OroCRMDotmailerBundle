@@ -13,11 +13,6 @@ use OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException;
 class DotmailerTransport implements TransportInterface
 {
     /**
-     * @var ManagerRegistry
-     */
-    protected $managerRegistry;
-
-    /**
      * @var IResources
      */
     protected $dotmailerResources;
@@ -28,12 +23,10 @@ class DotmailerTransport implements TransportInterface
     protected $dotmailerResourcesFactory;
 
     /**
-     * @param ManagerRegistry           $managerRegistry
      * @param DotmailerResourcesFactory $dotmailerResourcesFactory
      */
-    public function __construct(ManagerRegistry $managerRegistry, DotmailerResourcesFactory $dotmailerResourcesFactory)
+    public function __construct(DotmailerResourcesFactory $dotmailerResourcesFactory)
     {
-        $this->managerRegistry = $managerRegistry;
         $this->dotmailerResourcesFactory = $dotmailerResourcesFactory;
     }
 
@@ -42,11 +35,12 @@ class DotmailerTransport implements TransportInterface
      */
     public function init(Transport $transportEntity)
     {
-        $username = $transportEntity->getSettingsBag()->get('username');
+        $settings = $transportEntity->getSettingsBag();
+        $username = $settings->get('username');
         if (!$username) {
             throw new RequiredOptionException('username');
         }
-        $password = $transportEntity->getSettingsBag()->get('password');
+        $password = $settings->get('password');
         if (!$password) {
             throw new RequiredOptionException('password');
         }
