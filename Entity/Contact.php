@@ -150,7 +150,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     /**
      * @var Collection
      *
-     * @ORM\ManyToMany(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\AddressBook")
+     * @ORM\ManyToMany(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\AddressBook", inversedBy="contacts")
      * @ORM\JoinTable(name="orocrm_dm_contact_to_ab",
      *      joinColumns={@ORM\JoinColumn(name="contact_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="address_book_id", referencedColumnName="id", onDelete="CASCADE")}

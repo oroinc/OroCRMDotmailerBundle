@@ -204,7 +204,7 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
     /**
      * @var Collection
      *
-     * @ORM\ManyToMany(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\AddressBook")
+     * @ORM\ManyToMany(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\AddressBook", inversedBy="campaigns")
      * @ORM\JoinTable(name="orocrm_dm_campaign_to_ab",
      *      joinColumns={@ORM\JoinColumn(name="campaign_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="address_book_id", referencedColumnName="id", onDelete="CASCADE")}
