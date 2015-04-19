@@ -20,26 +20,26 @@ class AddEnumFields implements Migration, ExtendExtensionAwareInterface, Ordered
     protected $enumData = [
         // table_name => [enumCode => enumField],
         'orocrm_dm_campaign' => [
-            'orocrm_dm_cmp_reply_action'  => [
+            'dm_cmp_reply_action'  => [
                 'field'   => 'reply_action',
             ],
-            'orocrm_dm_cmp_status' => [
+            'dm_cmp_status' => [
                 'field'   => 'status',
             ],
         ],
         'orocrm_dm_address_book' => [
-            'orocrm_dm_ab_visibility'  => [
+            'dm_ab_visibility'  => [
                 'field'   => 'visibility',
             ],
         ],
         'orocrm_dm_contact' => [
-            'orocrm_dm_cnt_opt_in_type'  => [
+            'dm_cnt_opt_in_type'  => [
                 'field'   => 'opt_in_type',
             ],
-            'orocrm_dm_cnt_email_type'  => [
+            'dm_cnt_email_type'  => [
                 'field'   => 'email_type',
             ],
-            'orocrm_dm_cnt_status'  => [
+            'dm_cnt_status'  => [
                 'field'   => 'status',
             ],
         ],

@@ -43,7 +43,7 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
 {
     use OriginTrait;
 
-    /** constant for enum orocrm_dm_ab_visibility */
+    /** constant for enum dm_ab_visibility */
     const VISIBILITY_PRIVATE                    = 'Private';
     const VISIBILITY_PUBLIC                     = 'Public';
     const VISIBILITY_NOTAVAILABLEINTHISVERSION  = 'NotAvailableInThisVersion';
@@ -201,7 +201,7 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
      *
      * @return AddressBook
      */
-    public function setChannel($channel)
+    public function setChannel(Channel $channel)
     {
         $this->channel = $channel;
 

@@ -43,14 +43,14 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
 {
     use OriginTrait;
 
-    /** constant for enum orocrm_dm_cmp_reply_action */
+    /** constant for enum dm_cmp_reply_action */
     const REPLY_ACTION_UNSET                        = 'Unset';
     const REPLY_ACTION_WEBMAILFORWARD               = 'WebMailForward';
     const REPLY_ACTION_WEBMAIL                      = 'Webmail';
     const REPLY_ACTION_DELETE                       = 'Delete';
     const REPLY_ACTION_NOTAVAILABLEINTHISVERSION    = 'NotAvailableInThisVersion';
 
-    /** constant for enum orocrm_dm_cmp_status */
+    /** constant for enum dm_cmp_status */
     const STATUS_UNSENT                             = 'Unsent';
     const STATUS_SENDING                            = 'Sending';
     const STATUS_SENT                               = 'Sent';
@@ -249,7 +249,7 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
      *
      * @return Campaign
      */
-    public function setChannel($channel)
+    public function setChannel(Channel $channel)
     {
         $this->channel = $channel;
 

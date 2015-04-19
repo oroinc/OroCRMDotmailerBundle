@@ -14,14 +14,14 @@ class LoadEnumValues extends AbstractEnumFixture
     /** @var array */
     protected $enumData =
         [
-            'orocrm_dm_cmp_reply_action' => [
+            'dm_cmp_reply_action' => [
                 Campaign::REPLY_ACTION_UNSET                        => 'Unset',
                 Campaign::REPLY_ACTION_WEBMAILFORWARD               => 'WebMailForward',
                 Campaign::REPLY_ACTION_WEBMAIL                      => 'Webmail',
                 Campaign::REPLY_ACTION_DELETE                       => 'Delete',
                 Campaign::REPLY_ACTION_NOTAVAILABLEINTHISVERSION    => 'NotAvailableInThisVersion',
             ],
-            'orocrm_dm_cmp_status' => [
+            'dm_cmp_status' => [
                 Campaign::STATUS_UNSENT                             => 'Unsent',
                 Campaign::STATUS_SENDING                            => 'Sending',
                 Campaign::STATUS_SENT                               => 'Sent',
@@ -33,24 +33,24 @@ class LoadEnumValues extends AbstractEnumFixture
                 Campaign::STATUS_TRIGGERED                          => 'Triggered',
                 Campaign::STATUS_NOTAVAILABLEINTHISVERSION          => 'NotAvailableInThisVersion',
             ],
-            'orocrm_dm_ab_visibility' => [
+            'dm_ab_visibility' => [
                 AddressBook::VISIBILITY_PRIVATE                     => 'Private',
                 AddressBook::VISIBILITY_PUBLIC                      => 'Public',
                 AddressBook::VISIBILITY_NOTAVAILABLEINTHISVERSION   => 'NotAvailableInThisVersion',
             ],
-            'orocrm_dm_cnt_opt_in_type' => [
+            'dm_cnt_opt_in_type' => [
                 Contact::OPT_IN_TYPE_UNKNOWN                        => 'Unknown',
                 Contact::OPT_IN_TYPE_SINGLE                         => 'Single',
                 Contact::OPT_IN_TYPE_DOUBLE                         => 'Double',
                 Contact::OPT_IN_TYPE_VERIFIEDDOUBLE                 => 'VerifiedDouble',
                 Contact::OPT_IN_TYPE_NOTAVAILABLEINTHISVERSION      => 'NotAvailableInThisVersion',
             ],
-            'orocrm_dm_cnt_email_type' => [
+            'dm_cnt_email_type' => [
                 Contact::EMAIL_TYPE_PLAINTEXT                       => 'PlainText',
                 Contact::EMAIL_TYPE_HTML                            => 'Html',
                 Contact::EMAIL_TYPE_NOTAVAILABLEINTHISVERSION       => 'NotAvailableInThisVersion',
             ],
-            'orocrm_dm_cnt_status' => [
+            'dm_cnt_status' => [
                 Contact::STATUS_SUBSCRIBED                          => 'Subscribed',
                 Contact::STATUS_UNSUBSCRIBED                        => 'Unsubscribed',
                 Contact::STATUS_SOFTBOUNCED                         => 'SoftBounced',

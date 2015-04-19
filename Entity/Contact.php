@@ -12,7 +12,6 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Bundle\LocaleBundle\Model\FirstNameInterface;
 use Oro\Bundle\LocaleBundle\Model\LastNameInterface;
-use Oro\Bundle\LocaleBundle\Model\MiddleNameInterface;
 
 use OroCRM\Bundle\DotmailerBundle\Model\ExtendContact;
 
@@ -46,19 +45,19 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
 {
     use OriginTrait;
 
-    /** constant for enum orocrm_dm_cnt_opt_in_type */
+    /** constant for enum dm_cnt_opt_in_type */
     const OPT_IN_TYPE_UNKNOWN                       = 'Unknown';
     const OPT_IN_TYPE_SINGLE                        = 'Single';
     const OPT_IN_TYPE_DOUBLE                        = 'Double';
     const OPT_IN_TYPE_VERIFIEDDOUBLE                = 'VerifiedDouble';
     const OPT_IN_TYPE_NOTAVAILABLEINTHISVERSION     = 'NotAvailableInThisVersion';
 
-    /** constant for enum orocrm_dm_cnt_email_type */
+    /** constant for enum dm_cnt_email_type */
     const EMAIL_TYPE_PLAINTEXT                      = 'PlainText';
     const EMAIL_TYPE_HTML                           = 'Html';
     const EMAIL_TYPE_NOTAVAILABLEINTHISVERSION      = 'NotAvailableInThisVersion';
 
-    /** constant for enum orocrm_dm_cnt_status */
+    /** constant for enum dm_cnt_status */
     const STATUS_SUBSCRIBED                         = 'Subscribed';
     const STATUS_UNSUBSCRIBED                       = 'Unsubscribed';
     const STATUS_SOFTBOUNCED                        = 'SoftBounced';
@@ -245,7 +244,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
      *
      * @return Contact
      */
-    public function setChannel($channel)
+    public function setChannel(Channel $channel)
     {
         $this->channel = $channel;
 

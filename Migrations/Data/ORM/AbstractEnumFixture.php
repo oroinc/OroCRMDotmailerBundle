@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
+use Oro\Bundle\EntityExtendBundle\Entity\Repository\EnumValueRepository;
 
 abstract class AbstractEnumFixture extends AbstractFixture
 {
@@ -24,35 +25,31 @@ abstract class AbstractEnumFixture extends AbstractFixture
      */
     public function loadEnumValues(array $enumData, EntityManagerInterface $manager)
     {
-        $isNewInserted = false;
         foreach ($enumData as $enumCode => $enumValues) {
             $entityName = ExtendHelper::buildEnumValueClassName($enumCode);
+            /** @var EnumValueRepository $enumRepository */
+            $enumRepository = $manager->getRepository($entityName);
 
             $existingCodes = [];
-            $existingStatuses = $manager->getRepository($entityName)->findAll();
+            $existingValues = $enumRepository->findAll();
 
-            /** @var AbstractEnumValue $existingStatus */
-            foreach($existingStatuses as $existingStatus) {
-                $existingCodes[$existingStatus->getId()] = true;
+            /** @var AbstractEnumValue $existingValue */
+            foreach ($existingValues as $existingValue) {
+                $existingCodes[$existingValue->getId()] = true;
             }
+
+            $priority = 1;
 
             foreach ($enumValues as $key => $value) {
-                $enumId = ExtendHelper::buildEnumValueId($key);
-                if (isset($existingStatuses[$key])) {
-                    continue;
+                if (!isset($existingCodes[$key])) {
+                    /** @var AbstractEnumValue $enum */
+                    $enum = $enumRepository->createEnumValue($value, $priority++, false, $key);
+                    $existingCodes[$key] = true;
+                    $manager->persist($enum);
                 }
-
-                /** @var AbstractEnumValue $enum */
-                $enum = new $entityName($enumId, $value);
-                $manager->persist($enum);
-
-                $isNewInserted = true;
             }
-
         }
 
-        if ($isNewInserted) {
-            $manager->flush();
-        }
+        $manager->flush();
     }
 }
