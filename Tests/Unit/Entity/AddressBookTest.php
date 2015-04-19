@@ -4,6 +4,8 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
+
 use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
@@ -35,7 +37,7 @@ class AddressBookTest extends \PHPUnit_Framework_TestCase
     public function flatPropertiesDataProvider()
     {
         $now = new \DateTime('now');
-        $channel = $this->getMockBuilder('Oro\Bundle\IntegrationBundle\Entity\Channel');
+        $channel = new Channel();
         $organization = $this->getMock('Oro\Bundle\OrganizationBundle\Entity\Organization');
 
         return array(

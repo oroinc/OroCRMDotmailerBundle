@@ -457,7 +457,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
      *
      * @return Contact
      */
-    public function resetAddressBooks($addressBooks)
+    public function setAddressBooks($addressBooks)
     {
         $this->getAddressBooks()->clear();
 

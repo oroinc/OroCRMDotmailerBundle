@@ -483,7 +483,7 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
      *
      * @return Campaign
      */
-    public function resetAddressBooks($addressBooks)
+    public function setAddressBooks($addressBooks)
     {
         $this->getAddressBooks()->clear();
 

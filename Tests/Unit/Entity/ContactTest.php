@@ -4,6 +4,8 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
+
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 
@@ -34,7 +36,7 @@ class ContactTest extends \PHPUnit_Framework_TestCase
     public function flatPropertiesDataProvider()
     {
         $now = new \DateTime('now');
-        $channel = $this->getMockBuilder('Oro\Bundle\IntegrationBundle\Entity\Channel');
+        $channel = new Channel();
         $organization = $this->getMock('Oro\Bundle\OrganizationBundle\Entity\Organization');
         $dataFields = array('test_field' => 'test');
 
@@ -120,7 +122,7 @@ class ContactTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->entity->hasAddressBooks());
     }
 
-    public function testResetCampaigns()
+    public function testSetAddressBooks()
     {
         $this->assertEmpty($this->entity->getAddressBooks()->toArray());
 
@@ -129,7 +131,7 @@ class ContactTest extends \PHPUnit_Framework_TestCase
         $addressBooks = $this->entity->getAddressBooks()->toArray();
         $this->assertCount(1, $addressBooks);
         $this->assertEquals($addressBook, current($addressBooks));
-        $this->entity->resetAddressBooks(new ArrayCollection());
+        $this->entity->setAddressBooks(new ArrayCollection());
         $this->assertEmpty($this->entity->getAddressBooks()->toArray());
     }
 }
