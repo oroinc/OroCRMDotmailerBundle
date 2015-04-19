@@ -29,6 +29,9 @@ abstract class AbstractIterator implements \Iterator
      */
     protected $isValid = true;
 
+    /**
+     * @var bool
+     */
     protected $lastPage = false;
 
     /**
