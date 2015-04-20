@@ -8,11 +8,15 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
+use OroCRM\Bundle\CampaignBundle\Entity\Campaign;
 
 /**
  * @ORM\Entity
  * @ORM\Table(
- *      name="orocrm_dm_activity"
+ *      name="orocrm_dm_activity",
+ *      uniqueConstraints={
+ *          @ORM\UniqueConstraint(name="orocrm_dm_activity_unq", columns={"campaign_id", "contact_id", "channel_id"})
+ *     }
  * )
  * @ORM\HasLifecycleCallbacks()
  * @Config(
@@ -57,13 +61,6 @@ class Activity
      * )
      */
     protected $channel;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="contact_id", type="integer")
-     */
-    protected $contactId;
 
     /**
      * @var string
@@ -195,6 +192,21 @@ class Activity
     protected $campaign;
 
     /**
+     * @var Campaign
+     *
+     * @ORM\ManyToOne(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\Contact")
+     * @ORM\JoinColumn(name="contact_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ConfigField(
+     *      defaultValues={
+     *          "importexport"={
+     *              "excluded"=true
+     *          }
+     *      }
+     * )
+     */
+    protected $contact;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime")
@@ -249,7 +261,7 @@ class Activity
      *
      * @return Activity
      */
-    public function setChannel($channel)
+    public function setChannel(Channel $channel = null)
     {
         $this->channel = $channel;
 
@@ -257,21 +269,21 @@ class Activity
     }
 
     /**
-     * @return int
+     * @return Contact
      */
-    public function getContactId()
+    public function getContact()
     {
-        return $this->contactId;
+        return $this->contact;
     }
 
     /**
-     * @param int $contactId
+     * @param Contact $contact
      *
      * @return Activity
      */
-    public function setContactId($contactId)
+    public function setContact(Contact $contact = null)
     {
-        $this->contactId = $contactId;
+        $this->contact = $contact;
 
         return $this;
     }
@@ -429,7 +441,7 @@ class Activity
      *
      * @return Activity
      */
-    public function setDateSent($dateSent)
+    public function setDateSent(\DateTime $dateSent = null)
     {
         $this->dateSent = $dateSent;
 
@@ -449,7 +461,7 @@ class Activity
      *
      * @return Activity
      */
-    public function setDateFirstOpened($dateFirstOpened)
+    public function setDateFirstOpened(\DateTime $dateFirstOpened = null)
     {
         $this->dateFirstOpened = $dateFirstOpened;
 
@@ -469,7 +481,7 @@ class Activity
      *
      * @return Activity
      */
-    public function setDateLastOpened($dateLastOpened)
+    public function setDateLastOpened(\DateTime $dateLastOpened = null)
     {
         $this->dateLastOpened = $dateLastOpened;
 
@@ -570,7 +582,7 @@ class Activity
      *
      * @return Activity
      */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt(\DateTime $createdAt = null)
     {
         $this->createdAt = $createdAt;
 
@@ -590,7 +602,7 @@ class Activity
      *
      * @return Activity
      */
-    public function setUpdatedAt($updatedAt)
+    public function setUpdatedAt(\DateTime $updatedAt = null)
     {
         $this->updatedAt = $updatedAt;
 
@@ -610,7 +622,7 @@ class Activity
      *
      * @return Activity
      */
-    public function setOwner($owner)
+    public function setOwner(Organization $owner = null)
     {
         $this->owner = $owner;
 
@@ -630,7 +642,7 @@ class Activity
      *
      * @return Activity
      */
-    public function setCampaign($campaign)
+    public function setCampaign(Campaign $campaign = null)
     {
         $this->campaign = $campaign;
 

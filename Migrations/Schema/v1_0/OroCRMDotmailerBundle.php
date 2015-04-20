@@ -149,6 +149,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
         $table->addColumn('owner_id', 'integer', ['notnull' => false]);
         $table->addColumn('channel_id', 'integer', ['notnull' => false]);
+        $table->addColumn('campaign_id', 'integer', []);
         $table->addColumn('contact_id', 'integer', []);
         $table->addColumn('email', 'string', ['length' => 255]);
         $table->addColumn('num_opens', 'integer', ['notnull' => false]);
@@ -168,6 +169,9 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addColumn('updated_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->addIndex(['channel_id'], 'IDX_8E5702BD72F5A1AA', []);
         $table->addIndex(['owner_id'], 'IDX_8E5702BD7E3C61F9', []);
+        $table->addIndex(['campaign_id'], 'IDX_8E5702BDF639F774', []);
+        $table->addIndex(['contact_id'], 'IDX_8E5702BDE7A1254A', []);
+        $table->addUniqueIndex(['campaign_id', 'contact_id', 'channel_id'], 'orocrm_dm_activity_unq');
         $table->setPrimaryKey(['id']);
     }
 
@@ -290,6 +294,12 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addForeignKeyConstraint(
             $schema->getTable('orocrm_dm_campaign'),
             ['campaign_id'],
+            ['id'],
+            ['onUpdate' => null, 'onDelete' => 'SET NULL']
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('orocrm_dm_contact'),
+            ['contact_id'],
             ['id'],
             ['onUpdate' => null, 'onDelete' => 'SET NULL']
         );
