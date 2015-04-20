@@ -2,7 +2,12 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Entity;
 
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\OrganizationBundle\Tests\Unit\Fixture\Entity\Organization;
+
 use OroCRM\Bundle\DotmailerBundle\Entity\Activity;
+use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
+use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 
 class ActivityTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,14 +36,15 @@ class ActivityTest extends \PHPUnit_Framework_TestCase
     public function flatPropertiesDataProvider()
     {
         $now = new \DateTime('now');
-        $channel = $this->getMockBuilder('Oro\Bundle\IntegrationBundle\Entity\Channel');
-        $organization = $this->getMock('Oro\Bundle\OrganizationBundle\Entity\Organization');
-        $campaign = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\Campaign');
+        $channel = new Channel();
+        $organization = new Organization();
+        $campaign = new Campaign();
+        $contact = new Contact();
 
         return array(
             'channel' => array('channel', $channel, $channel),
             'campaign' => array('campaign', $campaign, $campaign),
-            'contactId' => array('contactId', 101, 101),
+            'contact' => array('contact', $contact, $contact),
             'email' => array('email', 'test@from.com', 'test@from.com'),
             'numOpens' => array('numOpens', 5, 5),
             'numPageViews' => array('numPageViews', 3, 3),

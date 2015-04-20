@@ -8,6 +8,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
+use OroCRM\Bundle\DotmailerBundle\Entity\Activity;
 
 class ContactTest extends \PHPUnit_Framework_TestCase
 {
@@ -133,5 +134,51 @@ class ContactTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($addressBook, current($addressBooks));
         $this->entity->setAddressBooks(new ArrayCollection());
         $this->assertEmpty($this->entity->getAddressBooks()->toArray());
+    }
+
+    public function testAddActivity()
+    {
+        $this->assertEmpty($this->entity->getActivities()->toArray());
+
+        $activity = new Activity();
+        $this->entity->addActivity($activity);
+        $activities = $this->entity->getActivities()->toArray();
+        $this->assertCount(1, $activities);
+        $this->assertEquals($activity, current($activities));
+    }
+
+    public function testRemoveActivity()
+    {
+        $this->assertEmpty($this->entity->getActivities()->toArray());
+
+        $activity = new Activity();
+        $this->entity->addActivity($activity);
+        $activities = $this->entity->getActivities()->toArray();
+        $this->assertCount(1, $activities);
+        $this->assertEquals($activity, current($activities));
+        $this->entity->removeActivity($activity);
+        $this->assertEmpty($this->entity->getActivities()->toArray());
+    }
+
+    public function testSetActivity()
+    {
+        $this->assertEmpty($this->entity->getActivities()->toArray());
+
+        $activity = new Activity();
+        $this->entity->addActivity($activity);
+        $activities = $this->entity->getActivities()->toArray();
+        $this->assertCount(1, $activities);
+        $this->assertEquals($activity, current($activities));
+        $this->entity->setActivities(new ArrayCollection());
+        $this->assertEmpty($this->entity->getActivities()->toArray());
+    }
+
+    public function testHasActivities()
+    {
+        $this->assertEmpty($this->entity->getActivities()->toArray());
+        $activity = new Activity();
+        $this->assertFalse($this->entity->hasActivities());
+        $this->entity->addActivity($activity);
+        $this->assertTrue($this->entity->hasActivities());
     }
 }

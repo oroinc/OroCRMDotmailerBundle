@@ -8,7 +8,6 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
-use OroCRM\Bundle\CampaignBundle\Entity\Campaign;
 
 /**
  * @ORM\Entity
@@ -179,8 +178,8 @@ class Activity
     /**
      * @var Campaign
      *
-     * @ORM\ManyToOne(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\Campaign")
-     * @ORM\JoinColumn(name="campaign_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\ManyToOne(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\Campaign", inversedBy="activities")
+     * @ORM\JoinColumn(name="campaign_id", referencedColumnName="id", onDelete="CASCADE")
      * @ConfigField(
      *      defaultValues={
      *          "importexport"={
@@ -192,10 +191,10 @@ class Activity
     protected $campaign;
 
     /**
-     * @var Campaign
+     * @var Contact
      *
-     * @ORM\ManyToOne(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\Contact")
-     * @ORM\JoinColumn(name="contact_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\ManyToOne(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\Contact", inversedBy="activities")
+     * @ORM\JoinColumn(name="contact_id", referencedColumnName="id", onDelete="CASCADE")
      * @ConfigField(
      *      defaultValues={
      *          "importexport"={
