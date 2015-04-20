@@ -1,31 +1,58 @@
 parameters:
     # Entities
-    orocrm.dotmailer.entity.transport.class:                          OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransport
+    orocrm_dotmailer.entity.transport.class:                          OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransport
 
     # Integration related services
-    orocrm.dotmailer.provider.channel_type.class:                     OroCRM\Bundle\DotmailerBundle\Provider\ChannelType
-    orocrm.dotmailer.transport.integration_transport.class:           OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport
+    orocrm_dotmailer.provider.channel_type.class:                     OroCRM\Bundle\DotmailerBundle\Provider\ChannelType
+    orocrm_dotmailer.transport.integration_transport.class:           OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport
+    orocrm_dotmailer.transport.resources_factory.class:               OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory
 
     # Forms and Extensions
-    orocrm.dotmailer.form.type.integration_transport_settings.class:  OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSettingsType
+    orocrm_dotmailer.form.type.integration_transport_settings.class:  OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSettingsType
+
+    #connectors
+    orocrm_dotmailer.connector.abstract.class:                        OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector
+    orocrm_dotmailer.connector.campaign.class:                        OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignsConnector
 
 services:
 
     # Forms and Extensions
-    orocrm.dotmailer.form.type.integration_transport_settings:
-        class: %orocrm.dotmailer.form.type.integration_transport_settings.class%
+    orocrm_dotmailer.form.type.integration_transport_settings:
+        class: %orocrm_dotmailer.form.type.integration_transport_settings.class%
         tags:
             - { name: form.type, alias: "orocrm_dotmailer_transport_setting_type" }
 
     # Integration related services
-    orocrm.dotmailer.provider.channel_type:
-        class: %orocrm.dotmailer.provider.channel_type.class%
+    orocrm_dotmailer.provider.channel_type:
+        class: %orocrm_dotmailer.provider.channel_type.class%
         tags:
             - { name: oro_integration.channel, type: dotmailer }
 
-    orocrm.dotmailer.transport.integration_transport:
-        class: %orocrm.dotmailer.transport.integration_transport.class%
+    orocrm_dotmailer.transport.integration_transport:
+        class: %orocrm_dotmailer.transport.integration_transport.class%
         arguments:
-            - @doctrine
+            - @orocrm_dotmailer.transport.resources_factory
         tags:
             - { name: oro_integration.transport, type: dotmailer_api, channel_type: dotmailer }
+
+    orocrm_dotmailer.transport.resources_factory:
+        class: %orocrm_dotmailer.transport.resources_factory.class%
+
+    #connectors
+    orocrm_dotmailer.connector.abstract:
+        abstract: true
+        arguments:
+            - @oro_importexport.context_registry
+            - @oro_integration.logger.strategy
+            - @oro_integration.provider.connector_context_mediator
+        calls:
+            - [setManagerRegistry, [@doctrine]]
+
+    orocrm_dotmailer.connector.campaign:
+        class: %orocrm_dotmailer.connector.campaign.class%
+        parent: orocrm_dotmailer.connector.abstract
+        # Uncomment after entities merge
+        #calls:
+        #    - [setEntityName, [%orocrm_dotmailer.entity.campaign.class%]]
+        tags:
+            - { name: oro_integration.connector, type: campaign, channel_type: dotmailer }

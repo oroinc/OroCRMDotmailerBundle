@@ -2,26 +2,30 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use DotMailer\Api\Resources\IResources;
 
 use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
-
 use OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException;
 
 class DotmailerTransport implements TransportInterface
 {
     /**
-     * @var ManagerRegistry
+     * @var IResources
      */
-    protected $managerRegistry;
+    protected $dotmailerResources;
 
     /**
-     * @param ManagerRegistry $managerRegistry
+     * @var DotmailerResourcesFactory
      */
-    public function __construct(ManagerRegistry $managerRegistry)
+    protected $dotmailerResourcesFactory;
+
+    /**
+     * @param DotmailerResourcesFactory $dotmailerResourcesFactory
+     */
+    public function __construct(DotmailerResourcesFactory $dotmailerResourcesFactory)
     {
-        $this->managerRegistry = $managerRegistry;
+        $this->dotmailerResourcesFactory = $dotmailerResourcesFactory;
     }
 
     /**
@@ -29,14 +33,17 @@ class DotmailerTransport implements TransportInterface
      */
     public function init(Transport $transportEntity)
     {
-        $username = $transportEntity->getSettingsBag()->get('username');
+        $settings = $transportEntity->getSettingsBag();
+        $username = $settings->get('username');
         if (!$username) {
             throw new RequiredOptionException('username');
         }
-        $password = $transportEntity->getSettingsBag()->get('password');
+        $password = $settings->get('password');
         if (!$password) {
             throw new RequiredOptionException('password');
         }
+
+        $this->dotmailerResources = $this->dotmailerResourcesFactory->createResources($username, $password);
     }
 
     /**
