@@ -295,13 +295,13 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
             $schema->getTable('orocrm_dm_campaign'),
             ['campaign_id'],
             ['id'],
-            ['onUpdate' => null, 'onDelete' => 'SET NULL']
+            ['onUpdate' => null, 'onDelete' => 'CASCADE']
         );
         $table->addForeignKeyConstraint(
             $schema->getTable('orocrm_dm_contact'),
             ['contact_id'],
             ['id'],
-            ['onUpdate' => null, 'onDelete' => 'SET NULL']
+            ['onUpdate' => null, 'onDelete' => 'CASCADE']
         );
     }
 
