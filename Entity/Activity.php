@@ -179,7 +179,7 @@ class Activity
      * @var Campaign
      *
      * @ORM\ManyToOne(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\Campaign", inversedBy="activities")
-     * @ORM\JoinColumn(name="campaign_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="campaign_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      * @ConfigField(
      *      defaultValues={
      *          "importexport"={
@@ -194,7 +194,7 @@ class Activity
      * @var Contact
      *
      * @ORM\ManyToOne(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\Contact", inversedBy="activities")
-     * @ORM\JoinColumn(name="contact_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="contact_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      * @ConfigField(
      *      defaultValues={
      *          "importexport"={
