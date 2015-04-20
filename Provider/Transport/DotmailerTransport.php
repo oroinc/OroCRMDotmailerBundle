@@ -2,12 +2,10 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-
 use DotMailer\Api\Resources\IResources;
+
 use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
-
 use OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException;
 
 class DotmailerTransport implements TransportInterface

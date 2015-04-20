@@ -17,7 +17,7 @@ class DotmailerResourcesFactory
     public function createResources($username, $password)
     {
         return Container::newResources([
-            Container::USERNAME =>  $username,
+            Container::USERNAME => $username,
             Container::PASSWORD => $password
         ]);
     }
