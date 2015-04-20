@@ -108,11 +108,11 @@ abstract class AbstractIterator implements \Iterator
     }
 
     /**
-     * @param int $select Count of requested records
+     * @param int $take Count of requested records
      * @param int $skip Count of skipped records
      * @return array
      */
-    abstract protected function getItems($select, $skip);
+    abstract protected function getItems($take, $skip);
 
     /**
      * @return int

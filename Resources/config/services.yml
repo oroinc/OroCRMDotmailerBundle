@@ -1,6 +1,8 @@
 parameters:
     # Entities
     orocrm_dotmailer.entity.transport.class:                          OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransport
+    orocrm_dotmailer.entity.campaign.class:                           OroCRM\Bundle\DotmailerBundle\Entity\Campaign
+    orocrm_dotmailer.entity.address_book.class:                       OroCRM\Bundle\DotmailerBundle\Entity\AddressBook
 
     # Integration related services
     orocrm_dotmailer.provider.channel_type.class:                     OroCRM\Bundle\DotmailerBundle\Provider\ChannelType
@@ -13,6 +15,7 @@ parameters:
     #connectors
     orocrm_dotmailer.connector.abstract.class:                        OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector
     orocrm_dotmailer.connector.campaign.class:                        OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignsConnector
+    orocrm_dotmailer.connector.address_book.class:                    OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector
 
 services:
 
@@ -51,8 +54,15 @@ services:
     orocrm_dotmailer.connector.campaign:
         class: %orocrm_dotmailer.connector.campaign.class%
         parent: orocrm_dotmailer.connector.abstract
-        # Uncomment after entities merge
-        #calls:
-        #    - [setEntityName, [%orocrm_dotmailer.entity.campaign.class%]]
+        calls:
+            - [setEntityName, [%orocrm_dotmailer.entity.campaign.class%]]
         tags:
             - { name: oro_integration.connector, type: campaign, channel_type: dotmailer }
+
+    orocrm_dotmailer.connector.address_book:
+        class: %orocrm_dotmailer.connector.address_book.class%
+        parent: orocrm_dotmailer.connector.abstract
+        calls:
+            - [setEntityName, [%orocrm_dotmailer.entity.address_book.class%]]
+        tags:
+            - { name: oro_integration.connector, type: address_book, channel_type: dotmailer }

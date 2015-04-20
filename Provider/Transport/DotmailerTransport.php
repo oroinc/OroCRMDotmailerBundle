@@ -47,6 +47,18 @@ class DotmailerTransport implements TransportInterface
     }
 
     /**
+     * @param int $take
+     * @param int $skip
+     *
+     * @return array
+     */
+    public function getAddressBooks($take, $skip)
+    {
+        $apiAddressBookList = $this->dotmailerResources->GetAddressBooks($take, $skip);
+        return $apiAddressBookList->toArray();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getLabel()

@@ -2,16 +2,18 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Connector;
 
-class CampaignsConnector extends AbstractDotmailerConnector
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
+
+class AddressBookConnector extends AbstractDotmailerConnector
 {
-    const TYPE = 'campaign';
+    const TYPE = 'address_book';
 
     /**
      * {@inheritdoc}
      */
     protected function getConnectorSource()
     {
-        return new \EmptyIterator();
+        return new AddressBookIterator($this->transport);
     }
 
     /**
@@ -19,7 +21,7 @@ class CampaignsConnector extends AbstractDotmailerConnector
      */
     public function getLabel()
     {
-        return 'orocrm.dotmailer.connector.campaign.label';
+        return 'orocrm.dotmailer.connector.address_book.label';
     }
 
     /**
