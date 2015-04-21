@@ -8,3 +8,6 @@ orocrm:
                 label: Username
             password:
                 label: Password
+
+        connector:
+            campaign.label: Dotmailer Campaign Connector

@@ -6,6 +6,8 @@ use DotMailer\Api\Resources\IResources;
 
 use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
+
 use OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException;
 
 class DotmailerTransport implements TransportInterface
@@ -68,5 +70,24 @@ class DotmailerTransport implements TransportInterface
     public function getSettingsEntityFQCN()
     {
         return 'OroCRM\\Bundle\\DotmailerBundle\\Entity\\DotmailerTransport';
+    }
+
+    /**
+     * @link http://apidocs.mailchimp.com/api/2.0/campaigns/list.php
+     * @param Channel $channel
+     * @return \Iterator
+     */
+    public function getCampaigns(Channel $channel)
+    {
+        // Synchronize only campaigns that are connected to subscriber lists that are used within OroCRM.
+        $aBooksToSynchronize = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->getAddressBooksToSync($channel);
+
+        if (!$aBooksToSynchronize) {
+            return new \ArrayIterator();
+        }
+
+        return new CampaignIterator($this->dotmailerResources, $aBooksToSynchronize);
     }
 }

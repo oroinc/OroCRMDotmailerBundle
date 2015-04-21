@@ -2,16 +2,17 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Connector;
 
-class CampaignsConnector extends AbstractDotmailerConnector
+class CampaignConnector extends AbstractDotmailerConnector
 {
     const TYPE = 'campaign';
+    const JOB_IMPORT = 'dotmailer_campaign_import';
 
     /**
      * {@inheritdoc}
      */
     protected function getConnectorSource()
     {
-        return new \EmptyIterator();
+        return $this->transport->getCampaigns($this->getChannel());
     }
 
     /**
@@ -19,7 +20,7 @@ class CampaignsConnector extends AbstractDotmailerConnector
      */
     public function getLabel()
     {
-        // TODO: Implement getLabel() method.
+        return 'orocrm.dotmailer.connector.campaign.label';
     }
 
     /**
@@ -27,7 +28,7 @@ class CampaignsConnector extends AbstractDotmailerConnector
      */
     public function getImportEntityFQCN()
     {
-        // TODO: Implement getImportEntityFQCN() method.
+        return $this->entityName;
     }
 
     /**
@@ -35,7 +36,7 @@ class CampaignsConnector extends AbstractDotmailerConnector
      */
     public function getImportJobName()
     {
-        // TODO: Implement getImportJobName() method.
+        return self::JOB_IMPORT;
     }
 
     /**
