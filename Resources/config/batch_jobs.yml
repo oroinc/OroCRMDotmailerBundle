@@ -1,0 +1,9 @@
+connector:
+    name: oro_importexport
+    jobs:
+        new_dotmailer_contacts:
+            title: "Import new Contacts from dotMailer"
+            type:  import
+            steps:
+                -
+                    title:     new_contact

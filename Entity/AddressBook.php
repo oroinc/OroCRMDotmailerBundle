@@ -14,7 +14,7 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBook;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="OroCRM\Bundle\DotmailerBundle\Entity\Repository\AddressBookRepository")
  * @ORM\Table(
  *      name="orocrm_dm_address_book",
  *      uniqueConstraints={

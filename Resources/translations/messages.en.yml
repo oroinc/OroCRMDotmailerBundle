@@ -8,3 +8,5 @@ orocrm:
                 label: Username
             password:
                 label: Password
+        connector:
+            label: Contact Connector

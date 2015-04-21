@@ -2,11 +2,16 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
 
-use DotMailer\Api\Resources\IResources;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
+
 use OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
+
+use DotMailer\Api\Resources\IResources;
 
 class DotmailerTransport implements TransportInterface
 {
@@ -18,14 +23,21 @@ class DotmailerTransport implements TransportInterface
     /**
      * @var DotmailerResourcesFactory
      */
-    protected $dotmailerResourcesFactory;
+    protected $dotMailerResFactory;
 
     /**
-     * @param DotmailerResourcesFactory $dotmailerResourcesFactory
+     * @var ManagerRegistry
      */
-    public function __construct(DotmailerResourcesFactory $dotmailerResourcesFactory)
+    protected $managerRegistry;
+
+    /**
+     * @param DotmailerResourcesFactory $dotMailerResFactory
+     * @param ManagerRegistry           $managerRegistry
+     */
+    public function __construct(DotmailerResourcesFactory $dotMailerResFactory, ManagerRegistry $managerRegistry)
     {
-        $this->dotmailerResourcesFactory = $dotmailerResourcesFactory;
+        $this->dotMailerResFactory = $dotMailerResFactory;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -43,7 +55,25 @@ class DotmailerTransport implements TransportInterface
             throw new RequiredOptionException('password');
         }
 
-        $this->dotmailerResources = $this->dotmailerResourcesFactory->createResources($username, $password);
+        $this->dotmailerResources = $this->dotMailerResFactory->createResources($username, $password);
+    }
+
+    /**
+     * @param Channel $channel
+     *
+     * @return ContactIterator
+     */
+    public function getContacts(Channel $channel)
+    {
+        $aBooksToSynchronize = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->getAddressBooksToSync($channel);
+
+        if (!$aBooksToSynchronize) {
+            return new \ArrayIterator();
+        }
+
+        return new ContactIterator($this->dotmailerResources, $aBooksToSynchronize);
     }
 
     /**
