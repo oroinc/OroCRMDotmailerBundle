@@ -2,18 +2,17 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Connector;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
-
 class AddressBookConnector extends AbstractDotmailerConnector
 {
     const TYPE = 'address_book';
+    const IMPORT_JOB = 'dotmailer_address_book_import';
 
     /**
      * {@inheritdoc}
      */
     protected function getConnectorSource()
     {
-        return new AddressBookIterator($this->transport);
+        return $this->transport->getAddressBooks();
     }
 
     /**
@@ -29,7 +28,7 @@ class AddressBookConnector extends AbstractDotmailerConnector
      */
     public function getImportJobName()
     {
-        // TODO: Implement getImportJobName() method.
+        return self::IMPORT_JOB;
     }
 
     /**

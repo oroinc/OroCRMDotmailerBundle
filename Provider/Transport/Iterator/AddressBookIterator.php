@@ -2,21 +2,26 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use DotMailer\Api\Resources\IResources;
 
 class AddressBookIterator extends AbstractIterator
 {
     /**
-     * @var DotmailerTransport
+     * {@inheritdoc}
      */
-    protected $transport;
+    protected $batchSize = 100;
 
     /**
-     * @param DotmailerTransport $transport
+     * @var IResources
      */
-    public function __construct(DotmailerTransport $transport)
+    protected $resources;
+
+    /**
+     * @param IResources $resources
+     */
+    public function __construct(IResources $resources)
     {
-        $this->transport = $transport;
+        $this->resources = $resources;
     }
 
     /**
@@ -24,6 +29,8 @@ class AddressBookIterator extends AbstractIterator
      */
     protected function getItems($take, $skip)
     {
-        return $this->transport->getAddressBooks($take, $skip);
+        $apiAddressBookList = $this->resources->GetAddressBooks($take, $skip)
+            ->toArray();
+        return $apiAddressBookList;
     }
 }
