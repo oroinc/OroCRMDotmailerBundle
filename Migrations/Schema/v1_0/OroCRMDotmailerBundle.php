@@ -8,6 +8,9 @@ use Oro\Bundle\MigrationBundle\Migration\Migration;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 use Oro\Bundle\MigrationBundle\Migration\OrderedMigrationInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ */
 class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
 {
     /**
@@ -27,6 +30,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      * {@inheritdoc}
      */
     public function up(Schema $schema, QueryBag $queries)

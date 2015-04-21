@@ -17,6 +17,7 @@ abstract class AbstractDotmailerConnector extends AbstractConnector
      * @var ManagerRegistry
      */
     protected $managerRegistry;
+
     /**
      * @var string
      */
@@ -44,9 +45,8 @@ abstract class AbstractDotmailerConnector extends AbstractConnector
     public function getLastSyncDate()
     {
         $repository = $this->managerRegistry->getRepository('OroIntegrationBundle:Status');
-        /**
-         * @var Status $status
-         */
+
+        /** @var Status $status */
         $status = $repository->findOneBy(
             [
                 'code' => Status::STATUS_COMPLETED,
@@ -57,6 +57,7 @@ abstract class AbstractDotmailerConnector extends AbstractConnector
                 'date' => 'DESC'
             ]
         );
+
         $date = new \DateTime('now', new \DateTimeZone('UTC'));
         $context = $this->getStepExecution()->getExecutionContext();
         $data = $context->get(ConnectorInterface::CONTEXT_CONNECTOR_DATA_KEY) ?: [];
@@ -65,9 +66,11 @@ abstract class AbstractDotmailerConnector extends AbstractConnector
             ConnectorInterface::CONTEXT_CONNECTOR_DATA_KEY,
             $data
         );
+
         if (!$status) {
             return null;
         }
+
         $data = $status->getData();
         if (empty($data) || empty($data[self::LAST_SYNC_DATE_KEY])) {
             return null;
