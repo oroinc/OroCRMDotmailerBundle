@@ -27,8 +27,8 @@ class CampaignIterator extends AbstractIterator
 
     /**
      * @param IResources $dotmailerResources
-     * @param int $batchSize
-     * @param Collection|AddressBook[] $addressBooks
+     * @param array      $addressBooks
+     * @param int        $batchSize
      */
     public function __construct(IResources $dotmailerResources, $addressBooks, $batchSize = self::BATCH_SIZE)
     {
@@ -43,7 +43,7 @@ class CampaignIterator extends AbstractIterator
     protected function tryToLoadItems()
     {
         /** Requests count optimization */
-        if ($this->lastPage && $this->indexAddressBook == count($this->addressBooks) - 1) {
+        if (!$this->addressBooks || $this->lastPage && ($this->indexAddressBook == count($this->addressBooks))) {
             return false;
         }
 
