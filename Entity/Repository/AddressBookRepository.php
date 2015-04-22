@@ -20,7 +20,7 @@ class AddressBookRepository extends EntityRepository
         $qb = $this->createQueryBuilder('a');
 
         $qb
-            ->select('a.id')
+            ->select('a.originId')
             ->where('a.channel = :channel AND a.marketingList IS NOT NULL')
             ->setParameter('channel', $channel);
 

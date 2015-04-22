@@ -4,12 +4,15 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
 
 use DotMailer\Api\Resources\IResources;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
+
 use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 use OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
 
 class DotmailerTransport implements TransportInterface
 {
@@ -24,11 +27,18 @@ class DotmailerTransport implements TransportInterface
     protected $dotmailerResourcesFactory;
 
     /**
-     * @param DotmailerResourcesFactory $dotmailerResourcesFactory
+     * @var ManagerRegistry
      */
-    public function __construct(DotmailerResourcesFactory $dotmailerResourcesFactory)
+    protected $managerRegistry;
+
+    /**
+     * @param DotmailerResourcesFactory $dotmailerResourcesFactory
+     * @param ManagerRegistry $managerRegistry
+     */
+    public function __construct(DotmailerResourcesFactory $dotmailerResourcesFactory, ManagerRegistry $managerRegistry)
     {
         $this->dotmailerResourcesFactory = $dotmailerResourcesFactory;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
