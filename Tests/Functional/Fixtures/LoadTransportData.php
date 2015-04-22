@@ -38,7 +38,7 @@ class LoadTransportData extends AbstractFixture
         foreach ($this->data as $item) {
             $transport = new DotmailerTransport();
             $transport->setUsername($item['username']);
-            $transport->setUsername($item['password']);
+            $transport->setPassword($item['password']);
 
             $manager->persist($transport);
             $this->setReference($item['reference'], $transport);
