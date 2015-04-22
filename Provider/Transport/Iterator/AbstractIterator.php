@@ -108,8 +108,9 @@ abstract class AbstractIterator implements \Iterator
     }
 
     /**
-     * @param int $take Count of requested records
-     * @param int $skip Count of skipped records
+     * @param int $select Count of requested records
+     * @param int $skip   Count of skipped records
+     *
      * @return array
      */
     abstract protected function getItems($take, $skip);
@@ -124,11 +125,13 @@ abstract class AbstractIterator implements \Iterator
 
     /**
      * @param int $batchSize
+     *
      * @return AbstractIterator
      */
     public function setBatchSize($batchSize)
     {
         $this->batchSize = $batchSize;
+
         return $this;
     }
 }
