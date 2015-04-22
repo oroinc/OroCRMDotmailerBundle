@@ -204,7 +204,7 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
     /**
      * @var Collection
      *
-     * @ORM\ManyToMany(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\AddressBook", inversedBy="campaigns")
+     * @ORM\ManyToMany(targetEntity="AddressBook", inversedBy="campaigns")
      * @ORM\JoinTable(name="orocrm_dm_campaign_to_ab",
      *      joinColumns={@ORM\JoinColumn(name="campaign_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="address_book_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -220,12 +220,27 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
     protected $addressBooks;
 
     /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="Activity", mappedBy="campaign", cascade={"all"})
+     * @ConfigField(
+     *      defaultValues={
+     *          "importexport"={
+     *              "excluded"=true
+     *          }
+     *      }
+     * )
+     */
+    protected $activities;
+
+    /**
      * Initialize collections
      */
     public function __construct()
     {
         parent::__construct();
         $this->addressBooks = new ArrayCollection();
+        $this->activities = new ArrayCollection();
     }
 
     /**
@@ -536,6 +551,63 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
     public function hasAddressBooks()
     {
         return !$this->getAddressBooks()->isEmpty();
+    }
+
+    /**
+     * @return Collection|Activity[]
+     */
+    public function getActivities()
+    {
+        return $this->activities;
+    }
+
+    /**
+     * @param Collection|Activity[] $activities
+     *
+     * @return Campaign
+     */
+    public function setActivities($activities)
+    {
+        $this->activities = $activities;
+
+        return $this;
+    }
+
+    /**
+     * @param Activity $activity
+     *
+     * @return Campaign
+     */
+    public function addActivity(Activity $activity)
+    {
+        if (!$this->getActivities()->contains($activity)) {
+            $this->getActivities()->add($activity);
+            $activity->setCampaign($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Activity $activity
+     *
+     * @return Campaign
+     */
+    public function removeActivity(Activity $activity)
+    {
+        if ($this->getActivities()->contains($activity)) {
+            $this->getActivities()->removeElement($activity);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasActivities()
+    {
+        return !$this->getActivities()->isEmpty();
     }
 
     /**

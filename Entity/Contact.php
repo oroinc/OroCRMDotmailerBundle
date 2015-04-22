@@ -166,6 +166,20 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     protected $addressBooks;
 
     /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="Activity", mappedBy="contact", cascade={"all"})
+     * @ConfigField(
+     *      defaultValues={
+     *          "importexport"={
+     *              "excluded"=true
+     *          }
+     *      }
+     * )
+     */
+    protected $activities;
+
+    /**
      * @var Organization
      *
      * @ORM\ManyToOne(targetEntity="Oro\Bundle\OrganizationBundle\Entity\Organization")
@@ -221,6 +235,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     {
         parent::__construct();
         $this->addressBooks = new ArrayCollection();
+        $this->activities = new ArrayCollection();
     }
 
     /**
@@ -510,6 +525,63 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     public function hasAddressBooks()
     {
         return !$this->getAddressBooks()->isEmpty();
+    }
+
+    /**
+     * @return Collection|Activity[]
+     */
+    public function getActivities()
+    {
+        return $this->activities;
+    }
+
+    /**
+     * @param Collection|Activity[] $activities
+     *
+     * @return Contact
+     */
+    public function setActivities($activities)
+    {
+        $this->activities = $activities;
+
+        return $this;
+    }
+
+    /**
+     * @param Activity $activity
+     *
+     * @return Contact
+     */
+    public function addActivity(Activity $activity)
+    {
+        if (!$this->getActivities()->contains($activity)) {
+            $this->getActivities()->add($activity);
+            $activity->setContact($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Activity $activity
+     *
+     * @return Contact
+     */
+    public function removeActivity(Activity $activity)
+    {
+        if ($this->getActivities()->contains($activity)) {
+            $this->getActivities()->removeElement($activity);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasActivities()
+    {
+        return !$this->getActivities()->isEmpty();
     }
 
     /**

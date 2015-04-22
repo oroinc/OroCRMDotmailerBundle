@@ -9,6 +9,7 @@ use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 use OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
 
 class DotmailerTransport implements TransportInterface
 {
@@ -46,6 +47,14 @@ class DotmailerTransport implements TransportInterface
         }
 
         $this->dotmailerResources = $this->dotmailerResourcesFactory->createResources($username, $password);
+    }
+
+    /**
+     * @return \Iterator
+     */
+    public function getAddressBooks()
+    {
+        return new AddressBookIterator($this->dotmailerResources);
     }
 
     /**
