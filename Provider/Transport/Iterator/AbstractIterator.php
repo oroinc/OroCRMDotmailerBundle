@@ -22,7 +22,7 @@ abstract class AbstractIterator implements \Iterator
     /**
      * @var int
      */
-    protected $batchSize = 10000;
+    protected $batchSize = 1000;
 
     /**
      * @var bool
@@ -108,7 +108,7 @@ abstract class AbstractIterator implements \Iterator
     }
 
     /**
-     * @param int $select Count of requested records
+     * @param int $take   Count of requested records
      * @param int $skip   Count of skipped records
      *
      * @return array

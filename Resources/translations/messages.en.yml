@@ -15,3 +15,6 @@ orocrm:
             address_book:
                 label: Address book Connector
                 job: Import Address books from Dotmailer
+            unsubscribed_contacts:
+                label: Unsubscribed Contacts Connector
+                job: Import Unsubscribed Contacts from Dotmailer

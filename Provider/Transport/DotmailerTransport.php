@@ -8,6 +8,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
 use OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactsIterator;
 
 class DotmailerTransport implements TransportInterface
 {
@@ -53,6 +54,11 @@ class DotmailerTransport implements TransportInterface
     public function getAddressBooks()
     {
         return new AddressBookIterator($this->dotmailerResources);
+    }
+
+    public function getUnsubscribedContacts(array $addressBooks, $lastSyncDate)
+    {
+        return new UnsubscribedContactsIterator($this->dotmailerResources, $addressBooks, $lastSyncDate);
     }
 
     /**
