@@ -10,7 +10,6 @@ use Oro\Bundle\ImportExportBundle\Processor\ImportProcessor as BaseImportProcess
 
 class ImportProcessor extends BaseImportProcessor implements StepExecutionAwareInterface
 {
-
     /**
      * @var ContextRegistry
      */
@@ -23,7 +22,6 @@ class ImportProcessor extends BaseImportProcessor implements StepExecutionAwareI
     {
         $this->contextRegistry = $contextRegistry;
     }
-
 
     /**
      * @param StepExecution $stepExecution

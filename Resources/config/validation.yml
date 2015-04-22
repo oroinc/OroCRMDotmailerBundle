@@ -15,10 +15,6 @@ OroCRM\Bundle\DotmailerBundle\Entity\AddressBook:
     properties:
         channel:
             - NotBlank: ~
-        campaigns:
-            - NotBlank: ~
-        contacts:
-            - NotBlank: ~
         name:
             - NotBlank: ~
             - Length:
