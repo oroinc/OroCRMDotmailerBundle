@@ -43,6 +43,19 @@ class CampaignDataConverter extends AbstractTableDataConverter
      */
     protected function getBackendHeader()
     {
-        throw new \Exception('Normalization is not implemented!');
+        return
+            [
+                'id',
+                'name',
+                'subject',
+                'fromName',
+                'fromAddress',
+                'htmlContent',
+                'plainTextContent',
+                'replyAction',
+                'replyToAddress',
+                'isSplitTest',
+                'status',
+            ];
     }
 }
