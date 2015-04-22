@@ -67,10 +67,9 @@ class CampaignIterator extends AbstractIterator
         if ($this->lastPage) {
             //next addressBook
 
-            if (empty($this->addressBooks[$this->indexAddressBook])) {
+            if (empty($this->addressBooks[++$this->indexAddressBook])) {
                 return [];
             }
-            $this->indexAddressBook++;
             $this->isValid = true;
             $this->lastPage = false;
             $this->items = [];

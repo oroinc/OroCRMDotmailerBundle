@@ -15,14 +15,14 @@ class CampaignDataConverter extends AbstractTableDataConverter
             'id' => 'originId',
             'name' => 'name',
             'subject' => 'subject',
-            'fromName' => 'fromName',
-            'fromAddress' => 'fromAddress',
-            'htmlContent' => 'htmlContent',
-            'plainTextContent' => 'plainTextContent',
-            'replyAction' => 'replyAction',
-            'replyToAddress' => 'replyToAddress',
-            'isSplitTest' => 'isSplitTest',
-            'status' => 'status',
+            'fromname' => 'fromName',
+            'fromaddress' => 'fromAddress',
+            'htmlcontent' => 'htmlContent',
+            'plaintextcontent' => 'plainTextContent',
+            'replyaction' => 'reply_action:id',
+            'replytoaddress' => 'replyToAddress',
+            'issplittest' => 'isSplitTest',
+            'status' => 'status:id',
         ];
     }
 
@@ -31,8 +31,8 @@ class CampaignDataConverter extends AbstractTableDataConverter
      */
     public function convertToImportFormat(array $importedRecord, $skipNullValues = true)
     {
-        if (is_array($importedRecord['fromAddress'])) {
-            $importedRecord['fromAddress'] = $importedRecord['fromAddress']['email'];
+        if (is_array($importedRecord['fromaddress'])) {
+            $importedRecord['fromaddress'] = $importedRecord['fromaddress']['email'];
         }
 
         return parent::convertToImportFormat($importedRecord, $skipNullValues);
@@ -48,13 +48,13 @@ class CampaignDataConverter extends AbstractTableDataConverter
                 'id',
                 'name',
                 'subject',
-                'fromName',
-                'fromAddress',
-                'htmlContent',
-                'plainTextContent',
-                'replyAction',
-                'replyToAddress',
-                'isSplitTest',
+                'fromname',
+                'fromaddress',
+                'htmlcontent',
+                'plaintextcontent',
+                'replyaction',
+                'replytoaddress',
+                'issplittest',
                 'status',
             ];
     }
