@@ -20,6 +20,7 @@ class OroCRMDotmailerBundleInstaller implements Installation
     }
 
     /**
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      * {@inheritdoc}
      */
     public function up(Schema $schema, QueryBag $queries)
