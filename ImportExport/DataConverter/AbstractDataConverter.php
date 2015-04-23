@@ -8,9 +8,6 @@ abstract class AbstractDataConverter extends AbstractTableDataConverter
 {
     const NULL_VALUE = 'null';
 
-    const XS_BOOLEAN_TRUE = 'true';
-    const XS_BOOLEAN_FALSE = 'false';
-
     /**
      * {@inheritdoc}
      */
@@ -24,26 +21,5 @@ abstract class AbstractDataConverter extends AbstractTableDataConverter
                 return $item !== self::NULL_VALUE;
             }
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function convertToImportFormat(array $importedRecord, $skipNullValues = true)
-    {
-        $importedRecord = parent::convertToImportFormat($importedRecord, $skipNullValues);
-
-        array_walk_recursive(
-            $importedRecord,
-            function(&$value) {
-                if ($value === self::XS_BOOLEAN_FALSE) {
-                    $value = false;
-                } elseif ($value == self::XS_BOOLEAN_TRUE) {
-                    $value = true;
-                }
-            }
-        );
-
-        return $importedRecord;
     }
 }

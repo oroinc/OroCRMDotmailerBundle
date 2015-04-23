@@ -29,6 +29,7 @@ parameters:
 
     #serializer
     orocrm_dotmailer.importexport.normalizer.enum.class:              OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer\EnumNormalizer
+    orocrm.dotmailer.importexport.normalizer.configurable.class:      OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer\ConfigurableEntityNormalizer
 
 services:
 
@@ -48,7 +49,6 @@ services:
         class: %orocrm_dotmailer.transport.integration_transport.class%
         arguments:
             - @orocrm_dotmailer.transport.resources_factory
-            - @doctrine
         tags:
             - { name: oro_integration.transport, type: dotmailer_api, channel_type: dotmailer }
 
@@ -123,5 +123,13 @@ services:
     #serializer
     orocrm_dotmailer.importexport.normalizer.enum:
         class: %orocrm_dotmailer.importexport.normalizer.enum.class%
+        tags:
+            - { name: oro_importexport.normalizer, priority: 20 }
+
+    orocrm.dotmailer.importexport.normalizer.configurable:
+        parent: oro_importexport.serializer.configurable_entity_normalizer
+        class: %orocrm.dotmailer.importexport.normalizer.configurable.class%
+        calls:
+            - [setManagerRegistry, [@doctrine]]
         tags:
             - { name: oro_importexport.normalizer, priority: 20 }

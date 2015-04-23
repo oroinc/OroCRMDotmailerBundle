@@ -27,6 +27,7 @@ class LoadMarketingListData extends AbstractFixture implements ContainerAwareInt
             'name'          => 'list1',
             'entity'        => 'CB\Bundle\WebsphereBundle\Entity\Subscriber',
             'type'          => 'dynamic',
+            'owner'         => 'orocrm_dotmailer.user.john.doe',
             'organization'  => 'orocrm_dotmailer.organization.foo',
             'reference'     => 'orocrm_dotmailer.marketing_list.first'
         ],
@@ -34,6 +35,7 @@ class LoadMarketingListData extends AbstractFixture implements ContainerAwareInt
             'name'          => 'list2',
             'entity'        => 'CB\Bundle\WebsphereBundle\Entity\Subscriber',
             'type'          => 'dynamic',
+            'owner'         => 'orocrm_dotmailer.user.john.doe',
             'organization'  => 'orocrm_dotmailer.organization.foo',
             'reference'     => 'orocrm_dotmailer.marketing_list.second'
         ],
@@ -68,7 +70,7 @@ class LoadMarketingListData extends AbstractFixture implements ContainerAwareInt
     public function getDependencies()
     {
         return [
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadOrganizationData',
+            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadUserData',
         ];
     }
 }

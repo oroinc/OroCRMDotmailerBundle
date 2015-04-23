@@ -50,7 +50,7 @@ class LoadAddressBookData extends AbstractFixture implements ContainerAwareInter
     {
         foreach ($this->data as $data) {
             $entity = new AddressBook();
-            $data['visibility'] = $this->findEnum($manager, 'dm_ab_visibility', $data['visibility']);
+            $data['visibility'] = $this->findEnum('dm_ab_visibility', $data['visibility']);
             $this->resolveReferenceIfExist($data, 'channel');
             $this->resolveReferenceIfExist($data, 'marketingList');
             $this->resolveReferenceIfExist($data, 'owner');

@@ -4,11 +4,8 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
 
 use DotMailer\Api\Resources\IResources;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-
 use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 use OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
@@ -27,18 +24,11 @@ class DotmailerTransport implements TransportInterface
     protected $dotmailerResourcesFactory;
 
     /**
-     * @var ManagerRegistry
-     */
-    protected $managerRegistry;
-
-    /**
      * @param DotmailerResourcesFactory $dotmailerResourcesFactory
-     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(DotmailerResourcesFactory $dotmailerResourcesFactory, ManagerRegistry $managerRegistry)
+    public function __construct(DotmailerResourcesFactory $dotmailerResourcesFactory)
     {
         $this->dotmailerResourcesFactory = $dotmailerResourcesFactory;
-        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -92,18 +82,13 @@ class DotmailerTransport implements TransportInterface
     }
 
     /**
-     * @param Channel $channel
+     * @param array $aBooksToSynchronize
      * @return \Iterator
      */
-    public function getCampaigns(Channel $channel)
+    public function getCampaigns(array $aBooksToSynchronize = [])
     {
-        // Synchronize only campaigns that are connected to subscriber lists that are used within OroCRM.
-        $aBooksToSynchronize = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBook')
-            ->getAddressBooksToSync($channel);
-
         if (!$aBooksToSynchronize) {
-            return new \ArrayIterator();
+            return new \EmptyIterator();
         }
 
         return new CampaignIterator($this->dotmailerResources, $aBooksToSynchronize);

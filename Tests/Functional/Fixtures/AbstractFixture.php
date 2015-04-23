@@ -21,6 +21,11 @@ abstract class AbstractFixture extends BaseFixture implements ContainerAwareInte
     protected $container;
 
     /**
+     * @var ObjectManager
+     */
+    protected $manager;
+
+    /**
      * @var PropertyAccessor
      */
     protected $propertyAccessor = false;
@@ -56,11 +61,12 @@ abstract class AbstractFixture extends BaseFixture implements ContainerAwareInte
 
     /**
      * @param string $date
+     * @param string $dateFormat
      * @return \DateTime
      */
-    protected function convertDate($date)
+    protected function convertDate($date, $dateFormat = 'Y-m-d')
     {
-        return date_create_from_format('Y-m-d', $date);
+        return date_create_from_format($dateFormat, $date);
     }
 
     /**
@@ -75,16 +81,15 @@ abstract class AbstractFixture extends BaseFixture implements ContainerAwareInte
     }
 
     /**
-     * @param ObjectManager $manager
      * @param string $enumCode
      * @param mixed $id
      * @return AbstractEnumValue
      */
-    protected function findEnum(ObjectManager $manager, $enumCode, $id)
+    protected function findEnum($enumCode, $id)
     {
         $enumClass = ExtendHelper::buildEnumValueClassName($enumCode);
 
-        return $manager->getRepository($enumClass)->find($id);
+        return $this->manager->getRepository($enumClass)->find($id);
     }
 
     /**
@@ -93,5 +98,6 @@ abstract class AbstractFixture extends BaseFixture implements ContainerAwareInte
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
+        $this->manager = $container->get('doctrine')->getManager();
     }
 }

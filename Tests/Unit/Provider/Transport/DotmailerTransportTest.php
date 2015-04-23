@@ -16,24 +16,14 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
      */
     protected $factory;
 
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $manager;
-
     protected function setUp()
     {
         $this->factory = $this->getMock(
             'OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory'
         );
 
-        $this->manager = $this->getMock(
-            'Doctrine\Common\Persistence\ManagerRegistry'
-        );
-
         $this->target = new DotmailerTransport(
-            $this->factory,
-            $this->manager
+            $this->factory
         );
     }
 
@@ -114,20 +104,8 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
 
     public function testGetCampaignsWithoutAddressBooks()
     {
-        $channel = $this->getMock('Oro\Bundle\IntegrationBundle\Entity\Channel');
-        $repository = $this->getMockBuilder('OroCRM\Bundle\DotmailerBundle\Entity\Repository\AddressBookRepository')
-            ->disableOriginalConstructor()->getMock();
-        $aBooksToSynchronize = [];
-
-        $repository->expects($this->once())
-            ->method('getAddressBooksToSync')
-            ->will($this->returnValue($aBooksToSynchronize));
-        $this->manager->expects($this->once())
-            ->method('getRepository')
-            ->will($this->returnValue($repository));
-
-        $iterator = $this->target->getCampaigns($channel);
-        $this->assertInstanceOf('\ArrayIterator', $iterator);
+        $iterator = $this->target->getCampaigns([]);
+        $this->assertInstanceOf('\EmptyIterator', $iterator);
     }
 
     public function testGetCampaignsWithAddressBooks()
@@ -158,19 +136,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
 
         $this->target->init($transport);
 
-        $channel = $this->getMock('Oro\Bundle\IntegrationBundle\Entity\Channel');
-        $repository = $this->getMockBuilder('OroCRM\Bundle\DotmailerBundle\Entity\Repository\AddressBookRepository')
-            ->disableOriginalConstructor()->getMock();
-        $aBooksToSynchronize = [0 => ['id' => 15645]];
-
-        $repository->expects($this->once())
-            ->method('getAddressBooksToSync')
-            ->will($this->returnValue($aBooksToSynchronize));
-        $this->manager->expects($this->once())
-            ->method('getRepository')
-            ->will($this->returnValue($repository));
-
-        $iterator = $this->target->getCampaigns($channel);
+        $iterator = $this->target->getCampaigns([0 => ['id' => 15645]]);
         $this->assertInstanceOf(
             'OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator',
             $iterator
