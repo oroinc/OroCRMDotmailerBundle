@@ -113,7 +113,7 @@ abstract class AbstractIterator implements \Iterator
      *
      * @return array
      */
-    abstract protected function getItems($select, $skip);
+    abstract protected function getItems($take, $skip);
 
     /**
      * @return int

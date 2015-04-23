@@ -10,3 +10,14 @@ OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransport:
             - Length:
                 min: 8
                 max: 255
+
+OroCRM\Bundle\DotmailerBundle\Entity\AddressBook:
+    properties:
+        channel:
+            - NotBlank: ~
+        name:
+            - NotBlank: ~
+            - Length:
+                max: 255
+        owner:
+            - NotBlank: ~

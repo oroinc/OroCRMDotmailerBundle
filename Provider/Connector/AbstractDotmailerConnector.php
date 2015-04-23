@@ -8,7 +8,11 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Entity\Status;
 use Oro\Bundle\IntegrationBundle\Provider\AbstractConnector;
 use Oro\Bundle\IntegrationBundle\Provider\ConnectorInterface;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
+/**
+ * @property DotmailerTransport $transport
+ */
 abstract class AbstractDotmailerConnector extends AbstractConnector
 {
     const LAST_SYNC_DATE_KEY = 'lastSyncDate';
@@ -85,5 +89,13 @@ abstract class AbstractDotmailerConnector extends AbstractConnector
     protected function getChannel()
     {
         return $this->contextMediator->getChannel($this->getContext());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getImportEntityFQCN()
+    {
+        return $this->entityName;
     }
 }

@@ -1,0 +1,16 @@
+connector:
+    name: oro_importexport
+    jobs:
+        dotmailer_address_book_import:
+            title: orocrm.dotmailer.connector.address_book.job
+            type: import
+            steps:
+                import:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.connector.address_book
+                        processor: orocrm_dotmailer.importexport.processor.address_book
+                        writer:    oro_integration.writer.persistent_batch_writer
+                    parameters:
+                        batch_size: 25
