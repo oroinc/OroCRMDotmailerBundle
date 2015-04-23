@@ -46,14 +46,12 @@ class LoadMarketingListData extends AbstractFixture implements ContainerAwareInt
      */
     public function load(ObjectManager $manager)
     {
-        $userManager = $this->container->get('oro_user.manager');
-        $admin = $userManager->findUserByEmail(LoadAdminUserData::DEFAULT_ADMIN_EMAIL);
         $listTypeRepository = $manager->getRepository('OroCRMMarketingListBundle:MarketingListType');
 
         foreach ($this->data as $data) {
             $entity = new MarketingList();
             $data['type']       = $listTypeRepository->find($data['type']);
-            $data['owner']      = $admin;
+            $this->resolveReferenceIfExist($data, 'owner');
             $this->resolveReferenceIfExist($data, 'organization');
             $this->setEntityPropertyValues($entity, $data, ['reference']);
 
