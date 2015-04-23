@@ -14,3 +14,17 @@ connector:
                         writer:    oro_integration.writer.persistent_batch_writer
                     parameters:
                         batch_size: 25
+
+        dotmailer_campaign_import:
+            title: orocrm.dotmailer.connector.campaign.job
+            type: import
+            steps:
+                import:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.connector.campaign
+                        processor: orocrm_dotmailer.importexport.processor.campaign
+                        writer:    oro_integration.writer.persistent_batch_writer
+                    parameters:
+                        batch_size: 100

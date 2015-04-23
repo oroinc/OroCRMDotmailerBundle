@@ -5,9 +5,10 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
+
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory;
 
-class AbstractImportTest extends WebTestCase
+abstract class AbstractImportTest extends WebTestCase
 {
     const RESOURCES_FACTORY_ID = 'orocrm_dotmailer.transport.resources_factory';
 

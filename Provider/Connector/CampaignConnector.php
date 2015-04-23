@@ -2,16 +2,22 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Connector;
 
-class CampaignsConnector extends AbstractDotmailerConnector
+class CampaignConnector extends AbstractDotmailerConnector
 {
     const TYPE = 'campaign';
+    const JOB_IMPORT = 'dotmailer_campaign_import';
 
     /**
      * {@inheritdoc}
      */
     protected function getConnectorSource()
     {
-        return new \EmptyIterator();
+        // Synchronize only campaigns that are connected to subscriber lists that are used within OroCRM.
+        $aBooksToSynchronize = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->getAddressBooksToSyncOriginIds($this->getChannel());
+
+        return $this->transport->getCampaigns($aBooksToSynchronize);
     }
 
     /**
@@ -27,7 +33,7 @@ class CampaignsConnector extends AbstractDotmailerConnector
      */
     public function getImportJobName()
     {
-        // TODO: Implement getImportJobName() method.
+        return self::JOB_IMPORT;
     }
 
     /**

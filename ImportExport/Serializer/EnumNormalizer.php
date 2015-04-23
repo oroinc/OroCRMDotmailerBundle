@@ -5,6 +5,7 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\DenormalizerInterface;
 use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\NormalizerInterface;
+
 use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
 
 class EnumNormalizer implements NormalizerInterface, DenormalizerInterface
@@ -47,8 +48,8 @@ class EnumNormalizer implements NormalizerInterface, DenormalizerInterface
      */
     public function supportsDenormalization($data, $type, $format = null, array $context = [])
     {
-        return is_a($type, 'Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue',
-            true) && $context['channelType'] = ChannelType::TYPE;
+        return is_a($type, 'Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue', true)
+            && $context['channelType'] == ChannelType::TYPE;
     }
 
     /**

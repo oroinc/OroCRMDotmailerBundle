@@ -4,11 +4,27 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
 use Doctrine\Common\Util\ClassUtils;
 
+use Oro\Bundle\IntegrationBundle\ImportExport\Helper\DefaultOwnerHelper;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\ImportExportBundle\Strategy\Import\ConfigurableAddOrReplaceStrategy;
+
 use OroCRM\Bundle\DotmailerBundle\Entity\OriginAwareInterface;
 
 class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
 {
+    /**
+     * @var DefaultOwnerHelper
+     */
+    protected $ownerHelper;
+
+    /**
+     * @param DefaultOwnerHelper $ownerHelper
+     */
+    public function setOwnerHelper($ownerHelper)
+    {
+        $this->ownerHelper = $ownerHelper;
+    }
+
     /**
      * @param object $entity
      * @return object
@@ -22,6 +38,8 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
             ->getRepository('OroIntegrationBundle:Channel')
             ->getOrLoadById($this->context->getOption('channel'));
         $entity->setChannel($channel);
+
+        $this->setOwner($entity);
 
         return $entity;
     }
@@ -43,5 +61,18 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
         }
 
         return $entity;
+    }
+
+    /**
+     * @param object $entity
+     */
+    protected function setOwner($entity)
+    {
+        if ($entity instanceof OriginAwareInterface) {
+            /** @var Channel $channel */
+            $channel = $this->databaseHelper->getEntityReference($entity->getChannel());
+
+            $this->ownerHelper->populateChannelOwner($entity, $channel);
+        }
     }
 }

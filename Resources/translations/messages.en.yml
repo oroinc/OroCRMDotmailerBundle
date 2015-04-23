@@ -8,6 +8,7 @@ orocrm:
                 label: Username
             password:
                 label: Password
+
         connector:
             campaign:
                 label: Campaign Connector
