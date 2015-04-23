@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
+use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
@@ -39,9 +40,11 @@ class AddressBookTest extends \PHPUnit_Framework_TestCase
         $now = new \DateTime('now');
         $channel = new Channel();
         $organization = $this->getMock('Oro\Bundle\OrganizationBundle\Entity\Organization');
+        $marketingList = new MarketingList();
 
         return array(
             'channel' => array('channel', $channel, $channel),
+            'marketingList' => array('marketingList', $marketingList, $marketingList),
             'name' => array('name', 'testName', 'testName'),
             'contactCount' => array('contactCount', 10, 10),
             'createdAt' => array('createdAt', $now, $now),
