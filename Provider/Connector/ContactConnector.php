@@ -5,13 +5,14 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Connector;
 class ContactConnector extends AbstractDotmailerConnector
 {
     const TYPE = 'contact';
+    const IMPORT_JOB = 'dotmailer_new_contacts';
 
     /**
      * {@inheritdoc}
      */
     protected function getConnectorSource()
     {
-        return new \EmptyIterator();
+        return $this->transport->getContacts($this->getChannel());
     }
 
     /**
@@ -25,17 +26,9 @@ class ContactConnector extends AbstractDotmailerConnector
     /**
      * {@inheritdoc}
      */
-    public function getImportEntityFQCN()
-    {
-        return 'OroCRM\Bundle\DotmailerBundle\Entity\Contact';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getImportJobName()
     {
-        return 'new_dotmailer_contacts';
+        return self::IMPORT_JOB;
     }
 
     /**

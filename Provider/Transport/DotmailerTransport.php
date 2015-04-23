@@ -67,7 +67,7 @@ class DotmailerTransport implements TransportInterface
     {
         $aBooksToSynchronize = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBook')
-            ->getAddressBooksToSync($channel);
+            ->getAddressBookIdsToSync($channel);
 
         if (!$aBooksToSynchronize) {
             return new \ArrayIterator();
