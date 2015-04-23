@@ -48,7 +48,7 @@ class EnumNormalizer implements NormalizerInterface, DenormalizerInterface
     public function supportsDenormalization($data, $type, $format = null, array $context = [])
     {
         return is_a($type, 'Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue',
-            true) && $context['channelType'] = ChannelType::TYPE;
+            true) && $context['channelType'] == ChannelType::TYPE;
     }
 
     /**

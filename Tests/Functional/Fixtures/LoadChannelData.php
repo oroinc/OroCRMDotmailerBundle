@@ -2,7 +2,6 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -10,8 +9,9 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignsConnector;
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
@@ -28,19 +28,19 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
     protected $data = [
         [
             'name' => 'first channel',
-            'connectors' => [CampaignsConnector::TYPE, AddressBookConnector::TYPE],
+            'connectors' => [CampaignConnector::TYPE, AddressBookConnector::TYPE],
             'transport' => 'orocrm_dotmailer.transport.first',
             'reference' => 'orocrm_dotmailer.channel.first'
         ],
         [
             'name' => 'second channel',
-            'connectors' => [CampaignsConnector::TYPE, AddressBookConnector::TYPE],
+            'connectors' => [CampaignConnector::TYPE, AddressBookConnector::TYPE],
             'transport' => 'orocrm_dotmailer.transport.second',
             'reference' => 'orocrm_dotmailer.channel.second'
         ],
         [
             'name' => 'second third',
-            'connectors' => [CampaignsConnector::TYPE, AddressBookConnector::TYPE],
+            'connectors' => [CampaignConnector::TYPE, AddressBookConnector::TYPE],
             'transport' => 'orocrm_dotmailer.transport.third',
             'reference' => 'orocrm_dotmailer.channel.third'
         ]

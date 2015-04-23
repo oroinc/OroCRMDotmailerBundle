@@ -14,3 +14,30 @@ connector:
                         writer:    oro_integration.writer.persistent_batch_writer
                     parameters:
                         batch_size: 25
+        dotmailer_unsubscribed_contacts_import:
+            title: orocrm.dotmailer.connector.unsubscribed_contacts.job
+            type: import
+            steps:
+                import:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.connector.unsubscribed_contacts
+                        processor: orocrm_dotmailer.importexport.processor.unsubscribed_contacts
+                        writer:    oro_integration.writer.persistent_batch_writer
+                    parameters:
+                        batch_size: 25
+
+        dotmailer_unsubscribed_from_account_contacts_import:
+            title: orocrm.dotmailer.connector.unsubscribed_from_account_contacts.job
+            type: import
+            steps:
+                import:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.connector.unsubscribed_from_account_contacts
+                        processor: orocrm_dotmailer.importexport.processor.unsubscribed_from_account_contacts
+                        writer:    oro_integration.writer.persistent_batch_writer
+                    parameters:
+                        batch_size: 25

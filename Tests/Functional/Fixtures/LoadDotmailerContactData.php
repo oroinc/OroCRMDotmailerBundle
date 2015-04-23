@@ -71,7 +71,8 @@ class LoadDotmailerContactData extends AbstractFixture implements ContainerAware
     function getDependencies()
     {
         return [
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData'
+            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData',
+            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData',
         ];
     }
 }

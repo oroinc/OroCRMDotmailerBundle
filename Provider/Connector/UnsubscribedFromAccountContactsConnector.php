@@ -2,10 +2,10 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Connector;
 
-class UnsubscribedContactsConnector extends AbstractDotmailerConnector
+class UnsubscribedFromAccountContactsConnector extends AbstractDotmailerConnector
 {
-    const TYPE = 'unsubscribed_contacts';
-    const IMPORT_JOB = 'dotmailer_unsubscribed_contacts_import';
+    const TYPE = 'unsubscribed_from_account_contacts';
+    const IMPORT_JOB = 'dotmailer_unsubscribed_from_account_contacts_import';
 
     /**
      * {@inheritdoc}
@@ -17,10 +17,7 @@ class UnsubscribedContactsConnector extends AbstractDotmailerConnector
             return new \EmptyIterator();
         }
 
-        $addressBooks = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBook')
-            ->getAddressBooksToSync($this->getChannel());
-
-        return $this->transport->getUnsubscribedContacts($addressBooks, $lastSyncDate);
+        return $this->transport->getUnsubscribedFromAccountsContacts($lastSyncDate);
     }
 
     /**
@@ -28,7 +25,7 @@ class UnsubscribedContactsConnector extends AbstractDotmailerConnector
      */
     public function getLabel()
     {
-        return 'orocrm.dotmailer.connector.unsubscribed_contacts.label';
+        return 'orocrm.dotmailer.connector.unsubscribed_from_account_contacts.label';
     }
 
     /**
