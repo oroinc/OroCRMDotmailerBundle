@@ -8,9 +8,10 @@ orocrm:
                 label: Username
             password:
                 label: Password
+
         connector:
             campaign:
-                label: Dotmailer Campaign Connector
+                label: Campaign Connector
                 job: Import campaigns from Dotmailer
             address_book:
                 label: Address book Connector

@@ -5,6 +5,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
+
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory;
 
 abstract class AbstractImportTest extends WebTestCase

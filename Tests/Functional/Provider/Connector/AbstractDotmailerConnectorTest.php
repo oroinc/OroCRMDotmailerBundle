@@ -4,7 +4,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Provider\Connector;
 
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignsConnector;
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 
 /**
  * @dbIsolation
@@ -73,7 +73,13 @@ class AbstractDotmailerConnectorTest extends WebTestCase
         )
             ->disableOriginalConstructor()
             ->getMock();
-        $transport = $this->getMock('Oro\Bundle\IntegrationBundle\Provider\TransportInterface');
+        $transport = $this->getMockBuilder('Oro\Bundle\IntegrationBundle\Provider\TransportInterface')
+            ->setMethods(['init', 'getLabel', 'getSettingsFormType', 'getSettingsEntityFQCN', 'getCampaigns'])
+            ->getMock();
+        $iterator = $this->getMock('\Iterator');
+        $transport->expects($this->any())
+            ->method('getCampaigns')
+            ->will($this->returnValue($iterator));
         $this->contextMediator->expects($this->any())
             ->method('getTransport')
             ->will($this->returnValue($transport));
@@ -88,7 +94,7 @@ class AbstractDotmailerConnectorTest extends WebTestCase
             ->method('getChannel')
             ->will($this->returnValue($this->getReference($channel)));
 
-        $connector = new CampaignsConnector(
+        $connector = new CampaignConnector(
             $this->getContainer()
                 ->get('oro_importexport.context_registry'),
             $this->getContainer()

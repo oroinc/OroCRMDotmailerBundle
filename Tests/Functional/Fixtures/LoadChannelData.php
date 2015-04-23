@@ -6,16 +6,17 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\AbstractFixture as BaseAbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
-use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
-class LoadChannelData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
+use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
+
+class LoadChannelData extends BaseAbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
     /**
      * @var ContainerInterface
@@ -49,7 +50,7 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
     /**
      * {@inheritdoc}
      */
-    function load(ObjectManager $manager)
+    public function load(ObjectManager $manager)
     {
         $userManager = $this->container->get('oro_user.manager');
         $admin = $userManager->findUserByEmail(LoadAdminUserData::DEFAULT_ADMIN_EMAIL);
@@ -82,7 +83,7 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
     /**
      * {@inheritdoc}
      */
-    function getDependencies()
+    public function getDependencies()
     {
         return [
             'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadTransportData'

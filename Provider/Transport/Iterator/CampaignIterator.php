@@ -4,10 +4,6 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use DotMailer\Api\Resources\IResources;
 
-use Doctrine\Common\Collections\Collection;
-
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-
 class CampaignIterator extends AbstractIterator
 {
     /**
@@ -26,14 +22,17 @@ class CampaignIterator extends AbstractIterator
     protected $indexAddressBook = 0;
 
     /**
+     * {@inheritdoc}
+     */
+    protected $batchSize = 100;
+
+    /**
      * @param IResources $dotmailerResources
      * @param array      $addressBooks
-     * @param int        $batchSize
      */
-    public function __construct(IResources $dotmailerResources, $addressBooks, $batchSize = self::BATCH_SIZE)
+    public function __construct(IResources $dotmailerResources, $addressBooks)
     {
         $this->dotmailerResources = $dotmailerResources;
-        $this->batchSize = $batchSize;
         $this->addressBooks = $addressBooks;
     }
 
@@ -68,10 +67,9 @@ class CampaignIterator extends AbstractIterator
         if ($this->lastPage) {
             //next addressBook
 
-            if (empty($this->addressBooks[$this->indexAddressBook])) {
+            if (empty($this->addressBooks[++$this->indexAddressBook])) {
                 return [];
             }
-            $this->indexAddressBook++;
             $this->isValid = true;
             $this->lastPage = false;
             $this->items = [];
@@ -79,13 +77,13 @@ class CampaignIterator extends AbstractIterator
             $this->pageNumber = 0;
 
             $items = $this->dotmailerResources->GetAddressBookCampaigns(
-                $this->addressBooks[$this->indexAddressBook],
+                $this->addressBooks[$this->indexAddressBook]['originId'],
                 $select,
                 0
             );
         } else {
             $items = $this->dotmailerResources->GetAddressBookCampaigns(
-                $this->addressBooks[$this->indexAddressBook],
+                $this->addressBooks[$this->indexAddressBook]['originId'],
                 $select,
                 $skip
             );

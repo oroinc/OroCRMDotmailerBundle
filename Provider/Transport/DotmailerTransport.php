@@ -9,6 +9,7 @@ use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
 
 use OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactsIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactsIterator;
 
@@ -106,5 +107,18 @@ class DotmailerTransport implements TransportInterface
     public function getSettingsEntityFQCN()
     {
         return 'OroCRM\\Bundle\\DotmailerBundle\\Entity\\DotmailerTransport';
+    }
+
+    /**
+     * @param array $aBooksToSynchronize
+     * @return \Iterator
+     */
+    public function getCampaigns(array $aBooksToSynchronize = [])
+    {
+        if (!$aBooksToSynchronize) {
+            return new \EmptyIterator();
+        }
+
+        return new CampaignIterator($this->dotmailerResources, $aBooksToSynchronize);
     }
 }

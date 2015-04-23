@@ -2,15 +2,15 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\AbstractFixture as BaseAbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Oro\Bundle\IntegrationBundle\Entity\Status;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignsConnector;
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 
-class LoadStatusData extends AbstractFixture implements DependentFixtureInterface
+class LoadStatusData extends BaseAbstractFixture implements DependentFixtureInterface
 {
     /**
      * @var array
@@ -19,31 +19,31 @@ class LoadStatusData extends AbstractFixture implements DependentFixtureInterfac
         [
             'channel' => 'orocrm_dotmailer.channel.first',
             'code' => Status::STATUS_FAILED,
-            'connector' => CampaignsConnector::TYPE,
+            'connector' => CampaignConnector::TYPE,
             'date' => '2015-11-11'
         ],
         [
             'channel' => 'orocrm_dotmailer.channel.second',
             'code' => Status::STATUS_COMPLETED,
-            'connector' => CampaignsConnector::TYPE,
+            'connector' => CampaignConnector::TYPE,
             'date' => '2015-01-01'
         ],
         [
             'channel' => 'orocrm_dotmailer.channel.second',
             'code' => Status::STATUS_COMPLETED,
-            'connector' => CampaignsConnector::TYPE,
+            'connector' => CampaignConnector::TYPE,
             'date' => '2015-10-10'
         ],
         [
             'channel' => 'orocrm_dotmailer.channel.second',
             'code' => Status::STATUS_FAILED,
-            'connector' => CampaignsConnector::TYPE,
+            'connector' => CampaignConnector::TYPE,
             'date' => '2015-11-11'
         ],
         [
             'channel' => 'orocrm_dotmailer.channel.third',
             'code' => Status::STATUS_COMPLETED,
-            'connector' => CampaignsConnector::TYPE,
+            'connector' => CampaignConnector::TYPE,
             'date' => '2015-11-11'
         ],
     ];

@@ -2,14 +2,12 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-
-use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 
 class LoadAddressBookData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
@@ -24,33 +22,42 @@ class LoadAddressBookData extends AbstractFixture implements ContainerAwareInter
      */
     protected $data = [
         [
-            'name'          => 'first address book',
-            'originid'      => 1234,
+            'originId'      => 11,
+            'name'          => 'test1',
+            'contactCount'  => 23,
+            'visibility'    => 'Private',
             'channel'       => 'orocrm_dotmailer.channel.first',
-            'marketingList' => 'orocrm_dotmailer.marketing_list.first',
+            'marketingList' => null,
+            'owner'         => 'orocrm_dotmailer.organization.foo',
             'reference'     => 'orocrm_dotmailer.address_book.first'
+        ],
+        [
+            'originId'      => 12,
+            'name'          => 'test2',
+            'contactCount'  => 2,
+            'visibility'    => 'Private',
+            'channel'       => 'orocrm_dotmailer.channel.first',
+            'marketingList' => 'orocrm_dotmailer.marketing_list.second',
+            'owner'         => 'orocrm_dotmailer.organization.foo',
+            'reference'     => 'orocrm_dotmailer.address_book.second'
         ],
     ];
 
     /**
      * {@inheritdoc}
      */
-    function load(ObjectManager $manager)
+    public function load(ObjectManager $manager)
     {
-        $userManager = $this->container->get('oro_user.manager');
-        $admin = $userManager->findUserByEmail(LoadAdminUserData::DEFAULT_ADMIN_EMAIL);
+        foreach ($this->data as $data) {
+            $entity = new AddressBook();
+            $data['visibility'] = $this->findEnum('dm_ab_visibility', $data['visibility']);
+            $this->resolveReferenceIfExist($data, 'channel');
+            $this->resolveReferenceIfExist($data, 'marketingList');
+            $this->resolveReferenceIfExist($data, 'owner');
+            $this->setEntityPropertyValues($entity, $data, ['reference']);
 
-        foreach ($this->data as $item) {
-            $addressBook = new AddressBook();
-            $addressBook->setOwner($admin->getOrganization());
-            $addressBook->setChannel($this->getReference($item['channel']));
-            $addressBook->setOriginId($item['originId']);
-            $addressBook->setMarketingList($this->getReference($item['marketingList']));
-            $addressBook->setName($item['name']);
-
-            $manager->persist($addressBook);
-
-            $this->setReference($item['reference'], $addressBook);
+            $this->addReference($data['reference'], $entity);
+            $manager->persist($entity);
         }
 
         $manager->flush();
@@ -59,15 +66,7 @@ class LoadAddressBookData extends AbstractFixture implements ContainerAwareInter
     /**
      * {@inheritdoc}
      */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    function getDependencies()
+    public function getDependencies()
     {
         return [
             'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadMarketingListData',

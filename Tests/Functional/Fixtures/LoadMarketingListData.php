@@ -2,17 +2,17 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\Persistence\ObjectManager;
-
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingListType;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 
-class LoadMarketingListData extends AbstractFixture implements ContainerAwareInterface
+use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
+
+use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
+
+class LoadMarketingListData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
     /**
      * @var ContainerInterface
@@ -24,6 +24,21 @@ class LoadMarketingListData extends AbstractFixture implements ContainerAwareInt
      */
     protected $data = [
         [
+            'name'          => 'list1',
+            'entity'        => 'CB\Bundle\WebsphereBundle\Entity\Subscriber',
+            'type'          => 'dynamic',
+            'owner'         => 'orocrm_dotmailer.user.john.doe',
+            'organization'  => 'orocrm_dotmailer.organization.foo',
+            'reference'     => 'orocrm_dotmailer.marketing_list.first'
+        ],
+        [
+            'name'          => 'list2',
+            'entity'        => 'CB\Bundle\WebsphereBundle\Entity\Subscriber',
+            'type'          => 'dynamic',
+            'owner'         => 'orocrm_dotmailer.user.john.doe',
+            'organization'  => 'orocrm_dotmailer.organization.foo',
+            'reference'     => 'orocrm_dotmailer.marketing_list.second'
+        ],
             'name'          => 'first marketing list',
             'reference'     => 'orocrm_dotmailer.marketing_list.first'
         ],
@@ -32,23 +47,19 @@ class LoadMarketingListData extends AbstractFixture implements ContainerAwareInt
     /**
      * {@inheritdoc}
      */
-    function load(ObjectManager $manager)
+    public function load(ObjectManager $manager)
     {
-        $userManager = $this->container->get('oro_user.manager');
-        $admin = $userManager->findUserByEmail(LoadAdminUserData::DEFAULT_ADMIN_EMAIL);
-        $type = $this->container->get('doctrine')
-            ->getRepository('OroCRMMarketingListBundle:MarketingListType')->find(MarketingListType::TYPE_STATIC);
+        $listTypeRepository = $manager->getRepository('OroCRMMarketingListBundle:MarketingListType');
 
-        foreach ($this->data as $item) {
-            $marketingList = new MarketingList();
-            $marketingList->setOwner($admin);
-            $marketingList->setName($item['name']);
-            $marketingList->setEntity($this->container->getParameter('orocrm_contact.entity.class'));
-            $marketingList->setType($type);
+        foreach ($this->data as $data) {
+            $entity = new MarketingList();
+            $data['type']       = $listTypeRepository->find($data['type']);
+            $this->resolveReferenceIfExist($data, 'owner');
+            $this->resolveReferenceIfExist($data, 'organization');
+            $this->setEntityPropertyValues($entity, $data, ['reference']);
 
-            $manager->persist($marketingList);
-
-            $this->setReference($item['reference'], $marketingList);
+            $this->addReference($data['reference'], $entity);
+            $manager->persist($entity);
         }
 
         $manager->flush();
@@ -57,8 +68,10 @@ class LoadMarketingListData extends AbstractFixture implements ContainerAwareInt
     /**
      * {@inheritdoc}
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function getDependencies()
     {
-        $this->container = $container;
+        return [
+            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadUserData',
+        ];
     }
 }
