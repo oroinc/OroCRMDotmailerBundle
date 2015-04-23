@@ -2,9 +2,7 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
-use Oro\Bundle\ImportExportBundle\Converter\AbstractTableDataConverter;
-
-class CampaignDataConverter extends AbstractTableDataConverter
+class CampaignDataConverter extends AbstractDataConverter
 {
     /**
      * {@inheritdoc}

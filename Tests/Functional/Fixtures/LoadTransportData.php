@@ -2,12 +2,12 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\AbstractFixture as BaseAbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransport;
 
-class LoadTransportData extends AbstractFixture
+class LoadTransportData extends BaseAbstractFixture
 {
     /**
      * @var array
@@ -38,7 +38,7 @@ class LoadTransportData extends AbstractFixture
         foreach ($this->data as $item) {
             $transport = new DotmailerTransport();
             $transport->setUsername($item['username']);
-            $transport->setUsername($item['password']);
+            $transport->setPassword($item['password']);
 
             $manager->persist($transport);
             $this->setReference($item['reference'], $transport);

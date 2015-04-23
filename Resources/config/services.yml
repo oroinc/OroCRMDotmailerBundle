@@ -92,6 +92,8 @@ services:
     orocrm_dotmailer.importexport.strategy.add_or_replace:
         class: %orocrm_dotmailer.importexport.strategy.add_or_replace.class%
         parent: oro_importexport.strategy.configurable_add_or_replace
+        calls:
+            - [setOwnerHelper, [@oro_integration.helper.default_owner_helper]]
 
     orocrm_dotmailer.importexport.strategy.address_book:
         parent: orocrm_dotmailer.importexport.strategy.add_or_replace

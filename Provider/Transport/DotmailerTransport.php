@@ -92,7 +92,6 @@ class DotmailerTransport implements TransportInterface
     }
 
     /**
-     * @link http://apidocs.mailchimp.com/api/2.0/campaigns/list.php
      * @param Channel $channel
      * @return \Iterator
      */

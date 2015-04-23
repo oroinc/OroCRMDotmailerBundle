@@ -25,3 +25,26 @@ OroCRM\Bundle\DotmailerBundle\Entity\AddressBook:
                 max: 255
         owner:
             - NotBlank: ~
+
+OroCRM\Bundle\DotmailerBundle\Entity\Campaign:
+    properties:
+        channel:
+            - NotBlank: ~
+        name:
+            - NotBlank: ~
+            - Length:
+                max: 255
+        subject:
+            - Length:
+                max: 255
+        fromName:
+            - Length:
+                max: 255
+        fromAddress:
+            - Length:
+                max: 255
+        replyToAddress:
+            - Length:
+                max: 255
+        owner:
+            - NotBlank: ~
