@@ -13,4 +13,4 @@ connector:
                         processor: orocrm_dotmailer.importexport.processor.contact
                         writer:    oro_integration.writer.persistent_batch_writer
                     parameters:
-                        batch_size: 25
+                        batch_size: 100

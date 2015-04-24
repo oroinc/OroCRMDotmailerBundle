@@ -7,7 +7,7 @@ use DotMailer\Api\Resources\IResources;
 class ContactIterator extends AbstractIterator
 {
     /** @var int */
-    protected $batchSize = 100;
+    protected $batchSize = 1000;
 
     /** @var IResources */
     protected $resources;
@@ -34,7 +34,7 @@ class ContactIterator extends AbstractIterator
             $items = $this->resources->GetContacts(false, $select, $skip);
         } else {
             $items = $this->resources->GetContactsModifiedSinceDate(
-                $this->dateSince->format('Y-m-dTH:i:sZ'),
+                $this->dateSince->format('Y-m-d\TH:i:s'),
                 true,
                 $select,
                 $skip
