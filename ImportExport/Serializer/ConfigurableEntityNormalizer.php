@@ -34,9 +34,6 @@ class ConfigurableEntityNormalizer extends BaseNormalizer
         $object = parent::denormalize($data, $class, $format, $context);
 
         $fields = $this->fieldHelper->getFields($class, true);
-        $metadata = $this->registry->getManagerForClass($class)
-            ->getMetadataFactory()
-            ->getMetadataFor($class);
 
         foreach ($fields as $field) {
             $fieldName = $field['name'];

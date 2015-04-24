@@ -8,8 +8,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
-
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 
 class LoadMarketingListData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
@@ -39,8 +37,13 @@ class LoadMarketingListData extends AbstractFixture implements ContainerAwareInt
             'organization'  => 'orocrm_dotmailer.organization.foo',
             'reference'     => 'orocrm_dotmailer.marketing_list.second'
         ],
-            'name'          => 'first marketing list',
-            'reference'     => 'orocrm_dotmailer.marketing_list.first'
+        [
+            'name'          => 'list3',
+            'entity'        => 'CB\Bundle\WebsphereBundle\Entity\Subscriber',
+            'type'          => 'static',
+            'owner'         => 'orocrm_dotmailer.user.john.doe',
+            'organization'  => 'orocrm_dotmailer.organization.foo',
+            'reference'     => 'orocrm_dotmailer.marketing_list.third'
         ],
     ];
 

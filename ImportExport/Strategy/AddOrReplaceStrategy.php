@@ -75,4 +75,12 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
             $this->ownerHelper->populateChannelOwner($entity, $channel);
         }
     }
+
+    protected function assertEnvironment($entity)
+    {
+        if ($entityName = $this->context->getOption('entityName')) {
+            $this->entityName = $entityName;
+        }
+        parent::assertEnvironment($entity);
+    }
 }

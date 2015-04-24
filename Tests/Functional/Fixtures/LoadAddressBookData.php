@@ -41,6 +41,16 @@ class LoadAddressBookData extends AbstractFixture implements ContainerAwareInter
             'owner'         => 'orocrm_dotmailer.organization.foo',
             'reference'     => 'orocrm_dotmailer.address_book.second'
         ],
+        [
+            'originId'      => 25,
+            'name'          => 'test3',
+            'contactCount'  => 4,
+            'visibility'    => 'Private',
+            'channel'       => 'orocrm_dotmailer.channel.second',
+            'marketingList' => 'orocrm_dotmailer.marketing_list.third',
+            'owner'         => 'orocrm_dotmailer.organization.foo',
+            'reference'     => 'orocrm_dotmailer.address_book.third'
+        ],
     ];
 
     /**

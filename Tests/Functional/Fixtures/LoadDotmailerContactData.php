@@ -19,14 +19,16 @@ class LoadDotmailerContactData extends AbstractFixture implements ContainerAware
      */
     protected $data = [
         [
-            'originId' => 42,
-            'channel' => 'orocrm_dotmailer.channel.second',
-            'reference' => 'orocrm_dotmailer.contact.first'
+            'originId'      => 42,
+            'channel'       => 'orocrm_dotmailer.channel.second',
+            'reference'     => 'orocrm_dotmailer.contact.first',
+            'address_books' => ['orocrm_dotmailer.address_book.third']
         ],
         [
-            'originId' => 42,
-            'channel' => 'orocrm_dotmailer.channel.first',
-            'reference' => 'orocrm_dotmailer.contact.second'
+            'originId'      => 42,
+            'channel'       => 'orocrm_dotmailer.channel.first',
+            'reference'     => 'orocrm_dotmailer.contact.second',
+            'address_books' => ['orocrm_dotmailer.address_book.second']
         ],
     ];
 
@@ -48,6 +50,10 @@ class LoadDotmailerContactData extends AbstractFixture implements ContainerAware
             $contact->setOriginId($item['originId']);
             $contact->setOwner($admin->getOrganization());
             $contact->setChannel($this->getReference($item['channel']));
+
+            foreach ($item['address_books'] as $addressBook) {
+                $contact->setAddressBooks($this->getReference($addressBook));
+            }
 
             $manager->persist($contact);
 
