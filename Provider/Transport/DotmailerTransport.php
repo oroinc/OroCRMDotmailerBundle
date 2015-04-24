@@ -2,9 +2,6 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
 
@@ -26,18 +23,11 @@ class DotmailerTransport implements TransportInterface
     protected $dotMailerResFactory;
 
     /**
-     * @var ManagerRegistry
-     */
-    protected $managerRegistry;
-
-    /**
      * @param DotmailerResourcesFactory $dotMailerResFactory
-     * @param ManagerRegistry           $managerRegistry
      */
-    public function __construct(DotmailerResourcesFactory $dotMailerResFactory, ManagerRegistry $managerRegistry)
+    public function __construct(DotmailerResourcesFactory $dotMailerResFactory)
     {
         $this->dotMailerResFactory = $dotMailerResFactory;
-        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -59,21 +49,13 @@ class DotmailerTransport implements TransportInterface
     }
 
     /**
-     * @param Channel $channel
+     * @param \DateTime $dateSince
      *
      * @return ContactIterator
      */
-    public function getContacts(Channel $channel)
+    public function getContacts($dateSince)
     {
-        $aBooksToSynchronize = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBook')
-            ->getAddressBookIdsToSync($channel);
-
-        if (!$aBooksToSynchronize) {
-            return new \ArrayIterator();
-        }
-
-        return new ContactIterator($this->dotmailerResources, $aBooksToSynchronize);
+        return new ContactIterator($this->dotmailerResources, $dateSince);
     }
 
     /**

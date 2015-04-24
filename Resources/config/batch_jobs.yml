@@ -2,8 +2,15 @@ connector:
     name: oro_importexport
     jobs:
         dotmailer_new_contacts:
-            title: "Import new Contacts from dotMailer"
+            title: orocrm.dotmailer.connector.contact.job
             type:  import
             steps:
                 -
-                    title:     new_contact
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.connector.contact
+                        processor: orocrm_dotmailer.importexport.processor.contact
+                        writer:    oro_integration.writer.persistent_batch_writer
+                    parameters:
+                        batch_size: 25

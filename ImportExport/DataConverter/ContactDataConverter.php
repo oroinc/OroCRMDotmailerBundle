@@ -16,7 +16,6 @@ class ContactDataConverter extends AbstractTableDataConverter
             'status'        => 'status:id',
             'optInType'     => 'opt_in_type:id',
             'emailType'     => 'email_type:id',
-            'addressBookId' => 'addressBooks[0]:originId',
         ];
     }
 

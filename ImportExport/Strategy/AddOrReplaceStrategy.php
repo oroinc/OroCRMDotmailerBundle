@@ -46,4 +46,16 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
 
         return $entity;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function assertEnvironment($entity)
+    {
+        if ($entityName = $this->context->getOption('entityName')) {
+            $this->entityName = $entityName;
+        }
+
+        parent::assertEnvironment($entity);
+    }
 }

@@ -12,7 +12,12 @@ class ContactConnector extends AbstractDotmailerConnector
      */
     protected function getConnectorSource()
     {
-        return $this->transport->getContacts($this->getChannel());
+        $channel = $this->getChannel();
+        $dateSince = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:Contact')
+            ->getLastCreatedAt($channel);
+
+        return $this->transport->getContacts($dateSince);
     }
 
     /**
