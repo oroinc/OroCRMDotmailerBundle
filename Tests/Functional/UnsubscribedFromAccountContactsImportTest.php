@@ -15,7 +15,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactsConnect
  * @dbIsolation
  * @dbReindex
  */
-class UnsubscribedContactsImportTest extends AbstractImportTest
+class UnsubscribedFromAccountContactsImportTest extends AbstractImportTest
 {
     protected function setUp()
     {
@@ -30,30 +30,24 @@ class UnsubscribedContactsImportTest extends AbstractImportTest
     }
 
     /**
-     * @dataProvider importUnsubscribedContactsDataProvider
+     * @dataProvider importUnsubscribedFromAccountContactsDataProvider
      *
      * @param array $expected
-     * @param array $apiContactSuppressionLists
+     * @param array $apiContactSuppressionList
      */
-    public function testUnsubscribedContactsImport($expected, $apiContactSuppressionLists)
+    public function testUnsubscribedFromAccountContactsImport($expected, $apiContactSuppressionList)
     {
-        $entityMap = [];
-        foreach ($apiContactSuppressionLists as $addressBookId => $apiContactSuppressionList) {
-            $entity = new ApiContactSuppressionList();
-            foreach ($apiContactSuppressionList as $listItem) {
-                $entity[] = $listItem;
-            }
-            $entityMap[$addressBookId] = $entity;
+        $entity = new ApiContactSuppressionList();
+        foreach ($apiContactSuppressionList as $listItem) {
+            $entity[] = $listItem;
         }
         $this->resource->expects($this->any())
-            ->method('GetAddressBookContactsUnsubscribedSinceDate')
-            ->will($this->returnCallback(function($entityId) use ($entityMap){
-                return $entityMap[$entityId];
-            }));
-
-        $this->resource->expects($this->any())
             ->method('GetContactsUnsubscribedSinceDate')
+            ->will($this->returnValue($entity));
+        $this->resource->expects($this->any())
+            ->method('GetAddressBookContactsUnsubscribedSinceDate')
             ->will($this->returnValue(new ApiContactSuppressionList()));
+
         $channel = $this->getReference('orocrm_dotmailer.channel.third');
 
         $processor = $this->getContainer()->get(SyncCommand::SYNC_PROCESSOR);
@@ -77,16 +71,15 @@ class UnsubscribedContactsImportTest extends AbstractImportTest
             $this->assertCount(1, $actualContacts);
             /** @var Contact $actualContact */
             $actualContact = $actualContacts[0];
-            foreach ($expectedContact['addressBooks'] as &$addressBook) {
-                $addressBook = $this->getReference($addressBook);
-            }
+
             $actualAddressBooks = $actualContact->getAddressBooks()
                 ->toArray();
-            $this->assertEquals($expectedContact['addressBooks'], $actualAddressBooks);
+            $this->assertCount(0, $actualAddressBooks);
         }
     }
 
-    public function importUnsubscribedContactsDataProvider()
+
+    public function importUnsubscribedFromAccountContactsDataProvider()
     {
         return [
             [
@@ -94,25 +87,22 @@ class UnsubscribedContactsImportTest extends AbstractImportTest
                     [
                         'originId'     => 42,
                         'channel'      => 'orocrm_dotmailer.channel.third',
-                        'status'       => ApiContactStatuses::SUBSCRIBED,
+                        'status'       => ApiContactStatuses::UNSUBSCRIBED,
                         'addressBooks' => ['orocrm_dotmailer.address_book.fourth']
                     ]
                 ],
                 'apiContactSuppressionList' => [
-                    '25' => [
-                        [
-                            'suppressedContact' => [
-                                'Id'         => 42,
-                                'Email'      => 'test@mail.com',
-                                'EmailType'  => ApiContactEmailTypes::PLAIN_TEXT,
-                                'DataFields' => [],
-                                'Status'     => ApiContactStatuses::SUBSCRIBED
-                            ],
-                            'dateRemoved'       => '2015-10-10',
-                            'reason'            => ApiContactStatuses::UNSUBSCRIBED
-                        ]
-                    ],
-                    '35' => []
+                    [
+                        'suppressedContact' => [
+                            'Id'         => 42,
+                            'Email'      => 'test@mail.com',
+                            'EmailType'  => ApiContactEmailTypes::PLAIN_TEXT,
+                            'DataFields' => [],
+                            'Status'     => ApiContactStatuses::SUBSCRIBED
+                        ],
+                        'dateRemoved'       => '2015-10-10',
+                        'reason'            => ApiContactStatuses::UNSUBSCRIBED
+                    ]
                 ]
             ]
         ];

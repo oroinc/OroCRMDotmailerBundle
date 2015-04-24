@@ -4,6 +4,8 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
 
 use DotMailer\Api\Resources\IResources;
 
+use Guzzle\Iterator\AppendIterator;
+
 use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
 
@@ -66,10 +68,10 @@ class DotmailerTransport implements TransportInterface
      */
     public function getUnsubscribedContacts(array $addressBooks, \DateTime $lastSyncDate = null)
     {
-        $iterator = new \AppendIterator();
+        $iterator = new AppendIterator();
         foreach ($addressBooks as $addressBook) {
             $iterator->append(
-                new UnsubscribedContactsIterator($this->dotmailerResources, $addressBook, $lastSyncDate)
+                new UnsubscribedContactsIterator($this->dotmailerResources, $addressBook['originId'], $lastSyncDate)
             );
         }
 
@@ -110,15 +112,23 @@ class DotmailerTransport implements TransportInterface
     }
 
     /**
-     * @param array $aBooksToSynchronize
+     * @param array $addressBooks
+     *
      * @return \Iterator
      */
-    public function getCampaigns(array $aBooksToSynchronize = [])
+    public function getCampaigns(array $addressBooks = [])
     {
-        if (!$aBooksToSynchronize) {
+        if (!$addressBooks) {
             return new \EmptyIterator();
         }
 
-        return new CampaignIterator($this->dotmailerResources, $aBooksToSynchronize);
+        $iterator = new AppendIterator();
+        foreach ($addressBooks as $addressBook) {
+            $iterator->append(
+                new CampaignIterator($this->dotmailerResources, $addressBook['originId'])
+            );
+        }
+
+        return $iterator;
     }
 }

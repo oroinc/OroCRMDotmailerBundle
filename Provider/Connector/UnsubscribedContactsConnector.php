@@ -18,7 +18,7 @@ class UnsubscribedContactsConnector extends AbstractDotmailerConnector
         }
 
         $addressBooks = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBook')
-            ->getAddressBooksToSync($this->getChannel());
+            ->getAddressBooksToSyncOriginIds($this->getChannel());
 
         return $this->transport->getUnsubscribedContacts($addressBooks, $lastSyncDate);
     }

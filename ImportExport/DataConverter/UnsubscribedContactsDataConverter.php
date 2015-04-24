@@ -12,10 +12,22 @@ class UnsubscribedContactsDataConverter  extends AbstractTableDataConverter
     protected function getHeaderConversionRules()
     {
         return [
-            'suppressedContact:id' => 'originId',
-            'dateRemoved' => 'dateRemoved',
-            'reason' => 'status:id',
+            'suppressedcontact' => 'originId',
+            'dateremoved'       => 'dateRemoved',
+            'reason'            => 'status:id',
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function convertToImportFormat(array $importedRecord, $skipNullValues = true)
+    {
+        if (is_array($importedRecord['suppressedcontact'])) {
+            $importedRecord['suppressedcontact'] = $importedRecord['suppressedcontact']['id'];
+        }
+
+        return parent::convertToImportFormat($importedRecord, $skipNullValues);
     }
 
     /**

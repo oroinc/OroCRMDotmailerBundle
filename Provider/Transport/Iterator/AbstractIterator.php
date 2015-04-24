@@ -49,9 +49,7 @@ abstract class AbstractIterator implements \Iterator
      */
     public function next()
     {
-        if (next($this->items) === false && !$this->tryToLoadItems()) {
-            $this->isValid = false;
-        } else {
+        if (next($this->items) !== false || $this->tryToLoadItems()) {
             $this->currentItemIndex++;
         }
     }
@@ -67,6 +65,8 @@ abstract class AbstractIterator implements \Iterator
         }
 
         $this->items = $this->getItems($this->batchSize, $this->batchSize * $this->pageNumber);
+        reset($this->items);
+
         if (count($this->items) == 0) {
             return false;
         }
@@ -92,7 +92,8 @@ abstract class AbstractIterator implements \Iterator
      */
     public function valid()
     {
-        return $this->isValid;
+        $isValid = $this->isValid && current($this->items) !== false;
+        return $isValid;
     }
 
     /**
@@ -100,13 +101,13 @@ abstract class AbstractIterator implements \Iterator
      */
     public function rewind()
     {
-        $this->isValid = true;
         $this->lastPage = false;
         $this->items = [];
+        reset($this->items);
         $this->currentItemIndex = 0;
         $this->pageNumber = 0;
 
-        $this->tryToLoadItems();
+        $this->isValid = $this->tryToLoadItems();
     }
 
     /**

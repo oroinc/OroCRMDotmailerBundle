@@ -54,7 +54,9 @@ class UnsubscribedContactsIterator extends AbstractIterator
             );
 
         $contacts = $contacts->toArray();
-        $contacts[self::ADDRESS_BOOK_KEY] = $this->addressBookOriginId;
+        foreach ($contacts as &$contact) {
+            $contact[self::ADDRESS_BOOK_KEY] = $this->addressBookOriginId;
+        }
 
         return $contacts;
     }

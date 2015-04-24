@@ -2,6 +2,7 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactsConnector;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -29,19 +30,19 @@ class LoadChannelData extends BaseAbstractFixture implements ContainerAwareInter
     protected $data = [
         [
             'name' => 'first channel',
-            'connectors' => [CampaignConnector::TYPE, AddressBookConnector::TYPE],
+            'connectors' => [CampaignConnector::TYPE, AddressBookConnector::TYPE, UnsubscribedContactsConnector::TYPE],
             'transport' => 'orocrm_dotmailer.transport.first',
             'reference' => 'orocrm_dotmailer.channel.first'
         ],
         [
             'name' => 'second channel',
-            'connectors' => [CampaignConnector::TYPE, AddressBookConnector::TYPE],
+            'connectors' => [CampaignConnector::TYPE, AddressBookConnector::TYPE, UnsubscribedContactsConnector::TYPE],
             'transport' => 'orocrm_dotmailer.transport.second',
             'reference' => 'orocrm_dotmailer.channel.second'
         ],
         [
-            'name' => 'second third',
-            'connectors' => [CampaignConnector::TYPE, AddressBookConnector::TYPE],
+            'name' => 'third channel',
+            'connectors' => [CampaignConnector::TYPE, AddressBookConnector::TYPE, UnsubscribedContactsConnector::TYPE],
             'transport' => 'orocrm_dotmailer.transport.third',
             'reference' => 'orocrm_dotmailer.channel.third'
         ]
