@@ -3,6 +3,7 @@
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
+use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 
 class UnsubscribedFromAccountStrategy extends AbstractImportStrategy
 {
@@ -12,7 +13,7 @@ class UnsubscribedFromAccountStrategy extends AbstractImportStrategy
     public function process($entity)
     {
         if (!$entity instanceof Contact) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf(
                     'Argument must be an instance of "%s", but "%s" is given',
                     'OroCRM\Bundle\DotmailerBundle\Entity\Contact',
@@ -22,7 +23,7 @@ class UnsubscribedFromAccountStrategy extends AbstractImportStrategy
         }
 
         if (!$this->getChannel()) {
-            throw new \RuntimeException('Channel not found');
+            throw new RuntimeException('Channel not found');
         }
 
         $contact = $this->registry->getRepository('OroCRMDotmailerBundle:Contact')

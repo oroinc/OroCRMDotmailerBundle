@@ -4,6 +4,7 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
+use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactsIterator;
 
 class UnsubscribedContactsStrategy extends AbstractImportStrategy
@@ -24,7 +25,7 @@ class UnsubscribedContactsStrategy extends AbstractImportStrategy
         }
 
         if (!$this->getChannel()) {
-            throw new \RuntimeException('Channel not found');
+            throw new RuntimeException('Channel not found');
         }
 
         $contact = $this->registry->getRepository('OroCRMDotmailerBundle:Contact')
@@ -44,7 +45,7 @@ class UnsubscribedContactsStrategy extends AbstractImportStrategy
         $originalValue = $this->context->getValue('itemData');
 
         if (empty($originalValue[UnsubscribedContactsIterator::ADDRESS_BOOK_KEY])) {
-            throw new \RuntimeException('Address book id required');
+            throw new RuntimeException('Address book id required');
         }
         $addressBook = $this->registry->getRepository('OroCRMDotmailerBundle:AddressBook')
             ->findOneBy(

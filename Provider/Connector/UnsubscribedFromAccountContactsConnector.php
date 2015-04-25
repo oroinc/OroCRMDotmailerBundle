@@ -13,10 +13,6 @@ class UnsubscribedFromAccountContactsConnector extends AbstractDotmailerConnecto
     protected function getConnectorSource()
     {
         $lastSyncDate = $this->getLastSyncDate();
-        if (!$lastSyncDate) {
-            return new \EmptyIterator();
-        }
-
         return $this->transport->getUnsubscribedFromAccountsContacts($lastSyncDate);
     }
 

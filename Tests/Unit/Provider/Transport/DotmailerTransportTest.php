@@ -102,13 +102,117 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
         $this->target->init($transport);
     }
 
-    public function testGetCampaignsWithoutAddressBooks()
+    public function testGetUnsubscribedFromAccountsContactsWithoutSyncDate()
     {
-        $iterator = $this->target->getCampaigns([]);
+        $iterator = $this->target->getUnsubscribedFromAccountsContacts();
         $this->assertInstanceOf('\EmptyIterator', $iterator);
     }
 
+    public function testGetUnsubscribedFromAccountsContacts()
+    {
+        $resource = $this->initTransportStub();
+
+        $expectedDate = new \DateTime();
+        $iterator = $this->target->getUnsubscribedFromAccountsContacts($expectedDate);
+        /**
+         * Test iterator initialized with correct address book origin id and last sync date
+         */
+        $contactsList = $this->getMock('\StdClass', ['toArray']);
+        $contactsList->expects($this->once())
+            ->method('toArray')
+            ->will($this->returnValue([]));
+        $resource->expects($this->once())
+            ->method('GetContactsUnsubscribedSinceDate')
+            ->with($expectedDate)
+            ->will($this->returnValue($contactsList));
+        $iterator->rewind();
+    }
+
+    //GetContactsUnsubscribedSinceDate
+    public function testGetUnsubscribedContactsWithoutSyncDate()
+    {
+        $iterator = $this->target->getUnsubscribedContacts([]);
+        $this->assertInstanceOf('\EmptyIterator', $iterator);
+    }
+
+    public function testGetUnsubscribedContactsWithoutAddressBook()
+    {
+        $iterator = $this->target->getCampaigns([]);
+        $this->assertInstanceOf('\Iterator', $iterator);
+
+        $this->assertEquals(0, iterator_count($iterator));
+    }
+
+    public function testGetUnsubscribedContacts()
+    {
+        $resource = $this->initTransportStub();
+
+        $expectedAddressBookOriginId = 15645;
+        $expectedDate = new \DateTime();
+        $iterator = $this->target->getUnsubscribedContacts(
+            [0 => ['originId' => $expectedAddressBookOriginId]],
+            $expectedDate
+        );
+        $this->assertInstanceOf(
+            'Guzzle\Iterator\AppendIterator',
+            $iterator
+        );
+
+        /**
+         * Test iterator initialized with correct address book origin id and last sync date
+         */
+        $contactsList = $this->getMock('\StdClass', ['toArray']);
+        $contactsList->expects($this->once())
+            ->method('toArray')
+            ->will($this->returnValue([]));
+        $resource->expects($this->once())
+            ->method('GetAddressBookContactsUnsubscribedSinceDate')
+            ->with(
+                $expectedAddressBookOriginId,
+                $expectedDate
+            )
+            ->will($this->returnValue($contactsList));
+        $iterator->rewind();
+    }
+
+    public function testGetCampaignsWithoutAddressBooks()
+    {
+        $iterator = $this->target->getCampaigns([]);
+        $this->assertInstanceOf('\Iterator', $iterator);
+
+        $this->assertEquals(0, iterator_count($iterator));
+    }
+
     public function testGetCampaignsWithAddressBooks()
+    {
+        $resource = $this->initTransportStub();
+
+        $expectedAddressBookOriginId = 15645;
+        $iterator = $this->target->getCampaigns([0 => ['originId' => $expectedAddressBookOriginId]]);
+        $this->assertInstanceOf(
+            'Guzzle\Iterator\AppendIterator',
+            $iterator
+        );
+
+        /**
+         * Test iterator initialized with correct address book origin id
+         */
+        $campaignsList = $this->getMock('\StdClass', ['toArray']);
+        $campaignsList->expects($this->once())
+            ->method('toArray')
+            ->will($this->returnValue([]));
+        $resource->expects($this->once())
+            ->method('GetAddressBookCampaigns')
+            ->with($expectedAddressBookOriginId)
+            ->will($this->returnValue($campaignsList));
+        $iterator->rewind();
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @throws \OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException
+     */
+    protected function initTransportStub()
     {
         $username = 'John';
         $password = '42';
@@ -118,7 +222,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
         $settingsBag = $this->getMock(
             'Symfony\Component\HttpFoundation\ParameterBag'
         );
-        $settingsBag->expects($this->exactly(2))
+        $settingsBag->expects($this->any())
             ->method('get')
             ->will($this->returnValueMap(
                 [
@@ -126,20 +230,15 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
                     ['password', null, false, $password],
                 ]
             ));
-        $transport->expects($this->once())
+        $transport->expects($this->any())
             ->method('getSettingsBag')
             ->will($this->returnValue($settingsBag));
         $resource = $this->getMock('DotMailer\Api\Resources\IResources');
-        $this->factory->expects($this->once())
+        $this->factory->expects($this->any())
             ->method('createResources')
             ->will($this->returnValue($resource));
 
         $this->target->init($transport);
-
-        $iterator = $this->target->getCampaigns([0 => ['id' => 15645]]);
-        $this->assertInstanceOf(
-            'OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator',
-            $iterator
-        );
+        return $resource;
     }
 }

@@ -57,11 +57,9 @@ class UnsubscribedFromAccountContactsReader extends IteratorBasedReader
         /** @var DotmailerTransport $transport */
         $transport = $this->contextMediator->getInitializedTransport($channel);
 
-        if ($lastSyncDate = $this->getLastSyncDate()) {
-            $iterator = $transport->getUnsubscribedFromAccountsContacts($lastSyncDate);
-        } else {
-            $iterator =  new \EmptyIterator();
-        }
+        $lastSyncDate = $this->getLastSyncDate();
+        $iterator = $transport->getUnsubscribedFromAccountsContacts($lastSyncDate);
+
 
         $this->setSourceIterator($iterator);
     }

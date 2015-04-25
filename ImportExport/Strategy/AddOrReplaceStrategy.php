@@ -45,6 +45,18 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function validateAndUpdateContext($entity)
+    {
+        if (!$entity) {
+            return $entity;
+        }
+
+        return parent::validateAndUpdateContext($entity);
+    }
+
+    /**
      * @param $entity
      * @return null|object
      * @throws \Doctrine\ORM\ORMException

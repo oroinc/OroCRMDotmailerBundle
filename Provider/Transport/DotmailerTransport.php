@@ -68,6 +68,10 @@ class DotmailerTransport implements TransportInterface
      */
     public function getUnsubscribedContacts(array $addressBooks, \DateTime $lastSyncDate = null)
     {
+        if (!$lastSyncDate) {
+            return new \EmptyIterator();
+        }
+
         $iterator = new AppendIterator();
         foreach ($addressBooks as $addressBook) {
             $iterator->append(
@@ -84,7 +88,28 @@ class DotmailerTransport implements TransportInterface
      */
     public function getUnsubscribedFromAccountsContacts(\DateTime $lastSyncDate = null)
     {
+        if (!$lastSyncDate) {
+            return new \EmptyIterator();
+        }
+
         return new UnsubscribedFromAccountContactsIterator($this->dotmailerResources, $lastSyncDate);
+    }
+
+    /**
+     * @param array $addressBooks
+     *
+     * @return \Iterator
+     */
+    public function getCampaigns(array $addressBooks = [])
+    {
+        $iterator = new AppendIterator();
+        foreach ($addressBooks as $addressBook) {
+            $iterator->append(
+                new CampaignIterator($this->dotmailerResources, $addressBook['originId'])
+            );
+        }
+
+        return $iterator;
     }
 
     /**
@@ -109,26 +134,5 @@ class DotmailerTransport implements TransportInterface
     public function getSettingsEntityFQCN()
     {
         return 'OroCRM\\Bundle\\DotmailerBundle\\Entity\\DotmailerTransport';
-    }
-
-    /**
-     * @param array $addressBooks
-     *
-     * @return \Iterator
-     */
-    public function getCampaigns(array $addressBooks = [])
-    {
-        if (!$addressBooks) {
-            return new \EmptyIterator();
-        }
-
-        $iterator = new AppendIterator();
-        foreach ($addressBooks as $addressBook) {
-            $iterator->append(
-                new CampaignIterator($this->dotmailerResources, $addressBook['originId'])
-            );
-        }
-
-        return $iterator;
     }
 }

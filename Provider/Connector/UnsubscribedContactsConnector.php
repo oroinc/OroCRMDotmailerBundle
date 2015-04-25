@@ -12,14 +12,10 @@ class UnsubscribedContactsConnector extends AbstractDotmailerConnector
      */
     protected function getConnectorSource()
     {
-        $lastSyncDate = $this->getLastSyncDate();
-        if (!$lastSyncDate) {
-            return new \EmptyIterator();
-        }
-
         $addressBooks = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBook')
             ->getAddressBooksToSyncOriginIds($this->getChannel());
 
+        $lastSyncDate = $this->getLastSyncDate();
         return $this->transport->getUnsubscribedContacts($addressBooks, $lastSyncDate);
     }
 
