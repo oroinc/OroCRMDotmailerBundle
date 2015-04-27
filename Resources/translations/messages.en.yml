@@ -2,6 +2,8 @@ orocrm:
     dotmailer:
         channel_type.label: Dotmailer
 
+        integration:
+            select.placeholder: Choose Dotmailer integration
         integration_transport:
             label: Dotmailer
             username:
@@ -9,16 +11,45 @@ orocrm:
             password:
                 label: Password
 
+        addressbook:
+            select.placeholder: Select Address Book
+
         connector:
             campaign:
-                label: Campaign Connector
-                job: Import campaigns from Dotmailer
+                label:  Campaign Connector
+                job:    Import campaigns from Dotmailer
             address_book:
-                label: Address book Connector
-                job: Import Address books from Dotmailer
+                label:  Address book Connector
+                job:    Import Address books from Dotmailer
             unsubscribed_contacts:
-                label: Contacts unsubscribed from Address book Connector
-                job: Contacts unsubscribed from Address book
+                label:  Contacts unsubscribed from Address book Connector
+                job:    Contacts unsubscribed from Address book
             unsubscribed_from_account_contacts:
-                label: Contacts unsubscribed from Account Connector
-                job: Import Contacts unsubscribed from Account
+                label:  Contacts unsubscribed from Account Connector
+                job:    Import Contacts unsubscribed from Account
+
+        connection:
+            name: Dotmailer Connection
+            sync_message: Marketing List scheduled for sync with Dotmailer AddressBook "%address_book%"
+            message:
+                update:                     Dotmailer connection updated
+                connect:                    Connected to Dotmailer
+                disconnect:                 Marketing List disconnected from Dotmailer
+                syncronize_scheduled:       Marketing List scheduled to synchronize with Dotmailer
+                syncronize_schedule_failed: Marketing List synchronization with Dotmailer schedule failed
+            dialog:
+                button:
+                    update: Update
+                    connect: Connect
+                    cancel: Cancel
+                title:
+                    connect: Connect to Dotmailer
+                    update: Dotmailer Connection Settings
+            button:
+                group_name:         Dotmailer
+                connect:            Connect to Dotmailer
+                manage_connection:  Connection Settings
+                synchronize:        Synchronize
+                disconnect:         Disconnect
+            confirmation:
+                disconnect:         Are you sure you want to unlink this Marketing List from Dotmailer

@@ -12,6 +12,9 @@ parameters:
 
     # Forms and Extensions
     orocrm_dotmailer.form.type.integration_transport_settings.class:  OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSettingsType
+    orocrm_dotmailer.form.type.marketing_list_connection.class:       OroCRM\Bundle\DotmailerBundle\Form\Type\MarketingListConnectionType
+    orocrm_dotmailer.form.type.integration_select.class:              OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType
+    orocrm_dotmailer.form.type.address_book_select.class:             OroCRM\Bundle\DotmailerBundle\Form\Type\AddressBookSelectType
 
     #data converters
     orocrm_dotmailer.importexport.data_converter.address_book.class:          OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\AddressBookDataConverter
@@ -42,6 +45,12 @@ parameters:
     orocrm_dotmailer.importexport.normalizer.enum.class:              OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer\EnumNormalizer
     orocrm.dotmailer.importexport.normalizer.configurable.class:      OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer\ConfigurableEntityNormalizer
 
+    #filters
+    orocrm_dotmailer.placeholder.filter.buttons_filter.class:         OroCRM\Bundle\DotmailerBundle\Placeholders\ButtonFilter
+
+    #search handlers
+    dotmailer_address_books
+
 services:
 
     # Forms and Extensions
@@ -49,6 +58,24 @@ services:
         class: %orocrm_dotmailer.form.type.integration_transport_settings.class%
         tags:
             - { name: form.type, alias: "orocrm_dotmailer_transport_setting_type" }
+
+    orocrm_dotmailer.form.type.marketing_list_connection:
+        class: %orocrm_dotmailer.form.type.marketing_list_connection.class%
+        tags:
+            - { name: form.type, alias: "orocrm_dotmailer_marketing_list_connection" }
+
+    orocrm_dotmailer.form.type.integration_select:
+        class: %orocrm_dotmailer.form.type.integration_select.class%
+        arguments:
+            - @doctrine
+            - @oro_security.acl_helper
+        tags:
+            - { name: form.type, alias: "orocrm_dotmailer_integration_select" }
+
+    orocrm_dotmailer.form.type.address_book_select:
+        class: %orocrm_dotmailer.form.type.address_book_select.class%
+        tags:
+            - { name: form.type, alias: "orocrm_dotmailer_address_book_list_select" }
 
     # Integration related services
     orocrm_dotmailer.provider.channel_type:
@@ -198,3 +225,9 @@ services:
             - [setManagerRegistry, [@doctrine]]
         tags:
             - { name: oro_importexport.normalizer, priority: 20 }
+
+    #filters
+    orocrm_dotmailer.placeholder.filter.buttons_filter:
+        class: %orocrm_dotmailer.placeholder.filter.buttons_filter.class%
+        arguments:
+            - @orocrm_marketing_list.provider.contact_information_fields
