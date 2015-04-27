@@ -43,7 +43,7 @@ class UnsubscribedFromAccountContactsIterator extends AbstractIterator
         /** @var ApiContactSuppressionList $contacts */
         $contacts = $this->resources
             ->GetContactsUnsubscribedSinceDate(
-                $this->lastSyncDate,
+                $this->lastSyncDate->format(\DateTime::ISO8601),
                 $take,
                 $skip
             );

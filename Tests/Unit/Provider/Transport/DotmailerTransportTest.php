@@ -123,7 +123,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue([]));
         $resource->expects($this->once())
             ->method('GetContactsUnsubscribedSinceDate')
-            ->with($expectedDate)
+            ->with($expectedDate->format(\DateTime::ISO8601))
             ->will($this->returnValue($contactsList));
         $iterator->rewind();
     }
@@ -169,7 +169,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->method('GetAddressBookContactsUnsubscribedSinceDate')
             ->with(
                 $expectedAddressBookOriginId,
-                $expectedDate
+                $expectedDate->format(\DateTime::ISO8601)
             )
             ->will($this->returnValue($contactsList));
         $iterator->rewind();
