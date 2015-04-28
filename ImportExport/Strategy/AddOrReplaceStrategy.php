@@ -31,7 +31,6 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
      */
     protected function beforeProcessEntity($entity)
     {
-        /** @var OriginAwareInterface $entity */
         $entity = parent::beforeProcessEntity($entity);
 
         $channel = $this->strategyHelper->getEntityManager('OroIntegrationBundle:Channel')
@@ -80,7 +79,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
      */
     protected function setOwner($entity)
     {
-        if ($entity instanceof OriginAwareInterface) {
+        if (is_object($entity) && method_exists($entity, 'getChannel')) {
             /** @var Channel $channel */
             $channel = $this->databaseHelper->getEntityReference($entity->getChannel());
 

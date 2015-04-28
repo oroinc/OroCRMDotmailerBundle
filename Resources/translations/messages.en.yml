@@ -22,3 +22,6 @@ orocrm:
             unsubscribed_from_account_contacts:
                 label: Contacts unsubscribed from Account Connector
                 job: Import Contacts unsubscribed from Account
+            activity_contact:
+                label: Contact Activities Connector
+                job: Import contact activities from Dotmailer
