@@ -15,7 +15,7 @@ class AddressBookRepository extends EntityRepository
      *
      * @return array
      */
-    public function getAddressBookIdsToSync(Channel $channel)
+    public function getAddressBooksToSyncOriginIds(Channel $channel)
     {
         return $this->createQueryBuilder('addressBook')
             ->select('addressBook.originId')

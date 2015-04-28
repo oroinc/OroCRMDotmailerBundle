@@ -33,7 +33,7 @@ class ContactConnector extends AbstractDotmailerConnector
      */
     public function getLabel()
     {
-        return 'orocrm.dotmailer.connector.label';
+        return 'orocrm.dotmailer.connector.contact.label';
     }
 
     /**

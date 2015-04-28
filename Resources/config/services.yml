@@ -23,7 +23,6 @@ parameters:
     orocrm_dotmailer.connector.abstract.class:                        OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector
     orocrm_dotmailer.connector.campaign.class:                        OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector
     orocrm_dotmailer.connector.address_book.class:                    OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector
-    orocrm_dotmailer.connector.campaign.class:                        OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignsConnector
     orocrm_dotmailer.connector.contact.class:                         OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector
 
     #strategy
