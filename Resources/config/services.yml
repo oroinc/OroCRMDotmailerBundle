@@ -1,6 +1,8 @@
 parameters:
     # Entities
     orocrm_dotmailer.entity.transport.class:                          OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransport
+    orocrm_dotmailer.entity.campaign.class:                           OroCRM\Bundle\DotmailerBundle\Entity\Campaign
+    orocrm_dotmailer.entity.address_book.class:                       OroCRM\Bundle\DotmailerBundle\Entity\AddressBook
     orocrm_dotmailer.entity.contact.class:                            OroCRM\Bundle\DotmailerBundle\Entity\Contact
 
     # Integration related services
@@ -11,22 +13,28 @@ parameters:
     # Forms and Extensions
     orocrm_dotmailer.form.type.integration_transport_settings.class:  OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSettingsType
 
-    # Data converters
+    #data converters
+    orocrm_dotmailer.importexport.data_converter.campaign.class:      OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\CampaignDataConverter
+    orocrm_dotmailer.importexport.data_converter.address_book.class:  OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\AddressBookDataConverter
     orocrm_dotmailer.importexport.data_converter.contact.class:       OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactDataConverter
 
-    # Strategy
-    orocrm_dotmailer.importexport.strategy.add_or_replace.class:      OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\AddOrReplaceStrategy
-
-    # Processors
-    orocrm_dotmailer.importexport.processor.import_abstract.class:    OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\ImportProcessor
-
-    # Connectors
+    
+    #connectors
     orocrm_dotmailer.connector.abstract.class:                        OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector
+    orocrm_dotmailer.connector.campaign.class:                        OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector
+    orocrm_dotmailer.connector.address_book.class:                    OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector
     orocrm_dotmailer.connector.campaign.class:                        OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignsConnector
     orocrm_dotmailer.connector.contact.class:                         OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector
 
-    # Serializer
+    #strategy
+    orocrm_dotmailer.importexport.strategy.add_or_replace.class:      OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\AddOrReplaceStrategy
+
+    #processor
+    orocrm_dotmailer.importexport.processor.import_abstract.class:    OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\ImportProcessor
+
+    #serializer
     orocrm_dotmailer.importexport.normalizer.enum.class:              OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer\EnumNormalizer
+    orocrm.dotmailer.importexport.normalizer.configurable.class:      OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer\ConfigurableEntityNormalizer
 
 services:
     # Forms and Extensions
@@ -51,11 +59,7 @@ services:
     orocrm_dotmailer.transport.resources_factory:
         class: %orocrm_dotmailer.transport.resources_factory.class%
 
-    # Data converter
-    orocrm_dotmailer.importexport.data_converter.contact:
-        class: %orocrm_dotmailer.importexport.data_converter.contact.class%
-
-    # Connectors
+    #connectors
     orocrm_dotmailer.connector.abstract:
         abstract: true
         arguments:
@@ -73,12 +77,44 @@ services:
         tags:
             - { name: oro_integration.connector, type: contact, channel_type: dotmailer }
 
-    # Strategy
+    orocrm_dotmailer.connector.campaign:
+        class: %orocrm_dotmailer.connector.campaign.class%
+        parent: orocrm_dotmailer.connector.abstract
+        calls:
+            - [setEntityName, [%orocrm_dotmailer.entity.campaign.class%]]
+        tags:
+            - { name: oro_integration.connector, type: campaign, channel_type: dotmailer }
+
+    orocrm_dotmailer.connector.address_book:
+        class: %orocrm_dotmailer.connector.address_book.class%
+        parent: orocrm_dotmailer.connector.abstract
+        calls:
+            - [setEntityName, [%orocrm_dotmailer.entity.address_book.class%]]
+        tags:
+            - { name: oro_integration.connector, type: address_book, channel_type: dotmailer }
+
+    #data converter
+    orocrm_dotmailer.importexport.data_converter.campaign:
+        class: %orocrm_dotmailer.importexport.data_converter.campaign.class%
+
+    orocrm_dotmailer.importexport.data_converter.address_book:
+        class: %orocrm_dotmailer.importexport.data_converter.address_book.class%
+
+    orocrm_dotmailer.importexport.data_converter.contact:
+        class: %orocrm_dotmailer.importexport.data_converter.contact.class%
+
+
+    #strategy
     orocrm_dotmailer.importexport.strategy.add_or_replace:
         class: %orocrm_dotmailer.importexport.strategy.add_or_replace.class%
         parent: oro_importexport.strategy.configurable_add_or_replace
+        calls:
+            - [setOwnerHelper, [@oro_integration.helper.default_owner_helper]]
 
-    # Processors
+    orocrm_dotmailer.importexport.strategy.address_book:
+        parent: orocrm_dotmailer.importexport.strategy.add_or_replace
+
+    #processor
     orocrm_dotmailer.importexport.processor.import_abstract:
         class: %orocrm_dotmailer.importexport.processor.import_abstract.class%
         parent: oro_importexport.processor.import_abstract
@@ -86,6 +122,20 @@ services:
             - @oro_importexport.context_registry
         abstract: true
 
+    orocrm_dotmailer.importexport.processor.address_book:
+        parent: orocrm_dotmailer.importexport.processor.import_abstract
+        calls:
+            - [setDataConverter, [@orocrm_dotmailer.importexport.data_converter.address_book]]
+            - [setStrategy, [@orocrm_dotmailer.importexport.strategy.address_book]]
+            - [setEntityName, [%orocrm_dotmailer.entity.address_book.class%]]
+
+    orocrm_dotmailer.importexport.processor.campaign:
+        parent: orocrm_dotmailer.importexport.processor.import_abstract
+        calls:
+            - [setDataConverter, [@orocrm_dotmailer.importexport.data_converter.campaign]]
+            - [setStrategy, [@orocrm_dotmailer.importexport.strategy.add_or_replace]]
+            - [setEntityName, [%orocrm_dotmailer.entity.campaign.class%]]
+    
     orocrm_dotmailer.importexport.processor.contact:
         parent: orocrm_dotmailer.importexport.processor.import_abstract
         calls:
@@ -93,8 +143,17 @@ services:
             - [setStrategy, [@orocrm_dotmailer.importexport.strategy.add_or_replace]]
             - [setEntityName, [%orocrm_dotmailer.entity.contact.class%]]
 
-    # Serializer
+    
+    #serializer
     orocrm_dotmailer.importexport.normalizer.enum:
         class: %orocrm_dotmailer.importexport.normalizer.enum.class%
+        tags:
+            - { name: oro_importexport.normalizer, priority: 20 }
+
+    orocrm.dotmailer.importexport.normalizer.configurable:
+        parent: oro_importexport.serializer.configurable_entity_normalizer
+        class: %orocrm.dotmailer.importexport.normalizer.configurable.class%
+        calls:
+            - [setManagerRegistry, [@doctrine]]
         tags:
             - { name: oro_importexport.normalizer, priority: 20 }

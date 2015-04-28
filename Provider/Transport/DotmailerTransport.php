@@ -2,13 +2,15 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
 
+use DotMailer\Api\Resources\IResources;
+
 use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
 
 use OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
-
-use DotMailer\Api\Resources\IResources;
 
 class DotmailerTransport implements TransportInterface
 {
@@ -59,6 +61,14 @@ class DotmailerTransport implements TransportInterface
     }
 
     /**
+     * @return \Iterator
+     */
+    public function getAddressBooks()
+    {
+        return new AddressBookIterator($this->dotmailerResources);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getLabel()
@@ -80,5 +90,18 @@ class DotmailerTransport implements TransportInterface
     public function getSettingsEntityFQCN()
     {
         return 'OroCRM\\Bundle\\DotmailerBundle\\Entity\\DotmailerTransport';
+    }
+
+    /**
+     * @param array $aBooksToSynchronize
+     * @return \Iterator
+     */
+    public function getCampaigns(array $aBooksToSynchronize = [])
+    {
+        if (!$aBooksToSynchronize) {
+            return new \EmptyIterator();
+        }
+
+        return new CampaignIterator($this->dotmailerResources, $aBooksToSynchronize);
     }
 }

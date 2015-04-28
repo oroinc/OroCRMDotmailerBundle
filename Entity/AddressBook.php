@@ -11,6 +11,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
+use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBook;
 
 /**
@@ -106,6 +107,14 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
      * )
      */
     protected $contacts;
+
+    /**
+     * @var MarketingList
+     *
+     * @ORM\OneToOne(targetEntity="OroCRM\Bundle\MarketingListBundle\Entity\MarketingList")
+     * @ORM\JoinColumn(name="marketing_list_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected $marketingList;
 
     /**
      * @var string
@@ -440,6 +449,26 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
             $this->getContacts()->removeElement($contact);
             $contact->removeAddressBook($this);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return MarketingList
+     */
+    public function getMarketingList()
+    {
+        return $this->marketingList;
+    }
+
+    /**
+     * @param MarketingList $marketingList
+     *
+     * @return AddressBook
+     */
+    public function setMarketingList(MarketingList $marketingList = null)
+    {
+        $this->marketingList = $marketingList;
 
         return $this;
     }

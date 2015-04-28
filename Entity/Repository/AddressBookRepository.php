@@ -9,7 +9,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 class AddressBookRepository extends EntityRepository
 {
     /**
-     * Get address book ids which related with marketing lists
+     * Get addressBook Ids which related with marketing lists
      *
      * @param Channel $channel
      *

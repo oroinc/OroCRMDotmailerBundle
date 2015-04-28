@@ -1,4 +1,5 @@
 <?php
+
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Processor;
 
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
@@ -13,6 +14,7 @@ class ImportProcessor extends BaseImportProcessor implements StepExecutionAwareI
      * @var ContextRegistry
      */
     protected $contextRegistry;
+
     /**
      * @param ContextRegistry $contextRegistry
      */
@@ -20,12 +22,14 @@ class ImportProcessor extends BaseImportProcessor implements StepExecutionAwareI
     {
         $this->contextRegistry = $contextRegistry;
     }
+
     /**
      * @param StepExecution $stepExecution
      */
     public function setStepExecution(StepExecution $stepExecution)
     {
         $context = $this->contextRegistry->getByStepExecution($stepExecution);
+
         $this->setImportExportContext($context);
     }
 }

@@ -4,6 +4,8 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 abstract class AbstractIterator implements \Iterator
 {
+    const DEFAULT_BATCH_SIZE = 1000;
+
     /**
      * @var int
      */
@@ -22,7 +24,7 @@ abstract class AbstractIterator implements \Iterator
     /**
      * @var int
      */
-    protected $batchSize = 10000;
+    protected $batchSize = self::DEFAULT_BATCH_SIZE;
 
     /**
      * @var bool
@@ -113,7 +115,7 @@ abstract class AbstractIterator implements \Iterator
      *
      * @return array
      */
-    abstract protected function getItems($select, $skip);
+    abstract protected function getItems($take, $skip);
 
     /**
      * @return int

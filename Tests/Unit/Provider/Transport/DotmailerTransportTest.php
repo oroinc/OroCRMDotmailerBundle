@@ -101,4 +101,45 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
 
         $this->target->init($transport);
     }
+
+    public function testGetCampaignsWithoutAddressBooks()
+    {
+        $iterator = $this->target->getCampaigns([]);
+        $this->assertInstanceOf('\EmptyIterator', $iterator);
+    }
+
+    public function testGetCampaignsWithAddressBooks()
+    {
+        $username = 'John';
+        $password = '42';
+        $transport = $this->getMock(
+            'Oro\Bundle\IntegrationBundle\Entity\Transport'
+        );
+        $settingsBag = $this->getMock(
+            'Symfony\Component\HttpFoundation\ParameterBag'
+        );
+        $settingsBag->expects($this->exactly(2))
+            ->method('get')
+            ->will($this->returnValueMap(
+                [
+                    ['username', null, false, $username],
+                    ['password', null, false, $password],
+                ]
+            ));
+        $transport->expects($this->once())
+            ->method('getSettingsBag')
+            ->will($this->returnValue($settingsBag));
+        $resource = $this->getMock('DotMailer\Api\Resources\IResources');
+        $this->factory->expects($this->once())
+            ->method('createResources')
+            ->will($this->returnValue($resource));
+
+        $this->target->init($transport);
+
+        $iterator = $this->target->getCampaigns([0 => ['id' => 15645]]);
+        $this->assertInstanceOf(
+            'OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator',
+            $iterator
+        );
+    }
 }
