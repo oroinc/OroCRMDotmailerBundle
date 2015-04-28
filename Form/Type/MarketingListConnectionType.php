@@ -9,9 +9,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-
-class MarketingListConnectionType  extends AbstractType
+class MarketingListConnectionType extends AbstractType
 {
     const NAME = 'orocrm_dotmailer_marketing_list_connection';
 
@@ -25,7 +23,7 @@ class MarketingListConnectionType  extends AbstractType
                 'channel',
                 'orocrm_dotmailer_integration_select',
                 [
-                    'label' => 'orocrm.dotmailer.emailcampaign.integration.label',
+                    'label' => 'orocrm.dotmailer.integration.label',
                     'required' => true
                 ]
             )
@@ -33,25 +31,23 @@ class MarketingListConnectionType  extends AbstractType
                 'addressBook',
                 'orocrm_dotmailer_address_book_list_select',
                 [
-                    'label' => 'orocrm.dotmailer.subscriberslist.entity_label',
+                    'label' => 'orocrm.dotmailer.addressbook.entity_label',
                     'required' => true,
                     'channel_field' => 'channel',
-                    'constraints' => [new NotBlank()]
+                    'constraints' => [new NotBlank()],
                 ]
             );
 
         $marketingList = $options['marketingList'];
-        $builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $formEvent) use($marketingList){
-            $originalData = $formEvent->getData();
-            if (!is_array($originalData) ||  empty($originalData['addressBook'])) {
-                return;
-            }
-            /** @var AddressBook $addressBook */
-            $addressBook = $originalData['addressBook'];
-            $addressBook->setMarketingList($marketingList);
-            $formEvent->getForm()
-                ->setData($addressBook);
-        });
+        $builder->get('addressBook')
+            ->addEventListener(
+                FormEvents::POST_SUBMIT,
+                function (FormEvent $formEvent) use ($marketingList) {
+                    $form = $formEvent->getForm();
+                    $addressBook = $form->getData();
+                    $addressBook->setMarketingList($marketingList);
+                }
+            );
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

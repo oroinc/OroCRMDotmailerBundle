@@ -21,6 +21,7 @@ define(['jquery', 'oroui/js/mediator', 'oroui/js/app/components/widget-component
         this.startSyncDelegate = function(){
             var successMessage = this.data('success-message');
             var failMessage = this.data('fail-message');
+            mediator.execute('showLoading');
             $.post(this.data('url')).done(function() {
                 if (successMessage) {
                     mediator.execute('addMessage', 'success', successMessage);
@@ -30,6 +31,8 @@ define(['jquery', 'oroui/js/mediator', 'oroui/js/app/components/widget-component
                 if (successMessage) {
                     mediator.execute('showFlashMessage', 'error', failMessage);
                 }
+            }).always(function(){
+                mediator.execute('hideLoading');
             });
         };
 

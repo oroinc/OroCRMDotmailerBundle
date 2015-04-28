@@ -36,13 +36,12 @@
             {{ form_row(form.channel) }}
             {{ form_row(form.addressBook) }}
         </fieldset>
-
-        {{ form_rest(form) }}
+        {{ form_row(form._token) }}
 
         <div class="widget-actions">
             <button type="reset" class="btn">{{ 'orocrm.dotmailer.connection.dialog.button.cancel'|trans }}</button>
             <button type="submit" class="btn btn-success">
-                {% if entity.id %}
+                {% if entity and entity.id %}
                     {{ 'orocrm.dotmailer.connection.dialog.button.update'|trans }}
                 {% else %}
                     {{ 'orocrm.dotmailer.connection.dialog.button.connect'|trans }}

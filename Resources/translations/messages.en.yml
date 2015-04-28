@@ -4,6 +4,8 @@ orocrm:
 
         integration:
             select.placeholder: Choose Dotmailer integration
+            label: Channel
+
         integration_transport:
             label: Dotmailer
             username:
@@ -12,7 +14,78 @@ orocrm:
                 label: Password
 
         addressbook:
-            select.placeholder: Select Address Book
+            select.placeholder:   Select Address Book
+            entity_label:         Address Book
+            campaigns.label:      Campaign
+            channel.label:        Channel
+            contact_count.label:  Contacts count
+            contacts.label:       Contacts
+            id.label:             Id
+            marketing_list.label: Marketing List
+            name.label:           Name
+            origin_id.label:      Origin Id
+            owner.label:          Owner
+            visibility.label:     Visibility
+
+        activity:
+            entity_label:                 Dotmailer Activity
+            campaign.label:               Campaign
+            channel.label:                Channel
+            contact.label:                Contact
+            date_first_opened.label:      First Opened Date
+            date_last_opened.label:       Last Opened Date
+            date_sent.label:              Sent Date
+            email.label:                  Email
+            first_open_ip.label:          First Open Ip
+            hard_bounced.label:           Hard bounced
+            id.label:                     Id
+            num_clicks.label:             Clicks Number
+            num_estimated_forwards.label: Estimated Forwards Number
+            num_forwards.label:           Forwards Number
+            num_opens.label:              Opens Number
+            num_page_views.label:         Page Views Number
+            num_replies.label:            Replies Number
+            owner.label:                  Owner
+            soft_bounced.label:           Soft Bounced
+            unsubscribed.label:           Unsubscribed
+
+        contact:
+            entity_label:           Dotmailer Contact
+            activities.label:       Activities
+            address_books.label:    Address Books
+            channel.label:          Channel
+            email.label:            Email
+            email_type.label:       Email Type
+            first_name.label:       First Name
+            full_name.label:        Full Name
+            gender.label:           Gender
+            id.label:               Id
+            last_name.label:        Last Name
+            merge_var_values.label: Merge Variable Values
+            opt_in_type.label:      Opt In Type
+            origin_id.label:        Origin Id
+            owner.label:            Owner
+            postcode.label:         Postal Code
+            status.label:           Status
+
+        campaign:
+            entity_label:             Dotmailer Campaign
+            activities.label:         Activities
+            address_books.label:      Address Books
+            channel.label:            Channel
+            from_address.label:       From Address
+            from_name.label:          From Name
+            html_content.label:       Html Content
+            id.label:                 Id
+            is_split_test.label:      Is Split Test
+            name.label:               Name
+            origin_id.label:          Origin Id
+            owner.label:              Owner
+            plain_text_content.label: Plain Text Content
+            reply_action.label:       Reply Action
+            reply_to_address.label:   Reply To Address
+            status.label:             Status
+            subject.label:            Subject
 
         connector:
             campaign:

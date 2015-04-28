@@ -16,6 +16,9 @@ parameters:
     orocrm_dotmailer.form.type.integration_select.class:              OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType
     orocrm_dotmailer.form.type.address_book_select.class:             OroCRM\Bundle\DotmailerBundle\Form\Type\AddressBookSelectType
 
+    #Form handlers
+    orocrm_dotmailer.form.handler.connection_update.class:            OroCRM\Bundle\DotmailerBundle\Form\Handler\ConnectionUpdateFormHandler
+
     #data converters
     orocrm_dotmailer.importexport.data_converter.address_book.class:          OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\AddressBookDataConverter
     orocrm_dotmailer.importexport.data_converter.unsubscribed_contacts.class: OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\UnsubscribedContactsDataConverter
@@ -49,7 +52,7 @@ parameters:
     orocrm_dotmailer.placeholder.filter.buttons_filter.class:         OroCRM\Bundle\DotmailerBundle\Placeholders\ButtonFilter
 
     #search handlers
-    dotmailer_address_books
+    orocrm_dotmailer.form.autocomplete.list.search_handler.class:     OroCRM\Bundle\DotmailerBundle\Autocomplete\AddressBooksSearchHandler
 
 services:
 
@@ -76,6 +79,25 @@ services:
         class: %orocrm_dotmailer.form.type.address_book_select.class%
         tags:
             - { name: form.type, alias: "orocrm_dotmailer_address_book_list_select" }
+
+    orocrm_dotmailer.form.autocomplete.list.search_handler:
+        class: %orocrm_dotmailer.form.autocomplete.list.search_handler.class%
+        arguments:
+            - %orocrm_dotmailer.entity.address_book.class%
+            - ["name"]
+        calls:
+            - [initDoctrinePropertiesByManagerRegistry, ["@doctrine"]]
+            - [setAclHelper,["@oro_security.acl_helper"]]
+        tags:
+            - { name: oro_form.autocomplete.search_handler, alias: "dotmailer_address_books", acl_resource: "orocrm_email_campaign_view" }
+
+    #Form handlers
+    orocrm_dotmailer.form.handler.connection_update:
+        class: %orocrm_dotmailer.form.handler.connection_update.class%
+        arguments:
+            - @doctrine
+            - @request
+        scope: request
 
     # Integration related services
     orocrm_dotmailer.provider.channel_type:

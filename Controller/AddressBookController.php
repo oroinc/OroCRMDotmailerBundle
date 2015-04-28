@@ -21,9 +21,9 @@ class AddressBookController extends Controller
 {
     /**
      * @Route(
-     *      "/syncronize/{entity}",
+     *      "/syncronize/{id}",
      *      name="orocrm_dotmailer_syncronize_adddress_book",
-     *      requirements={"entity"="\d+"}
+     *      requirements={"id"="\d+"}
      * )
      * @Acl(
      *      id="orocrm_dotmailer_address_book_update",
@@ -34,14 +34,17 @@ class AddressBookController extends Controller
      */
     public function synchronizeAddressBook(AddressBook $addressBook)
     {
+        /**
+         * @todo: sync address book address book in task @CBORO-66
+         */
         return new Response();
     }
 
     /**
      * @Route(
-     *      "/marketing-list/disconnect/{entity}",
+     *      "/marketing-list/disconnect/{id}",
      *      name="orocrm_dotmailer_marketing_list_disconnect",
-     *      requirements={"entity"="\d+"}
+     *      requirements={"id"="\d+"}
      * )
      * @Acl(
      *      id="orocrm_dotmailer_address_book_update",
@@ -52,6 +55,14 @@ class AddressBookController extends Controller
      */
     public function disconnectMarketingListAction(AddressBook $addressBook)
     {
+        $em = $this->get('doctrine')
+            ->getManager();
+        $addressBook->setMarketingList(null);
+        /**
+         * @todo: unsubscribe all marketing list items from address book in task @CBORO-66
+         */
+        $em->flush();
+
         return new Response();
     }
 
@@ -67,31 +78,20 @@ class AddressBookController extends Controller
      */
     public function addressBookConnectionUpdateAction(MarketingList $marketingList)
     {
-        $addressBook = $this->getAddressBook($marketingList);
-
         $form = $this->createForm(
             'orocrm_dotmailer_marketing_list_connection',
-            [
-                'addressBook' => $addressBook,
-            ],
-            [
-                'marketingList' => $marketingList
-            ]
+            null,
+            [ 'marketingList' => $marketingList ]
         );
 
-        $em = $this->get('doctrine')->getManager();
-        $request = $this->getRequest();
-        if ($request->isMethod('POST')) {
-            if ($form->submit($request)->isValid()) {
-                $addressBook = $form->getData();
-                $em->persist($addressBook);
-                $em->flush();
-            }
-        }
+        $addressBook = $this->getAddressBook($marketingList);
+        $formData = $addressBook ? ['addressBook' => $addressBook, 'channel' => $addressBook->getChannel()] : [];
+        $savedId = $this->get('orocrm_dotmailer.form.handler.connection_update')->handle($form, $formData);
 
         return [
-            'form' => $form,
-            'entity' => $addressBook
+            'form' => $form->createView(),
+            'entity' => $addressBook,
+            'savedId' => $savedId
         ];
     }
 
