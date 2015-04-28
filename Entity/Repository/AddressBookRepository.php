@@ -19,7 +19,7 @@ class AddressBookRepository extends EntityRepository
     {
         return $this->createQueryBuilder('addressBook')
             ->select('addressBook.originId')
-            ->where('addressBook.channel = :channel AND a.marketingList IS NOT NULL')
+            ->where('addressBook.channel = :channel AND addressBook.marketingList IS NOT NULL')
             ->setParameter('channel', $channel)
             ->getQuery()
             ->getScalarResult();
