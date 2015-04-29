@@ -54,12 +54,12 @@ class UnsubscribedFromAccountContactsReader extends IteratorBasedReader
     {
         $this->context = $context;
         $channel = $this->getChannel();
+
         /** @var DotmailerTransport $transport */
         $transport = $this->contextMediator->getInitializedTransport($channel);
 
         $lastSyncDate = $this->getLastSyncDate();
         $iterator = $transport->getUnsubscribedFromAccountsContacts($lastSyncDate);
-
 
         $this->setSourceIterator($iterator);
     }
@@ -75,6 +75,9 @@ class UnsubscribedFromAccountContactsReader extends IteratorBasedReader
         return $jobExecution->getExecutionContext();
     }
 
+    /**
+     * @return \DateTime|null
+     */
     protected function getLastSyncDate()
     {
         $repository = $this->managerRegistry->getRepository('OroIntegrationBundle:Status');
@@ -82,8 +85,8 @@ class UnsubscribedFromAccountContactsReader extends IteratorBasedReader
         /** @var Status $status */
         $status = $repository->findOneBy(
             [
-                'code' => Status::STATUS_COMPLETED,
-                'channel' => $this->getChannel(),
+                'code'      => Status::STATUS_COMPLETED,
+                'channel'   => $this->getChannel(),
                 'connector' => UnsubscribedContactsConnector::TYPE
             ],
             [
@@ -94,6 +97,7 @@ class UnsubscribedFromAccountContactsReader extends IteratorBasedReader
         if (!$status) {
             return null;
         }
+
         $data = $status->getData();
         if (empty($data) || empty($data[AbstractDotmailerConnector::LAST_SYNC_DATE_KEY])) {
             return null;
