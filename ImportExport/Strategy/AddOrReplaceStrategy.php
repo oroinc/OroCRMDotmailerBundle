@@ -27,6 +27,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
 
     /**
      * @param object $entity
+     *
      * @return object
      */
     protected function beforeProcessEntity($entity)
@@ -58,6 +59,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
 
     /**
      * @param $entity
+     *
      * @return null|object
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
@@ -88,6 +90,9 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
         }
     }
 
+    /**
+     * @param object $entity
+     */
     protected function assertEnvironment($entity)
     {
         if ($entityName = $this->context->getOption('entityName')) {

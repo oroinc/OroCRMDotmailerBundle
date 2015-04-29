@@ -128,7 +128,9 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
         $iterator->rewind();
     }
 
-    //GetContactsUnsubscribedSinceDate
+    /**
+     * GetContactsUnsubscribedSinceDate
+     */
     public function testGetUnsubscribedContactsWithoutSyncDate()
     {
         $iterator = $this->target->getUnsubscribedContacts([]);

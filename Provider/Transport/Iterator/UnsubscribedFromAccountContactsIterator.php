@@ -26,7 +26,7 @@ class UnsubscribedFromAccountContactsIterator extends AbstractIterator
      * @param IResources $resources
      * @param \DateTime  $lastSyncDate
      */
-    public function __construct(IResources $resources, \DateTime $lastSyncDate )
+    public function __construct(IResources $resources, \DateTime $lastSyncDate)
     {
         $this->resources = $resources;
         $this->lastSyncDate = $lastSyncDate;
