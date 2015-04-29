@@ -69,6 +69,7 @@ class DotmailerTransport implements TransportInterface
     /**
      * @param array     $addressBooks
      * @param \DateTime $lastSyncDate
+     *
      * @return UnsubscribedContactsIterator
      */
     public function getUnsubscribedContacts(array $addressBooks, \DateTime $lastSyncDate = null)
@@ -89,6 +90,7 @@ class DotmailerTransport implements TransportInterface
 
     /**
      * @param \DateTime $lastSyncDate
+     *
      * @return UnsubscribedFromAccountContactsIterator
      */
     public function getUnsubscribedFromAccountsContacts(\DateTime $lastSyncDate = null)

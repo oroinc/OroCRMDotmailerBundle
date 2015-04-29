@@ -78,7 +78,6 @@ class UnsubscribedFromAccountContactsImportTest extends AbstractImportTest
         }
     }
 
-
     public function importUnsubscribedFromAccountContactsDataProvider()
     {
         return [

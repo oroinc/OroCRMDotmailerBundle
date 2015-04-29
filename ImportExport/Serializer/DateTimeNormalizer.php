@@ -4,11 +4,12 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer;
 
 use Symfony\Component\Serializer\Exception\RuntimeException;
 
-use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\DateTimeNormalizer as BaseNormalizer;
+use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\DenormalizerInterface;
+use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\NormalizerInterface;
 
 use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
 
-class DateTimeNormalizer extends BaseNormalizer
+class DateTimeNormalizer implements NormalizerInterface, DenormalizerInterface
 {
     /**
      * {@inheritdoc}
@@ -19,9 +20,9 @@ class DateTimeNormalizer extends BaseNormalizer
             return null;
         }
 
-        $datetime = new \DateTime($data);
-
-        if (false === $datetime) {
+        try {
+            $datetime = new \DateTime($data);
+        } catch (\Exception $e) {
             throw new RuntimeException(sprintf('Invalid datetime "%s".', $data));
         }
 
@@ -31,9 +32,9 @@ class DateTimeNormalizer extends BaseNormalizer
     /**
      * {@inheritdoc}
      */
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($object, $format = null, array $context = array())
     {
-        return parent::normalize($object, $format, $context);
+        throw new RuntimeException('Do not support normalization.');
     }
 
     /**
@@ -41,7 +42,15 @@ class DateTimeNormalizer extends BaseNormalizer
      */
     public function supportsDenormalization($data, $type, $format = null, array $context = [])
     {
-        return parent::supportsDenormalization($data, $type, $format, $context)
+        return is_string($data) && $type === 'DateTime' && !empty($context['channelType'])
             && $context['channelType'] == ChannelType::TYPE;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsNormalization($data, $format = null, array $context = [])
+    {
+        return false;
     }
 }

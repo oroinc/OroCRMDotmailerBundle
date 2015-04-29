@@ -48,7 +48,7 @@ class UnsubscribedContactsIterator extends AbstractIterator
         $contacts = $this->resources
             ->GetAddressBookContactsUnsubscribedSinceDate(
                 $this->addressBookOriginId,
-                $this->lastSyncDate,
+                $this->lastSyncDate->format(\DateTime::ISO8601),
                 $take,
                 $skip
             );

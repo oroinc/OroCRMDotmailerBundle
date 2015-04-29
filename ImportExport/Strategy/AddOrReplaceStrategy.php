@@ -8,7 +8,7 @@ use Oro\Bundle\IntegrationBundle\ImportExport\Helper\DefaultOwnerHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\ImportExportBundle\Strategy\Import\ConfigurableAddOrReplaceStrategy;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\OriginAwareInterface;
+use OroCRM\Bundle\DotmailerBundle\Entity\ChannelAwareInterface;
 
 class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
 {
@@ -27,6 +27,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
 
     /**
      * @param object $entity
+     *
      * @return object
      */
     protected function beforeProcessEntity($entity)
@@ -57,6 +58,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
 
     /**
      * @param $entity
+     *
      * @return null|object
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
@@ -79,7 +81,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
      */
     protected function setOwner($entity)
     {
-        if (is_object($entity) && method_exists($entity, 'getChannel')) {
+        if ($entity instanceof ChannelAwareInterface) {
             /** @var Channel $channel */
             $channel = $this->databaseHelper->getEntityReference($entity->getChannel());
 
@@ -87,6 +89,9 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
         }
     }
 
+    /**
+     * @param object $entity
+     */
     protected function assertEnvironment($entity)
     {
         if ($entityName = $this->context->getOption('entityName')) {
