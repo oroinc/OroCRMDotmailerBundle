@@ -2,6 +2,8 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Entity;
 
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
+
 trait OriginTrait
 {
     /**
