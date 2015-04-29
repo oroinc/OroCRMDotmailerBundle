@@ -12,16 +12,17 @@ class EnumNormalizer implements NormalizerInterface, DenormalizerInterface
 {
     /**
      * @param AbstractEnumValue $object
-     * @param null|string $format
-     * @param array $context
+     * @param null|string       $format
+     * @param array             $context
+     *
      * @return array
      */
     public function normalize($object, $format = null, array $context = [])
     {
         return [
-            'id' => $object->getId(),
-            'name' => $object->getName(),
-            'priority' => (int)$object->getPriority(),
+            'id'         => $object->getId(),
+            'name'       => $object->getName(),
+            'priority'   => (int)$object->getPriority(),
             'is_default' => (bool)$object->isDefault()
         ];
     }
@@ -34,10 +35,10 @@ class EnumNormalizer implements NormalizerInterface, DenormalizerInterface
         $reflection  = new \ReflectionClass($class);
 
         $args = [
-            'id' => empty($data['id']) ? null : $data['id'] ,
-            'name' => empty($data['name']) ? '' : $data['name'],
+            'id'       => empty($data['id']) ? null : $data['id'],
+            'name'     => empty($data['name']) ? '' : $data['name'],
             'priority' => empty($data['priority']) ? 0 : $data['priority'],
-            'default' => !empty($data['default'])
+            'default'  => !empty($data['default'])
         ];
 
         return $reflection->newInstanceArgs($args);

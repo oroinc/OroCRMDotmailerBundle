@@ -106,7 +106,7 @@ abstract class AbstractIterator implements \Iterator
         $this->currentItemIndex = 0;
         $this->pageNumber = 0;
 
-        $this->tryToLoadItems();
+        $this->isValid = $this->tryToLoadItems();
     }
 
     /**

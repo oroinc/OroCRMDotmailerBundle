@@ -44,3 +44,12 @@ OroCRM\Bundle\DotmailerBundle\Entity\Campaign:
                 max: 255
         owner:
             - NotBlank: ~
+
+OroCRM\Bundle\DotmailerBundle\Entity\Contact:
+    properties:
+        channel:
+            - NotBlank: ~
+        originId:
+            - NotBlank: ~
+        owner:
+            - NotBlank: ~

@@ -8,6 +8,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Entity\Status;
 use Oro\Bundle\IntegrationBundle\Provider\AbstractConnector;
 use Oro\Bundle\IntegrationBundle\Provider\ConnectorInterface;
+
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
 /**
