@@ -55,7 +55,7 @@ class CampaignTest extends \PHPUnit_Framework_TestCase
             'createdAt' => array('createdAt', $now, $now),
             'updatedAt' => array('updatedAt', $now, $now),
             'owner' => array('owner', $organization, $organization),
-            'campaignSummary' => array('channel', $summary, $summary),
+            'campaignSummary' => array('campaignSummary', $summary, $summary),
         );
     }
 

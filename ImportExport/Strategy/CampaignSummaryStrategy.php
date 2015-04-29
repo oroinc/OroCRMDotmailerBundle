@@ -14,24 +14,6 @@ class CampaignSummaryStrategy extends AddOrReplaceStrategy
     /**
      * {@inheritdoc}
      */
-    protected function beforeProcessEntity($entity)
-    {
-        /** @var CampaignSummary $entity */
-        $entity = parent::beforeProcessEntity($entity);
-
-        $channel = $this->strategyHelper->getEntityManager('OroIntegrationBundle:Channel')
-            ->getRepository('OroIntegrationBundle:Channel')
-            ->getOrLoadById($this->context->getOption('channel'));
-        $entity->setChannel($channel);
-
-        $this->setOwner($entity);
-
-        return $entity;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function afterProcessEntity($entity)
     {
         /** @var CampaignSummary|null $entity */
