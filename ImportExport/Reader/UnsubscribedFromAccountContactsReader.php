@@ -2,20 +2,18 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
 
-use Akeneo\Bundle\BatchBundle\Entity\JobExecution;
-
 use Symfony\Bridge\Doctrine\ManagerRegistry;
-use Symfony\Component\Validator\ExecutionContext;
 
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Entity\Status;
 use Oro\Bundle\IntegrationBundle\Provider\ConnectorContextMediator;
+use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
+use Oro\Bundle\ImportExportBundle\Reader\IteratorBasedReader;
+
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactsConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
-use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
-use Oro\Bundle\ImportExportBundle\Reader\IteratorBasedReader;
 
 class UnsubscribedFromAccountContactsReader extends IteratorBasedReader
 {
@@ -24,7 +22,9 @@ class UnsubscribedFromAccountContactsReader extends IteratorBasedReader
      */
     protected $context;
 
-    /** @var ConnectorContextMediator */
+    /**
+     * @var ConnectorContextMediator
+     */
     protected $contextMediator;
 
     /**
@@ -64,16 +64,6 @@ class UnsubscribedFromAccountContactsReader extends IteratorBasedReader
         $this->setSourceIterator($iterator);
     }
 
-    /**
-     * @return ExecutionContext
-     */
-    protected function getJobContext()
-    {
-        /** @var JobExecution $jobExecution */
-        $jobExecution = $this->stepExecution->getJobExecution();
-
-        return $jobExecution->getExecutionContext();
-    }
 
     protected function getLastSyncDate()
     {

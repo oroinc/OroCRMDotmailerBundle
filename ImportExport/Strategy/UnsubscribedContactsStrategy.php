@@ -30,6 +30,12 @@ class UnsubscribedContactsStrategy extends AbstractImportStrategy
 
         $contact = $this->registry->getRepository('OroCRMDotmailerBundle:Contact')
             ->findOneBy(['originId' => $entity->getOriginId(), 'channel' => $this->getChannel()]);
+        if (!$contact) {
+            $this->context->addError("Contact {$entity->getOriginId()} not found.");
+
+            return null;
+        }
+
 
         $addressBook = $this->getAddressBook();
         $contact->removeAddressBook($addressBook);
