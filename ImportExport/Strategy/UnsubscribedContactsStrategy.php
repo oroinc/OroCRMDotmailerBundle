@@ -43,10 +43,10 @@ class UnsubscribedContactsStrategy extends AbstractImportStrategy
     protected function getAddressBook()
     {
         $originalValue = $this->context->getValue('itemData');
-
         if (empty($originalValue[UnsubscribedContactsIterator::ADDRESS_BOOK_KEY])) {
             throw new RuntimeException('Address book id required');
         }
+
         $addressBook = $this->registry->getRepository('OroCRMDotmailerBundle:AddressBook')
             ->findOneBy(
                 [
