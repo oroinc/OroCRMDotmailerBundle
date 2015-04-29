@@ -17,13 +17,11 @@ class AddressBookRepository extends EntityRepository
      */
     public function getAddressBooksToSyncOriginIds(Channel $channel)
     {
-        $qb = $this->createQueryBuilder('a');
-
-        $qb
-            ->select('a.originId')
-            ->where('a.channel = :channel AND a.marketingList IS NOT NULL')
-            ->setParameter('channel', $channel);
-
-        return $qb->getQuery()->getScalarResult();
+        return $this->createQueryBuilder('addressBook')
+            ->select('addressBook.originId')
+            ->where('addressBook.channel = :channel AND addressBook.marketingList IS NOT NULL')
+            ->setParameter('channel', $channel)
+            ->getQuery()
+            ->getScalarResult();
     }
 }
