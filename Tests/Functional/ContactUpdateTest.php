@@ -24,7 +24,6 @@ class ContactUpdateTest extends AbstractImportTest
 
         $this->loadFixtures(
             [
-                //'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData',
                 'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData',
             ]
         );

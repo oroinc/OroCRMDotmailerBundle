@@ -18,7 +18,6 @@ parameters:
     orocrm_dotmailer.importexport.data_converter.address_book.class:  OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\AddressBookDataConverter
     orocrm_dotmailer.importexport.data_converter.contact.class:       OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactDataConverter
 
-    
     #connectors
     orocrm_dotmailer.connector.abstract.class:                        OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector
     orocrm_dotmailer.connector.campaign.class:                        OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector
@@ -102,7 +101,6 @@ services:
     orocrm_dotmailer.importexport.data_converter.contact:
         class: %orocrm_dotmailer.importexport.data_converter.contact.class%
 
-
     #strategy
     orocrm_dotmailer.importexport.strategy.add_or_replace:
         class: %orocrm_dotmailer.importexport.strategy.add_or_replace.class%
@@ -142,7 +140,6 @@ services:
             - [setStrategy, [@orocrm_dotmailer.importexport.strategy.add_or_replace]]
             - [setEntityName, [%orocrm_dotmailer.entity.contact.class%]]
 
-    
     #serializer
     orocrm_dotmailer.importexport.normalizer.enum:
         class: %orocrm_dotmailer.importexport.normalizer.enum.class%

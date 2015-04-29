@@ -3,7 +3,6 @@
 namespace OroCRM\Bundle\DotmailerBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NoResultException;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
@@ -18,19 +17,15 @@ class ContactRepository extends EntityRepository
      */
     public function getLastCreatedAt(Channel $channel)
     {
-        try {
-            $result = $this->createQueryBuilder('contact')
-                ->select('contact.createdAt')
-                ->where('contact.channel = :channel')
-                ->setParameter('channel', $channel)
-                ->orderBy('contact.createdAt', 'DESC')
-                ->setMaxResults(1)
-                ->getQuery()
-                ->getSingleResult();
-            $result = empty($result['createdAt']) ? null : $result['createdAt'];
-        } catch (NoResultException $e) {
-            $result = null;
-        }
+        $result = $this->createQueryBuilder('contact')
+            ->select('contact.createdAt')
+            ->where('contact.channel = :channel')
+            ->setParameter('channel', $channel)
+            ->orderBy('contact.createdAt', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+        $result = empty($result['createdAt']) ? null : $result['createdAt'];
 
         return $result;
     }

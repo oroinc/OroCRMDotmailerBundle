@@ -19,7 +19,7 @@ class ContactIterator extends AbstractIterator
      * @param IResources $resources
      * @param \DateTime  $dateSince
      */
-    public function __construct(IResources $resources, $dateSince = null)
+    public function __construct(IResources $resources, \DateTime $dateSince = null)
     {
         $this->resources = $resources;
         $this->dateSince = $dateSince;
@@ -34,7 +34,7 @@ class ContactIterator extends AbstractIterator
             $items = $this->resources->GetContacts(false, $select, $skip);
         } else {
             $items = $this->resources->GetContactsModifiedSinceDate(
-                $this->dateSince->format('Y-m-d\TH:i:s'),
+                $this->dateSince->format(\DateTime::ISO8601),
                 true,
                 $select,
                 $skip

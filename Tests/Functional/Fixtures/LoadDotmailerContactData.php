@@ -6,14 +6,14 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\AbstractFixture as BaseAbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
 
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 
-class LoadDotmailerContactData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
+class LoadDotmailerContactData extends BaseAbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
     /**
      * @var array
