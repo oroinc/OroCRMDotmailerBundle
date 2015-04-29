@@ -7,7 +7,7 @@ use DotMailer\Api\Resources\IResources;
 class ActivityContactIterator extends AbstractIterator
 {
     const CAMPAIGN_KEY = 'related_campaign';
-    const LASTSYNCDATE_FORMAT = 'Y-m-d';
+    const LASTSYNCDATE_FORMAT = 'Y-m-d H:i:s';
 
     /**
      * @var IResources

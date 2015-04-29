@@ -20,13 +20,6 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
         /** @var Activity $entity */
         $entity = parent::beforeProcessEntity($entity);
 
-        $channel = $this->strategyHelper->getEntityManager('OroIntegrationBundle:Channel')
-            ->getRepository('OroIntegrationBundle:Channel')
-            ->getOrLoadById($this->context->getOption('channel'));
-        $entity->setChannel($channel);
-
-        $this->setOwner($entity);
-
         if ($entity->getContact() instanceof Contact) {
             $entity->getContact()->setChannel($channel);
         }
