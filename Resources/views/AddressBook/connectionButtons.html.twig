@@ -34,7 +34,7 @@
                 'dataRedirect': path('orocrm_marketing_list_view', {id: marketingList.id}),
                 'dataMessage': 'orocrm.dotmailer.connection.confirmation.disconnect'|trans,
                 'aCss': 'no-hash remove-button',
-                'id': 'btn-remove-mailchimp-connection',
+                'id': 'btn-remove-dotmailer-connection',
                 'entity_label': 'orocrm.dotmailer.connection.name'|trans,
                 'successMessage': 'orocrm.dotmailer.connection.message.disconnect'|trans,
                 'title': 'orocrm.dotmailer.connection.button.disconnect'|trans,
@@ -58,12 +58,13 @@
             },
             'label': 'orocrm.dotmailer.connection.button.connect'|trans,
             'class': 'no-hash btn dotmailer-sync-btn',
-            'iCss': 'icon-mailchimp'
+            'iCss': 'icon-dotmailer'
         }) }}
     {% endif %}
 </div>
+
 <script type="text/javascript">
     require(['orocrmdotmailer/js/sync-buttons-handler'], function(Handler){
-        var handler = new Handler('.dotmailer-sync-btn');
+        new Handler('.dotmailer-sync-btn');
     });
 </script>

@@ -2,8 +2,8 @@
     {% if savedId is defined and savedId %}
         <script type="text/javascript">
             require(['oroui/js/widget-manager'],
-                    function(widgetManager){
-                        widgetManager.getWidgetInstance({{ app.request.get('_wid')|json_encode|raw }}, function(widget) {
+                    function (widgetManager) {
+                        widgetManager.getWidgetInstance({{ app.request.get('_wid')|json_encode|raw }}, function (widget) {
                             widget.trigger(
                                     'formSave',
                                     {{ savedId|json_encode|raw }}
@@ -14,8 +14,8 @@
         {% elseif form.vars.errors|length > 0 %}
         <script type="text/javascript">
             require(['oroui/js/widget-manager'],
-                    function(widgetManager){
-                        widgetManager.getWidgetInstance({{ app.request.get('_wid')|json_encode|raw }}, function(widget) {
+                    function (widgetManager) {
+                        widgetManager.getWidgetInstance({{ app.request.get('_wid')|json_encode|raw }}, function (widget) {
                             widget.trigger('formSaveError');
                         });
                     });

@@ -4,18 +4,21 @@ placeholders:
             orocrm_dotmailer_marketing_list_buttons: ~
 #    view_content_data_email_campaign_status:
 #        items:
-#            orocrm_mailchimp_emailcampaign_stats: ~
+#            orocrm_dotmailer_emailcampaign_stats: ~
 #   marketing_list_sync_info:
 #        items:
-#            orocrm_mailchimp_marketing_list_sync_data: ~
+#            orocrm_dotmailer_marketing_list_sync_data: ~
 
 items:
     orocrm_dotmailer_marketing_list_buttons:
         action: OroCRMDotmailerBundle:AddressBook:connectionButtons
         applicable: @orocrm_dotmailer.placeholder.filter.buttons_filter->isApplicable($entity$)
-    #orocrm_mailchimp_emailcampaign_stats:
-    #    action: OroCRMMailChimpBundle:MailChimp:emailCampaignStats
-    #    applicable: @orocrm_mailchimp.placeholder.filter.email_campaign->isApplicableOnEmailCampaign($entity$)
-    #orocrm_mailchimp_marketing_list_sync_data:
-    #    action: OroCRMMailChimpBundle:MailChimp:marketingListSyncStatus
-    #    applicable: @orocrm_mailchimp.placeholder.filter.sync_status->isApplicableOnMarketingList($marketingList$)
+
+    # TODO: implement stats and sync list placeholders
+    #orocrm_dotmailer_emailcampaign_stats:
+    #    action: OroCRMDotmailerBundle:Dotmailer:emailCampaignStats
+    #    applicable: @orocrm_dotmailer.placeholder.filter.email_campaign->isApplicableOnEmailCampaign($entity$)
+
+    #orocrm_dotmailer_marketing_list_sync_data:
+    #    action: OroCRMDotmailerBundle:Dotmailer:marketingListSyncStatus
+    #    applicable: @orocrm_dotmailer.placeholder.filter.sync_status->isApplicableOnMarketingList($marketingList$)
