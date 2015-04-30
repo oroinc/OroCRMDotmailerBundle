@@ -23,7 +23,7 @@ class MarketingListConnectionType extends AbstractType
                 'channel',
                 'orocrm_dotmailer_integration_select',
                 [
-                    'label' => 'orocrm.dotmailer.integration.label',
+                    'label'    => 'orocrm.dotmailer.integration.label',
                     'required' => true
                 ]
             )
@@ -31,10 +31,10 @@ class MarketingListConnectionType extends AbstractType
                 'addressBook',
                 'orocrm_dotmailer_address_book_list_select',
                 [
-                    'label' => 'orocrm.dotmailer.addressbook.entity_label',
-                    'required' => true,
+                    'label'         => 'orocrm.dotmailer.addressbook.entity_label',
+                    'required'      => true,
                     'channel_field' => 'channel',
-                    'constraints' => [new NotBlank()],
+                    'constraints'   => [new NotBlank()],
                 ]
             );
 
@@ -50,6 +50,9 @@ class MarketingListConnectionType extends AbstractType
             );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setRequired(['marketingList']);

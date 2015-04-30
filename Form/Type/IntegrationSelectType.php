@@ -8,6 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use Oro\Bundle\SecurityBundle\ORM\Walker\AclHelper;
+
 use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
 
 class IntegrationSelectType extends AbstractType
@@ -40,25 +41,26 @@ class IntegrationSelectType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $integrations = $this->getMailChimpIntegrations();
+        $integrations = $this->getDotmailerIntegrations();
         $options = [
-            'class' => self::ENTITY,
+            'class'    => self::ENTITY,
             'property' => 'name',
-            'choices' => $integrations
+            'choices'  => $integrations
         ];
 
         if (count($integrations) != 1) {
             $options['empty_value'] = 'orocrm.dotmailer.integration.select.placeholder';
         }
+
         $resolver->setDefaults($options);
     }
 
     /**
-     * Get integration with type mailchimp.
+     * Get dotMailer integration.
      *
      * @return array
      */
-    protected function getMailChimpIntegrations()
+    protected function getDotmailerIntegrations()
     {
         $qb = $this->registry->getRepository(self::ENTITY)
             ->createQueryBuilder('c')

@@ -22,6 +22,7 @@ class ButtonFilter
 
     /**
      * @param mixed $entity
+     *
      * @return bool
      */
     public function isApplicable($entity)

@@ -9,9 +9,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
+
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 
 /**
@@ -21,8 +22,8 @@ class AddressBookController extends Controller
 {
     /**
      * @Route(
-     *      "/syncronize/{id}",
-     *      name="orocrm_dotmailer_syncronize_adddress_book",
+     *      "/synchronize/{id}",
+     *      name="orocrm_dotmailer_synchronize_adddress_book",
      *      requirements={"id"="\d+"}
      * )
      * @Acl(
@@ -58,10 +59,13 @@ class AddressBookController extends Controller
         $em = $this->get('doctrine')
             ->getManager();
         $addressBook->setMarketingList(null);
+
         /**
          * @todo: unsubscribe all marketing list items from address book in task @CBORO-66
          */
-        $em->flush();
+
+        $em->persist($addressBook);
+        $em->flush($addressBook);
 
         return new Response();
     }
@@ -89,8 +93,8 @@ class AddressBookController extends Controller
         $savedId = $this->get('orocrm_dotmailer.form.handler.connection_update')->handle($form, $formData);
 
         return [
-            'form' => $form->createView(),
-            'entity' => $addressBook,
+            'form'    => $form->createView(),
+            'entity'  => $addressBook,
             'savedId' => $savedId
         ];
     }
@@ -107,8 +111,11 @@ class AddressBookController extends Controller
      *      options={"id" = "entity"}
      * )
      * @AclAncestor("orocrm_marketing_list_update")
-     *
      * @Template()
+     *
+     * @param MarketingList $marketingList
+     *
+     * @return array
      */
     public function connectionButtonsAction(MarketingList $marketingList)
     {
@@ -122,6 +129,7 @@ class AddressBookController extends Controller
 
     /**
      * @param MarketingList $marketingList
+     *
      * @return AddressBook
      */
     protected function getAddressBook(MarketingList $marketingList)
@@ -129,6 +137,7 @@ class AddressBookController extends Controller
         $addressBook = $this->get('doctrine')
             ->getRepository('OroCRMDotmailerBundle:AddressBook')
             ->findOneBy(['marketingList' => $marketingList]);
+
         return $addressBook;
     }
 }

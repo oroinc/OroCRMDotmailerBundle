@@ -17,8 +17,8 @@ class AddressBookSelectType extends AbstractType
         $resolver->setDefaults(
             [
                 'autocomplete_alias' => 'dotmailer_address_books',
-                'grid_name' => 'orocrm_dotmailer_address_books_grid',
-                'configs' => [
+                'grid_name'          => 'orocrm_dotmailer_address_books_grid',
+                'configs'            => [
                     'placeholder' => 'orocrm.dotmailer.addressbook.select.placeholder'
                 ]
             ]

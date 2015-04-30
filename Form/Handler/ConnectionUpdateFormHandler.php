@@ -32,8 +32,9 @@ class ConnectionUpdateFormHandler
     }
 
     /**
-     * @param Form $form
+     * @param Form  $form
      * @param array $data
+     *
      * @return int|null Return id of selected Address book if form valid and null otherwise
      */
     public function handle(Form $form, array $data)
