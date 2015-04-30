@@ -25,3 +25,9 @@ orocrm:
             contact:
                 label:  Contact Connector
                 job:    Import new Contacts from Dotmailer
+
+        emailcampaign:
+            transport.dotmailer: Dotmailer
+            integration:
+                label: Dotmailer Integration
+                placeholder: Choose Dotmailer integration

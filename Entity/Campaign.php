@@ -11,6 +11,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
+use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign;
 use OroCRM\Bundle\DotmailerBundle\Model\ExtendCampaign;
 
 /**
@@ -232,6 +233,14 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
      * )
      */
     protected $activities;
+
+    /**
+     * @var EmailCampaign
+     *
+     * @ORM\OneToOne(targetEntity="OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign")
+     * @ORM\JoinColumn(name="email_campaign_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected $emailCampaign;
 
     /**
      * Initialize collections
@@ -611,6 +620,26 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
     }
 
     /**
+     * @return EmailCampaign
+     */
+    public function getEmailCampaign()
+    {
+        return $this->emailCampaign;
+    }
+
+    /**
+     * @param EmailCampaign $emailCampaign
+     *
+     * @return Campaign
+     */
+    public function setEmailCampaign(EmailCampaign $emailCampaign = null)
+    {
+        $this->emailCampaign = $emailCampaign;
+
+        return $this;
+    }
+
+    /**
      * @ORM\PrePersist
      */
     public function prePersist()
@@ -630,5 +659,14 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
     public function preUpdate()
     {
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
+    }
+
+    public function getFirstAddressBook()
+    {
+        if ($this->hasAddressBooks()) {
+            return $this->getAddressBooks()->first();
+        } else {
+            return null;
+        }
     }
 }

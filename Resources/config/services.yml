@@ -12,6 +12,8 @@ parameters:
 
     # Forms and Extensions
     orocrm_dotmailer.form.type.integration_transport_settings.class:  OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSettingsType
+    orocrm_dotmailer.form.type.integration_select.class:              OroCRM\Bundle\DotmailerBundle\Form\Type\DotmailerIntegrationSelectType
+    orocrm_dotmailer.form.type.transport_settings.class:              OroCRM\Bundle\DotmailerBundle\Form\Type\DotmailerTransportSettingsType
 
     #data converters
     orocrm_dotmailer.importexport.data_converter.address_book.class:          OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\AddressBookDataConverter
@@ -50,6 +52,19 @@ services:
         class: %orocrm_dotmailer.form.type.integration_transport_settings.class%
         tags:
             - { name: form.type, alias: "orocrm_dotmailer_transport_setting_type" }
+
+    orocrm_dotmailer.form.type.integration_select:
+        class: %orocrm_dotmailer.form.type.integration_select.class%
+        arguments:
+            - @doctrine
+            - @oro_security.acl_helper
+        tags:
+            - { name: form.type, alias: "orocrm_dotmailer_integration_select" }
+
+    orocrm_dotmailer.form.type.transport_settings:
+        class: %orocrm_dotmailer.form.type.transport_settings.class%
+        tags:
+            - { name: form.type, alias: "orocrm_dotmailer_email_transport_settings" }
 
     # Integration related services
     orocrm_dotmailer.provider.channel_type:
