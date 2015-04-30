@@ -13,6 +13,12 @@ parameters:
 
     # Forms and Extensions
     orocrm_dotmailer.form.type.integration_transport_settings.class:  OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSettingsType
+    orocrm_dotmailer.form.type.marketing_list_connection.class:       OroCRM\Bundle\DotmailerBundle\Form\Type\MarketingListConnectionType
+    orocrm_dotmailer.form.type.integration_select.class:              OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType
+    orocrm_dotmailer.form.type.address_book_select.class:             OroCRM\Bundle\DotmailerBundle\Form\Type\AddressBookSelectType
+
+    #Form handlers
+    orocrm_dotmailer.form.handler.connection_update.class:            OroCRM\Bundle\DotmailerBundle\Form\Handler\ConnectionUpdateFormHandler
 
     #data converters
     orocrm_dotmailer.importexport.data_converter.address_book.class:          OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\AddressBookDataConverter
@@ -49,12 +55,55 @@ parameters:
     orocrm.dotmailer.importexport.normalizer.configurable.class:      OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer\ConfigurableEntityNormalizer
     orocrm_dotmailer.importexport.normalizer.datetime.class:          OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer\DateTimeNormalizer
 
+    #filters
+    orocrm_dotmailer.placeholder.filter.buttons_filter.class:         OroCRM\Bundle\DotmailerBundle\Placeholders\ButtonFilter
+
+    #search handlers
+    orocrm_dotmailer.form.autocomplete.list.search_handler.class:     OroCRM\Bundle\DotmailerBundle\Autocomplete\AddressBooksSearchHandler
+
 services:
     # Forms and Extensions
     orocrm_dotmailer.form.type.integration_transport_settings:
         class: %orocrm_dotmailer.form.type.integration_transport_settings.class%
         tags:
             - { name: form.type, alias: "orocrm_dotmailer_transport_setting_type" }
+
+    orocrm_dotmailer.form.type.marketing_list_connection:
+        class: %orocrm_dotmailer.form.type.marketing_list_connection.class%
+        tags:
+            - { name: form.type, alias: "orocrm_dotmailer_marketing_list_connection" }
+
+    orocrm_dotmailer.form.type.integration_select:
+        class: %orocrm_dotmailer.form.type.integration_select.class%
+        arguments:
+            - @doctrine
+            - @oro_security.acl_helper
+        tags:
+            - { name: form.type, alias: "orocrm_dotmailer_integration_select" }
+
+    orocrm_dotmailer.form.type.address_book_select:
+        class: %orocrm_dotmailer.form.type.address_book_select.class%
+        tags:
+            - { name: form.type, alias: "orocrm_dotmailer_address_book_list_select" }
+
+    orocrm_dotmailer.form.autocomplete.list.search_handler:
+        class: %orocrm_dotmailer.form.autocomplete.list.search_handler.class%
+        arguments:
+            - %orocrm_dotmailer.entity.address_book.class%
+            - ["name"]
+        calls:
+            - [initDoctrinePropertiesByManagerRegistry, ["@doctrine"]]
+            - [setAclHelper,["@oro_security.acl_helper"]]
+        tags:
+            - { name: oro_form.autocomplete.search_handler, alias: "dotmailer_address_books", acl_resource: "orocrm_email_campaign_view" }
+
+    #Form handlers
+    orocrm_dotmailer.form.handler.connection_update:
+        class: %orocrm_dotmailer.form.handler.connection_update.class%
+        arguments:
+            - @doctrine
+            - @request
+        scope: request
 
     # Integration related services
     orocrm_dotmailer.provider.channel_type:
@@ -249,3 +298,9 @@ services:
         class: %orocrm_dotmailer.importexport.normalizer.datetime.class%
         tags:
             - { name: oro_importexport.normalizer, priority: 20 }
+
+    #filters
+    orocrm_dotmailer.placeholder.filter.buttons_filter:
+        class: %orocrm_dotmailer.placeholder.filter.buttons_filter.class%
+        arguments:
+            - @orocrm_marketing_list.provider.contact_information_fields

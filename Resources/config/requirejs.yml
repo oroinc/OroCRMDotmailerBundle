@@ -1,0 +1,3 @@
+config:
+    paths:
+        'orocrmdotmailer/js/sync-buttons-handler': 'bundles/orocrmdotmailer/js/sync-buttons-handler.js'
