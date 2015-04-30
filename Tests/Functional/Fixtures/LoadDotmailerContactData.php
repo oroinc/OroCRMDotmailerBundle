@@ -3,7 +3,6 @@
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 use DotMailer\Api\DataTypes\ApiContactStatuses;
 
@@ -35,12 +34,36 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'address_books' => ['orocrm_dotmailer.address_book.third', 'orocrm_dotmailer.address_book.fourth'],
             'reference'     => 'orocrm_dotmailer.contact.second',
         ],
+        // contact for contact update test
+        [
+            'originId'      => 142,
+            'email'         => 'test1@ex.com',
+            'channel'       => 'orocrm_dotmailer.channel.second',
+            'reference'     => 'orocrm_dotmailer.contact.update_1',
+            'createdAt'     => 'first day of January 2008',
+            'status'        => ApiContactStatuses::SUBSCRIBED,
+            'address_books' => [],
+        ],
+        [
+            'originId'      => 143,
+            'email'         => 'test2@ex.com',
+            'channel'       => 'orocrm_dotmailer.channel.second',
+            'reference'     => 'orocrm_dotmailer.contact.update_2',
+            'createdAt'     => 'first day of January 2008',
+            'status'        => ApiContactStatuses::SUBSCRIBED,
+            'address_books' => [],
+        ],
     ];
+
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
 
     /**
      * {@inheritdoc}
      */
-    function load(ObjectManager $manager)
+    public function load(ObjectManager $manager)
     {
         $userManager = $this->container->get('oro_user.manager');
         $admin = $userManager->findUserByEmail(LoadAdminUserData::DEFAULT_ADMIN_EMAIL);
@@ -50,13 +73,21 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             $contact->setOriginId($item['originId']);
             $contact->setOwner($admin->getOrganization());
             $contact->setChannel($this->getReference($item['channel']));
-            $contact->setEmail($item['email']);
+
+            if (!empty($item['email'])) {
+                $contact->setEmail($item['email']);
+            }
+
             $contact->setStatus(
                 $this->findEnum('dm_cnt_status', $item['status'])
             );
 
             foreach ($item['address_books'] as $addressBook) {
                 $contact->addAddressBook($this->getReference($addressBook));
+            }
+
+            if (!empty($item['createdAt'])) {
+                $contact->setCreatedAt(new \DateTime($item['createdAt']));
             }
 
             $manager->persist($contact);
@@ -70,7 +101,7 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
     /**
      * {@inheritdoc}
      */
-    function getDependencies()
+    public function getDependencies()
     {
         return [
             'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData',

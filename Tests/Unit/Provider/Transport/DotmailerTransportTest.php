@@ -123,12 +123,14 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue([]));
         $resource->expects($this->once())
             ->method('GetContactsUnsubscribedSinceDate')
-            ->with($expectedDate)
+            ->with($expectedDate->format(\DateTime::ISO8601))
             ->will($this->returnValue($contactsList));
         $iterator->rewind();
     }
 
-    //GetContactsUnsubscribedSinceDate
+    /**
+     * GetContactsUnsubscribedSinceDate
+     */
     public function testGetUnsubscribedContactsWithoutSyncDate()
     {
         $iterator = $this->target->getUnsubscribedContacts([]);
@@ -169,7 +171,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->method('GetAddressBookContactsUnsubscribedSinceDate')
             ->with(
                 $expectedAddressBookOriginId,
-                $expectedDate
+                $expectedDate->format(\DateTime::ISO8601)
             )
             ->will($this->returnValue($contactsList));
         $iterator->rewind();
@@ -205,6 +207,47 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->method('GetAddressBookCampaigns')
             ->with($expectedAddressBookOriginId)
             ->will($this->returnValue($campaignsList));
+        $iterator->rewind();
+    }
+
+    public function testGetContactsWithoutSyncDate()
+    {
+        $resource = $this->initTransportStub();
+
+        $dateSince = null;
+
+        $contactsList = $this->getMock('\StdClass', ['toArray']);
+        $contactsList->expects($this->once())
+            ->method('toArray')
+            ->will($this->returnValue([]));
+
+        $resource->expects($this->once())
+            ->method('GetContacts')
+            ->with(false, 1000, 0)
+            ->will($this->returnValue($contactsList));
+
+        $dateSince = null;
+        $iterator = $this->target->getContacts($dateSince);
+        $iterator->rewind();
+    }
+
+    public function testGetContacts()
+    {
+        $resource = $this->initTransportStub();
+
+        $dateSince = new \DateTime();
+
+        $contactsList = $this->getMock('\StdClass', ['toArray']);
+        $contactsList->expects($this->once())
+            ->method('toArray')
+            ->will($this->returnValue([['id' => 1, 'email' => 'test@test.com']]));
+
+        $resource->expects($this->once())
+            ->method('GetContactsModifiedSinceDate')
+            ->with($dateSince->format(\DateTime::ISO8601), true, 1000, 0)
+            ->will($this->returnValue($contactsList));
+
+        $iterator = $this->target->getContacts($dateSince);
         $iterator->rewind();
     }
 

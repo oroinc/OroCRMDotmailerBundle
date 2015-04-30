@@ -30,6 +30,12 @@ class UnsubscribedContactsStrategy extends AbstractImportStrategy
 
         $contact = $this->registry->getRepository('OroCRMDotmailerBundle:Contact')
             ->findOneBy(['originId' => $entity->getOriginId(), 'channel' => $this->getChannel()]);
+        if (!$contact) {
+            $this->context->addError("Contact {$entity->getOriginId()} not found.");
+
+            return null;
+        }
+
 
         $addressBook = $this->getAddressBook();
         $contact->removeAddressBook($addressBook);
@@ -43,10 +49,10 @@ class UnsubscribedContactsStrategy extends AbstractImportStrategy
     protected function getAddressBook()
     {
         $originalValue = $this->context->getValue('itemData');
-
         if (empty($originalValue[UnsubscribedContactsIterator::ADDRESS_BOOK_KEY])) {
             throw new RuntimeException('Address book id required');
         }
+
         $addressBook = $this->registry->getRepository('OroCRMDotmailerBundle:AddressBook')
             ->findOneBy(
                 [

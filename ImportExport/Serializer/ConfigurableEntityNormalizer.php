@@ -59,8 +59,9 @@ class ConfigurableEntityNormalizer extends BaseNormalizer
      */
     public function supportsDenormalization($data, $type, $format = null, array $context = [])
     {
-        return parent::supportsDenormalization($data, $type, $format, $context)
-            && $context['channelType'] == ChannelType::TYPE;
+        $channelType = empty($context['channelType']) ? null : $context['channelType'];
+
+        return parent::supportsDenormalization($data, $type, $format, $context) && $channelType == ChannelType::TYPE;
     }
 
     /**
