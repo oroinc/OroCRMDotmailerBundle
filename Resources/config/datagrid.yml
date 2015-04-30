@@ -11,7 +11,6 @@ datagrid:
                 select:
                     - addressBook.name
                     - addressBook.contactCount
-                    - address_book_visibility.id as visibilityType
                 from:
                     - { table: %orocrm_dotmailer.entity.address_book.class%, alias: addressBook }
                 join:
@@ -25,16 +24,12 @@ datagrid:
                 label: orocrm.dotmailer.addressbook.name.label
             contactCount:
                 label: orocrm.dotmailer.addressbook.contact_count.label
-            visibilityType:
-                label: orocrm.dotmailer.addressbook.visibility.label
         sorters:
             columns:
                 name:
                     data_name: addressBook.name
                 contactCount:
                     data_name: addressBook.contactCount
-                visibilityType:
-                    data_name: visibilityType
             default:
                 name: ASC
         filters:
@@ -45,8 +40,5 @@ datagrid:
                 contactCount:
                     type: string
                     data_name: addressBook.contactCount
-                visibilityType:
-                    type: string
-                    data_name: visibilityType
         properties:
             id: ~
