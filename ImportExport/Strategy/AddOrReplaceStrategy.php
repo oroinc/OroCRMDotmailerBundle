@@ -27,6 +27,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
 
     /**
      * @param object $entity
+     *
      * @return object
      */
     protected function beforeProcessEntity($entity)
@@ -42,6 +43,18 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
         $this->setOwner($entity);
 
         return $entity;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function validateAndUpdateContext($entity)
+    {
+        if (!$entity) {
+            return $entity;
+        }
+
+        return parent::validateAndUpdateContext($entity);
     }
 
     /**

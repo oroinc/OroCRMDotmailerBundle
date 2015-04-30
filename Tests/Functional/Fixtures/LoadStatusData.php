@@ -9,6 +9,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Oro\Bundle\IntegrationBundle\Entity\Status;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactsConnector;
 
 class LoadStatusData extends BaseAbstractFixture implements DependentFixtureInterface
 {
@@ -44,6 +45,12 @@ class LoadStatusData extends BaseAbstractFixture implements DependentFixtureInte
             'channel' => 'orocrm_dotmailer.channel.third',
             'code' => Status::STATUS_COMPLETED,
             'connector' => CampaignConnector::TYPE,
+            'date' => '2015-11-11'
+        ],
+        [
+            'channel' => 'orocrm_dotmailer.channel.third',
+            'code' => Status::STATUS_COMPLETED,
+            'connector' => UnsubscribedContactsConnector::TYPE,
             'date' => '2015-11-11'
         ],
     ];

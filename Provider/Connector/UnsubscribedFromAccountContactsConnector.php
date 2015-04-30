@@ -2,17 +2,18 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Connector;
 
-class ContactConnector extends AbstractDotmailerConnector
+class UnsubscribedFromAccountContactsConnector extends AbstractDotmailerConnector
 {
-    const TYPE = 'contact';
-    const IMPORT_JOB = 'dotmailer_new_contacts';
+    const TYPE = 'unsubscribed_from_account_contacts';
+    const IMPORT_JOB = 'dotmailer_unsubscribed_from_account_contacts_import';
 
     /**
      * {@inheritdoc}
      */
     protected function getConnectorSource()
     {
-        return $this->transport->getContacts($this->getLastSyncDate());
+        $lastSyncDate = $this->getLastSyncDate();
+        return $this->transport->getUnsubscribedFromAccountsContacts($lastSyncDate);
     }
 
     /**
@@ -20,7 +21,7 @@ class ContactConnector extends AbstractDotmailerConnector
      */
     public function getLabel()
     {
-        return 'orocrm.dotmailer.connector.contact.label';
+        return 'orocrm.dotmailer.connector.unsubscribed_from_account_contacts.label';
     }
 
     /**

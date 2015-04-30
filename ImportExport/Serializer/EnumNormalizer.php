@@ -32,7 +32,7 @@ class EnumNormalizer implements NormalizerInterface, DenormalizerInterface
      */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
-        $reflection  = new \ReflectionClass($class);
+        $reflection = new \ReflectionClass($class);
 
         $args = [
             'id'       => empty($data['id']) ? null : $data['id'],

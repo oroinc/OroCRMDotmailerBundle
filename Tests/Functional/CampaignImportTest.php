@@ -7,6 +7,7 @@ use DotMailer\Api\DataTypes\ApiCampaignList;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\IntegrationBundle\Command\SyncCommand;
 
+use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 
 /**
@@ -69,9 +70,18 @@ class CampaignImportTest extends AbstractImportTest
                 'status' => $statusRepository->find($campaign['status']),
             ];
 
-            $campaignEntity = $campaignRepository->findBy($searchCriteria);
+            $campaignEntities = $campaignRepository->findBy($searchCriteria);
 
-            $this->assertCount(1, $campaignEntity);
+            $this->assertCount(1, $campaignEntities);
+            /** @var Campaign $actualCampaign */
+            $actualCampaign = $campaignEntities[0];
+
+            $actualAddressBooks = $actualCampaign->getAddressBooks()->toArray();
+            foreach ($campaign['addressBooks'] as &$expectedAddressBook) {
+                $expectedAddressBook = $this->getReference($expectedAddressBook);
+            }
+
+            $this->assertEquals($campaign['addressBooks'], $actualAddressBooks);
         }
     }
 
@@ -88,7 +98,8 @@ class CampaignImportTest extends AbstractImportTest
                         'fromAddress' => 'Arbitbet@dotmailer-email.com',
                         'reply_action' => 'Webmail',
                         'isSplitTest' => false,
-                        'status' => 'Unsent'
+                        'status' => 'Unsent',
+                        'addressBooks' => ['orocrm_dotmailer.address_book.second']
                     ],
                 ],
                 'campaignList' => [

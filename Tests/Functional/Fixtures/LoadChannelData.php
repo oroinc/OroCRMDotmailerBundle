@@ -12,6 +12,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactsConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
@@ -30,19 +31,34 @@ class LoadChannelData extends BaseAbstractFixture implements ContainerAwareInter
     protected $data = [
         [
             'name' => 'first channel',
-            'connectors' => [CampaignConnector::TYPE, AddressBookConnector::TYPE, ContactConnector::TYPE],
+            'connectors' => [
+                CampaignConnector::TYPE,
+                AddressBookConnector::TYPE,
+                UnsubscribedContactsConnector::TYPE,
+                ContactConnector::TYPE
+            ],
             'transport' => 'orocrm_dotmailer.transport.first',
             'reference' => 'orocrm_dotmailer.channel.first'
         ],
         [
             'name' => 'second channel',
-            'connectors' => [CampaignConnector::TYPE, AddressBookConnector::TYPE, ContactConnector::TYPE],
+            'connectors' => [
+                CampaignConnector::TYPE,
+                AddressBookConnector::TYPE,
+                UnsubscribedContactsConnector::TYPE,
+                ContactConnector::TYPE
+            ],
             'transport' => 'orocrm_dotmailer.transport.second',
             'reference' => 'orocrm_dotmailer.channel.second'
         ],
         [
-            'name' => 'second third',
-            'connectors' => [CampaignConnector::TYPE, AddressBookConnector::TYPE, ContactConnector::TYPE],
+            'name' => 'third channel',
+            'connectors' => [
+                CampaignConnector::TYPE,
+                AddressBookConnector::TYPE,
+                UnsubscribedContactsConnector::TYPE,
+                ContactConnector::TYPE
+            ],
             'transport' => 'orocrm_dotmailer.transport.third',
             'reference' => 'orocrm_dotmailer.channel.third'
         ]

@@ -14,18 +14,28 @@ parameters:
     orocrm_dotmailer.form.type.integration_transport_settings.class:  OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSettingsType
 
     #data converters
-    orocrm_dotmailer.importexport.data_converter.campaign.class:      OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\CampaignDataConverter
-    orocrm_dotmailer.importexport.data_converter.address_book.class:  OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\AddressBookDataConverter
-    orocrm_dotmailer.importexport.data_converter.contact.class:       OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactDataConverter
+    orocrm_dotmailer.importexport.data_converter.address_book.class:          OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\AddressBookDataConverter
+    orocrm_dotmailer.importexport.data_converter.unsubscribed_contacts.class: OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\UnsubscribedContactsDataConverter
+    orocrm_dotmailer.importexport.data_converter.campaign.class:              OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\CampaignDataConverter
+    orocrm_dotmailer.importexport.data_converter.contact.class:               OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactDataConverter
+
+    #reader
+    orocrm_dotmailer.importexport.reader.unsubscribed_from_account_contacts.class: OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\UnsubscribedFromAccountContactsReader
 
     #connectors
-    orocrm_dotmailer.connector.abstract.class:                        OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector
-    orocrm_dotmailer.connector.campaign.class:                        OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector
-    orocrm_dotmailer.connector.address_book.class:                    OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector
+    orocrm_dotmailer.connector.abstract.class:                            OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector
+    orocrm_dotmailer.connector.campaign.class:                            OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector
+    orocrm_dotmailer.connector.address_book.class:                        OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector
+    orocrm_dotmailer.connector.unsubscribed_contacts.class:               OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactsConnector
+    orocrm_dotmailer.connector.unsubscribed_from_account_contacts.class:  OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedFromAccountContactsConnector
     orocrm_dotmailer.connector.contact.class:                         OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector
 
     #strategy
-    orocrm_dotmailer.importexport.strategy.add_or_replace.class:      OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\AddOrReplaceStrategy
+    orocrm_dotmailer.importexport.strategy.add_or_replace.class:                      OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\AddOrReplaceStrategy
+    orocrm_dotmailer.importexport.strategy.import.abstract.class:                     OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\AbstractImportStrategy
+    orocrm_dotmailer.importexport.strategy.unsubscribed_contacts.class:               OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\UnsubscribedContactsStrategy
+    orocrm_dotmailer.importexport.strategy.unsubscribed_from_account_contacts.class:  OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\UnsubscribedFromAccountStrategy
+    orocrm_dotmailer.importexport.strategy.campaign.class:                            OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\CampaignStrategy
 
     #processor
     orocrm_dotmailer.importexport.processor.import_abstract.class:    OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\ImportProcessor
@@ -56,6 +66,14 @@ services:
 
     orocrm_dotmailer.transport.resources_factory:
         class: %orocrm_dotmailer.transport.resources_factory.class%
+
+    #readers
+    orocrm_dotmailer.importexport.reader.unsubscribed_from_account_contacts:
+        class: %orocrm_dotmailer.importexport.reader.unsubscribed_from_account_contacts.class%
+        arguments:
+            - @oro_importexport.context_registry
+            - @oro_integration.provider.connector_context_mediator
+            - @doctrine
 
     #connectors
     orocrm_dotmailer.connector.abstract:
@@ -91,12 +109,29 @@ services:
         tags:
             - { name: oro_integration.connector, type: address_book, channel_type: dotmailer }
 
+    orocrm_dotmailer.connector.unsubscribed_contacts:
+        class: %orocrm_dotmailer.connector.unsubscribed_contacts.class%
+        parent: orocrm_dotmailer.connector.abstract
+        calls:
+            - [setEntityName, [%orocrm_dotmailer.entity.contact.class%]]
+        tags:
+            - { name: oro_integration.connector, type: unsubscribed_contacts, channel_type: dotmailer }
+
+    orocrm_dotmailer.connector.unsubscribed_from_account_contacts:
+        class: %orocrm_dotmailer.connector.unsubscribed_from_account_contacts.class%
+        parent: orocrm_dotmailer.connector.abstract
+        calls:
+            - [setEntityName, [%orocrm_dotmailer.entity.contact.class%]]
+
     #data converter
     orocrm_dotmailer.importexport.data_converter.campaign:
         class: %orocrm_dotmailer.importexport.data_converter.campaign.class%
 
     orocrm_dotmailer.importexport.data_converter.address_book:
         class: %orocrm_dotmailer.importexport.data_converter.address_book.class%
+
+    orocrm_dotmailer.importexport.data_converter.unsubscribed_contacts:
+        class: %orocrm_dotmailer.importexport.data_converter.unsubscribed_contacts.class%
 
     orocrm_dotmailer.importexport.data_converter.contact:
         class: %orocrm_dotmailer.importexport.data_converter.contact.class%
@@ -108,8 +143,23 @@ services:
         calls:
             - [setOwnerHelper, [@oro_integration.helper.default_owner_helper]]
 
-    orocrm_dotmailer.importexport.strategy.address_book:
+    orocrm_dotmailer.importexport.strategy.import.abstract:
+        class: %orocrm_dotmailer.importexport.strategy.import.abstract.class%
+        abstract: true
+        calls:
+            - [setRegistry, [@doctrine]]
+
+    orocrm_dotmailer.importexport.strategy.unsubscribed_contacts:
+        class: %orocrm_dotmailer.importexport.strategy.unsubscribed_contacts.class%
+        parent: orocrm_dotmailer.importexport.strategy.import.abstract
+
+    orocrm_dotmailer.importexport.strategy.campaign:
+        class: %orocrm_dotmailer.importexport.strategy.campaign.class%
         parent: orocrm_dotmailer.importexport.strategy.add_or_replace
+
+    orocrm_dotmailer.importexport.strategy.unsubscribed_from_account_contacts:
+        class: %orocrm_dotmailer.importexport.strategy.unsubscribed_from_account_contacts.class%
+        parent: orocrm_dotmailer.importexport.strategy.import.abstract
 
     #processor
     orocrm_dotmailer.importexport.processor.import_abstract:
@@ -123,14 +173,28 @@ services:
         parent: orocrm_dotmailer.importexport.processor.import_abstract
         calls:
             - [setDataConverter, [@orocrm_dotmailer.importexport.data_converter.address_book]]
-            - [setStrategy, [@orocrm_dotmailer.importexport.strategy.address_book]]
+            - [setStrategy, [@orocrm_dotmailer.importexport.strategy.add_or_replace]]
             - [setEntityName, [%orocrm_dotmailer.entity.address_book.class%]]
+
+    orocrm_dotmailer.importexport.processor.unsubscribed_contacts:
+        parent: orocrm_dotmailer.importexport.processor.import_abstract
+        calls:
+            - [setDataConverter, [@orocrm_dotmailer.importexport.data_converter.unsubscribed_contacts]]
+            - [setStrategy, [@orocrm_dotmailer.importexport.strategy.unsubscribed_contacts]]
+            - [setEntityName, [%orocrm_dotmailer.entity.contact.class%]]
+
+    orocrm_dotmailer.importexport.processor.unsubscribed_from_account_contacts:
+        parent: orocrm_dotmailer.importexport.processor.import_abstract
+        calls:
+            - [setDataConverter, [@orocrm_dotmailer.importexport.data_converter.unsubscribed_contacts]]
+            - [setStrategy, [@orocrm_dotmailer.importexport.strategy.unsubscribed_from_account_contacts]]
+            - [setEntityName, [%orocrm_dotmailer.entity.contact.class%]]
 
     orocrm_dotmailer.importexport.processor.campaign:
         parent: orocrm_dotmailer.importexport.processor.import_abstract
         calls:
             - [setDataConverter, [@orocrm_dotmailer.importexport.data_converter.campaign]]
-            - [setStrategy, [@orocrm_dotmailer.importexport.strategy.add_or_replace]]
+            - [setStrategy, [@orocrm_dotmailer.importexport.strategy.campaign]]
             - [setEntityName, [%orocrm_dotmailer.entity.campaign.class%]]
     
     orocrm_dotmailer.importexport.processor.contact:
