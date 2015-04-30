@@ -4,7 +4,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Entity;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
-interface OriginAwareInterface
+interface OriginAwareInterface extends ChannelAwareInterface
 {
     /**
      * Set origin ID.
@@ -21,20 +21,4 @@ interface OriginAwareInterface
      * @return integer
      */
     public function getOriginId();
-
-    /**
-     * Set integration channel.
-     *
-     * @param Channel $channel
-     *
-     * @return mixed
-     */
-    public function setChannel(Channel $channel);
-
-    /**
-     * Get integration channel.
-     *
-     * @return Channel
-     */
-    public function getChannel();
 }

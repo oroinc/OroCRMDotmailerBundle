@@ -35,7 +35,7 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  *  }
  * )
  */
-class Activity
+class Activity implements ChannelAwareInterface
 {
     /**
      * @var int
@@ -195,13 +195,6 @@ class Activity
      *
      * @ORM\ManyToOne(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\Contact", inversedBy="activities")
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
      */
     protected $contact;
 

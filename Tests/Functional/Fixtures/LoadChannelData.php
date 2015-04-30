@@ -17,6 +17,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
 
 class LoadChannelData extends BaseAbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
@@ -35,7 +36,8 @@ class LoadChannelData extends BaseAbstractFixture implements ContainerAwareInter
                 CampaignConnector::TYPE,
                 AddressBookConnector::TYPE,
                 UnsubscribedContactsConnector::TYPE,
-                ContactConnector::TYPE
+                ContactConnector::TYPE,
+                ActivityContactConnector::TYPE
             ],
             'transport' => 'orocrm_dotmailer.transport.first',
             'reference' => 'orocrm_dotmailer.channel.first'
@@ -46,7 +48,8 @@ class LoadChannelData extends BaseAbstractFixture implements ContainerAwareInter
                 CampaignConnector::TYPE,
                 AddressBookConnector::TYPE,
                 UnsubscribedContactsConnector::TYPE,
-                ContactConnector::TYPE
+                ContactConnector::TYPE,
+                ActivityContactConnector::TYPE
             ],
             'transport' => 'orocrm_dotmailer.transport.second',
             'reference' => 'orocrm_dotmailer.channel.second'
@@ -57,7 +60,8 @@ class LoadChannelData extends BaseAbstractFixture implements ContainerAwareInter
                 CampaignConnector::TYPE,
                 AddressBookConnector::TYPE,
                 UnsubscribedContactsConnector::TYPE,
-                ContactConnector::TYPE
+                ContactConnector::TYPE,
+                ActivityContactConnector::TYPE
             ],
             'transport' => 'orocrm_dotmailer.transport.third',
             'reference' => 'orocrm_dotmailer.channel.third'
