@@ -103,6 +103,9 @@ orocrm:
             contact:
                 label:  Contact Connector
                 job:    Import new Contacts from Dotmailer
+            activity_contact:
+                label: Contact Activities Connector
+                job: Import contact activities from Dotmailer
 
         connection:
             name: Dotmailer Connection

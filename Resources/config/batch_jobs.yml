@@ -65,3 +65,17 @@ connector:
                         writer:    oro_integration.writer.persistent_batch_writer
                     parameters:
                         batch_size: 100
+
+        dotmailer_activity_contact_import:
+            title: orocrm.dotmailer.connector.activity_contact.job
+            type: import
+            steps:
+                import:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.connector.activity_contact
+                        processor: orocrm_dotmailer.importexport.processor.activity_contact
+                        writer:    oro_integration.writer.persistent_batch_writer
+                    parameters:
+                        batch_size: 100

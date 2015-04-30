@@ -2,6 +2,8 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 use DotMailer\Api\Resources\IResources;
 
 use Guzzle\Iterator\AppendIterator;
@@ -10,12 +12,14 @@ use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
 
 use OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
 
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactsIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactsIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
+use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
 
 class DotmailerTransport implements TransportInterface
 {
@@ -120,6 +124,29 @@ class DotmailerTransport implements TransportInterface
         foreach ($addressBooks as $addressBook) {
             $iterator->append(
                 new CampaignIterator($this->dotmailerResources, $addressBook['originId'])
+            );
+        }
+
+        return $iterator;
+    }
+
+    /**
+     * @param array|ArrayCollection $campaignsToSynchronize
+     * @param \DateTime             $lastSyncDate = null
+     *
+     * @return \Iterator
+     */
+    public function getActivityContacts(array $campaignsToSynchronize = [], \DateTime $lastSyncDate = null)
+    {
+        if (!$lastSyncDate) {
+            return new \EmptyIterator();
+        }
+
+        $iterator = new AppendIterator();
+        /** @var Campaign $campaign */
+        foreach ($campaignsToSynchronize as $campaign) {
+            $iterator->append(
+                new ActivityContactIterator($this->dotmailerResources, $campaign->getOriginId(), $lastSyncDate)
             );
         }
 
