@@ -12,20 +12,7 @@ class ContactConnector extends AbstractDotmailerConnector
      */
     protected function getConnectorSource()
     {
-        $channel = $this->getChannel();
-        $dateSince = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:Contact')
-            ->getLastCreatedAt($channel);
-
-        // if there are imported records at dotMailer
-        // and import to OroCRM was not completed - continue from latest we have
-        $lastSyncDate = $this->getLastSyncDate();
-        if ($dateSince && !$lastSyncDate) {
-            // substract some buffer to ensure we got everything
-            $dateSince = $dateSince->sub(new \DateInterval('PT2H'));
-        }
-
-        return $this->transport->getContacts($dateSince);
+        return $this->transport->getContacts($this->getLastSyncDate());
     }
 
     /**
