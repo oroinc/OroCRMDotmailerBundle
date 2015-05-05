@@ -60,11 +60,11 @@ class DotmailerTransport implements TransportInterface
     }
 
     /**
-     * @param \DateTime $dateSince
+     * @param \DateTime|null $dateSince
      *
      * @return ContactIterator
      */
-    public function getContacts($dateSince)
+    public function getContacts($dateSince = null)
     {
         return new ContactIterator($this->dotmailerResources, $dateSince);
     }
