@@ -1,5 +1,8 @@
 orocrm:
     dotmailer:
+        campaign:
+            entity_label: Dotmailer Campaign
+
         channel_type.label: Dotmailer
 
         integration_transport:
