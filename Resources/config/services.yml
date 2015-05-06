@@ -14,11 +14,18 @@ parameters:
 
     # Forms and Extensions
     orocrm_dotmailer.form.type.integration_transport_settings.class:  OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSettingsType
+    orocrm_dotmailer.form.type.marketing_list_connection.class:       OroCRM\Bundle\DotmailerBundle\Form\Type\MarketingListConnectionType
+    orocrm_dotmailer.form.type.integration_select.class:              OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType
+    orocrm_dotmailer.form.type.address_book_select.class:             OroCRM\Bundle\DotmailerBundle\Form\Type\AddressBookSelectType
+
+    #Form handlers
+    orocrm_dotmailer.form.handler.connection_update.class:            OroCRM\Bundle\DotmailerBundle\Form\Handler\ConnectionUpdateFormHandler
 
     #data converters
     orocrm_dotmailer.importexport.data_converter.address_book.class:          OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\AddressBookDataConverter
     orocrm_dotmailer.importexport.data_converter.unsubscribed_contacts.class: OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\UnsubscribedContactsDataConverter
     orocrm_dotmailer.importexport.data_converter.campaign.class:              OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\CampaignDataConverter
+    orocrm_dotmailer.importexport.data_converter.contact.class:               OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactDataConverter
     orocrm_dotmailer.importexport.data_converter.activity_contact.class:      OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ActivityContactDataConverter
     orocrm_dotmailer.importexport.data_converter.campaign_summary.class:      OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\CampaignSummaryDataConverter
 
@@ -31,6 +38,7 @@ parameters:
     orocrm_dotmailer.connector.address_book.class:                        OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector
     orocrm_dotmailer.connector.unsubscribed_contacts.class:               OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactsConnector
     orocrm_dotmailer.connector.unsubscribed_from_account_contacts.class:  OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedFromAccountContactsConnector
+    orocrm_dotmailer.connector.contact.class:                         OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector
     orocrm_dotmailer.connector.activity_contact.class:                    OroCRM\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector
     orocrm_dotmailer.connector.campaign_summary.class:                    OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector
 
@@ -51,13 +59,55 @@ parameters:
     orocrm.dotmailer.importexport.normalizer.configurable.class:      OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer\ConfigurableEntityNormalizer
     orocrm_dotmailer.importexport.normalizer.datetime.class:          OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer\DateTimeNormalizer
 
-services:
+    #filters
+    orocrm_dotmailer.placeholder.filter.buttons_filter.class:         OroCRM\Bundle\DotmailerBundle\Placeholders\ButtonFilter
 
+    #search handlers
+    orocrm_dotmailer.form.autocomplete.list.search_handler.class:     OroCRM\Bundle\DotmailerBundle\Autocomplete\AddressBooksSearchHandler
+
+services:
     # Forms and Extensions
     orocrm_dotmailer.form.type.integration_transport_settings:
         class: %orocrm_dotmailer.form.type.integration_transport_settings.class%
         tags:
             - { name: form.type, alias: "orocrm_dotmailer_transport_setting_type" }
+
+    orocrm_dotmailer.form.type.marketing_list_connection:
+        class: %orocrm_dotmailer.form.type.marketing_list_connection.class%
+        tags:
+            - { name: form.type, alias: "orocrm_dotmailer_marketing_list_connection" }
+
+    orocrm_dotmailer.form.type.integration_select:
+        class: %orocrm_dotmailer.form.type.integration_select.class%
+        arguments:
+            - @doctrine
+            - @oro_security.acl_helper
+        tags:
+            - { name: form.type, alias: "orocrm_dotmailer_integration_select" }
+
+    orocrm_dotmailer.form.type.address_book_select:
+        class: %orocrm_dotmailer.form.type.address_book_select.class%
+        tags:
+            - { name: form.type, alias: "orocrm_dotmailer_address_book_list_select" }
+
+    orocrm_dotmailer.form.autocomplete.list.search_handler:
+        class: %orocrm_dotmailer.form.autocomplete.list.search_handler.class%
+        arguments:
+            - %orocrm_dotmailer.entity.address_book.class%
+            - ["name"]
+        calls:
+            - [initDoctrinePropertiesByManagerRegistry, ["@doctrine"]]
+            - [setAclHelper,["@oro_security.acl_helper"]]
+        tags:
+            - { name: oro_form.autocomplete.search_handler, alias: "dotmailer_address_books", acl_resource: "orocrm_email_campaign_view" }
+
+    #Form handlers
+    orocrm_dotmailer.form.handler.connection_update:
+        class: %orocrm_dotmailer.form.handler.connection_update.class%
+        arguments:
+            - @doctrine
+            - @request
+        scope: request
 
     # Integration related services
     orocrm_dotmailer.provider.channel_type:
@@ -92,6 +142,14 @@ services:
             - @oro_integration.provider.connector_context_mediator
         calls:
             - [setManagerRegistry, [@doctrine]]
+
+    orocrm_dotmailer.connector.contact:
+        class: %orocrm_dotmailer.connector.contact.class%
+        parent: orocrm_dotmailer.connector.abstract
+        calls:
+            - [setEntityName, [%orocrm_dotmailer.entity.contact.class%]]
+        tags:
+            - { name: oro_integration.connector, type: contact, channel_type: dotmailer }
 
     orocrm_dotmailer.connector.campaign:
         class: %orocrm_dotmailer.connector.campaign.class%
@@ -148,6 +206,9 @@ services:
 
     orocrm_dotmailer.importexport.data_converter.unsubscribed_contacts:
         class: %orocrm_dotmailer.importexport.data_converter.unsubscribed_contacts.class%
+
+    orocrm_dotmailer.importexport.data_converter.contact:
+        class: %orocrm_dotmailer.importexport.data_converter.contact.class%
 
     orocrm_dotmailer.importexport.data_converter.activity_contact:
         class: %orocrm_dotmailer.importexport.data_converter.activity_contact.class%
@@ -223,6 +284,13 @@ services:
             - [setDataConverter, [@orocrm_dotmailer.importexport.data_converter.campaign]]
             - [setStrategy, [@orocrm_dotmailer.importexport.strategy.campaign]]
             - [setEntityName, [%orocrm_dotmailer.entity.campaign.class%]]
+    
+    orocrm_dotmailer.importexport.processor.contact:
+        parent: orocrm_dotmailer.importexport.processor.import_abstract
+        calls:
+            - [setDataConverter, [@orocrm_dotmailer.importexport.data_converter.contact]]
+            - [setStrategy, [@orocrm_dotmailer.importexport.strategy.add_or_replace]]
+            - [setEntityName, [%orocrm_dotmailer.entity.contact.class%]]
 
     orocrm_dotmailer.importexport.processor.activity_contact:
         parent: orocrm_dotmailer.importexport.processor.import_abstract
@@ -256,3 +324,9 @@ services:
         class: %orocrm_dotmailer.importexport.normalizer.datetime.class%
         tags:
             - { name: oro_importexport.normalizer, priority: 20 }
+
+    #filters
+    orocrm_dotmailer.placeholder.filter.buttons_filter:
+        class: %orocrm_dotmailer.placeholder.filter.buttons_filter.class%
+        arguments:
+            - @orocrm_marketing_list.provider.contact_information_fields

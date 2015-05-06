@@ -18,6 +18,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactsIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactsIterator;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
 use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
 
 class DotmailerTransport implements TransportInterface
@@ -30,14 +31,14 @@ class DotmailerTransport implements TransportInterface
     /**
      * @var DotmailerResourcesFactory
      */
-    protected $dotmailerResourcesFactory;
+    protected $dotMailerResFactory;
 
     /**
-     * @param DotmailerResourcesFactory $dotmailerResourcesFactory
+     * @param DotmailerResourcesFactory $dotMailerResFactory
      */
-    public function __construct(DotmailerResourcesFactory $dotmailerResourcesFactory)
+    public function __construct(DotmailerResourcesFactory $dotMailerResFactory)
     {
-        $this->dotmailerResourcesFactory = $dotmailerResourcesFactory;
+        $this->dotMailerResFactory = $dotMailerResFactory;
     }
 
     /**
@@ -55,7 +56,17 @@ class DotmailerTransport implements TransportInterface
             throw new RequiredOptionException('password');
         }
 
-        $this->dotmailerResources = $this->dotmailerResourcesFactory->createResources($username, $password);
+        $this->dotmailerResources = $this->dotMailerResFactory->createResources($username, $password);
+    }
+
+    /**
+     * @param \DateTime|null $dateSince
+     *
+     * @return ContactIterator
+     */
+    public function getContacts($dateSince = null)
+    {
+        return new ContactIterator($this->dotmailerResources, $dateSince);
     }
 
     /**

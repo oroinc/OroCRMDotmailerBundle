@@ -35,7 +35,7 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  *  }
  * )
  */
-class Activity
+class Activity implements ChannelAwareInterface
 {
     /**
      * @var int

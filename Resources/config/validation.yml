@@ -45,6 +45,15 @@ OroCRM\Bundle\DotmailerBundle\Entity\Campaign:
         owner:
             - NotBlank: ~
 
+OroCRM\Bundle\DotmailerBundle\Entity\Contact:
+    properties:
+        channel:
+            - NotBlank: ~
+        originId:
+            - NotBlank: ~
+        owner:
+            - NotBlank: ~
+
 OroCRM\Bundle\DotmailerBundle\Entity\Activity:
     properties:
         channel:

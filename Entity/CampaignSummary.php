@@ -34,7 +34,7 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.ExcessiveClassLength)
  */
-class CampaignSummary
+class CampaignSummary implements ChannelAwareInterface
 {
     /**
      * @var int
