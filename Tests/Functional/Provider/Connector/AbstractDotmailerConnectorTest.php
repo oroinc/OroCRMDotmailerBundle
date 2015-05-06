@@ -23,7 +23,7 @@ class AbstractDotmailerConnectorTest extends WebTestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    protected $stepExecution;
+    protected $context;
 
     protected function setUp()
     {
@@ -38,11 +38,6 @@ class AbstractDotmailerConnectorTest extends WebTestCase
     public function testGetLastSyncDate()
     {
         $connector = $this->getConnector('orocrm_dotmailer.channel.second');
-        $context = $this->getMock('Akeneo\Bundle\BatchBundle\Item\ExecutionContext');
-        $this->stepExecution->expects($this->once())
-            ->method('getExecutionContext')
-            ->will($this->returnValue($context));
-
         $date = $connector->getLastSyncDate();
         $this->assertInstanceOf('\DateTime', $date);
 
@@ -53,18 +48,13 @@ class AbstractDotmailerConnectorTest extends WebTestCase
     public function testGetLastSyncDateReturnNullForFirstSync()
     {
         $connector = $this->getConnector('orocrm_dotmailer.channel.first');
-        $context = $this->getMock('Akeneo\Bundle\BatchBundle\Item\ExecutionContext');
-        $this->stepExecution->expects($this->once())
-            ->method('getExecutionContext')
-            ->will($this->returnValue($context));
-
         $date = $connector->getLastSyncDate();
         $this->assertNull($date);
     }
 
     /**
      * @param string $channel
-     * @return CampaignsConnector
+     * @return CampaignConnector
      */
     protected function getConnector($channel)
     {
@@ -84,7 +74,7 @@ class AbstractDotmailerConnectorTest extends WebTestCase
             ->method('getTransport')
             ->will($this->returnValue($transport));
 
-        $this->stepExecution = $this->getMockBuilder(
+        $stepExecution = $this->getMockBuilder(
             'Akeneo\Bundle\BatchBundle\Entity\StepExecution'
         )
             ->disableOriginalConstructor()
@@ -103,7 +93,11 @@ class AbstractDotmailerConnectorTest extends WebTestCase
         );
         $connector->setManagerRegistry($this->getContainer()
             ->get('doctrine'));
-        $connector->setStepExecution($this->stepExecution);
+        $this->context = $this->getMock('Akeneo\Bundle\BatchBundle\Item\ExecutionContext');
+        $stepExecution->expects($this->any())
+            ->method('getExecutionContext')
+            ->will($this->returnValue($this->context));
+        $connector->setStepExecution($stepExecution);
         return $connector;
     }
 }

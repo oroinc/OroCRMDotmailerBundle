@@ -8,7 +8,7 @@ use Oro\Bundle\IntegrationBundle\ImportExport\Helper\DefaultOwnerHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\ImportExportBundle\Strategy\Import\ConfigurableAddOrReplaceStrategy;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\OriginAwareInterface;
+use OroCRM\Bundle\DotmailerBundle\Entity\ChannelAwareInterface;
 
 class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
 {
@@ -32,7 +32,6 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
      */
     protected function beforeProcessEntity($entity)
     {
-        /** @var OriginAwareInterface $entity */
         $entity = parent::beforeProcessEntity($entity);
 
         $channel = $this->strategyHelper->getEntityManager('OroIntegrationBundle:Channel')
@@ -82,7 +81,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
      */
     protected function setOwner($entity)
     {
-        if ($entity instanceof OriginAwareInterface) {
+        if ($entity instanceof ChannelAwareInterface) {
             /** @var Channel $channel */
             $channel = $this->databaseHelper->getEntityReference($entity->getChannel());
 

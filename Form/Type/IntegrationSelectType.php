@@ -11,7 +11,7 @@ use Oro\Bundle\SecurityBundle\ORM\Walker\AclHelper;
 
 use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
 
-class DotmailerIntegrationSelectType extends AbstractType
+class IntegrationSelectType extends AbstractType
 {
     const NAME = 'orocrm_dotmailer_integration_select';
     const ENTITY = 'Oro\Bundle\IntegrationBundle\Entity\Channel';
@@ -43,19 +43,20 @@ class DotmailerIntegrationSelectType extends AbstractType
     {
         $integrations = $this->getDotmailerIntegrations();
         $options = [
-            'class' => self::ENTITY,
+            'class'    => self::ENTITY,
             'property' => 'name',
-            'choices' => $integrations
+            'choices'  => $integrations
         ];
 
         if (count($integrations) != 1) {
-            $options['empty_value'] = 'orocrm.dotmailer.emailcampaign.integration.placeholder';
+            $options['empty_value'] = 'orocrm.dotmailer.integration.select.placeholder';
         }
+
         $resolver->setDefaults($options);
     }
 
     /**
-     * Get integration with type "dotmailer".
+     * Get dotMailer integration.
      *
      * @return array
      */
@@ -63,10 +64,10 @@ class DotmailerIntegrationSelectType extends AbstractType
     {
         $qb = $this->registry->getRepository(self::ENTITY)
             ->createQueryBuilder('c')
-            ->andWhere('c.type = :type')
+            ->andWhere('c.type = :channelType')
             ->andWhere('c.enabled = :enabled')
             ->setParameter('enabled', true)
-            ->setParameter('type', ChannelType::TYPE)
+            ->setParameter('channelType', ChannelType::TYPE)
             ->orderBy('c.name', 'ASC');
         $query = $this->aclHelper->apply($qb);
 

@@ -16,7 +16,7 @@ use Oro\Bundle\LocaleBundle\Model\LastNameInterface;
 use OroCRM\Bundle\DotmailerBundle\Model\ExtendContact;
 
 /**
- * @ORM\Entity(repositoryClass="OroCRM\Bundle\DotmailerBundle\Entity\Repository\ContactRepository")
+ * @ORM\Entity()
  * @ORM\Table(
  *      name="orocrm_dm_contact",
  *      uniqueConstraints={
