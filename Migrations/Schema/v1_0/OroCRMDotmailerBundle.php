@@ -43,7 +43,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $this->createOroCRMDotmailerActivityTable($schema);
         $this->createOroCRMDotmailerCampaignToABTable($schema);
         $this->createOrocrmDmAbContactTable($schema);
-        $this->createOrocrmDmAbCntImportTable($schema);
+        $this->createOrocrmDmAbCntExportTable($schema);
 
         /** Add Foreign Keys */
         $this->addOroCRMDotmailerCampaignForeignKeys($schema);
@@ -51,7 +51,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $this->addOroCRMDotmailerContactForeignKeys($schema);
         $this->addOroCRMDotmailerActivityForeignKeys($schema);
         $this->addOroCRMDotmailerCampaignToABForeignKeys($schema);
-        $this->addOrocrmDmAbCntImportForeignKeys($schema);
+        $this->addOrocrmDmAbCntExportForeignKeys($schema);
         $this->addOrocrmDmAbContactForeignKeys($schema);
     }
 
@@ -208,9 +208,8 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
     {
         $table = $schema->createTable('orocrm_dm_ab_contact');
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
-        $table->addColumn('contact_id', 'integer', ['notnull' => false]);
-        $table->addColumn('address_book_id', 'integer', ['notnull' => false]);
-        $table->addColumn('status', 'string', ['length' => 16]);
+        $table->addColumn('contact_id', 'integer');
+        $table->addColumn('address_book_id', 'integer');
         $table->addColumn('unsubscribed_date', 'datetime', ['notnull' => false]);
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['address_book_id', 'contact_id'], 'orocrm_dm_ab_cnt_unq');
@@ -219,17 +218,16 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
     }
 
     /**
-     * Create orocrm_dm_ab_cnt_import table
+     * Create orocrm_dm_ab_cnt_export table
      *
      * @param Schema $schema
      */
-    protected function createOrocrmDmAbCntImportTable(Schema $schema)
+    protected function createOrocrmDmAbCntExportTable(Schema $schema)
     {
-        $table = $schema->createTable('orocrm_dm_ab_cnt_import');
+        $table = $schema->createTable('orocrm_dm_ab_cnt_export');
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
         $table->addColumn('address_book_id', 'integer', ['notnull' => false]);
         $table->addColumn('import_id', 'string', ['length' => 100]);
-        $table->addColumn('status', 'string', ['length' => 50]);
         $table->addColumn('created_at', 'datetime', []);
         $table->addColumn('updated_at', 'datetime', []);
         $table->setPrimaryKey(['id']);
@@ -366,13 +364,13 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
     }
 
     /**
-     * Add orocrm_dm_ab_cnt_import foreign keys.
+     * Add orocrm_dm_ab_cnt_export foreign keys.
      *
      * @param Schema $schema
      */
-    protected function addOrocrmDmAbCntImportForeignKeys(Schema $schema)
+    protected function addOrocrmDmAbCntExportForeignKeys(Schema $schema)
     {
-        $table = $schema->getTable('orocrm_dm_ab_cnt_import');
+        $table = $schema->getTable('orocrm_dm_ab_cnt_export');
         $table->addForeignKeyConstraint(
             $schema->getTable('orocrm_dm_address_book'),
             ['address_book_id'],

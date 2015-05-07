@@ -584,10 +584,14 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
 
     /**
      * @param \DateTime $unsubscribedDate
+     *
+     * @return Contact
      */
     public function setUnsubscribedDate(\DateTime $unsubscribedDate = null)
     {
         $this->unsubscribedDate = $unsubscribedDate;
+
+        return $this;
     }
 
     /**

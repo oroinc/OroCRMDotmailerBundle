@@ -4,6 +4,9 @@ namespace OroCRM\Bundle\DotmailerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBookContact;
+
 /**
  * @ORM\Entity()
  * @ORM\Table(
@@ -12,8 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
  *          @ORM\UniqueConstraint(name="orocrm_dm_ab_cnt_unq", columns={"address_book_id", "contact_id"})
  *     }
  * )
+ * @Config()
  */
-class AddressBookContact
+class AddressBookContact extends ExtendAddressBookContact
 {
     /**
      * @var int
@@ -27,27 +31,18 @@ class AddressBookContact
     /**
      * @var AddressBook
      *
-     * @ORM\ManyToOne(targetEntity="AddressBook")
-     * @ORM\JoinColumn(name="address_book_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="AddressBook", inversedBy="addressBookContacts")
+     * @ORM\JoinColumn(name="address_book_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     protected $addressBook;
 
     /**
-     * Contact status
-     *
      * @var Contact
      *
-     * @ORM\ManyToOne(targetEntity="Contact")
-     * @ORM\JoinColumn(name="contact_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Contact", inversedBy="addressBookContacts")
+     * @ORM\JoinColumn(name="contact_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     protected $contact;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="status", type="string", length=16, nullable=false)
-     */
-    protected $status;
 
     /**
      * @var \DateTime
@@ -77,7 +72,7 @@ class AddressBookContact
      *
      * @return AddressBookContact
      */
-    public function setAddressBook(AddressBook $addressBook = null)
+    public function setAddressBook(AddressBook $addressBook)
     {
         $this->addressBook = $addressBook;
 
@@ -97,29 +92,9 @@ class AddressBookContact
      *
      * @return AddressBookContact
      */
-    public function setContact(Contact $contact = null)
+    public function setContact(Contact $contact)
     {
         $this->contact = $contact;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param string $status
-     *
-     * @return AddressBookContact
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
 
         return $this;
     }

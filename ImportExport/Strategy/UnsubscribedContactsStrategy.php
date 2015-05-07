@@ -43,8 +43,8 @@ class UnsubscribedContactsStrategy extends AbstractImportStrategy
         $addressBookOriginId = $originalValue[UnsubscribedContactsIterator::ADDRESS_BOOK_KEY];
         foreach ($contact->getAddressBookContacts() as $addressBookContact) {
             $addressBook = $addressBookContact->getAddressBook();
-            if ($addressBook && $addressBook->getOriginId() == $addressBookOriginId) {
-                $addressBookContact->setStatus($entity->getStatus());
+            if ($addressBook && $addressBook->getOriginId() == $addressBookOriginId && $entity->getStatus()) {
+                $addressBookContact->setStatus($this->getEnumValue('dm_cnt_status', $entity->getStatus()->getId()));
                 $addressBookContact->setUnsubscribedDate($entity->getUnsubscribedDate());
 
                 break;

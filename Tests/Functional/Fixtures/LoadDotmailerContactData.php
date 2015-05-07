@@ -87,7 +87,7 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
                 $addressBook = $this->getReference($addressBook);
                 $addressBookContact = new AddressBookContact();
                 $addressBookContact->setAddressBook($addressBook);
-                $addressBookContact->setStatus(Contact::STATUS_SUBSCRIBED);
+                $addressBookContact->setStatus($this->findEnum('dm_cnt_status', Contact::STATUS_SUBSCRIBED));
                 $contact->addAddressBookContact($addressBookContact);
             }
 

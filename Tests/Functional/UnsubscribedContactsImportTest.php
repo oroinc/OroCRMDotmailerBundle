@@ -85,7 +85,7 @@ class UnsubscribedContactsImportTest extends AbstractImportTest
             $actualAddressBooks = [];
             /** @var AddressBookContact $addressBookContact */
             foreach ($actualContact->getAddressBookContacts()->toArray() as $addressBookContact) {
-                if ($addressBookContact->getStatus() == Contact::STATUS_SUBSCRIBED) {
+                if ($addressBookContact->getStatus()->getId() == Contact::STATUS_SUBSCRIBED) {
                     $actualAddressBooks[] = $addressBookContact->getAddressBook();
                 }
             }

@@ -180,9 +180,9 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
     protected $updatedAt;
 
     /**
-     * @var Collection|ContactsImport[]
+     * @var Collection|AddressBookContactsExport[]
      *
-     * @ORM\OneToMany(targetEntity="ContactsImport", mappedBy="addressBook")
+     * @ORM\OneToMany(targetEntity="AddressBookContactsExport", mappedBy="addressBook")
      * @ConfigField(
      *      defaultValues={
      *          "importexport"={
@@ -191,7 +191,7 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
      *      }
      * )
      */
-    protected $contactImports;
+    protected $addressBookContactsExports;
 
     /**
      * Initialize collections
@@ -470,49 +470,49 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
     }
 
     /**
-     * @return ContactsImport[]
+     * @return AddressBookContactsExport[]
      */
-    public function getContactImports()
+    public function getAddressBookContactsExports()
     {
-        return $this->contactImports;
+        return $this->addressBookContactsExports;
     }
 
     /**
-     * @param ContactsImport[] $contactImports
+     * @param AddressBookContactsExport[] $addressBookContactsExports
      *
      * @return AddressBook
      */
-    public function setContactImports($contactImports)
+    public function setAddressBookContactsExports($addressBookContactsExports)
     {
-        $this->contactImports = $contactImports;
+        $this->addressBookContactsExports = $addressBookContactsExports;
 
         return $this;
     }
 
     /**
-     * @param ContactsImport $contactsImport
+     * @param AddressBookContactsExport $addressBookContactsExport
      *
      * @return AddressBook
      */
-    public function addContactImports(ContactsImport $contactsImport)
+    public function addAddressBookContactsExport(AddressBookContactsExport $addressBookContactsExport)
     {
-        if (!$this->contactImports->contains($contactsImport)) {
-            $contactsImport->setAddressBook($this);
-            $this->contactImports->add($contactsImport);
+        if (!$this->addressBookContactsExports->contains($addressBookContactsExport)) {
+            $addressBookContactsExport->setAddressBook($this);
+            $this->addressBookContactsExports->add($addressBookContactsExport);
         }
 
         return $this;
     }
 
     /**
-     * @param ContactsImport $contactsImport
+     * @param AddressBookContactsExport $addressBookContactsExport
      *
      * @return AddressBook
      */
-    public function removeContactImports(ContactsImport $contactsImport)
+    public function removeAddressBookContactsExport(AddressBookContactsExport $addressBookContactsExport)
     {
-        if ($this->contactImports->contains($contactsImport)) {
-            $this->contactImports->removeElement($contactsImport);
+        if ($this->addressBookContactsExports->contains($addressBookContactsExport)) {
+            $this->addressBookContactsExports->removeElement($addressBookContactsExport);
         }
 
         return $this;

@@ -4,13 +4,17 @@ namespace OroCRM\Bundle\DotmailerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBookContactsExport;
+
 /**
  * @ORM\Entity()
  * @ORM\Table(
- *      name="orocrm_dm_ab_cnt_import",
+ *      name="orocrm_dm_ab_cnt_export",
  * )
+ * @Config()
  */
-class ContactsImport
+class AddressBookContactsExport extends ExtendAddressBookContactsExport
 {
     const STATUS_NOT_FINISHED = 'NotFinished';
     const STATUS_FINISH = 'Finished';
@@ -36,14 +40,6 @@ class ContactsImport
      * @ORM\Column(name="import_id", type="string", length=100, unique=true, nullable=false)
      */
     protected $importId;
-
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="status", type="string", length=50, nullable=false)
-     */
-    protected $status;
 
     /**
      * @var \DateTime
@@ -87,31 +83,11 @@ class ContactsImport
     /**
      * @param string $importId
      *
-     * @return ContactsImport
+     * @return AddressBookContactsExport
      */
     public function setImportId($importId)
     {
         $this->importId = $importId;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param string $status
-     *
-     * @return ContactsImport
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
 
         return $this;
     }
@@ -127,7 +103,7 @@ class ContactsImport
     /**
      * @param \DateTime $createdAt
      *
-     * @return ContactsImport
+     * @return AddressBookContactsExport
      */
     public function setCreatedAt(\DateTime $createdAt = null)
     {
@@ -147,7 +123,7 @@ class ContactsImport
     /**
      * @param AddressBook $addressBook
      *
-     * @return ContactsImport
+     * @return AddressBookContactsExport
      */
     public function setAddressBook(AddressBook $addressBook = null)
     {
@@ -167,7 +143,7 @@ class ContactsImport
     /**
      * @param \DateTime $updatedAt
      *
-     * @return ContactsImport
+     * @return AddressBookContactsExport
      */
     public function setUpdatedAt(\DateTime $updatedAt = null)
     {
