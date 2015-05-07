@@ -148,13 +148,9 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     protected $mergeVarValues;
 
     /**
-     * @var Collection
+     * @var Collection|AddressBookContact[]
      *
-     * @ORM\ManyToMany(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\AddressBook", inversedBy="contacts")
-     * @ORM\JoinTable(name="orocrm_dm_contact_to_ab",
-     *      joinColumns={@ORM\JoinColumn(name="contact_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="address_book_id", referencedColumnName="id", onDelete="CASCADE")}
-     * )
+     * @ORM\OneToMany(targetEntity="AddressBookContact", mappedBy="contact", cascade={"all"})
      * @ConfigField(
      *      defaultValues={
      *          "importexport"={
@@ -163,7 +159,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
      *      }
      * )
      **/
-    protected $addressBooks;
+    protected $addressBookContacts;
 
     /**
      * @var Collection
@@ -229,13 +225,20 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     protected $updatedAt;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="unsubscribed_date", type="datetime", nullable=true)
+     */
+    protected $unsubscribedDate;
+
+    /**
      * Initialize collections
      */
     public function __construct()
     {
         parent::__construct();
-        $this->addressBooks = new ArrayCollection();
         $this->activities = new ArrayCollection();
+        $this->addressBookContacts = new ArrayCollection();
     }
 
     /**
@@ -466,65 +469,52 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     }
 
     /**
-     * Set address books.
-     *
-     * @param Collection|AddressBook[] $addressBooks
+     * @return Collection|AddressBookContact[]
+     */
+    public function getAddressBookContacts()
+    {
+        return $this->addressBookContacts;
+    }
+
+    /**
+     * @param Collection|AddressBookContact[] $addressBookContacts
      *
      * @return Contact
      */
-    public function setAddressBooks($addressBooks)
+    public function setAddressBookContacts($addressBookContacts)
     {
-        $this->addressBooks = $addressBooks;
+        $this->addressBookContacts = $addressBookContacts;
 
         return $this;
     }
 
     /**
-     * Get address books.
-     *
-     * @return Collection|AddressBook[]
-     */
-    public function getAddressBooks()
-    {
-        return $this->addressBooks;
-    }
-
-    /**
-     * @param AddressBook $addressBook
+     * @param AddressBookContact $addressBookContact
      *
      * @return Contact
      */
-    public function addAddressBook(AddressBook $addressBook)
+    public function addAddressBookContact(AddressBookContact $addressBookContact)
     {
-        if (!$this->getAddressBooks()->contains($addressBook)) {
-            $this->getAddressBooks()->add($addressBook);
-            $addressBook->addContact($this);
+        if (!$this->addressBookContacts->contains($addressBookContact)) {
+            $addressBookContact->setContact($this);
+            $this->addressBookContacts->add($addressBookContact);
         }
 
         return $this;
     }
 
     /**
-     * @param AddressBook $addressBook
+     * @param AddressBookContact $addressBookContact
      *
-     * @return Contact
+     * @return AddressBook
      */
-    public function removeAddressBook(AddressBook $addressBook)
+    public function removeAddressBookContact(AddressBookContact $addressBookContact)
     {
-        if ($this->getAddressBooks()->contains($addressBook)) {
-            $this->getAddressBooks()->removeElement($addressBook);
-            $addressBook->removeContact($this);
+        if ($this->addressBookContacts->contains($addressBookContact)) {
+            $this->addressBookContacts->removeElement($addressBookContact);
         }
 
         return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasAddressBooks()
-    {
-        return !$this->getAddressBooks()->isEmpty();
     }
 
     /**
@@ -582,6 +572,26 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     public function hasActivities()
     {
         return !$this->getActivities()->isEmpty();
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUnsubscribedDate()
+    {
+        return $this->unsubscribedDate;
+    }
+
+    /**
+     * @param \DateTime $unsubscribedDate
+     *
+     * @return Contact
+     */
+    public function setUnsubscribedDate(\DateTime $unsubscribedDate = null)
+    {
+        $this->unsubscribedDate = $unsubscribedDate;
+
+        return $this;
     }
 
     /**
