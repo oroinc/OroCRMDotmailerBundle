@@ -15,7 +15,7 @@ use OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
-
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactsIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactsIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
@@ -148,6 +148,22 @@ class DotmailerTransport implements TransportInterface
             $iterator->append(
                 new ActivityContactIterator($this->dotmailerResources, $campaign->getOriginId(), $lastSyncDate)
             );
+        }
+
+        return $iterator;
+    }
+
+    /**
+     * @param array $campaignsToSynchronize
+     *
+     * @return AppendIterator
+     */
+    public function getCampaignSummary(array $campaignsToSynchronize = [])
+    {
+        $iterator = new AppendIterator();
+        /** @var Campaign $campaign */
+        foreach ($campaignsToSynchronize as $campaign) {
+            $iterator->append(new CampaignSummaryIterator($this->dotmailerResources, $campaign->getOriginId()));
         }
 
         return $iterator;

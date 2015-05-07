@@ -39,6 +39,7 @@ use OroCRM\Bundle\DotmailerBundle\Model\ExtendCampaign;
  *      }
  *  }
  * )
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class Campaign extends ExtendCampaign implements OriginAwareInterface
 {
@@ -241,6 +242,17 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
      * @ORM\JoinColumn(name="email_campaign_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $emailCampaign;
+
+    /**
+     * @var CampaignSummary
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\CampaignSummary",
+     *     cascade={"persist"}, mappedBy="campaign"
+     * )
+     * @ORM\JoinColumn(name="campaign_summary_id", referencedColumnName="id", onDelete="SET NULL", nullable=true)
+     */
+    protected $campaignSummary;
 
     /**
      * Initialize collections
@@ -635,6 +647,26 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
     public function setEmailCampaign(EmailCampaign $emailCampaign = null)
     {
         $this->emailCampaign = $emailCampaign;
+
+        return $this;
+    }
+
+    /**
+     * @return CampaignSummary
+     */
+    public function getCampaignSummary()
+    {
+        return $this->campaignSummary;
+    }
+
+    /**
+     * @param CampaignSummary $campaignSummary
+     *
+     * @return Campaign
+     */
+    public function setCampaignSummary($campaignSummary)
+    {
+        $this->campaignSummary = $campaignSummary;
 
         return $this;
     }

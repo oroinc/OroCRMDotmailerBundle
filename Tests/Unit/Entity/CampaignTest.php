@@ -9,6 +9,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\Activity;
+use OroCRM\Bundle\DotmailerBundle\Entity\CampaignSummary;
 
 class CampaignTest extends \PHPUnit_Framework_TestCase
 {
@@ -38,6 +39,7 @@ class CampaignTest extends \PHPUnit_Framework_TestCase
     {
         $now = new \DateTime('now');
         $channel = new Channel();
+        $summary = new CampaignSummary();
         $organization = $this->getMock('Oro\Bundle\OrganizationBundle\Entity\Organization');
 
         return array(
@@ -53,6 +55,7 @@ class CampaignTest extends \PHPUnit_Framework_TestCase
             'createdAt' => array('createdAt', $now, $now),
             'updatedAt' => array('updatedAt', $now, $now),
             'owner' => array('owner', $organization, $organization),
+            'campaignSummary' => array('campaignSummary', $summary, $summary),
         );
     }
 

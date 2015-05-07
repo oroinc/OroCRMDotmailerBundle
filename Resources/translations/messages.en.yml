@@ -109,6 +109,9 @@ orocrm:
             activity_contact:
                 label: Contact Activities Connector
                 job: Import contact activities from Dotmailer
+            campaign_summary:
+                label: Campaign Summary Connector
+                job: Import campaigns summary from Dotmailer
 
         emailcampaign:
             transport.dotmailer: Dotmailer
