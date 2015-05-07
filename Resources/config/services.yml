@@ -303,7 +303,7 @@ services:
         parent: orocrm_dotmailer.importexport.processor.import_abstract
         calls:
             - [setDataConverter, [@orocrm_dotmailer.importexport.data_converter.campaign_summary]]
-            - [setStrategy, [@orocrm_dotmailer.importexport.strategy.campaign_summary]]
+            - [setStrategy, [@orocrm_dotmailer.importexport.strategy.add_or_replace]]
             - [setEntityName, [%orocrm_dotmailer.entity.campaign_summary.class%]]
 
     #serializer

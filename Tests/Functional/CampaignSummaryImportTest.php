@@ -61,6 +61,12 @@ class CampaignSummaryImportTest extends AbstractImportTest
         $summaryEntities = $campaignSummaryRepository->findBy($searchCriteria);
 
         $this->assertCount(1, $summaryEntities);
+
+        $result = $processor->process($channel, CampaignSummaryConnector::TYPE);
+
+        $this->assertTrue($result);
+        $summaryEntities = $campaignSummaryRepository->findBy($searchCriteria);
+        $this->assertCount(1, $summaryEntities);
     }
 
     public function importDataProvider()

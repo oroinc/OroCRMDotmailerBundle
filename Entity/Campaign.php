@@ -634,7 +634,7 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
      *
      * @return Campaign
      */
-    public function setCampaignSummary($campaignSummary)
+    public function setCampaignSummary(CampaignSummary $campaignSummary = null)
     {
         $this->campaignSummary = $campaignSummary;
 
