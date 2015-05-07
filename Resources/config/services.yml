@@ -46,6 +46,7 @@ parameters:
     orocrm_dotmailer.importexport.strategy.unsubscribed_from_account_contacts.class:  OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\UnsubscribedFromAccountStrategy
     orocrm_dotmailer.importexport.strategy.campaign.class:                            OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\CampaignStrategy
     orocrm_dotmailer.importexport.strategy.activity_contact.class:                    OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\ActivityContactStrategy
+    orocrm_dotmailer.importexport.strategy.contact.class:                             OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\ContactStrategy
 
     #processor
     orocrm_dotmailer.importexport.processor.import_abstract.class:    OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\ImportProcessor
@@ -230,6 +231,10 @@ services:
         class: %orocrm_dotmailer.importexport.strategy.activity_contact.class%
         parent: orocrm_dotmailer.importexport.strategy.add_or_replace
 
+    orocrm_dotmailer.importexport.strategy.contact:
+        class: %orocrm_dotmailer.importexport.strategy.contact.class%
+        parent: orocrm_dotmailer.importexport.strategy.add_or_replace
+
     #processor
     orocrm_dotmailer.importexport.processor.import_abstract:
         class: %orocrm_dotmailer.importexport.processor.import_abstract.class%
@@ -270,7 +275,7 @@ services:
         parent: orocrm_dotmailer.importexport.processor.import_abstract
         calls:
             - [setDataConverter, [@orocrm_dotmailer.importexport.data_converter.contact]]
-            - [setStrategy, [@orocrm_dotmailer.importexport.strategy.add_or_replace]]
+            - [setStrategy, [@orocrm_dotmailer.importexport.strategy.contact]]
             - [setEntityName, [%orocrm_dotmailer.entity.contact.class%]]
 
     orocrm_dotmailer.importexport.processor.activity_contact:

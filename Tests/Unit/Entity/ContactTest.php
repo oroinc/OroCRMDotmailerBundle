@@ -87,55 +87,6 @@ class ContactTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('DateTime', $this->entity->getUpdatedAt());
     }
 
-    public function testAddAddressBook()
-    {
-        $this->assertEmpty($this->entity->getAddressBooks()->toArray());
-
-        $addressBook = new AddressBook();
-        $this->entity->addAddressBook($addressBook);
-        $addressBooks = $this->entity->getAddressBooks()->toArray();
-        $this->assertCount(1, $addressBooks);
-        $this->assertEquals($addressBook, current($addressBooks));
-    }
-
-    public function testRemoveAddressBook()
-    {
-        $this->assertEmpty($this->entity->getAddressBooks()->toArray());
-
-        $addressBook = new AddressBook();
-        $this->entity->addAddressBook($addressBook);
-        $addressBooks = $this->entity->getAddressBooks()->toArray();
-        $this->assertCount(1, $addressBooks);
-        $this->assertEquals($addressBook, current($addressBooks));
-        $this->entity->removeAddressBook($addressBook);
-        $this->assertEmpty($this->entity->getAddressBooks()->toArray());
-    }
-
-    public function testHasAddressBooks()
-    {
-        $this->assertEmpty($this->entity->getAddressBooks()->toArray());
-
-        $addressBook = new AddressBook();
-        $this->assertFalse($this->entity->hasAddressBooks());
-        $this->entity->addAddressBook($addressBook);
-        $addressBooks = $this->entity->getAddressBooks()->toArray();
-        $this->assertCount(1, $addressBooks);
-        $this->assertTrue($this->entity->hasAddressBooks());
-    }
-
-    public function testSetAddressBooks()
-    {
-        $this->assertEmpty($this->entity->getAddressBooks()->toArray());
-
-        $addressBook = new AddressBook();
-        $this->entity->addAddressBook($addressBook);
-        $addressBooks = $this->entity->getAddressBooks()->toArray();
-        $this->assertCount(1, $addressBooks);
-        $this->assertEquals($addressBook, current($addressBooks));
-        $this->entity->setAddressBooks(new ArrayCollection());
-        $this->assertEmpty($this->entity->getAddressBooks()->toArray());
-    }
-
     public function testAddActivity()
     {
         $this->assertEmpty($this->entity->getActivities()->toArray());

@@ -42,7 +42,8 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $this->createOroCRMDotmailerContactTable($schema);
         $this->createOroCRMDotmailerActivityTable($schema);
         $this->createOroCRMDotmailerCampaignToABTable($schema);
-        $this->createOroCRMDotmailerContactToABTable($schema);
+        $this->createOrocrmDmAbContactTable($schema);
+        $this->createOrocrmDmAbCntExportTable($schema);
 
         /** Add Foreign Keys */
         $this->addOroCRMDotmailerCampaignForeignKeys($schema);
@@ -50,7 +51,8 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $this->addOroCRMDotmailerContactForeignKeys($schema);
         $this->addOroCRMDotmailerActivityForeignKeys($schema);
         $this->addOroCRMDotmailerCampaignToABForeignKeys($schema);
-        $this->addOroCRMDotmailerContactToABForeignKeys($schema);
+        $this->addOrocrmDmAbCntExportForeignKeys($schema);
+        $this->addOrocrmDmAbContactForeignKeys($schema);
     }
 
     /**
@@ -138,6 +140,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addColumn('merge_var_values', 'json_array', ['notnull' => false, 'comment' => '(DC2Type:json_array)']);
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->addColumn('updated_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
+        $table->addColumn('unsubscribed_date', 'datetime', ['notnull' => false]);
         $table->addIndex(['owner_id'], 'IDX_6D7FB88E7E3C61F9', []);
         $table->addIndex(['channel_id'], 'IDX_6D7FB88E72F5A1AA', []);
         $table->addUniqueIndex(['origin_id', 'channel_id'], 'orocrm_dm_contact_unq');
@@ -197,18 +200,39 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
     }
 
     /**
-     * Create orocrm_dm_contact_to_ab table
+     * Create orocrm_dm_ab_contact table
      *
      * @param Schema $schema
      */
-    protected function createOroCRMDotmailerContactToABTable(Schema $schema)
+    protected function createOrocrmDmAbContactTable(Schema $schema)
     {
-        $table = $schema->createTable('orocrm_dm_contact_to_ab');
-        $table->addColumn('contact_id', 'integer', []);
-        $table->addColumn('address_book_id', 'integer', []);
-        $table->addIndex(['address_book_id'], 'IDX_ECE957004D474419', []);
-        $table->addIndex(['contact_id'], 'IDX_ECE95700E7A1254A', []);
-        $table->setPrimaryKey(['contact_id', 'address_book_id']);
+        $table = $schema->createTable('orocrm_dm_ab_contact');
+        $table->addColumn('id', 'integer', ['autoincrement' => true]);
+        $table->addColumn('contact_id', 'integer');
+        $table->addColumn('address_book_id', 'integer');
+        $table->addColumn('unsubscribed_date', 'datetime', ['notnull' => false]);
+        $table->setPrimaryKey(['id']);
+        $table->addUniqueIndex(['address_book_id', 'contact_id'], 'orocrm_dm_ab_cnt_unq');
+        $table->addIndex(['address_book_id'], 'IDX_74DFE8B64D474419', []);
+        $table->addIndex(['contact_id'], 'IDX_74DFE8B6E7A1254A', []);
+    }
+
+    /**
+     * Create orocrm_dm_ab_cnt_export table
+     *
+     * @param Schema $schema
+     */
+    protected function createOrocrmDmAbCntExportTable(Schema $schema)
+    {
+        $table = $schema->createTable('orocrm_dm_ab_cnt_export');
+        $table->addColumn('id', 'integer', ['autoincrement' => true]);
+        $table->addColumn('address_book_id', 'integer', ['notnull' => false]);
+        $table->addColumn('import_id', 'string', ['length' => 100]);
+        $table->addColumn('created_at', 'datetime', []);
+        $table->addColumn('updated_at', 'datetime', []);
+        $table->setPrimaryKey(['id']);
+        $table->addUniqueIndex(['import_id'], 'UNIQ_5C0830B4B6A263D9');
+        $table->addIndex(['address_book_id'], 'IDX_5C0830B44D474419', []);
     }
 
     /**
@@ -340,24 +364,40 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
     }
 
     /**
-     * Add orocrm_dm_contact_to_ab foreign keys.
+     * Add orocrm_dm_ab_cnt_export foreign keys.
      *
      * @param Schema $schema
      */
-    protected function addOroCRMDotmailerContactToABForeignKeys(Schema $schema)
+    protected function addOrocrmDmAbCntExportForeignKeys(Schema $schema)
     {
-        $table = $schema->getTable('orocrm_dm_contact_to_ab');
+        $table = $schema->getTable('orocrm_dm_ab_cnt_export');
         $table->addForeignKeyConstraint(
             $schema->getTable('orocrm_dm_address_book'),
             ['address_book_id'],
             ['id'],
-            ['onUpdate' => null, 'onDelete' => 'CASCADE']
+            ['onDelete' => 'SET NULL', 'onUpdate' => null]
         );
+    }
+
+    /**
+     * Add orocrm_dm_ab_contact foreign keys.
+     *
+     * @param Schema $schema
+     */
+    protected function addOrocrmDmAbContactForeignKeys(Schema $schema)
+    {
+        $table = $schema->getTable('orocrm_dm_ab_contact');
         $table->addForeignKeyConstraint(
             $schema->getTable('orocrm_dm_contact'),
             ['contact_id'],
             ['id'],
-            ['onUpdate' => null, 'onDelete' => 'CASCADE']
+            ['onDelete' => 'CASCADE', 'onUpdate' => null]
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('orocrm_dm_address_book'),
+            ['address_book_id'],
+            ['id'],
+            ['onDelete' => 'CASCADE', 'onUpdate' => null]
         );
     }
 }

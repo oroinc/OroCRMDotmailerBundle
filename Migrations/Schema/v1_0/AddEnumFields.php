@@ -43,6 +43,16 @@ class AddEnumFields implements Migration, ExtendExtensionAwareInterface, Ordered
                 'field'   => 'status',
             ],
         ],
+        'orocrm_dm_ab_cnt_export' => [
+            'dm_import_status'  => [
+                'field'   => 'status',
+            ],
+        ],
+        'orocrm_dm_ab_contact' => [
+            'dm_cnt_status'  => [
+                'field'   => 'status',
+            ],
+        ]
     ];
 
     /**
