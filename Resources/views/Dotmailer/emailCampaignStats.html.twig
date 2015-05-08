@@ -1,0 +1,60 @@
+{% if campaignStats is not empty %}
+    {% import 'OroCRMDotmailerBundle::macros.html.twig' as ui %}
+
+    <div class="row-fluid">
+        <h5 class="user-fieldset">
+            <span>{{ 'orocrm.dotmailer.emailcampaign.statistics.label'|trans }}</span>
+        </h5>
+    </div>
+
+    <div class="row-fluid row-fluid-divider form-horizontal">
+        <div class="responsive-cell">
+            <div class="responsive-block">
+                <strong>{{ 'orocrm.dotmailer.emailcampaign.positive.label'|trans }}</strong>
+
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.emailsSent.label',
+                    campaignStats.numTotalSent|oro_format_decimal,
+                    'orocrm.dotmailer.emailcampaign.emailsSent.tooltip'
+                ) }}
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.opens.label',
+                    campaignStats.numTotalOpens|oro_format_decimal,
+                    'orocrm.dotmailer.emailcampaign.opens.tooltip')
+                }}
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.clicks.label',
+                    campaignStats.numTotalClicks|oro_format_decimal,
+                    'orocrm.dotmailer.emailcampaign.clicks.tooltip')
+                }}
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.forwards.label',
+                    campaignStats.numForwards|oro_format_decimal,
+                    'orocrm.dotmailer.emailcampaign.forwards.tooltip')
+                }}
+            </div>
+        </div>
+
+        <div class="responsive-cell">
+            <div class="responsive-block">
+                <strong>{{ 'orocrm.dotmailer.emailcampaign.negative.label'|trans }}</strong>
+
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.hardBounces.label',
+                    campaignStats.numTotalHardBounces|oro_format_decimal,
+                    'orocrm.dotmailer.emailcampaign.hardBounces.tooltip')
+                }}
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.softBounces.label',
+                    campaignStats.numTotalSoftBounces|oro_format_decimal,
+                    'orocrm.dotmailer.emailcampaign.softBounces.tooltip')
+                }}
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.unsubscribes.label',
+                    campaignStats.numTotalUnsubscribes|oro_format_decimal,
+                    'orocrm.dotmailer.emailcampaign.unsubscribes.tooltip')
+                }}
+            </div>
+        </div>
+    </div>
+{% endif %}

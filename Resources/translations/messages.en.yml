@@ -117,6 +117,16 @@ orocrm:
             transport.dotmailer: Dotmailer
             integration:
                 label: Dotmailer Integration
+            statistics.label: Dotmailer Statistics
+            positive.label: Positive
+            negative.label: Negative
+            emailsSent.label: Emails Sent
+            hardBounces.label: Hard Bounces
+            softBounces.label: Soft Bounces
+            unsubscribes.label: Unsubscribes
+            forwards.label: Forwards
+            opens.label: Opens
+            clicks.label: Clicks
 
         connection:
             name: Dotmailer Connection
