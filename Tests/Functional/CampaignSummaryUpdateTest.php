@@ -12,14 +12,14 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector;
  * @dbIsolation
  * @dbReindex
  */
-class CampaignSummaryImportTest extends AbstractImportTest
+class CampaignSummaryUpdateTest extends AbstractImportTest
 {
     protected function setUp()
     {
         parent::setUp();
         $this->loadFixtures(
             [
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadCampaignData',
+                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadCampaignSummaryData',
             ]
         );
     }
@@ -32,6 +32,11 @@ class CampaignSummaryImportTest extends AbstractImportTest
      */
     public function testImport($expected, $summary)
     {
+        $campaignSummaryRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:CampaignSummary');
+        $summaryEntities = $campaignSummaryRepository->findAll();
+        $this->assertCount(1, $summaryEntities);
+        $summaryEntities = null;
+
         $entity = new ApiCampaignSummary($summary);
 
         $this->resource->expects($this->any())
@@ -43,8 +48,6 @@ class CampaignSummaryImportTest extends AbstractImportTest
         $result = $processor->process($channel, CampaignSummaryConnector::TYPE);
 
         $this->assertTrue($result);
-
-        $campaignSummaryRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:CampaignSummary');
 
         $searchCriteria = [
             'numUniqueOpens' => $expected['numUniqueOpens'],
@@ -59,7 +62,9 @@ class CampaignSummaryImportTest extends AbstractImportTest
         ];
 
         $summaryEntities = $campaignSummaryRepository->findBy($searchCriteria);
+        $this->assertCount(1, $summaryEntities);
 
+        $summaryEntities = $campaignSummaryRepository->findAll();
         $this->assertCount(1, $summaryEntities);
     }
 
@@ -68,10 +73,10 @@ class CampaignSummaryImportTest extends AbstractImportTest
         return [
             [
                 'expected'        => [
-                    'numUniqueOpens' => 5,
+                    'numUniqueOpens' => 15,
                     'numUniqueTextOpens' => 5,
                     'numTotalUniqueOpens' => 5,
-                    'numOpens' => 5,
+                    'numOpens' => 15,
                     'numTextOpens' => 5,
                     'numTotalOpens' => 5,
                     'numClicks' => 5,
@@ -79,10 +84,10 @@ class CampaignSummaryImportTest extends AbstractImportTest
                     'numTotalClicks' => 5,
                 ],
                 'summary' => [
-                    'numUniqueOpens' => 5,
+                    'numUniqueOpens' => 15,
                     'numUniqueTextOpens' => 5,
                     'numTotalUniqueOpens' => 5,
-                    'numOpens' => 5,
+                    'numOpens' => 15,
                     'numTextOpens' => 5,
                     'numTotalOpens' => 5,
                     'numClicks' => 5,

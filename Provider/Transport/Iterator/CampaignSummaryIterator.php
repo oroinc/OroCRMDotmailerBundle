@@ -83,7 +83,7 @@ class CampaignSummaryIterator implements \Iterator
      */
     public function next()
     {
-        if (next($this->items) !== false || $this->tryToLoadItems()) {
+        if (next($this->items) !== false) {
             $this->currentItemIndex++;
         }
     }
@@ -110,33 +110,10 @@ class CampaignSummaryIterator implements \Iterator
      */
     public function rewind()
     {
-        $this->lastPage = false;
-        $this->items = [];
+        $this->items = $this->getItems();
         reset($this->items);
         $this->currentItemIndex = 0;
 
-        $this->isValid = $this->tryToLoadItems();
-    }
-
-    /**
-     * @return bool
-     */
-    protected function tryToLoadItems()
-    {
-        /** Requests count optimization */
-        if ($this->lastPage) {
-            return false;
-        }
-
-        $this->items = $this->getItems();
-        reset($this->items);
-
-        if (count($this->items) == 0) {
-            return false;
-        }
-
-        $this->lastPage = true;
-
-        return true;
+        $this->isValid = count($this->items) == 0?false:true;
     }
 }
