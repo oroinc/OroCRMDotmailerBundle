@@ -119,9 +119,11 @@ class ContactUpdateTest extends AbstractImportTest
                         'optInType' => 'Double',
                         'emailType' => 'Html',
                         'status'    => 'Suppressed',
+                        'lastName'  => 'Test',
+                        'gender'    => 'male',
                     ],
                 ],
-                'addressBookList' => [
+                'contactList' => [
                     [
                         'id'        => 142,
                         'email'     => 'test1@example.com',
@@ -135,6 +137,28 @@ class ContactUpdateTest extends AbstractImportTest
                         'optInType' => 'Double',
                         'emailType' => 'Html',
                         'status'    => 'Suppressed',
+                        'datafields' => [
+                            [
+                                'key'   => 'FIRSTNAME',
+                                'value' => 'null'
+                            ],
+                            [
+                                'key'   => 'LASTNAME',
+                                'value' => ['Test']
+                            ],
+                            [
+                                'key'   => 'FULLNAME',
+                                'value' => 'null'
+                            ],
+                            [
+                                'key'   => 'POSTCODE',
+                                'value' => 'null'
+                            ],
+                            [
+                                'key'   => 'GENDER',
+                                'value' => ['male']
+                            ],
+                        ]
                     ],
                 ]
             ]

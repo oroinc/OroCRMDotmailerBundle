@@ -70,6 +70,26 @@ class ContactImportTest extends AbstractImportTest
                 'email'     => $contact['email'],
             ];
 
+            if (!empty($expected['firstName'])) {
+                $searchCriteria['firstName'] = $expected['firstName'];
+            }
+
+            if (!empty($expected['lastName'])) {
+                $searchCriteria['lastName'] = $expected['lastName'];
+            }
+
+            if (!empty($expected['fullName'])) {
+                $searchCriteria['fullName'] = $expected['fullName'];
+            }
+
+            if (!empty($expected['gender'])) {
+                $searchCriteria['gender'] = $expected['gender'];
+            }
+
+            if (!empty($expected['postcode'])) {
+                $searchCriteria['postcode'] = $expected['postcode'];
+            }
+
             $contactEntity = $contactRepository->findOneBy($searchCriteria);
             $this->assertNotNull($contactEntity, 'Failed asserting that contact imported.');
 
@@ -111,6 +131,8 @@ class ContactImportTest extends AbstractImportTest
                         'optInType' => 'Single',
                         'emailType' => 'PlainText',
                         'status'    => 'Subscribed',
+                        'lastName'  => 'Test',
+                        'gender'    => 'male',
                     ],
                     [
                         'originId'  => 75,
@@ -120,17 +142,39 @@ class ContactImportTest extends AbstractImportTest
                         'status'    => 'Subscribed',
                     ],
                 ],
-                'addressBookList' => [
+                'contactList' => [
                     [
                         'id'    => 11,
                         'email' => 'test1@test.com',
                     ],
                     [
-                        'id'        => 67,
-                        'email'     => 'test4@test.com',
-                        'optInType' => 'Single',
-                        'emailType' => 'PlainText',
-                        'status'    => 'Subscribed',
+                        'id'         => 67,
+                        'email'      => 'test4@test.com',
+                        'optInType'  => 'Single',
+                        'emailType'  => 'PlainText',
+                        'status'     => 'Subscribed',
+                        'datafields' => [
+                            [
+                                'key'   => 'FIRSTNAME',
+                                'value' => 'null'
+                            ],
+                            [
+                                'key'   => 'LASTNAME',
+                                'value' => ['Test']
+                            ],
+                            [
+                                'key'   => 'FULLNAME',
+                                'value' => 'null'
+                            ],
+                            [
+                                'key'   => 'POSTCODE',
+                                'value' => 'null'
+                            ],
+                            [
+                                'key'   => 'GENDER',
+                                'value' => ['male']
+                            ],
+                        ]
                     ],
                     [
                         'id'        => 75,
