@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 
 use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign;
+use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 
 /**
  * @Route("/dotmailer")
@@ -36,5 +37,27 @@ class DotmailerController extends Controller
             ->getRepository('OroCRMDotmailerBundle:CampaignSummary')
             ->getSummaryByEmailCampaign($emailCampaign);
         return ['campaignStats' => $campaign];
+    }
+
+    /**
+     * @Route("/sync-status/{marketingList}",
+     *      name="orocrm_dotmailer_sync_status",
+     *      requirements={"marketingList"="\d+"})
+     * @ParamConverter("marketingList",
+     *      class="OroCRMMarketingListBundle:MarketingList",
+     *      options={"id" = "marketingList"})
+     * @AclAncestor("orocrm_dotmailer")
+     *
+     * @Template
+     *
+     * @param MarketingList $marketingList
+     * @return array
+     */
+    public function marketingListSyncStatusAction(MarketingList $marketingList)
+    {
+        $addressBook = $this->getDoctrine()->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->findOneBy(['marketingList' => $marketingList]);
+
+        return ['address_book' => $addressBook];
     }
 }

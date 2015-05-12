@@ -153,3 +153,10 @@ orocrm:
                 disconnect:         Disconnect
             confirmation:
                 disconnect:         Are you sure you want to unlink this Marketing List from Dotmailer
+
+        syncstatus:
+            synced: Up to date
+            not_synced: Not Synced
+            in_progress: In Progress
+            scheduled: Scheduled for Sync
+            list_is_connected.lebel: This list is linked to "%address_book%" Dotmailer address book. Last synchronization date: %synced%. Synchronization status: %status%.

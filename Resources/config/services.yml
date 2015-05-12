@@ -63,6 +63,7 @@ parameters:
     #filters
     orocrm_dotmailer.placeholder.filter.buttons_filter.class:         OroCRM\Bundle\DotmailerBundle\Placeholders\ButtonFilter
     orocrm_dotmailer.placeholder.filter.email_campaign.class:         OroCRM\Bundle\DotmailerBundle\Placeholders\EmailCampaignPlaceholderFilter
+    orocrm_dotmailer.placeholder.filter.marketing_list.class:         OroCRM\Bundle\DotmailerBundle\Placeholders\MarketingListPlaceholderFilter
 
     #search handlers
     orocrm_dotmailer.form.autocomplete.list.search_handler.class:     OroCRM\Bundle\DotmailerBundle\Autocomplete\AddressBooksSearchHandler
@@ -347,6 +348,11 @@ services:
 
     orocrm_dotmailer.placeholder.filter.email_campaign:
         class: %orocrm_dotmailer.placeholder.filter.email_campaign.class%
+        arguments:
+            - @doctrine
+
+    orocrm_dotmailer.placeholder.filter.sync_status:
+        class: %orocrm_dotmailer.placeholder.filter.marketing_list.class%
         arguments:
             - @doctrine
 

@@ -5,9 +5,9 @@ placeholders:
     view_content_data_email_campaign_status:
         items:
             orocrm_dotmailer_emailcampaign_stats: ~
-#   marketing_list_sync_info:
-#        items:
-#            orocrm_dotmailer_marketing_list_sync_data: ~
+    marketing_list_sync_info:
+        items:
+            orocrm_dotmailer_marketing_list_sync_data: ~
 
 items:
     orocrm_dotmailer_marketing_list_buttons:
@@ -18,7 +18,6 @@ items:
         action: OroCRMDotmailerBundle:Dotmailer:emailCampaignStats
         applicable: @orocrm_dotmailer.placeholder.filter.email_campaign->isApplicableOnEmailCampaign($entity$)
 
-    # TODO: implement stats and sync list placeholders
-    #orocrm_dotmailer_marketing_list_sync_data:
-    #    action: OroCRMDotmailerBundle:Dotmailer:marketingListSyncStatus
-    #    applicable: @orocrm_dotmailer.placeholder.filter.sync_status->isApplicableOnMarketingList($marketingList$)
+    orocrm_dotmailer_marketing_list_sync_data:
+        action: OroCRMDotmailerBundle:Dotmailer:marketingListSyncStatus
+        applicable: @orocrm_dotmailer.placeholder.filter.sync_status->isApplicableOnMarketingList($marketingList$)
