@@ -234,6 +234,17 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
     protected $activities;
 
     /**
+     * @var CampaignSummary
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\CampaignSummary",
+     *     cascade={"persist"}, mappedBy="campaign"
+     * )
+     * @ORM\JoinColumn(name="campaign_summary_id", referencedColumnName="id", onDelete="SET NULL", nullable=true)
+     */
+    protected $campaignSummary;
+
+    /**
      * Initialize collections
      */
     public function __construct()
@@ -608,6 +619,26 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
     public function hasActivities()
     {
         return !$this->getActivities()->isEmpty();
+    }
+
+    /**
+     * @return CampaignSummary
+     */
+    public function getCampaignSummary()
+    {
+        return $this->campaignSummary;
+    }
+
+    /**
+     * @param CampaignSummary $campaignSummary
+     *
+     * @return Campaign
+     */
+    public function setCampaignSummary(CampaignSummary $campaignSummary = null)
+    {
+        $this->campaignSummary = $campaignSummary;
+
+        return $this;
     }
 
     /**

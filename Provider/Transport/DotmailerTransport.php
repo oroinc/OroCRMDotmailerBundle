@@ -15,7 +15,7 @@ use OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
-
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactsIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactsIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
@@ -151,6 +151,16 @@ class DotmailerTransport implements TransportInterface
         }
 
         return $iterator;
+    }
+
+    /**
+     * @param array $campaignsToSynchronize
+     *
+     * @return \Iterator
+     */
+    public function getCampaignSummary(array $campaignsToSynchronize = [])
+    {
+        return new CampaignSummaryIterator($this->dotmailerResources, $campaignsToSynchronize);
     }
 
     /**

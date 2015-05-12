@@ -41,6 +41,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $this->createOroCRMDotmailerAddressBookTable($schema);
         $this->createOroCRMDotmailerContactTable($schema);
         $this->createOroCRMDotmailerActivityTable($schema);
+        $this->createOroCRMDotmailerCampaignSummaryTable($schema);
         $this->createOroCRMDotmailerCampaignToABTable($schema);
         $this->createOrocrmDmAbContactTable($schema);
         $this->createOrocrmDmAbCntExportTable($schema);
@@ -50,6 +51,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $this->addOroCRMDotmailerAddressBookForeignKeys($schema);
         $this->addOroCRMDotmailerContactForeignKeys($schema);
         $this->addOroCRMDotmailerActivityForeignKeys($schema);
+        $this->addOroCRMDotmailerCampaignSummaryForeignKeys($schema);
         $this->addOroCRMDotmailerCampaignToABForeignKeys($schema);
         $this->addOrocrmDmAbCntExportForeignKeys($schema);
         $this->addOrocrmDmAbContactForeignKeys($schema);
@@ -78,6 +80,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
         $table->addColumn('owner_id', 'integer', ['notnull' => false]);
         $table->addColumn('channel_id', 'integer', ['notnull' => false]);
+        $table->addColumn('campaign_summary_id', 'integer', ['notnull' => false]);
         $table->addColumn('origin_id', 'bigint', ['notnull' => false]);
         $table->addColumn('name', 'string', ['length' => 255]);
         $table->addColumn('subject', 'string', ['notnull' => false, 'length' => 255]);
@@ -91,6 +94,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addColumn('updated_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->addIndex(['owner_id'], 'IDX_3D36193A7E3C61F9', []);
         $table->addIndex(['channel_id'], 'IDX_3D36193A72F5A1AA', []);
+        $table->addUniqueIndex(['campaign_summary_id'], 'UNIQ_3D36193AEDD5F4F4');
         $table->addUniqueIndex(['origin_id', 'channel_id'], 'orocrm_dm_campaign_unq');
         $table->setPrimaryKey(['id']);
     }
@@ -185,6 +189,81 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
     }
 
     /**
+     * Create orocrm_dm_campaign_summary table
+     *
+     * @param Schema $schema
+     */
+    protected function createOroCRMDotmailerCampaignSummaryTable(Schema $schema)
+    {
+        $table = $schema->createTable('orocrm_dm_campaign_summary');
+        $table->addColumn('id', 'integer', ['autoincrement' => true]);
+        $table->addColumn('owner_id', 'integer', ['notnull' => false]);
+        $table->addColumn('channel_id', 'integer', ['notnull' => false]);
+        $table->addColumn('campaign_id', 'integer', []);
+
+        $table->addColumn('date_sent', 'datetime', ['notnull' => false, 'comment' => '(DC2Type:datetime)']);
+        $table->addColumn('num_unique_opens', 'integer', ['notnull' => false]);
+        $table->addColumn('num_unique_text_opens', 'integer', ['notnull' => false]);
+        $table->addColumn('num_total_unique_opens', 'integer', ['notnull' => false]);
+        $table->addColumn('num_opens', 'integer', ['notnull' => false]);
+        $table->addColumn('num_text_opens', 'integer', ['notnull' => false]);
+        $table->addColumn('num_total_opens', 'integer', ['notnull' => false]);
+        $table->addColumn('num_clicks', 'integer', ['notnull' => false]);
+        $table->addColumn('num_text_clicks', 'integer', ['notnull' => false]);
+        $table->addColumn('num_total_clicks', 'integer', ['notnull' => false]);
+        $table->addColumn('num_page_views', 'integer', ['notnull' => false]);
+        $table->addColumn('num_total_page_views', 'integer', ['notnull' => false]);
+        $table->addColumn('num_text_page_views', 'integer', ['notnull' => false]);
+        $table->addColumn('num_forwards', 'integer', ['notnull' => false]);
+        $table->addColumn('num_text_forwards', 'integer', ['notnull' => false]);
+        $table->addColumn('num_estimated_forwards', 'integer', ['notnull' => false]);
+        $table->addColumn('num_text_estimated_forwards', 'integer', ['notnull' => false]);
+        $table->addColumn('num_total_estimated_forwards', 'integer', ['notnull' => false]);
+        $table->addColumn('num_replies', 'integer', ['notnull' => false]);
+        $table->addColumn('num_text_replies', 'integer', ['notnull' => false]);
+        $table->addColumn('num_total_replies', 'integer', ['notnull' => false]);
+        $table->addColumn('num_hard_bounces', 'integer', ['notnull' => false]);
+        $table->addColumn('num_text_hard_bounces', 'integer', ['notnull' => false]);
+        $table->addColumn('num_total_hard_bounces', 'integer', ['notnull' => false]);
+        $table->addColumn('num_soft_bounces', 'integer', ['notnull' => false]);
+        $table->addColumn('num_text_soft_bounces', 'integer', ['notnull' => false]);
+        $table->addColumn('num_total_soft_bounces', 'integer', ['notnull' => false]);
+        $table->addColumn('num_unsubscribes', 'integer', ['notnull' => false]);
+        $table->addColumn('num_text_unsubscribes', 'integer', ['notnull' => false]);
+        $table->addColumn('num_total_unsubscribes', 'integer', ['notnull' => false]);
+        $table->addColumn('num_isp_complaints', 'integer', ['notnull' => false]);
+        $table->addColumn('num_text_isp_complaints', 'integer', ['notnull' => false]);
+        $table->addColumn('num_total_isp_complaints', 'integer', ['notnull' => false]);
+        $table->addColumn('num_mail_blocks', 'integer', ['notnull' => false]);
+        $table->addColumn('num_text_mail_blocks', 'integer', ['notnull' => false]);
+        $table->addColumn('num_total_mail_blocks', 'integer', ['notnull' => false]);
+        $table->addColumn('num_sent', 'integer', ['notnull' => false]);
+        $table->addColumn('num_text_sent', 'integer', ['notnull' => false]);
+        $table->addColumn('num_total_sent', 'integer', ['notnull' => false]);
+        $table->addColumn('num_recipients_clicked', 'integer', ['notnull' => false]);
+        $table->addColumn('num_delivered', 'integer', ['notnull' => false]);
+        $table->addColumn('num_text_delivered', 'integer', ['notnull' => false]);
+        $table->addColumn('num_total_delivered', 'integer', ['notnull' => false]);
+        $table->addColumn('percentage_delivered', 'float', ['notnull' => false]);
+        $table->addColumn('percentage_unique_opens', 'float', ['notnull' => false]);
+        $table->addColumn('percentage_opens', 'float', ['notnull' => false]);
+        $table->addColumn('percentage_unsubscribes', 'float', ['notnull' => false]);
+        $table->addColumn('percentage_replies', 'float', ['notnull' => false]);
+        $table->addColumn('percentage_hard_bounces', 'float', ['notnull' => false]);
+        $table->addColumn('percentage_soft_bounces', 'float', ['notnull' => false]);
+        $table->addColumn('percentage_users_clicked', 'float', ['notnull' => false]);
+        $table->addColumn('percentage_clicks_to_opens', 'float', ['notnull' => false]);
+
+        $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
+        $table->addColumn('updated_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
+
+        $table->addIndex(['channel_id'], 'IDX_D7B9893172F5A1AA', []);
+        $table->addIndex(['owner_id'], 'IDX_D7B989317E3C61F9', []);
+        $table->addUniqueIndex(['campaign_id'], 'UNIQ_D7B98931F639F774');
+        $table->setPrimaryKey(['id']);
+    }
+
+    /**
      * Create orocrm_dm_campaign_to_ab table
      *
      * @param Schema $schema
@@ -252,6 +331,12 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addForeignKeyConstraint(
             $schema->getTable('oro_integration_channel'),
             ['channel_id'],
+            ['id'],
+            ['onUpdate' => null, 'onDelete' => 'SET NULL']
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('orocrm_dm_campaign_summary'),
+            ['campaign_summary_id'],
             ['id'],
             ['onUpdate' => null, 'onDelete' => 'SET NULL']
         );
@@ -336,6 +421,34 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addForeignKeyConstraint(
             $schema->getTable('orocrm_dm_contact'),
             ['contact_id'],
+            ['id'],
+            ['onUpdate' => null, 'onDelete' => 'CASCADE']
+        );
+    }
+
+    /**
+     * Add orocrm_dm_campaign_summary foreign keys.
+     *
+     * @param Schema $schema
+     */
+    protected function addOroCRMDotmailerCampaignSummaryForeignKeys(Schema $schema)
+    {
+        $table = $schema->getTable('orocrm_dm_campaign_summary');
+        $table->addForeignKeyConstraint(
+            $schema->getTable('oro_organization'),
+            ['owner_id'],
+            ['id'],
+            ['onUpdate' => null, 'onDelete' => 'SET NULL']
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('oro_integration_channel'),
+            ['channel_id'],
+            ['id'],
+            ['onUpdate' => null, 'onDelete' => 'SET NULL']
+        );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('orocrm_dm_campaign'),
+            ['campaign_id'],
             ['id'],
             ['onUpdate' => null, 'onDelete' => 'CASCADE']
         );
