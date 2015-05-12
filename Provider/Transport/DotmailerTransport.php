@@ -156,17 +156,11 @@ class DotmailerTransport implements TransportInterface
     /**
      * @param array $campaignsToSynchronize
      *
-     * @return AppendIterator
+     * @return \Iterator
      */
     public function getCampaignSummary(array $campaignsToSynchronize = [])
     {
-        $iterator = new AppendIterator();
-        /** @var Campaign $campaign */
-        foreach ($campaignsToSynchronize as $campaign) {
-            $iterator->append(new CampaignSummaryIterator($this->dotmailerResources, $campaign->getOriginId()));
-        }
-
-        return $iterator;
+        return new CampaignSummaryIterator($this->dotmailerResources, $campaignsToSynchronize);
     }
 
     /**

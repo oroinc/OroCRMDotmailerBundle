@@ -72,9 +72,10 @@ class UnsubscribedFromAccountContactsImportTest extends AbstractImportTest
             /** @var Contact $actualContact */
             $actualContact = $actualContacts[0];
 
-            $actualAddressBooks = $actualContact->getAddressBooks()
+            $actualAddressBooks = $actualContact->getAddressBookContacts()
                 ->toArray();
             $this->assertCount(0, $actualAddressBooks);
+            $this->assertEquals($expectedContact['unsubscribedDate'], $actualContact->getUnsubscribedDate());
         }
     }
 
@@ -87,7 +88,8 @@ class UnsubscribedFromAccountContactsImportTest extends AbstractImportTest
                         'originId'     => 42,
                         'channel'      => 'orocrm_dotmailer.channel.third',
                         'status'       => ApiContactStatuses::UNSUBSCRIBED,
-                        'addressBooks' => ['orocrm_dotmailer.address_book.fourth']
+                        'addressBooks' => ['orocrm_dotmailer.address_book.fourth'],
+                        'unsubscribedDate' => new \DateTime('2015-10-10', new \DateTimeZone('UTC'))
                     ]
                 ],
                 'apiContactSuppressionList' => [
@@ -99,7 +101,7 @@ class UnsubscribedFromAccountContactsImportTest extends AbstractImportTest
                             'DataFields' => [],
                             'Status'     => ApiContactStatuses::SUBSCRIBED
                         ],
-                        'dateRemoved'       => '2015-10-10',
+                        'dateRemoved'       => '2015-10-10T00:00:00z',
                         'reason'            => ApiContactStatuses::UNSUBSCRIBED
                     ]
                 ]

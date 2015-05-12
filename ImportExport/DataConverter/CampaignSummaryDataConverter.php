@@ -2,6 +2,8 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterator;
+
 class CampaignSummaryDataConverter extends AbstractDataConverter
 {
     /**
@@ -62,6 +64,7 @@ class CampaignSummaryDataConverter extends AbstractDataConverter
             'percentagesoftbounces' => 'percentageSoftBounces',
             'percentageusersclicked' => 'percentageUsersClicked',
             'percentageclickstoopens' => 'percentageClicksToOpens',
+            CampaignSummaryIterator::CAMPAIGN_KEY => 'campaign:id',
         ];
     }
 
@@ -124,6 +127,7 @@ class CampaignSummaryDataConverter extends AbstractDataConverter
                 'percentagesoftbounces',
                 'percentageusersclicked',
                 'percentageclickstoopens',
+                CampaignSummaryIterator::CAMPAIGN_KEY,
             ];
     }
 }

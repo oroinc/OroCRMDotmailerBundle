@@ -2,7 +2,7 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactsIterator;
@@ -36,31 +36,21 @@ class UnsubscribedContactsStrategy extends AbstractImportStrategy
             return null;
         }
 
-
-        $addressBook = $this->getAddressBook();
-        $contact->removeAddressBook($addressBook);
-
-        return $contact;
-    }
-
-    /**
-     * @return AddressBook
-     */
-    protected function getAddressBook()
-    {
         $originalValue = $this->context->getValue('itemData');
         if (empty($originalValue[UnsubscribedContactsIterator::ADDRESS_BOOK_KEY])) {
             throw new RuntimeException('Address book id required');
         }
+        $addressBookOriginId = $originalValue[UnsubscribedContactsIterator::ADDRESS_BOOK_KEY];
+        foreach ($contact->getAddressBookContacts() as $addressBookContact) {
+            $addressBook = $addressBookContact->getAddressBook();
+            if ($addressBook && $addressBook->getOriginId() == $addressBookOriginId && $entity->getStatus()) {
+                $addressBookContact->setStatus($this->getEnumValue('dm_cnt_status', $entity->getStatus()->getId()));
+                $addressBookContact->setUnsubscribedDate($entity->getUnsubscribedDate());
 
-        $addressBook = $this->registry->getRepository('OroCRMDotmailerBundle:AddressBook')
-            ->findOneBy(
-                [
-                    'channel' => $this->getChannel(),
-                    'originId' => $originalValue[UnsubscribedContactsIterator::ADDRESS_BOOK_KEY]
-                ]
-            );
+                break;
+            }
+        }
 
-        return $addressBook;
+        return $contact;
     }
 }

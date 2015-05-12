@@ -95,9 +95,9 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
     protected $campaigns;
 
     /**
-     * @var Collection
+     * @var Collection|AddressBookContact[]
      *
-     * @ORM\ManyToMany(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\Contact", mappedBy="addressBooks")
+     * @ORM\OneToMany(targetEntity="AddressBookContact", mappedBy="addressBook", cascade={"all"})
      * @ConfigField(
      *      defaultValues={
      *          "importexport"={
@@ -106,7 +106,7 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
      *      }
      * )
      */
-    protected $contacts;
+    protected $addressBookContacts;
 
     /**
      * @var MarketingList
@@ -180,13 +180,28 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
     protected $updatedAt;
 
     /**
+     * @var Collection|AddressBookContactsExport[]
+     *
+     * @ORM\OneToMany(targetEntity="AddressBookContactsExport", mappedBy="addressBook")
+     * @ConfigField(
+     *      defaultValues={
+     *          "importexport"={
+     *              "excluded"=true
+     *          }
+     *      }
+     * )
+     */
+    protected $addressBookContactsExports;
+
+    /**
      * Initialize collections
      */
     public function __construct()
     {
         parent::__construct();
         $this->campaigns = new ArrayCollection();
-        $this->contacts = new ArrayCollection();
+        $this->addressBookContacts = new ArrayCollection();
+        $this->contactImports = new ArrayCollection();
     }
 
     /**
@@ -386,74 +401,6 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
     }
 
     /**
-     * Get contacts collection
-     *
-     * @return Collection|Contact[]
-     */
-    public function getContacts()
-    {
-        return $this->contacts;
-    }
-
-    /**
-     * Add specified email contact
-     *
-     * @param Contact $contact
-     *
-     * @return AddressBook
-     */
-    public function addContact(Contact $contact)
-    {
-        if (!$this->hasContact($contact)) {
-            $this->getContacts()->add($contact);
-            $contact->addAddressBook($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Contact $contact
-     *
-     * @return bool
-     */
-    public function hasContact(Contact $contact)
-    {
-        return $this->getContacts()->contains($contact);
-    }
-
-    /**
-     * Set contacts collection
-     *
-     * @param Collection $contacts
-     *
-     * @return AddressBook
-     */
-    public function setContacts(Collection $contacts)
-    {
-        $this->contacts = $contacts;
-
-        return $this;
-    }
-
-    /**
-     * Remove specified contact
-     *
-     * @param Contact $contact
-     *
-     * @return AddressBook
-     */
-    public function removeContact(Contact $contact)
-    {
-        if ($this->hasContact($contact)) {
-            $this->getContacts()->removeElement($contact);
-            $contact->removeAddressBook($this);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return MarketingList
      */
     public function getMarketingList()
@@ -474,6 +421,104 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
     }
 
     /**
+     * @return Collection
+     */
+    public function getAddressBookContacts()
+    {
+        return $this->addressBookContacts;
+    }
+
+    /**
+     * @param Collection $addressBookContacts
+     *
+     * @return AddressBook
+     */
+    public function setAddressBookContacts($addressBookContacts)
+    {
+        $this->addressBookContacts = $addressBookContacts;
+
+        return $this;
+    }
+
+    /**
+     * @param AddressBookContact $addressBookContact
+     *
+     * @return AddressBook
+     */
+    public function addAddressBookContact(AddressBookContact $addressBookContact)
+    {
+        if (!$this->addressBookContacts->contains($addressBookContact)) {
+            $addressBookContact->setAddressBook($this);
+            $this->addressBookContacts->add($addressBookContact);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param AddressBookContact $addressBookContact
+     *
+     * @return AddressBook
+     */
+    public function removeAddressBookContact(AddressBookContact $addressBookContact)
+    {
+        if ($this->addressBookContacts->contains($addressBookContact)) {
+            $this->addressBookContacts->removeElement($addressBookContact);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return AddressBookContactsExport[]
+     */
+    public function getAddressBookContactsExports()
+    {
+        return $this->addressBookContactsExports;
+    }
+
+    /**
+     * @param AddressBookContactsExport[] $addressBookContactsExports
+     *
+     * @return AddressBook
+     */
+    public function setAddressBookContactsExports($addressBookContactsExports)
+    {
+        $this->addressBookContactsExports = $addressBookContactsExports;
+
+        return $this;
+    }
+
+    /**
+     * @param AddressBookContactsExport $addressBookContactsExport
+     *
+     * @return AddressBook
+     */
+    public function addAddressBookContactsExport(AddressBookContactsExport $addressBookContactsExport)
+    {
+        if (!$this->addressBookContactsExports->contains($addressBookContactsExport)) {
+            $addressBookContactsExport->setAddressBook($this);
+            $this->addressBookContactsExports->add($addressBookContactsExport);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param AddressBookContactsExport $addressBookContactsExport
+     *
+     * @return AddressBook
+     */
+    public function removeAddressBookContactsExport(AddressBookContactsExport $addressBookContactsExport)
+    {
+        if ($this->addressBookContactsExports->contains($addressBookContactsExport)) {
+            $this->addressBookContactsExports->removeElement($addressBookContactsExport);
+        }
+
+        return $this;
+    }
+
+    /**
      * @ORM\PrePersist
      */
     public function prePersist()
@@ -486,7 +531,6 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
             $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
         }
     }
-
     /**
      * @ORM\PreUpdate
      */

@@ -13,7 +13,7 @@ class UnsubscribedContactsDataConverter extends AbstractTableDataConverter
     {
         return [
             'suppressedcontact' => 'originId',
-            'dateremoved'       => 'dateRemoved',
+            'dateremoved'       => 'unsubscribedDate',
             'reason'            => 'status:id',
         ];
     }

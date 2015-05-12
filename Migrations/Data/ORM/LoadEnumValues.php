@@ -5,6 +5,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Migrations\Data\ORM;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
@@ -66,6 +67,16 @@ class LoadEnumValues extends AbstractEnumFixture
             Contact::STATUS_NOMXRECORD                          => 'NoMxRecord',
             Contact::STATUS_NOTAVAILABLEINTHISVERSION           => 'NotAvailableInThisVersion',
         ],
+        'dm_import_status' => [
+            AddressBookContactsExport::STATUS_EXCEEDS_ALLOWED_CONTACT_LIMIT,
+            AddressBookContactsExport::STATUS_FAILED,
+            AddressBookContactsExport::STATUS_FINISH,
+            AddressBookContactsExport::STATUS_INVALID_FILE_FORMAT,
+            AddressBookContactsExport::STATUS_NOT_AVAILABLE_IN__THIS_VERSION,
+            AddressBookContactsExport::STATUS_NOT_FINISHED,
+            AddressBookContactsExport::STATUS_REJECTED_BY_WATCHDOG,
+            AddressBookContactsExport::STATUS_UNKNOWN,
+        ]
     ];
 
     /**

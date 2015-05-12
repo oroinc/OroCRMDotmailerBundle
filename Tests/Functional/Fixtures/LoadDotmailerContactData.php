@@ -9,6 +9,7 @@ use DotMailer\Api\DataTypes\ApiContactStatuses;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 
@@ -83,7 +84,11 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             );
 
             foreach ($item['address_books'] as $addressBook) {
-                $contact->addAddressBook($this->getReference($addressBook));
+                $addressBook = $this->getReference($addressBook);
+                $addressBookContact = new AddressBookContact();
+                $addressBookContact->setAddressBook($addressBook);
+                $addressBookContact->setStatus($this->findEnum('dm_cnt_status', Contact::STATUS_SUBSCRIBED));
+                $contact->addAddressBookContact($addressBookContact);
             }
 
             if (!empty($item['createdAt'])) {

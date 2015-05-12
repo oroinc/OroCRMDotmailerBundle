@@ -1556,8 +1556,6 @@ class CampaignSummary implements ChannelAwareInterface
         return $this;
     }
 
-
-
     /**
      * @return \DateTime
      */
