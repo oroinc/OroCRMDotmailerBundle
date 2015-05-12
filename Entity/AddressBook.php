@@ -131,6 +131,20 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
     protected $contactCount;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="last_synced", type="datetime", nullable=true)
+     * @ConfigField(
+     *      defaultValues={
+     *          "importexport"={
+     *              "excluded"=true
+     *          }
+     *      }
+     * )
+     */
+    protected $lastSynced;
+
+    /**
      * @var Organization
      *
      * @ORM\ManyToOne(targetEntity="Oro\Bundle\OrganizationBundle\Entity\Organization")

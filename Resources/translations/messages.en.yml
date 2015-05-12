@@ -29,6 +29,8 @@ orocrm:
             origin_id.label:      Origin Id
             owner.label:          Owner
             visibility.label:     Visibility
+            lastSynced.label:     Last Synced Date
+            status.label:         Status
 
         activity:
             entity_label:                 Dotmailer Activity
