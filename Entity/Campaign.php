@@ -692,13 +692,4 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
     {
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
     }
-
-    public function getFirstAddressBook()
-    {
-        if ($this->hasAddressBooks()) {
-            return $this->getAddressBooks()->first();
-        } else {
-            return null;
-        }
-    }
 }

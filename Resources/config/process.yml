@@ -11,15 +11,13 @@ definitions:
                     - @assign_value:
                         attribute: $.addressBook
                         value: null
-                    - @tree:
+                    - @call_method:
                         conditions:
-                            @and:
-                                - @not_empty: $addressBooks
-                        actions:
-                            - @call_method:
-                                attribute: $.addressBook
-                                method: first
-                                object: $addressBooks
+                            @not_empty: $addressBooks
+                        parameters:
+                            attribute: $.addressBook
+                            method: first
+                            object: $addressBooks
                     # Prepare constants values
                     - @assign_constant_value:
                         attribute: $.statusSent

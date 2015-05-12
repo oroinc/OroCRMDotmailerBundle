@@ -17,7 +17,6 @@ class CampaignStrategy extends AddOrReplaceStrategy
     public function afterProcessEntity($entity)
     {
         /** @var Campaign $entity */
-
         if ($entity) {
             $addressBook = $this->getAddressBook($entity->getChannel());
             if ($addressBook) {
