@@ -28,11 +28,6 @@ class CampaignSummaryIterator implements \Iterator
     protected $isValid = true;
 
     /**
-     * @var bool
-     */
-    protected $lastPage = false;
-
-    /**
      * @var IResources
      */
     protected $dotmailerResources;
@@ -114,6 +109,6 @@ class CampaignSummaryIterator implements \Iterator
         reset($this->items);
         $this->currentItemIndex = 0;
 
-        $this->isValid = count($this->items) == 0?false:true;
+        $this->isValid = count($this->items) > 0;
     }
 }
