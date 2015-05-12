@@ -1,0 +1,79 @@
+definitions:
+    dotmailer_email_campaign_creation:
+        label:   'Create Email Campaign for Dotmailer Campaign'
+        enabled: true
+        order:   10
+        entity:  OroCRM\Bundle\DotmailerBundle\Entity\Campaign
+        exclude_definitions: [dotmailer_create_email_creation]
+        actions_configuration:
+            - @assign_value:
+                attribute: $.addressBook
+                value: null
+            - @call_method:
+                conditions:
+                    @not_empty: $addressBooks
+                parameters:
+                    attribute: $.addressBook
+                    method: first
+                    object: $addressBooks
+            # Prepare constants values
+            - @assign_constant_value:
+                attribute: $.statusSent
+                value: OroCRM\Bundle\DotmailerBundle\Entity\Campaign::STATUS_SENT
+            - @assign_constant_value:
+                attribute: $.scheduleManual
+                value: OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign::SCHEDULE_MANUAL
+            - @assign_constant_value:
+                attribute: $.dotmailerTransport
+                value: OroCRM\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport::NAME
+            # Create OroCRM EmailCampaign
+            - @tree:
+                # If OroCRM EmailCampaign not exists and
+                # Dotmailer Campaign relates to OroCRM MarketingList and
+                # Dotmailer Campaign has "sent" status
+                conditions:
+                    @and:
+                        - @empty: $emailCampaign
+                        - @not_empty: $.addressBook
+                        - @not_empty: $.addressBook.marketingList
+                        - @equal: [$status, $.statusSent]
+                actions:
+                    - @create_entity: # Create OroCRM EmailCampaign
+                        class:     OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign
+                        attribute: $emailCampaign
+                        data:
+                            name: $name
+                            description: $subject
+                            schedule: $.scheduleManual
+                            sent: true
+#                                    sentAt: $sendTime
+                            senderEmail: $fromAddress
+                            senderName: $fromName
+                            transport: $.dotmailerTransport
+                            owner: $channel.defaultUserOwner
+                            organization: $channel.defaultUserOwner.organization
+                            marketingLIst: $.addressBook.marketingList
+                    - @create_entity: # Create DotmailerTransportSettings
+                        class:     OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransportSettings
+                        attribute: $emailCampaign.transportSettings
+                        data:
+                            channel: $channel
+
+    dotmailer_contact_activity_update:
+        label:   'Synchronizes OroCRM Marketing List Item with Dotmailer Contact Activity'
+        enabled: true
+        order:   20
+        entity:  OroCRM\Bundle\DotmailerBundle\Entity\Activity
+        actions_configuration:
+            - @update_email_campaign_dm_statistics: ~
+
+triggers:
+    dotmailer_email_campaign_creation:
+        -
+            event:    create
+
+    dotmailer_contact_activity_update:
+        -
+            event:    create
+        -
+            event:    update

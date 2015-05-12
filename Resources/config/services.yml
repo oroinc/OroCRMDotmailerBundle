@@ -14,6 +14,7 @@ parameters:
 
     # Forms and Extensions
     orocrm_dotmailer.form.type.integration_transport_settings.class:  OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSettingsType
+    orocrm_dotmailer.form.type.transport_settings.class:              OroCRM\Bundle\DotmailerBundle\Form\Type\DotmailerTransportSettingsType
     orocrm_dotmailer.form.type.marketing_list_connection.class:       OroCRM\Bundle\DotmailerBundle\Form\Type\MarketingListConnectionType
     orocrm_dotmailer.form.type.integration_select.class:              OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType
     orocrm_dotmailer.form.type.address_book_select.class:             OroCRM\Bundle\DotmailerBundle\Form\Type\AddressBookSelectType
@@ -38,7 +39,7 @@ parameters:
     orocrm_dotmailer.connector.address_book.class:                        OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector
     orocrm_dotmailer.connector.unsubscribed_contacts.class:               OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactsConnector
     orocrm_dotmailer.connector.unsubscribed_from_account_contacts.class:  OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedFromAccountContactsConnector
-    orocrm_dotmailer.connector.contact.class:                         OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector
+    orocrm_dotmailer.connector.contact.class:                             OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector
     orocrm_dotmailer.connector.activity_contact.class:                    OroCRM\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector
     orocrm_dotmailer.connector.campaign_summary.class:                    OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector
 
@@ -65,6 +66,13 @@ parameters:
     #search handlers
     orocrm_dotmailer.form.autocomplete.list.search_handler.class:     OroCRM\Bundle\DotmailerBundle\Autocomplete\AddressBooksSearchHandler
 
+    #workflow actions
+    orocrm_dotmailer.workflow.action.update_email_campaign_statistics.class: OroCRM\Bundle\DotmailerBundle\Model\Action\UpdateEmailCampaignStatistics
+    orocrm_dotmailer.workflow.action.abstract_marketing_list_entities.class: OroCRM\Bundle\DotmailerBundle\Model\Action\AbstractMarketingListEntitiesAction
+
+    #helpers
+    orocrm_dotmailer.model.field_helper.class: OroCRM\Bundle\DotmailerBundle\Model\FieldHelper
+
 services:
     # Forms and Extensions
     orocrm_dotmailer.form.type.integration_transport_settings:
@@ -84,6 +92,11 @@ services:
             - @oro_security.acl_helper
         tags:
             - { name: form.type, alias: "orocrm_dotmailer_integration_select" }
+
+    orocrm_dotmailer.form.type.transport_settings:
+        class: %orocrm_dotmailer.form.type.transport_settings.class%
+        tags:
+            - { name: form.type, alias: "orocrm_dotmailer_email_transport_settings" }
 
     orocrm_dotmailer.form.type.address_book_select:
         class: %orocrm_dotmailer.form.type.address_book_select.class%
@@ -330,3 +343,28 @@ services:
         class: %orocrm_dotmailer.placeholder.filter.buttons_filter.class%
         arguments:
             - @orocrm_marketing_list.provider.contact_information_fields
+
+    #workflow actionss
+    orocrm_dotmailer.workflow.action.abstract_marketing_list_entities:
+        class: %orocrm_dotmailer.workflow.action.abstract_marketing_list_entities.class%
+        astract: true
+        arguments:
+            - @oro_workflow.context_accessor
+            - @orocrm_marketing_list.provider.contact_information_fields
+            - @orocrm_marketing_list.provider.marketing_list
+            - @orocrm_dotmailer.model.field_helper
+
+    orocrm_dotmailer.workflow.action.update_email_campaign_statistics:
+        class: %orocrm_dotmailer.workflow.action.update_email_campaign_statistics.class%
+        parent: orocrm_dotmailer.workflow.action.abstract_marketing_list_entities
+        calls:
+            - [setCampaignStatisticsConnector, [@orocrm_campaign.email_campaign.statistics_connector]]
+            - [setRegistry, [@doctrine]]
+        tags:
+            - { name: oro_workflow.action, alias: update_email_campaign_dm_statistics }
+
+    #helpers
+    orocrm_dotmailer.model.field_helper:
+        class: %orocrm_dotmailer.model.field_helper.class%
+        arguments:
+            - @oro_entity.virtual_field_provider

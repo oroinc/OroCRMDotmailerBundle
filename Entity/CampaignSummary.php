@@ -53,7 +53,7 @@ class CampaignSummary implements ChannelAwareInterface
      * @ConfigField(
      *      defaultValues={
      *          "importexport"={
-     *              "excluded"=true
+     *              "identity"=true
      *          }
      *      }
      * )

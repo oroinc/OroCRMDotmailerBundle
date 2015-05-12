@@ -1,5 +1,8 @@
 orocrm:
     dotmailer:
+        campaign:
+            entity_label: Dotmailer Campaign
+
         channel_type.label: Dotmailer
 
         integration:
@@ -109,6 +112,11 @@ orocrm:
             campaign_summary:
                 label: Campaign Summary Connector
                 job: Import campaigns summary from Dotmailer
+
+        emailcampaign:
+            transport.dotmailer: Dotmailer
+            integration:
+                label: Dotmailer Integration
 
         connection:
             name: Dotmailer Connection
