@@ -57,6 +57,8 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
         [
             'originId'      => 143,
             'email'         => 'test2@ex.com',
+            'lastName'      => 'Test2',
+            'gender'        => 'female',
             'channel'       => 'orocrm_dotmailer.channel.second',
             'reference'     => 'orocrm_dotmailer.contact.update_2',
             'createdAt'     => 'first day of January 2008',
