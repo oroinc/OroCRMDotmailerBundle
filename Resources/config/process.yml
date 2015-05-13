@@ -67,12 +67,38 @@ definitions:
         actions_configuration:
             - @update_email_campaign_dm_statistics: ~
 
+    dotmailer_handle_contact_state:
+        label:   Create MarketingListUnsubscribedItem for Dotmailer unsubscribed Contact
+        enabled: true
+        entity:  OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact
+        actions_configuration:
+            # Prepare constants values
+            - @assign_constant_value:
+                attribute: $.statusUnsubscribed
+                value: OroCRM\Bundle\DotmailerBundle\Entity\Contact::STATUS_UNSUBSCRIBED
+            # Create OroCRM MarketingListUnsubscribedItem
+            - @create_marketing_list_unsubscribed_item:
+                conditions:
+                    @and:
+                        - @equal: [$status, $.statusUnsubscribed]
+            # Remove OroCRM MarketingListUnsubscribedItem
+            - @remove_marketing_list_unsubscribed_item:
+                conditions:
+                    @and:
+                        - @not_equal: [$status, $.statusUnsubscribed]
+
 triggers:
     dotmailer_email_campaign_creation:
         -
             event:    create
 
     dotmailer_contact_activity_update:
+        -
+            event:    create
+        -
+            event:    update
+
+    dotmailer_handle_contact_state:
         -
             event:    create
         -
