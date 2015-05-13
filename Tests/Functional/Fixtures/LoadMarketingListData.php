@@ -53,6 +53,14 @@ class LoadMarketingListData extends AbstractFixture implements ContainerAwareInt
             'organization'  => 'orocrm_dotmailer.organization.foo',
             'reference'     => 'orocrm_dotmailer.marketing_list.fourth'
         ],
+        [
+            'name'          => 'list5',
+            'entity'        => 'CB\Bundle\WebsphereBundle\Entity\Subscriber',
+            'type'          => 'static',
+            'owner'         => 'orocrm_dotmailer.user.john.doe',
+            'organization'  => 'orocrm_dotmailer.organization.foo',
+            'reference'     => 'orocrm_dotmailer.marketing_list.fifth'
+        ],
     ];
 
     /**

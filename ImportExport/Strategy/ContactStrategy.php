@@ -20,18 +20,22 @@ class ContactStrategy extends AddOrReplaceStrategy
         if ($entity) {
             $addressBook = $this->getAddressBook($entity->getChannel());
             if ($addressBook) {
-                $addressBookContact = $this->getAddressBookContact($addressBook);
+                $addressBookContact = null;
+                if ($entity->getId()) {
+                    $addressBookContact = $this->getRepository('OroCRMDotmailerBundle:AddressBookContact')
+                        ->getAddressBookContact($entity, $addressBook);
+                }
 
                 if (is_null($addressBookContact)) {
                     $addressBookContact = new AddressBookContact();
                     $addressBookContact->setAddressBook($addressBook);
                     $entity->addAddressBookContact($addressBookContact);
-                } else {
-                    $addressBookContact->setStatus($entity->getStatus());
                 }
+
+                $addressBookContact->setStatus($entity->getStatus());
             } else {
                 throw new RuntimeException(
-                    sprintf('Address book for campaign %s not found', $entity->getOriginId())
+                    sprintf('Address book for contact %s not found', $entity->getOriginId())
                 );
             }
         }
@@ -60,21 +64,5 @@ class ContactStrategy extends AddOrReplaceStrategy
             );
 
         return $addressBook;
-    }
-
-    /**
-     * @param AddressBook $addressBook
-     *
-     * @return AddressBookContact|null
-     */
-    protected function getAddressBookContact(AddressBook $addressBook)
-    {
-        foreach ($addressBook->getAddressBookContacts() as $addressBookContact) {
-            if ($addressBookContact->getAddressBook() == $addressBook) {
-                return $addressBookContact;
-            }
-        }
-
-        return null;
     }
 }

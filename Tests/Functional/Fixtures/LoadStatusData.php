@@ -67,6 +67,12 @@ class LoadStatusData extends BaseAbstractFixture implements DependentFixtureInte
             'connector' => ContactConnector::TYPE,
             'date' => '2015-01-01'
         ],
+        [
+            'channel' => 'orocrm_dotmailer.channel.fourth',
+            'code' => Status::STATUS_COMPLETED,
+            'connector' => ContactConnector::TYPE,
+            'date' => '2015-01-01'
+        ],
     ];
 
     /**

@@ -52,7 +52,7 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'reference'     => 'orocrm_dotmailer.contact.update_1',
             'createdAt'     => 'first day of January 2008',
             'status'        => ApiContactStatuses::SUBSCRIBED,
-            'address_books' => [],
+            'address_books' => ['orocrm_dotmailer.address_book.fourth'],
         ],
         [
             'originId'      => 143,
@@ -63,7 +63,7 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'reference'     => 'orocrm_dotmailer.contact.update_2',
             'createdAt'     => 'first day of January 2008',
             'status'        => ApiContactStatuses::SUBSCRIBED,
-            'address_books' => [],
+            'address_books' => ['orocrm_dotmailer.address_book.fourth'],
         ],
     ];
 

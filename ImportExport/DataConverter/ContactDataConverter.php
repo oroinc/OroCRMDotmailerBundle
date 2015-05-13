@@ -12,8 +12,8 @@ class ContactDataConverter extends AbstractDataConverter
         return [
             'id'             => 'originId',
             'status'         => 'status:id',
-            'optInType'      => 'opt_in_type:id',
-            'emailType'      => 'email_type:id',
+            'optintype'      => 'opt_in_type:id',
+            'emailtype'      => 'email_type:id',
             'FIRSTNAME'      => 'firstName',
             'LASTNAME'       => 'lastName',
             'GENDER'         => 'gender',
