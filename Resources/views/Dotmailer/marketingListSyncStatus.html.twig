@@ -1,0 +1,20 @@
+{% import 'OroUIBundle::macros.html.twig' as ui %}
+
+<div class="widget-content" xmlns="http://www.w3.org/1999/html">
+    <div class="row-fluid form-horizontal">
+        <div class="responsive-block">
+            <div class="control-group">
+                {{ 'orocrm.dotmailer.syncstatus.list_is_connected.lebel'|trans({
+                    '%address_book%': '<strong>' ~ address_book.name ~ '</strong>',
+                    '%synced%': '<strong>'
+                        ~ address_book.lastSynced|oro_format_date|default('oro.ui.empty'|trans)
+                        ~ '</strong>',
+                    '%status%': '<strong>'
+                        ~ ('orocrm.dotmailer.syncstatus.' ~ address_book.syncStatus)|trans
+                        ~ '</strong>'
+                    })|raw
+                }}
+            </div>
+        </div>
+    </div>
+</div>

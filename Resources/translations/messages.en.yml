@@ -29,6 +29,8 @@ orocrm:
             origin_id.label:      Origin Id
             owner.label:          Owner
             visibility.label:     Visibility
+            lastSynced.label:     Last Synced Date
+            status.label:         Status
 
         activity:
             entity_label:                 Dotmailer Activity
@@ -117,6 +119,16 @@ orocrm:
             transport.dotmailer: Dotmailer
             integration:
                 label: Dotmailer Integration
+            statistics.label: Dotmailer Statistics
+            positive.label: Positive
+            negative.label: Negative
+            emailsSent.label: Emails Sent
+            hardBounces.label: Hard Bounces
+            softBounces.label: Soft Bounces
+            unsubscribes.label: Unsubscribes
+            forwards.label: Forwards
+            opens.label: Opens
+            clicks.label: Clicks
 
         connection:
             name: Dotmailer Connection
@@ -143,3 +155,10 @@ orocrm:
                 disconnect:         Disconnect
             confirmation:
                 disconnect:         Are you sure you want to unlink this Marketing List from Dotmailer
+
+        syncstatus:
+            synced: Up to date
+            not_synced: Not Synced
+            in_progress: In Progress
+            scheduled: Scheduled for Sync
+            list_is_connected.lebel: This list is linked to "%address_book%" Dotmailer address book. Last synchronization date: %synced%. Synchronization status: %status%.

@@ -5,3 +5,11 @@ orocrm:
                 tooltip: API User.
             password:
                 tooltip: API User Password.
+        emailcampaign:
+            emailsSent.tooltip: Emails Sent
+            hardBounces.tooltip: Number of email addresses in campaign that hard bounced.
+            softBounces.tooltip: Number of email addresses in campaign that soft bounced.
+            unsubscribes.tooltip: Number of email addresses in campaign that unsubscribed.
+            forwards.tooltip: Number of times email was forwarded to a friend.
+            opens.tooltip: Number of times the campaign was opened.
+            clicks.tooltip: Number of times a link in the campaign was clicked.
