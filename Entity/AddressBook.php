@@ -421,7 +421,7 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
     }
 
     /**
-     * @return Collection
+     * @return Collection|AddressBookContact[]
      */
     public function getAddressBookContacts()
     {

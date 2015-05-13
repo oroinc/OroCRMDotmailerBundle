@@ -60,13 +60,21 @@ class DotmailerTransport implements TransportInterface
     }
 
     /**
+     * @param int[]          $addressBooksOriginIds
      * @param \DateTime|null $dateSince
      *
      * @return ContactIterator
      */
-    public function getContacts($dateSince = null)
+    public function getContacts($addressBooksOriginIds, $dateSince = null)
     {
-        return new ContactIterator($this->dotmailerResources, $dateSince);
+        $iterator = new \AppendIterator();
+        foreach ($addressBooksOriginIds as $addressBooksOriginId) {
+            $iterator->append(
+                new ContactIterator($this->dotmailerResources, $addressBooksOriginId, $dateSince)
+            );
+        }
+
+        return $iterator;
     }
 
     /**
