@@ -23,7 +23,7 @@ class ContactStrategy extends AddOrReplaceStrategy
                 $addressBookContact = null;
                 if ($entity->getId()) {
                     $addressBookContact = $this->getRepository('OroCRMDotmailerBundle:AddressBookContact')
-                        ->getAddressBookContact($entity, $addressBook);
+                        ->findOneBy(['addressBook' => $addressBook, 'contact' => $entity]);
                 }
 
                 if (is_null($addressBookContact)) {
