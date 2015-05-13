@@ -213,6 +213,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
     public function testGetContactsWithoutSyncDate()
     {
         $resource = $this->initTransportStub();
+        $addressBookId = 42;
 
         $dateSince = null;
 
@@ -222,18 +223,19 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue([]));
 
         $resource->expects($this->once())
-            ->method('GetContacts')
-            ->with(false, 1000, 0)
+            ->method('GetAddressBookContacts')
+            ->with($addressBookId, true, 1000, 0)
             ->will($this->returnValue($contactsList));
 
         $dateSince = null;
-        $iterator = $this->target->getContacts($dateSince);
+        $iterator = $this->target->getContacts([0 => ['originId' => $addressBookId]], $dateSince);
         $iterator->rewind();
     }
 
     public function testGetContacts()
     {
         $resource = $this->initTransportStub();
+        $addressBookId = 42;
 
         $dateSince = new \DateTime();
 
@@ -243,11 +245,11 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue([['id' => 1, 'email' => 'test@test.com']]));
 
         $resource->expects($this->once())
-            ->method('GetContactsModifiedSinceDate')
-            ->with($dateSince->format(\DateTime::ISO8601), true, 1000, 0)
+            ->method('GetAddressBookContactsModifiedSinceDate')
+            ->with($addressBookId, $dateSince->format(\DateTime::ISO8601), true, 1000, 0)
             ->will($this->returnValue($contactsList));
 
-        $iterator = $this->target->getContacts($dateSince);
+        $iterator = $this->target->getContacts([0 => ['originId' => $addressBookId]], $dateSince);
         $iterator->rewind();
     }
 
