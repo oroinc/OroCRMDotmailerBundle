@@ -393,6 +393,14 @@ services:
         tags:
             - { name: oro_workflow.action, alias: remove_marketing_list_unsubscribed_item }
 
+    orocrm_dotmailer.workflow.action.remove_marketing_list_removed_item:
+        class: %orocrm_dotmailer.workflow.action.remove_marketing_list_state_item.class%
+        calls:
+            - [setMarketingListStateItemClassName, [%orocrm_marketing_list.removed_item.class%]]
+            - [setDoctrineHelper, [@oro_entity.doctrine_helper]]
+        tags:
+            - { name: oro_workflow.action, alias: remove_marketing_list_unsubscribed_item }
+
     #helpers
     orocrm_dotmailer.model.field_helper:
         class: %orocrm_dotmailer.model.field_helper.class%
