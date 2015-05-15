@@ -4,6 +4,9 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use DotMailer\Api\DataTypes\ApiFileMedia;
+use DotMailer\Api\DataTypes\Int32List;
+use DotMailer\Api\DataTypes\XsBase64Binary;
 use DotMailer\Api\Resources\IResources;
 
 use Guzzle\Iterator\AppendIterator;
@@ -161,6 +164,26 @@ class DotmailerTransport implements TransportInterface
     public function getCampaignSummary(array $campaignsToSynchronize = [])
     {
         return new CampaignSummaryIterator($this->dotmailerResources, $campaignsToSynchronize);
+    }
+
+    /**
+     * @param int[] $removingItemsOriginIds
+     * @param int   $addressBookOriginId
+     */
+    public function removeContactsFromAddressBook(array $removingItemsOriginIds, $addressBookOriginId)
+    {
+        $contactIdsList = new Int32List($removingItemsOriginIds);
+        $this->dotmailerResources->PostAddressBookContactsDelete($addressBookOriginId, $contactIdsList);
+    }
+
+    public function exportAddressBookContacts(array $contacts, $addressBookOriginId)
+    {
+        $apiFileMedia = new ApiFileMedia();
+        $file = new XsBase64Binary();
+
+
+
+        $this->dotmailerResources->PostAddressBookContactsImport($addressBookOriginId, )
     }
 
     /**

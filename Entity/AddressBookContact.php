@@ -52,6 +52,20 @@ class AddressBookContact extends ExtendAddressBookContact
     protected $unsubscribedDate;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="marketing_list_item_id", type="integer", nullable=true)
+     */
+    protected $marketingListItemId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="marketing_list_item_class", type="string", unique=false, length=255, nullable=true)
+     */
+    protected $marketingListItemClass;
+
+    /**
      * @return int
      */
     public function getId()
@@ -115,6 +129,46 @@ class AddressBookContact extends ExtendAddressBookContact
     public function setUnsubscribedDate(\DateTime $unsubscribedDate = null)
     {
         $this->unsubscribedDate = $unsubscribedDate;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMarketingListItemId()
+    {
+        return $this->marketingListItemId;
+    }
+
+    /**
+     * @param int $marketingListItemId
+     *
+     * @return AddressBookContact
+     */
+    public function setMarketingListItemId($marketingListItemId)
+    {
+        $this->marketingListItemId = $marketingListItemId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMarketingListItemClass()
+    {
+        return $this->marketingListItemClass;
+    }
+
+    /**
+     * @param string $marketingListItemClass
+     *
+     * @return AddressBookContact
+     */
+    public function setMarketingListItemClass($marketingListItemClass)
+    {
+        $this->marketingListItemClass = $marketingListItemClass;
 
         return $this;
     }

@@ -93,3 +93,17 @@ connector:
                         writer:    oro_integration.writer.persistent_batch_writer
                     parameters:
                         batch_size: 100
+
+        dotmailer_contact_export:
+            title: orocrm.dotmailer.connector.contact.export_job
+            type: export
+            steps:
+                removeContacts:
+                    title: export
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.importexport.reader.removed_contacts_export
+                        processor: orocrm_dotmailer.importexport.processor.export_removed
+                        writer:    oro_integration.writer.persistent_batch_writer
+                    parameters:
+                        batch_size: 10000
