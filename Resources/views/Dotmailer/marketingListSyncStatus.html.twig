@@ -10,7 +10,7 @@
                         ~ address_book.lastSynced|oro_format_date|default('oro.ui.empty'|trans)
                         ~ '</strong>',
                     '%status%': '<strong>'
-                        ~ ('orocrm.dotmailer.syncstatus.' ~ address_book.syncStatus)|trans
+                        ~ ('orocrm.dotmailer.syncstatus.' ~ address_book.status)|trans
                         ~ '</strong>'
                     })|raw
                 }}
