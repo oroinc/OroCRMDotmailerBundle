@@ -35,6 +35,15 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'address_books' => ['orocrm_dotmailer.address_book.third', 'orocrm_dotmailer.address_book.fourth'],
             'reference'     => 'orocrm_dotmailer.contact.second',
         ],
+        [
+            'originId'      => 13,
+            'email'         => 'test_concurrent_statuses@mail.com',
+            'channel'       => 'orocrm_dotmailer.channel.third',
+            'status'        => ApiContactStatuses::SUBSCRIBED,
+            'address_books' => ['orocrm_dotmailer.address_book.third', 'orocrm_dotmailer.address_book.fourth'],
+            'lastSubscribedDate' => '2015-10-11',
+            'reference'     => 'orocrm_dotmailer.contact.second',
+        ],
         // contact for contact update test
         [
             'originId'      => 142,
@@ -43,7 +52,7 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'reference'     => 'orocrm_dotmailer.contact.update_1',
             'createdAt'     => 'first day of January 2008',
             'status'        => ApiContactStatuses::SUBSCRIBED,
-            'address_books' => [],
+            'address_books' => ['orocrm_dotmailer.address_book.fourth'],
         ],
         [
             'originId'      => 143,
@@ -54,7 +63,7 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'reference'     => 'orocrm_dotmailer.contact.update_2',
             'createdAt'     => 'first day of January 2008',
             'status'        => ApiContactStatuses::SUBSCRIBED,
-            'address_books' => [],
+            'address_books' => ['orocrm_dotmailer.address_book.fourth'],
         ],
     ];
 
@@ -95,6 +104,9 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
 
             if (!empty($item['createdAt'])) {
                 $contact->setCreatedAt(new \DateTime($item['createdAt']));
+            }
+            if (!empty($item['lastSubscribedDate'])) {
+                $contact->setLastSubscribedDate(new \DateTime($item['lastSubscribedDate']));
             }
 
             $manager->persist($contact);
