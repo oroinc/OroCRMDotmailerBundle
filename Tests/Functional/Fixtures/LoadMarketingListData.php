@@ -10,13 +10,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 
-class LoadMarketingListData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
+class LoadMarketingListData extends AbstractFixture implements DependentFixtureInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
     /**
      * @var array
      */
@@ -27,7 +22,7 @@ class LoadMarketingListData extends AbstractFixture implements ContainerAwareInt
             'type'          => 'dynamic',
             'owner'         => 'orocrm_dotmailer.user.john.doe',
             'organization'  => 'orocrm_dotmailer.organization.foo',
-            'reference'     => 'orocrm_dotmailer.marketing_list.first'
+            'reference'     => 'orocrm_dotmailer.marketing_list.first',
         ],
         [
             'name'          => 'list2',
@@ -75,6 +70,7 @@ class LoadMarketingListData extends AbstractFixture implements ContainerAwareInt
             $data['type']       = $listTypeRepository->find($data['type']);
             $this->resolveReferenceIfExist($data, 'owner');
             $this->resolveReferenceIfExist($data, 'organization');
+            $this->resolveReferenceIfExist($data, 'segment');
             $this->setEntityPropertyValues($entity, $data, ['reference']);
 
             $this->addReference($data['reference'], $entity);
@@ -91,6 +87,7 @@ class LoadMarketingListData extends AbstractFixture implements ContainerAwareInt
     {
         return [
             'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadUserData',
+            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadSegmentData',
         ];
     }
 }

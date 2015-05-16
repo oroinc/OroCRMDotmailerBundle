@@ -176,6 +176,7 @@ services:
 
     orocrm_dotmailer.importexport.reader.export.abstract:
         class: %orocrm_dotmailer.importexport.reader.export.abstract.class%
+        parent: orocrm_dotmailer.importexport.reader.abstract
         abstract: true
         calls:
             - [setRegistry, [@doctrine]]

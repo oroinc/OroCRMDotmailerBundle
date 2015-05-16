@@ -9,10 +9,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvide
 
 abstract class AbstractMarketingListItemIterator extends AbstractIterator
 {
-    /**
-     * @var MarketingListItemsQueryBuilderProvider
-     */
-    protected $marketingListItemsQueryBuilderProvider;
+    const ADDRESS_BOOK_KEY = 'related_address_book';
 
     /**
      * @var int
@@ -20,11 +17,44 @@ abstract class AbstractMarketingListItemIterator extends AbstractIterator
     protected $batchSize = 500;
 
     /**
+     * @var AddressBook
+     */
+    protected $addressBook;
+
+    /**
+     * @var MarketingListItemsQueryBuilderProvider
+     */
+    protected $marketingListItemsQueryBuilderProvider;
+
+    /**
+     * @param AddressBook $addressBook
      * @param MarketingListItemsQueryBuilderProvider $marketingListItemsQueryBuilderProvider
      */
-    public function __construct(MarketingListItemsQueryBuilderProvider $marketingListItemsQueryBuilderProvider)
-    {
+    public function __construct(
+        AddressBook $addressBook,
+        MarketingListItemsQueryBuilderProvider $marketingListItemsQueryBuilderProvider
+    ) {
+        $this->addressBook = $addressBook;
         $this->marketingListItemsQueryBuilderProvider = $marketingListItemsQueryBuilderProvider;
+    }
+
+    /**
+     * @param int $take Count of requested records
+     * @param int $skip Count of skipped records
+     *
+     * @return array
+     */
+    protected function getItems($take, $skip)
+    {
+        $qb = $this->getIteratorQueryBuilder($this->addressBook);
+        $qb->setMaxResults($take);
+        $qb->setFirstResult(++$skip);
+
+        $items = $qb->getQuery()->execute();
+        foreach ($items as &$item) {
+            $item[static::ADDRESS_BOOK_KEY] = $this->addressBook->getOriginId();
+        }
+        return $items;
     }
 
     /**
@@ -32,8 +62,5 @@ abstract class AbstractMarketingListItemIterator extends AbstractIterator
      *
      * @return QueryBuilder
      */
-    protected function getIteratorQueryBuilder(AddressBook $addressBook)
-    {
-        return $this->marketingListItemsQueryBuilderProvider->getMarketingListItemsQB($addressBook);
-    }
+    abstract protected function getIteratorQueryBuilder(AddressBook $addressBook);
 }

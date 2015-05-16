@@ -16,7 +16,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactsConnect
  * @dbIsolation
  * @dbReindex
  */
-class UnsubscribedContactsImportTest extends AbstractImportTest
+class UnsubscribedContactsImportExportTest extends AbstractImportExportTest
 {
     protected function setUp()
     {

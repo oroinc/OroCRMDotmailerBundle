@@ -66,6 +66,13 @@ class AddressBookContact extends ExtendAddressBookContact
     protected $marketingListItemClass;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="scheduled_for_export", type="boolean")
+     */
+    protected $scheduledForExport = false;
+
+    /**
      * @return int
      */
     public function getId()

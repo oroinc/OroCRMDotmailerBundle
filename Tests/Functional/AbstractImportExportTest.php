@@ -8,7 +8,7 @@ use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory;
 
-abstract class AbstractImportTest extends WebTestCase
+abstract class AbstractImportExportTest extends WebTestCase
 {
     const RESOURCES_FACTORY_ID = 'orocrm_dotmailer.transport.resources_factory';
 

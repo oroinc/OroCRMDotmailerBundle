@@ -37,7 +37,7 @@ abstract class AbstractFixture extends BaseFixture implements ContainerAwareInte
      * @param array $data
      * @param array $excludeProperties
      */
-    public function setEntityPropertyValues($entity, array $data, array $excludeProperties = array())
+    public function setEntityPropertyValues($entity, array $data, array $excludeProperties = [])
     {
         foreach ($data as $property => $value) {
             if (in_array($property, $excludeProperties)) {
@@ -100,4 +100,11 @@ abstract class AbstractFixture extends BaseFixture implements ContainerAwareInte
         $this->container = $container;
         $this->manager = $container->get('doctrine')->getManager();
     }
+
+    /**
+     * Declare correct visibility
+     *
+     * {@inheritdoc}
+     */
+    abstract public function load(ObjectManager $manager);
 }

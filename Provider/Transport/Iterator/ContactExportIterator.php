@@ -2,28 +2,29 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Common\Persistence\ObjectRepository;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 
-class ContactExportIterator extends AbstractMarketingListItemIterator
+class ContactExportIterator
 {
-    const ADDRESS_BOOK_KEY = 'related_address_book';
+    /**
+     * @var ManagerRegistry
+     */
+    protected $registry;
 
     /**
-     * @var AddressBook
+     * @var ObjectRepository
      */
-    protected $addressBook;
+    protected $addressBookContactRepository;
 
     /**
-     * @param AddressBook $addressBook
-     * @param MarketingListItemsQueryBuilderProvider $marketingListItemsQueryBuilderProvider
+     * @param ManagerRegistry $registry
      */
-    public function __construct(
-        AddressBook $addressBook,
-        MarketingListItemsQueryBuilderProvider $marketingListItemsQueryBuilderProvider
-    ) {
-        $this->addressBook = $addressBook;
-        parent::__construct($marketingListItemsQueryBuilderProvider);
+    public function __construct(ManagerRegistry $registry)
+    {
+        $this->registry = $registry;
+        $this->addressBookContactRepository = $registry->getRepository('OroCRMDotmailerBundle:AddressBookContact');
     }
 
     /**
@@ -34,14 +35,11 @@ class ContactExportIterator extends AbstractMarketingListItemIterator
      */
     protected function getItems($take, $skip)
     {
-        $qb = $this->getIteratorQueryBuilder($this->addressBook);
-        $qb->setMaxResults($take);
-        $qb->setFirstResult(++$skip);
-
-        $items = $qb->getQuery()->execute();
-        foreach ($items as &$item) {
-            $item[self::ADDRESS_BOOK_KEY] = $this->addressBook->getOriginId();
-        }
-        return $items;
+        return $this->addressBookContactRepository->findBy(
+            ['scheduledForExport' => true],
+            ['addressBook'],
+            $take,
+            $skip
+        );
     }
 }

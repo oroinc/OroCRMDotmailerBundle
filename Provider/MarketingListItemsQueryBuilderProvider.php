@@ -198,7 +198,7 @@ class MarketingListItemsQueryBuilderProvider
             ->select('addressBookContact.id')
             ->addSelect('contact.originId')
             ->from($this->addressBookContactClassName, 'addressBookContact')
-            ->join('addressBookContact.Contact', 'contact')
+            ->innerJoin('addressBookContact.Contact', 'contact')
             ->where('addressBookContact.addressBook =:addressBook')
             /**
              * Get only subscribed to address book contacts because
@@ -217,6 +217,8 @@ class MarketingListItemsQueryBuilderProvider
             ->andWhere(
                 $removedItemsQueryBuilder->expr()
                     ->notIn('addressBookContact.marketingListItemId', $qb->getDQL())
+            )->andWhere(
+                $removedItemsQueryBuilder->expr()->isNotNull('addressBookContact.marketingListItemId')
             );
 
 
