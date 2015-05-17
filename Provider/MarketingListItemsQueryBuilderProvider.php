@@ -3,7 +3,6 @@
 namespace OroCRM\Bundle\DotmailerBundle\Provider;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\Query\Expr\From;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
@@ -21,6 +20,7 @@ class MarketingListItemsQueryBuilderProvider
     const CONTACT_EMAIL_FIELD = 'email';
     const CONTACT_FIRS_NAME_FIELD = 'firsName';
     const CONTACT_LAST_NAME_FIELD = 'lastName';
+    const MARKETING_LIST_ITEM_ID = 'marketingListItemId';
     /**
      * @var MarketingListProvider
      */
@@ -127,20 +127,17 @@ class MarketingListItemsQueryBuilderProvider
                 "mlu.entityId = $entityAlias.id"
             )
             ->andWhere($qb->expr()->isNull('mlu.id'));
-
-        /** @var From[] $from */
-        $from = $qb->getDQLPart('from');
-        $entityAlias = $from[0]->getAlias();
         $parts = $this->formatter->extractNamePartsPaths($marketingList->getEntity(), $entityAlias);
 
         $qb->resetDQLPart('select');
+        $qb->addSelect("$entityAlias.id as ". self::MARKETING_LIST_ITEM_ID);
         $expr = $qb->expr();
-        $isItemModifiedPart = $expr->andX();
+        $isItemModifiedPart = $expr->orX();
         if (isset($parts['first_name'])) {
             $qb->addSelect(sprintf('%s AS %s', $parts['first_name'], self::CONTACT_FIRS_NAME_FIELD));
             $isItemModifiedPart->add(
                 $expr->neq(
-                    self::CONTACT_FIRS_NAME_FIELD,
+                    $parts['first_name'],
                     sprintf('%s.firstName', self::CONTACT_ALIAS)
                 )
             );
@@ -149,7 +146,7 @@ class MarketingListItemsQueryBuilderProvider
             $qb->addSelect(sprintf('%s AS %s', $parts['last_name'], self::CONTACT_LAST_NAME_FIELD));
             $isItemModifiedPart->add(
                 $expr->neq(
-                    self::CONTACT_LAST_NAME_FIELD,
+                    $parts['last_name'],
                     sprintf('%s.lastName', self::CONTACT_ALIAS)
                 )
             );
@@ -161,11 +158,25 @@ class MarketingListItemsQueryBuilderProvider
             Join::WITH,
             'addressBookContacts.addressBook =:addressBook'
         )->setParameter('addressBook', $addressBook);
+
         $qb->andWhere(
             $expr->orX()
                 ->add(sprintf('%s.id is NULL', self::CONTACT_ALIAS))
                 ->add($isItemModifiedPart)
         );
+        /**
+         * Get only subscribed to address book contacts because
+         * of other type of address book contacts is already removed from address book.
+         */
+        $qb->leftJoin('addressBookContacts.status', 'addressBookContactStatus')
+            ->andWhere(
+                $expr->orX()
+                    ->add($expr->isNull('addressBookContactStatus.id'))
+                    ->add($expr->in(
+                        'addressBookContactStatus.id',
+                        [Contact::STATUS_SUBSCRIBED, Contact::STATUS_SOFTBOUNCED]
+                    ))
+            );
         return $qb;
     }
 
@@ -233,16 +244,15 @@ class MarketingListItemsQueryBuilderProvider
         );
 
         $expr = $qb->expr()->orX();
-
         foreach ($contactInformationFields as $contactInformationField) {
             $contactInformationFieldExpr = $this->fieldHelper
                 ->getFieldExpr($marketingList->getEntity(), $qb, $contactInformationField);
 
-            $qb->addSelect($contactInformationFieldExpr . ' AS ' . $contactInformationField);
+            $qb->addSelect($contactInformationFieldExpr . ' AS ' . self::CONTACT_EMAIL_FIELD);
             $expr->add(
                 $qb->expr()->eq(
                     $contactInformationFieldExpr,
-                    sprintf('%s.%s', self::CONTACT_ALIAS, self::CONTACT_EMAIL_FIELD)
+                    sprintf('%s.email', self::CONTACT_ALIAS)
                 )
             );
         }

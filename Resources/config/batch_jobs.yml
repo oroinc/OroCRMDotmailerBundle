@@ -107,6 +107,15 @@ connector:
                         writer:    orocrm_dotmailer.importexport.writer.export.removed_contacts
                     parameters:
                         batch_size: 10000
+                syncMarketingListItemsWithContacts:
+                    title: export
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.importexport.reader.contact_sync
+                        processor: orocrm_dotmailer.importexport.processor.contact_sync
+                        writer:    oro_integration.writer.persistent_batch_writer
+                    parameters:
+                        batch_size: 2000
 #                exportContacts:
 #                    title: export
 #                    class: Oro\Bundle\BatchBundle\Step\ItemStep

@@ -57,6 +57,7 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
         [
             'originId'      => 143,
             'email'         => 'test2@ex.com',
+            'firstName'     => 'Test2',
             'lastName'      => 'Test2',
             'gender'        => 'female',
             'channel'       => 'orocrm_dotmailer.channel.second',
@@ -68,8 +69,9 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
         [
             'originId'      => 144,
             'email'         => 'daniel.case@example.com',
+            'firstName'     => 'Test144',
             'lastName'      => 'Test144',
-            'gender'        => 'female',
+            'gender'        => 'male',
             'channel'       => 'orocrm_dotmailer.channel.fourth',
             'reference'     => 'orocrm_dotmailer.contact.unsubscribed_from_ab',
             'status'        => ApiContactStatuses::SUBSCRIBED,
@@ -84,8 +86,9 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
         [
             'originId'      => 145,
             'email'         => 'john.smith@example.com',
+            'firstName'     => 'Test145',
             'lastName'      => 'Test145',
-            'gender'        => 'female',
+            'gender'        => 'male',
             'channel'       => 'orocrm_dotmailer.channel.fourth',
             'reference'     => 'orocrm_dotmailer.contact.removed',
             'status'        => ApiContactStatuses::SUBSCRIBED,
@@ -97,12 +100,12 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
                 ]
             ],
         ],
-
         [
             'originId'      => 146,
             'email'         => 'john.case@example.com',
+            'firstName'     => 'Test146',
             'lastName'      => 'Test146',
-            'gender'        => 'female',
+            'gender'        => 'male',
             'channel'       => 'orocrm_dotmailer.channel.fourth',
             'reference'     => 'orocrm_dotmailer.contact.exported',
             'status'        => ApiContactStatuses::SUBSCRIBED,
@@ -131,17 +134,7 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
 
         foreach ($this->data as $item) {
             $contact = new Contact();
-            $contact->setOriginId($item['originId']);
             $contact->setOwner($admin->getOrganization());
-            $contact->setChannel($this->getReference($item['channel']));
-
-            if (!empty($item['email'])) {
-                $contact->setEmail($item['email']);
-            }
-
-            $contact->setStatus(
-                $this->findEnum('dm_cnt_status', $item['status'])
-            );
 
             foreach ($item['addressBooks'] as $data) {
                 $addressBookContact = new AddressBookContact();
@@ -159,6 +152,7 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
                         $status = $this->findEnum('dm_cnt_status', $data['status']);
                     }
                 }
+
                 $addressBookContact->setAddressBook($addressBook);
                 $addressBookContact->setStatus($status);
                 
@@ -166,11 +160,21 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             }
 
             if (!empty($item['createdAt'])) {
-                $contact->setCreatedAt(new \DateTime($item['createdAt']));
+                $item['createdAt'] = new \DateTime($item['createdAt']);
             }
             if (!empty($item['lastSubscribedDate'])) {
-                $contact->setLastSubscribedDate(new \DateTime($item['lastSubscribedDate']));
+                $item['lastSubscribedDate'] = new \DateTime($item['lastSubscribedDate']);
             }
+            $this->resolveReferenceIfExist($item, 'channel');
+            $item['status'] = $this->findEnum('dm_cnt_status', $item['status']);
+            $this->setEntityPropertyValues(
+                $contact,
+                $item,
+                [
+                    'addressBooks',
+                    'reference'
+                ]
+            );
 
             $manager->persist($contact);
 

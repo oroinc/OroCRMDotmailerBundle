@@ -179,4 +179,24 @@ class AddressBookContact extends ExtendAddressBookContact
 
         return $this;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isScheduledForExport()
+    {
+        return $this->scheduledForExport;
+    }
+
+    /**
+     * @param boolean $scheduledForExport
+     *
+     * @return AddressBookContact
+     */
+    public function setScheduledForExport($scheduledForExport)
+    {
+        $this->scheduledForExport = $scheduledForExport;
+
+        return $this;
+    }
 }

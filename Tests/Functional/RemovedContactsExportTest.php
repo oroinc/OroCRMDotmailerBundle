@@ -3,6 +3,7 @@
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\Int32List;
+
 use Oro\Bundle\IntegrationBundle\Command\ReverseSyncCommand;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 

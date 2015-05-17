@@ -2,11 +2,10 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactExportIterator;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\MarketingListItemIterator;
 
-class ContactsExportReader extends AbstractExportReader
+class ContactsSyncReader extends AbstractExportReader
 {
-
     protected function afterInitialize()
     {
         $iterator = new \AppendIterator();
@@ -16,7 +15,7 @@ class ContactsExportReader extends AbstractExportReader
 
         foreach ($addressBooks as $addressBook) {
             $iterator->append(
-                new ContactExportIterator($addressBook, $this->marketingListItemsQueryBuilderProvider)
+                new MarketingListItemIterator($addressBook, $this->marketingListItemsQueryBuilderProvider)
             );
         }
 

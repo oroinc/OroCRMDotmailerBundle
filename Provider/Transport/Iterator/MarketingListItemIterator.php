@@ -11,6 +11,7 @@ class MarketingListItemIterator extends AbstractMarketingListItemIterator
      */
     protected function getIteratorQueryBuilder(AddressBook $addressBook)
     {
-        return $this->marketingListItemsQueryBuilderProvider->getMarketingListItemsQB($addressBook);
+        return $this->marketingListItemsQueryBuilderProvider
+            ->getMarketingListItemsQB($addressBook);
     }
 }

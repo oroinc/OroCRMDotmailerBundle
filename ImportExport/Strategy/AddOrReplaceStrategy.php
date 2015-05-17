@@ -34,9 +34,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
     {
         $entity = parent::beforeProcessEntity($entity);
 
-        $channel = $this->strategyHelper->getEntityManager('OroIntegrationBundle:Channel')
-            ->getRepository('OroIntegrationBundle:Channel')
-            ->getOrLoadById($this->context->getOption('channel'));
+        $channel = $this->getChannel();
         $entity->setChannel($channel);
 
         $this->setOwner($entity);
@@ -91,5 +89,16 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
         return $this->strategyHelper
             ->getEntityManager($entityName)
             ->getRepository($entityName);
+    }
+
+    /**
+     * @return Channel
+     */
+    protected function getChannel()
+    {
+        $channel = $this->strategyHelper->getEntityManager('OroIntegrationBundle:Channel')
+            ->getRepository('OroIntegrationBundle:Channel')
+            ->getOrLoadById($this->context->getOption('channel'));
+        return $channel;
     }
 }
