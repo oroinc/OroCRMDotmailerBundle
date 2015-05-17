@@ -30,14 +30,14 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
                 if (is_null($addressBookContact)) {
                     $addressBookContact = new AddressBookContact();
                     $addressBookContact->setAddressBook($addressBook);
-                    $addressBookContact->setMarketingListItemId(
-                        $this->getMarketingListItemId()
-                    );
-                    $addressBookContact->setMarketingListItemClass(
-                        $addressBook->getMarketingList()->getEntity()
-                    );
                     $entity->addAddressBookContact($addressBookContact);
                 }
+                $addressBookContact->setMarketingListItemId(
+                    $this->getMarketingListItemId()
+                );
+                $addressBookContact->setMarketingListItemClass(
+                    $addressBook->getMarketingList()->getEntity()
+                );
                 $addressBookContact->setScheduledForExport(true);
             } else {
                 throw new RuntimeException(

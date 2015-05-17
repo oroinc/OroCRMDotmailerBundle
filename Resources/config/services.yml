@@ -39,6 +39,7 @@ parameters:
     orocrm_dotmailer.importexport.reader.unsubscribed_from_account_contacts.class:  OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\UnsubscribedFromAccountContactsReader
     orocrm_dotmailer.importexport.reader.removed_contacts_export.class:             OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\RemovedContactsExportReader
     orocrm_dotmailer.importexport.reader.contact_sync.class:                        OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\ContactsSyncReader
+    orocrm_dotmailer.importexport.reader.scheduled_for_export.class:                OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\ScheduledForExportContactsReader
 
     #connectors
     orocrm_dotmailer.connector.abstract.class:                            OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector
@@ -63,6 +64,7 @@ parameters:
     #processor
     orocrm_dotmailer.importexport.processor.import_abstract.class:    OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\ImportProcessor
     orocrm_dotmailer.importexport.processor.export_removed.class:     OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\RemovedExportProcessor
+    orocrm_dotmailer.importexport.processor.export_contact.class:     OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\ExportContactsProcessor
 
     #serializer
     orocrm_dotmailer.importexport.normalizer.enum.class:              OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer\EnumNormalizer
@@ -195,6 +197,10 @@ services:
 
     orocrm_dotmailer.importexport.reader.contact_sync:
         class: %orocrm_dotmailer.importexport.reader.contact_sync.class%
+        parent: orocrm_dotmailer.importexport.reader.export.abstract
+
+    orocrm_dotmailer.importexport.reader.scheduled_for_export:
+        class: %orocrm_dotmailer.importexport.reader.scheduled_for_export.class%
         parent: orocrm_dotmailer.importexport.reader.export.abstract
 
     #connectors
@@ -388,6 +394,14 @@ services:
             - [setDataConverter, [@orocrm_dotmailer.importexport.data_converter.contact_sync]]
             - [setEntityName, [%orocrm_dotmailer.entity.contact.class%]]
             - [setStrategy, [@orocrm_dotmailer.importexport.strategy.contact_sync]]
+
+    orocrm_dotmailer.importexport.processor.export_contact:
+        class: %orocrm_dotmailer.importexport.processor.export_contact.class%
+        parent: oro_importexport.processor.export_abstract
+        calls:
+            - [setDataConverter, [@orocrm_dotmailer.importexport.data_converter.contact]]
+            - [setContextRegistry, [@oro_importexport.context_registry]]
+            - [setEntityName, [%orocrm_dotmailer.entity.contact.class%]]
 
     #serializer
     orocrm_dotmailer.importexport.normalizer.enum:

@@ -116,12 +116,12 @@ connector:
                         writer:    oro_integration.writer.persistent_batch_writer
                     parameters:
                         batch_size: 2000
-#                exportContacts:
-#                    title: export
-#                    class: Oro\Bundle\BatchBundle\Step\ItemStep
-#                    services:
-#                        reader:    orocrm_dotmailer.importexport.reader.export_contact
-#                        processor: orocrm_dotmailer.importexport.processor.export_contact
-#                        writer:    orocrm_dotmailer.importexport.writer.export.contacts
-#                    parameters:
-#                        batch_size: 10000
+                exportContacts:
+                    title: export
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.importexport.reader.scheduled_for_export
+                        processor: orocrm_dotmailer.importexport.processor.export_contact
+                        writer:    orocrm_dotmailer.importexport.writer.export.contacts
+                    parameters:
+                        batch_size: 10000

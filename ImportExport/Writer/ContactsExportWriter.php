@@ -19,8 +19,6 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemovedContactsExp
 
 class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareInterface
 {
-    const BATCH_SIZE = 2000;
-
     /**
      * @var ManagerRegistry
      */
@@ -77,7 +75,6 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
             foreach ($addressBookItems as $addressBookOriginId => $items) {
                 $this->updateAddressBookContacts($items, $manager, $addressBookOriginId);
             }
-
 
             $manager->flush();
             $manager->commit();

@@ -109,6 +109,8 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'channel'       => 'orocrm_dotmailer.channel.fourth',
             'reference'     => 'orocrm_dotmailer.contact.exported',
             'status'        => ApiContactStatuses::SUBSCRIBED,
+            'opt_in_type'   => Contact::OPT_IN_TYPE_SINGLE,
+            'email_type'   => Contact::EMAIL_TYPE_PLAINTEXT,
             'addressBooks' => [
                 [
                     'addressBook' => 'orocrm_dotmailer.address_book.fifth',
@@ -167,6 +169,12 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             }
             $this->resolveReferenceIfExist($item, 'channel');
             $item['status'] = $this->findEnum('dm_cnt_status', $item['status']);
+            if (isset($item['opt_in_type'])) {
+                $item['opt_in_type'] = $this->findEnum('dm_cnt_opt_in_type', $item['opt_in_type']);
+            }
+            if (isset($item['email_type'])) {
+                $item['email_type'] = $this->findEnum('dm_cnt_email_type', $item['email_type']);
+            }
             $this->setEntityPropertyValues(
                 $contact,
                 $item,

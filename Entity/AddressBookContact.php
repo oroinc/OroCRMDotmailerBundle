@@ -8,7 +8,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBookContact;
 
 /**
- * @ORM\Entity(repositoryClass="OroCRM\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactRepository")
+ * @ORM\Entity()
  * @ORM\Table(
  *      name="orocrm_dm_ab_contact",
  *      uniqueConstraints={
