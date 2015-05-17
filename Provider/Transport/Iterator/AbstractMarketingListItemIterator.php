@@ -48,7 +48,7 @@ abstract class AbstractMarketingListItemIterator extends AbstractIterator
     {
         $qb = $this->getIteratorQueryBuilder($this->addressBook);
         $qb->setMaxResults($take);
-        $qb->setFirstResult(++$skip);
+        $qb->setFirstResult($skip);
 
         $items = $qb->getQuery()->execute();
         foreach ($items as &$item) {

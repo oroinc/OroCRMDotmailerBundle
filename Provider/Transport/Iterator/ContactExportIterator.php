@@ -4,9 +4,9 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectRepository;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
-class ContactExportIterator
+class ContactExportIterator extends AbstractIterator
 {
     /**
      * @var ManagerRegistry
@@ -19,12 +19,19 @@ class ContactExportIterator
     protected $addressBookContactRepository;
 
     /**
-     * @param ManagerRegistry $registry
+     * @var Channel
      */
-    public function __construct(ManagerRegistry $registry)
+    protected $channel;
+
+    /**
+     * @param ManagerRegistry $registry
+     * @param Channel         $channel
+     */
+    public function __construct(ManagerRegistry $registry, Channel $channel)
     {
         $this->registry = $registry;
         $this->addressBookContactRepository = $registry->getRepository('OroCRMDotmailerBundle:AddressBookContact');
+        $this->channel = $channel;
     }
 
     /**
@@ -35,11 +42,9 @@ class ContactExportIterator
      */
     protected function getItems($take, $skip)
     {
-        return $this->addressBookContactRepository->findBy(
-            ['scheduledForExport' => true],
-            ['addressBook'],
-            $take,
-            $skip
-        );
+        return $this->addressBookContactRepository
+            ->getScheduledForExportByChannelQB($this->channel)
+            ->setFirstResult($skip)
+            ->setMaxResults($take);
     }
 }

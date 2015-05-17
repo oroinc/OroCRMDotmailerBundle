@@ -77,10 +77,7 @@ class MarketingListItemsQueryBuilderProvider
      * @param ContactInformationFieldsProvider $contactInformationFieldsProvider
      * @param OwnershipMetadataProvider        $ownershipMetadataProvider
      * @param ManagerRegistry                  $registry
-     * @param string                           $removedItemClassName
-     * @param string                           $unsubscribedItemClassName
-     * @param string                           $contactClassName
-     * @param                                  $addressBookContactClassName
+     * @param FieldHelper                      $fieldHelper
      */
     public function __construct(
         MarketingListProvider $marketingListProvider,
@@ -88,20 +85,13 @@ class MarketingListItemsQueryBuilderProvider
         ContactInformationFieldsProvider $contactInformationFieldsProvider,
         OwnershipMetadataProvider $ownershipMetadataProvider,
         ManagerRegistry $registry,
-        $removedItemClassName,
-        $unsubscribedItemClassName,
-        $contactClassName,
-        $addressBookContactClassName
+        FieldHelper $fieldHelper
     ) {
         $this->marketingListProvider = $marketingListProvider;
         $this->formatter = $formatter;
         $this->contactInformationFieldsProvider = $contactInformationFieldsProvider;
         $this->ownershipMetadataProvider = $ownershipMetadataProvider;
         $this->registry = $registry;
-        $this->removedItemClassName = $removedItemClassName;
-        $this->unsubscribedItemClassName = $unsubscribedItemClassName;
-        $this->contactClassName = $contactClassName;
-        $this->addressBookContactClassName = $addressBookContactClassName;
     }
 
     /**
@@ -282,5 +272,51 @@ class MarketingListItemsQueryBuilderProvider
 
             $qb->setParameter('organization', $organization);
         }
+    }
+
+    /**
+     * @param string $removedItemClassName
+     *
+     * @return MarketingListItemsQueryBuilderProvider
+     */
+    public function setRemovedItemClassName($removedItemClassName)
+    {
+        $this->removedItemClassName = $removedItemClassName;
+        return $this;
+    }
+
+    /**
+     * @param string $unsubscribedItemClassName
+     *
+     * @return MarketingListItemsQueryBuilderProvider
+     */
+    public function setUnsubscribedItemClassName($unsubscribedItemClassName)
+    {
+        $this->unsubscribedItemClassName = $unsubscribedItemClassName;
+        return $this;
+    }
+
+    /**
+     * @param string $contactClassName
+     *
+     * @return MarketingListItemsQueryBuilderProvider
+     */
+    public function setContactClassName($contactClassName)
+    {
+        $this->contactClassName = $contactClassName;
+
+        return $this;
+    }
+
+    /**
+     * @param string $addressBookContactClassName
+     *
+     * @return MarketingListItemsQueryBuilderProvider
+     */
+    public function setAddressBookContactClassName($addressBookContactClassName)
+    {
+        $this->addressBookContactClassName = $addressBookContactClassName;
+
+        return $this;
     }
 }
