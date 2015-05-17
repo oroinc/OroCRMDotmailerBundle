@@ -69,7 +69,7 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
                 if (!isset($addressBookItems[$addressBookOriginId])) {
                     $addressBookItems[$addressBookOriginId] = [];
                 }
-
+                unset($item[RemovedContactsExportIterator::ADDRESS_BOOK_KEY]);
                 $addressBookItems[$addressBookOriginId][] = $item;
             }
             foreach ($addressBookItems as $addressBookOriginId => $items) {
@@ -139,5 +139,6 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
     {
         $this->stepExecution = $stepExecution;
         $this->context = $this->contextRegistry->getByStepExecution($stepExecution);
+        $this->setImportExportContext($this->context);
     }
 }

@@ -23,9 +23,21 @@ class ContactRepository extends EntityRepository
             ->add('addressBookContacts.addressBook =:addressBook')
             ->add($expr->eq('addressBookContacts.scheduledForExport', true));
         return $qb
-            ->addSelect('opt_in_type, email_type')
-            ->leftJoin('contact.opt_in_type', 'opt_in_type')
-            ->leftJoin('contact.email_type', 'email_type')
+            ->select(
+                [
+                    'contact.email',
+                    'contact.originId',
+                    'contact.firstName',
+                    'contact.lastName',
+                    'contact.gender',
+                    'contact.fullName',
+                    'contact.postcode',
+                    'optInType.id as opt_in_type',
+                    'emailType.id as email_type',
+                ]
+            )
+            ->leftJoin('contact.opt_in_type', 'optInType')
+            ->leftJoin('contact.email_type', 'emailType')
             ->innerJoin(
                 'contact.addressBookContacts',
                 'addressBookContacts',

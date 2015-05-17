@@ -26,17 +26,6 @@ class ContactDataConverter extends AbstractDataConverter
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function convertToExportFormat(array $exportedRecord, $skipNullValues = true)
-    {
-        $allowedKeys = array_fill_keys($this->getBackendHeader(), true);
-        $exportedRecord = array_intersect_key($exportedRecord, $allowedKeys);
-        $result = parent::convertToExportFormat($exportedRecord, $skipNullValues);
-        return $result;
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function getBackendHeader()
@@ -49,7 +38,7 @@ class ContactDataConverter extends AbstractDataConverter
             'firstName',
             'lastName',
             'gender',
-            'fullname',
+            'fullName',
             'postcode',
             ScheduledForExportContactsIterator::ADDRESS_BOOK_KEY
         ];
