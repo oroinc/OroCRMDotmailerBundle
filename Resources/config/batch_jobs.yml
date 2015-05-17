@@ -104,7 +104,7 @@ connector:
                     services:
                         reader:    orocrm_dotmailer.importexport.reader.removed_contacts_export
                         processor: orocrm_dotmailer.importexport.processor.export_removed
-                        writer:    oro_integration.writer.persistent_batch_writer
+                        writer:    orocrm_dotmailer.importexport.writer.export.removed_contacts
                     parameters:
                         batch_size: 10000
 #                exportContacts:

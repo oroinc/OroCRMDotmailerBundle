@@ -58,13 +58,13 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
             $entity = new Segment();
             $this->resolveReferenceIfExist($data, 'owner');
             $this->resolveReferenceIfExist($data, 'organization');
+            $data['definition'] = json_encode($data['definition']);
             $data['type'] = $manager
                 ->getRepository('OroSegmentBundle:SegmentType')
                 ->find($data['type']);
             $this->setEntityPropertyValues($entity, $data, ['reference']);
 
             $this->addReference($data['reference'], $entity);
-
 
             $manager->persist($entity);
         }

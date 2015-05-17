@@ -2,15 +2,20 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Writer;
 
+use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 use Akeneo\Bundle\BatchBundle\Item\ItemWriterInterface;
+use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityRepository;
 
+use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
+use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemovedContactsExportIterator;
 
-class RemovedContactsExportWriter implements ItemWriterInterface
+class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionAwareInterface
 {
     const BATCH_SIZE = 2000;
 
@@ -25,13 +30,28 @@ class RemovedContactsExportWriter implements ItemWriterInterface
     protected $transport;
 
     /**
+     * @var ContextRegistry
+     */
+    protected $contextRegistry;
+
+    /**
+     * @var ContextInterface
+     */
+    protected $context;
+
+    /**
      * @param ManagerRegistry    $registry
      * @param DotmailerTransport $transport
+     * @param ContextRegistry    $contextRegistry
      */
-    public function __construct(ManagerRegistry $registry, DotmailerTransport $transport)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        DotmailerTransport $transport,
+        ContextRegistry $contextRegistry
+    ) {
         $this->registry = $registry;
         $this->transport = $transport;
+        $this->contextRegistry = $contextRegistry;
     }
 
     /**
@@ -39,7 +59,8 @@ class RemovedContactsExportWriter implements ItemWriterInterface
      */
     public function write(array $items)
     {
-        $repository = $this->registry->getRepository('OroCRMDotmailerBundle:Contact');
+        $repository = $this->registry->getRepository('OroCRMDotmailerBundle:AddressBookContact');
+        $this->transport->init($this->getChannel()->getTransport());
 
         $addressBookItems = [];
         foreach ($items as $item) {
@@ -77,12 +98,13 @@ class RemovedContactsExportWriter implements ItemWriterInterface
                 continue;
             }
 
-            $qb = $repository->createQueryBuilder('contact');
-            $qb->delete()->where($qb->expr()->in('contact.id', $removingItemsIds));
-            $qb->getQuery()->execute();
+            $this->removeContacts($repository, $removingItemsIds);
 
             $removingItemsIds = [];
             $removingItemsIdsCount = 0;
+        }
+        if ($removingItemsIdsCount > 0) {
+            $this->removeContacts($repository, $removingItemsIds);
         }
 
         /**
@@ -90,5 +112,38 @@ class RemovedContactsExportWriter implements ItemWriterInterface
          * Operation is Async in Dotmailer side
          */
         $this->transport->removeContactsFromAddressBook($removingItemsOriginIds, $addressBookOriginId);
+    }
+
+
+    /**
+     * @return Channel
+     */
+    protected function getChannel()
+    {
+        return $this->registry->getRepository('OroIntegrationBundle:Channel')
+            ->getOrLoadById($this->context->getOption('channel'));
+    }
+
+    /**
+     * @param StepExecution $stepExecution
+     */
+    public function setStepExecution(StepExecution $stepExecution)
+    {
+        $this->stepExecution = $stepExecution;
+        $this->context = $this->contextRegistry->getByStepExecution($stepExecution);
+    }
+
+    /**
+     * @param EntityRepository $repository
+     * @param array            $removingItemsIds
+     */
+    protected function removeContacts(EntityRepository $repository, array $removingItemsIds)
+    {
+        $qb = $repository->createQueryBuilder('contact');
+        $qb->delete()
+            ->where($qb->expr()
+                ->in('contact.id', $removingItemsIds));
+        $qb->getQuery()
+            ->execute();
     }
 }

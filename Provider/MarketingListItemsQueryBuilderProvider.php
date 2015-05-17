@@ -92,6 +92,7 @@ class MarketingListItemsQueryBuilderProvider
         $this->contactInformationFieldsProvider = $contactInformationFieldsProvider;
         $this->ownershipMetadataProvider = $ownershipMetadataProvider;
         $this->registry = $registry;
+        $this->fieldHelper = $fieldHelper;
     }
 
     /**
@@ -182,14 +183,18 @@ class MarketingListItemsQueryBuilderProvider
         );
 
         $this->prepareMarketingListItemQuery($addressBook, $qb);
+        $aliases = $qb->getRootAliases();
+        $qb->select(sprintf('%s.id', reset($aliases)));
         $removedItemsQueryBuilder = clone $qb;
         $removedItemsQueryBuilder
             ->resetDQLParts()
             ->select('addressBookContact.id')
             ->addSelect('contact.originId')
             ->from($this->addressBookContactClassName, 'addressBookContact')
-            ->innerJoin('addressBookContact.Contact', 'contact')
+            ->innerJoin('addressBookContact.contact', 'contact')
+            ->leftJoin('addressBookContact.status', 'status')
             ->where('addressBookContact.addressBook =:addressBook')
+            ->setParameter('addressBook', $addressBook)
             /**
              * Get only subscribed to address book contacts because
              * of other type of address book contacts is already removed from address book.
@@ -197,7 +202,7 @@ class MarketingListItemsQueryBuilderProvider
             ->andWhere(
                 $qb->expr()
                     ->in(
-                        'addressBookContacts.status',
+                        'status.id',
                         [Contact::STATUS_SUBSCRIBED, Contact::STATUS_SOFTBOUNCED]
                     )
             )
@@ -211,8 +216,7 @@ class MarketingListItemsQueryBuilderProvider
                 $removedItemsQueryBuilder->expr()->isNotNull('addressBookContact.marketingListItemId')
             );
 
-
-        return $qb;
+        return $removedItemsQueryBuilder;
     }
 
     /**

@@ -2,9 +2,6 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -50,11 +47,12 @@ class LoadMarketingListData extends AbstractFixture implements DependentFixtureI
         ],
         [
             'name'          => 'list5',
-            'entity'        => 'CB\Bundle\WebsphereBundle\Entity\Subscriber',
+            'entity'        => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
             'type'          => 'static',
             'owner'         => 'orocrm_dotmailer.user.john.doe',
             'organization'  => 'orocrm_dotmailer.organization.foo',
-            'reference'     => 'orocrm_dotmailer.marketing_list.fifth'
+            'reference'     => 'orocrm_dotmailer.marketing_list.fifth',
+            'segment'       => 'orocrm_dotmailer.segment.first'
         ],
     ];
 

@@ -448,6 +448,7 @@ services:
         arguments:
             - @doctrine
             - @orocrm_dotmailer.transport.integration_transport
+            - @oro_importexport.context_registry
 
     orocrm_dotmailer.importexport.writer.export.contacts:
         class: %orocrm_dotmailer.importexport.writer.export.contacts.class%

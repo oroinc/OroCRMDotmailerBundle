@@ -102,8 +102,6 @@ abstract class AbstractFixture extends BaseFixture implements ContainerAwareInte
     }
 
     /**
-     * Declare correct visibility
-     *
      * {@inheritdoc}
      */
     abstract public function load(ObjectManager $manager);
