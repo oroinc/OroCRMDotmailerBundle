@@ -27,6 +27,11 @@ class LoadTransportData extends BaseAbstractFixture
             'username' => 'John',
             'password' => 'Johns password',
             'reference' => 'orocrm_dotmailer.transport.third'
+        ],
+        [
+            'username' => 'John',
+            'password' => 'Johns password',
+            'reference' => 'orocrm_dotmailer.transport.fourth'
         ]
     ];
 

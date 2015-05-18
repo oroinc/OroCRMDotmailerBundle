@@ -12,7 +12,12 @@ class ContactConnector extends AbstractDotmailerConnector
      */
     protected function getConnectorSource()
     {
-        return $this->transport->getContacts($this->getLastSyncDate());
+        // Synchronize only campaigns that are connected to subscriber lists that are used within OroCRM.
+        $aBooksToSynchronize = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->getAddressBooksToSyncOriginIds($this->getChannel());
+
+        return $this->transport->getContacts($aBooksToSynchronize, $this->getLastSyncDate());
     }
 
     /**
