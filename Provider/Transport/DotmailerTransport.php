@@ -146,9 +146,6 @@ class DotmailerTransport implements TransportInterface
      */
     public function getActivityContacts(array $campaignsToSynchronize = [], \DateTime $lastSyncDate = null)
     {
-        if (!$lastSyncDate) {
-            return new \EmptyIterator();
-        }
 
         $iterator = new AppendIterator();
         /** @var Campaign $campaign */
