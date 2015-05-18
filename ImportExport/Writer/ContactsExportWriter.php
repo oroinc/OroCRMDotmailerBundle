@@ -110,14 +110,16 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
         $importStatus = $this->transport->exportAddressBookContacts($csv, $addressBookOriginId);
 
         $exportEntity = new AddressBookContactsExport();
-        $exportEntity->setImportId($importStatus->id);
+        $importId = (string)$importStatus->id;
+        $exportEntity->setImportId($importId);
 
         $addressBook = $manager->getRepository('OroCRMDotmailerBundle:AddressBook')
             ->findOneBy(['originId' => $addressBookOriginId, 'channel' => $this->getChannel()]);
         $exportEntity->setAddressBook($addressBook);
 
         $className = ExtendHelper::buildEnumValueClassName('dm_import_status');
-        $status = $manager->find($className, $importStatus->status);
+        $status = (string)$importStatus->status;
+        $status = $manager->find($className, $status);
         $exportEntity->setStatus($status);
 
         $manager->persist($exportEntity);

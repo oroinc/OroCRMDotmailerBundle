@@ -2,10 +2,14 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
 
+use DotMailer\Api\DataTypes\ApiContactImport;
+
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\IntegrationBundle\Command\ReverseSyncCommand;
 use OroCRM\Bundle\ContactBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact as DotmailerContact;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 
@@ -30,6 +34,19 @@ class ExportContactsTest extends AbstractImportExportTest
         $channel = $this->getReference('orocrm_dotmailer.channel.fourth');
         $addressBook = $this->getReference('orocrm_dotmailer.address_book.fifth');
 
+        $expectedId = '391da8d7-70f0-405b-98d4-02faa41d499d';
+        $statusClass = ExtendHelper::buildEnumValueClassName('dm_import_status');
+        $expectedStatus = $this->managerRegistry
+            ->getRepository($statusClass)
+            ->find(AddressBookContactsExport::STATUS_NOT_FINISHED);
+        $import = new ApiContactImport();
+        $import->id = $expectedId;
+        $import->status = AddressBookContactsExport::STATUS_NOT_FINISHED;
+        $this->resource->expects($this->once())
+            ->method('PostAddressBookContactsImport')
+            ->with($addressBook->getOriginId())
+            ->will($this->returnValue($import));
+
         $processor = $this->getContainer()->get(ReverseSyncCommand::SYNC_PROCESSOR);
         $processor->process($channel, ContactConnector::TYPE, []);
 
@@ -49,6 +66,17 @@ class ExportContactsTest extends AbstractImportExportTest
             $addressBook,
             true
         );
+
+        $export = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+            ->findBy(
+                [
+                    'addressBook' => $addressBook,
+                    'importId' => $expectedId,
+                    'status' => $expectedStatus
+                ]
+            );
+        $this->assertCount(1, $export);
     }
 
     /**

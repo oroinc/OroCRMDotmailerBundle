@@ -68,14 +68,14 @@ class LoadEnumValues extends AbstractEnumFixture
             Contact::STATUS_NOTAVAILABLEINTHISVERSION           => 'NotAvailableInThisVersion',
         ],
         'dm_import_status' => [
-            AddressBookContactsExport::STATUS_EXCEEDS_ALLOWED_CONTACT_LIMIT,
-            AddressBookContactsExport::STATUS_FAILED,
-            AddressBookContactsExport::STATUS_FINISH,
-            AddressBookContactsExport::STATUS_INVALID_FILE_FORMAT,
-            AddressBookContactsExport::STATUS_NOT_AVAILABLE_IN__THIS_VERSION,
-            AddressBookContactsExport::STATUS_NOT_FINISHED,
-            AddressBookContactsExport::STATUS_REJECTED_BY_WATCHDOG,
-            AddressBookContactsExport::STATUS_UNKNOWN,
+            AddressBookContactsExport::STATUS_NOT_FINISHED                   => 'NotFinished',
+            AddressBookContactsExport::STATUS_FINISH                         => 'Finished',
+            AddressBookContactsExport::STATUS_REJECTED_BY_WATCHDOG           => 'RejectedByWatchdog',
+            AddressBookContactsExport::STATUS_INVALID_FILE_FORMAT            => 'InvalidFileFormat',
+            AddressBookContactsExport::STATUS_UNKNOWN                        => 'Unknown',
+            AddressBookContactsExport::STATUS_FAILED                         => 'Failed',
+            AddressBookContactsExport::STATUS_EXCEEDS_ALLOWED_CONTACT_LIMIT  => 'ExceedsAllowedContactLimit',
+            AddressBookContactsExport::STATUS_NOT_AVAILABLE_IN__THIS_VERSION => 'NotAvailableInThisVersion',
         ]
     ];
 
