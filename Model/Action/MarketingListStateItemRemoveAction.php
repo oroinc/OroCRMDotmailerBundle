@@ -41,16 +41,14 @@ class MarketingListStateItemRemoveAction extends AbstractMarketingListEntitiesAc
      */
     protected function executeAction($context)
     {
-        $entitiesByClassName = $this->getMarketingListStateItems($context->getEntity());
+        $entities = $this->getMarketingListStateItems($context->getEntity());
 
-        foreach ($entitiesByClassName as $className => $entities) {
-            $em = $this->doctrineHelper->getEntityManager($className);
-            foreach ($entities as $entity) {
-                $em->remove($entity);
-            }
-
-            $em->flush($entities);
+        $em = $this->doctrineHelper->getEntityManager($this->marketingListStateItemClassName);
+        foreach ($entities as $entity) {
+            $em->remove($entity);
         }
+
+        $em->flush($entities);
     }
 
     /**
@@ -110,7 +108,7 @@ class MarketingListStateItemRemoveAction extends AbstractMarketingListEntitiesAc
             $marketingListStateItem = $this->getMarketingListStateItem($criteria);
 
             if ($marketingListStateItem) {
-                $entities[$marketingList->getEntity()][] = $marketingListStateItem;
+                $entities[] = $marketingListStateItem;
             }
         }
 
