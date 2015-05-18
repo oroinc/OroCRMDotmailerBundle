@@ -379,6 +379,7 @@ services:
 
     orocrm_dotmailer.workflow.action.create_marketing_list_unsubscribed_item:
         class: %orocrm_dotmailer.workflow.action.create_marketing_list_state_item.class%
+        parent: orocrm_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
             - [setMarketingListStateItemClassName, [%orocrm_marketing_list.unsubscribed_item.class%]]
             - [setDoctrineHelper, [@oro_entity.doctrine_helper]]
@@ -387,6 +388,7 @@ services:
 
     orocrm_dotmailer.workflow.action.remove_marketing_list_unsubscribed_item:
         class: %orocrm_dotmailer.workflow.action.remove_marketing_list_state_item.class%
+        parent: orocrm_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
             - [setMarketingListStateItemClassName, [%orocrm_marketing_list.unsubscribed_item.class%]]
             - [setDoctrineHelper, [@oro_entity.doctrine_helper]]
@@ -395,11 +397,12 @@ services:
 
     orocrm_dotmailer.workflow.action.remove_marketing_list_removed_item:
         class: %orocrm_dotmailer.workflow.action.remove_marketing_list_state_item.class%
+        parent: orocrm_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
             - [setMarketingListStateItemClassName, [%orocrm_marketing_list.removed_item.class%]]
             - [setDoctrineHelper, [@oro_entity.doctrine_helper]]
         tags:
-            - { name: oro_workflow.action, alias: remove_marketing_list_unsubscribed_item }
+            - { name: oro_workflow.action, alias: remove_marketing_list_removed_item }
 
     #helpers
     orocrm_dotmailer.model.field_helper:
