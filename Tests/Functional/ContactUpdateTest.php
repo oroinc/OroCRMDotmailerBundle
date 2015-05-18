@@ -44,10 +44,10 @@ class ContactUpdateTest extends AbstractImportTest
         }
 
         $this->resource->expects($this->any())
-            ->method('GetContactsModifiedSinceDate')
+            ->method('GetAddressBookContactsModifiedSinceDate')
             ->will($this->returnValue($entity));
 
-        $channel = $this->getReference('orocrm_dotmailer.channel.second');
+        $channel = $this->getReference('orocrm_dotmailer.channel.fourth');
         $processor = $this->getContainer()->get(SyncCommand::SYNC_PROCESSOR);
         $result = $processor->process($channel, ContactConnector::TYPE);
 
@@ -74,25 +74,25 @@ class ContactUpdateTest extends AbstractImportTest
             $contactEntity = $contactRepository->findOneBy($searchCriteria);
             $this->assertNotNull($contactEntity, 'Failed asserting that contact updated.');
 
-            if (empty($expected['optInType'])) {
+            if (empty($contact['optInType'])) {
                 $this->assertNull($contactEntity->getOptInType());
             } else {
                 $optInType = $optInTypeRepository->find($contact['optInType']);
-                $this->assertEquals($expected['optInType'], $optInType->getName());
+                $this->assertEquals($contact['optInType'], $optInType->getName());
             }
 
-            if (empty($expected['emailType'])) {
+            if (empty($contact['emailType'])) {
                 $this->assertNull($contactEntity->getEmailType());
             } else {
                 $emailType = $emailTypeRepository->find($contact['emailType']);
-                $this->assertEquals($expected['emailType'], $emailType->getName());
+                $this->assertEquals($contact['emailType'], $emailType->getName());
             }
 
-            if (empty($expected['status'])) {
+            if (empty($contact['status'])) {
                 $this->assertNull($contactEntity->getOptInType());
             } else {
                 $status = $statusRepository->find($contact['status']);
-                $this->assertEquals($expected['status'], $status->getName());
+                $this->assertEquals($contact['status'], $status->getName());
             }
         }
     }
@@ -119,9 +119,12 @@ class ContactUpdateTest extends AbstractImportTest
                         'optInType' => 'Double',
                         'emailType' => 'Html',
                         'status'    => 'Suppressed',
+                        'lastName'  => 'Test',
+                        'gender'    => 'male',
+                        'lastSubscribedDate' => new \DateTime('2015-01-01', new \DateTimeZone('UTC'))
                     ],
                 ],
-                'addressBookList' => [
+                'contactList' => [
                     [
                         'id'        => 142,
                         'email'     => 'test1@example.com',
@@ -135,6 +138,32 @@ class ContactUpdateTest extends AbstractImportTest
                         'optInType' => 'Double',
                         'emailType' => 'Html',
                         'status'    => 'Suppressed',
+                        'datafields' => [
+                            [
+                                'key'   => 'FIRSTNAME',
+                                'value' => 'null'
+                            ],
+                            [
+                                'key'   => 'LASTNAME',
+                                'value' => ['Test']
+                            ],
+                            [
+                                'key'   => 'FULLNAME',
+                                'value' => 'null'
+                            ],
+                            [
+                                'key'   => 'POSTCODE',
+                                'value' => 'null'
+                            ],
+                            [
+                                'key'   => 'GENDER',
+                                'value' => ['male']
+                            ],
+                            [
+                                'key'   => 'LASTSUBSCRIBED',
+                                'value' => ['2015-01-01T00:00:00z']
+                            ],
+                        ]
                     ],
                 ]
             ]

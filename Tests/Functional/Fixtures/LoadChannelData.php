@@ -69,6 +69,19 @@ class LoadChannelData extends BaseAbstractFixture implements ContainerAwareInter
             ],
             'transport' => 'orocrm_dotmailer.transport.third',
             'reference' => 'orocrm_dotmailer.channel.third'
+        ],
+        [
+            'name' => 'fourth channel',
+            'connectors' => [
+                CampaignConnector::TYPE,
+                AddressBookConnector::TYPE,
+                UnsubscribedContactsConnector::TYPE,
+                ActivityContactConnector::TYPE,
+                CampaignSummaryConnector::TYPE,
+                ContactConnector::TYPE,
+            ],
+            'transport' => 'orocrm_dotmailer.transport.fourth',
+            'reference' => 'orocrm_dotmailer.channel.fourth'
         ]
     ];
 

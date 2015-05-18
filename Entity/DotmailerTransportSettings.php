@@ -36,7 +36,7 @@ class DotmailerTransportSettings extends TransportSettings
      *
      * @return DotmailerTransportSettings
      */
-    public function setChannel($channel)
+    public function setChannel(Channel $channel = null)
     {
         $this->channel = $channel;
 
