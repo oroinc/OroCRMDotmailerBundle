@@ -533,6 +533,26 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getLastSynced()
+    {
+        return $this->lastSynced;
+    }
+
+    /**
+     * @param \DateTime $lastSynced
+     *
+     * @return AddressBook
+     */
+    public function setLastSynced(\DateTime $lastSynced = null)
+    {
+        $this->lastSynced = $lastSynced;
+
+        return $this;
+    }
+
+    /**
      * @ORM\PrePersist
      */
     public function prePersist()

@@ -67,12 +67,49 @@ definitions:
         actions_configuration:
             - @update_email_campaign_dm_statistics: ~
 
+    dotmailer_handle_contact_state:
+        label:   Check MarketingListItem State for Dotmailer Contact
+        enabled: true
+        entity:  OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact
+        actions_configuration:
+            # Prepare constants values
+            - @assign_constant_value:
+                attribute: $.statusSubscribed
+                value: OroCRM\Bundle\DotmailerBundle\Entity\Contact::STATUS_SUBSCRIBED
+            - @assign_constant_value:
+                attribute: $.statusSoftBounced
+                value: OroCRM\Bundle\DotmailerBundle\Entity\Contact::STATUS_SOFTBOUNCED
+            # Create OroCRM MarketingListUnsubscribedItem
+            - @create_marketing_list_unsubscribed_item:
+                conditions:
+                    @and:
+                        - @not_equal: [$status, $.statusSubscribed]
+                        - @not_equal: [$status, $.statusSoftBounced]
+            # Remove OroCRM MarketingListUnsubscribedItem
+            - @remove_marketing_list_unsubscribed_item:
+                conditions:
+                    @or:
+                        - @equal: [$status, $.statusSubscribed]
+                        - @equal: [$status, $.statusSoftBounced]
+
+            - @remove_marketing_list_removed_item:
+                conditions:
+                    @or:
+                        - @equal: [$status, $.statusSubscribed]
+                        - @equal: [$status, $.statusSoftBounced]
+
 triggers:
     dotmailer_email_campaign_creation:
         -
             event:    create
 
     dotmailer_contact_activity_update:
+        -
+            event:    create
+        -
+            event:    update
+
+    dotmailer_handle_contact_state:
         -
             event:    create
         -
