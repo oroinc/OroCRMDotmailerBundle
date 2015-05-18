@@ -14,7 +14,7 @@ class CampaignConnector extends AbstractDotmailerConnector
     {
         $aBooksToSynchronize = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBook')
-            ->getAddressBooksToSyncOriginIds($this->getChannel());
+            ->getSyncedAddressBooksToSyncOriginIds($this->getChannel());
 
         return $this->transport->getCampaigns($aBooksToSynchronize);
     }
