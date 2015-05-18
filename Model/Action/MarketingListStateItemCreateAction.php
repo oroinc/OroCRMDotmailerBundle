@@ -41,16 +41,14 @@ class MarketingListStateItemCreateAction extends AbstractMarketingListEntitiesAc
      */
     protected function executeAction($context)
     {
-        $entitiesByClassName = $this->getMarketingListStateItems($context->getEntity());
+        $entities = $this->getMarketingListStateItems($context->getEntity());
 
-        foreach ($entitiesByClassName as $className => $entities) {
-            $em = $this->doctrineHelper->getEntityManager($className);
-            foreach ($entities as $entity) {
-                $em->persist($entity);
-            }
-
-            $em->flush($entities);
+        $em = $this->doctrineHelper->getEntityManager($this->marketingListStateItemClassName);
+        foreach ($entities as $entity) {
+            $em->persist($entity);
         }
+
+        $em->flush($entities);
     }
 
     /**
@@ -93,6 +91,9 @@ class MarketingListStateItemCreateAction extends AbstractMarketingListEntitiesAc
         $entities = [];
 
         $marketingList = $abContact->getAddressBook()->getMarketingList();
+        if (!$marketingList) {
+            return $entities;
+        }
         $marketingListEntities = $this->getMarketingListEntitiesByEmail(
             $marketingList,
             $abContact->getContact()->getEmail()
@@ -117,7 +118,7 @@ class MarketingListStateItemCreateAction extends AbstractMarketingListEntitiesAc
                 ->setEntityId($entityId)
                 ->setMarketingList($marketingList);
 
-            $entities[$marketingList->getEntity()][] = $marketingListStateItem;
+            $entities[] = $marketingListStateItem;
         }
 
         return $entities;

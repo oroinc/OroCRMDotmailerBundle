@@ -57,26 +57,6 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
     }
 
     /**
-     * @param $entity
-     *
-     * @return null|object
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\TransactionRequiredException
-     */
-    protected function refreshEntity($entity)
-    {
-        $entityClass = ClassUtils::getClass($entity);
-        $manager = $this->strategyHelper->getEntityManager($entityClass);
-        if (!$manager->contains($entity)) {
-            $identity = $this->databaseHelper->getIdentifier($entity);
-            return $manager->find($entityClass, $identity);
-        }
-
-        return $entity;
-    }
-
-    /**
      * @param object $entity
      */
     protected function setOwner($entity)
@@ -99,5 +79,17 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
         }
 
         parent::assertEnvironment($entity);
+    }
+
+    /**
+     * @param string $entityName "FQCN" or Doctrine entity alias
+     *
+     * @return \Doctrine\ORM\EntityRepository
+     */
+    protected function getRepository($entityName)
+    {
+        return $this->strategyHelper
+            ->getEntityManager($entityName)
+            ->getRepository($entityName);
     }
 }

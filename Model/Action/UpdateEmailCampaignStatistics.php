@@ -77,7 +77,9 @@ class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
         $dmCampaign = $activity->getCampaign();
         $emailCampaign = $dmCampaign->getEmailCampaign();
         $marketingList = $dmCampaign->getAddressBooks()->first()->getMarketingList();
-
+        if (!$marketingList) {
+            return;
+        }
         $relatedEntities = $this->getMarketingListEntitiesByEmail($marketingList, $activity->getEmail());
 
         $em = $this->registry->getManager();

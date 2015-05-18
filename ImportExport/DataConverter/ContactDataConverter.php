@@ -10,15 +10,16 @@ class ContactDataConverter extends AbstractDataConverter
     protected function getHeaderConversionRules()
     {
         return [
-            'id'            => 'originId',
-            'status'        => 'status:id',
-            'optInType'     => 'opt_in_type:id',
-            'emailType'     => 'email_type:id',
-            'FIRSTNAME'     => 'firstName',
-            'LASTNAME'      => 'lastName',
-            'GENDER'        => 'gender',
-            'FULLNAME'      => 'fullname',
-            'POSTCODE'      => 'postcode',
+            'id'             => 'originId',
+            'status'         => 'status:id',
+            'optintype'      => 'opt_in_type:id',
+            'emailtype'      => 'email_type:id',
+            'FIRSTNAME'      => 'firstName',
+            'LASTNAME'       => 'lastName',
+            'GENDER'         => 'gender',
+            'FULLNAME'       => 'fullname',
+            'POSTCODE'       => 'postcode',
+            'LASTSUBSCRIBED' => 'lastSubscribedDate',
         ];
     }
 

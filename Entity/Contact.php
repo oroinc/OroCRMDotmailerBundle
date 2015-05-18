@@ -232,6 +232,13 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     protected $unsubscribedDate;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="last_subscribed_date", type="datetime", nullable=true)
+     */
+    protected $lastSubscribedDate;
+
+    /**
      * Initialize collections
      */
     public function __construct()
@@ -506,7 +513,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     /**
      * @param AddressBookContact $addressBookContact
      *
-     * @return AddressBook
+     * @return Contact
      */
     public function removeAddressBookContact(AddressBookContact $addressBookContact)
     {
@@ -590,6 +597,26 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     public function setUnsubscribedDate(\DateTime $unsubscribedDate = null)
     {
         $this->unsubscribedDate = $unsubscribedDate;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getLastSubscribedDate()
+    {
+        return $this->lastSubscribedDate;
+    }
+
+    /**
+     * @param \DateTime $lastSubscribedDate
+     *
+     * @return Contact
+     */
+    public function setLastSubscribedDate(\DateTime $lastSubscribedDate = null)
+    {
+        $this->lastSubscribedDate = $lastSubscribedDate;
 
         return $this;
     }

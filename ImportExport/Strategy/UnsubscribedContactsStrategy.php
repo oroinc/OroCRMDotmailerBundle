@@ -2,7 +2,6 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactsIterator;
@@ -41,16 +40,27 @@ class UnsubscribedContactsStrategy extends AbstractImportStrategy
             throw new RuntimeException('Address book id required');
         }
         $addressBookOriginId = $originalValue[UnsubscribedContactsIterator::ADDRESS_BOOK_KEY];
-        foreach ($contact->getAddressBookContacts() as $addressBookContact) {
-            $addressBook = $addressBookContact->getAddressBook();
-            if ($addressBook && $addressBook->getOriginId() == $addressBookOriginId && $entity->getStatus()) {
-                $addressBookContact->setStatus($this->getEnumValue('dm_cnt_status', $entity->getStatus()->getId()));
-                $addressBookContact->setUnsubscribedDate($entity->getUnsubscribedDate());
-
-                break;
-            }
-        }
+        $this->updateAddressBookContact($entity, $contact, $addressBookOriginId);
 
         return $contact;
+    }
+
+    /**
+     * @param Contact $contact
+     * @param Contact $existingContact
+     * @param int     $addressBookOriginId
+     */
+    protected function updateAddressBookContact(Contact $contact, Contact $existingContact, $addressBookOriginId)
+    {
+        foreach ($existingContact->getAddressBookContacts() as $addressBookContact) {
+            $addressBook = $addressBookContact->getAddressBook();
+            if ($addressBook && $addressBook->getOriginId() == $addressBookOriginId && $contact->getStatus()) {
+                $reason = $this->getEnumValue('dm_cnt_status', $contact->getStatus()->getId());
+                $addressBookContact->setStatus($reason);
+                $addressBookContact->setUnsubscribedDate($contact->getUnsubscribedDate());
+
+                return;
+            }
+        }
     }
 }
