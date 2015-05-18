@@ -91,6 +91,9 @@ class MarketingListStateItemRemoveAction extends AbstractMarketingListEntitiesAc
         $entities = [];
 
         $marketingList = $abContact->getAddressBook()->getMarketingList();
+        if (!$marketingList) {
+            return $entities;
+        }
         $marketingListEntities = $this->getMarketingListEntitiesByEmail(
             $marketingList,
             $abContact->getContact()->getEmail()
