@@ -14,6 +14,22 @@ class ContactStrategy extends AddOrReplaceStrategy
     /**
      * {@inheritdoc}
      */
+    public function process($entity)
+    {
+        $entity = parent::process($entity);
+
+        if ($entity instanceof Contact && !$this->databaseHelper->getIdentifier($entity)) {
+            $newImportedContacts = $this->context->getValue('newImportedItems') ?: [];
+            $newImportedContacts[$entity->getOriginId()] = true;
+            $this->context->setValue('newImportedItems', $newImportedContacts);
+        }
+
+        return $entity;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function afterProcessEntity($entity)
     {
         /** @var Contact $entity */
@@ -37,6 +53,14 @@ class ContactStrategy extends AddOrReplaceStrategy
                 throw new RuntimeException(
                     sprintf('Address book for contact %s not found', $entity->getOriginId())
                 );
+            }
+
+            $newImportedContacts = $this->context->getValue('newImportedItems');
+            /**
+             * Fix case if this contact already imported on this batch
+             */
+            if ($newImportedContacts && isset($newImportedContacts[$entity->getOriginId()])) {
+                return null;
             }
         }
 

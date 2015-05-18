@@ -35,11 +35,11 @@ parameters:
 
     #connectors
     orocrm_dotmailer.connector.abstract.class:                            OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector
-    orocrm_dotmailer.connector.campaign.class:                            OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector
     orocrm_dotmailer.connector.address_book.class:                        OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector
+    orocrm_dotmailer.connector.campaign.class:                            OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector
+    orocrm_dotmailer.connector.contact.class:                             OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector
     orocrm_dotmailer.connector.unsubscribed_contacts.class:               OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactsConnector
     orocrm_dotmailer.connector.unsubscribed_from_account_contacts.class:  OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedFromAccountContactsConnector
-    orocrm_dotmailer.connector.contact.class:                             OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector
     orocrm_dotmailer.connector.activity_contact.class:                    OroCRM\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector
     orocrm_dotmailer.connector.campaign_summary.class:                    OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector
 
@@ -54,6 +54,9 @@ parameters:
 
     #processor
     orocrm_dotmailer.importexport.processor.import_abstract.class:    OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\ImportProcessor
+
+    #writer
+    orocrm_dotmailer.importexport.writer.import.class:                OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\ImportWriter
 
     #serializer
     orocrm_dotmailer.importexport.normalizer.enum.class:              OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer\EnumNormalizer
@@ -160,13 +163,14 @@ services:
         calls:
             - [setManagerRegistry, [@doctrine]]
 
-    orocrm_dotmailer.connector.contact:
-        class: %orocrm_dotmailer.connector.contact.class%
+    orocrm_dotmailer.connector.address_book:
+        class: %orocrm_dotmailer.connector.address_book.class%
         parent: orocrm_dotmailer.connector.abstract
         calls:
-            - [setEntityName, [%orocrm_dotmailer.entity.contact.class%]]
+            - [setEntityName, [%orocrm_dotmailer.entity.address_book.class%]]
         tags:
-            - { name: oro_integration.connector, type: contact, channel_type: dotmailer }
+            - { name: oro_integration.connector, type: address_book, channel_type: dotmailer }
+
 
     orocrm_dotmailer.connector.campaign:
         class: %orocrm_dotmailer.connector.campaign.class%
@@ -176,13 +180,14 @@ services:
         tags:
             - { name: oro_integration.connector, type: campaign, channel_type: dotmailer }
 
-    orocrm_dotmailer.connector.address_book:
-        class: %orocrm_dotmailer.connector.address_book.class%
+    orocrm_dotmailer.connector.contact:
+        class: %orocrm_dotmailer.connector.contact.class%
         parent: orocrm_dotmailer.connector.abstract
         calls:
-            - [setEntityName, [%orocrm_dotmailer.entity.address_book.class%]]
+            - [setEntityName, [%orocrm_dotmailer.entity.contact.class%]]
         tags:
-            - { name: oro_integration.connector, type: address_book, channel_type: dotmailer }
+            - { name: oro_integration.connector, type: contact, channel_type: dotmailer }
+
 
     orocrm_dotmailer.connector.unsubscribed_contacts:
         class: %orocrm_dotmailer.connector.unsubscribed_contacts.class%
@@ -323,6 +328,11 @@ services:
             - [setStrategy, [@orocrm_dotmailer.importexport.strategy.add_or_replace]]
             - [setEntityName, [%orocrm_dotmailer.entity.campaign_summary.class%]]
 
+    #writer
+    orocrm_dotmailer.importexport.writer.import:
+        parent: oro_integration.writer.persistent_batch_writer
+        class: %orocrm_dotmailer.importexport.writer.import.class%
+
     #serializer
     orocrm_dotmailer.importexport.normalizer.enum:
         class: %orocrm_dotmailer.importexport.normalizer.enum.class%
@@ -379,6 +389,7 @@ services:
 
     orocrm_dotmailer.workflow.action.create_marketing_list_unsubscribed_item:
         class: %orocrm_dotmailer.workflow.action.create_marketing_list_state_item.class%
+        parent: orocrm_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
             - [setMarketingListStateItemClassName, [%orocrm_marketing_list.unsubscribed_item.class%]]
             - [setDoctrineHelper, [@oro_entity.doctrine_helper]]
@@ -386,6 +397,7 @@ services:
             - { name: oro_workflow.action, alias: create_marketing_list_unsubscribed_item }
 
     orocrm_dotmailer.workflow.action.remove_marketing_list_unsubscribed_item:
+        parent: orocrm_dotmailer.workflow.action.abstract_marketing_list_entities
         class: %orocrm_dotmailer.workflow.action.remove_marketing_list_state_item.class%
         calls:
             - [setMarketingListStateItemClassName, [%orocrm_marketing_list.unsubscribed_item.class%]]
@@ -394,12 +406,13 @@ services:
             - { name: oro_workflow.action, alias: remove_marketing_list_unsubscribed_item }
 
     orocrm_dotmailer.workflow.action.remove_marketing_list_removed_item:
+        parent: orocrm_dotmailer.workflow.action.abstract_marketing_list_entities
         class: %orocrm_dotmailer.workflow.action.remove_marketing_list_state_item.class%
         calls:
             - [setMarketingListStateItemClassName, [%orocrm_marketing_list.removed_item.class%]]
             - [setDoctrineHelper, [@oro_entity.doctrine_helper]]
         tags:
-            - { name: oro_workflow.action, alias: remove_marketing_list_unsubscribed_item }
+            - { name: oro_workflow.action, alias: remove_marketing_list_removed_item }
 
     #helpers
     orocrm_dotmailer.model.field_helper:
