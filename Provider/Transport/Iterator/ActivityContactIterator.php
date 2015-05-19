@@ -7,7 +7,6 @@ use DotMailer\Api\Resources\IResources;
 class ActivityContactIterator extends AbstractIterator
 {
     const CAMPAIGN_KEY = 'related_campaign';
-    const LASTSYNCDATE_FORMAT = \DateTime::ISO8601;
 
     /**
      * @var IResources
@@ -34,7 +33,7 @@ class ActivityContactIterator extends AbstractIterator
      * @param int        $campaignOriginId
      * @param \DateTime  $lastSyncDate
      */
-    public function __construct(IResources $dotmailerResources, $campaignOriginId, \DateTime $lastSyncDate)
+    public function __construct(IResources $dotmailerResources, $campaignOriginId, \DateTime $lastSyncDate = null)
     {
         $this->dotmailerResources = $dotmailerResources;
         $this->campaignOriginId = $campaignOriginId;
@@ -49,13 +48,17 @@ class ActivityContactIterator extends AbstractIterator
      */
     protected function getItems($take, $skip)
     {
-        $items = $this->dotmailerResources
-            ->GetCampaignActivitiesSinceDateByDate(
+        if (is_null($this->lastSyncDate)) {
+            $items = $this->dotmailerResources->GetCampaignActivities($this->campaignOriginId, true, $take, $skip);
+        } else {
+            $items = $this->dotmailerResources->GetCampaignActivitiesSinceDateByDate(
                 $this->campaignOriginId,
-                $this->lastSyncDate->format(self::LASTSYNCDATE_FORMAT),
+                $this->lastSyncDate->format(\DateTime::ISO8601),
+                true,
                 $take,
                 $skip
             );
+        }
 
         $items = $items->toArray();
         foreach ($items as &$item) {

@@ -21,19 +21,19 @@ class ActivityContactIteratorTest extends \PHPUnit_Framework_TestCase
         $items[] = $expectedActivity;
         $resource->expects($this->any())
             ->method('GetCampaignActivitiesSinceDateByDate')
-            ->with($expectedCampaignOriginId, $expectedDate->format(ActivityContactIterator::LASTSYNCDATE_FORMAT))
+            ->with($expectedCampaignOriginId, $expectedDate->format(\DateTime::ISO8601))
             ->will($this->returnValueMap(
                 [
                     [
                         $expectedCampaignOriginId,
-                        $expectedDate->format(ActivityContactIterator::LASTSYNCDATE_FORMAT),
+                        $expectedDate->format(\DateTime::ISO8601),
                         1,
                         0,
                         $items
                     ],
                     [
                         $expectedCampaignOriginId,
-                        $expectedDate->format(ActivityContactIterator::LASTSYNCDATE_FORMAT),
+                        $expectedDate->format(\DateTime::ISO8601),
                         1,
                         1,
                         new ApiCampaignContactSummaryList()

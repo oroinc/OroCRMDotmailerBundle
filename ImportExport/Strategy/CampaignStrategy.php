@@ -14,6 +14,22 @@ class CampaignStrategy extends AddOrReplaceStrategy
     /**
      * {@inheritdoc}
      */
+    public function process($entity)
+    {
+        $entity = parent::process($entity);
+
+        if ($entity instanceof Campaign && !$this->databaseHelper->getIdentifier($entity)) {
+            $newImportedCampaigns = $this->context->getValue('newImportedItems')?:[];
+            $newImportedCampaigns[$entity->getOriginId()] = true;
+            $this->context->setValue('newImportedItems', $newImportedCampaigns);
+        }
+
+        return $entity;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function afterProcessEntity($entity)
     {
         /** @var Campaign $entity */
@@ -26,8 +42,15 @@ class CampaignStrategy extends AddOrReplaceStrategy
                     sprintf('Address book for campaign %s not found', $entity->getOriginId())
                 );
             }
-        }
 
+            $newImportedCampaigns = $this->context->getValue('newImportedItems');
+            /**
+             * Fix case if this campaign already imported on this batch
+             */
+            if ($newImportedCampaigns && isset($newImportedCampaigns[$entity->getOriginId()])) {
+                return null;
+            }
+        }
         return parent::afterProcessEntity($entity);
     }
 
