@@ -12,7 +12,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector;
  * @dbIsolation
  * @dbReindex
  */
-class CampaignSummaryUpdateExportTest extends AbstractImportExportTest
+class CampaignSummaryUpdateTest extends AbstractImportExportTest
 {
     protected function setUp()
     {
