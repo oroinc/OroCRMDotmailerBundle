@@ -307,6 +307,9 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addColumn('contact_id', 'integer');
         $table->addColumn('address_book_id', 'integer');
         $table->addColumn('unsubscribed_date', 'datetime', ['notnull' => false]);
+        $table->addColumn('marketing_list_item_id', 'integer', ['notnull' => false]);
+        $table->addColumn('marketing_list_item_class', 'string', ['notnull' => false, 'length' => 255]);
+        $table->addColumn('scheduled_for_export', 'boolean', []);
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['address_book_id', 'contact_id'], 'orocrm_dm_ab_cnt_unq');
         $table->addIndex(['address_book_id'], 'IDX_74DFE8B64D474419', []);

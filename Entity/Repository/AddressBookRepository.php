@@ -41,4 +41,17 @@ class AddressBookRepository extends EntityRepository
             ->getQuery()
             ->getScalarResult();
     }
+
+    /**
+     * @param Channel $channel
+     *
+     * @return array
+     */
+    public function getAddressBooksToSync(Channel $channel)
+    {
+        return $this->createQueryBuilder('addressBook')
+            ->where('addressBook.channel = :channel AND addressBook.marketingList IS NOT NULL')
+            ->getQuery()
+            ->execute(['channel' => $channel]);
+    }
 }
