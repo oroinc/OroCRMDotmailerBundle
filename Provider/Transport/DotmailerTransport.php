@@ -190,11 +190,7 @@ class DotmailerTransport implements TransportInterface
      */
     public function exportAddressBookContacts($contactsCsv, $addressBookOriginId)
     {
-        $apiFileMedia = new ApiFileMedia();
-        $file = new XsBase64Binary($contactsCsv);
-        $apiFileMedia->fileName = 'contacts.csv';
-        $apiFileMedia->data = $file;
-
+        $apiFileMedia = new ApiFileMedia(['FileName' => 'contacts.csv', 'Data' => $contactsCsv]);
         return $this->dotmailerResources->PostAddressBookContactsImport($addressBookOriginId, $apiFileMedia);
     }
 

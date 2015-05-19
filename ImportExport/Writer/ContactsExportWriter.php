@@ -142,5 +142,6 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
         $this->stepExecution = $stepExecution;
         $this->context = $this->contextRegistry->getByStepExecution($stepExecution);
         $this->setImportExportContext($this->context);
+        $this->transport->init($this->getChannel()->getTransport());
     }
 }

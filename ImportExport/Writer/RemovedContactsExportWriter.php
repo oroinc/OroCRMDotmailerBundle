@@ -60,7 +60,6 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
     public function write(array $items)
     {
         $repository = $this->registry->getRepository('OroCRMDotmailerBundle:AddressBookContact');
-        $this->transport->init($this->getChannel()->getTransport());
 
         $addressBookItems = [];
         foreach ($items as $item) {
@@ -131,6 +130,8 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
     {
         $this->stepExecution = $stepExecution;
         $this->context = $this->contextRegistry->getByStepExecution($stepExecution);
+
+        $this->transport->init($this->getChannel()->getTransport());
     }
 
     /**
