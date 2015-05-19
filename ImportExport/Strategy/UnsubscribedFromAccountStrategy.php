@@ -34,12 +34,14 @@ class UnsubscribedFromAccountStrategy extends AbstractImportStrategy
             return null;
         }
 
-        $em = $this->registry->getManager();
+        $reason = $this->getEnumValue('dm_cnt_status', Contact::STATUS_SUPPRESSED);
+//        $em = $this->registry->getManager();
         foreach ($contact->getAddressBookContacts() as $addressBookContact) {
-            $em->remove($addressBookContact);
+            $addressBookContact->setStatus($reason);
+            $addressBookContact->setUnsubscribedDate($entity->getUnsubscribedDate());
+//            $em->persist($addressBookContact);
         }
-        $contact->getAddressBookContacts()->clear();
-        $reason = $this->getEnumValue('dm_cnt_status', $entity->getStatus()->getId());
+//        $contact->getAddressBookContacts()->clear();
         $contact->setStatus($reason);
         $contact->setUnsubscribedDate($entity->getUnsubscribedDate());
 
