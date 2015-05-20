@@ -11,6 +11,7 @@ parameters:
     orocrm_dotmailer.provider.channel_type.class:                     OroCRM\Bundle\DotmailerBundle\Provider\ChannelType
     orocrm_dotmailer.transport.integration_transport.class:           OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport
     orocrm_dotmailer.transport.resources_factory.class:               OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory
+    orocrm_dotmailer.export_manager.class:                            OroCRM\Bundle\DotmailerBundle\Model\ExportManager
 
     # Forms and Extensions
     orocrm_dotmailer.form.type.integration_transport_settings.class:  OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSettingsType
@@ -144,6 +145,13 @@ services:
 
     orocrm_dotmailer.transport.resources_factory:
         class: %orocrm_dotmailer.transport.resources_factory.class%
+
+    orocrm_dotmailer.export_manager:
+        class: %orocrm_dotmailer.export_manager.class%
+        arguments:
+            - @doctrine
+            - @orocrm_dotmailer.transport.integration_transport
+            - @oro_integration.sync.processor
 
     #readers
     orocrm_dotmailer.importexport.reader.unsubscribed_from_account_contacts:

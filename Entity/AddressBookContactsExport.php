@@ -8,7 +8,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBookContactsExport;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="OroCRM\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactsExportRepository")
  * @ORM\Table(
  *      name="orocrm_dm_ab_cnt_export",
  * )

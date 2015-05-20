@@ -4,6 +4,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\Resources\IResources;
 
 use Guzzle\Iterator\AppendIterator;
@@ -166,6 +167,16 @@ class DotmailerTransport implements TransportInterface
     public function getCampaignSummary(array $campaignsToSynchronize = [])
     {
         return new CampaignSummaryIterator($this->dotmailerResources, $campaignsToSynchronize);
+    }
+
+    /**
+     * @param string $importId
+     *
+     * @return ApiContactImport
+     */
+    public function getImportStatus($importId)
+    {
+        return $this->dotmailerResources->GetContactsImportByImportId($importId);
     }
 
     /**
