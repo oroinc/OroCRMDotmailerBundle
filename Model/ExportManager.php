@@ -52,13 +52,11 @@ class ExportManager
     {
         $addressBookContactsExportRepository = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport');
-        $enumClassName = ExtendHelper::buildEnumValueClassName('dm_import_status');
+
+        $className = ExtendHelper::buildEnumValueClassName('dm_import_status');
         $statusRepository = $this->managerRegistry
-            ->getRepository($enumClassName);
-        $addressBookRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBook');
-
+            ->getRepository($className);
         $this->dotmailerTransport->init($channel->getTransport());
-
 
         /**
          * @var EntityRepository $addressBookContactRepository
@@ -92,17 +90,7 @@ class ExportManager
                 ->getQuery()
                 ->execute(['channel' => $channel, 'scheduledForExport' => false]);
 
-            $finishStatus = $statusRepository->find(AddressBookContactsExport::STATUS_FINISH);
-            $addressBooks = $addressBookRepository->findBy(['channel' => $channel]);
-            foreach ($addressBooks as $addressBook) {
-                $failedExport = $addressBookContactsExportRepository->getLastFailedExport($addressBook);
-
-                if ($failedExport) {
-                    $addressBook->setSyncStatus($failedExport->getStatus());
-                } else {
-                    $addressBook->setSyncStatus($finishStatus);
-                }
-            }
+            $this->updateAddressBookStatus($channel);
         }
 
         $this->managerRegistry->getManager()->flush();
@@ -128,5 +116,32 @@ class ExportManager
         $repository = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport');
         return $repository->isExportFinished($channel);
+    }
+
+    /**
+     * @param Channel $channel
+     */
+    protected function updateAddressBookStatus(Channel $channel)
+    {
+        $addressBookRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBook');
+        $className = ExtendHelper::buildEnumValueClassName('dm_import_status');
+        $statusRepository = $this->managerRegistry
+            ->getRepository($className);
+        $addressBookContactsExportRepository = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport');
+
+        $finishStatus = $statusRepository->find(AddressBookContactsExport::STATUS_FINISH);
+        $addressBooks = $addressBookRepository->findBy(['channel' => $channel]);
+        $lastSyncDate = new \DateTime('now', new \DateTimeZone('UTC'));
+        foreach ($addressBooks as $addressBook) {
+            $failedExport = $addressBookContactsExportRepository->getLastFailedExport($addressBook);
+
+            if ($failedExport) {
+                $addressBook->setSyncStatus($failedExport->getStatus());
+            } else {
+                $addressBook->setSyncStatus($finishStatus);
+            }
+            $addressBook->setLastSynced($lastSyncDate);
+        }
     }
 }

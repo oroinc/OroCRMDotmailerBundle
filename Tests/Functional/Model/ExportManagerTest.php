@@ -74,7 +74,11 @@ class ExportManagerTest extends AbstractImportExportTest
         $this->assertCount(1, $exportEntity);
         $exportEntity = reset($exportEntity);
 
-        $this->assertEquals(AddressBookContactsExport::STATUS_FINISH, $exportEntity->getStatus()->getId());
+        $exportStatus = $exportEntity->getStatus();
+        $this->assertEquals(AddressBookContactsExport::STATUS_FINISH, $exportStatus->getId());
+
+        $addressBookStatus = $exportEntity->getAddressBook()->getSyncStatus();
+        $this->assertEquals(AddressBookContactsExport::STATUS_FINISH, $addressBookStatus->getId());
 
         $scheduledForExport = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBookContact')
             ->findBy(['scheduledForExport' => true ]);
