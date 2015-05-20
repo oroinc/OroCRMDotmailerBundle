@@ -7,8 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\ApiFileMedia;
 use DotMailer\Api\DataTypes\Int32List;
-use DotMailer\Api\DataTypes\XsBase64Binary;
-use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\Resources\IResources;
 
 use Guzzle\Iterator\AppendIterator;

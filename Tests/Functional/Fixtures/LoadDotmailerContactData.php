@@ -137,6 +137,7 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
         foreach ($this->data as $item) {
             $contact = new Contact();
             $contact->setOwner($admin->getOrganization());
+            $this->resolveReferenceIfExist($item, 'channel');
 
             foreach ($item['addressBooks'] as $data) {
                 $addressBookContact = new AddressBookContact();
@@ -157,7 +158,10 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
 
                 $addressBookContact->setAddressBook($addressBook);
                 $addressBookContact->setStatus($status);
-                
+                $addressBookContact->setChannel($item['channel']);
+                if (empty($item['originId'])) {
+                    $addressBookContact->setScheduledForExport(true);
+                }
                 $contact->addAddressBookContact($addressBookContact);
             }
 
@@ -167,7 +171,7 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             if (!empty($item['lastSubscribedDate'])) {
                 $item['lastSubscribedDate'] = new \DateTime($item['lastSubscribedDate']);
             }
-            $this->resolveReferenceIfExist($item, 'channel');
+
             $item['status'] = $this->findEnum('dm_cnt_status', $item['status']);
             if (isset($item['opt_in_type'])) {
                 $item['opt_in_type'] = $this->findEnum('dm_cnt_opt_in_type', $item['opt_in_type']);

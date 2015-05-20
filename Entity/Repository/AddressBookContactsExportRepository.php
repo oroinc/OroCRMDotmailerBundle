@@ -18,9 +18,8 @@ class AddressBookContactsExportRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('addressBookContactExport');
         $qb->select('addressBookContactExport.id')
-            ->innerJoin('addressBookContactExport.addressBook', 'addressBook')
             ->innerJoin('addressBookContactExport.status', 'status')
-            ->where('addressBook.channel =:channel')
+            ->where('addressBookContactExport.channel =:channel')
             ->andWhere('status.id =:status')
             ->setMaxResults(1)
             ->setParameters(
@@ -42,9 +41,8 @@ class AddressBookContactsExportRepository extends EntityRepository
     public function getNotFinishedImports($channel)
     {
         $qb = $this->createQueryBuilder('addressBookContactExport');
-        $qb->innerJoin('addressBookContactExport.addressBook', 'addressBook')
-            ->innerJoin('addressBookContactExport.status', 'status')
-            ->where('addressBook.channel =:channel')
+        $qb->innerJoin('addressBookContactExport.status', 'status')
+            ->where('addressBookContactExport.channel =:channel')
             ->andWhere('status.id =:status');
 
         return $qb->getQuery()

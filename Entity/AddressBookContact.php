@@ -5,6 +5,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBookContact;
 
 /**
@@ -71,6 +72,14 @@ class AddressBookContact extends ExtendAddressBookContact
      * @ORM\Column(name="scheduled_for_export", type="boolean")
      */
     protected $scheduledForExport = false;
+
+    /**
+     * @var Channel
+     *
+     * @ORM\ManyToOne(targetEntity="Oro\Bundle\IntegrationBundle\Entity\Channel")
+     * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected $channel;
 
     /**
      * @return int
@@ -196,6 +205,26 @@ class AddressBookContact extends ExtendAddressBookContact
     public function setScheduledForExport($scheduledForExport)
     {
         $this->scheduledForExport = $scheduledForExport;
+
+        return $this;
+    }
+
+    /**
+     * @return Channel
+     */
+    public function getChannel()
+    {
+        return $this->channel;
+    }
+
+    /**
+     * @param Channel $channel
+     *
+     * @return AddressBookContact
+     */
+    public function setChannel(Channel $channel)
+    {
+        $this->channel = $channel;
 
         return $this;
     }

@@ -2,8 +2,7 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Model;
 
-use Psr\Log\LoggerInterface;
-
+use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
@@ -32,11 +31,6 @@ class ExportManager
     protected $syncProcessor;
 
     /**
-     * @var LoggerInterface
-     */
-    protected $loggerInterface;
-
-    /**
      * @param ManagerRegistry    $managerRegistry
      * @param DotmailerTransport $dotmailerTransport
      * @param SyncProcessor      $syncProcessor
@@ -58,7 +52,7 @@ class ExportManager
     {
         $repository = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport');
-        $enumClassName = ExtendHelper::buildEnumValueClassName('orocrm_dm_ab_cnt_export');
+        $enumClassName = ExtendHelper::buildEnumValueClassName('dm_import_status');
         $statusRepository = $this->managerRegistry
             ->getRepository($enumClassName);
         $this->dotmailerTransport->init($channel->getTransport());
@@ -78,7 +72,21 @@ class ExportManager
         }
 
         if ($isExportFinished) {
-            $this->startImportContactsJob($channel);
+            $importJobResult = $this->startImportContactsJob($channel);
+            if (!$importJobResult) {
+                throw new RuntimeException('Import exported data failed.');
+            }
+
+            /**
+             * @var EntityRepository $entityRepository
+             */
+            $entityRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBookContact');
+            $entityRepository->createQueryBuilder('addressBookContact')
+                ->update()
+                ->where('addressBookContact.channel =:channel')
+                ->set('addressBookContact.scheduledForExport', ':scheduledForExport')
+                ->getQuery()
+                ->execute(['channel' => $channel, 'scheduledForExport' => false]);
         }
     }
 

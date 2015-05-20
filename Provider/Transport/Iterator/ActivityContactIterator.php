@@ -49,12 +49,11 @@ class ActivityContactIterator extends AbstractIterator
     protected function getItems($take, $skip)
     {
         if (is_null($this->lastSyncDate)) {
-            $items = $this->dotmailerResources->GetCampaignActivities($this->campaignOriginId, true, $take, $skip);
+            $items = $this->dotmailerResources->GetCampaignActivities($this->campaignOriginId, $take, $skip);
         } else {
             $items = $this->dotmailerResources->GetCampaignActivitiesSinceDateByDate(
                 $this->campaignOriginId,
                 $this->lastSyncDate->format(\DateTime::ISO8601),
-                true,
                 $take,
                 $skip
             );

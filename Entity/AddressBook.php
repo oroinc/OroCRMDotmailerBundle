@@ -216,6 +216,7 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
         $this->campaigns = new ArrayCollection();
         $this->addressBookContacts = new ArrayCollection();
         $this->contactImports = new ArrayCollection();
+        $this->addressBookContactsExports = new ArrayCollection();
     }
 
     /**
