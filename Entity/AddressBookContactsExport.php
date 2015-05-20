@@ -12,6 +12,7 @@ use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBookContactsExport;
  * @ORM\Table(
  *      name="orocrm_dm_ab_cnt_export",
  * )
+ * @ORM\HasLifecycleCallbacks()
  * @Config()
  */
 class AddressBookContactsExport extends ExtendAddressBookContactsExport
