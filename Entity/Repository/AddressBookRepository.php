@@ -5,6 +5,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Entity\Repository;
 use Doctrine\ORM\EntityRepository;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 
 class AddressBookRepository extends EntityRepository
 {
@@ -45,7 +46,7 @@ class AddressBookRepository extends EntityRepository
     /**
      * @param Channel $channel
      *
-     * @return array
+     * @return AddressBook[]
      */
     public function getAddressBooksToSync(Channel $channel)
     {

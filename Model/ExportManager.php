@@ -50,16 +50,24 @@ class ExportManager
      */
     public function updateExportResults(Channel $channel)
     {
-        $repository = $this->managerRegistry
+        $addressBookContactsExportRepository = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport');
         $enumClassName = ExtendHelper::buildEnumValueClassName('dm_import_status');
         $statusRepository = $this->managerRegistry
             ->getRepository($enumClassName);
+        $addressBookRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBook');
+
         $this->dotmailerTransport->init($channel->getTransport());
 
+
+        /**
+         * @var EntityRepository $addressBookContactRepository
+         */
+        $addressBookContactRepository = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:AddressBookContact');
         $isExportFinished = true;
 
-        $importStatuses = $repository->getNotFinishedImports($channel);
+        $importStatuses = $addressBookContactsExportRepository->getNotFinishedImports($channel);
         foreach ($importStatuses as $importStatus) {
             $apiImportStatus = $this->dotmailerTransport->getImportStatus($importStatus->getImportId());
             if (!$status = $statusRepository->find($apiImportStatus->status)) {
@@ -77,17 +85,27 @@ class ExportManager
                 throw new RuntimeException('Import exported data failed.');
             }
 
-            /**
-             * @var EntityRepository $entityRepository
-             */
-            $entityRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBookContact');
-            $entityRepository->createQueryBuilder('addressBookContact')
+            $addressBookContactRepository->createQueryBuilder('addressBookContact')
                 ->update()
                 ->where('addressBookContact.channel =:channel')
                 ->set('addressBookContact.scheduledForExport', ':scheduledForExport')
                 ->getQuery()
                 ->execute(['channel' => $channel, 'scheduledForExport' => false]);
+
+            $finishStatus = $statusRepository->find(AddressBookContactsExport::STATUS_FINISH);
+            $addressBooks = $addressBookRepository->findBy(['channel' => $channel]);
+            foreach ($addressBooks as $addressBook) {
+                $failedExport = $addressBookContactsExportRepository->getLastFailedExport($addressBook);
+
+                if ($failedExport) {
+                    $addressBook->setSyncStatus($failedExport->getStatus());
+                } else {
+                    $addressBook->setSyncStatus($finishStatus);
+                }
+            }
         }
+
+        $this->managerRegistry->getManager()->flush();
     }
 
     /**

@@ -5,6 +5,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Entity\Repository;
 use Doctrine\ORM\EntityRepository;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 
 class AddressBookContactsExportRepository extends EntityRepository
@@ -52,5 +53,23 @@ class AddressBookContactsExportRepository extends EntityRepository
                     'status' => AddressBookContactsExport::STATUS_NOT_FINISHED
                 ]
             );
+    }
+
+    /**
+     * @param AddressBook $addressBook
+     *
+     * @return AddressBookContactsExport
+     */
+    public function getLastFailedExport(AddressBook $addressBook)
+    {
+        $qb = $this->createQueryBuilder('addressBookContactExport');
+        $qb->innerJoin('addressBookContactExport.status', 'status')
+            ->where('addressBookContactExport.addressBook =:addressBook')
+            ->andWhere('status.id <> :status')
+            ->setMaxResults(1)
+            ->orderBy('addressBookContactExport.updatedAt', 'desc')
+            ->setParameters(['addressBook' => $addressBook, 'status' => AddressBookContactsExport::STATUS_FINISH]);
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }
