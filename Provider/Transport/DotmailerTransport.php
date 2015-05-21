@@ -4,6 +4,10 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use DotMailer\Api\DataTypes\ApiContactImport;
+use DotMailer\Api\DataTypes\ApiFileMedia;
+use DotMailer\Api\DataTypes\Int32List;
+use DotMailer\Api\DataTypes\XsBase64Binary;
 use DotMailer\Api\Resources\IResources;
 use DotMailer\Api\DataTypes\ApiContactResubscription;
 
@@ -190,6 +194,28 @@ class DotmailerTransport implements TransportInterface
             $abContact->getAddressBook()->getOriginId(),
             $apiContactResubscription
         );
+    }
+
+    /**
+     * @param int[] $removingItemsOriginIds
+     * @param int   $addressBookOriginId
+     */
+    public function removeContactsFromAddressBook(array $removingItemsOriginIds, $addressBookOriginId)
+    {
+        $contactIdsList = new Int32List($removingItemsOriginIds);
+        $this->dotmailerResources->PostAddressBookContactsDelete($addressBookOriginId, $contactIdsList);
+    }
+
+    /**
+     * @param string $contactsCsv
+     * @param int    $addressBookOriginId
+     *
+     * @return ApiContactImport
+     */
+    public function exportAddressBookContacts($contactsCsv, $addressBookOriginId)
+    {
+        $apiFileMedia = new ApiFileMedia(['FileName' => 'contacts.csv', 'Data' => $contactsCsv]);
+        return $this->dotmailerResources->PostAddressBookContactsImport($addressBookOriginId, $apiFileMedia);
     }
 
     /**

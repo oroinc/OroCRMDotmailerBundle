@@ -2,6 +2,8 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExportContactsIterator;
+
 class ContactDataConverter extends AbstractDataConverter
 {
     /**
@@ -17,7 +19,7 @@ class ContactDataConverter extends AbstractDataConverter
             'FIRSTNAME'      => 'firstName',
             'LASTNAME'       => 'lastName',
             'GENDER'         => 'gender',
-            'FULLNAME'       => 'fullname',
+            'FULLNAME'       => 'fullName',
             'POSTCODE'       => 'postcode',
             'LASTSUBSCRIBED' => 'lastSubscribedDate',
         ];
@@ -28,7 +30,18 @@ class ContactDataConverter extends AbstractDataConverter
      */
     protected function getBackendHeader()
     {
-        throw new \Exception('Normalization is not implemented!');
+        return [
+            'email',
+            'originId',
+            'opt_in_type',
+            'email_type',
+            'firstName',
+            'lastName',
+            'gender',
+            'fullName',
+            'postcode',
+            ScheduledForExportContactsIterator::ADDRESS_BOOK_KEY
+        ];
     }
 
     /**
