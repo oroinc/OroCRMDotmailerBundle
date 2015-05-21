@@ -18,7 +18,7 @@ use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBookContact;
  * )
  * @Config()
  */
-class AddressBookContact extends ExtendAddressBookContact
+class AddressBookContact extends ExtendAddressBookContact implements ChannelAwareInterface
 {
     /**
      * @var int
@@ -222,7 +222,7 @@ class AddressBookContact extends ExtendAddressBookContact
      *
      * @return AddressBookContact
      */
-    public function setChannel(Channel $channel)
+    public function setChannel(Channel $channel = null)
     {
         $this->channel = $channel;
 

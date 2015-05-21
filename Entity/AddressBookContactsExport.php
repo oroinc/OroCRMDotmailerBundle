@@ -16,7 +16,7 @@ use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBookContactsExport;
  * @ORM\HasLifecycleCallbacks()
  * @Config()
  */
-class AddressBookContactsExport extends ExtendAddressBookContactsExport
+class AddressBookContactsExport extends ExtendAddressBookContactsExport implements ChannelAwareInterface
 {
     const STATUS_NOT_FINISHED = 'NotFinished';
     const STATUS_FINISH = 'Finished';
@@ -175,7 +175,7 @@ class AddressBookContactsExport extends ExtendAddressBookContactsExport
      *
      * @return AddressBookContactsExport
      */
-    public function setChannel(Channel $channel)
+    public function setChannel(Channel $channel = null)
     {
         $this->channel = $channel;
 

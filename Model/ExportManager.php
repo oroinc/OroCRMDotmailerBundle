@@ -65,7 +65,7 @@ class ExportManager
             ->getRepository('OroCRMDotmailerBundle:AddressBookContact');
         $isExportFinished = true;
 
-        $importStatuses = $addressBookContactsExportRepository->getNotFinishedImports($channel);
+        $importStatuses = $addressBookContactsExportRepository->getNotFinishedExports($channel);
         foreach ($importStatuses as $importStatus) {
             $apiImportStatus = $this->dotmailerTransport->getImportStatus($importStatus->getImportId());
             if (!$status = $statusRepository->find($apiImportStatus->status)) {
@@ -113,9 +113,9 @@ class ExportManager
      */
     public function isExportFinished(Channel $channel)
     {
-        $repository = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport');
-        return $repository->isExportFinished($channel);
+        return $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+            ->isExportFinished($channel);
     }
 
     /**
