@@ -92,6 +92,9 @@ orocrm:
             status.label:             Status
             subject.label:            Subject
 
+        addressbookcontact:
+            entity_label: Address Book Contact
+
         connector:
             campaign:
                 label:  Campaign Connector
