@@ -8,6 +8,7 @@ use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\ApiFileMedia;
 use DotMailer\Api\DataTypes\Int32List;
 use DotMailer\Api\Resources\IResources;
+use DotMailer\Api\DataTypes\ApiContactResubscription;
 
 use Guzzle\Iterator\AppendIterator;
 
@@ -23,6 +24,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContac
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactsIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
 use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 
 class DotmailerTransport implements TransportInterface
 {
@@ -169,6 +171,28 @@ class DotmailerTransport implements TransportInterface
     public function getCampaignSummary(array $campaignsToSynchronize = [])
     {
         return new CampaignSummaryIterator($this->dotmailerResources, $campaignsToSynchronize);
+    }
+
+    /**
+     * @param AddressBookContact $abContact
+     *
+     * @return \DotMailer\Api\DataTypes\ApiResubscribeResult
+     */
+    public function resubscribeAddressBookContact(AddressBookContact $abContact)
+    {
+        $resubscription = [
+            'UnsubscribedContact' => [
+                'Email' => $abContact->getContact()->getEmail(),
+            ],
+            'PreferredLocale' => '',
+            'ReturnUrlToUseIfChallenged' => '',
+        ];
+        $apiContactResubscription = new ApiContactResubscription($resubscription);
+
+        return $this->dotmailerResources->PostAddressBookContactsResubscribe(
+            $abContact->getAddressBook()->getOriginId(),
+            $apiContactResubscription
+        );
     }
 
     /**
