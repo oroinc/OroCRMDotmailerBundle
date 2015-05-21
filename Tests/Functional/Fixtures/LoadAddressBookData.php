@@ -10,12 +10,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 
-class LoadAddressBookData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
+class LoadAddressBookData extends AbstractFixture implements DependentFixtureInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
 
     /**
      * @var array
