@@ -115,7 +115,7 @@ class ContactUpdateTest extends AbstractImportExportTest
                     ],
                     [
                         'originId'  => 143,
-                        'email'     => 'test2@example.com',
+                        'email'     => 'test2@ex.com',
                         'optInType' => 'Double',
                         'emailType' => 'Html',
                         'status'    => 'Suppressed',
@@ -134,7 +134,7 @@ class ContactUpdateTest extends AbstractImportExportTest
                     ],
                     [
                         'id'        => 143,
-                        'email'     => 'test2@example.com',
+                        'email'     => 'test2@ex.com',
                         'optInType' => 'Double',
                         'emailType' => 'Html',
                         'status'    => 'Suppressed',

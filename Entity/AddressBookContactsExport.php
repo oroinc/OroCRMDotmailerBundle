@@ -5,17 +5,18 @@ namespace OroCRM\Bundle\DotmailerBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBookContactsExport;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="OroCRM\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactsExportRepository")
  * @ORM\Table(
  *      name="orocrm_dm_ab_cnt_export",
  * )
  * @ORM\HasLifecycleCallbacks()
  * @Config()
  */
-class AddressBookContactsExport extends ExtendAddressBookContactsExport
+class AddressBookContactsExport extends ExtendAddressBookContactsExport implements ChannelAwareInterface
 {
     const STATUS_NOT_FINISHED = 'NotFinished';
     const STATUS_FINISH = 'Finished';
@@ -64,6 +65,14 @@ class AddressBookContactsExport extends ExtendAddressBookContactsExport
      * @ORM\JoinColumn(name="address_book_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $addressBook;
+
+    /**
+     * @var Channel
+     *
+     * @ORM\ManyToOne(targetEntity="Oro\Bundle\IntegrationBundle\Entity\Channel")
+     * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected $channel;
 
     /**
      * @return int
@@ -149,6 +158,26 @@ class AddressBookContactsExport extends ExtendAddressBookContactsExport
     public function setUpdatedAt(\DateTime $updatedAt = null)
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Channel
+     */
+    public function getChannel()
+    {
+        return $this->channel;
+    }
+
+    /**
+     * @param Channel $channel
+     *
+     * @return AddressBookContactsExport
+     */
+    public function setChannel(Channel $channel = null)
+    {
+        $this->channel = $channel;
 
         return $this;
     }

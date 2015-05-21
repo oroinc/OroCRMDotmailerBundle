@@ -2,7 +2,7 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
-use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
@@ -45,6 +45,7 @@ class ContactStrategy extends AddOrReplaceStrategy
                 if (is_null($addressBookContact)) {
                     $addressBookContact = new AddressBookContact();
                     $addressBookContact->setAddressBook($addressBook);
+                    $addressBookContact->setChannel($addressBook->getChannel());
                     $entity->addAddressBookContact($addressBookContact);
                 }
 
@@ -68,11 +69,38 @@ class ContactStrategy extends AddOrReplaceStrategy
     }
 
     /**
-     * @param Integration $channel
+     * {@inheritdoc}
+     */
+    protected function findExistingEntity($entity, array $searchContext = [])
+    {
+        $existingEntity = parent::findExistingEntity($entity, $searchContext);
+
+        /**
+         * Required for match contact after export new one to dotmailer
+         */
+        if ($entity instanceof Contact && !$existingEntity) {
+            if (!$entity->getEmail() || !$entity->getChannel()) {
+                throw new RuntimeException("Channel and email required for contact {$entity->getOriginId()}");
+            }
+
+            $existingEntity = $this->getRepository('OroCRMDotmailerBundle:Contact')
+                ->findOneBy(
+                    [
+                        'channel' => $entity->getChannel(),
+                        'email' => $entity->getEmail()
+                    ]
+                );
+        }
+
+        return $existingEntity;
+    }
+
+    /**
+     * @param Channel $channel
      *
      * @return AddressBook
      */
-    protected function getAddressBook(Integration $channel)
+    protected function getAddressBook(Channel $channel)
     {
         $originalValue = $this->context->getValue('itemData');
         if (empty($originalValue[ContactIterator::ADDRESS_BOOK_KEY])) {
