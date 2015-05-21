@@ -52,7 +52,7 @@ class ContactDataConverter extends AbstractDataConverter
         $header = array_keys($this->getHeaderConversionRules());
 
         if (!empty($importedRecord['datafields'])) {
-            foreach ($importedRecord['datafields'] as $data) {
+            foreach ((array)$importedRecord['datafields'] as $data) {
                 if (in_array($data['key'], $header)) {
                     $importedRecord[$data['key']] = is_array($data['value']) ? $data['value'][0] : null;
                 }

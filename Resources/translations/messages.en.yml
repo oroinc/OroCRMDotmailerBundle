@@ -92,6 +92,23 @@ orocrm:
             status.label:             Status
             subject.label:            Subject
 
+        addressbookcontact:
+            entity_label: Address Book Contact
+            address_book.label: Address Book
+            contact.label: Contact
+            id.label: Id
+            status.label: Status
+            unsubscribed_date.label: Unsubscribed Date
+
+        addressbookcontactsexport:
+            entity_label: Address Book Contact Export
+            address_book.label: Address Book
+            created_at.label: Created At
+            id.label: Id
+            import_id.label: Import Id
+            status.label: Status
+            updated_at.label: Updated At
+
         connector:
             campaign:
                 label:  Campaign Connector
