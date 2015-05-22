@@ -50,12 +50,6 @@ class ExportContactsTest extends AbstractImportExportTest
         $processor = $this->getContainer()->get(ReverseSyncCommand::SYNC_PROCESSOR);
         $processor->process($channel, ContactConnector::TYPE, []);
 
-        $this->assertContactUpdated(
-            $this->getReference('orocrm_dotmailer.contact.exported'),
-            $this->getReference('orocrm_dotmailer.orocrm_contact.john.case'),
-            $addressBook
-        );
-
         $contact = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:Contact')
             ->findOneBy(['channel' => $channel, 'email' => 'jack.case@example.com']);
