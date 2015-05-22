@@ -10,7 +10,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="OroCRM\Bundle\DotmailerBundle\Entity\Repository\ActivityRepository")
  * @ORM\Table(
  *      name="orocrm_dm_activity",
  *      uniqueConstraints={

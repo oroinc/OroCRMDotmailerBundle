@@ -71,7 +71,8 @@ define(['jquery', 'oroui/js/mediator', 'oroui/js/app/components/widget-component
             var widget = new StatelessWidgetComponent(
                 {
                     options: {
-                        'url': this.data('url')
+                        'url': this.data('url'),
+                        'title': this.data('title')
                     }
                 }
             );

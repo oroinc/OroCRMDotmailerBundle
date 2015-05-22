@@ -21,6 +21,7 @@ parameters:
     orocrm_dotmailer.form.type.marketing_list_connection.class:       OroCRM\Bundle\DotmailerBundle\Form\Type\MarketingListConnectionType
     orocrm_dotmailer.form.type.integration_select.class:              OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType
     orocrm_dotmailer.form.type.address_book_select.class:             OroCRM\Bundle\DotmailerBundle\Form\Type\AddressBookSelectType
+    orocrm_dotmailer.form.extension.channel_connectors.class:         OroCRM\Bundle\DotmailerBundle\Form\Extension\ChannelConnectorsExtension
 
     #Form handlers
     orocrm_dotmailer.form.handler.connection_update.class:            OroCRM\Bundle\DotmailerBundle\Form\Handler\ConnectionUpdateFormHandler
@@ -67,8 +68,10 @@ parameters:
     orocrm_dotmailer.importexport.processor.export_removed.class:     OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\RemovedExportProcessor
     orocrm_dotmailer.importexport.processor.export_contact.class:     OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\ExportContactsProcessor
 
-    #writer
-    orocrm_dotmailer.importexport.writer.import.class:                OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\ImportWriter
+    #writers
+    orocrm_dotmailer.importexport.writer.import.class:                  OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\ImportWriter
+    orocrm_dotmailer.importexport.writer.export.contacts.class:         OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\ContactsExportWriter
+    orocrm_dotmailer.importexport.writer.export.removed_contacts.class: OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\RemovedContactsExportWriter
 
     #serializer
     orocrm_dotmailer.importexport.normalizer.enum.class:              OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer\EnumNormalizer
@@ -92,9 +95,9 @@ parameters:
     #helpers
     orocrm_dotmailer.model.field_helper.class: OroCRM\Bundle\DotmailerBundle\Model\FieldHelper
 
-    #writers
-    orocrm_dotmailer.importexport.writer.export.contacts.class:         OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\ContactsExportWriter
-    orocrm_dotmailer.importexport.writer.export.removed_contacts.class: OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\RemovedContactsExportWriter
+    #voters
+    orocrm_dotmailer.email_campaign.security.acl.voter.entity.class:  OroCRM\Bundle\DotmailerBundle\Acl\Voter\EmailCampaignVoter
+    orocrm_dotmailer.acl.voter.marketing_list_state_item.class:       OroCRM\Bundle\DotmailerBundle\Acl\Voter\MarketingListStateItemVoter
 
 services:
     # Forms and Extensions
@@ -136,6 +139,11 @@ services:
             - [setAclHelper,["@oro_security.acl_helper"]]
         tags:
             - { name: oro_form.autocomplete.search_handler, alias: "dotmailer_address_books", acl_resource: "orocrm_email_campaign_view" }
+
+    orocrm_dotmailer.form.extension.channel_connectors:
+        class: %orocrm_dotmailer.form.extension.channel_connectors.class%
+        tags:
+            - { name: form.type_extension, alias: oro_integration_channel_form }
 
     #Form handlers
     orocrm_dotmailer.form.handler.connection_update:
@@ -524,3 +532,27 @@ services:
             - @doctrine
             - @orocrm_dotmailer.transport.integration_transport
             - @oro_importexport.context_registry
+
+    #emailCampaign Voter
+    orocrm_dotmailer.email_campaign.security.acl.voter.entity:
+        class: %orocrm_dotmailer.email_campaign.security.acl.voter.entity.class%
+        arguments:
+            - @oro_entity.doctrine_helper
+        calls:
+            - [setClassName, [%orocrm_campaign.email_campaign.entity.class%]]
+        tags:
+            - { name: security.voter, priority: 500 }
+
+    orocrm_dotmailer.acl.voter.marketing_list_state_item:
+        class: %orocrm_dotmailer.acl.voter.marketing_list_state_item.class%
+        arguments:
+            - @oro_entity.doctrine_helper
+            - @orocrm_marketing_list.provider.contact_information_fields
+            - @orocrm_dotmailer.model.field_helper
+            - %orocrm_dotmailer.entity.contact.class%
+            - %orocrm_dotmailer.entity.address_book.class%
+            - %orocrm_dotmailer.entity.address_book_contact.class%
+        calls:
+            - [setClassName, [%orocrm_marketing_list.unsubscribed_item.class%]]
+        tags:
+            - { name: security.voter, priority: 500 }

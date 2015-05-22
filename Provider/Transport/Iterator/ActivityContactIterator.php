@@ -24,6 +24,11 @@ class ActivityContactIterator extends AbstractIterator
     protected $campaignOriginId;
 
     /**
+     * @var bool
+     */
+    protected $isInit;
+
+    /**
      * @var \DateTime
      */
     protected $lastSyncDate;
@@ -31,12 +36,18 @@ class ActivityContactIterator extends AbstractIterator
     /**
      * @param IResources $dotmailerResources
      * @param int        $campaignOriginId
+     * @param bool       $isInit
      * @param \DateTime  $lastSyncDate
      */
-    public function __construct(IResources $dotmailerResources, $campaignOriginId, \DateTime $lastSyncDate = null)
-    {
+    public function __construct(
+        IResources $dotmailerResources,
+        $campaignOriginId,
+        $isInit = false,
+        \DateTime $lastSyncDate = null
+    ) {
         $this->dotmailerResources = $dotmailerResources;
         $this->campaignOriginId = $campaignOriginId;
+        $this->isInit = $isInit;
         $this->lastSyncDate = $lastSyncDate;
     }
 
@@ -48,7 +59,7 @@ class ActivityContactIterator extends AbstractIterator
      */
     protected function getItems($take, $skip)
     {
-        if (is_null($this->lastSyncDate)) {
+        if (!$this->isInit || is_null($this->lastSyncDate)) {
             $items = $this->dotmailerResources->GetCampaignActivities($this->campaignOriginId, $take, $skip);
         } else {
             $items = $this->dotmailerResources->GetCampaignActivitiesSinceDateByDate(
