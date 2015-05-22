@@ -6,6 +6,7 @@ use Doctrine\ORM\QueryBuilder;
 
 use Oro\Bundle\LocaleBundle\DQL\DQLNameFormatter;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
+use OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactSyncDataConverter;
 
 class ContactExportQBAdapter implements ContactExportQBAdapterInterface
 {
@@ -48,14 +49,12 @@ class ContactExportQBAdapter implements ContactExportQBAdapterInterface
                 $entityAlias
             );
 
-        $qb->addSelect("$entityAlias.id as ". MarketingListItemsQueryBuilderProvider::MARKETING_LIST_ITEM_ID);
-
         if (isset($parts['first_name'])) {
             $qb->addSelect(
                 sprintf(
                     '%s AS %s',
                     $parts['first_name'],
-                    MarketingListItemsQueryBuilderProvider::CONTACT_FIRST_NAME_FIELD
+                    ContactSyncDataConverter::FIRST_NAME_FIELD
                 )
             );
         }
@@ -64,7 +63,7 @@ class ContactExportQBAdapter implements ContactExportQBAdapterInterface
                 sprintf(
                     '%s AS %s',
                     $parts['last_name'],
-                    MarketingListItemsQueryBuilderProvider::CONTACT_LAST_NAME_FIELD
+                    ContactSyncDataConverter::LAST_NAME_FIELD
                 )
             );
         }
@@ -76,7 +75,9 @@ class ContactExportQBAdapter implements ContactExportQBAdapterInterface
     protected function applyRestrictions(QueryBuilder $qb)
     {
         $expr = $qb->expr();
-        $syncItemsRestrictions = $expr->isNull(MarketingListItemsQueryBuilderProvider::CONTACT_ALIAS.'.id');
+        $syncItemsRestrictions = $expr->isNull(
+            MarketingListItemsQueryBuilderProvider::ADDRESS_BOOK_CONTACT_ALIAS.'.id'
+        );
         $qb->andWhere($syncItemsRestrictions);
     }
 

@@ -13,6 +13,13 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\MarketingListItemI
 class ContactSyncStrategy extends AddOrReplaceStrategy
 {
     /**
+     * Fields allowed for update
+     *
+     * @var array
+     */
+    protected $fieldsAllowedForUpdate = [];
+
+    /**
      * {@inheritdoc}
      */
     public function afterProcessEntity($entity)
@@ -88,7 +95,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
     /**
      * {@inheritdoc}
      */
-    protected function findExistingEntity($entity, array $searchContext = array())
+    protected function findExistingEntity($entity, array $searchContext = [])
     {
         if (!$entity instanceof Contact) {
             return parent::findExistingEntity($entity, $searchContext);
@@ -103,10 +110,10 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
      */
     protected function isFieldExcluded($entityName, $fieldName, $itemData = null)
     {
-        if ($fieldName == 'channel' || $fieldName == 'originId') {
+        if (empty($this->fieldsAllowedForUpdate[$entityName])) {
             return true;
         }
 
-        return parent::isFieldExcluded($entityName, $fieldName, $itemData);
+        return !isset($this->fieldsAllowedForUpdate[$entityName]);
     }
 }

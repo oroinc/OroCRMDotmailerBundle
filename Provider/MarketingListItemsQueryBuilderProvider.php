@@ -6,10 +6,10 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
-use Oro\Bundle\LocaleBundle\DQL\DQLNameFormatter;
 use Oro\Bundle\SecurityBundle\Owner\Metadata\OwnershipMetadataProvider;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
+use OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactSyncDataConverter;
 use OroCRM\Bundle\DotmailerBundle\Model\FieldHelper;
 use OroCRM\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 use OroCRM\Bundle\MarketingListBundle\Provider\MarketingListProvider;
@@ -17,10 +17,8 @@ use OroCRM\Bundle\MarketingListBundle\Provider\MarketingListProvider;
 class MarketingListItemsQueryBuilderProvider
 {
     const CONTACT_ALIAS = 'dm_contact';
-    const CONTACT_EMAIL_FIELD = 'email';
-    const CONTACT_FIRST_NAME_FIELD = 'firstName';
-    const CONTACT_LAST_NAME_FIELD = 'lastName';
     const MARKETING_LIST_ITEM_ID = 'marketingListItemId';
+    const ADDRESS_BOOK_CONTACT_ALIAS = 'addressBookContacts';
 
     /**
      * @var MarketingListProvider
@@ -106,6 +104,9 @@ class MarketingListItemsQueryBuilderProvider
     public function getMarketingListItemsQB(AddressBook $addressBook)
     {
         $qb = $this->getMarketingListItemQuery($addressBook);
+        $rootAliases = $qb->getRootAliases();
+        $entityAlias = reset($rootAliases);
+        $qb->addSelect("$entityAlias.id as ". self::MARKETING_LIST_ITEM_ID);
 
         /**
          * Get create or update marketing list items query builder
@@ -116,9 +117,9 @@ class MarketingListItemsQueryBuilderProvider
 
         $qb->leftJoin(
             sprintf('%s.addressBookContacts', self::CONTACT_ALIAS),
-            'addressBookContacts',
+            self::ADDRESS_BOOK_CONTACT_ALIAS,
             Join::WITH,
-            'addressBookContacts.addressBook =:addressBook'
+            self::ADDRESS_BOOK_CONTACT_ALIAS.'.addressBook =:addressBook'
         )->setParameter('addressBook', $addressBook);
         $expr = $qb->expr();
         /**
@@ -224,7 +225,7 @@ class MarketingListItemsQueryBuilderProvider
             $contactInformationFieldExpr = $this->fieldHelper
                 ->getFieldExpr($marketingList->getEntity(), $qb, $contactInformationField);
 
-            $qb->addSelect($contactInformationFieldExpr . ' AS ' . self::CONTACT_EMAIL_FIELD);
+            $qb->addSelect($contactInformationFieldExpr . ' AS ' . ContactSyncDataConverter::EMAIL_FIELD);
             $expr->add(
                 $qb->expr()->eq(
                     $contactInformationFieldExpr,

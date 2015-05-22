@@ -119,6 +119,18 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
                 ]
             ],
         ],
+        [
+            'originId'      => 147,
+            'email'         => 'alex.case@example.com',
+            'firstName'     => 'Test147',
+            'lastName'      => 'Test147',
+            'gender'        => 'male',
+            'channel'       => 'orocrm_dotmailer.channel.fourth',
+            'reference'     => 'orocrm_dotmailer.contact.alex_case',
+            'status'        => ApiContactStatuses::SUBSCRIBED,
+            'opt_in_type'   => Contact::OPT_IN_TYPE_SINGLE,
+            'email_type'   => Contact::EMAIL_TYPE_PLAINTEXT
+        ],
     ];
 
     /**
@@ -139,30 +151,32 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             $contact->setOwner($admin->getOrganization());
             $this->resolveReferenceIfExist($item, 'channel');
 
-            foreach ($item['addressBooks'] as $data) {
-                $addressBookContact = new AddressBookContact();
-                $status = $this->findEnum('dm_cnt_status', Contact::STATUS_SUBSCRIBED);
-                if (is_scalar($data)) {
-                    $addressBook = $this->getReference($data);
-                } else {
-                    $addressBook = $this->getReference($data['addressBook']);
-                    
-                    if ($data['marketing_list_item']) {
-                        $marketingListItem = $this->getReference($data['marketing_list_item']);
-                        $addressBookContact->setMarketingListItemId($marketingListItem->getId());
-                    }
-                    if ($data['status']) {
-                        $status = $this->findEnum('dm_cnt_status', $data['status']);
-                    }
-                }
+            if (!empty($item['addressBooks'])) {
+                foreach ($item['addressBooks'] as $data) {
+                    $addressBookContact = new AddressBookContact();
+                    $status = $this->findEnum('dm_cnt_status', Contact::STATUS_SUBSCRIBED);
+                    if (is_scalar($data)) {
+                        $addressBook = $this->getReference($data);
+                    } else {
+                        $addressBook = $this->getReference($data['addressBook']);
 
-                $addressBookContact->setAddressBook($addressBook);
-                $addressBookContact->setStatus($status);
-                $addressBookContact->setChannel($item['channel']);
-                if (empty($item['originId'])) {
-                    $addressBookContact->setScheduledForExport(true);
+                        if ($data['marketing_list_item']) {
+                            $marketingListItem = $this->getReference($data['marketing_list_item']);
+                            $addressBookContact->setMarketingListItemId($marketingListItem->getId());
+                        }
+                        if ($data['status']) {
+                            $status = $this->findEnum('dm_cnt_status', $data['status']);
+                        }
+                    }
+
+                    $addressBookContact->setAddressBook($addressBook);
+                    $addressBookContact->setStatus($status);
+                    $addressBookContact->setChannel($item['channel']);
+                    if (empty($item['originId'])) {
+                        $addressBookContact->setScheduledForExport(true);
+                    }
+                    $contact->addAddressBookContact($addressBookContact);
                 }
-                $contact->addAddressBookContact($addressBookContact);
             }
 
             if (!empty($item['createdAt'])) {
