@@ -19,7 +19,7 @@ class UnsubscribedFromAccountContactsIteratorTest extends \PHPUnit_Framework_Tes
         $expectedContactSuppression['suppressedcontact'] = ['id' => 2];
         $items[] = $expectedContactSuppression;
         $resource->expects($this->exactly(2))
-            ->method('GetContactsUnsubscribedSinceDate')
+            ->method('GetContactsSuppressedSinceDate')
             ->with($expectedDate->format(\DateTime::ISO8601))
             ->will($this->returnValueMap(
                 [

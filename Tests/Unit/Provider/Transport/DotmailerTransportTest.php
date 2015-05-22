@@ -122,7 +122,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->method('toArray')
             ->will($this->returnValue([]));
         $resource->expects($this->once())
-            ->method('GetContactsUnsubscribedSinceDate')
+            ->method('GetContactsSuppressedSinceDate')
             ->with($expectedDate->format(\DateTime::ISO8601))
             ->will($this->returnValue($contactsList));
         $iterator->rewind();

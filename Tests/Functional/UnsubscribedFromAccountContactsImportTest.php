@@ -9,7 +9,7 @@ use DotMailer\Api\DataTypes\ApiContactSuppressionList;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\IntegrationBundle\Command\SyncCommand;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactsConnector;
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedFromAccountContactsConnector;
 
 /**
  * @dbIsolation
@@ -42,16 +42,13 @@ class UnsubscribedFromAccountContactsImportTest extends AbstractImportExportTest
             $entity[] = $listItem;
         }
         $this->resource->expects($this->any())
-            ->method('GetContactsUnsubscribedSinceDate')
+            ->method('GetContactsSuppressedSinceDate')
             ->will($this->returnValue($entity));
-        $this->resource->expects($this->any())
-            ->method('GetAddressBookContactsUnsubscribedSinceDate')
-            ->will($this->returnValue(new ApiContactSuppressionList()));
 
         $channel = $this->getReference('orocrm_dotmailer.channel.third');
 
         $processor = $this->getContainer()->get(SyncCommand::SYNC_PROCESSOR);
-        $result = $processor->process($channel, UnsubscribedContactsConnector::TYPE);
+        $result = $processor->process($channel, UnsubscribedFromAccountContactsConnector::TYPE);
 
         $this->assertTrue($result);
 

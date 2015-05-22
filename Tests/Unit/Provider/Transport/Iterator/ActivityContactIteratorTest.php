@@ -8,12 +8,12 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIte
 
 class ActivityContactIteratorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testIterator()
+    public function testIteratorInitTrue()
     {
         $resource = $this->getMock('DotMailer\Api\Resources\IResources');
         $expectedCampaignOriginId = 15662;
         $expectedDate = new \DateTime();
-        $iterator = new ActivityContactIterator($resource, $expectedCampaignOriginId, $expectedDate);
+        $iterator = new ActivityContactIterator($resource, $expectedCampaignOriginId, true, $expectedDate);
         $iterator->setBatchSize(1);
         $items = new ApiCampaignContactSummaryList();
         $expectedActivity = new ApiCampaignContactSummary();
@@ -34,6 +34,43 @@ class ActivityContactIteratorTest extends \PHPUnit_Framework_TestCase
                     [
                         $expectedCampaignOriginId,
                         $expectedDate->format(\DateTime::ISO8601),
+                        1,
+                        1,
+                        new ApiCampaignContactSummaryList()
+                    ],
+                ]
+            ));
+        foreach ($iterator as $item) {
+            $expectedActivityContactArray = $expectedActivity->toArray();
+            $expectedActivityContactArray[ActivityContactIterator::CAMPAIGN_KEY] = $expectedCampaignOriginId;
+            $this->assertSame($expectedActivityContactArray, $item);
+        }
+    }
+
+    public function testIteratorInitFalse()
+    {
+        $resource = $this->getMock('DotMailer\Api\Resources\IResources');
+        $expectedCampaignOriginId = 15662;
+        $expectedDate = new \DateTime();
+        $iterator = new ActivityContactIterator($resource, $expectedCampaignOriginId, false, $expectedDate);
+        $iterator->setBatchSize(1);
+        $items = new ApiCampaignContactSummaryList();
+        $expectedActivity = new ApiCampaignContactSummary();
+        $expectedActivity->contactId = 2;
+        $items[] = $expectedActivity;
+        $resource->expects($this->any())
+            ->method('GetCampaignActivities')
+            ->with($expectedCampaignOriginId)
+            ->will($this->returnValueMap(
+                [
+                    [
+                        $expectedCampaignOriginId,
+                        1,
+                        0,
+                        $items
+                    ],
+                    [
+                        $expectedCampaignOriginId,
                         1,
                         1,
                         new ApiCampaignContactSummaryList()
