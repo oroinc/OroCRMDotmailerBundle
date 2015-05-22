@@ -64,7 +64,6 @@ class ExportContactsTest extends AbstractImportExportTest
             true
         );
 
-
         /**
          * Check existing contact exported correctly
          */
@@ -75,6 +74,19 @@ class ExportContactsTest extends AbstractImportExportTest
         $this->assertContactUpdated(
             $contact,
             $this->getReference('orocrm_dotmailer.orocrm_contact.alex.case'),
+            $addressBook
+        );
+
+        /**
+         * Check existing contact exported correctly
+         */
+        $contact = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:Contact')
+            ->findOneBy(['channel' => $channel, 'email' => 'allen.case@example.com']);
+        $this->assertNotNull($contact, 'Updated contact not synced');
+        $this->assertContactUpdated(
+            $contact,
+            $this->getReference('orocrm_dotmailer.orocrm_contact.allen.case'),
             $addressBook
         );
 

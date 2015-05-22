@@ -29,7 +29,7 @@ class ContactExportQBAdapter implements ContactExportQBAdapterInterface
     public function prepareQueryBuilder(QueryBuilder $qb, AddressBook $addressBook)
     {
         $this->addContactInformationFields($qb, $addressBook);
-        $this->applyRestrictions($qb);
+        $this->applyRestrictions($qb, $addressBook);
 
         return $qb;
     }
@@ -71,14 +71,40 @@ class ContactExportQBAdapter implements ContactExportQBAdapterInterface
 
     /**
      * @param QueryBuilder $qb
+     * @param AddressBook  $addressBook
      */
-    protected function applyRestrictions(QueryBuilder $qb)
+    protected function applyRestrictions(QueryBuilder $qb, AddressBook $addressBook)
     {
+        $rootAliases = $qb->getRootAliases();
+        $entityAlias = reset($rootAliases);
+
         $expr = $qb->expr();
-        $syncItemsRestrictions = $expr->isNull(
-            MarketingListItemsQueryBuilderProvider::ADDRESS_BOOK_CONTACT_ALIAS.'.id'
+        $syncItemsRestrictions = $expr->orX();
+        $syncItemsRestrictions->add(
+            $expr->isNull(
+                MarketingListItemsQueryBuilderProvider::ADDRESS_BOOK_CONTACT_ALIAS . '.id'
+            )
         );
-        $qb->andWhere($syncItemsRestrictions);
+        $marketingListItemExpression = MarketingListItemsQueryBuilderProvider::ADDRESS_BOOK_CONTACT_ALIAS
+            . '.marketingListItemId';
+        $syncItemsRestrictions->add($expr->isNull($marketingListItemExpression));
+        $syncItemsRestrictions->add(
+            $expr->neq(
+                $marketingListItemExpression,
+                "$entityAlias.id"
+            )
+        );
+        $marketingListItemClassExpression = MarketingListItemsQueryBuilderProvider::ADDRESS_BOOK_CONTACT_ALIAS
+            . '.marketingListItemClass';
+        $syncItemsRestrictions->add($expr->isNull($marketingListItemClassExpression));
+        $syncItemsRestrictions->add(
+            $expr->neq(
+                $marketingListItemClassExpression,
+                ':entityClass'
+            )
+        );
+        $qb->andWhere($syncItemsRestrictions)
+            ->setParameter('entityClass', $addressBook->getMarketingList()->getEntity());
     }
 
     /**
