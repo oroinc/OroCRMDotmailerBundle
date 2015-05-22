@@ -18,18 +18,14 @@ class MarketingListItemsQueryBuilderProvider
 {
     const CONTACT_ALIAS = 'dm_contact';
     const CONTACT_EMAIL_FIELD = 'email';
-    const CONTACT_FIRS_NAME_FIELD = 'firsName';
+    const CONTACT_FIRST_NAME_FIELD = 'firstName';
     const CONTACT_LAST_NAME_FIELD = 'lastName';
     const MARKETING_LIST_ITEM_ID = 'marketingListItemId';
+
     /**
      * @var MarketingListProvider
      */
     protected $marketingListProvider;
-
-    /**
-     * @var DQLNameFormatter
-     */
-    protected $formatter;
 
     /**
      * @var ContactInformationFieldsProvider
@@ -72,27 +68,33 @@ class MarketingListItemsQueryBuilderProvider
     protected $addressBookContactClassName;
 
     /**
+     * @var ContactExportQBAdapterRegistry
+     */
+    protected $exportQBAdapterRegistry;
+
+    /**
      * @param MarketingListProvider            $marketingListProvider
-     * @param DQLNameFormatter                 $formatter
      * @param ContactInformationFieldsProvider $contactInformationFieldsProvider
      * @param OwnershipMetadataProvider        $ownershipMetadataProvider
      * @param ManagerRegistry                  $registry
      * @param FieldHelper                      $fieldHelper
+     * @param ContactExportQBAdapterRegistry   $exportQBAdapterRegistry
      */
     public function __construct(
         MarketingListProvider $marketingListProvider,
-        DQLNameFormatter $formatter,
         ContactInformationFieldsProvider $contactInformationFieldsProvider,
         OwnershipMetadataProvider $ownershipMetadataProvider,
         ManagerRegistry $registry,
-        FieldHelper $fieldHelper
+        FieldHelper $fieldHelper,
+        ContactExportQBAdapterRegistry $exportQBAdapterRegistry
     ) {
         $this->marketingListProvider = $marketingListProvider;
-        $this->formatter = $formatter;
+
         $this->contactInformationFieldsProvider = $contactInformationFieldsProvider;
         $this->ownershipMetadataProvider = $ownershipMetadataProvider;
         $this->registry = $registry;
         $this->fieldHelper = $fieldHelper;
+        $this->exportQBAdapterRegistry = $exportQBAdapterRegistry;
     }
 
     /**
@@ -103,67 +105,22 @@ class MarketingListItemsQueryBuilderProvider
      */
     public function getMarketingListItemsQB(AddressBook $addressBook)
     {
-        $marketingList = $addressBook->getMarketingList();
-        $qb = $this->marketingListProvider->getMarketingListEntitiesQueryBuilder(
-            $marketingList,
-            MarketingListProvider::FULL_ENTITIES_MIXIN
-        );
+        $qb = $this->getMarketingListItemQuery($addressBook);
 
-        $rootAliases = $qb->getRootAliases();
-        $entityAlias = reset($rootAliases);
+        /**
+         * Get create or update marketing list items query builder
+         */
+        $qb = $this->exportQBAdapterRegistry
+            ->getAdapterByAddressBook($addressBook)
+            ->prepareQueryBuilder($qb, $addressBook);
 
-        $qb
-            ->leftJoin(
-                $this->removedItemClassName,
-                'mlr',
-                Join::WITH,
-                "mlr.entityId = $entityAlias.id"
-            )
-            ->andWhere($qb->expr()->isNull('mlr.id'))
-            ->leftJoin(
-                $this->unsubscribedItemClassName,
-                'mlu',
-                Join::WITH,
-                "mlu.entityId = $entityAlias.id"
-            )
-            ->andWhere($qb->expr()->isNull('mlu.id'));
-        $parts = $this->formatter->extractNamePartsPaths($marketingList->getEntity(), $entityAlias);
-
-        $qb->resetDQLPart('select');
-        $qb->addSelect("$entityAlias.id as ". self::MARKETING_LIST_ITEM_ID);
-        $expr = $qb->expr();
-        $isItemModifiedPart = $expr->orX();
-        if (isset($parts['first_name'])) {
-            $qb->addSelect(sprintf('%s AS %s', $parts['first_name'], self::CONTACT_FIRS_NAME_FIELD));
-            $isItemModifiedPart->add(
-                $expr->neq(
-                    $parts['first_name'],
-                    sprintf('%s.firstName', self::CONTACT_ALIAS)
-                )
-            );
-        }
-        if (isset($parts['last_name'])) {
-            $qb->addSelect(sprintf('%s AS %s', $parts['last_name'], self::CONTACT_LAST_NAME_FIELD));
-            $isItemModifiedPart->add(
-                $expr->neq(
-                    $parts['last_name'],
-                    sprintf('%s.lastName', self::CONTACT_ALIAS)
-                )
-            );
-        }
-        $this->prepareMarketingListItemQuery($addressBook, $qb);
         $qb->leftJoin(
             sprintf('%s.addressBookContacts', self::CONTACT_ALIAS),
             'addressBookContacts',
             Join::WITH,
             'addressBookContacts.addressBook =:addressBook'
         )->setParameter('addressBook', $addressBook);
-
-        $qb->andWhere(
-            $expr->orX()
-                ->add(sprintf('%s.id is NULL', self::CONTACT_ALIAS))
-                ->add($isItemModifiedPart)
-        );
+        $expr = $qb->expr();
         /**
          * Get only subscribed to address book contacts because
          * of other type of address book contacts is already removed from address book.
@@ -177,6 +134,7 @@ class MarketingListItemsQueryBuilderProvider
                         [Contact::STATUS_SUBSCRIBED, Contact::STATUS_SOFTBOUNCED]
                     ))
             );
+
         return $qb;
     }
 
@@ -187,13 +145,7 @@ class MarketingListItemsQueryBuilderProvider
      */
     public function getRemovedMarketingListItemsQB(AddressBook $addressBook)
     {
-        $marketingList = $addressBook->getMarketingList();
-        $qb = $this->marketingListProvider->getMarketingListEntitiesQueryBuilder(
-            $marketingList,
-            MarketingListProvider::FULL_ENTITIES_MIXIN
-        );
-
-        $this->prepareMarketingListItemQuery($addressBook, $qb);
+        $qb = $this->getMarketingListItemQuery($addressBook);
         $aliases = $qb->getRootAliases();
         $qb->select(sprintf('%s.id', reset($aliases)));
         $removedItemsQueryBuilder = clone $qb;
@@ -231,12 +183,36 @@ class MarketingListItemsQueryBuilderProvider
     }
 
     /**
-     * @param AddressBook  $addressBook
-     * @param QueryBuilder $qb
+     * @param AddressBook $addressBook
+     *
+     * @return QueryBuilder
      */
-    protected function prepareMarketingListItemQuery(AddressBook $addressBook, QueryBuilder $qb)
+    protected function getMarketingListItemQuery(AddressBook $addressBook)
     {
         $marketingList = $addressBook->getMarketingList();
+        $qb = $this->marketingListProvider->getMarketingListEntitiesQueryBuilder(
+            $marketingList,
+            MarketingListProvider::FULL_ENTITIES_MIXIN
+        );
+
+        $qb->resetDQLPart('select');
+        $rootAliases = $qb->getRootAliases();
+        $entityAlias = reset($rootAliases);
+        $qb
+            ->leftJoin(
+                $this->removedItemClassName,
+                'mlr',
+                Join::WITH,
+                "mlr.entityId = $entityAlias.id"
+            )
+            ->andWhere($qb->expr()->isNull('mlr.id'))
+            ->leftJoin(
+                $this->unsubscribedItemClassName,
+                'mlu',
+                Join::WITH,
+                "mlu.entityId = $entityAlias.id"
+            )
+            ->andWhere($qb->expr()->isNull('mlu.id'));
 
         $contactInformationFields = $this->contactInformationFieldsProvider->getMarketingListTypedFields(
             $marketingList,
@@ -264,6 +240,8 @@ class MarketingListItemsQueryBuilderProvider
             Join::WITH,
             $expr
         );
+
+        return $qb;
     }
 
     /**
@@ -296,6 +274,7 @@ class MarketingListItemsQueryBuilderProvider
     public function setRemovedItemClassName($removedItemClassName)
     {
         $this->removedItemClassName = $removedItemClassName;
+
         return $this;
     }
 
@@ -307,6 +286,7 @@ class MarketingListItemsQueryBuilderProvider
     public function setUnsubscribedItemClassName($unsubscribedItemClassName)
     {
         $this->unsubscribedItemClassName = $unsubscribedItemClassName;
+
         return $this;
     }
 

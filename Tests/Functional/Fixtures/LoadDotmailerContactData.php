@@ -107,7 +107,7 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'lastName'      => 'Test146',
             'gender'        => 'male',
             'channel'       => 'orocrm_dotmailer.channel.fourth',
-            'reference'     => 'orocrm_dotmailer.contact.exported',
+            'reference'     => 'orocrm_dotmailer.contact.synced',
             'status'        => ApiContactStatuses::SUBSCRIBED,
             'opt_in_type'   => Contact::OPT_IN_TYPE_SINGLE,
             'email_type'   => Contact::EMAIL_TYPE_PLAINTEXT,
