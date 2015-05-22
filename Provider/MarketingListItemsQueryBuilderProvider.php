@@ -87,7 +87,6 @@ class MarketingListItemsQueryBuilderProvider
         ContactExportQBAdapterRegistry $exportQBAdapterRegistry
     ) {
         $this->marketingListProvider = $marketingListProvider;
-
         $this->contactInformationFieldsProvider = $contactInformationFieldsProvider;
         $this->ownershipMetadataProvider = $ownershipMetadataProvider;
         $this->registry = $registry;
