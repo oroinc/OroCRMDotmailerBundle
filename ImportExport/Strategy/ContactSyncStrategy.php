@@ -17,7 +17,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
      *
      * @var array
      */
-    protected $fieldsAllowedForUpdate = [];
+    protected $allowedFields = [];
 
     /**
      * {@inheritdoc}
@@ -106,14 +106,27 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
     }
 
     /**
+     * @param string $className
+     * @param array  $allowedFields
+     *
+     * @return ContactSyncStrategy
+     */
+    public function setAllowedFields($className, array $allowedFields)
+    {
+        $this->allowedFields[$className] = $allowedFields;
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function isFieldExcluded($entityName, $fieldName, $itemData = null)
     {
-        if (empty($this->fieldsAllowedForUpdate[$entityName])) {
+        if (empty($this->allowedFields[$entityName])) {
             return true;
         }
 
-        return !isset($this->fieldsAllowedForUpdate[$entityName]);
+        return !isset($this->allowedFields[$entityName]);
     }
 }
