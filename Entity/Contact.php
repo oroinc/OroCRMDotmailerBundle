@@ -101,7 +101,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=255)
+     * @ORM\Column(name="email", type="string", unique=true, length=255)
      */
     protected $email;
 

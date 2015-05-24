@@ -102,15 +102,20 @@ triggers:
     dotmailer_email_campaign_creation:
         -
             event:    create
+            queued:   false
 
     dotmailer_contact_activity_update:
         -
             event:    create
+            queued:   false
         -
             event:    update
+            queued:   false
 
     dotmailer_handle_contact_state:
         -
             event:    create
+            queued:   false
         -
             event:    update
+            queued:   false

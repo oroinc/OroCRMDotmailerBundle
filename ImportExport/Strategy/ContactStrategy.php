@@ -11,6 +11,8 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
 
 class ContactStrategy extends AddOrReplaceStrategy
 {
+    const FIND_CONTACT_BY_EMAIL_OPTION = 'findContactByEmail';
+
     /**
      * {@inheritdoc}
      */
@@ -74,11 +76,12 @@ class ContactStrategy extends AddOrReplaceStrategy
     protected function findExistingEntity($entity, array $searchContext = [])
     {
         $existingEntity = parent::findExistingEntity($entity, $searchContext);
+        $searchByEmail = $this->context->getOption(self::FIND_CONTACT_BY_EMAIL_OPTION, false);
 
         /**
          * Required for match contact after export new one to dotmailer
          */
-        if ($entity instanceof Contact && !$existingEntity) {
+        if ($searchByEmail && $entity instanceof Contact && !$existingEntity) {
             if (!$entity->getEmail() || !$entity->getChannel()) {
                 throw new RuntimeException("Channel and email required for contact {$entity->getOriginId()}");
             }
