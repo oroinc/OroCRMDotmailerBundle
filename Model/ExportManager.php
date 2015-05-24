@@ -47,6 +47,8 @@ class ExportManager
 
     /**
      * @param Channel $channel
+     *
+     * @return bool
      */
     public function updateExportResults(Channel $channel)
     {
@@ -94,6 +96,8 @@ class ExportManager
         }
 
         $this->managerRegistry->getManager()->flush();
+
+        return $isExportFinished;
     }
 
     /**
