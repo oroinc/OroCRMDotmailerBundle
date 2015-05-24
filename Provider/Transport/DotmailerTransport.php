@@ -153,10 +153,14 @@ class DotmailerTransport implements TransportInterface
     {
 
         $iterator = new AppendIterator();
-        /** @var Campaign $campaign */
         foreach ($campaignsToSynchronize as $campaign) {
             $iterator->append(
-                new ActivityContactIterator($this->dotmailerResources, $campaign->getOriginId(), $lastSyncDate)
+                new ActivityContactIterator(
+                    $this->dotmailerResources,
+                    $campaign['originId'],
+                    $campaign['isInit'],
+                    $lastSyncDate
+                )
             );
         }
 

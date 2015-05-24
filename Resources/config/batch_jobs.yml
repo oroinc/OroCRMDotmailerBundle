@@ -64,7 +64,7 @@ connector:
                         processor: orocrm_dotmailer.importexport.processor.contact
                         writer:    orocrm_dotmailer.importexport.writer.import
                     parameters:
-                        batch_size: 100
+                        batch_size: 1000
 
         dotmailer_activity_contact_import:
             title: orocrm.dotmailer.connector.activity_contact.job

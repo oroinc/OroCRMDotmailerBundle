@@ -19,18 +19,12 @@ define(['jquery', 'oroui/js/mediator', 'oroui/js/app/components/widget-component
          * @this jQuery current button
          */
         this.startSyncDelegate = function(){
-            var successMessage = this.data('success-message');
-            var failMessage = this.data('fail-message');
             mediator.execute('showLoading');
-            $.post(this.data('url')).done(function() {
-                if (successMessage) {
-                    mediator.execute('addMessage', 'success', successMessage);
-                }
+            $.post(this.data('url')).done(function(data) {
+                mediator.execute('addMessage', 'success', data.message);
                 mediator.execute('refreshPage');
-            }).fail(function(){
-                if (successMessage) {
-                    mediator.execute('showFlashMessage', 'error', failMessage);
-                }
+            }).fail(function(data){
+                mediator.execute('showFlashMessage', 'error', data.message);
             }).always(function(){
                 mediator.execute('hideLoading');
             });
@@ -71,7 +65,8 @@ define(['jquery', 'oroui/js/mediator', 'oroui/js/app/components/widget-component
             var widget = new StatelessWidgetComponent(
                 {
                     options: {
-                        'url': this.data('url')
+                        'url': this.data('url'),
+                        'title': this.data('title')
                     }
                 }
             );

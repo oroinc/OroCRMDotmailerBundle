@@ -5,7 +5,7 @@
         <div class="responsive-block">
             <div class="control-group">
                 {% if address_book.syncStatus %}
-                    {% set status = ('orocrm.dotmailer.syncstatus.' ~ address_book.syncStatus)|trans %}
+                    {% set status = ('orocrm.dotmailer.syncstatus.' ~ address_book.syncStatus.id)|trans %}
                 {% else %}
                     {% set status = 'oro.ui.empty'|trans %}
                 {% endif %}

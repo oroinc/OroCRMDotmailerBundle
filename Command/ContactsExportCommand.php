@@ -5,6 +5,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Command;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
@@ -13,6 +14,8 @@ use Oro\Bundle\IntegrationBundle\Command\AbstractSyncCronCommand;
 use Oro\Bundle\IntegrationBundle\Provider\ReverseSyncProcessor;
 use Oro\Component\Log\OutputLogger;
 
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
+use OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
 use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
@@ -21,6 +24,7 @@ class ContactsExportCommand extends AbstractSyncCronCommand
 {
     const NAME = 'oro:cron:dotmailer:export';
     const EXPORT_MANAGER = 'orocrm_dotmailer.export_manager';
+    const ADDRESS_BOOK_OPTION = 'address-book';
 
     /**
      * @var ManagerRegistry
@@ -47,7 +51,13 @@ class ContactsExportCommand extends AbstractSyncCronCommand
     {
         $this
             ->setName(self::NAME)
-            ->setDescription('Export contacts to Dotmailer');
+            ->setDescription('Export contacts to Dotmailer')
+            ->addOption(
+                self::ADDRESS_BOOK_OPTION,
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Dotmailer Address Book to sync'
+            );
     }
 
     /**
@@ -71,9 +81,17 @@ class ContactsExportCommand extends AbstractSyncCronCommand
         /** @var ExportManager $exportManager */
         $exportManager = $this->getService(self::EXPORT_MANAGER);
 
-        $channels = $this->registry
-            ->getRepository('OroIntegrationBundle:Channel')
-            ->findBy(['type' => ChannelType::TYPE, 'enabled' => true]);
+        $addressBookId = $input->getOption(self::ADDRESS_BOOK_OPTION);
+        /** @var AddressBook $addressBook */
+        $addressBook = null;
+        if ($addressBookId) {
+            $addressBook = $this->registry
+                ->getManager()
+                ->find('OroCRMDotmailerBundle:AddressBook', $addressBookId);
+        }
+        $channels = $addressBook
+            ? [ $addressBook->getChannel() ]
+            : $this->getChannels($addressBook);
         foreach ($channels as $channel) {
             /**
              * If previous export not finished we need to update export results from Dotmailer
@@ -86,7 +104,14 @@ class ContactsExportCommand extends AbstractSyncCronCommand
             } else {
                 $this->removePreviousAddressBookContactsExport($channel);
                 $this->getReverseSyncProcessor()
-                    ->process($channel, ContactConnector::TYPE, []);
+                    ->process(
+                        $channel,
+                        ContactConnector::TYPE,
+                        [
+                            AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION => $addressBook
+                        ]
+                    );
+                $exportManager->updateExportResults($channel);
             }
         }
     }
@@ -115,5 +140,16 @@ class ContactsExportCommand extends AbstractSyncCronCommand
             ->where('abContactsExport.channel =:channel')
             ->getQuery()
             ->execute(['channel' => $channel]);
+    }
+
+    /**
+     * @return Channel[]
+     */
+    protected function getChannels()
+    {
+        $channels = $this->registry
+            ->getRepository('OroIntegrationBundle:Channel')
+            ->findBy(['type' => ChannelType::TYPE, 'enabled' => true]);
+        return $channels;
     }
 }

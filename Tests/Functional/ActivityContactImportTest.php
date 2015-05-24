@@ -40,7 +40,7 @@ class ActivityContactImportTest extends AbstractImportExportTest
         }
 
         $this->resource->expects($this->any())
-            ->method('GetCampaignActivitiesSinceDateByDate')
+            ->method('GetCampaignActivities')
             ->will($this->returnValue($entity));
         $channel = $this->getReference('orocrm_dotmailer.channel.second');
 

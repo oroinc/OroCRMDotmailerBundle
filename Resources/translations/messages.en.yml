@@ -32,6 +32,8 @@ orocrm:
             lastSynced.label:     Last Synced Date
             status.label:         Status
 
+            sync: Marketing list synchronization started. {{ job_view_link }}
+
         activity:
             entity_label:                 Dotmailer Activity
             campaign.label:               Campaign
@@ -174,8 +176,11 @@ orocrm:
                 disconnect:         Are you sure you want to unlink this Marketing List from Dotmailer
 
         syncstatus:
-            synced: Up to date
-            not_synced: Not Synced
-            in_progress: In Progress
-            scheduled: Scheduled for Sync
+            Finished: Up to date
+            RejectedByWatchdog: Sync Rejected
+            InvalidFileFormat: Not Synced
+            Failed: Sync failed
+            ExceedsAllowedContactLimit: Dotmailer Contacts Limit Exceeds
+            NotAvailableInThisVersion: Not Synced
+            NotFinished: In Progress
             list_is_connected.lebel: This list is linked to "%address_book%" Dotmailer address book. Last synchronization date: %synced%. Synchronization status: %status%.
