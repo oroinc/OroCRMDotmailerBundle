@@ -18,8 +18,15 @@ class LoadAddressBookContactsExportData extends AbstractFixture implements Depen
             'addressBook' => 'orocrm_dotmailer.address_book.fifth',
             'channel'     => 'orocrm_dotmailer.channel.fourth',
             'importId'    => '1fb9cba7-e588-445a-8731-4796c86b1097',
-            'reference'   => 'orocrm_dotmailer.address_book_contacts_export'
-        ]
+            'reference'   => 'orocrm_dotmailer.address_book_contacts_export.first'
+        ],
+        [
+            'status'      => AddressBookContactsExport::STATUS_NOT_FINISHED,
+            'addressBook' => 'orocrm_dotmailer.address_book.fourth',
+            'channel'     => 'orocrm_dotmailer.channel.third',
+            'importId'    => '2fb9cba7-e588-445a-8731-4796c86b1097',
+            'reference'   => 'orocrm_dotmailer.address_book_contacts_export.second'
+        ],
     ];
 
     /**
