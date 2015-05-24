@@ -6,7 +6,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Common\DataFixtures\AbstractFixture as BaseAbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
@@ -20,7 +19,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector;
 
-class LoadChannelData extends BaseAbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
+class LoadChannelData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
     /**
      * @var ContainerInterface

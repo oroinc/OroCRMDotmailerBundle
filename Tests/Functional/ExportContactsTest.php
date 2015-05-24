@@ -50,12 +50,9 @@ class ExportContactsTest extends AbstractImportExportTest
         $processor = $this->getContainer()->get(ReverseSyncCommand::SYNC_PROCESSOR);
         $processor->process($channel, ContactConnector::TYPE, []);
 
-        $this->assertContactUpdated(
-            $this->getReference('orocrm_dotmailer.contact.exported'),
-            $this->getReference('orocrm_dotmailer.orocrm_contact.john.case'),
-            $addressBook
-        );
-
+        /**
+         * Check new contact exported correctly
+         */
         $contact = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:Contact')
             ->findOneBy(['channel' => $channel, 'email' => 'jack.case@example.com']);
@@ -65,6 +62,32 @@ class ExportContactsTest extends AbstractImportExportTest
             $this->getReference('orocrm_dotmailer.orocrm_contact.jack.case'),
             $addressBook,
             true
+        );
+
+        /**
+         * Check existing contact exported correctly
+         */
+        $contact = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:Contact')
+            ->findOneBy(['channel' => $channel, 'email' => 'alex.case@example.com']);
+        $this->assertNotNull($contact, 'Updated contact not synced');
+        $this->assertContactUpdated(
+            $contact,
+            $this->getReference('orocrm_dotmailer.orocrm_contact.alex.case'),
+            $addressBook
+        );
+
+        /**
+         * Check existing contact exported correctly
+         */
+        $contact = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:Contact')
+            ->findOneBy(['channel' => $channel, 'email' => 'allen.case@example.com']);
+        $this->assertNotNull($contact, 'Updated contact not synced');
+        $this->assertContactUpdated(
+            $contact,
+            $this->getReference('orocrm_dotmailer.orocrm_contact.allen.case'),
+            $addressBook
         );
 
         $export = $this->managerRegistry
@@ -105,7 +128,15 @@ class ExportContactsTest extends AbstractImportExportTest
             ->first();
         $this->assertTrue($addressBookContact->isScheduledForExport());
 
-        $this->assertEquals($expected->getFirstName(), $actual->getFirstName());
-        $this->assertEquals($expected->getLastName(), $actual->getLastName());
+        if (!$isNew) {
+            /**
+             * This is necessary to not update information fields for existing contacts
+             */
+            $this->assertNotEquals($expected->getFirstName(), $actual->getFirstName());
+            $this->assertNotEquals($expected->getLastName(), $actual->getLastName());
+        } else {
+            $this->assertEquals($expected->getFirstName(), $actual->getFirstName());
+            $this->assertEquals($expected->getLastName(), $actual->getLastName());
+        }
     }
 }
