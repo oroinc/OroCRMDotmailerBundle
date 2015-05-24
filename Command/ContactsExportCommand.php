@@ -4,21 +4,23 @@ namespace OroCRM\Bundle\DotmailerBundle\Command;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
+use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Command\ReverseSyncCommand;
 use Oro\Bundle\IntegrationBundle\Command\AbstractSyncCronCommand;
 use Oro\Bundle\IntegrationBundle\Provider\ReverseSyncProcessor;
 use Oro\Component\Log\OutputLogger;
 
-use OroCRM\Bundle\ChannelBundle\Entity\Channel;
 use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 
 class ContactsExportCommand extends AbstractSyncCronCommand
 {
     const NAME = 'oro:cron:dotmailer:export';
+    const EXPORT_MANAGER = 'orocrm_dotmailer.export_manager';
 
     /**
      * @var ManagerRegistry
@@ -66,7 +68,8 @@ class ContactsExportCommand extends AbstractSyncCronCommand
 
         $this->registry = $this->getService('doctrine');
 
-        $exportManager = $this->getService('orocrm_dotmailer.export_manager');
+        /** @var ExportManager $exportManager */
+        $exportManager = $this->getService(self::EXPORT_MANAGER);
 
         $channels = $this->registry
             ->getRepository('OroIntegrationBundle:Channel')
