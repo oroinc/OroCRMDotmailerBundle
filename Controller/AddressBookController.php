@@ -2,13 +2,21 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Controller;
 
+use FOS\RestBundle\Util\Codes;
+
+use JMS\JobQueueBundle\Entity\Job;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
+use OroCRM\Bundle\DotmailerBundle\Command\ContactsExportCommand;
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 
@@ -35,10 +43,46 @@ class AddressBookController extends Controller
      */
     public function synchronizeAddressBook(AddressBook $addressBook)
     {
-        /**
-         * @todo: sync address book address book in task @CBORO-66
-         */
-        return new Response();
+        $job = new Job(
+            ContactsExportCommand::NAME,
+            ['--address-book=' . $addressBook->getId(),'-v']
+        );
+
+        $status  = Codes::HTTP_OK;
+        $response = [
+            'message'    => '',
+        ];
+
+        try {
+            $registry = $this->get('doctrine');
+            $em = $registry->getManager();
+            $em->persist($job);
+            $statusClass = ExtendHelper::buildEnumValueClassName('dm_import_status');
+            $syncStatus = $registry->getRepository($statusClass)
+                ->find(AddressBookContactsExport::STATUS_NOT_FINISHED);
+            $addressBook->setSyncStatus($syncStatus);
+            $em->flush();
+
+            $jobViewLink = sprintf(
+                '<a href="%s" class="job-view-link">%s</a>',
+                $this->get('router')->generate('oro_cron_job_view', ['id' => $job->getId()]),
+                $this->get('translator')->trans('oro.integration.progress')
+            );
+
+            $response['message'] = str_replace(
+                '{{ job_view_link }}',
+                $jobViewLink,
+                $this->get('translator')->trans('orocrm.dotmailer.addressbook.sync')
+            );
+        } catch (\Exception $e) {
+            $status  = Codes::HTTP_BAD_REQUEST;
+            $response['message']    = sprintf(
+                $this->get('translator')->trans('oro.integration.sync_error'),
+                $e->getMessage()
+            );
+        }
+
+        return new JsonResponse($response, $status);
     }
 
     /**
@@ -59,11 +103,6 @@ class AddressBookController extends Controller
         $em = $this->get('doctrine')
             ->getManager();
         $addressBook->setMarketingList(null);
-
-        /**
-         * @todo: unsubscribe all marketing list items from address book in task @CBORO-66
-         */
-
         $em->persist($addressBook);
         $em->flush($addressBook);
 

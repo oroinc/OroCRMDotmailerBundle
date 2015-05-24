@@ -23,7 +23,7 @@
   ],
   "require": {
     "oro/crm": "1.x-dev",
-    "romanpitak/dotmailer-api-v2-client": ">=1.0.10"
+    "romanpitak/dotmailer-api-v2-client": "1.0.10"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
