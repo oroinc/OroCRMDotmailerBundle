@@ -15,34 +15,38 @@ class LoadMarketingListData extends AbstractFixture implements DependentFixtureI
     protected $data = [
         [
             'name'          => 'list1',
-            'entity'        => 'CB\Bundle\WebsphereBundle\Entity\Subscriber',
+            'entity'        => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
             'type'          => 'dynamic',
             'owner'         => 'orocrm_dotmailer.user.john.doe',
             'organization'  => 'orocrm_dotmailer.organization.foo',
+            'segment'       => 'orocrm_dotmailer.segment.first',
             'reference'     => 'orocrm_dotmailer.marketing_list.first',
         ],
         [
             'name'          => 'list2',
-            'entity'        => 'CB\Bundle\WebsphereBundle\Entity\Subscriber',
+            'entity'        => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
             'type'          => 'dynamic',
             'owner'         => 'orocrm_dotmailer.user.john.doe',
             'organization'  => 'orocrm_dotmailer.organization.foo',
+            'segment'       => 'orocrm_dotmailer.segment.first',
             'reference'     => 'orocrm_dotmailer.marketing_list.second'
         ],
         [
             'name'          => 'list3',
-            'entity'        => 'CB\Bundle\WebsphereBundle\Entity\Subscriber',
+            'entity'        => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
             'type'          => 'static',
             'owner'         => 'orocrm_dotmailer.user.john.doe',
             'organization'  => 'orocrm_dotmailer.organization.foo',
+            'segment'       => 'orocrm_dotmailer.segment.first',
             'reference'     => 'orocrm_dotmailer.marketing_list.third'
         ],
         [
             'name'          => 'list4',
-            'entity'        => 'CB\Bundle\WebsphereBundle\Entity\Subscriber',
+            'entity'        => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
             'type'          => 'static',
             'owner'         => 'orocrm_dotmailer.user.john.doe',
             'organization'  => 'orocrm_dotmailer.organization.foo',
+            'segment'       => 'orocrm_dotmailer.segment.first',
             'reference'     => 'orocrm_dotmailer.marketing_list.fourth'
         ],
         [
@@ -51,8 +55,8 @@ class LoadMarketingListData extends AbstractFixture implements DependentFixtureI
             'type'          => 'static',
             'owner'         => 'orocrm_dotmailer.user.john.doe',
             'organization'  => 'orocrm_dotmailer.organization.foo',
+            'segment'       => 'orocrm_dotmailer.segment.first',
             'reference'     => 'orocrm_dotmailer.marketing_list.fifth',
-            'segment'       => 'orocrm_dotmailer.segment.first'
         ],
     ];
 

@@ -30,6 +30,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
                 if (is_null($addressBookContact)) {
                     $addressBookContact = new AddressBookContact();
                     $addressBookContact->setAddressBook($addressBook);
+                    $addressBookContact->setChannel($addressBook->getChannel());
                     $entity->addAddressBookContact($addressBookContact);
                 }
                 $addressBookContact->setMarketingListItemId(

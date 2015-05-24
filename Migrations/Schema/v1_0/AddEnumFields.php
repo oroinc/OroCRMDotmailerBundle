@@ -98,7 +98,7 @@ class AddEnumFields implements Migration, ExtendExtensionAwareInterface, Ordered
                     $enumField,
                     $enumCode,
                     $isMulti, // only one option can be selected
-                    false, // an administrator can add new options and remove existing ones
+                    true, // an administrator can add new options and remove existing ones
                     $options
                 );
             }

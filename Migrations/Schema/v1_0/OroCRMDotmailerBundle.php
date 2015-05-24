@@ -305,6 +305,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table = $schema->createTable('orocrm_dm_ab_contact');
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
         $table->addColumn('contact_id', 'integer');
+        $table->addColumn('channel_id', 'integer', ['notnull' => false]);
         $table->addColumn('address_book_id', 'integer');
         $table->addColumn('unsubscribed_date', 'datetime', ['notnull' => false]);
         $table->addColumn('marketing_list_item_id', 'integer', ['notnull' => false]);
@@ -314,6 +315,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addUniqueIndex(['address_book_id', 'contact_id'], 'orocrm_dm_ab_cnt_unq');
         $table->addIndex(['address_book_id'], 'IDX_74DFE8B64D474419', []);
         $table->addIndex(['contact_id'], 'IDX_74DFE8B6E7A1254A', []);
+        $table->addIndex(['channel_id'], 'IDX_74DFE8B672F5A1AA', []);
     }
 
     /**
@@ -326,12 +328,14 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table = $schema->createTable('orocrm_dm_ab_cnt_export');
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
         $table->addColumn('address_book_id', 'integer', ['notnull' => false]);
+        $table->addColumn('channel_id', 'integer', ['notnull' => false]);
         $table->addColumn('import_id', 'string', ['length' => 100]);
         $table->addColumn('created_at', 'datetime', []);
         $table->addColumn('updated_at', 'datetime', []);
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['import_id'], 'UNIQ_5C0830B4B6A263D9');
         $table->addIndex(['address_book_id'], 'IDX_5C0830B44D474419', []);
+        $table->addIndex(['channel_id'], 'IDX_83CAE83D72F5A1AA', []);
     }
 
     /**
@@ -532,6 +536,12 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
             ['id'],
             ['onDelete' => 'SET NULL', 'onUpdate' => null]
         );
+        $table->addForeignKeyConstraint(
+            $schema->getTable('oro_integration_channel'),
+            ['channel_id'],
+            ['id'],
+            ['onDelete' => 'SET NULL', 'onUpdate' => null]
+        );
     }
 
     /**
@@ -542,6 +552,12 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
     protected function addOrocrmDmAbContactForeignKeys(Schema $schema)
     {
         $table = $schema->getTable('orocrm_dm_ab_contact');
+        $table->addForeignKeyConstraint(
+            $schema->getTable('oro_integration_channel'),
+            ['channel_id'],
+            ['id'],
+            ['onDelete' => 'SET NULL', 'onUpdate' => null]
+        );
         $table->addForeignKeyConstraint(
             $schema->getTable('orocrm_dm_contact'),
             ['contact_id'],
