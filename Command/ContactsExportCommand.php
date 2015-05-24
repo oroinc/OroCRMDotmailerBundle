@@ -2,27 +2,30 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Command;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\IntegrationBundle\Command\ReverseSyncCommand;
 use Oro\Bundle\IntegrationBundle\Command\AbstractSyncCronCommand;
 use Oro\Bundle\IntegrationBundle\Provider\ReverseSyncProcessor;
 use Oro\Component\Log\OutputLogger;
 
-use OroCRM\Bundle\ChannelBundle\Entity\Channel;
+use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
 use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 
 class ContactsExportCommand extends AbstractSyncCronCommand
 {
     const NAME = 'oro:cron:dotmailer:export';
+    const EXPORT_MANAGER = 'orocrm_dotmailer.export_manager';
 
     /**
-     * @var ObjectManager
+     * @var ManagerRegistry
      */
-    protected $em;
+    protected $registry;
 
     /**
      * {@inheritdoc}
@@ -53,7 +56,9 @@ class ContactsExportCommand extends AbstractSyncCronCommand
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $logger = new OutputLogger($output);
-        $this->getContainer()->get('oro_integration.logger.strategy')->setLogger($logger);
+        $this->getContainer()
+            ->get('oro_integration.logger.strategy')
+            ->setLogger($logger);
 
         if ($this->isJobRunning(null)) {
             $logger->warning('Job already running. Terminating....');
@@ -61,21 +66,28 @@ class ContactsExportCommand extends AbstractSyncCronCommand
             return;
         }
 
-        $exportManager = $this->getContainer()->get('orocrm_dotmailer.export_manager');
-        $this->em = $this->getContainer()->get('doctrine')->getManager();
+        $this->registry = $this->getService('doctrine');
 
-        $channels = $this->em->getRepository('OroIntegrationBundle:Channel')
+        /** @var ExportManager $exportManager */
+        $exportManager = $this->getService(self::EXPORT_MANAGER);
+
+        $channels = $this->registry
+            ->getRepository('OroIntegrationBundle:Channel')
             ->findBy(['type' => ChannelType::TYPE, 'enabled' => true]);
-
         foreach ($channels as $channel) {
-            //If previous export not finished and update export result not completed will check next channel
-            if (!$exportManager->isExportFinished($channel) && !$exportManager->updateExportResults($channel)) {
-                continue;
+            /**
+             * If previous export not finished we need to update export results from Dotmailer
+             * If after update export results all export batches is complete,
+             * import updated contacts from Dotmailer will be started.
+             * Else we need to start new export
+             */
+            if (!$exportManager->isExportFinished($channel)) {
+                $exportManager->updateExportResults($channel);
+            } else {
+                $this->removePreviousAddressBookContactsExport($channel);
+                $this->getReverseSyncProcessor()
+                    ->process($channel, ContactConnector::TYPE, []);
             }
-
-            $this->removePreviousAddressBookContactsExport($channel);
-            $this->getReverseSyncProcessor()->process($channel, ContactConnector::TYPE, []);
-            $exportManager->updateExportResults($channel);
         }
     }
 
@@ -85,7 +97,7 @@ class ContactsExportCommand extends AbstractSyncCronCommand
     protected function getReverseSyncProcessor()
     {
         if (!$this->reverseSyncProcessor) {
-            $this->reverseSyncProcessor = $this->getContainer()->get('oro_integration.reverse_sync.processor');
+            $this->reverseSyncProcessor = $this->getContainer()->get(ReverseSyncCommand::SYNC_PROCESSOR);
         }
 
         return $this->reverseSyncProcessor;
@@ -96,7 +108,8 @@ class ContactsExportCommand extends AbstractSyncCronCommand
      */
     protected function removePreviousAddressBookContactsExport(Channel $channel)
     {
-        $this->em->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+        $this->registry
+            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
             ->createQueryBuilder('abContactsExport')
             ->delete()
             ->where('abContactsExport.channel =:channel')
