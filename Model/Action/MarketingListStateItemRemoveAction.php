@@ -43,6 +43,10 @@ class MarketingListStateItemRemoveAction extends AbstractMarketingListEntitiesAc
     {
         $entities = $this->getMarketingListStateItems($context->getEntity());
 
+        if (count($entities) == 0) {
+            return;
+        }
+
         $em = $this->doctrineHelper->getEntityManager($this->marketingListStateItemClassName);
         foreach ($entities as $entity) {
             $em->remove($entity);
