@@ -2,6 +2,8 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
+use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
@@ -26,6 +28,11 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
     {
         /** @var Contact $entity */
         if ($entity) {
+            if (!$entity->getId()) {
+                $status = $this->getEnumValue('dm_cnt_status', Contact::STATUS_SUBSCRIBED);
+                $entity->setStatus($status);
+            }
+
             $addressBook = $this->getAddressBook($entity->getChannel());
             if ($addressBook) {
                 $addressBookContact = null;
@@ -38,6 +45,9 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
                     $addressBookContact = new AddressBookContact();
                     $addressBookContact->setAddressBook($addressBook);
                     $addressBookContact->setChannel($addressBook->getChannel());
+
+                    $status = $this->getEnumValue('dm_cnt_status', Contact::STATUS_SUBSCRIBED);
+                    $addressBookContact->setStatus($status);
                     $entity->addAddressBookContact($addressBookContact);
                 }
                 $addressBookContact->setMarketingListItemId(
@@ -128,5 +138,19 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
         }
 
         return !isset($this->allowedFields[$entityName]);
+    }
+
+
+    /**
+     * @param string $enumCode
+     * @param string $id
+     *
+     * @return AbstractEnumValue
+     */
+    protected function getEnumValue($enumCode, $id)
+    {
+        $className = ExtendHelper::buildEnumValueClassName($enumCode);
+        return $this->getRepository($className)
+            ->find($id);
     }
 }

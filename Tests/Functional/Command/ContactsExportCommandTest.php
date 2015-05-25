@@ -107,16 +107,15 @@ class ContactsExportCommandTest extends WebTestCase
             ->with($this->getReference('orocrm_dotmailer.channel.third'), ContactConnector::TYPE);
 
         $this->exportManagerMock
-            ->expects($this->once())
-            ->method('updateExportResults')
-            ->with($this->getReference('orocrm_dotmailer.channel.fourth'));
+            ->expects($this->exactly(4))
+            ->method('updateExportResults');
 
         $result = $this->runCommand(ContactsExportCommand::NAME, ['--verbose' => true]);
-
+        $result = trim($result);
         /**
          * Check no errors in output
          */
-        $this->assertEmpty($result);
+        $this->assertEmpty(trim($result));
 
         /**
          * Check previous export record removed
