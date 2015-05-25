@@ -23,7 +23,6 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIte
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactsIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactsIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
-use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 
 class DotmailerTransport implements TransportInterface
@@ -67,15 +66,16 @@ class DotmailerTransport implements TransportInterface
     /**
      * @param array          $addressBooks
      * @param \DateTime|null $dateSince
+     * @param int            $batchSize
      *
      * @return ContactIterator
      */
-    public function getContacts($addressBooks, $dateSince = null)
+    public function getContacts($addressBooks, $dateSince = null, $batchSize = null)
     {
         $iterator = new AppendIterator();
         foreach ($addressBooks as $addressBook) {
             $iterator->append(
-                new ContactIterator($this->dotmailerResources, $addressBook['originId'], $dateSince)
+                new ContactIterator($this->dotmailerResources, $addressBook['originId'], $dateSince, $batchSize)
             );
         }
 
