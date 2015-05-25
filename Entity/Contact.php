@@ -20,7 +20,8 @@ use OroCRM\Bundle\DotmailerBundle\Model\ExtendContact;
  * @ORM\Table(
  *      name="orocrm_dm_contact",
  *      uniqueConstraints={
- *          @ORM\UniqueConstraint(name="orocrm_dm_contact_unq", columns={"origin_id", "channel_id"})
+ *          @ORM\UniqueConstraint(name="orocrm_dm_contact_unq", columns={"origin_id", "channel_id"}),
+ *          @ORM\UniqueConstraint(name="orocrm_dm_cnt_em_unq", columns={"email", "channel_id"})
  *     }
  * )
  * @ORM\HasLifecycleCallbacks()
@@ -101,7 +102,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", unique=true, length=255)
+     * @ORM\Column(name="email", type="string",length=255)
      */
     protected $email;
 

@@ -10,7 +10,6 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Provider\SyncProcessor;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
-use OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\ContactStrategy;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
@@ -111,7 +110,7 @@ class ExportManager
         return $this->syncProcessor->process(
             $channel,
             ContactConnector::TYPE,
-            [ContactStrategy::FIND_CONTACT_BY_EMAIL_OPTION => true]
+            []
         );
     }
 

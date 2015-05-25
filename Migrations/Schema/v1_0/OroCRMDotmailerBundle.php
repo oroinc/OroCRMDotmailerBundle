@@ -153,7 +153,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addColumn('last_subscribed_date', 'datetime', ['notnull' => false]);
         $table->addIndex(['owner_id'], 'IDX_6D7FB88E7E3C61F9', []);
         $table->addIndex(['channel_id'], 'IDX_6D7FB88E72F5A1AA', []);
-        $table->addUniqueIndex(['email'], 'UNIQ_6D7FB88EE7927C74');
+        $table->addUniqueIndex(['email', 'channel_id'], 'orocrm_dm_cnt_em_unq');
         $table->addUniqueIndex(['origin_id', 'channel_id'], 'orocrm_dm_contact_unq');
         $table->setPrimaryKey(['id']);
     }
