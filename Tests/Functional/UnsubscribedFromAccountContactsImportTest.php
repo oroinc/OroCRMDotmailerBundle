@@ -9,6 +9,7 @@ use DotMailer\Api\DataTypes\ApiContactSuppressionList;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\IntegrationBundle\Command\SyncCommand;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactsConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedFromAccountContactsConnector;
 
 /**
@@ -45,10 +46,14 @@ class UnsubscribedFromAccountContactsImportTest extends AbstractImportExportTest
             ->method('GetContactsSuppressedSinceDate')
             ->will($this->returnValue($entity));
 
+        $this->resource->expects($this->any())
+            ->method('GetAddressBookContactsUnsubscribedSinceDate')
+            ->will($this->returnValue(new ApiContactSuppressionList()));
+
         $channel = $this->getReference('orocrm_dotmailer.channel.third');
 
         $processor = $this->getContainer()->get(SyncCommand::SYNC_PROCESSOR);
-        $result = $processor->process($channel, UnsubscribedFromAccountContactsConnector::TYPE);
+        $result = $processor->process($channel, UnsubscribedContactsConnector::TYPE);
 
         $this->assertTrue($result);
 
@@ -58,9 +63,10 @@ class UnsubscribedFromAccountContactsImportTest extends AbstractImportExportTest
         );
 
         foreach ($expected as $expectedContact) {
+            $expectedStatus = $statusRepository->find($expectedContact['status']);
             $searchCriteria = [
                 'originId' => $expectedContact['originId'],
-                'status'   => $statusRepository->find($expectedContact['status']),
+                'status'   => $expectedStatus,
                 'channel'  => $this->getReference($expectedContact['channel'])
             ];
 
@@ -69,9 +75,11 @@ class UnsubscribedFromAccountContactsImportTest extends AbstractImportExportTest
             /** @var Contact $actualContact */
             $actualContact = $actualContacts[0];
 
-            $actualAddressBooks = $actualContact->getAddressBookContacts()
-                ->toArray();
-            $this->assertCount(0, $actualAddressBooks);
+            $actualAddressBooks = $actualContact->getAddressBookContacts();
+            foreach ($actualAddressBooks as $actualAddressBook) {
+                $this->assertEquals($expectedContact['unsubscribedDate'], $actualAddressBook->getUnsubscribedDate());
+                $this->assertEquals($expectedStatus, $actualAddressBook->getStatus());
+            }
             $this->assertEquals($expectedContact['unsubscribedDate'], $actualContact->getUnsubscribedDate());
         }
     }

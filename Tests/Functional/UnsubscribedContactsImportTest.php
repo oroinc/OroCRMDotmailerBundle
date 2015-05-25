@@ -53,7 +53,7 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTest
             }));
 
         $this->resource->expects($this->any())
-            ->method('GetContactsUnsubscribedSinceDate')
+            ->method('GetContactsSuppressedSinceDate')
             ->will($this->returnValue(new ApiContactSuppressionList()));
         $channel = $this->getReference('orocrm_dotmailer.channel.third');
 

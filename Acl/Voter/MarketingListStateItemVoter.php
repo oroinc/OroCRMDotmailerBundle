@@ -95,7 +95,7 @@ class MarketingListStateItemVoter extends AbstractEntityVoter
 
         $qb = $this->getQueryBuilder($contactInformationValues, $item);
 
-        $result = $qb->getQuery()->getScalarResult();
+        $result = $qb->getQuery()->getSingleScalarResult();
 
         if (!empty($result)) {
             return self::ACCESS_DENIED;
@@ -132,12 +132,17 @@ class MarketingListStateItemVoter extends AbstractEntityVoter
             )
             ->where(
                 $qb->expr()->andX(
-                    $qb->expr()->eq('addressBook.marketingList', $item->getMarketingList()),
+                    $qb->expr()->eq('addressBook.marketingList', ':marketingList'),
                     $qb->expr()->in('dmContact.email', $contactInformationValues),
                     $qb->expr()->eq('dmAbContact.status', ':status')
                 )
             )
-            ->setParameter('status', Contact::STATUS_UNSUBSCRIBED);
+            ->setParameters(
+                [
+                    'status' => Contact::STATUS_UNSUBSCRIBED,
+                    'marketingList' => $item->getMarketingList()
+                ]
+            );
 
         return $qb;
     }
