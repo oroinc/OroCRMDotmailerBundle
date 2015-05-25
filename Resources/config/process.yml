@@ -71,6 +71,7 @@ definitions:
         label:   Check MarketingListItem State for Dotmailer Contact
         enabled: true
         entity:  OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact
+        exclude_definitions: [dotmailer_handle_contact_state]
         actions_configuration:
             # Prepare constants values
             - @assign_constant_value:
