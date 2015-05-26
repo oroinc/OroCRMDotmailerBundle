@@ -82,15 +82,24 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTest
                 $addressBook = $this->getReference($addressBook);
             }
 
+            $expectedUsubscribedDates = [];
+            foreach ($expectedContact['unsubscribedDate'] as $addressBookRef => $date) {
+                $expectedUsubscribedDates[$this->getReference($addressBookRef)->getId()] = $date;
+            }
+
             $actualAddressBooks = [];
             /** @var AddressBookContact $addressBookContact */
             foreach ($actualContact->getAddressBookContacts()->toArray() as $addressBookContact) {
                 if ($addressBookContact->getStatus()->getId() == Contact::STATUS_SUBSCRIBED) {
                     $actualAddressBooks[] = $addressBookContact->getAddressBook();
+                } elseif (!empty($expectedUsubscribedDates[$addressBookContact->getAddressBook()->getId()])) {
+                    $this->assertEquals(
+                        $expectedUsubscribedDates[$addressBookContact->getAddressBook()->getId()],
+                        $addressBookContact->getUnsubscribedDate()
+                    );
                 }
             }
             $this->assertEquals($expectedContact['subscribedAddressBooks'], $actualAddressBooks);
-            $this->assertEquals($expected['unsubscribedDate'], $actualContact->getUnsubscribedDate());
         }
     }
 
@@ -98,13 +107,18 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTest
     {
         return [
             [
-                'expected'        => [
+                'expected'                  => [
                     [
-                        'originId'     => 42,
-                        'channel'      => 'orocrm_dotmailer.channel.third',
-                        'status'       => ApiContactStatuses::SUBSCRIBED,
+                        'originId'               => 42,
+                        'channel'                => 'orocrm_dotmailer.channel.third',
+                        'status'                 => ApiContactStatuses::SUBSCRIBED,
                         'subscribedAddressBooks' => ['orocrm_dotmailer.address_book.fourth'],
-                        'unsubscribedDate' => new \DateTime('2015-10-10', new \DateTimeZone('UTC'))
+                        'unsubscribedDate'       => [
+                            'orocrm_dotmailer.address_book.third' => new \DateTime(
+                                '2015-10-10',
+                                new \DateTimeZone('UTC')
+                            )
+                        ]
                     ]
                 ],
                 'apiContactSuppressionList' => [

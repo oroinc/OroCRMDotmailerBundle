@@ -52,6 +52,13 @@ class LoadContactData extends AbstractFixture implements DependentFixtureInterfa
             'reference'    => 'orocrm_dotmailer.orocrm_contact.allen.case',
         ],
         [
+            'firstName'    => 'Without email',
+            'lastName'     => 'Case',
+            'organization' => 'orocrm_dotmailer.organization.foo',
+            'owner'        => 'orocrm_dotmailer.user.john.doe',
+            'reference'    => 'orocrm_dotmailer.orocrm_contact.without_email.case',
+        ],
+        [
             'firstName'    => 'John',
             'lastName'     => 'Smith',
             'email'        => 'john.smith@example.com',
@@ -72,10 +79,12 @@ class LoadContactData extends AbstractFixture implements DependentFixtureInterfa
             $this->resolveReferenceIfExist($data, 'organization');
             $this->setEntityPropertyValues($contact, $data, ['reference', 'email']);
 
-            $email = new ContactEmail();
-            $email->setEmail($data['email']);
-            $email->setPrimary(true);
-            $contact->addEmail($email);
+            if (!empty($data['email'])) {
+                $email = new ContactEmail();
+                $email->setEmail($data['email']);
+                $email->setPrimary(true);
+                $contact->addEmail($email);
+            }
 
             $this->addReference($data['reference'], $contact);
             $manager->persist($contact);
