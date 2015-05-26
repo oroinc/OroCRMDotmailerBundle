@@ -42,7 +42,7 @@ class ConnectionUpdateFormHandler
         $form->setData($data);
         if ($this->request->isMethod('POST')) {
             if ($form->submit($this->request)->isValid()) {
-                return $this->onSuccess($form);
+                return $this->onSuccess($form, $data);
             }
         }
 
@@ -53,13 +53,20 @@ class ConnectionUpdateFormHandler
     /**
      * "Success" form handler
      *
-     * @param Form $form
+     * @param Form  $form
+     *
+     * @param array $data
      *
      * @return int
      */
-    protected function onSuccess(Form $form)
+    protected function onSuccess(Form $form, array $data)
     {
         $manager = $this->managerRegistry->getManager();
+        if (!empty($data['addressBook'])) {
+            /** @var AddressBook $addressBook */
+            $addressBook = $data['addressBook'];
+            $addressBook->setMarketingList(null);
+        }
 
         $data = $form->getData();
         /** @var AddressBook $addressBook */

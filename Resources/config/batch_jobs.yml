@@ -113,7 +113,7 @@ connector:
                     services:
                         reader:    orocrm_dotmailer.importexport.reader.contact_sync
                         processor: orocrm_dotmailer.importexport.processor.contact_sync
-                        writer:    oro_integration.writer.persistent_batch_writer
+                        writer:    orocrm_dotmailer.importexport.writer.import
                     parameters:
                         batch_size: 2000
                 exportContacts:
