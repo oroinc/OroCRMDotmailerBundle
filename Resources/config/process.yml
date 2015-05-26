@@ -99,6 +99,29 @@ definitions:
                         - @equal: [$status, $.statusSubscribed]
                         - @equal: [$status, $.statusSoftBounced]
 
+    schedule_dotmailer_address_book_synchronization:
+        label:   Schedule Dotmailer Address Book synchronization
+        enabled: true
+        entity:  OroCRM\Bundle\DotmailerBundle\Entity\AddressBook
+        actions_configuration:
+            - @tree:
+                conditions:
+                    @and:
+                        - @not_empty: $marketingList
+                actions:
+                    - @format_string:
+                        attribute: $.addressBook
+                        string: '--address-book=%adddress_book_id% -v'
+                        arguments:
+                            adddress_book_id: $id
+                    - @create_entity:
+                        class: JMS\JobQueueBundle\Entity\Job
+                        attribute: $.syncJob
+                        flush: true
+                        arguments:
+                            - 'oro:cron:dotmailer:export'
+                            - [$.addressBook]
+
 triggers:
     dotmailer_email_campaign_creation:
         -
@@ -120,3 +143,8 @@ triggers:
         -
             event:    update
             queued:   false
+
+    schedule_dotmailer_address_book_synchronization:
+        -
+            event:    update
+            field:    marketingList
