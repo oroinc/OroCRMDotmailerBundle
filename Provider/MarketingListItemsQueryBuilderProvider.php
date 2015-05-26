@@ -9,6 +9,7 @@ use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\SecurityBundle\Owner\Metadata\OwnershipMetadataProvider;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
+use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactSyncDataConverter;
 use OroCRM\Bundle\DotmailerBundle\Model\FieldHelper;
 use OroCRM\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
@@ -152,12 +153,13 @@ class MarketingListItemsQueryBuilderProvider
             ContactInformationFieldsProvider::CONTACT_INFORMATION_SCOPE_EMAIL
         );
 
-        foreach ($contactInformationFields as $contactInformationField) {
-            $contactInformationFieldExpr = $this->fieldHelper
-                ->getFieldExpr($marketingList->getEntity(), $qb, $contactInformationField);
-
-            $qb->select($contactInformationFieldExpr);
+        if (!$contactInformationField = reset($contactInformationFields)) {
+            throw new RuntimeException('Contact information is not provided');
         }
+        $contactInformationFieldExpr = $this->fieldHelper
+            ->getFieldExpr($marketingList->getEntity(), $qb, $contactInformationField);
+        $qb->select($contactInformationFieldExpr);
+
         $removedItemsQueryBuilder = clone $qb;
         $expr = $removedItemsQueryBuilder->expr();
         $removedItemsQueryBuilder
@@ -204,7 +206,7 @@ class MarketingListItemsQueryBuilderProvider
             $marketingList,
             MarketingListProvider::FULL_ENTITIES_MIXIN
         );
-
+        $expr = $qb->expr();
         $qb->resetDQLPart('select');
         $rootAliases = $qb->getRootAliases();
         $entityAlias = reset($rootAliases);
@@ -213,42 +215,46 @@ class MarketingListItemsQueryBuilderProvider
                 $this->removedItemClassName,
                 'mlr',
                 Join::WITH,
-                "mlr.entityId = $entityAlias.id"
+                "mlr.entityId = $entityAlias.id and mlr.marketingList =:marketingList"
             )
-            ->andWhere($qb->expr()->isNull('mlr.id'))
+            ->andWhere($expr->isNull('mlr.id'))
             ->leftJoin(
                 $this->unsubscribedItemClassName,
                 'mlu',
                 Join::WITH,
-                "mlu.entityId = $entityAlias.id"
+                "mlu.entityId = $entityAlias.id and mlr.marketingList =:marketingList"
             )
-            ->andWhere($qb->expr()->isNull('mlu.id'));
+            ->andWhere($expr->isNull('mlu.id'))
+            ->setParameter('marketingList', $marketingList);
 
         $contactInformationFields = $this->contactInformationFieldsProvider->getMarketingListTypedFields(
             $marketingList,
             ContactInformationFieldsProvider::CONTACT_INFORMATION_SCOPE_EMAIL
         );
 
-        $expr = $qb->expr()->orX();
-        foreach ($contactInformationFields as $contactInformationField) {
-            $contactInformationFieldExpr = $this->fieldHelper
-                ->getFieldExpr($marketingList->getEntity(), $qb, $contactInformationField);
-
-            $qb->addSelect($contactInformationFieldExpr . ' AS ' . ContactSyncDataConverter::EMAIL_FIELD);
-            $expr->add(
-                $qb->expr()->eq(
-                    $contactInformationFieldExpr,
-                    sprintf('%s.email', self::CONTACT_ALIAS)
-                )
-            );
+        if (!$contactInformationField = reset($contactInformationFields)) {
+            throw new RuntimeException('Contact information is not provided');
         }
 
+        $joinContactsExpr = $expr->orX();
+        $contactInformationFieldExpr = $this->fieldHelper
+            ->getFieldExpr($marketingList->getEntity(), $qb, $contactInformationField);
+
+        $qb->addSelect($contactInformationFieldExpr . ' AS ' . ContactSyncDataConverter::EMAIL_FIELD);
+        $joinContactsExpr->add(
+            $expr->eq(
+                $contactInformationFieldExpr,
+                sprintf('%s.email', self::CONTACT_ALIAS)
+            )
+        );
+        $qb->andWhere("$contactInformationFieldExpr <> ''");
+        $qb->andWhere($expr->isNotNull($contactInformationFieldExpr));
         $this->applyOrganizationRestrictions($addressBook, $qb);
         $qb->leftJoin(
             $this->contactClassName,
             self::CONTACT_ALIAS,
             Join::WITH,
-            $expr
+            $joinContactsExpr
         );
 
         return $qb;
