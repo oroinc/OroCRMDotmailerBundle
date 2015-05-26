@@ -183,7 +183,7 @@ class Activity implements ChannelAwareInterface
      * @ConfigField(
      *      defaultValues={
      *          "importexport"={
-     *              "excluded"=true
+     *              "identity"=true
      *          }
      *      }
      * )
@@ -195,6 +195,13 @@ class Activity implements ChannelAwareInterface
      *
      * @ORM\ManyToOne(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\Contact", inversedBy="activities")
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @ConfigField(
+     *      defaultValues={
+     *          "importexport"={
+     *              "identity"=true
+     *          }
+     *      }
+     * )
      */
     protected $contact;
 
