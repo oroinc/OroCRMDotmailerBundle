@@ -51,6 +51,8 @@ OroCRM\Bundle\DotmailerBundle\Entity\Contact:
             - NotBlank: ~
         owner:
             - NotBlank: ~
+        email:
+            - NotBlank: ~
 
 OroCRM\Bundle\DotmailerBundle\Entity\Activity:
     properties:
