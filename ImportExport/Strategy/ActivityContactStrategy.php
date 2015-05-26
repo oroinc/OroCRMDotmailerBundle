@@ -19,31 +19,29 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
     {
         $entity = parent::beforeProcessEntity($entity);
 
+        $existingContact = null;
+
         if ($entity->getContact() instanceof Contact) {
             $entity->getContact()->setChannel($entity->getChannel());
+            $existingContact = $this->findExistingContact($entity->getContact());
+        }
+
+        if ($existingContact) {
+            $entity->setContact($existingContact);
+        } else {
+            return null;
+        }
+
+        $campaign = $this->getCampaign($entity->getChannel());
+        if ($campaign) {
+            $entity->setCampaign($campaign);
+        } else {
+            throw new RuntimeException(
+                sprintf('Campaign for contact %s not found', $entity->getContact()->getOriginId())
+            );
         }
 
         return $entity;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function afterProcessEntity($entity)
-    {
-        /** @var Activity|null $entity */
-        if ($entity) {
-            $campaign = $this->getCampaign($entity->getChannel());
-            if ($campaign) {
-                $entity->setCampaign($campaign);
-            } else {
-                throw new RuntimeException(
-                    sprintf('Campaign for contact %s not found', $entity->getContact()->getOriginId())
-                );
-            }
-        }
-
-        return parent::afterProcessEntity($entity);
     }
 
     /**
@@ -69,5 +67,42 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
             );
 
         return $campaign;
+    }
+
+    /**
+     * @param Contact $contact
+     *
+     * @return Contact
+     */
+    protected function findExistingContact(Contact $contact)
+    {
+        $existing = $this->strategyHelper
+            ->getEntityManager('OroCRMDotmailerBundle:Contact')
+            ->getRepository('OroCRMDotmailerBundle:Contact')
+            ->findOneBy(
+                [
+                    'channel'  => $contact->getChannel(),
+                    'originId' => $contact->getOriginId()
+                ]
+            );
+
+        return $existing;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function processEntity(
+        $entity,
+        $isFullData = false,
+        $isPersistNew = false,
+        $itemData = null,
+        array $searchContext = array()
+    ) {
+        if (!$entity) {
+            return null;
+        }
+
+        return parent::processEntity($entity, $isFullData, $isPersistNew, $itemData, $searchContext);
     }
 }
