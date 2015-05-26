@@ -20,7 +20,7 @@ class CampaignStrategy extends AddOrReplaceStrategy
 
         if ($entity instanceof Campaign && !$this->databaseHelper->getIdentifier($entity)) {
             $newImportedCampaigns = $this->context->getValue('newImportedItems')?:[];
-            $newImportedCampaigns[$entity->getOriginId()] = true;
+            $newImportedCampaigns[$entity->getOriginId()] = $entity;
             $this->context->setValue('newImportedItems', $newImportedCampaigns);
         }
 
@@ -34,6 +34,14 @@ class CampaignStrategy extends AddOrReplaceStrategy
     {
         /** @var Campaign $entity */
         if ($entity) {
+            $newImportedCampaigns = $this->context->getValue('newImportedItems');
+            /**
+             * Fix case if this campaign already imported on this batch
+             */
+            if ($newImportedCampaigns && isset($newImportedCampaigns[$entity->getOriginId()])) {
+                $entity = $newImportedCampaigns[$entity->getOriginId()];
+            }
+
             $addressBook = $this->getAddressBook($entity->getChannel());
             if ($addressBook) {
                 $entity->addAddressBook($addressBook);
@@ -41,14 +49,6 @@ class CampaignStrategy extends AddOrReplaceStrategy
                 throw new RuntimeException(
                     sprintf('Address book for campaign %s not found', $entity->getOriginId())
                 );
-            }
-
-            $newImportedCampaigns = $this->context->getValue('newImportedItems');
-            /**
-             * Fix case if this campaign already imported on this batch
-             */
-            if ($newImportedCampaigns && isset($newImportedCampaigns[$entity->getOriginId()])) {
-                return null;
             }
         }
         return parent::afterProcessEntity($entity);

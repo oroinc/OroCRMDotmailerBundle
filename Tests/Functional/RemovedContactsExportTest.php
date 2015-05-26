@@ -30,6 +30,7 @@ class RemovedContactsExportTest extends AbstractImportExportTest
         $channel = $this->getReference('orocrm_dotmailer.channel.fourth');
         $addressBook = $this->getReference('orocrm_dotmailer.address_book.fifth');
         $expectedContact = $this->getReference('orocrm_dotmailer.contact.removed');
+        $expectedNotRemoveContact = $this->getReference('orocrm_dotmailer.contact.synced');
 
         $addressBookContact = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBookContact')
@@ -73,5 +74,15 @@ class RemovedContactsExportTest extends AbstractImportExportTest
                 ]
             );
         $this->assertNull($addressBookContact);
+
+        $addressBookContact = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:AddressBookContact')
+            ->findOneBy(
+                [
+                    'addressBook' => $addressBook,
+                    'contact' => $expectedNotRemoveContact
+                ]
+            );
+        $this->assertNotNull($addressBookContact);
     }
 }

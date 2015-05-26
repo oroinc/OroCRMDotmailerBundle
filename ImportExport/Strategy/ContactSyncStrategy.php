@@ -24,44 +24,71 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
     /**
      * {@inheritdoc}
      */
+    public function process($entity)
+    {
+        $entity = parent::process($entity);
+
+        if ($entity instanceof Contact) {
+            $importedContacts = $this->context->getValue('newImportedItems') ?: [];
+            $importedContacts[$entity->getOriginId()] = $entity;
+            $this->context->setValue('newImportedItems', $importedContacts);
+        }
+
+        return $entity;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function afterProcessEntity($entity)
     {
         /** @var Contact $entity */
         if ($entity) {
+            $addressBook = $this->getAddressBook($entity->getChannel());
+            if (!$addressBook) {
+                throw new RuntimeException(
+                    sprintf('Address book for contact %s not found', $entity->getOriginId())
+                );
+            }
+            $newImportedContacts = $this->context->getValue('newImportedItems');
+            $addressBookContact = null;
+            /**
+             * Fix case if this contact already imported on this batch
+             */
+            if ($newImportedContacts && isset($newImportedContacts[$entity->getOriginId()])) {
+                $entity = $newImportedContacts[$entity->getOriginId()];
+                foreach ($entity->getAddressBookContacts() as $addressBookContact) {
+                    if ($addressBookContact->getAddressBook()->getId() == $addressBook->getId()) {
+                        break;
+                    }
+                }
+
+            } elseif ($entity->getId()) {
+                $addressBookContact = $this->getRepository('OroCRMDotmailerBundle:AddressBookContact')
+                    ->findOneBy(['addressBook' => $addressBook, 'contact' => $entity]);
+            }
+
             if (!$entity->getId()) {
                 $status = $this->getEnumValue('dm_cnt_status', Contact::STATUS_SUBSCRIBED);
                 $entity->setStatus($status);
             }
 
-            $addressBook = $this->getAddressBook($entity->getChannel());
-            if ($addressBook) {
-                $addressBookContact = null;
-                if ($entity->getId()) {
-                    $addressBookContact = $this->getRepository('OroCRMDotmailerBundle:AddressBookContact')
-                        ->findOneBy(['addressBook' => $addressBook, 'contact' => $entity]);
-                }
+            if (is_null($addressBookContact)) {
+                $addressBookContact = new AddressBookContact();
+                $addressBookContact->setAddressBook($addressBook);
+                $addressBookContact->setChannel($addressBook->getChannel());
 
-                if (is_null($addressBookContact)) {
-                    $addressBookContact = new AddressBookContact();
-                    $addressBookContact->setAddressBook($addressBook);
-                    $addressBookContact->setChannel($addressBook->getChannel());
-
-                    $status = $this->getEnumValue('dm_cnt_status', Contact::STATUS_SUBSCRIBED);
-                    $addressBookContact->setStatus($status);
-                    $entity->addAddressBookContact($addressBookContact);
-                }
-                $addressBookContact->setMarketingListItemId(
-                    $this->getMarketingListItemId()
-                );
-                $addressBookContact->setMarketingListItemClass(
-                    $addressBook->getMarketingList()->getEntity()
-                );
-                $addressBookContact->setScheduledForExport(true);
-            } else {
-                throw new RuntimeException(
-                    sprintf('Address book for contact %s not found', $entity->getOriginId())
-                );
+                $status = $this->getEnumValue('dm_cnt_status', Contact::STATUS_SUBSCRIBED);
+                $addressBookContact->setStatus($status);
+                $entity->addAddressBookContact($addressBookContact);
             }
+            $addressBookContact->setMarketingListItemId(
+                $this->getMarketingListItemId()
+            );
+            $addressBookContact->setMarketingListItemClass(
+                $addressBook->getMarketingList()->getEntity()
+            );
+            $addressBookContact->setScheduledForExport(true);
         }
 
         return parent::afterProcessEntity($entity);

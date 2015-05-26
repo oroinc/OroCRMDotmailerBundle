@@ -115,7 +115,8 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
                 [
                     'addressBook'         => 'orocrm_dotmailer.address_book.fifth',
                     'status'              => Contact::STATUS_SUBSCRIBED,
-                    'marketing_list_item' => 'orocrm_dotmailer.orocrm_contact.john.case'
+                    /** check situation where email is presented in marketing list but item is new */
+                    'marketing_list_item' => 'orocrm_dotmailer.orocrm_contact.john.smith'
                 ]
             ],
         ],
