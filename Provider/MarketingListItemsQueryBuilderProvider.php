@@ -146,9 +146,20 @@ class MarketingListItemsQueryBuilderProvider
     public function getRemovedMarketingListItemsQB(AddressBook $addressBook)
     {
         $qb = $this->getMarketingListItemQuery($addressBook);
-        $aliases = $qb->getRootAliases();
-        $qb->select(sprintf('%s.id', reset($aliases)));
+        $marketingList = $addressBook->getMarketingList();
+        $contactInformationFields = $this->contactInformationFieldsProvider->getMarketingListTypedFields(
+            $marketingList,
+            ContactInformationFieldsProvider::CONTACT_INFORMATION_SCOPE_EMAIL
+        );
+
+        foreach ($contactInformationFields as $contactInformationField) {
+            $contactInformationFieldExpr = $this->fieldHelper
+                ->getFieldExpr($marketingList->getEntity(), $qb, $contactInformationField);
+
+            $qb->select($contactInformationFieldExpr);
+        }
         $removedItemsQueryBuilder = clone $qb;
+        $expr = $removedItemsQueryBuilder->expr();
         $removedItemsQueryBuilder
             ->resetDQLParts()
             ->select('addressBookContact.id')
@@ -173,8 +184,7 @@ class MarketingListItemsQueryBuilderProvider
              * Select only Address book contacts for which marketing list items not exist
              */
             ->andWhere(
-                $removedItemsQueryBuilder->expr()
-                    ->notIn('addressBookContact.marketingListItemId', $qb->getDQL())
+                $expr->notIn('contact.email', $qb->getDQL())
             )->andWhere(
                 $removedItemsQueryBuilder->expr()->isNotNull('addressBookContact.marketingListItemId')
             );

@@ -22,7 +22,7 @@ class ContactStrategy extends AddOrReplaceStrategy
 
         if ($entity instanceof Contact && !$this->databaseHelper->getIdentifier($entity)) {
             $newImportedContacts = $this->context->getValue('newImportedItems') ?: [];
-            $newImportedContacts[$entity->getOriginId()] = true;
+            $newImportedContacts[$entity->getOriginId()] = $entity;
             $this->context->setValue('newImportedItems', $newImportedContacts);
         }
 
@@ -36,6 +36,13 @@ class ContactStrategy extends AddOrReplaceStrategy
     {
         /** @var Contact $entity */
         if ($entity) {
+            $newImportedContacts = $this->context->getValue('newImportedItems');
+            /**
+             * Fix case if this contact already imported on this batch
+             */
+            if ($newImportedContacts && isset($newImportedContacts[$entity->getOriginId()])) {
+                $entity = $newImportedContacts[$entity->getOriginId()];
+            }
             $addressBook = $this->getAddressBook($entity->getChannel());
             if ($addressBook) {
                 $addressBookContact = null;
@@ -56,14 +63,6 @@ class ContactStrategy extends AddOrReplaceStrategy
                 throw new RuntimeException(
                     sprintf('Address book for contact %s not found', $entity->getOriginId())
                 );
-            }
-
-            $newImportedContacts = $this->context->getValue('newImportedItems');
-            /**
-             * Fix case if this contact already imported on this batch
-             */
-            if ($newImportedContacts && isset($newImportedContacts[$entity->getOriginId()])) {
-                return null;
             }
         }
 
