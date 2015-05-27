@@ -530,6 +530,7 @@ services:
             - @doctrine
             - @orocrm_dotmailer.transport.integration_transport
             - @oro_importexport.context_registry
+            - @oro_integration.logger.strategy
 
     orocrm_dotmailer.importexport.writer.export.contacts:
         class: %orocrm_dotmailer.importexport.writer.export.contacts.class%
@@ -537,6 +538,7 @@ services:
             - @doctrine
             - @orocrm_dotmailer.transport.integration_transport
             - @oro_importexport.context_registry
+            - @oro_integration.logger.strategy
 
     #emailCampaign Voter
     orocrm_dotmailer.email_campaign.security.acl.voter.entity:

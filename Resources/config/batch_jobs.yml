@@ -11,7 +11,7 @@ connector:
                     services:
                         reader:    orocrm_dotmailer.connector.address_book
                         processor: orocrm_dotmailer.importexport.processor.address_book
-                        writer:    oro_integration.writer.persistent_batch_writer
+                        writer:    orocrm_dotmailer.importexport.writer.import
                     parameters:
                         batch_size: 25
 
@@ -39,7 +39,7 @@ connector:
                     services:
                         reader:    orocrm_dotmailer.connector.unsubscribed_contacts
                         processor: orocrm_dotmailer.importexport.processor.unsubscribed_contacts
-                        writer:    oro_integration.writer.persistent_batch_writer
+                        writer:    orocrm_dotmailer.importexport.writer.import
                     parameters:
                         batch_size: 25
                 unsubscribed_from_account_contacts_import:
@@ -48,7 +48,7 @@ connector:
                     services:
                           reader:    orocrm_dotmailer.importexport.reader.unsubscribed_from_account_contacts
                           processor: orocrm_dotmailer.importexport.processor.unsubscribed_from_account_contacts
-                          writer:    oro_integration.writer.persistent_batch_writer
+                          writer:    orocrm_dotmailer.importexport.writer.import
                     parameters:
                         batch_size: 25
 
@@ -76,7 +76,7 @@ connector:
                     services:
                         reader:    orocrm_dotmailer.connector.activity_contact
                         processor: orocrm_dotmailer.importexport.processor.activity_contact
-                        writer:    oro_integration.writer.persistent_batch_writer
+                        writer:    orocrm_dotmailer.importexport.writer.import
                     parameters:
                         batch_size: 100
 
@@ -90,7 +90,7 @@ connector:
                     services:
                         reader:    orocrm_dotmailer.connector.campaign_summary
                         processor: orocrm_dotmailer.importexport.processor.campaign_summary
-                        writer:    oro_integration.writer.persistent_batch_writer
+                        writer:    orocrm_dotmailer.importexport.writer.import
                     parameters:
                         batch_size: 100
 
