@@ -8,6 +8,7 @@ orocrm:
         integration:
             select.placeholder: Choose Dotmailer integration
             label: Integration
+            check_connection.label: Check Connection
 
         integration_transport:
             label: Dotmailer
