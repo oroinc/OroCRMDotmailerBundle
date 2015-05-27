@@ -7,7 +7,7 @@ orocrm:
 
         integration:
             select.placeholder: Choose Dotmailer integration
-            label: Channel
+            label: Integration
 
         integration_transport:
             label: Dotmailer
@@ -17,20 +17,24 @@ orocrm:
                 label: Password
 
         addressbook:
-            select.placeholder:   Select Address Book
-            entity_label:         Address Book
-            campaigns.label:      Campaign
-            channel.label:        Channel
-            contact_count.label:  Contacts count
-            contacts.label:       Contacts
-            id.label:             Id
-            marketing_list.label: Marketing List
-            name.label:           Name
-            origin_id.label:      Origin Id
-            owner.label:          Owner
-            visibility.label:     Visibility
-            lastSynced.label:     Last Synced Date
-            status.label:         Status
+            select.placeholder:                   Select Address Book
+            entity_label:                         Address Book
+            campaigns.label:                      Campaign
+            channel.label:                        Channel
+            contact_count.label:                  Contacts count
+            contacts.label:                       Contacts
+            id.label:                             Id
+            marketing_list.label:                 Marketing List
+            name.label:                           Name
+            origin_id.label:                      Origin Id
+            owner.label:                          Owner
+            visibility.label:                     Visibility
+            lastSynced.label:                     Last Synced Date
+            status.label:                         Status
+            address_book_contacts.label:          Address Book Contacts
+            address_book_contacts_exports.label:  Address Book Contacts Export
+            last_synced.label:                    Last Synced At
+            sync_status.label:                    Sync Status
 
             sync: Marketing list synchronization started. {{ job_view_link }}
 
@@ -57,23 +61,26 @@ orocrm:
             unsubscribed.label:           Unsubscribed
 
         contact:
-            entity_label:           Dotmailer Contact
-            activities.label:       Activities
-            address_books.label:    Address Books
-            channel.label:          Channel
-            email.label:            Email
-            email_type.label:       Email Type
-            first_name.label:       First Name
-            full_name.label:        Full Name
-            gender.label:           Gender
-            id.label:               Id
-            last_name.label:        Last Name
-            merge_var_values.label: Merge Variable Values
-            opt_in_type.label:      Opt In Type
-            origin_id.label:        Origin Id
-            owner.label:            Owner
-            postcode.label:         Postal Code
-            status.label:           Status
+            entity_label:                 Dotmailer Contact
+            activities.label:             Activities
+            address_books.label:          Address Books
+            channel.label:                Channel
+            email.label:                  Email
+            email_type.label:             Email Type
+            first_name.label:             First Name
+            full_name.label:              Full Name
+            gender.label:                 Gender
+            id.label:                     Id
+            last_name.label:              Last Name
+            merge_var_values.label:       Merge Variable Values
+            opt_in_type.label:            Opt In Type
+            origin_id.label:              Origin Id
+            owner.label:                  Owner
+            postcode.label:               Postal Code
+            status.label:                 Status
+            address_book_contacts.label:  Address Book Contacts
+            last_subscribed_date.label:   Last Subscribed Date
+            unsubscribed_date.label:      Unsubscribed Date
 
         campaign:
             entity_label:             Dotmailer Campaign
@@ -93,23 +100,82 @@ orocrm:
             reply_to_address.label:   Reply To Address
             status.label:             Status
             subject.label:            Subject
+            campaign_summary.label:   Campaign Summary
+            email_campaign.label:     Email Campaign
+
+        campaignsummary:
+            entity_label:                       Campaign summary
+            campaign.label:                     Campaign
+            channel.label:                      Integration
+            date_sent.label:                    Date sent
+            id.label:                           Id
+            num_sent.label:                     Sent number
+            num_clicks.label:                   Clicks number
+            num_delivered.label:                Delivered number
+            num_estimated_forwards.label:       Estimated forwards number
+            num_forwards.label:                 Forwards number
+            num_hard_bounces.label:             Hard Bounces number
+            num_isp_complaints.label:           Isp Complaints number
+            num_mail_blocks.label:              Mail Blocks number
+            num_opens.label:                    Opens number
+            num_page_views.label:               Page Views number
+            num_recipients_clicked.label:       Recipients Clicked number
+            num_replies.label:                  Replies number
+            num_soft_bounces.label:             Soft bounces number
+            num_text_clicks.label:              Text Clicks number
+            num_text_delivered.label:           Text Delivered number
+            num_text_estimated_forwards.label:  Text Estimated forwards number
+            num_text_forwards.label:            Text Forwards number
+            num_text_hard_bounces.label:        Text Hard Bounces number
+            num_text_isp_complaints.label:      Text Isp Complaints number
+            num_text_mail_blocks.label:         Text Mail Blocks number
+            num_text_opens.label:               Text Opens number
+            num_text_page_views.label:          Text Page Views number
+            num_text_replies.label:             Text Replies number
+            num_text_sent.label:                Text Sent number
+            num_text_soft_bounces.label:        Text Soft bounces number
+            num_text_unsubscribes.label:        Text Unsubscribed number
+            num_total_clicks.label:             Total Clics number
+            num_total_delivered.label:          Total Delivered number
+            num_total_estimated_forwards.label: Total Estimated Forwards number
+            num_total_hard_bounces.label:       Total Hard Bounces number
+            num_total_isp_complaints.label:     Total Isp Complains number
+            num_total_mail_blocks.label:        Total Mail Blocks number
+            num_total_opens.label:              Total Opens number
+            num_total_page_views.label:         Total Page Views number
+            num_total_replies.label:            Total Replies number
+            num_total_sent.label:               Total Sent number
+            num_total_soft_bounces.label:       Total Soft Bounces number
+            num_total_unique_opens.label:       Total Unique Opens number
+            num_total_unsubscribes.label:       Total Unsubscribes number
+            num_unique_opens.label:             Unique Opens number
+            num_unique_text_opens.label:        Unique Text Opens number
+            num_unsubscribes.label:             Unsubscribes number
+            owner.label:                        Owner
+            percentage_clicks_to_opens.label:   Clicks to Opens percentage
+            percentage_delivered.label:         Delivered percentage
 
         addressbookcontact:
-            entity_label: Address Book Contact
-            address_book.label: Address Book
-            contact.label: Contact
-            id.label: Id
-            status.label: Status
-            unsubscribed_date.label: Unsubscribed Date
+            entity_label:                     Address Book Contact
+            address_book.label:               Address Book
+            contact.label:                    Contact
+            id.label:                         Id
+            status.label:                     Status
+            unsubscribed_date.label:          Unsubscribed Date
+            channel.label:                    Integration
+            marketing_list_item_class.label:  Marketing List Item Class Name
+            marketing_list_item_id.label:     Marketing List Item Id
+            scheduled_for_export.label:       Scheduled for Export
 
         addressbookcontactsexport:
-            entity_label: Address Book Contact Export
-            address_book.label: Address Book
-            created_at.label: Created At
-            id.label: Id
-            import_id.label: Import Id
-            status.label: Status
-            updated_at.label: Updated At
+            entity_label:                     Address Book Contact Export
+            address_book.label:               Address Book
+            created_at.label:                 Created At
+            id.label:                         Id
+            import_id.label:                  Import Id
+            status.label:                     Status
+            updated_at.label:                 Updated At
+            channel.label:                    Integration
 
         connector:
             campaign:

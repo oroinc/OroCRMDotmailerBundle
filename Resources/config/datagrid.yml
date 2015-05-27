@@ -9,6 +9,7 @@ datagrid:
             type: orm
             query:
                 select:
+                    - addressBook.id
                     - addressBook.name
                     - addressBook.contactCount
                 from:
@@ -18,6 +19,7 @@ datagrid:
                         - { join: addressBook.visibility, alias: address_book_visibility }
                 where:
                     and:
+                        - addressBook.marketingList IS NULL
                         - addressBook.owner = @oro_security.security_facade->getOrganizationId
         columns:
             name:
