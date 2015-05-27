@@ -23,6 +23,7 @@ parameters:
     orocrm_dotmailer.form.type.marketing_list_connection.class:       OroCRM\Bundle\DotmailerBundle\Form\Type\MarketingListConnectionType
     orocrm_dotmailer.form.type.integration_select.class:              OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType
     orocrm_dotmailer.form.type.address_book_select.class:             OroCRM\Bundle\DotmailerBundle\Form\Type\AddressBookSelectType
+    orocrm_dotmailer.form.type.transport_check.class:                 OroCRM\Bundle\DotmailerBundle\Form\Type\DotmailerTransportCheckButtonType
     orocrm_dotmailer.form.extension.channel_connectors.class:         OroCRM\Bundle\DotmailerBundle\Form\Extension\ChannelConnectorsExtension
 
     #Form handlers
@@ -145,6 +146,11 @@ services:
         class: %orocrm_dotmailer.form.extension.channel_connectors.class%
         tags:
             - { name: form.type_extension, alias: oro_integration_channel_form }
+
+    orocrm_dotmailer.form.type.soap_transport_check:
+        class: %orocrm_dotmailer.form.type.transport_check.class%
+        tags:
+            - { name: form.type, alias: orocrm_dotmailer_transport_check_button }
 
     #Form handlers
     orocrm_dotmailer.form.handler.connection_update:

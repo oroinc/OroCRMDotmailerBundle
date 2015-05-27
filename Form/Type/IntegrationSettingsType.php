@@ -33,6 +33,12 @@ class IntegrationSettingsType extends AbstractType
                     'tooltip'  => 'orocrm.dotmailer.form.password.tooltip',
                     'required' => true
                 ]
+            )->add(
+                'check',
+                'orocrm_dotmailer_transport_check_button',
+                [
+                    'label' => 'orocrm.dotmailer.integration.check_connection.label'
+                ]
             );
     }
 
