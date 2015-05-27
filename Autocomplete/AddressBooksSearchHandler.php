@@ -21,14 +21,16 @@ class AddressBooksSearchHandler extends SearchHandler
      */
     protected function searchEntities($search, $firstResult, $maxResults)
     {
-        list($searchTerm, $channelId) = explode(';', $search);
+        list($searchTerm, $channelId, $marketingListId) = explode(';', $search);
 
         $queryBuilder = $this->entityRepository->createQueryBuilder('e');
         $queryBuilder
             ->where($queryBuilder->expr()->like('LOWER(e.name)', ':searchTerm'))
             ->andWhere('e.channel = :channel')
+            ->andWhere('e.marketingList IS NULL or e.marketingList =:marketingList')
             ->setParameter('searchTerm', '%' . strtolower($searchTerm) . '%')
             ->setParameter('channel', (int)$channelId)
+            ->setParameter('marketingList', (int)$marketingListId)
             ->addOrderBy('e.name', 'ASC')
             ->setFirstResult($firstResult)
             ->setMaxResults($maxResults);

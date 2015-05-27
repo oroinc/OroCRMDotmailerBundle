@@ -18,6 +18,8 @@ class MarketingListConnectionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $marketingList = $options['marketingList'];
+
         $builder
             ->add(
                 'channel',
@@ -34,11 +36,11 @@ class MarketingListConnectionType extends AbstractType
                     'label'         => 'orocrm.dotmailer.addressbook.entity_label',
                     'required'      => true,
                     'channel_field' => 'channel',
+                    'marketing_list_id' => $marketingList->getId(),
                     'constraints'   => [new NotBlank()],
                 ]
             );
 
-        $marketingList = $options['marketingList'];
         $builder->get('addressBook')
             ->addEventListener(
                 FormEvents::POST_SUBMIT,

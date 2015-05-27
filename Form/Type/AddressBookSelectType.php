@@ -2,10 +2,13 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class AddressBookSelectType extends AbstractType
+use OroCRM\Bundle\ChannelBundle\Form\Type\CreateOrSelectInlineChannelAwareType;
+
+class AddressBookSelectType extends CreateOrSelectInlineChannelAwareType
 {
     const NAME = 'orocrm_dotmailer_address_book_list_select';
 
@@ -14,15 +17,27 @@ class AddressBookSelectType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
+        $resolver->setRequired(['marketing_list_id']);
         $resolver->setDefaults(
             [
                 'autocomplete_alias' => 'dotmailer_address_books',
                 'grid_name'          => 'orocrm_dotmailer_address_books_grid',
                 'configs'            => [
-                    'placeholder' => 'orocrm.dotmailer.addressbook.select.placeholder'
+                    'placeholder'  => 'orocrm.dotmailer.addressbook.select.placeholder',
                 ]
             ]
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::buildView($view, $form, $options);
+
+        $view->vars['configs']['extra_config'] .= '_address_book';
+        $view->vars['marketing_list_id'] = isset($options['marketing_list_id']) ? $options['marketing_list_id'] : null;
     }
 
     /**
