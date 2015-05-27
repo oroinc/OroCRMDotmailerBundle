@@ -6,7 +6,10 @@ use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 use Akeneo\Bundle\BatchBundle\Item\ItemWriterInterface;
 use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 
+use Psr\Log\LoggerInterface;
+
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
@@ -40,18 +43,31 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
     protected $context;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * @var StepExecution
+     */
+    protected $stepExecution;
+
+    /**
      * @param ManagerRegistry    $registry
      * @param DotmailerTransport $transport
      * @param ContextRegistry    $contextRegistry
+     * @param LoggerInterface    $logger
      */
     public function __construct(
         ManagerRegistry $registry,
         DotmailerTransport $transport,
-        ContextRegistry $contextRegistry
+        ContextRegistry $contextRegistry,
+        LoggerInterface $logger
     ) {
         $this->registry = $registry;
         $this->transport = $transport;
         $this->contextRegistry = $contextRegistry;
+        $this->logger = $logger;
     }
 
     /**
@@ -70,10 +86,26 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
 
             $addressBookItems[$addressBookOriginId][] = $item;
         }
-        foreach ($addressBookItems as $addressBookOriginId => $items) {
-            $this->removeAddressBookContacts($items, $repository, $addressBookOriginId);
+        /** @var EntityManager $em */
+        $em = $this->registry->getManager();
+
+        $em->beginTransaction();
+        try {
+            foreach ($addressBookItems as $addressBookOriginId => $items) {
+                $this->removeAddressBookContacts($items, $repository, $addressBookOriginId);
+            }
+            $em->commit();
+            $this->logger->info('Batch finished');
+        } catch (\Exception $e) {
+            $em->rollback();
+            if (!$em->isOpen()) {
+                $this->registry->resetManager();
+            }
+
+            throw $e;
         }
     }
+
 
     /**
      * @param array            $items
@@ -93,6 +125,8 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
             $removingItemsIds[] = $item['id'];
             $removingItemsOriginIds[] = $item['originId'];
 
+            $this->context->incrementDeleteCount();
+
             if (++$removingItemsIdsCount != static::BATCH_SIZE) {
                 continue;
             }
@@ -111,8 +145,33 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
          * Operation is Async in Dotmailer side
          */
         $this->transport->removeContactsFromAddressBook($removingItemsOriginIds, $addressBookOriginId);
+
+        $this->logBatchInfo($removingItemsOriginIds, $addressBookOriginId);
     }
 
+    /**
+     * @param array $items
+     * @param int   $addressBookOriginId
+     */
+    protected function logBatchInfo(array $items, $addressBookOriginId)
+    {
+        $itemsCount = count($items);
+        $now = microtime(true);
+        $previousBatchFinishTime = $this->context->getValue('recordingTime');
+
+        $message = "$itemsCount Contacts removed from Dotmailer Address Book with Id: $addressBookOriginId.";
+        if ($previousBatchFinishTime) {
+            $spent = $now - $previousBatchFinishTime;
+            $message .= "Time spent: $spent seconds.";
+        }
+        $memoryUsed = memory_get_usage(true);
+        $memoryUsed = $memoryUsed / 1048576;
+        $message .= "Memory used $memoryUsed MB .";
+
+        $this->logger->info($message);
+
+        $this->context->setValue('recordingTime', $now);
+    }
 
     /**
      * @return Channel
