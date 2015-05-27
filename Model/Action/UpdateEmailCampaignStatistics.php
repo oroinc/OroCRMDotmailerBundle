@@ -88,7 +88,7 @@ class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
             );
 
             $marketingListItem = $emailCampaignStatistics->getMarketingListItem();
-            $marketingListItem->setLastContactedAt($activity->getDateLastOpened());
+            $marketingListItem->setLastContactedAt($activity->getDateSent());
             $emailCampaignStatistics->setOpenCount($activity->getNumOpens());
             $emailCampaignStatistics->setClickCount($activity->getNumClicks());
             $emailCampaignStatistics->setBounceCount((int)$activity->isSoftBounced() + (int)$activity->isHardBounced());
