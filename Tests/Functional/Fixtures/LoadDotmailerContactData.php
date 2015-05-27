@@ -145,10 +145,44 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'email_type'   => Contact::EMAIL_TYPE_PLAINTEXT,
             'addressBooks' => [
                 [
-                    'addressBook'         => 'orocrm_dotmailer.address_book.fifth',
-                    'status'              => Contact::STATUS_SUBSCRIBED
+                    'addressBook' => 'orocrm_dotmailer.address_book.fifth',
+                    'status'      => Contact::STATUS_SUBSCRIBED
                 ]
             ],
+        ],
+        [
+            'originId'     => 149,
+            'email'        => 'nick.case@example.com',
+            'firstName'    => 'Test149',
+            'lastName'     => 'Test149',
+            'gender'       => 'male',
+            'channel'      => 'orocrm_dotmailer.channel.fourth',
+            'reference'    => 'orocrm_dotmailer.contact.removed_as_unsubscribed',
+            'status'       => ApiContactStatuses::SUBSCRIBED,
+            'addressBooks' => [
+                [
+                    'addressBook'         => 'orocrm_dotmailer.address_book.fifth',
+                    'status'              => Contact::STATUS_SUBSCRIBED,
+                    'marketing_list_item' => 'orocrm_dotmailer.orocrm_contact.nick.case'
+                ]
+            ]
+        ],
+        [
+            'originId'     => 150,
+            'email'        => 'mike.case@example.com',
+            'firstName'    => 'Test150',
+            'lastName'     => 'Test150',
+            'gender'       => 'male',
+            'channel'      => 'orocrm_dotmailer.channel.fourth',
+            'reference'    => 'orocrm_dotmailer.contact.removed_from_marketing_list',
+            'status'       => ApiContactStatuses::SUBSCRIBED,
+            'addressBooks' => [
+                [
+                    'addressBook'         => 'orocrm_dotmailer.address_book.fifth',
+                    'status'              => Contact::STATUS_SUBSCRIBED,
+                    'marketing_list_item' => 'orocrm_dotmailer.orocrm_contact.mike.case'
+                ]
+            ]
         ],
     ];
 
@@ -171,35 +205,9 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             $this->resolveReferenceIfExist($item, 'channel');
 
             if (!empty($item['addressBooks'])) {
-                foreach ($item['addressBooks'] as $data) {
-                    $addressBookContact = new AddressBookContact();
-                    $status = $this->findEnum('dm_cnt_status', Contact::STATUS_SUBSCRIBED);
-                    if (is_scalar($data)) {
-                        $addressBook = $this->getReference($data);
-                    } else {
-                        $addressBook = $this->getReference($data['addressBook']);
-
-                        if (isset($data['marketing_list_item'])) {
-                            $marketingListItem = $this->getReference($data['marketing_list_item']);
-                            $addressBookContact->setMarketingListItemId($marketingListItem->getId());
-                            $addressBookContact->setMarketingListItemClass(
-                                'OroCRM\Bundle\ContactBundle\Entity\Contact'
-                            );
-                        }
-                        if (isset($data['status'])) {
-                            $status = $this->findEnum('dm_cnt_status', $data['status']);
-                        }
-                    }
-
-                    $addressBookContact->setAddressBook($addressBook);
-                    $addressBookContact->setStatus($status);
-                    $addressBookContact->setChannel($item['channel']);
-                    if (empty($item['originId'])) {
-                        $addressBookContact->setScheduledForExport(true);
-                    }
-                    $contact->addAddressBookContact($addressBookContact);
-                }
+                $item = $this->resolveAddressBookRelations($item, $contact, $manager);
             }
+
 
             if (!empty($item['createdAt'])) {
                 $item['createdAt'] = new \DateTime($item['createdAt']);
@@ -242,5 +250,47 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData',
             'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadContactData',
         ];
+    }
+
+    /**
+     * @param array         $item
+     * @param Contact       $contact
+     * @param ObjectManager $manager
+     *
+     * @return mixed
+     */
+    protected function resolveAddressBookRelations(array $item, Contact $contact, ObjectManager $manager)
+    {
+        foreach ($item['addressBooks'] as $data) {
+            $addressBookContact = new AddressBookContact();
+            $status = $this->findEnum('dm_cnt_status', Contact::STATUS_SUBSCRIBED);
+            if (is_scalar($data)) {
+                $addressBook = $this->getReference($data);
+            } else {
+                $addressBook = $this->getReference($data['addressBook']);
+
+                if (isset($data['marketing_list_item'])) {
+                    $marketingListItem = $this->getReference($data['marketing_list_item']);
+                    $addressBookContact->setMarketingListItemId($marketingListItem->getId());
+                    $addressBookContact->setMarketingListItemClass(
+                        'OroCRM\Bundle\ContactBundle\Entity\Contact'
+                    );
+                }
+
+                if (isset($data['status'])) {
+                    $status = $this->findEnum('dm_cnt_status', $data['status']);
+                }
+            }
+
+            $addressBookContact->setAddressBook($addressBook);
+            $addressBookContact->setStatus($status);
+            $addressBookContact->setChannel($item['channel']);
+            if (empty($item['originId'])) {
+                $addressBookContact->setScheduledForExport(true);
+            }
+            $contact->addAddressBookContact($addressBookContact);
+        }
+
+        return $item;
     }
 }
