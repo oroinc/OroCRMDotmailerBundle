@@ -20,7 +20,8 @@ class RemovedContactsExportTest extends AbstractImportExportTest
         parent::setUp();
         $this->loadFixtures(
             [
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData'
+                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadMarketingListUnsubscribedData',
+                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadMarketingListRemovedData',
             ]
         );
     }
@@ -29,18 +30,28 @@ class RemovedContactsExportTest extends AbstractImportExportTest
     {
         $channel = $this->getReference('orocrm_dotmailer.channel.fourth');
         $addressBook = $this->getReference('orocrm_dotmailer.address_book.fifth');
-        $expectedContact = $this->getReference('orocrm_dotmailer.contact.removed');
+        $expectedRemoved = [
+            $this->getReference('orocrm_dotmailer.contact.removed'),
+            $this->getReference('orocrm_dotmailer.contact.removed_as_unsubscribed'),
+            $this->getReference('orocrm_dotmailer.contact.removed_from_marketing_list'),
+        ];
         $expectedNotRemoveContact = $this->getReference('orocrm_dotmailer.contact.synced');
 
-        $addressBookContact = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContact')
-            ->findOneBy(
-                [
-                    'addressBook' => $addressBook,
-                    'contact' => $expectedContact
-                ]
-            );
-        $this->assertNotNull($addressBookContact);
+        foreach ($expectedRemoved as $contact) {
+            /**
+             * Check fixtures loaded correctly
+             */
+            $addressBookContact = $this->managerRegistry
+                ->getRepository('OroCRMDotmailerBundle:AddressBookContact')
+                ->findOneBy(
+                    [
+                        'addressBook' => $addressBook,
+                        'contact' => $contact
+                    ]
+                );
+            $this->assertNotNull($addressBookContact);
+        }
+
 
         $import = new ApiContactImport();
         $import->id = '391da8d7-70f0-405b-98d4-02faa41d499d';
@@ -50,10 +61,9 @@ class RemovedContactsExportTest extends AbstractImportExportTest
             ->method('PostAddressBookContactsImport')
             ->will($this->returnValue($import));
         $expectedApiContact = new Int32List(
-            [
-
-                $expectedContact->getOriginId()
-            ]
+            array_map(function ($contact) {
+                return $contact->getOriginId();
+            }, $expectedRemoved)
         );
         $expectedAddressBook = $addressBook->getOriginId();
         $this->resource
@@ -65,15 +75,20 @@ class RemovedContactsExportTest extends AbstractImportExportTest
         $processor->process($channel, ContactConnector::TYPE, []);
 
 
-        $addressBookContact = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContact')
-            ->findOneBy(
-                [
-                    'addressBook' => $addressBook,
-                    'contact' => $expectedContact
-                ]
-            );
-        $this->assertNull($addressBookContact);
+        foreach ($expectedRemoved as $contact) {
+            /**
+             * Check removed from db
+             */
+            $addressBookContact = $this->managerRegistry
+                ->getRepository('OroCRMDotmailerBundle:AddressBookContact')
+                ->findOneBy(
+                    [
+                        'addressBook' => $addressBook,
+                        'contact' => $contact
+                    ]
+                );
+            $this->assertNull($addressBookContact);
+        }
 
         $addressBookContact = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBookContact')

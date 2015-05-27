@@ -222,7 +222,7 @@ class MarketingListItemsQueryBuilderProvider
                 $this->unsubscribedItemClassName,
                 'mlu',
                 Join::WITH,
-                "mlu.entityId = $entityAlias.id and mlr.marketingList =:marketingList"
+                "mlu.entityId = $entityAlias.id and mlu.marketingList =:marketingList"
             )
             ->andWhere($expr->isNull('mlu.id'))
             ->setParameter('marketingList', $marketingList);
