@@ -7,7 +7,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemovedContactsExp
 
 class RemovedContactsExportReader extends AbstractExportReader
 {
-    protected function afterInitialize()
+    protected function initializeReader()
     {
         $iterator = new \AppendIterator();
         $addressBooks = $this->getAddressBooksToSync();

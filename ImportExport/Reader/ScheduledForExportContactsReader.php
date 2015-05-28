@@ -6,7 +6,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExport
 
 class ScheduledForExportContactsReader extends AbstractExportReader
 {
-    protected function afterInitialize()
+    protected function initializeReader()
     {
         $iterator = new \AppendIterator();
         $addressBooks = $this->getAddressBooksToSync();
