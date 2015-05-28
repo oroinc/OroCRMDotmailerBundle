@@ -47,6 +47,19 @@ class LoadCampaignData extends AbstractFixture implements ContainerAwareInterfac
             'channel'       => 'orocrm_dotmailer.channel.first',
             'reference'     => 'orocrm_dotmailer.campaign.second'
         ],
+        [
+            'originId'      => 15664,
+            'name'          => 'Removed Campaign',
+            'subject'       => 'Removed Campaign',
+            'fromName'      => 'CityBeach',
+            'fromAddress'   => 'Arbitbet@dotmailer-email.com',
+            'reply_action'  => 'Webmail',
+            'isSplitTest'   => false,
+            'status'        => 'Unsent',
+            'owner'         => 'orocrm_dotmailer.organization.foo',
+            'channel'       => 'orocrm_dotmailer.channel.first',
+            'reference'     => 'orocrm_dotmailer.campaign.third'
+        ],
     ];
 
     /**
