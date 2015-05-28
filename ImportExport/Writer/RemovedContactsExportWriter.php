@@ -79,12 +79,7 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
 
         $addressBookItems = [];
         foreach ($items as $item) {
-            $addressBookOriginId = $item[RemovedContactsExportIterator::ADDRESS_BOOK_KEY];
-            if (!isset($addressBookItems[$addressBookOriginId])) {
-                $addressBookItems[$addressBookOriginId] = [];
-            }
-
-            $addressBookItems[$addressBookOriginId][] = $item;
+            $addressBookItems[$item[RemovedContactsExportIterator::ADDRESS_BOOK_KEY]][] = $item;
         }
         /** @var EntityManager $em */
         $em = $this->registry->getManager();
@@ -166,7 +161,7 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
         }
         $memoryUsed = memory_get_usage(true);
         $memoryUsed = $memoryUsed / 1048576;
-        $message .= "Memory used $memoryUsed MB .";
+        $message .= " Memory used $memoryUsed MB.";
 
         $this->logger->info($message);
 
