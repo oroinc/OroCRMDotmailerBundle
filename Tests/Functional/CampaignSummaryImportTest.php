@@ -34,8 +34,10 @@ class CampaignSummaryImportTest extends AbstractImportExportTest
     {
         $entity = new ApiCampaignSummary($summary);
 
-        $this->resource->expects($this->any())
+        $expectedCampaignOriginId = 15662;
+        $this->resource->expects($this->once())
             ->method('GetCampaignSummary')
+            ->with($expectedCampaignOriginId)
             ->will($this->returnValue($entity));
         $channel = $this->getReference('orocrm_dotmailer.channel.second');
 
