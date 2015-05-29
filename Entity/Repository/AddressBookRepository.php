@@ -65,24 +65,14 @@ class AddressBookRepository extends EntityRepository
      */
     public function getAddressBooksForRemoveQB(Channel $channel, array $keepAddressBooks)
     {
-        /**
-         * Array of Address Books Ids was divided into parts because of
-         * "IN" statement has Limit of size based on DB settings.
-         * For mysql "IN" statement limited by "max_allowed_packet" setting.
-         * @link https://dev.mysql.com/doc/refman/5.0/en/comparison-operators.html#function_in
-         */
-        $chunks = array_chunk($keepAddressBooks, 1000);
-
         $qb = $this->createQueryBuilder('addressBook');
         $qb->select('addressBook.id')
             ->where('addressBook.channel =:channel');
 
-        foreach ($chunks as $keepAddressBooks) {
-            $qb->andWhere(
-                $qb->expr()
-                    ->notIn('addressBook.originId', $keepAddressBooks)
-            );
-        }
+        $qb->andWhere(
+            $qb->expr()
+                ->notIn('addressBook.originId', $keepAddressBooks)
+        );
 
         return $qb->setParameters(['channel' => $channel]);
     }
