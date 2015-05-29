@@ -14,7 +14,7 @@ class RemoveAddressBookStrategy extends AbstractImportStrategy
     {
         if ($entity instanceof AddressBook) {
             if (!$entity->getId()) {
-                throw new RuntimeException();
+                throw new RuntimeException('Address book Id must be set');
             }
 
             $existingEntity = $this->registry

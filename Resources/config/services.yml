@@ -46,7 +46,7 @@ parameters:
     orocrm_dotmailer.importexport.reader.contact_sync.class:                        OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\ContactsSyncReader
     orocrm_dotmailer.importexport.reader.scheduled_for_export.class:                OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\ScheduledForExportContactsReader
     orocrm_dotmailer.importexport.reader.address_book.remove.class:                 OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\RemoveAddressBookReader
-    orocrm_dotmailer.importexport.reader.campaign.remove.class:                     OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\RemoveCampaignsReader
+    orocrm_dotmailer.importexport.reader.campaign.remove.class:                     OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\RemoveCampaignReader
 
     #connectors
     orocrm_dotmailer.connector.abstract.class:                            OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector

@@ -46,23 +46,23 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
     use OriginTrait;
 
     /** constant for enum dm_cmp_reply_action */
-    const REPLY_ACTION_UNSET = 'Unset';
-    const REPLY_ACTION_WEBMAILFORWARD = 'WebMailForward';
-    const REPLY_ACTION_WEBMAIL = 'Webmail';
-    const REPLY_ACTION_DELETE = 'Delete';
-    const REPLY_ACTION_NOTAVAILABLEINTHISVERSION = 'NotAvailableInThisVersion';
+    const REPLY_ACTION_UNSET                        = 'Unset';
+    const REPLY_ACTION_WEBMAILFORWARD               = 'WebMailForward';
+    const REPLY_ACTION_WEBMAIL                      = 'Webmail';
+    const REPLY_ACTION_DELETE                       = 'Delete';
+    const REPLY_ACTION_NOTAVAILABLEINTHISVERSION    = 'NotAvailableInThisVersion';
 
     /** constant for enum dm_cmp_status */
-    const STATUS_UNSENT = 'Unsent';
-    const STATUS_SENDING = 'Sending';
-    const STATUS_SENT = 'Sent';
-    const STATUS_PAUSED = 'Paused';
-    const STATUS_CANCELLED = 'Cancelled';
-    const STATUS_REQUIRESSYSTEMAPPROVAL = 'RequiresSystemApproval';
-    const STATUS_REQUIRESSMSAPPROVAL = 'RequiresSMSApproval';
-    const STATUS_REQUIRESWORKFLOWAPPROVAL = 'RequiresWorkflowApproval';
-    const STATUS_TRIGGERED = 'Triggered';
-    const STATUS_NOTAVAILABLEINTHISVERSION = 'NotAvailableInThisVersion';
+    const STATUS_UNSENT                             = 'Unsent';
+    const STATUS_SENDING                            = 'Sending';
+    const STATUS_SENT                               = 'Sent';
+    const STATUS_PAUSED                             = 'Paused';
+    const STATUS_CANCELLED                          = 'Cancelled';
+    const STATUS_REQUIRESSYSTEMAPPROVAL             = 'RequiresSystemApproval';
+    const STATUS_REQUIRESSMSAPPROVAL                = 'RequiresSMSApproval';
+    const STATUS_REQUIRESWORKFLOWAPPROVAL           = 'RequiresWorkflowApproval';
+    const STATUS_TRIGGERED                          = 'Triggered';
+    const STATUS_NOTAVAILABLEINTHISVERSION          = 'NotAvailableInThisVersion';
 
     /**
      * @var int
@@ -688,13 +688,13 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
     }
 
     /**
-     * @param bool $isDeleted
+     * @param bool $deleted
      *
      * @return Campaign
      */
-    public function setDeleted($isDeleted)
+    public function setDeleted($deleted)
     {
-        $this->deleted = $isDeleted;
+        $this->deleted = $deleted;
 
         return $this;
     }
