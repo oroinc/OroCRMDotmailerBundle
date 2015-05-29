@@ -11,7 +11,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
 
 class CampaignStrategy extends AddOrReplaceStrategy
 {
-    const EXISTED_CAMPAIGNS_ORIGIN_IDS = 'existedCampaignsOriginIds';
+    const EXISTING_CAMPAIGNS_ORIGIN_IDS = 'existingCampaignsOriginIds';
 
     /**
      * {@inheritdoc}
@@ -24,9 +24,9 @@ class CampaignStrategy extends AddOrReplaceStrategy
             if (!$entity->getOriginId()) {
                 throw new RuntimeException("Origin Id required for Campaign '{$entity->getName()}'.");
             }
-            $existedCampaignsOriginIds = $this->context->getValue(self::EXISTED_CAMPAIGNS_ORIGIN_IDS) ?: [];
+            $existedCampaignsOriginIds = $this->context->getValue(self::EXISTING_CAMPAIGNS_ORIGIN_IDS) ?: [];
             $existedCampaignsOriginIds[] = $entity->getOriginId();
-            $this->context->setValue(self::EXISTED_CAMPAIGNS_ORIGIN_IDS, $existedCampaignsOriginIds);
+            $this->context->setValue(self::EXISTING_CAMPAIGNS_ORIGIN_IDS, $existedCampaignsOriginIds);
         }
 
         return $entity;

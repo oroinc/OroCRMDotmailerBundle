@@ -35,7 +35,6 @@ class RemoveCampaignsIterator extends AbstractIterator
         $this->keepCampaigns = $keepCampaigns;
     }
 
-
     /**
      * {@inheritdoc}
      */

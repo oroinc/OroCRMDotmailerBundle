@@ -7,7 +7,7 @@ use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 
 class AddressBookStrategy extends AddOrReplaceStrategy
 {
-    const EXISTED_ADDRESS_BOOKS_ORIGIN_IDS = 'existedAddressBooksOriginIds';
+    const EXISTING_ADDRESS_BOOKS_ORIGIN_IDS = 'existingAddressBooksOriginIds';
 
     /**
      * {@inheritdoc}
@@ -20,9 +20,9 @@ class AddressBookStrategy extends AddOrReplaceStrategy
             if (!$entity->getOriginId()) {
                 throw new RuntimeException("Origin Id required for Address Book '{$entity->getName()}'.");
             }
-            $existedAddressBooksOriginIds = $this->context->getValue(self::EXISTED_ADDRESS_BOOKS_ORIGIN_IDS) ?: [];
+            $existedAddressBooksOriginIds = $this->context->getValue(self::EXISTING_ADDRESS_BOOKS_ORIGIN_IDS) ?: [];
             $existedAddressBooksOriginIds[] = $entity->getOriginId();
-            $this->context->setValue(self::EXISTED_ADDRESS_BOOKS_ORIGIN_IDS, $existedAddressBooksOriginIds);
+            $this->context->setValue(self::EXISTING_ADDRESS_BOOKS_ORIGIN_IDS, $existedAddressBooksOriginIds);
         }
 
         return $entity;
