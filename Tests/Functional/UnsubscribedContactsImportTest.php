@@ -57,7 +57,7 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTest
             ->will($this->returnValue(new ApiContactSuppressionList()));
         $channel = $this->getReference('orocrm_dotmailer.channel.third');
 
-        $processor = $this->getContainer()->get(SyncCommand::SYNC_PROCESSOR);
+        $processor = $this->getContainer()->get(self::SYNC_PROCESSOR);
         $result = $processor->process($channel, UnsubscribedContactsConnector::TYPE);
 
         $this->assertTrue($result);
