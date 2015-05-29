@@ -2,8 +2,6 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
-use Doctrine\Common\Util\ClassUtils;
-
 use Oro\Bundle\IntegrationBundle\ImportExport\Helper\DefaultOwnerHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\ImportExportBundle\Strategy\Import\ConfigurableAddOrReplaceStrategy;
@@ -12,6 +10,8 @@ use OroCRM\Bundle\DotmailerBundle\Entity\ChannelAwareInterface;
 
 class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
 {
+    const PROCESSING_ITEMS = 'processingItems';
+
     /**
      * @var DefaultOwnerHelper
      */

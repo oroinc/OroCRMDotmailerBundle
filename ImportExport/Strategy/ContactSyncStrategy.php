@@ -50,6 +50,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
                     sprintf('Address book for contact %s not found', $entity->getOriginId())
                 );
             }
+
             $newImportedContacts = $this->context->getValue('newImportedItems');
             $addressBookContact = null;
             /**

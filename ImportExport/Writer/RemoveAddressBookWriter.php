@@ -2,13 +2,17 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Writer;
 
+use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 use Akeneo\Bundle\BatchBundle\Item\ItemWriterInterface;
+use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 
 use Psr\Log\LoggerInterface;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
-class RemoveAddressBookWriter implements ItemWriterInterface
+use OroCRM\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
+
+class RemoveAddressBookWriter implements ItemWriterInterface, StepExecutionAwareInterface
 {
     /**
      * @var ManagerRegistry
@@ -21,13 +25,25 @@ class RemoveAddressBookWriter implements ItemWriterInterface
     protected $logger;
 
     /**
-     * @param ManagerRegistry $registry
-     * @param LoggerInterface $logger
+     * @var StepExecution
      */
-    public function __construct(ManagerRegistry $registry, LoggerInterface $logger)
+    protected $stepExecution;
+
+    /**
+     * @var ImportExportLogHelper
+     */
+    protected $logHelper;
+
+    /**
+     * @param ManagerRegistry       $registry
+     * @param LoggerInterface       $logger
+     * @param ImportExportLogHelper $logHelper
+     */
+    public function __construct(ManagerRegistry $registry, LoggerInterface $logger, ImportExportLogHelper $logHelper)
     {
         $this->registry = $registry;
         $this->logger = $logger;
+        $this->logHelper = $logHelper;
     }
 
     /**
@@ -46,9 +62,23 @@ class RemoveAddressBookWriter implements ItemWriterInterface
             $em->flush();
             $em->clear();
 
-            $this->logger->info("$itemsCount Address Books removed");
+            $memoryUsed = $this->logHelper->getMemoryConsumption();
+            $stepExecutionTime = $this->logHelper->getStepExecutionTime($this->stepExecution);
+
+            $message = "$itemsCount Address Books removed";
+            $message .= " Elapsed Time(in minutes): {$stepExecutionTime}. Memory used: $memoryUsed MB .";
+
+            $this->logger->info($message);
         } catch (\Exception $e) {
             $this->logger->error("Removing $itemsCount Address Books failed");
         }
+    }
+
+    /**
+     * @param StepExecution $stepExecution
+     */
+    public function setStepExecution(StepExecution $stepExecution)
+    {
+        $this->stepExecution = $stepExecution;
     }
 }
