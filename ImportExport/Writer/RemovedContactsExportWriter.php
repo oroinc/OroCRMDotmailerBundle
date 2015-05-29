@@ -6,6 +6,7 @@ use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 use Akeneo\Bundle\BatchBundle\Item\ItemWriterInterface;
 use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 
+use DotMailer\Api\Exception;
 use Psr\Log\LoggerInterface;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -109,39 +110,46 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
      */
     protected function removeAddressBookContacts(array $items, EntityRepository $repository, $addressBookOriginId)
     {
-        $removingItemsIds = [];
-        $removingItemsIdsCount = 0;
-        $removingItemsOriginIds = [];
-        /**
-         * Remove Dotmailer Contacts from DB.
-         * Smaller, than step batch used because of "IN" max length
-         */
-        foreach ($items as $item) {
-            $removingItemsIds[] = $item['id'];
-            $removingItemsOriginIds[] = $item['originId'];
-
-            $this->context->incrementDeleteCount();
-
-            if (++$removingItemsIdsCount != static::BATCH_SIZE) {
-                continue;
-            }
-
-            $this->removeContacts($repository, $removingItemsIds);
-
+        try {
             $removingItemsIds = [];
             $removingItemsIdsCount = 0;
-        }
-        if ($removingItemsIdsCount > 0) {
-            $this->removeContacts($repository, $removingItemsIds);
-        }
+            $removingItemsOriginIds = [];
+            /**
+             * Remove Dotmailer Contacts from DB.
+             * Smaller, than step batch used because of "IN" max length
+             */
+            foreach ($items as $item) {
+                $removingItemsIds[] = $item['id'];
+                $removingItemsOriginIds[] = $item['originId'];
 
-        /**
-         * Remove Dotmailer Contacts from Dotmailer
-         * Operation is Async in Dotmailer side
-         */
-        $this->transport->removeContactsFromAddressBook($removingItemsOriginIds, $addressBookOriginId);
+                $this->context->incrementDeleteCount();
 
-        $this->logBatchInfo($removingItemsOriginIds, $addressBookOriginId);
+                if (++$removingItemsIdsCount != static::BATCH_SIZE) {
+                    continue;
+                }
+
+                $this->removeContacts($repository, $removingItemsIds);
+
+                $removingItemsIds = [];
+                $removingItemsIdsCount = 0;
+            }
+            if ($removingItemsIdsCount > 0) {
+                $this->removeContacts($repository, $removingItemsIds);
+            }
+
+            /**
+             * Remove Dotmailer Contacts from Dotmailer
+             * Operation is Async in Dotmailer side
+             */
+            $this->transport->removeContactsFromAddressBook($removingItemsOriginIds, $addressBookOriginId);
+
+            $this->logBatchInfo($removingItemsOriginIds, $addressBookOriginId);
+        } catch (Exception $e) {
+            $this->logger
+                ->warning(
+                    "Remove contacts from Address Book '{$addressBookOriginId}' failed. Message: {$e->getMessage()}"
+                );
+        }
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace OroCRM\Bundle\DotmailerBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
@@ -54,5 +55,25 @@ class AddressBookRepository extends EntityRepository
             ->where('addressBook.channel = :channel AND addressBook.marketingList IS NOT NULL')
             ->getQuery()
             ->execute(['channel' => $channel]);
+    }
+
+    /**
+     * @param Channel $channel
+     * @param array   $keepAddressBooks
+     *
+     * @return QueryBuilder
+     */
+    public function getAddressBooksForRemoveQB(Channel $channel, array $keepAddressBooks)
+    {
+        $qb = $this->createQueryBuilder('addressBook');
+        $qb->select('addressBook.id')
+            ->where('addressBook.channel =:channel');
+
+        $qb->andWhere(
+            $qb->expr()
+                ->notIn('addressBook.originId', $keepAddressBooks)
+        );
+
+        return $qb->setParameters(['channel' => $channel]);
     }
 }

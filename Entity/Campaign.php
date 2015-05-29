@@ -15,7 +15,7 @@ use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign;
 use OroCRM\Bundle\DotmailerBundle\Model\ExtendCampaign;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="OroCRM\Bundle\DotmailerBundle\Entity\Repository\CampaignRepository")
  * @ORM\Table(
  *      name="orocrm_dm_campaign",
  *      uniqueConstraints={
@@ -253,6 +253,14 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
      * @ORM\JoinColumn(name="campaign_summary_id", referencedColumnName="id", onDelete="SET NULL", nullable=true)
      */
     protected $campaignSummary;
+
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_deleted", type="boolean")
+     */
+    protected $deleted = false;
 
     /**
      * Initialize collections
@@ -667,6 +675,26 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
     public function setCampaignSummary(CampaignSummary $campaignSummary = null)
     {
         $this->campaignSummary = $campaignSummary;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * @param bool $deleted
+     *
+     * @return Campaign
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
 
         return $this;
     }
