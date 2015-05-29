@@ -15,7 +15,7 @@ class ActivityContactConnector extends AbstractDotmailerConnector
         // Synchronize only campaign activities that are connected to marketing list.
         $campaigns = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:Campaign')
-            ->findBy(['channel' => $this->getChannel()]);
+            ->findBy(['channel' => $this->getChannel(), 'deleted' => false]);
 
         $activityRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:Activity');
         $campaignsToSynchronize = [];

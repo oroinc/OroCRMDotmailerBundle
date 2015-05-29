@@ -39,8 +39,10 @@ class ActivityContactImportTest extends AbstractImportExportTest
             $entity[] = $listItem;
         }
 
-        $this->resource->expects($this->any())
+        $expectedCampaignOriginId = 15662;
+        $this->resource->expects($this->once())
             ->method('GetCampaignActivities')
+            ->with($expectedCampaignOriginId)
             ->will($this->returnValue($entity));
         $channel = $this->getReference('orocrm_dotmailer.channel.second');
 
