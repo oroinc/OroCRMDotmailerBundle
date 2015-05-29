@@ -48,7 +48,7 @@ class ContactUpdateTest extends AbstractImportExportTest
             ->will($this->returnValue($entity));
 
         $channel = $this->getReference('orocrm_dotmailer.channel.fourth');
-        $processor = $this->getContainer()->get(SyncCommand::SYNC_PROCESSOR);
+        $processor = $this->getContainer()->get(self::SYNC_PROCESSOR);
         $result = $processor->process($channel, ContactConnector::TYPE);
 
         $this->assertTrue($result, 'Failed asserting that import job ran successfully.');
