@@ -24,9 +24,9 @@ class CampaignStrategy extends AddOrReplaceStrategy
             if (!$entity->getOriginId()) {
                 throw new RuntimeException("Origin Id required for Campaign '{$entity->getName()}'.");
             }
-            $existedCampaignsOriginIds = $this->context->getValue(self::EXISTING_CAMPAIGNS_ORIGIN_IDS) ?: [];
-            $existedCampaignsOriginIds[] = $entity->getOriginId();
-            $this->context->setValue(self::EXISTING_CAMPAIGNS_ORIGIN_IDS, $existedCampaignsOriginIds);
+            $existingCampaignsOriginIds = $this->context->getValue(self::EXISTING_CAMPAIGNS_ORIGIN_IDS) ?: [];
+            $existingCampaignsOriginIds[] = $entity->getOriginId();
+            $this->context->setValue(self::EXISTING_CAMPAIGNS_ORIGIN_IDS, $existingCampaignsOriginIds);
         }
 
         return $entity;

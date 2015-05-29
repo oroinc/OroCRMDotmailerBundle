@@ -23,7 +23,6 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIte
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactsIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactsIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
-use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 
 class DotmailerTransport implements TransportInterface

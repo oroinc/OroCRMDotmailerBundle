@@ -7,6 +7,7 @@ use Akeneo\Bundle\BatchBundle\Item\ItemWriterInterface;
 use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 
 use DotMailer\Api\Exception;
+
 use Psr\Log\LoggerInterface;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -164,12 +165,12 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
 
         $message = "$itemsCount Contacts removed from Dotmailer Address Book with Id: $addressBookOriginId.";
         if ($previousBatchFinishTime) {
-            $spent = $now - $previousBatchFinishTime;
+            $spent = round($now - $previousBatchFinishTime);
             $message .= "Time spent: $spent seconds.";
         }
         $memoryUsed = memory_get_usage(true);
         $memoryUsed = $memoryUsed / 1048576;
-        $message .= " Memory used $memoryUsed MB.";
+        $message .= " Memory used: $memoryUsed MB.";
 
         $this->logger->info($message);
 

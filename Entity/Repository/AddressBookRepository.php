@@ -69,10 +69,12 @@ class AddressBookRepository extends EntityRepository
         $qb->select('addressBook.id')
             ->where('addressBook.channel =:channel');
 
-        $qb->andWhere(
-            $qb->expr()
-                ->notIn('addressBook.originId', $keepAddressBooks)
-        );
+        if (count($keepAddressBooks) > 0) {
+            $qb->andWhere(
+                $qb->expr()
+                    ->notIn('addressBook.originId', $keepAddressBooks)
+            );
+        }
 
         return $qb->setParameters(['channel' => $channel]);
     }

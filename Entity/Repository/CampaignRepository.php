@@ -21,10 +21,12 @@ class CampaignRepository extends EntityRepository
         $qb->select('campaign.id')
             ->where('campaign.channel =:channel');
 
-        $qb->andWhere(
-            $qb->expr()
-                ->notIn('campaign.originId', $keepCampaigns)
-        );
+        if (count($keepCampaigns) > 0) {
+            $qb->andWhere(
+                $qb->expr()
+                    ->notIn('campaign.originId', $keepCampaigns)
+            );
+        }
 
         return $qb->setParameters(['channel' => $channel]);
     }
