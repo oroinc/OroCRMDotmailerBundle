@@ -14,7 +14,7 @@ class RemoveCampaignStrategy extends AbstractImportStrategy
     {
         if ($entity instanceof Campaign) {
             if (!$entity->getId()) {
-                throw new RuntimeException();
+                throw new RuntimeException('Campaign Id must be set');
             }
 
             $existingEntity = $this->registry
