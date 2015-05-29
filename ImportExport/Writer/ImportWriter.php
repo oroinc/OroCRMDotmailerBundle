@@ -2,11 +2,16 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Writer;
 
-use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\IntegrationBundle\ImportExport\Writer\PersistentBatchWriter;
+use OroCRM\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 
 class ImportWriter extends PersistentBatchWriter
 {
+    /**
+     * @var ImportExportLogHelper
+     */
+    protected $logHelper;
+
     /**
      * {@inheritdoc}
      */
@@ -15,49 +20,43 @@ class ImportWriter extends PersistentBatchWriter
         $context = $this->contextRegistry
             ->getByStepExecution($this->stepExecution);
 
-        $this->clearTempData($context);
+        /**
+         * clear new imported items list
+         */
+        $context->setValue('newImportedItems', []);
 
         parent::write($items);
+
+        gc_collect_cycles();
 
         $this->logBatchInfo($items, $context);
     }
 
     /**
      * @param array            $items
-     * @param ContextInterface $context
      */
-    protected function logBatchInfo(array $items, ContextInterface $context)
+    protected function logBatchInfo(array $items)
     {
         $itemsCount = count($items);
-        $now = microtime(true);
-        $previousBatchFinishTime = $context->getValue('recordingTime');
 
         if ($this->stepExecution->getStepName() == 'export') {
             $message = "Batch finished. $itemsCount items prepared for export.";
         } else {
             $message = "Batch finished. $itemsCount items imported.";
         }
-        if ($previousBatchFinishTime) {
-            $spent = round($now - $previousBatchFinishTime);
-            $message .= "Time spent: $spent seconds.";
-        }
-        $memoryUsed = memory_get_usage(true);
-        $memoryUsed = $memoryUsed / 1048576;
-        $message .= "Memory used: $memoryUsed MB .";
+
+        $memoryUsed = $this->logHelper->getMemoryConsumption();
+        $stepExecutionTime = $this->logHelper->getStepExecutionTime($this->stepExecution);
+        $message .= " Elapsed Time(in minutes): {$stepExecutionTime}. Memory used: $memoryUsed MB .";
 
         $this->logger->info($message);
-
-        $context->setValue('recordingTime', $now);
     }
 
     /**
-     * @param ContextInterface $context
+     * @param ImportExportLogHelper $logHelper
      */
-    protected function clearTempData(ContextInterface $context)
+    public function setLogHelper(ImportExportLogHelper $logHelper)
     {
-        /**
-         * clear new imported items list
-         */
-        $context->setValue('newImportedItems', []);
+        $this->logHelper = $logHelper;
     }
 }

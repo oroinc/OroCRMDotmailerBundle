@@ -21,6 +21,8 @@ use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemovedContactsExportIterator;
 
+use OroCRM\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
+
 class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareInterface
 {
     /**
@@ -49,21 +51,29 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
     protected $logger;
 
     /**
-     * @param ManagerRegistry    $registry
-     * @param DotmailerTransport $transport
-     * @param ContextRegistry    $contextRegistry
-     * @param LoggerInterface    $logger
+     * @var ImportExportLogHelper
+     */
+    protected $logHelper;
+
+    /**
+     * @param ManagerRegistry       $registry
+     * @param DotmailerTransport    $transport
+     * @param ContextRegistry       $contextRegistry
+     * @param LoggerInterface       $logger
+     * @param ImportExportLogHelper $logHelper
      */
     public function __construct(
         ManagerRegistry $registry,
         DotmailerTransport $transport,
         ContextRegistry $contextRegistry,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ImportExportLogHelper $logHelper
     ) {
         $this->registry = $registry;
         $this->transport = $transport;
         $this->contextRegistry = $contextRegistry;
         $this->logger = $logger;
+        $this->logHelper = $logHelper;
     }
 
     /**
@@ -152,7 +162,6 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
         $this->logBatchInfo($items, $addressBookOriginId);
     }
 
-
     /**
      * @param array $items
      * @param int   $addressBookOriginId
@@ -160,30 +169,14 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
     protected function logBatchInfo(array $items, $addressBookOriginId)
     {
         $itemsCount = count($items);
-        $now = microtime(true);
-        $previousBatchFinishTime = $this->context->getValue('recordingTime');
+
+        $stepExecutionTime = $this->logHelper->getStepExecutionTime($this->stepExecution);
+        $memoryUsed = $this->logHelper->getMemoryConsumption();
 
         $message = "$itemsCount Contacts exported to Dotmailer Address Book with Id: $addressBookOriginId.";
-        if ($previousBatchFinishTime) {
-            $spent = round($now - $previousBatchFinishTime);
-            $message .= "Time spent: $spent seconds.";
-        }
-        $memoryUsed = memory_get_usage(true);
-        $memoryUsed = $memoryUsed / 1048576;
-        $message .= " Memory used: $memoryUsed MB.";
+        $message .= " Elapsed Time(in minutes): {$stepExecutionTime}. Memory used: $memoryUsed MB .";
 
         $this->logger->info($message);
-
-        $this->context->setValue('recordingTime', $now);
-    }
-
-    /**
-     * @return Channel
-     */
-    protected function getChannel()
-    {
-        return $this->registry->getRepository('OroIntegrationBundle:Channel')
-            ->getOrLoadById($this->context->getOption('channel'));
     }
 
     /**
@@ -193,7 +186,17 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
     {
         $this->stepExecution = $stepExecution;
         $this->context = $this->contextRegistry->getByStepExecution($stepExecution);
-        $this->setImportExportContext($this->context);
         $this->transport->init($this->getChannel()->getTransport());
+
+        $this->setImportExportContext($this->context);
+    }
+
+    /**
+     * @return Channel
+     */
+    protected function getChannel()
+    {
+        return $this->registry->getRepository('OroIntegrationBundle:Channel')
+            ->getOrLoadById($this->context->getOption('channel'));
     }
 }
