@@ -30,7 +30,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
 
         if ($entity instanceof Contact) {
             $importedContacts = $this->context->getValue('newImportedItems') ?: [];
-            $importedContacts[$entity->getOriginId()] = $entity;
+            $importedContacts[$entity->getEmail()] = $entity;
             $this->context->setValue('newImportedItems', $importedContacts);
         }
 
@@ -55,8 +55,8 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
             /**
              * Fix case if this contact already imported on this batch
              */
-            if ($newImportedContacts && isset($newImportedContacts[$entity->getOriginId()])) {
-                $entity = $newImportedContacts[$entity->getOriginId()];
+            if ($newImportedContacts && isset($newImportedContacts[$entity->getEmail()])) {
+                $entity = $newImportedContacts[$entity->getEmail()];
                 foreach ($entity->getAddressBookContacts() as $addressBookContact) {
                     if ($addressBookContact->getAddressBook()->getId() == $addressBook->getId()) {
                         break;
