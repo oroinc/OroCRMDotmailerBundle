@@ -10,7 +10,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
 class UnsubscribedFromAccountContactsReader extends AbstractReader
 {
-    protected function afterInitialize()
+    protected function initializeReader()
     {
         /** @var DotmailerTransport $transport */
         $transport = $this->contextMediator->getInitializedTransport($this->getChannel());

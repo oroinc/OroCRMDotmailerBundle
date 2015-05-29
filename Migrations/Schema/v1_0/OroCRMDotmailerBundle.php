@@ -95,6 +95,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addColumn('is_split_test', 'boolean', ['notnull' => false]);
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->addColumn('updated_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
+        $table->addColumn('is_deleted', 'boolean', []);
         $table->addIndex(['owner_id'], 'IDX_3D36193A7E3C61F9', []);
         $table->addIndex(['channel_id'], 'IDX_3D36193A72F5A1AA', []);
         $table->addUniqueIndex(['campaign_summary_id'], 'UNIQ_3D36193AEDD5F4F4');

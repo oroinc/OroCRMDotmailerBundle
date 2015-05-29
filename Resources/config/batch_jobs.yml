@@ -5,7 +5,7 @@ connector:
             title: orocrm.dotmailer.connector.address_book.job
             type: import
             steps:
-                import:
+                importAddressBooks:
                     title: import
                     class: Oro\Bundle\BatchBundle\Step\ItemStep
                     services:
@@ -14,18 +14,34 @@ connector:
                         writer:    orocrm_dotmailer.importexport.writer.import
                     parameters:
                         batch_size: 25
+                removeNotExistingAddressBooks:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.importexport.reader.address_book.remove
+                        processor: orocrm_dotmailer.importexport.processor.address_book.remove
+                        writer:    orocrm_dotmailer.importexport.writer.import.removed_address_book
 
         dotmailer_campaign_import:
             title: orocrm.dotmailer.connector.campaign.job
             type: import
             steps:
-                import:
+                importCampaigns:
                     title: import
                     class: Oro\Bundle\BatchBundle\Step\ItemStep
                     services:
                         reader:    orocrm_dotmailer.connector.campaign
                         processor: orocrm_dotmailer.importexport.processor.campaign
                         writer:    orocrm_dotmailer.importexport.writer.import
+                    parameters:
+                        batch_size: 100
+                removeCampaigns:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.importexport.reader.campaign.remove
+                        processor: orocrm_dotmailer.importexport.processor.remove_campaign
+                        writer:    oro_integration.writer.persistent_batch_writer
                     parameters:
                         batch_size: 100
 

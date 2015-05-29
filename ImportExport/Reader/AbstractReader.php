@@ -2,6 +2,8 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
 
+use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
+
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
@@ -10,12 +12,19 @@ use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Reader\IteratorBasedReader;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
+use OroCRM\Bundle\DotmailerBundle\ImportExport\JobContextComposite;
+
 abstract class AbstractReader extends IteratorBasedReader
 {
     /**
      * @var ContextInterface
      */
     protected $context;
+
+    /**
+     * @var ContextInterface
+     */
+    protected $jobContext;
 
     /**
      * @var ConnectorContextMediator
@@ -45,13 +54,22 @@ abstract class AbstractReader extends IteratorBasedReader
     /**
      * {@inheritdoc}
      */
+    public function setStepExecution(StepExecution $stepExecution)
+    {
+        $this->jobContext = new JobContextComposite($stepExecution, $this->contextRegistry);
+        parent::setStepExecution($stepExecution);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function initializeFromContext(ContextInterface $context)
     {
         $this->context = $context;
-        $this->afterInitialize();
+        $this->initializeReader();
     }
 
-    abstract protected function afterInitialize();
+    abstract protected function initializeReader();
 
     /**
      * @return Channel
