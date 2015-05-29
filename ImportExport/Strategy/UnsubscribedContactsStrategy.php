@@ -31,6 +31,7 @@ class UnsubscribedContactsStrategy extends AbstractImportStrategy
             ->findOneBy(['originId' => $entity->getOriginId(), 'channel' => $this->getChannel()]);
         if (!$contact) {
             $this->context->addError("Contact {$entity->getOriginId()} not found.");
+            $this->context->incrementErrorEntriesCount();
 
             return null;
         }
@@ -41,6 +42,8 @@ class UnsubscribedContactsStrategy extends AbstractImportStrategy
         }
         $addressBookOriginId = $originalValue[UnsubscribedContactsIterator::ADDRESS_BOOK_KEY];
         $this->updateAddressBookContact($entity, $contact, $addressBookOriginId);
+
+        $this->context->incrementUpdateCount();
 
         return $contact;
     }

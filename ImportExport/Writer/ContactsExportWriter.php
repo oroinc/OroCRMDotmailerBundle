@@ -6,6 +6,7 @@ use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 
 use DotMailer\Api\Exception;
+
 use Psr\Log\LoggerInterface;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -164,12 +165,12 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
 
         $message = "$itemsCount Contacts exported to Dotmailer Address Book with Id: $addressBookOriginId.";
         if ($previousBatchFinishTime) {
-            $spent = $now - $previousBatchFinishTime;
+            $spent = round($now - $previousBatchFinishTime);
             $message .= "Time spent: $spent seconds.";
         }
         $memoryUsed = memory_get_usage(true);
         $memoryUsed = $memoryUsed / 1048576;
-        $message .= " Memory used $memoryUsed MB.";
+        $message .= " Memory used: $memoryUsed MB.";
 
         $this->logger->info($message);
 
