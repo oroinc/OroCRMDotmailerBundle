@@ -20,9 +20,9 @@ class AddressBookStrategy extends AddOrReplaceStrategy
             if (!$entity->getOriginId()) {
                 throw new RuntimeException("Origin Id required for Address Book '{$entity->getName()}'.");
             }
-            $existedAddressBooksOriginIds = $this->context->getValue(self::EXISTING_ADDRESS_BOOKS_ORIGIN_IDS) ?: [];
-            $existedAddressBooksOriginIds[] = $entity->getOriginId();
-            $this->context->setValue(self::EXISTING_ADDRESS_BOOKS_ORIGIN_IDS, $existedAddressBooksOriginIds);
+            $existingAddressBooksOriginIds = $this->context->getValue(self::EXISTING_ADDRESS_BOOKS_ORIGIN_IDS) ?: [];
+            $existingAddressBooksOriginIds[] = $entity->getOriginId();
+            $this->context->setValue(self::EXISTING_ADDRESS_BOOKS_ORIGIN_IDS, $existingAddressBooksOriginIds);
         }
 
         return $entity;

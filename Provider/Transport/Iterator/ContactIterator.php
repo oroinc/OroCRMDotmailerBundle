@@ -7,6 +7,7 @@ use DotMailer\Api\Resources\IResources;
 class ContactIterator extends AbstractIterator
 {
     const ADDRESS_BOOK_KEY = 'related_address_book';
+
     /** @var int */
     protected $batchSize = 1000;
 

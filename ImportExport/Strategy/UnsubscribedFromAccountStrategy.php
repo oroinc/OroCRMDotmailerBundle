@@ -30,6 +30,7 @@ class UnsubscribedFromAccountStrategy extends AbstractImportStrategy
             ->findOneBy(['originId' => $entity->getOriginId(), 'channel' => $this->getChannel()]);
         if (!$contact) {
             $this->context->addError("Contact {$entity->getOriginId()} not found.");
+            $this->context->incrementErrorEntriesCount();
 
             return null;
         }
@@ -41,6 +42,8 @@ class UnsubscribedFromAccountStrategy extends AbstractImportStrategy
         }
         $contact->setStatus($reason);
         $contact->setUnsubscribedDate($entity->getUnsubscribedDate());
+
+        $this->context->incrementUpdateCount();
 
         return $contact;
     }

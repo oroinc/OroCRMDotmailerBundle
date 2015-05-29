@@ -33,17 +33,17 @@ class ImportWriter extends PersistentBatchWriter
         $previousBatchFinishTime = $context->getValue('recordingTime');
 
         if ($this->stepExecution->getStepName() == 'export') {
-            $message = "Batch finished $itemsCount items prepared for export.";
+            $message = "Batch finished. $itemsCount items prepared for export.";
         } else {
-            $message = "Batch finished $itemsCount items imported.";
+            $message = "Batch finished. $itemsCount items imported.";
         }
         if ($previousBatchFinishTime) {
-            $spent = $now - $previousBatchFinishTime;
+            $spent = round($now - $previousBatchFinishTime);
             $message .= "Time spent: $spent seconds.";
         }
         $memoryUsed = memory_get_usage(true);
         $memoryUsed = $memoryUsed / 1048576;
-        $message .= "Memory used $memoryUsed MB .";
+        $message .= "Memory used: $memoryUsed MB .";
 
         $this->logger->info($message);
 
