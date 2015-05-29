@@ -31,6 +31,11 @@ class ChannelConnectorsExtension extends AbstractTypeExtension
             FormEvents::POST_SUBMIT,
             [$this, 'onPostSubmit']
         );
+
+        $builder->addEventListener(
+            FormEvents::PRE_SUBMIT,
+            [$this, 'onPreSubmit']
+        );
     }
 
     /**
@@ -43,7 +48,8 @@ class ChannelConnectorsExtension extends AbstractTypeExtension
     }
 
     /**
-     * Hide connectors for Dotmailer channel
+     * Hide connectors for Dotmailer channel and
+     * remove synchronizationSettings for Dotmailer channel
      *
      * @param FormEvent $event
      */
@@ -57,6 +63,8 @@ class ChannelConnectorsExtension extends AbstractTypeExtension
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
         $options          = $event->getForm()['connectors']->getConfig()->getOptions();
         $class            = $propertyAccessor->getValue($options, self::CLASS_PATH);
+
+        $event->getForm()->remove('synchronizationSettings');
 
         FormUtils::replaceField(
             $event->getForm(),
@@ -83,6 +91,21 @@ class ChannelConnectorsExtension extends AbstractTypeExtension
         $options = $event->getForm()['connectors']->getConfig()->getOptions();
         $connectors = array_keys($options['choices']);
         $data->setConnectors($connectors);
+    }
+
+    /**
+     * Remove synchronizationSettings for Dotmailer channel
+     *
+     * @param FormEvent $event
+     */
+    public function onPreSubmit(FormEvent $event)
+    {
+        $data = $event->getForm()->getData();
+        if (!$this->isApplicable($data)) {
+            return;
+        }
+
+        $event->getForm()->remove('synchronizationSettings');
     }
 
     /**

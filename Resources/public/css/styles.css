@@ -18,3 +18,7 @@
     filter: grayscale(100%);
     filter: gray; /* IE 6-9 */;
 }
+
+.connection-status {
+    width: 294px;
+}

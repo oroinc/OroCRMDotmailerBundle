@@ -7,7 +7,6 @@ use DotMailer\Api\Resources\IResources;
 class ContactIterator extends AbstractIterator
 {
     const ADDRESS_BOOK_KEY = 'related_address_book';
-
     /** @var int */
     protected $batchSize = 1000;
 
@@ -24,21 +23,12 @@ class ContactIterator extends AbstractIterator
      * @param IResources $resources
      * @param int        $addressBookOriginId
      * @param \DateTime  $dateSince
-     * @param int        $batchSize
      */
-    public function __construct(
-        IResources $resources,
-        $addressBookOriginId,
-        \DateTime $dateSince = null,
-        $batchSize = 500
-    ) {
+    public function __construct(IResources $resources, $addressBookOriginId, \DateTime $dateSince = null)
+    {
         $this->resources = $resources;
         $this->dateSince = $dateSince;
         $this->addressBookOriginId = $addressBookOriginId;
-
-        if ($batchSize) {
-            $this->batchSize = $batchSize;
-        }
     }
 
     /**

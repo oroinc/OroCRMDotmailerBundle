@@ -2,10 +2,14 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Controller;
 
+use DotMailer\Api\DataTypes\ApiAccount;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 
@@ -59,5 +63,36 @@ class DotmailerController extends Controller
             ->findOneBy(['marketingList' => $marketingList]);
 
         return ['address_book' => $addressBook];
+    }
+
+    /**
+     * @Route("/ping", name="orocrm_dotmailer_ping")
+     * @AclAncestor("orocrm_dotmailer")
+     */
+    public function pingAction()
+    {
+        $username = $this->getRequest()->get('username');
+        $password = $this->getRequest()->get('password');
+
+        $dotmailerResourceFactory = $this->get('orocrm_dotmailer.transport.resources_factory');
+        $resource = $dotmailerResourceFactory->createResources($username, $password);
+        try {
+            $result = $resource->GetAccountInfo();
+            if ($result instanceof ApiAccount) {
+                $result = [
+                    'msg' => 'Connection successful!'
+                ];
+            } else {
+                $result = [
+                    'error' => 'Connection failed!'
+                ];
+            }
+        } catch (\Exception $e) {
+            $result = [
+                'error' => $e->getMessage()
+            ];
+        }
+
+        return new JsonResponse($result);
     }
 }
