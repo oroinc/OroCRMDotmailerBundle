@@ -5,6 +5,7 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Writer;
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 
+use DotMailer\Api\Exception;
 use Psr\Log\LoggerInterface;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -119,8 +120,16 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
          */
         $this->fileHandle = null;
         $this->header = null;
+        try {
+            $importStatus = $this->transport->exportAddressBookContacts($csv, $addressBookOriginId);
+        } catch (Exception $e) {
+            $this->logger
+                ->warning(
+                    "Export Contacts to Address Book {$addressBookOriginId} failed. Message: {$e->getMessage()}"
+                );
 
-        $importStatus = $this->transport->exportAddressBookContacts($csv, $addressBookOriginId);
+            return;
+        }
 
         $exportEntity = new AddressBookContactsExport();
         $importId = (string)$importStatus->id;
