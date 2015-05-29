@@ -111,7 +111,7 @@ definitions:
                 actions:
                     - @format_string:
                         attribute: $.addressBook
-                        string: '--address-book=%adddress_book_id% -v'
+                        string: '--address-book=%adddress_book_id%'
                         arguments:
                             adddress_book_id: $id
                     - @create_entity:
@@ -120,7 +120,7 @@ definitions:
                         flush: true
                         arguments:
                             - 'oro:cron:dotmailer:export'
-                            - [$.addressBook]
+                            - [$.addressBook,'-v']
 
 triggers:
     dotmailer_email_campaign_creation:

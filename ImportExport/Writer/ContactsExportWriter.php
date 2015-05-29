@@ -169,7 +169,7 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
         }
         $memoryUsed = memory_get_usage(true);
         $memoryUsed = $memoryUsed / 1048576;
-        $message .= "Memory used $memoryUsed MB .";
+        $message .= " Memory used $memoryUsed MB.";
 
         $this->logger->info($message);
 
