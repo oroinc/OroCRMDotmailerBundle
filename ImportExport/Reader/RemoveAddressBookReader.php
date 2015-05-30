@@ -9,6 +9,7 @@ class RemoveAddressBookReader extends AbstractReader
 {
     protected function initializeReader()
     {
+        $this->logger->info('Importing Removed Address Books');
         $keepAddressBooks = $this->jobContext->getValue(AddressBookStrategy::EXISTING_ADDRESS_BOOKS_ORIGIN_IDS);
         $keepAddressBooks = $keepAddressBooks ?: [];
 

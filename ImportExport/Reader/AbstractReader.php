@@ -4,6 +4,8 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
 
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 
+use Psr\Log\LoggerInterface;
+
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
@@ -37,18 +39,26 @@ abstract class AbstractReader extends IteratorBasedReader
     protected $managerRegistry;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @param ContextRegistry          $contextRegistry
      * @param ConnectorContextMediator $contextMediator
      * @param ManagerRegistry          $managerRegistry
+     * @param LoggerInterface          $logger
      */
     public function __construct(
         ContextRegistry $contextRegistry,
         ConnectorContextMediator $contextMediator,
-        ManagerRegistry $managerRegistry
+        ManagerRegistry $managerRegistry,
+        LoggerInterface $logger
     ) {
         parent::__construct($contextRegistry);
         $this->contextMediator = $contextMediator;
         $this->managerRegistry = $managerRegistry;
+        $this->logger = $logger;
     }
 
     /**

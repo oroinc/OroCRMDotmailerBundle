@@ -3,6 +3,7 @@
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Writer;
 
 use Oro\Bundle\IntegrationBundle\ImportExport\Writer\PersistentBatchWriter;
+use OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\AddOrReplaceStrategy;
 use OroCRM\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 
 class ImportWriter extends PersistentBatchWriter
@@ -23,11 +24,9 @@ class ImportWriter extends PersistentBatchWriter
         /**
          * clear new imported items list
          */
-        $context->setValue('newImportedItems', []);
+        $context->setValue(AddOrReplaceStrategy::BATCH_ITEMS, []);
 
         parent::write($items);
-
-        gc_collect_cycles();
 
         $this->logBatchInfo($items, $context);
     }
@@ -40,9 +39,9 @@ class ImportWriter extends PersistentBatchWriter
         $itemsCount = count($items);
 
         if ($this->stepExecution->getStepName() == 'export') {
-            $message = "Batch finished. $itemsCount items prepared for export.";
+            $message = "$itemsCount items prepared for export.";
         } else {
-            $message = "Batch finished. $itemsCount items imported.";
+            $message = "$itemsCount items imported.";
         }
 
         $memoryUsed = $this->logHelper->getMemoryConsumption();

@@ -12,6 +12,8 @@ class AddressBookConnector extends AbstractDotmailerConnector
      */
     protected function getConnectorSource()
     {
+        $this->logger->info('Importing Address Books.');
+
         return $this->transport->getAddressBooks();
     }
 
