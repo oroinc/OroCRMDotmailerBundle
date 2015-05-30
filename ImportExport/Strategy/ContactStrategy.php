@@ -11,24 +11,6 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
 
 class ContactStrategy extends AddOrReplaceStrategy
 {
-    const FIND_CONTACT_BY_EMAIL_OPTION = 'findContactByEmail';
-
-    /**
-     * {@inheritdoc}
-     */
-    public function process($entity)
-    {
-        $entity = parent::process($entity);
-
-        if ($entity instanceof Contact && !$this->databaseHelper->getIdentifier($entity)) {
-            $newImportedContacts = $this->context->getValue('newImportedItems') ?: [];
-            $newImportedContacts[$entity->getOriginId()] = $entity;
-            $this->context->setValue('newImportedItems', $newImportedContacts);
-        }
-
-        return $entity;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -36,12 +18,13 @@ class ContactStrategy extends AddOrReplaceStrategy
     {
         /** @var Contact $entity */
         if ($entity) {
-            $newImportedContacts = $this->context->getValue('newImportedItems');
+            $batchItems = $this->context->getValue(self::BATCH_ITEMS);
+
             /**
              * Fix case if this contact already imported on this batch
              */
-            if ($newImportedContacts && isset($newImportedContacts[$entity->getOriginId()])) {
-                $entity = $newImportedContacts[$entity->getOriginId()];
+            if ($batchItems && !$entity->getId() && isset($batchItems[$entity->getOriginId()])) {
+                $entity = $batchItems[$entity->getOriginId()];
             }
             $addressBook = $this->getAddressBook($entity->getChannel());
             if ($addressBook) {

@@ -12,6 +12,8 @@ class UnsubscribedFromAccountContactsReader extends AbstractReader
 {
     protected function initializeReader()
     {
+        $this->logger->info('Importing Unsubscribed from Account Contacts');
+
         /** @var DotmailerTransport $transport */
         $transport = $this->contextMediator->getInitializedTransport($this->getChannel());
         $lastSyncDate = $this->getLastSyncDate();

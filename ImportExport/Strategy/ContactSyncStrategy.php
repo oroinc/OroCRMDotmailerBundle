@@ -29,9 +29,9 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
         $entity = parent::process($entity);
 
         if ($entity instanceof Contact) {
-            $importedContacts = $this->context->getValue('newImportedItems') ?: [];
-            $importedContacts[$entity->getEmail()] = $entity;
-            $this->context->setValue('newImportedItems', $importedContacts);
+            $batchItems = $this->context->getValue(self::BATCH_ITEMS) ?: [];
+            $batchItems[$entity->getEmail()] = $entity;
+            $this->context->setValue(self::BATCH_ITEMS, $batchItems);
         }
 
         return $entity;
@@ -51,13 +51,14 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
                 );
             }
 
-            $newImportedContacts = $this->context->getValue('newImportedItems');
+            $batchItems = $this->context->getValue(self::BATCH_ITEMS);
             $addressBookContact = null;
+
             /**
-             * Fix case if this contact already imported on this batch
+             * Fix case if this contact already imported on this batch  but for different address book
              */
-            if ($newImportedContacts && isset($newImportedContacts[$entity->getEmail()])) {
-                $entity = $newImportedContacts[$entity->getEmail()];
+            if ($batchItems && isset($batchItems[$entity->getEmail()])) {
+                $entity = $batchItems[$entity->getEmail()];
                 foreach ($entity->getAddressBookContacts() as $addressBookContact) {
                     if ($addressBookContact->getAddressBook()->getId() == $addressBook->getId()) {
                         break;

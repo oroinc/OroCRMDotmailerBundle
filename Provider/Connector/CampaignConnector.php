@@ -12,6 +12,7 @@ class CampaignConnector extends AbstractDotmailerConnector
      */
     protected function getConnectorSource()
     {
+        $this->logger->info('Importing Campaigns.');
         $aBooksToSynchronize = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBook')
             ->getSyncedAddressBooksToSyncOriginIds($this->getChannel());

@@ -226,6 +226,7 @@ services:
             - @oro_importexport.context_registry
             - @oro_integration.provider.connector_context_mediator
             - @doctrine
+            - @oro_integration.logger.strategy
 
     orocrm_dotmailer.importexport.reader.export.abstract:
         class: %orocrm_dotmailer.importexport.reader.export.abstract.class%
