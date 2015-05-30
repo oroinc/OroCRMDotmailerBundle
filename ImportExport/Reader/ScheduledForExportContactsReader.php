@@ -8,6 +8,8 @@ class ScheduledForExportContactsReader extends AbstractExportReader
 {
     protected function initializeReader()
     {
+        $this->logger->info('Exporting Contacts');
+
         $iterator = new \AppendIterator();
         $addressBooks = $this->getAddressBooksToSync();
 

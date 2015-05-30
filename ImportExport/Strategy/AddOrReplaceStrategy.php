@@ -7,15 +7,32 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\ImportExportBundle\Strategy\Import\ConfigurableAddOrReplaceStrategy;
 
 use OroCRM\Bundle\DotmailerBundle\Entity\ChannelAwareInterface;
+use OroCRM\Bundle\DotmailerBundle\Entity\OriginAwareInterface;
 
 class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
 {
-    const PROCESSING_ITEMS = 'processingItems';
+    const BATCH_ITEMS = 'batchItems';
 
     /**
      * @var DefaultOwnerHelper
      */
     protected $ownerHelper;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function process($entity)
+    {
+        $entity = parent::process($entity);
+
+        if ($entity instanceof OriginAwareInterface) {
+            $batchItems = $this->context->getValue(self::BATCH_ITEMS)?:[];
+            $batchItems[$entity->getOriginId()] = $entity;
+            $this->context->setValue(self::BATCH_ITEMS, $batchItems);
+        }
+
+        return $entity;
+    }
 
     /**
      * @param DefaultOwnerHelper $ownerHelper

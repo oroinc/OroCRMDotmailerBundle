@@ -9,6 +9,7 @@ class RemoveCampaignReader extends AbstractReader
 {
     protected function initializeReader()
     {
+        $this->logger->info('Importing Removed Campaigns');
         $keepCampaigns = $this->jobContext->getValue(CampaignStrategy::EXISTING_CAMPAIGNS_ORIGIN_IDS);
         $keepCampaigns = $keepCampaigns ?: [];
 

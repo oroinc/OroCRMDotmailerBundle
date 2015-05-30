@@ -102,7 +102,6 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
                 $this->removeAddressBookContacts($items, $repository, $addressBookOriginId);
             }
             $em->commit();
-            $this->logger->info('Batch finished');
         } catch (\Exception $e) {
             $em->rollback();
             if (!$em->isOpen()) {

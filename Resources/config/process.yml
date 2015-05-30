@@ -80,24 +80,20 @@ definitions:
             - @assign_constant_value:
                 attribute: $.statusSoftBounced
                 value: OroCRM\Bundle\DotmailerBundle\Entity\Contact::STATUS_SOFTBOUNCED
+            - @tree:
+                conditions:
+                    @or:
+                        - @equal: [$status, $.statusSubscribed]
+                        - @equal: [$status, $.statusSoftBounced]
+                actions:
+                    - @remove_marketing_list_unsubscribed_item: ~
+                    - @remove_marketing_list_removed_item: ~
             # Create OroCRM MarketingListUnsubscribedItem
             - @create_marketing_list_unsubscribed_item:
                 conditions:
                     @and:
                         - @not_equal: [$status, $.statusSubscribed]
                         - @not_equal: [$status, $.statusSoftBounced]
-            # Remove OroCRM MarketingListUnsubscribedItem
-            - @remove_marketing_list_unsubscribed_item:
-                conditions:
-                    @or:
-                        - @equal: [$status, $.statusSubscribed]
-                        - @equal: [$status, $.statusSoftBounced]
-
-            - @remove_marketing_list_removed_item:
-                conditions:
-                    @or:
-                        - @equal: [$status, $.statusSubscribed]
-                        - @equal: [$status, $.statusSoftBounced]
 
     schedule_dotmailer_address_book_synchronization:
         label:   Schedule Dotmailer Address Book synchronization

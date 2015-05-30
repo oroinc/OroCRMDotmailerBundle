@@ -103,7 +103,6 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
             $manager->flush();
             $manager->commit();
             $manager->clear();
-            $this->logger->info('Batch finished');
         } catch (\Exception $exception) {
             $manager->rollback();
             if (!$manager->isOpen()) {
