@@ -45,8 +45,8 @@ class ImportWriter extends PersistentBatchWriter
         }
 
         $memoryUsed = $this->logHelper->getMemoryConsumption();
-        $stepExecutionTime = $this->logHelper->getStepExecutionTime($this->stepExecution);
-        $message .= " Elapsed Time(in minutes): {$stepExecutionTime}. Memory used: $memoryUsed MB .";
+        $stepExecutionTime = $this->logHelper->getFormattedTimeOfStepExecution($this->stepExecution);
+        $message .= " Elapsed Time: {$stepExecutionTime}. Memory used: $memoryUsed MB .";
 
         $this->logger->info($message);
     }
