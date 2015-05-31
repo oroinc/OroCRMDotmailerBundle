@@ -7,7 +7,6 @@ use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 class ImportExportLogHelper
 {
     const MEGABYTE = 1048576;
-    const MINUTE = 60;
 
     /**
      * Return Memory Consumption in MB
@@ -21,18 +20,18 @@ class ImportExportLogHelper
     }
 
     /**
-     * Return Step execution time in minutes
+     * Return formatted Step execution time
      *
      * @param StepExecution $stepExecution
      *
      * @return int
      */
-    public function getStepExecutionTime(StepExecution $stepExecution)
+    public function getFormattedTimeOfStepExecution(StepExecution $stepExecution)
     {
         /** @var \DateTime $jobStartTime */
         $jobStartTime = $stepExecution->getStartTime();
-        $timeSpent = microtime(true) - $jobStartTime->getTimestamp();
+        $timeSpent = round(microtime(true)) - $jobStartTime->getTimestamp();
 
-        return (int)round($timeSpent / self::MINUTE);
+        return gmdate('H:i:s', $timeSpent);
     }
 }
