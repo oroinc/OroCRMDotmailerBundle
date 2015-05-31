@@ -2,6 +2,11 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport;
 
+use DotMailer\Api\DataTypes\ApiContactImport;
+use DotMailer\Api\DataTypes\ApiContactResubscription;
+use DotMailer\Api\DataTypes\ApiFileMedia;
+use DotMailer\Api\DataTypes\ApiResubscribeResult;
+use DotMailer\Api\DataTypes\Int32List;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
 class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
@@ -253,6 +258,93 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
         $iterator->rewind();
     }
 
+    public function testResubscribeAddressBookContact()
+    {
+        $resource = $this->initTransportStub();
+        $entity = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact');
+        $contact = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\Contact');
+        $addressBook = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\AddressBook');
+        $expected = new ApiResubscribeResult();
+        $addressBookId = 42;
+        $entity->expects($this->once())
+            ->method('getContact')
+            ->will($this->returnValue($contact));
+        $entity->expects($this->once())
+            ->method('getAddressBook')
+            ->will($this->returnValue($addressBook));
+        $addressBook->expects($this->once())
+            ->method('getOriginId')
+            ->will($this->returnValue($addressBookId));
+        $contact->expects($this->once())
+            ->method('getEmail')
+            ->will($this->returnValue($email = 'test@mail.com'));
+
+        $resource->expects($this->once())
+            ->method('PostAddressBookContactsResubscribe')
+            ->with($addressBookId, $this->callback(function (ApiContactResubscription $actual) use ($email) {
+                $this->assertEquals($email, $actual->unsubscribedContact->email);
+
+                return true;
+            }))
+            ->will($this->returnValue($expected));
+
+        $actual = $this->target->resubscribeAddressBookContact($entity);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testRemoveContactsFromAddressBook()
+    {
+        $addressBookId = 42;
+        $removingItemsOriginIds = [21, 567];
+
+        $resource = $this->initTransportStub();
+        $resource->expects($this->once())
+            ->method('PostAddressBookContactsDelete')
+            ->with($addressBookId, $this->callback(function (Int32List $list) use ($removingItemsOriginIds) {
+                $actual = $list->toArray();
+                $this->assertEquals($removingItemsOriginIds, $actual);
+
+                return true;
+            }));
+
+        $this->target->removeContactsFromAddressBook($removingItemsOriginIds, $addressBookId);
+    }
+
+    public function testExportAddressBookContacts()
+    {
+        $resource = $this->initTransportStub();
+        $addressBookId = 42;
+
+        $testCsv = "Email\ntest@mail.com";
+
+        $import = new ApiContactImport();
+        $resource->expects($this->once())
+            ->method('PostAddressBookContactsImport')
+            ->with($addressBookId, $this->callback(function (ApiFileMedia $apiFileMedia) use ($testCsv) {
+
+                $this->assertEquals(base64_encode($testCsv), $apiFileMedia->data);
+
+                return true;
+            }))
+            ->will($this->returnValue($import));
+
+        $actual = $this->target->exportAddressBookContacts($testCsv, $addressBookId);
+        $this->assertSame($import, $actual);
+    }
+
+    public function testGetImportStatus()
+    {
+        $resource = $this->initTransportStub();
+        $expected = new ApiContactImport();
+        $resource->expects($this->once())
+            ->method('GetContactsImportByImportId')
+            ->with($importId = '2d2cac85-e292-4f35-988c-ddb5ba40dda0')
+            ->will($this->returnValue($expected));
+
+        $actual = $this->target->getImportStatus($importId);
+        $this->assertSame($expected, $actual);
+    }
+
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      * @throws \OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException
@@ -284,6 +376,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($resource));
 
         $this->target->init($transport);
+
         return $resource;
     }
 }
