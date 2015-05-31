@@ -38,7 +38,7 @@ class ScheduledForExportContactsIterator extends AbstractIterator
     {
         $contacts = $this->registry
             ->getRepository('OroCRMDotmailerBundle:Contact')
-            ->getScheduledForExportByChannelQB($this->addressBook, self::ADDRESS_BOOK_KEY)
+            ->getScheduledForExportByChannelQB($this->addressBook)
             ->setFirstResult($skip)
             ->setMaxResults($take)
             ->getQuery()
