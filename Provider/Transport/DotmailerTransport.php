@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\ApiFileMedia;
+use DotMailer\Api\DataTypes\ApiResubscribeResult;
 use DotMailer\Api\DataTypes\Int32List;
 use DotMailer\Api\Resources\IResources;
 use DotMailer\Api\DataTypes\ApiContactResubscription;
@@ -179,7 +180,7 @@ class DotmailerTransport implements TransportInterface
     /**
      * @param AddressBookContact $abContact
      *
-     * @return \DotMailer\Api\DataTypes\ApiResubscribeResult
+     * @return ApiResubscribeResult
      */
     public function resubscribeAddressBookContact(AddressBookContact $abContact)
     {

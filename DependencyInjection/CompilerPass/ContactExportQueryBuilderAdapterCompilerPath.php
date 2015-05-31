@@ -10,6 +10,7 @@ class ContactExportQueryBuilderAdapterCompilerPath implements CompilerPassInterf
 {
     const ADAPTERS_TAG = 'orocrm_dotmailer.contact.export.query_builder_adapter';
     const REGISTRY = 'orocrm_dotmailer.contact.export.query_builder_adapter.registry';
+    const ADD_ADAPTER_METHOD = 'addAdapter';
 
     /**
      * {@inheritdoc}
@@ -21,7 +22,7 @@ class ContactExportQueryBuilderAdapterCompilerPath implements CompilerPassInterf
             $definition = $container->getDefinition(self::REGISTRY);
             foreach ($adapters as $id => $arguments) {
                 $priority = isset($arguments['priority']) ? $arguments['priority'] : 0;
-                $definition->addMethodCall('addAdapter', [new Reference($id), $priority]);
+                $definition->addMethodCall(self::ADD_ADAPTER_METHOD, [new Reference($id), $priority]);
             }
         }
     }

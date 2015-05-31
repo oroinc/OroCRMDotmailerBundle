@@ -30,7 +30,7 @@ class MarketingListPlaceholderFilter
     public function isApplicableOnMarketingList($marketingList)
     {
         if ($marketingList instanceof MarketingList) {
-            return (bool)$this->registry->getManager()
+            return (bool)$this->registry
                 ->getRepository('OroCRMDotmailerBundle:AddressBook')
                 ->findOneBy(['marketingList' => $marketingList]);
         }

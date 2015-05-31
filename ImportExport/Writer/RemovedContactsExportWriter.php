@@ -171,10 +171,10 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
         $itemsCount = count($items);
 
         $memoryUsed = $this->logHelper->getMemoryConsumption();
-        $stepExecutionTime = $this->logHelper->getStepExecutionTime($this->stepExecution);
+        $stepExecutionTime = $this->logHelper->getFormattedTimeOfStepExecution($this->stepExecution);
 
         $message = "$itemsCount Contacts removed from Dotmailer Address Book with Id: $addressBookOriginId.";
-        $message .= " Elapsed Time(in minutes): {$stepExecutionTime}. Memory used: $memoryUsed MB .";
+        $message .= " Elapsed Time: {$stepExecutionTime}. Memory used: $memoryUsed MB .";
 
         $this->logger->info($message);
     }
