@@ -291,7 +291,7 @@ class JobContextComposite implements ContextInterface
      */
     public function getOption($name, $default = null)
     {
-        $option = null;
+        $option = $default;
         foreach ($this->contexts as $context) {
             $contextOption = $context->getOption($name);
             if (is_null($contextOption)) {
