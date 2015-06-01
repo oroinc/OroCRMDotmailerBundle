@@ -7,6 +7,7 @@ use DotMailer\Api\DataTypes\ApiContactResubscription;
 use DotMailer\Api\DataTypes\ApiFileMedia;
 use DotMailer\Api\DataTypes\ApiResubscribeResult;
 use DotMailer\Api\DataTypes\Int32List;
+
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
 class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
