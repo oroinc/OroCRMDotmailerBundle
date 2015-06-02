@@ -307,4 +307,14 @@ class JobContextComposite implements ContextInterface
 
         return $option;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeOption($name)
+    {
+        foreach ($this->contexts as $context) {
+            $context->removeOption($name);
+        }
+    }
 }

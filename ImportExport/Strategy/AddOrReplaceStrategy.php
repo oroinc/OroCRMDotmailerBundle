@@ -51,7 +51,13 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
             return $entity;
         }
 
-        return parent::validateAndUpdateContext($entity);
+        $entity = parent::validateAndUpdateContext($entity);
+
+        if ($entity && $this->databaseHelper->getIdentifier($entity)) {
+            $this->context->incrementUpdateCount();
+        }
+
+        return $entity;
     }
 
     /**
