@@ -107,6 +107,9 @@ parameters:
     orocrm_dotmailer.email_campaign.security.acl.voter.entity.class:  OroCRM\Bundle\DotmailerBundle\Acl\Voter\EmailCampaignVoter
     orocrm_dotmailer.acl.voter.marketing_list_state_item.class:       OroCRM\Bundle\DotmailerBundle\Acl\Voter\MarketingListStateItemVoter
 
+    #listeners
+    orocrm_dotmailer.listener.datagrid.marketing_list_item.class: OroCRM\Bundle\DotmailerBundle\EventListener\Datagrid\MarketingListItemGridListener
+
 services:
     # Forms and Extensions
     orocrm_dotmailer.form.type.integration_transport_settings:
@@ -612,3 +615,11 @@ services:
             - [setClassName, [%orocrm_marketing_list.unsubscribed_item.class%]]
         tags:
             - { name: security.voter, priority: 500 }
+
+    #listeners
+    orocrm_dotmailer.listener.datagrid.marketing_list_item:
+        class: %orocrm_dotmailer.listener.datagrid.marketing_list_item.class%
+        arguments:
+            - @doctrine
+        tags:
+            - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.after, method: onBuildAfter }
