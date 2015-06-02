@@ -65,6 +65,10 @@ class ContactsExportCommand extends AbstractSyncCronCommand
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        if ($output->getVerbosity() < OutputInterface::VERBOSITY_VERBOSE) {
+            $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
+        }
+
         $logger = new OutputLogger($output);
         $this->getContainer()
             ->get('oro_integration.logger.strategy')
