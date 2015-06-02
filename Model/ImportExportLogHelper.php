@@ -24,7 +24,7 @@ class ImportExportLogHelper
      *
      * @param StepExecution $stepExecution
      *
-     * @return int
+     * @return string
      */
     public function getFormattedTimeOfStepExecution(StepExecution $stepExecution)
     {
