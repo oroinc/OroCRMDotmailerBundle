@@ -4,8 +4,6 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiCampaignContactSummaryList;
 
-use Oro\Bundle\IntegrationBundle\Command\SyncCommand;
-
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
 
 /**

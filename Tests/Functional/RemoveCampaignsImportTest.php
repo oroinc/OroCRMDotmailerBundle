@@ -5,7 +5,6 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
 use DotMailer\Api\DataTypes\ApiCampaign;
 use DotMailer\Api\DataTypes\ApiCampaignList;
 
-use Oro\Bundle\IntegrationBundle\Command\SyncCommand;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 
 /**
