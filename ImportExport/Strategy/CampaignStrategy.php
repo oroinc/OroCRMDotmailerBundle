@@ -35,32 +35,16 @@ class CampaignStrategy extends AddOrReplaceStrategy
     /**
      * {@inheritdoc}
      */
-    public function process($entity)
-    {
-        $entity = parent::process($entity);
-
-        if ($entity instanceof Campaign && !$this->databaseHelper->getIdentifier($entity)) {
-            $newImportedCampaigns = $this->context->getValue('newImportedItems')?:[];
-            $newImportedCampaigns[$entity->getOriginId()] = $entity;
-            $this->context->setValue('newImportedItems', $newImportedCampaigns);
-        }
-
-        return $entity;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function afterProcessEntity($entity)
     {
         /** @var Campaign $entity */
         if ($entity) {
-            $newImportedCampaigns = $this->context->getValue('newImportedItems');
+            $batchItems = $this->context->getValue(self::BATCH_ITEMS);
             /**
              * Fix case if this campaign already imported on this batch
              */
-            if ($newImportedCampaigns && isset($newImportedCampaigns[$entity->getOriginId()])) {
-                $entity = $newImportedCampaigns[$entity->getOriginId()];
+            if ($batchItems && !$entity->getId() && isset($batchItems[$entity->getOriginId()])) {
+                $entity = $batchItems[$entity->getOriginId()];
             }
 
             $addressBook = $this->getAddressBook($entity->getChannel());

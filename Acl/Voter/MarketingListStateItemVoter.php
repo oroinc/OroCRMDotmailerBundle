@@ -2,13 +2,10 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Acl\Voter;
 
-use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\QueryBuilder;
-
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\SecurityBundle\Acl\Voter\AbstractEntityVoter;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
+use OroCRM\Bundle\DotmailerBundle\Entity\Repository\ContactRepository;
 use OroCRM\Bundle\DotmailerBundle\Model\FieldHelper;
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface;
 use OroCRM\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
@@ -50,23 +47,17 @@ class MarketingListStateItemVoter extends AbstractEntityVoter
      * @param ContactInformationFieldsProvider $contactInformationFieldsProvider
      * @param FieldHelper $fieldHelper
      * @param string $contactClassName
-     * @param string $addressBookClassName
-     * @param string $abContactClassName
      */
     public function __construct(
         DoctrineHelper $doctrineHelper,
         ContactInformationFieldsProvider $contactInformationFieldsProvider,
         FieldHelper $fieldHelper,
-        $contactClassName,
-        $addressBookClassName,
-        $abContactClassName
+        $contactClassName
     ) {
         $this->doctrineHelper = $doctrineHelper;
         $this->contactInformationFieldsProvider = $contactInformationFieldsProvider;
         $this->fieldHelper = $fieldHelper;
         $this->contactClassName = $contactClassName;
-        $this->addressBookClassName = $addressBookClassName;
-        $this->abContactClassName = $abContactClassName;
     }
 
     /**
@@ -75,75 +66,38 @@ class MarketingListStateItemVoter extends AbstractEntityVoter
     protected function getPermissionForAttribute($class, $identifier, $attribute)
     {
         /** @var MarketingListStateItemInterface $item */
-        $item = $this->doctrineHelper->getEntityRepository($this->className)->find($identifier);
+        $item = $this->doctrineHelper
+            ->getEntityRepository($this->className)
+            ->find($identifier);
         $entityClass = $item->getMarketingList()->getEntity();
-        $entity = $this->doctrineHelper->getEntityRepository($entityClass)->find($item->getEntityId());
+        $entity = $this->doctrineHelper
+            ->getEntityRepository($entityClass)
+            ->find($item->getEntityId());
 
         if (!$entity) {
             return self::ACCESS_ABSTAIN;
         }
 
-        $contactInformationFields = $this->contactInformationFieldsProvider->getEntityTypedFields(
-            $entityClass,
-            ContactInformationFieldsProvider::CONTACT_INFORMATION_SCOPE_EMAIL
-        );
-
-        $contactInformationValues = $this->contactInformationFieldsProvider->getTypedFieldsValues(
-            $contactInformationFields,
-            $entity
-        );
-
-        $qb = $this->getQueryBuilder($contactInformationValues, $item);
-
-        $result = $qb->getQuery()->getSingleScalarResult();
-
-        if (!empty($result)) {
-            return self::ACCESS_DENIED;
-        }
-
-        return self::ACCESS_ABSTAIN;
-    }
-
-    /**
-     * @param array $contactInformationValues
-     * @param MarketingListStateItemInterface $item
-     * @return QueryBuilder
-     */
-    protected function getQueryBuilder(array $contactInformationValues, $item)
-    {
-        $qb = $this->doctrineHelper
-            ->getEntityManager($this->abContactClassName)
-            ->createQueryBuilder();
-
-        $qb
-            ->select('COUNT(dmAbContact.id)')
-            ->from($this->abContactClassName, 'dmAbContact')
-            ->join(
-                $this->addressBookClassName,
-                'addressBook',
-                Join::WITH,
-                'dmAbContact.addressBook = addressBook.id'
-            )
-            ->join(
-                $this->contactClassName,
-                'dmContact',
-                Join::WITH,
-                'dmAbContact.contact = dmContact.id'
-            )
-            ->where(
-                $qb->expr()->andX(
-                    $qb->expr()->eq('addressBook.marketingList', ':marketingList'),
-                    $qb->expr()->in('dmContact.email', $contactInformationValues),
-                    $qb->expr()->eq('dmAbContact.status', ':status')
-                )
-            )
-            ->setParameters(
-                [
-                    'status' => Contact::STATUS_UNSUBSCRIBED,
-                    'marketingList' => $item->getMarketingList()
-                ]
+        $contactInformationFields = $this->contactInformationFieldsProvider
+            ->getEntityTypedFields(
+                $entityClass,
+                ContactInformationFieldsProvider::CONTACT_INFORMATION_SCOPE_EMAIL
             );
 
-        return $qb;
+        $contactInformationValues = $this->contactInformationFieldsProvider
+            ->getTypedFieldsValues(
+                $contactInformationFields,
+                $entity
+            );
+
+        /** @var ContactRepository $contactRepository */
+        $contactRepository = $this->doctrineHelper
+            ->getEntityRepository($this->contactClassName);
+        $result = $contactRepository->isUnsubscribedFromAddressBookByMarketingList(
+            $contactInformationValues,
+            $item->getMarketingList()
+        );
+
+        return $result ? self::ACCESS_DENIED : self::ACCESS_ABSTAIN;
     }
 }

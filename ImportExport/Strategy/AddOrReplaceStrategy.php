@@ -2,20 +2,37 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
-use Doctrine\Common\Util\ClassUtils;
-
 use Oro\Bundle\IntegrationBundle\ImportExport\Helper\DefaultOwnerHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\ImportExportBundle\Strategy\Import\ConfigurableAddOrReplaceStrategy;
 
 use OroCRM\Bundle\DotmailerBundle\Entity\ChannelAwareInterface;
+use OroCRM\Bundle\DotmailerBundle\Entity\OriginAwareInterface;
 
 class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
 {
+    const BATCH_ITEMS = 'batchItems';
+
     /**
      * @var DefaultOwnerHelper
      */
     protected $ownerHelper;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function process($entity)
+    {
+        $entity = parent::process($entity);
+
+        if ($entity instanceof OriginAwareInterface) {
+            $batchItems = $this->context->getValue(self::BATCH_ITEMS)?:[];
+            $batchItems[$entity->getOriginId()] = $entity;
+            $this->context->setValue(self::BATCH_ITEMS, $batchItems);
+        }
+
+        return $entity;
+    }
 
     /**
      * @param DefaultOwnerHelper $ownerHelper

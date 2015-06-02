@@ -20,6 +20,8 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemovedContactsExportIterator;
 
+use OroCRM\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
+
 class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionAwareInterface
 {
     const BATCH_SIZE = 2000;
@@ -55,21 +57,29 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
     protected $stepExecution;
 
     /**
-     * @param ManagerRegistry    $registry
-     * @param DotmailerTransport $transport
-     * @param ContextRegistry    $contextRegistry
-     * @param LoggerInterface    $logger
+     * @var ImportExportLogHelper
+     */
+    protected $logHelper;
+
+    /**
+     * @param ManagerRegistry       $registry
+     * @param DotmailerTransport    $transport
+     * @param ContextRegistry       $contextRegistry
+     * @param LoggerInterface       $logger
+     * @param ImportExportLogHelper $logHelper
      */
     public function __construct(
         ManagerRegistry $registry,
         DotmailerTransport $transport,
         ContextRegistry $contextRegistry,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ImportExportLogHelper $logHelper
     ) {
         $this->registry = $registry;
         $this->transport = $transport;
         $this->contextRegistry = $contextRegistry;
         $this->logger = $logger;
+        $this->logHelper = $logHelper;
     }
 
     /**
@@ -92,7 +102,6 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
                 $this->removeAddressBookContacts($items, $repository, $addressBookOriginId);
             }
             $em->commit();
-            $this->logger->info('Batch finished');
         } catch (\Exception $e) {
             $em->rollback();
             if (!$em->isOpen()) {
@@ -160,21 +169,14 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
     protected function logBatchInfo(array $items, $addressBookOriginId)
     {
         $itemsCount = count($items);
-        $now = microtime(true);
-        $previousBatchFinishTime = $this->context->getValue('recordingTime');
+
+        $memoryUsed = $this->logHelper->getMemoryConsumption();
+        $stepExecutionTime = $this->logHelper->getFormattedTimeOfStepExecution($this->stepExecution);
 
         $message = "$itemsCount Contacts removed from Dotmailer Address Book with Id: $addressBookOriginId.";
-        if ($previousBatchFinishTime) {
-            $spent = round($now - $previousBatchFinishTime);
-            $message .= "Time spent: $spent seconds.";
-        }
-        $memoryUsed = memory_get_usage(true);
-        $memoryUsed = $memoryUsed / 1048576;
-        $message .= " Memory used: $memoryUsed MB.";
+        $message .= " Elapsed Time: {$stepExecutionTime}. Memory used: $memoryUsed MB.";
 
         $this->logger->info($message);
-
-        $this->context->setValue('recordingTime', $now);
     }
 
     /**

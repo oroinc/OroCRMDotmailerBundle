@@ -25,18 +25,19 @@ class EmailCampaignPlaceholderFilter
     /**
      * Checks the object is an instance of a given class.
      *
-     * @param EmailCampaign $entity
+     * @param $entity
      * @return bool
      */
     public function isApplicableOnEmailCampaign($entity)
     {
         if ($entity instanceof EmailCampaign && $entity->getTransport() == DotmailerEmailCampaignTransport::NAME) {
-            $campaign = $this->registry->getManager()
+            $campaign = $this->registry
                 ->getRepository('OroCRMDotmailerBundle:Campaign')
                 ->findOneBy(['emailCampaign' => $entity]);
+
             return (bool) $campaign;
-        } else {
-            return false;
         }
+
+        return false;
     }
 }
