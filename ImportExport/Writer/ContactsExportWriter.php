@@ -173,7 +173,7 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
         $memoryUsed = $this->logHelper->getMemoryConsumption();
 
         $message = "$itemsCount Contacts exported to Dotmailer Address Book with Id: $addressBookOriginId.";
-        $message .= " Elapsed Time: {$stepExecutionTime}. Memory used: $memoryUsed MB .";
+        $message .= " Elapsed Time: {$stepExecutionTime}. Memory used: $memoryUsed MB.";
 
         $this->logger->info($message);
     }
