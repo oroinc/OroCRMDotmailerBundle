@@ -66,7 +66,7 @@ class RemoveAddressBookWriter implements ItemWriterInterface, StepExecutionAware
             $stepExecutionTime = $this->logHelper->getFormattedTimeOfStepExecution($this->stepExecution);
 
             $message = "$itemsCount Address Books removed";
-            $message .= " Elapsed Time: {$stepExecutionTime}. Memory used: $memoryUsed MB .";
+            $message .= " Elapsed Time: {$stepExecutionTime}. Memory used: $memoryUsed MB.";
 
             $this->logger->info($message);
         } catch (\Exception $e) {
