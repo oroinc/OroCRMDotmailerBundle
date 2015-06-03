@@ -104,6 +104,12 @@ class ContactsExportCommand extends AbstractSyncCronCommand
              * Else we need to start new export
              */
             if (!$exportManager->isExportFinished($channel)) {
+                $logger->info(
+                    sprintf(
+                        'Previous export do not complete for channel %s, checking previous export state ...',
+                        $channel->getId()
+                    )
+                );
                 $exportManager->updateExportResults($channel);
             } else {
                 $this->removePreviousAddressBookContactsExport($channel);
