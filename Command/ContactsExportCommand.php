@@ -106,8 +106,8 @@ class ContactsExportCommand extends AbstractSyncCronCommand
             if (!$exportManager->isExportFinished($channel)) {
                 $logger->info(
                     sprintf(
-                        'Previous export do not complete for channel %s, checking previous export state ...',
-                        $channel->getId()
+                        'Previous export do not complete for Integration "%s", checking previous export state ...',
+                        $channel->getName()
                     )
                 );
                 $exportManager->updateExportResults($channel);
