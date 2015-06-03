@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\MailChimpBundle\Tests\Unit\Model;
+namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Model;
 
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
