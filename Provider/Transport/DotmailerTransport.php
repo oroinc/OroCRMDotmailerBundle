@@ -222,6 +222,14 @@ class DotmailerTransport implements TransportInterface
     }
 
     /**
+     * @return IResources
+     */
+    public function getDotmailerResource()
+    {
+        return $this->dotmailerResources;
+    }
+
+    /**
      * @param string $importId
      *
      * @return ApiContactImport

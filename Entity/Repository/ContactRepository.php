@@ -81,4 +81,28 @@ class ContactRepository extends EntityRepository
         return (bool)$qb->getQuery()
             ->getSingleScalarResult();
     }
+
+    /**
+     * @param array $emails
+     *
+     * @return array associative array with emails as key and dotmailer contact ID as a value
+     */
+    public function getContactIdsByEmails(array $emails)
+    {
+        $qb = $this->createQueryBuilder('contact');
+
+        $result = $qb
+            ->select('contact.originId, contact.email')
+            ->where($qb->expr()->in('contact.email', ':emails'))
+            ->setParameter('emails', $emails)
+            ->getQuery()
+            ->getArrayResult();
+
+        $map = [];
+        foreach ($result as $record) {
+            $map[$record['email']] = $record['originId'];
+        }
+
+        return $map;
+    }
 }
