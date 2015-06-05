@@ -110,6 +110,20 @@ connector:
                     parameters:
                         batch_size: 100
 
+        dotmailer_import_not_exported_contact:
+            title: import
+            type: import
+            steps:
+                import:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.importexport.reader.not_exported_contact
+                        processor: orocrm_dotmailer.importexport.processor.not_exported_contact
+                        writer:    orocrm_dotmailer.importexport.writer.import
+                    parameters:
+                        batch_size: 100
+
         dotmailer_contact_export:
             title: orocrm.dotmailer.connector.contact.export_job
             type: export

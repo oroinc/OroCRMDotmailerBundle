@@ -6,7 +6,9 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
+use Oro\Bundle\ImportExportBundle\Processor\ProcessorRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\IntegrationBundle\ImportExport\Job\Executor;
 use Oro\Bundle\IntegrationBundle\Provider\SyncProcessor;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
@@ -31,18 +33,34 @@ class ExportManager
     protected $syncProcessor;
 
     /**
+     * @var Executor
+     */
+    protected $executor;
+
+    /**
+     * @var string
+     */
+    protected $addressBookContact;
+
+    /**
      * @param ManagerRegistry    $managerRegistry
      * @param DotmailerTransport $dotmailerTransport
      * @param SyncProcessor      $syncProcessor
+     * @param Executor           $executor
+     * @param string             $addressBookContact
      */
     public function __construct(
         ManagerRegistry $managerRegistry,
         DotmailerTransport $dotmailerTransport,
-        SyncProcessor $syncProcessor
+        SyncProcessor $syncProcessor,
+        Executor $executor,
+        $addressBookContact
     ) {
         $this->managerRegistry = $managerRegistry;
         $this->dotmailerTransport = $dotmailerTransport;
         $this->syncProcessor = $syncProcessor;
+        $this->executor = $executor;
+        $this->addressBookContact = $addressBookContact;
     }
 
     /**
@@ -80,6 +98,11 @@ class ExportManager
         }
 
         if ($isExportFinished) {
+            $jobResult = $this->startUpdateSkippedContactsStatusJob($channel);
+            if (!$jobResult) {
+                throw new RuntimeException('Update skipped contacts failed.');
+            }
+
             $importJobResult = $this->startImportContactsJob($channel);
             if (!$importJobResult) {
                 throw new RuntimeException('Import exported data failed.');
@@ -98,6 +121,23 @@ class ExportManager
         $this->managerRegistry->getManager()->flush();
 
         return $isExportFinished;
+    }
+
+    protected function startUpdateSkippedContactsStatusJob(Channel $channel)
+    {
+        $configuration = [
+            ProcessorRegistry::TYPE_IMPORT => [
+                'entityName'     => $this->addressBookContact,
+                'channel'        => $channel->getId(),
+                'channelType'    => $channel->getType(),
+            ],
+        ];
+
+        return $this->executor->executeJob(
+            ProcessorRegistry::TYPE_IMPORT,
+            'dotmailer_import_not_exported_contact',
+            $configuration
+        );
     }
 
     /**
