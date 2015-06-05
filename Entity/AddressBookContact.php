@@ -9,7 +9,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBookContact;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="OroCRM\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactRepository")
  * @ORM\Table(
  *      name="orocrm_dm_ab_contact",
  *      uniqueConstraints={
