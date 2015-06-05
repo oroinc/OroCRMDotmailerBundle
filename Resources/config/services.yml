@@ -31,13 +31,14 @@ parameters:
     orocrm_dotmailer.form.handler.connection_update.class:            OroCRM\Bundle\DotmailerBundle\Form\Handler\ConnectionUpdateFormHandler
 
     #data converters
-    orocrm_dotmailer.importexport.data_converter.address_book.class:          OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\AddressBookDataConverter
-    orocrm_dotmailer.importexport.data_converter.unsubscribed_contacts.class: OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\UnsubscribedContactsDataConverter
-    orocrm_dotmailer.importexport.data_converter.campaign.class:              OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\CampaignDataConverter
-    orocrm_dotmailer.importexport.data_converter.contact.class:               OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactDataConverter
-    orocrm_dotmailer.importexport.data_converter.activity_contact.class:      OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ActivityContactDataConverter
-    orocrm_dotmailer.importexport.data_converter.campaign_summary.class:      OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\CampaignSummaryDataConverter
-    orocrm_dotmailer.importexport.data_converter.contact_sync.class:          OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactSyncDataConverter
+    orocrm_dotmailer.importexport.data_converter.not_exported_contact.class:        OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\NotExportedContactDataConverter
+    orocrm_dotmailer.importexport.data_converter.address_book.class:                OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\AddressBookDataConverter
+    orocrm_dotmailer.importexport.data_converter.unsubscribed_contacts.class:       OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\UnsubscribedContactsDataConverter
+    orocrm_dotmailer.importexport.data_converter.campaign.class:                    OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\CampaignDataConverter
+    orocrm_dotmailer.importexport.data_converter.contact.class:                     OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactDataConverter
+    orocrm_dotmailer.importexport.data_converter.activity_contact.class:            OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ActivityContactDataConverter
+    orocrm_dotmailer.importexport.data_converter.campaign_summary.class:            OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\CampaignSummaryDataConverter
+    orocrm_dotmailer.importexport.data_converter.contact_sync.class:                OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactSyncDataConverter
 
     #reader
     orocrm_dotmailer.importexport.reader.abstract.class:                            OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractReader
@@ -61,6 +62,7 @@ parameters:
     #strategy
     orocrm_dotmailer.importexport.strategy.add_or_replace.class:                      OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\AddOrReplaceStrategy
     orocrm_dotmailer.importexport.strategy.import.abstract.class:                     OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\AbstractImportStrategy
+    orocrm_dotmailer.importexport.strategy.not_exported_contact.class:                OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\NotExportedContactStrategy
     orocrm_dotmailer.importexport.strategy.address_book.class:                        OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\AddressBookStrategy
     orocrm_dotmailer.importexport.strategy.remove_address_book.class:                 OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\RemoveAddressBookStrategy
     orocrm_dotmailer.importexport.strategy.remove_campaign.class:                     OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\RemoveCampaignStrategy
@@ -194,6 +196,8 @@ services:
             - @doctrine
             - @orocrm_dotmailer.transport.integration_transport
             - @oro_integration.sync.processor
+            - @oro_integration.job_executor
+            - %orocrm_dotmailer.entity.address_book_contact.class%
 
     orocrm_dotmailer.provider.marketing_list_items.query_builder:
         class: %orocrm_dotmailer.provider.marketing_list_items.query_builder.class%
@@ -326,6 +330,9 @@ services:
             - { name: oro_integration.connector, type: campaign_summary, channel_type: dotmailer }
 
     #data converter
+    orocrm_dotmailer.importexport.data_converter.not_exported_contact:
+        class: %orocrm_dotmailer.importexport.data_converter.not_exported_contact.class%
+
     orocrm_dotmailer.importexport.data_converter.campaign:
         class: %orocrm_dotmailer.importexport.data_converter.campaign.class%
 
@@ -359,6 +366,10 @@ services:
         abstract: true
         calls:
             - [setRegistry, [@doctrine]]
+
+    orocrm_dotmailer.importexport.strategy.not_exported_contact:
+        class: %orocrm_dotmailer.importexport.strategy.not_exported_contact.class%
+        parent: orocrm_dotmailer.importexport.strategy.import.abstract
 
     orocrm_dotmailer.importexport.strategy.address_book:
         class: %orocrm_dotmailer.importexport.strategy.address_book.class%
@@ -403,6 +414,13 @@ services:
         arguments:
             - @oro_importexport.context_registry
         abstract: true
+
+    orocrm_dotmailer.importexport.processor.not_exported_contact:
+        parent: orocrm_dotmailer.importexport.processor.import_abstract
+        calls:
+            - [setDataConverter, [@orocrm_dotmailer.importexport.data_converter.not_exported_contact]]
+            - [setEntityName, [%orocrm_dotmailer.entity.contact.class%]]
+            - [setStrategy, [@orocrm_dotmailer.importexport.strategy.not_exported_contact]]
 
     orocrm_dotmailer.importexport.processor.contact_sync:
         class: %orocrm_dotmailer.importexport.processor.contact_sync.class%
