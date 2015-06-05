@@ -2,7 +2,9 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Writer;
 
+use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\IntegrationBundle\ImportExport\Writer\PersistentBatchWriter;
+
 use OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\AddOrReplaceStrategy;
 use OroCRM\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 
@@ -20,11 +22,7 @@ class ImportWriter extends PersistentBatchWriter
     {
         $context = $this->contextRegistry
             ->getByStepExecution($this->stepExecution);
-
-        /**
-         * clear new imported items list
-         */
-        $context->setValue(AddOrReplaceStrategy::BATCH_ITEMS, []);
+        $this->clearTempValues($context);
 
         parent::write($items);
 
@@ -57,5 +55,16 @@ class ImportWriter extends PersistentBatchWriter
     public function setLogHelper(ImportExportLogHelper $logHelper)
     {
         $this->logHelper = $logHelper;
+    }
+
+    /**
+     * @param ContextInterface $context
+     */
+    protected function clearTempValues(ContextInterface $context)
+    {
+        /**
+         * Items to write(processed items.)
+         */
+        $context->setValue(AddOrReplaceStrategy::BATCH_ITEMS, []);
     }
 }

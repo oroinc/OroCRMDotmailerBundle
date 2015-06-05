@@ -13,7 +13,7 @@ connector:
                         processor: orocrm_dotmailer.importexport.processor.address_book
                         writer:    orocrm_dotmailer.importexport.writer.import
                     parameters:
-                        batch_size: 25
+                        batch_size: 100
                 removeNotExistingAddressBooks:
                     title: import
                     class: Oro\Bundle\BatchBundle\Step\ItemStep
@@ -118,20 +118,20 @@ connector:
                     title: export
                     class: Oro\Bundle\BatchBundle\Step\ItemStep
                     services:
-                        reader:    orocrm_dotmailer.importexport.reader.removed_contacts_export
+                        reader:    orocrm_dotmailer.importexport.reader.removed_contact_export
                         processor: orocrm_dotmailer.importexport.processor.export_removed
                         writer:    orocrm_dotmailer.importexport.writer.export.removed_contacts
                     parameters:
-                        batch_size: 10000
+                        batch_size: 1000
                 syncMarketingListItemsWithContacts:
                     title: export
                     class: Oro\Bundle\BatchBundle\Step\ItemStep
                     services:
                         reader:    orocrm_dotmailer.importexport.reader.contact_sync
                         processor: orocrm_dotmailer.importexport.processor.contact_sync
-                        writer:    orocrm_dotmailer.importexport.writer.import
+                        writer:    orocrm_dotmailer.importexport.writer.contact_sync
                     parameters:
-                        batch_size: 2000
+                        batch_size: 1000
                 exportContacts:
                     title: export
                     class: Oro\Bundle\BatchBundle\Step\ItemStep
