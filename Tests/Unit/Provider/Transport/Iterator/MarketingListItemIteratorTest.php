@@ -13,6 +13,7 @@ class MarketingListItemIteratorTest extends \PHPUnit_Framework_TestCase
         )
             ->disableOriginalConstructor()
             ->getMock();
+        $context = $this->getMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
         $addressBook = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\AddressBook');
         $addressBook->expects($this->any())
             ->method('getOriginId')
@@ -25,7 +26,11 @@ class MarketingListItemIteratorTest extends \PHPUnit_Framework_TestCase
             ['id' => 44, MarketingListItemIterator::ADDRESS_BOOK_KEY => $addressBookOriginId],
         ];
 
-        $iterator = new MarketingListItemIterator($addressBook, $marketingListItemsQueryBuilderProvider);
+        $iterator = new MarketingListItemIterator(
+            $addressBook,
+            $marketingListItemsQueryBuilderProvider,
+            $context
+        );
         $iterator->setBatchSize(1);
 
         $qb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
@@ -34,25 +39,36 @@ class MarketingListItemIteratorTest extends \PHPUnit_Framework_TestCase
         $qb->expects($this->exactly(3))
             ->method('setMaxResults')
             ->with(1);
-        $qb->expects($this->exactly(3))
-            ->method('setFirstResult');
         $query = $this->getMockBuilder('Doctrine\ORM\AbstractQuery')
-            ->setMethods(['execute'])
+            ->setMethods(['execute', 'useQueryCache'])
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
-        $qb->expects($this->exactly(3))
+
+        $query->expects($this->exactly(3))
+            ->method('useQueryCache')
+            ->will($this->returnSelf());
+
+        $executeMap = [
+            [$firstItem],
+            [$secondItem],
+            []
+        ];
+        $query->expects($this->exactly(3))
+            ->method('execute')
+            ->will(
+                $this->returnCallback(
+                    function () use (&$executeMap) {
+                        $result = current($executeMap);
+                        next($executeMap);
+
+                        return $result;
+                    }
+                )
+            );
+
+        $qb->expects($this->any())
             ->method('getQuery')
             ->will($this->returnValue($query));
-
-        $query->expects($this->at(0))
-            ->method('execute')
-            ->will($this->returnValue([$firstItem]));
-        $query->expects($this->at(1))
-            ->method('execute')
-            ->will($this->returnValue([$secondItem]));
-        $query->expects($this->at(2))
-            ->method('execute')
-            ->will($this->returnValue([]));
 
         $marketingListItemsQueryBuilderProvider->expects($this->exactly(3))
             ->method('getMarketingListItemsQB')
