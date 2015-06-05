@@ -2,14 +2,17 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Model\Action;
 
-use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
+use Doctrine\ORM\Query\Expr\Join;
 
+use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface;
 
 class MarketingListStateItemCreateAction extends AbstractMarketingListEntitiesAction
 {
+    const MARKETING_LIST_ENTITY_QB_ALIAS = 'marketingListEntity';
+
     /**
      * @var DoctrineHelper
      */
@@ -71,21 +74,6 @@ class MarketingListStateItemCreateAction extends AbstractMarketingListEntitiesAc
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function getEntitiesQueryBuilder(MarketingList $marketingList)
-    {
-        $className = $marketingList->getEntity();
-
-        $qb = $this->doctrineHelper
-            ->getEntityManager($className)
-            ->getRepository($className)
-            ->createQueryBuilder('e');
-
-        return $qb;
-    }
-
-    /**
      * @param AddressBookContact $abContact
      * @return MarketingListStateItemInterface[]
      */
@@ -103,39 +91,42 @@ class MarketingListStateItemCreateAction extends AbstractMarketingListEntitiesAc
         );
 
         foreach ($marketingListEntities as $marketingListEntity) {
-            $entityId = $this->doctrineHelper->getSingleEntityIdentifier($marketingListEntity);
-
-            $criteria = [
-                'entityId' => $entityId,
-                'marketingList' => $marketingList->getId()
-            ];
-
-            if ($this->getMarketingListStateItem($criteria)) {
-                continue;
-            }
-
             /** @var MarketingListStateItemInterface $marketingListStateItem */
             $marketingListStateItem = new $this->marketingListStateItemClassName();
 
-            $marketingListStateItem
-                ->setEntityId($entityId)
+            $entities[] = $marketingListStateItem
+                ->setEntityId($marketingListEntity['id'])
                 ->setMarketingList($marketingList);
-
-            $entities[] = $marketingListStateItem;
         }
 
         return $entities;
     }
 
     /**
-     * @param array $criteria
-     * @return MarketingListStateItemInterface|null
+     * {@inheritdoc}
      */
-    protected function getMarketingListStateItem(array $criteria)
+    protected function getMarketingListEntitiesByEmailQueryBuilder(MarketingList $marketingList, $email)
+    {
+        $qb = parent::getMarketingListEntitiesByEmailQueryBuilder($marketingList, $email);
+
+        $qb->leftJoin(
+            $this->marketingListStateItemClassName,
+            'mli',
+            Join::WITH,
+            sprintf('mli.entityId = %s.id and mli.marketingList =:marketingList', self::MARKETING_LIST_ENTITY_QB_ALIAS)
+        )->setParameter('marketingList', $marketingList);
+        $qb->andWhere('mli.id is NULL');
+
+        return $qb->select(sprintf('%s.id as id', self::MARKETING_LIST_ENTITY_QB_ALIAS));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getEntitiesQueryBuilder(MarketingList $marketingList)
     {
         return $this->doctrineHelper
-            ->getEntityManager($this->marketingListStateItemClassName)
-            ->getRepository($this->marketingListStateItemClassName)
-            ->findOneBy($criteria);
+            ->getEntityRepository($marketingList->getEntity())
+            ->createQueryBuilder(self::MARKETING_LIST_ENTITY_QB_ALIAS);
     }
 }

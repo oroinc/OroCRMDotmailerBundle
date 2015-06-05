@@ -10,6 +10,8 @@ use Oro\Bundle\ImportExportBundle\Processor\StepExecutionAwareProcessor;
 
 class RemovedExportProcessor implements StepExecutionAwareProcessor
 {
+    const CURRENT_BATCH_READ_ITEMS = 'currentBatchReadItems';
+
     /**
      * @var ContextRegistry
      */
@@ -40,6 +42,11 @@ class RemovedExportProcessor implements StepExecutionAwareProcessor
     {
         if (is_array($item)) {
             $this->context->incrementDeleteCount();
+
+            $items = $this->context->getValue(self::CURRENT_BATCH_READ_ITEMS) ?: [];
+            $items[] = $item;
+
+            $this->context->setValue(self::CURRENT_BATCH_READ_ITEMS, $items);
         }
 
         return $item;
