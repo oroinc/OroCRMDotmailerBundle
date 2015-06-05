@@ -52,6 +52,24 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
     /**
      * @param MarketingList $marketingList
      * @param string $email
+     * @return BufferedQueryResultIterator
+     */
+    protected function getMarketingListEntitiesByEmail(MarketingList $marketingList, $email)
+    {
+        $query = $this->getMarketingListEntitiesByEmailQueryBuilder($marketingList, $email)
+            ->getQuery()
+            /**
+             * Call multiple times during import
+             * and because of it cache grows larger and script getting out of memory.
+             */
+            ->useQueryCache(false);
+
+        return new BufferedQueryResultIterator($query);
+    }
+
+    /**
+     * @param MarketingList $marketingList
+     * @param string $email
      * @return QueryBuilder
      */
     protected function getMarketingListEntitiesByEmailQueryBuilder(MarketingList $marketingList, $email)
@@ -77,18 +95,6 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
         $qb->andWhere($expr);
 
         return $qb;
-    }
-
-    /**
-     * @param MarketingList $marketingList
-     * @param string $email
-     * @return BufferedQueryResultIterator
-     */
-    protected function getMarketingListEntitiesByEmail(MarketingList $marketingList, $email)
-    {
-        return new BufferedQueryResultIterator(
-            $this->getMarketingListEntitiesByEmailQueryBuilder($marketingList, $email)
-        );
     }
 
     /**

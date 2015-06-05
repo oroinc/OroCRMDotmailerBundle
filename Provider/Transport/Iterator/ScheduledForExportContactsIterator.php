@@ -42,6 +42,11 @@ class ScheduledForExportContactsIterator extends AbstractIterator
             ->setFirstResult($skip)
             ->setMaxResults($take)
             ->getQuery()
+            /**
+             * Call multiple times during import
+             * and because of it cache grows larger and script getting out of memory.
+             */
+            ->useQueryCache(false)
             ->getArrayResult();
 
         foreach ($contacts as &$contact) {
