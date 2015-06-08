@@ -43,6 +43,7 @@ parameters:
     #reader
     orocrm_dotmailer.importexport.reader.abstract.class:                            OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractReader
     orocrm_dotmailer.importexport.reader.export.abstract.class:                     OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader
+    orocrm_dotmailer.importexport.reader.not_exported_contact.class:
     orocrm_dotmailer.importexport.reader.unsubscribed_from_account_contacts.class:  OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\UnsubscribedFromAccountContactsReader
     orocrm_dotmailer.importexport.reader.removed_contact_export.class:              OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\RemovedContactExportReader
     orocrm_dotmailer.importexport.reader.contact_sync.class:                        OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\ContactSyncReader
@@ -419,7 +420,7 @@ services:
         parent: orocrm_dotmailer.importexport.processor.import_abstract
         calls:
             - [setDataConverter, [@orocrm_dotmailer.importexport.data_converter.not_exported_contact]]
-            - [setEntityName, [%orocrm_dotmailer.entity.contact.class%]]
+            - [setEntityName, [%orocrm_dotmailer.entity.address_book_contact.class%]]
             - [setStrategy, [@orocrm_dotmailer.importexport.strategy.not_exported_contact]]
 
     orocrm_dotmailer.importexport.processor.contact_sync:
