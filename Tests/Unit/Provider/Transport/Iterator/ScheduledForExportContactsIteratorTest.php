@@ -34,18 +34,33 @@ class ScheduledForExportContactsIteratorTest extends \PHPUnit_Framework_TestCase
             ->method('setFirstResult')
             ->will($this->returnSelf());
         $query = $this->getMockBuilder('Doctrine\ORM\AbstractQuery')
-            ->setMethods(['getArrayResult'])
+            ->setMethods(['useQueryCache', 'getArrayResult'])
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
         $qb->expects($this->exactly(2))
             ->method('getQuery')
             ->will($this->returnValue($query));
-        $query->expects($this->at(0))
+
+        $query->expects($this->exactly(2))
+            ->method('useQueryCache')
+            ->will($this->returnSelf());
+
+        $getArrayResultMap = [
+            [$firstItem, $secondItem],
+            [$thirdItem]
+        ];
+        $query->expects($this->exactly(2))
             ->method('getArrayResult')
-            ->will($this->returnValue([$firstItem, $secondItem]));
-        $query->expects($this->at(1))
-            ->method('getArrayResult')
-            ->will($this->returnValue([$thirdItem]));
+            ->will(
+                $this->returnCallback(
+                    function () use (&$getArrayResultMap) {
+                        $result = current($getArrayResultMap);
+                        next($getArrayResultMap);
+
+                        return $result;
+                    }
+                )
+            );
         $repository = $this->getMockBuilder('OroCRM\Bundle\DotmailerBundle\Entity\Repository\ContactRepository')
             ->disableOriginalConstructor()
             ->getMock();
