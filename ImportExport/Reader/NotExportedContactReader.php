@@ -20,12 +20,7 @@ class NotExportedContactReader extends AbstractReader
         $addressBookExports = [];
 
         foreach ($exportEntities as $exportEntity) {
-            $addressBookId = $exportEntity->getAddressBook()->getId();
-            if (!isset($addressBookExports[$addressBookId])) {
-                $addressBookExports[$addressBookId] = [];
-            }
-
-            $addressBookExports[$addressBookId][] = $exportEntity->getImportId();
+            $addressBookExports[$exportEntity->getAddressBook()->getId()][] = $exportEntity->getImportId();
         }
 
         $iterator = new AppendIterator();
