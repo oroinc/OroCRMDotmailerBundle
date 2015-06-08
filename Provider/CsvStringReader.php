@@ -45,10 +45,10 @@ class CsvStringReader
      */
     public function __construct($csv, array $options = [])
     {
-        $tempFile = new \SplTempFileObject();
-        $tempFile->fwrite($csv);
+        $tempFile = tempnam(sys_get_temp_dir(), 'dm_export');
+        fwrite(fopen($tempFile, 'r+'), $csv);
 
-        $this->setFilePath($tempFile->getRealPath());
+        $this->setFilePath($tempFile);
         $this->initialize($options);
     }
 

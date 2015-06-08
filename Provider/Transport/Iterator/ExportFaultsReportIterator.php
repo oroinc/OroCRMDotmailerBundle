@@ -2,12 +2,16 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
+use DotMailer\Api\DataTypes\Guid;
 use DotMailer\Api\Resources\IResources;
 
 use OroCRM\Bundle\DotmailerBundle\Provider\CsvStringReader;
 
 class ExportFaultsReportIterator implements \Iterator
 {
+    const ADDRESS_BOOK_ID = 'address_book_id';
+    const IMPORT_ID = 'import_id';
+
     /**
      * @var IResources
      */
@@ -47,6 +51,7 @@ class ExportFaultsReportIterator implements \Iterator
      * @param IResources $resources
      * @param int        $addressBookId
      * @param string     $importId
+     * @param array      $options
      */
     public function __construct(IResources $resources, $addressBookId, $importId, $options = [])
     {
@@ -72,7 +77,12 @@ class ExportFaultsReportIterator implements \Iterator
      */
     public function current()
     {
-        return $this->current;
+        $item = $this->current;
+
+        $item[self::ADDRESS_BOOK_ID] = $this->addressBookId;
+        $item[self::IMPORT_ID] = $this->importId;
+
+        return $item;
     }
 
     /**
@@ -108,7 +118,7 @@ class ExportFaultsReportIterator implements \Iterator
     protected function getReader()
     {
         if (!$this->reader) {
-            $csv = $this->resources->GetContactsImportReportFaults($this->importId);
+            $csv = $this->resources->GetContactsImportReportFaults(new Guid($this->importId));
             $this->reader = new CsvStringReader($csv, $this->options);
         }
         return $this->reader;

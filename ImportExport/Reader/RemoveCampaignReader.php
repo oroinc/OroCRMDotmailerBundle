@@ -13,7 +13,7 @@ class RemoveCampaignReader extends AbstractReader
         $keepCampaigns = $this->jobContext->getValue(CampaignStrategy::EXISTING_CAMPAIGNS_ORIGIN_IDS);
         $keepCampaigns = $keepCampaigns ?: [];
 
-        $iterator = new RemoveCampaignsIterator($this->managerRegistry, $this->getChannel(), $keepCampaigns);
+        $iterator = new RemoveCampaignsIterator($this->registry, $this->getChannel(), $keepCampaigns);
 
         $this->setSourceIterator($iterator);
     }
