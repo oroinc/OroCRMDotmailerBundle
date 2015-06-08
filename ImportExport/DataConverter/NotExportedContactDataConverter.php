@@ -3,6 +3,7 @@
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
 use Oro\Bundle\ImportExportBundle\Converter\AbstractTableDataConverter;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReportIterator;
 
 class NotExportedContactDataConverter extends AbstractTableDataConverter
 {
@@ -12,7 +13,8 @@ class NotExportedContactDataConverter extends AbstractTableDataConverter
     protected function getHeaderConversionRules()
     {
         return [
-            'email' => 'email'
+            'email' => 'contact:email',
+            ExportFaultsReportIterator::ADDRESS_BOOK_ID => 'addressBook:id'
         ];
     }
 
