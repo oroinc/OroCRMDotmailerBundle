@@ -115,7 +115,13 @@ class ContactsExportCommandTest extends WebTestCase
         /**
          * Check no errors in output
          */
-        $this->assertEmpty(trim($result));
+        $this->assertEquals(
+            sprintf(
+                'Previous export do not complete for Integration "%s", checking previous export state ...',
+                $this->getReference('orocrm_dotmailer.channel.fourth')->getName()
+            ),
+            $result
+        );
 
         /**
          * Check previous export record removed
