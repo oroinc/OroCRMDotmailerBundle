@@ -21,6 +21,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIte
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterator;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReportIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactsIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactsIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
@@ -219,6 +220,23 @@ class DotmailerTransport implements TransportInterface
     {
         $apiFileMedia = new ApiFileMedia(['FileName' => 'contacts.csv', 'Data' => $contactsCsv]);
         return $this->dotmailerResources->PostAddressBookContactsImport($addressBookOriginId, $apiFileMedia);
+    }
+
+    /**
+     * @param string[] $importIds Array of GUID
+     * @param int $addressBookId Address Book Id
+     *
+     * @return \Iterator
+     */
+    public function getAddressBookExportReports($importIds, $addressBookId)
+    {
+        $appendIterator = new AppendIterator();
+        foreach ($importIds as $importId) {
+            $iterator = new ExportFaultsReportIterator($this->dotmailerResources, $addressBookId, $importId);
+            $appendIterator->append($iterator);
+        }
+
+        return $appendIterator;
     }
 
     /**
