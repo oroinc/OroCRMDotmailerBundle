@@ -61,10 +61,14 @@ class NotExportedContactStrategy extends AbstractImportStrategy
             $addressBookContact->setAddressBook($addressBook);
             $addressBookContact->setContact($contact);
             $addressBookContact->setChannel($this->getChannel());
-            $addressBookContact->setStatus($this->getEnumValue('dm_cnt_status', Contact::STATUS_SUPPRESSED));
-            $currentDate = new \DateTime('now', new \DateTimeZone('UTC'));
-            $addressBookContact->setUnsubscribedDate($currentDate);
         }
+
+        $reason = $this->getEnumValue('dm_cnt_status', Contact::STATUS_SUPPRESSED);
+        $addressBookContact->setStatus($reason);
+        $currentDate = new \DateTime('now', new \DateTimeZone('UTC'));
+        $addressBookContact->setUnsubscribedDate($currentDate);
+        $contact->setStatus($reason);
+        $contact->setUnsubscribedDate($currentDate);
 
         return $addressBookContact;
     }
