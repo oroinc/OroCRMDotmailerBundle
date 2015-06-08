@@ -107,6 +107,6 @@ class ExportManagerTest extends AbstractImportExportTest
         $this->assertCount(1, $addressBookContact);
         $addressBookContact = reset($addressBookContact);
 
-        $this->assertEquals($addressBookContact->getStatus()->getId(), Contact::STATUS_UNSUBSCRIBED);
+        $this->assertEquals($addressBookContact->getStatus()->getId(), Contact::STATUS_SUPPRESSED);
     }
 }
