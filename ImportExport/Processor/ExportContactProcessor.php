@@ -8,7 +8,7 @@ use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\ImportExportBundle\Processor\ExportProcessor;
 use Oro\Bundle\ImportExportBundle\Processor\StepExecutionAwareProcessor;
 
-class ExportContactsProcessor extends ExportProcessor implements StepExecutionAwareProcessor
+class ExportContactProcessor extends ExportProcessor implements StepExecutionAwareProcessor
 {
     /**
      * @var ContextRegistry

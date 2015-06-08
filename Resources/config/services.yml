@@ -43,8 +43,8 @@ parameters:
     orocrm_dotmailer.importexport.reader.abstract.class:                            OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractReader
     orocrm_dotmailer.importexport.reader.export.abstract.class:                     OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader
     orocrm_dotmailer.importexport.reader.unsubscribed_from_account_contacts.class:  OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\UnsubscribedFromAccountContactsReader
-    orocrm_dotmailer.importexport.reader.removed_contacts_export.class:             OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\RemovedContactsExportReader
-    orocrm_dotmailer.importexport.reader.contact_sync.class:                        OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\ContactsSyncReader
+    orocrm_dotmailer.importexport.reader.removed_contact_export.class:              OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\RemovedContactExportReader
+    orocrm_dotmailer.importexport.reader.contact_sync.class:                        OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\ContactSyncReader
     orocrm_dotmailer.importexport.reader.scheduled_for_export.class:                OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\ScheduledForExportContactsReader
     orocrm_dotmailer.importexport.reader.address_book.remove.class:                 OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\RemoveAddressBookReader
     orocrm_dotmailer.importexport.reader.campaign.remove.class:                     OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\RemoveCampaignReader
@@ -73,11 +73,13 @@ parameters:
 
     #processor
     orocrm_dotmailer.importexport.processor.import_abstract.class:    OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\ImportProcessor
+    orocrm_dotmailer.importexport.processor.contact_sync.class:       OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\ContactSyncProcessor
     orocrm_dotmailer.importexport.processor.export_removed.class:     OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\RemovedExportProcessor
-    orocrm_dotmailer.importexport.processor.export_contact.class:     OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\ExportContactsProcessor
+    orocrm_dotmailer.importexport.processor.export_contact.class:     OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\ExportContactProcessor
 
     #writers
     orocrm_dotmailer.importexport.writer.import.class:                      OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\ImportWriter
+    orocrm_dotmailer.importexport.writer.contact_sync.class:                OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\ContactSyncWriter
     orocrm_dotmailer.importexport.writer.import.removed_address_book.class: OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\RemoveAddressBookWriter
     orocrm_dotmailer.importexport.writer.export.contacts.class:             OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\ContactsExportWriter
     orocrm_dotmailer.importexport.writer.export.removed_contacts.class:     OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\RemovedContactsExportWriter
@@ -251,8 +253,8 @@ services:
         parent: orocrm_dotmailer.importexport.reader.abstract
         class: %orocrm_dotmailer.importexport.reader.campaign.remove.class%
 
-    orocrm_dotmailer.importexport.reader.removed_contacts_export:
-        class: %orocrm_dotmailer.importexport.reader.removed_contacts_export.class%
+    orocrm_dotmailer.importexport.reader.removed_contact_export:
+        class: %orocrm_dotmailer.importexport.reader.removed_contact_export.class%
         parent: orocrm_dotmailer.importexport.reader.export.abstract
 
     orocrm_dotmailer.importexport.reader.contact_sync:
@@ -402,6 +404,14 @@ services:
             - @oro_importexport.context_registry
         abstract: true
 
+    orocrm_dotmailer.importexport.processor.contact_sync:
+        class: %orocrm_dotmailer.importexport.processor.contact_sync.class%
+        parent: orocrm_dotmailer.importexport.processor.import_abstract
+        calls:
+            - [setDataConverter, [@orocrm_dotmailer.importexport.data_converter.contact_sync]]
+            - [setEntityName, [%orocrm_dotmailer.entity.contact.class%]]
+            - [setStrategy, [@orocrm_dotmailer.importexport.strategy.contact_sync]]
+
     orocrm_dotmailer.importexport.processor.address_book:
         parent: orocrm_dotmailer.importexport.processor.import_abstract
         calls:
@@ -467,13 +477,6 @@ services:
         class: %orocrm_dotmailer.importexport.processor.export_removed.class%
         arguments:
             - @oro_importexport.context_registry
-
-    orocrm_dotmailer.importexport.processor.contact_sync:
-        parent: orocrm_dotmailer.importexport.processor.import_abstract
-        calls:
-            - [setDataConverter, [@orocrm_dotmailer.importexport.data_converter.contact_sync]]
-            - [setEntityName, [%orocrm_dotmailer.entity.contact.class%]]
-            - [setStrategy, [@orocrm_dotmailer.importexport.strategy.contact_sync]]
 
     orocrm_dotmailer.importexport.processor.export_contact:
         class: %orocrm_dotmailer.importexport.processor.export_contact.class%
@@ -576,6 +579,10 @@ services:
         class: %orocrm_dotmailer.importexport.writer.import.class%
         calls:
             - [setLogHelper, [@orocrm_dotmailer.log_helper]]
+
+    orocrm_dotmailer.importexport.writer.contact_sync:
+        parent: orocrm_dotmailer.importexport.writer.import
+        class: %orocrm_dotmailer.importexport.writer.contact_sync.class%
 
     orocrm_dotmailer.importexport.writer.import.removed_address_book:
         class: %orocrm_dotmailer.importexport.writer.import.removed_address_book.class%
