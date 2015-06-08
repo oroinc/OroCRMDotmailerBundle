@@ -13,7 +13,7 @@ class RemoveAddressBookReader extends AbstractReader
         $keepAddressBooks = $this->jobContext->getValue(AddressBookStrategy::EXISTING_ADDRESS_BOOKS_ORIGIN_IDS);
         $keepAddressBooks = $keepAddressBooks ?: [];
 
-        $iterator = new RemoveAddressBookIterator($this->managerRegistry, $this->getChannel(), $keepAddressBooks);
+        $iterator = new RemoveAddressBookIterator($this->registry, $this->getChannel(), $keepAddressBooks);
 
         $this->setSourceIterator($iterator);
     }

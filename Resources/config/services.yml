@@ -43,7 +43,7 @@ parameters:
     #reader
     orocrm_dotmailer.importexport.reader.abstract.class:                            OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractReader
     orocrm_dotmailer.importexport.reader.export.abstract.class:                     OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader
-    orocrm_dotmailer.importexport.reader.not_exported_contact.class:
+    orocrm_dotmailer.importexport.reader.not_exported_contact.class:                OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\NotExportedContactReader
     orocrm_dotmailer.importexport.reader.unsubscribed_from_account_contacts.class:  OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\UnsubscribedFromAccountContactsReader
     orocrm_dotmailer.importexport.reader.removed_contact_export.class:              OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\RemovedContactExportReader
     orocrm_dotmailer.importexport.reader.contact_sync.class:                        OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\ContactSyncReader
@@ -243,8 +243,11 @@ services:
         parent: orocrm_dotmailer.importexport.reader.abstract
         abstract: true
         calls:
-            - [setRegistry, [@doctrine]]
             - [setMarketingListItemsQueryBuilderProvider, [@orocrm_dotmailer.provider.marketing_list_items.query_builder]]
+
+    orocrm_dotmailer.importexport.reader.not_exported_contact:
+        class: %orocrm_dotmailer.importexport.reader.not_exported_contact.class%
+        parent: orocrm_dotmailer.importexport.reader.abstract
 
     orocrm_dotmailer.importexport.reader.unsubscribed_from_account_contacts:
         class: %orocrm_dotmailer.importexport.reader.unsubscribed_from_account_contacts.class%

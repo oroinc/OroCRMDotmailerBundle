@@ -2,8 +2,6 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-
 use Oro\Bundle\ImportExportBundle\Exception\LogicException;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
@@ -11,11 +9,6 @@ use OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvide
 abstract class AbstractExportReader extends AbstractReader
 {
     const ADDRESS_BOOK_RESTRICTION_OPTION = 'address-book';
-
-    /**
-     * @var ManagerRegistry
-     */
-    protected $registry;
 
     /**
      * @var MarketingListItemsQueryBuilderProvider
@@ -26,18 +19,6 @@ abstract class AbstractExportReader extends AbstractReader
      * @var bool
      */
     protected $rewound = false;
-
-    /**
-     * @param ManagerRegistry $registry
-     *
-     * @return RemovedContactExportReader
-     */
-    public function setRegistry(ManagerRegistry $registry)
-    {
-        $this->registry = $registry;
-
-        return $this;
-    }
 
     /**
      * @param MarketingListItemsQueryBuilderProvider $marketingListItemsQueryBuilderProvider
