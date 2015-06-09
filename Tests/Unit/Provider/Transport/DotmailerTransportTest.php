@@ -22,15 +22,21 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
      */
     protected $factory;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $logger;
+
     protected function setUp()
     {
         $this->factory = $this->getMock(
             'OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory'
         );
-
+        $this->logger = $this->getMock('Psr\Log\LoggerInterface');
         $this->target = new DotmailerTransport(
             $this->factory
         );
+        $this->target->setLogger($this->logger);
     }
 
     public function testInit()
@@ -57,7 +63,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
 
         $this->factory->expects($this->once())
             ->method('createResources')
-            ->with($username, $password);
+            ->with($username, $password, $this->logger);
 
         $this->target->init($transport);
     }

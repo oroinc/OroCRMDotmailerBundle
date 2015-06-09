@@ -185,6 +185,8 @@ services:
         class: %orocrm_dotmailer.transport.integration_transport.class%
         arguments:
             - @orocrm_dotmailer.transport.resources_factory
+        calls:
+            - [setLogger, ["@oro_integration.logger.strategy"]]
         tags:
             - { name: oro_integration.transport, type: dotmailer_api, channel_type: dotmailer }
 
