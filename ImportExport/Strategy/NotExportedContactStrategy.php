@@ -5,6 +5,7 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReportIterator;
 
 class NotExportedContactStrategy extends AbstractImportStrategy
 {
@@ -64,23 +65,28 @@ class NotExportedContactStrategy extends AbstractImportStrategy
         }
 
         $reason = $this->getEnumValue('dm_cnt_status', Contact::STATUS_SUPPRESSED);
-        $addressBookContact->setStatus($reason);
         $currentDate = new \DateTime('now', new \DateTimeZone('UTC'));
+
+        $addressBookContact->setStatus($reason);
         $addressBookContact->setUnsubscribedDate($currentDate);
+
         $contact->setStatus($reason);
         $contact->setUnsubscribedDate($currentDate);
 
         return $addressBookContact;
     }
 
+    /**
+     * @return string
+     */
     protected function getImport()
     {
         $originalValue = $this->context->getValue('itemData');
 
-        if (empty($originalValue['import'])) {
+        if (empty($originalValue[ExportFaultsReportIterator::IMPORT_ID])) {
             throw new RuntimeException('Import Id is required');
         }
 
-        return $originalValue['import'];
+        return $originalValue[ExportFaultsReportIterator::IMPORT_ID];
     }
 }
