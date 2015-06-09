@@ -59,8 +59,10 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
              */
             if ($batchItems && isset($batchItems[$entity->getEmail()])) {
                 $entity = $batchItems[$entity->getEmail()];
-                foreach ($entity->getAddressBookContacts() as $addressBookContact) {
-                    if ($addressBookContact->getAddressBook()->getId() == $addressBook->getId()) {
+                foreach ($entity->getAddressBookContacts() as $abContacts) {
+                    if ($abContacts->getAddressBook()->getId() == $addressBook->getId()) {
+                        $addressBookContact = $abContacts;
+
                         break;
                     }
                 }
