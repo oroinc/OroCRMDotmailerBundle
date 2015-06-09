@@ -36,7 +36,7 @@ abstract class AbstractReader extends IteratorBasedReader
     /**
      * @var ManagerRegistry
      */
-    protected $managerRegistry;
+    protected $registry;
 
     /**
      * @var LoggerInterface
@@ -57,7 +57,7 @@ abstract class AbstractReader extends IteratorBasedReader
     ) {
         parent::__construct($contextRegistry);
         $this->contextMediator = $contextMediator;
-        $this->managerRegistry = $managerRegistry;
+        $this->registry = $managerRegistry;
         $this->logger = $logger;
     }
 

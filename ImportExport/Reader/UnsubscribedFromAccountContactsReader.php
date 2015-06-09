@@ -27,7 +27,7 @@ class UnsubscribedFromAccountContactsReader extends AbstractReader
      */
     protected function getLastSyncDate()
     {
-        $repository = $this->managerRegistry->getRepository('OroIntegrationBundle:Status');
+        $repository = $this->registry->getRepository('OroIntegrationBundle:Status');
 
         /** @var Status $status */
         $status = $repository->findOneBy(
