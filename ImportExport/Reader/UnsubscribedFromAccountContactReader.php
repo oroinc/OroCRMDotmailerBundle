@@ -5,11 +5,10 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
 use Oro\Bundle\IntegrationBundle\Entity\Status;
 
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactsConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
-class UnsubscribedFromAccountContactsReader extends AbstractReader
+class UnsubscribedFromAccountContactReader extends AbstractReader
 {
     protected function initializeReader()
     {
@@ -34,7 +33,7 @@ class UnsubscribedFromAccountContactsReader extends AbstractReader
             [
                 'code'      => Status::STATUS_COMPLETED,
                 'channel'   => $this->getChannel(),
-                'connector' => UnsubscribedContactsConnector::TYPE
+                'connector' => ContactConnector::TYPE
             ],
             [
                 'date' => 'DESC'
@@ -42,20 +41,7 @@ class UnsubscribedFromAccountContactsReader extends AbstractReader
         );
 
         if (!$status) {
-            $status = $repository->findOneBy(
-                [
-                    'code'      => Status::STATUS_COMPLETED,
-                    'channel'   => $this->getChannel(),
-                    'connector' => ContactConnector::TYPE
-                ],
-                [
-                    'date' => 'ASC'
-                ]
-            );
-
-            if (!$status) {
-                return null;
-            }
+            return null;
         }
 
         $data = $status->getData();

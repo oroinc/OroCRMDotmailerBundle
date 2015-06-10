@@ -2,9 +2,9 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemoveCampaignsIterator;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemoveCampaignIterator;
 
-class RemoveCampaignsIteratorTest extends \PHPUnit_Framework_TestCase
+class RemoveCampaignIteratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testIterator()
     {
@@ -58,7 +58,7 @@ class RemoveCampaignsIteratorTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->will($this->returnValue($repository));
 
-        $iterator = new RemoveCampaignsIterator($registry, $channel, $keepCampaigns);
+        $iterator = new RemoveCampaignIterator($registry, $channel, $keepCampaigns);
         $iterator->setBatchSize($batchSize);
 
         foreach ($iterator as $item) {

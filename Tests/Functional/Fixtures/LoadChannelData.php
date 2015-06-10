@@ -11,7 +11,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactsConnector;
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
@@ -35,7 +35,7 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
             'connectors' => [
                 CampaignConnector::TYPE,
                 AddressBookConnector::TYPE,
-                UnsubscribedContactsConnector::TYPE,
+                UnsubscribedContactConnector::TYPE,
                 ActivityContactConnector::TYPE,
                 CampaignSummaryConnector::TYPE,
                 ContactConnector::TYPE,
@@ -48,7 +48,7 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
             'connectors' => [
                 CampaignConnector::TYPE,
                 AddressBookConnector::TYPE,
-                UnsubscribedContactsConnector::TYPE,
+                UnsubscribedContactConnector::TYPE,
                 ActivityContactConnector::TYPE,
                 CampaignSummaryConnector::TYPE,
                 ContactConnector::TYPE,
@@ -61,7 +61,7 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
             'connectors' => [
                 CampaignConnector::TYPE,
                 AddressBookConnector::TYPE,
-                UnsubscribedContactsConnector::TYPE,
+                UnsubscribedContactConnector::TYPE,
                 ActivityContactConnector::TYPE,
                 CampaignSummaryConnector::TYPE,
                 ContactConnector::TYPE,
@@ -74,7 +74,7 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
             'connectors' => [
                 CampaignConnector::TYPE,
                 AddressBookConnector::TYPE,
-                UnsubscribedContactsConnector::TYPE,
+                UnsubscribedContactConnector::TYPE,
                 ActivityContactConnector::TYPE,
                 CampaignSummaryConnector::TYPE,
                 ContactConnector::TYPE,

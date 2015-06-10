@@ -1,0 +1,78 @@
+<?php
+
+namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Processor;
+
+use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
+use Akeneo\Bundle\BatchBundle\Item\ItemProcessorInterface;
+use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
+
+use Doctrine\Common\Persistence\ManagerRegistry;
+
+use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
+use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
+use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
+use OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\OutOfSyncContactIterator;
+use OroCRM\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem;
+
+class UnsubscribedContactSyncProcessor implements ItemProcessorInterface, StepExecutionAwareInterface
+{
+    const CURRENT_BATCH_READ_ITEMS = 'currentBatchReadItems';
+
+    /**
+     * @var ContextInterface
+     */
+    protected $context;
+
+    /**
+     * @var ManagerRegistry
+     */
+    protected $registry;
+
+    /**
+     * @var ContextRegistry
+     */
+    protected $contextRegistry;
+
+    /**
+     * @param ManagerRegistry $registry
+     * @param ContextRegistry $contextRegistry
+     */
+    public function __construct(ManagerRegistry $registry, ContextRegistry $contextRegistry)
+    {
+        $this->registry = $registry;
+        $this->contextRegistry = $contextRegistry;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function process($item)
+    {
+        $items = $this->context->getValue(self::CURRENT_BATCH_READ_ITEMS) ?: [];
+        $items[] = $item;
+        $this->context->setValue(self::CURRENT_BATCH_READ_ITEMS, $items);
+
+        $entityId = $item[MarketingListItemsQueryBuilderProvider::MARKETING_LIST_ITEM_ID];
+        if (!$item[MarketingListItemsQueryBuilderProvider::MARKETING_LIST_ITEM_ID]) {
+            throw new RuntimeException("Marketing List required for entity $entityId");
+        }
+
+        $object = new MarketingListUnsubscribedItem();
+        $object->setEntityId($entityId);
+        $marketingList = $this->registry
+            ->getRepository('OroCRMMarketingListBundle:MarketingList')
+            ->find($item[OutOfSyncContactIterator::MARKETING_LIST]->getId());
+        $object->setMarketingList($marketingList);
+
+        return $object;
+    }
+
+    /**
+     * @param StepExecution $stepExecution
+     */
+    public function setStepExecution(StepExecution $stepExecution)
+    {
+        $this->context = $this->contextRegistry->getByStepExecution($stepExecution);
+    }
+}

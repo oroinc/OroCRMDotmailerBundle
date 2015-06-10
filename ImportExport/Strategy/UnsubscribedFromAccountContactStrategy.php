@@ -5,7 +5,7 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 
-class UnsubscribedFromAccountStrategy extends AbstractImportStrategy
+class UnsubscribedFromAccountContactStrategy extends AbstractImportStrategy
 {
     /**
      * {@inheritdoc}

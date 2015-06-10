@@ -5,7 +5,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 
-class ScheduledForExportContactsIterator extends AbstractIterator
+class ScheduledForExportContactIterator extends AbstractIterator
 {
     const ADDRESS_BOOK_KEY = 'related_address_book';
     /**
