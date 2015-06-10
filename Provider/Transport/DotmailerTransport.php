@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\ApiFileMedia;
 use DotMailer\Api\DataTypes\ApiResubscribeResult;
+use DotMailer\Api\DataTypes\ApiTransactionalDataImport;
+use DotMailer\Api\DataTypes\ApiTransactionalDataList;
 use DotMailer\Api\DataTypes\Int32List;
 use DotMailer\Api\Resources\IResources;
 use DotMailer\Api\DataTypes\ApiContactResubscription;
@@ -219,6 +221,30 @@ class DotmailerTransport implements TransportInterface
     {
         $apiFileMedia = new ApiFileMedia(['FileName' => 'contacts.csv', 'Data' => $contactsCsv]);
         return $this->dotmailerResources->PostAddressBookContactsImport($addressBookOriginId, $apiFileMedia);
+    }
+
+    /**
+     * @param string                   $collectionName
+     * @param ApiTransactionalDataList $list
+     *
+     * @return ApiTransactionalDataImport
+     */
+    public function updateContactsTransactionalData($collectionName, ApiTransactionalDataList $list)
+    {
+        // workaround till https://github.com/romanpitak/dotMailer-API-v2-PHP-client/issues/7 resolved
+        $url = sprintf("contacts/transactional-data/import/%s", $collectionName);
+
+        $reflObject = new \ReflectionObject($this->dotmailerResources);
+        $method = $reflObject->getMethod('execute');
+        $method->setAccessible(true);
+
+        $result = $method->invoke($this->dotmailerResources, $url, 'POST', $list->toJson());
+
+        return new ApiTransactionalDataImport($result);
+
+        // should be just that
+        return $this->dotmailerResources
+            ->PostContactsTransactionalDataImport($collectionName, $list);
     }
 
     /**
