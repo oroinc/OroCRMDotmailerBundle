@@ -60,6 +60,8 @@ class ContactRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('contact');
         $expr = $qb->expr();
+        $subscribedStatuses = [Contact::STATUS_SUBSCRIBED, Contact::STATUS_SOFTBOUNCED];
+
         $qb->select('COUNT(contact.id)')
             ->leftJoin('contact.addressBookContacts', 'addressBookContacts')
             ->leftJoin('addressBookContacts.addressBook', 'addressBook')
@@ -69,11 +71,10 @@ class ContactRepository extends EntityRepository
             ->andWhere($expr->in('contact.email', $emails))
             ->andWhere(
                 $expr->orX()
-                    ->add($expr->eq('contact.status', ':status'))
-                    ->add($expr->eq('addressBookContacts.status', ':status'))
+                    ->add($expr->notIn('contact.status', $subscribedStatuses))
+                    ->add($expr->notIn('addressBookContacts.status', $subscribedStatuses))
             )->setParameters(
                 [
-                    'status'        => Contact::STATUS_UNSUBSCRIBED,
                     'marketingList' => $marketingList
                 ]
             );
