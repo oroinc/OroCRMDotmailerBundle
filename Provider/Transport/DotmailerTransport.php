@@ -13,6 +13,9 @@ use DotMailer\Api\DataTypes\ApiContactResubscription;
 
 use Guzzle\Iterator\AppendIterator;
 
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerAwareInterface;
+
 use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
 
@@ -27,8 +30,10 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAc
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 
-class DotmailerTransport implements TransportInterface
+class DotmailerTransport implements TransportInterface, LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @var IResources
      */
@@ -62,7 +67,7 @@ class DotmailerTransport implements TransportInterface
             throw new RequiredOptionException('password');
         }
 
-        $this->dotmailerResources = $this->dotMailerResFactory->createResources($username, $password);
+        $this->dotmailerResources = $this->dotMailerResFactory->createResources($username, $password, $this->logger);
     }
 
     /**
