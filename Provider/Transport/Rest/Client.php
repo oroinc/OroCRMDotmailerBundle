@@ -21,7 +21,7 @@ class Client implements IClient, LoggerAwareInterface
     use LoggerAwareTrait;
 
     /** @var int */
-    protected $attempted;
+    protected $attempted = 0;
 
     /** @var bool */
     protected $multipleAttemptsEnabled = true;
@@ -109,7 +109,7 @@ class Client implements IClient, LoggerAwareInterface
                     '[exception type] ' . get_class($exception),
                     '[exception message] ' . $exception->getMessage(),
                     '[request url] ' . $requestUrl,
-                    '[request method]' . $requestMethod,
+                    '[request method] ' . $requestMethod,
                     '[request data] ' . $requestData,
                     '[response code] ' . $responseCode,
                     '[response body] ' . $responseBody,
@@ -136,7 +136,7 @@ class Client implements IClient, LoggerAwareInterface
      */
     protected function isAttemptNecessary()
     {
-        return $this->multipleAttemptsEnabled && ($this->attempted < count($this->sleepBetweenAttempt) - 1);
+        return $this->multipleAttemptsEnabled && ($this->attempted <= count($this->sleepBetweenAttempt) - 1);
     }
 
     /**
@@ -157,7 +157,7 @@ class Client implements IClient, LoggerAwareInterface
      */
     protected function makeNewAttempt($paramArr, $responses = [])
     {
-        sleep($this->getSleepBetweenAttempt());
+        sleep((int)$this->getSleepBetweenAttempt());
         ++$this->attempted;
 
         return $this->execute($paramArr, $responses);
@@ -189,9 +189,9 @@ class Client implements IClient, LoggerAwareInterface
     protected function getSleepBetweenAttempt()
     {
         if (!empty($this->sleepBetweenAttempt[$this->attempted])) {
-            return (int)$this->sleepBetweenAttempt[$this->attempted];
+            return $this->sleepBetweenAttempt[$this->attempted];
         }
 
-        return (int)end($this->sleepBetweenAttempt);
+        return end($this->sleepBetweenAttempt);
     }
 }

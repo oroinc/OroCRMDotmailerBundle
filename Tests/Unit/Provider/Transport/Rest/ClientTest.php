@@ -9,7 +9,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @var Client
      */
-    protected $target;
+    protected $client;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -17,27 +17,34 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     protected $response;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \stdClass
      */
     protected $info;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $logger;
+
     protected function setUp()
     {
-        $this->target = new Client('username', 'password');
+        $this->logger = $this->getMock('Psr\Log\LoggerInterface');
+        $this->client = new Client('username', 'password');
+        $this->client->setLogger($this->logger);
+        $this->response = $this->getMockBuilder('\RestClient\Response')->disableOriginalConstructor()->getMock();
+        $this->info = new \stdClass();
     }
 
-    protected function initTarget()
+    protected function initClient()
     {
         $restClient = $this->getMock('\RestClient\Client');
 
-        $class = new \ReflectionClass($this->target);
+        $class = new \ReflectionClass($this->client);
         $prop  = $class->getProperty('restClient');
         $prop->setAccessible(true);
-        $prop->setValue($this->target, $restClient);
+        $prop->setValue($this->client, $restClient);
 
         $request = $this->getMock('\RestClient\Request');
-        $this->response = $this->getMockBuilder('\RestClient\Response')->disableOriginalConstructor()->getMock();
-        $this->info = new \stdClass();
 
         $restClient->expects($this->once())
             ->method('newRequest')
@@ -55,7 +62,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testExecuteOk($code)
     {
-        $this->initTarget();
+        $this->initClient();
 
         $result = 'Ok';
         $this->response->expects($this->once())
@@ -64,7 +71,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $this->info->http_code = $code;
 
-        $this->assertEquals($result, $this->target->execute('testCall'));
+        $this->assertEquals($result, $this->client->execute('testCall'));
     }
 
     /**
@@ -81,19 +88,19 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testExecute204()
     {
-        $this->initTarget();
+        $this->initClient();
 
         $this->response->expects($this->at(0))
             ->method('getParsedResponse');
 
         $this->info->http_code = 204;
 
-        $this->assertNull($this->target->execute('testCall'));
+        $this->assertNull($this->client->execute('testCall'));
     }
 
     public function testExecuteSpecialFunction()
     {
-        $this->initTarget();
+        $this->initClient();
 
         $result = 'Ok';
         $this->response->expects($this->exactly(2))
@@ -103,54 +110,175 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->info->http_code = 301;
         $params = [301 => [$this->response, 'getParsedResponse']];
 
-        $this->assertEquals($result, $this->target->execute('testCall', $params));
+        $this->assertEquals($result, $this->client->execute('testCall', $params));
     }
 
-    public function testExecuteException()
+    public function testExecuteAttemptsFailed()
     {
-        $this->setExpectedException(
-            'OroCRM\Bundle\DotmailerBundle\Exception\RestClientException',
-            'Dotmailer REST client exception:' . PHP_EOL .
+        $exceptionMessage = 'Dotmailer REST client exception:' . PHP_EOL .
             '[exception type] OroCRM\Bundle\DotmailerBundle\Exception\RestClientAttemptException' . PHP_EOL .
             '[exception message] Unexpected response' . PHP_EOL .
             '[request url] testCall' . PHP_EOL .
-            '[request method]' . PHP_EOL .
+            '[request method] ' . PHP_EOL .
             '[request data] ' . PHP_EOL .
             '[response code] 500' . PHP_EOL .
-            '[response body] Internal Error'
-        );
+            '[response body] Internal Error';
+
+        $this->setExpectedException('OroCRM\Bundle\DotmailerBundle\Exception\RestClientException', $exceptionMessage);
 
         $restClient = $this->getMock('RestClient\Client');
 
-        $class = new \ReflectionClass($this->target);
+        $class = new \ReflectionClass($this->client);
         $prop  = $class->getProperty('restClient');
         $prop->setAccessible(true);
-        $prop->setValue($this->target, $restClient);
+        $prop->setValue($this->client, $restClient);
         $prop  = $class->getProperty('sleepBetweenAttempt');
         $prop->setAccessible(true);
-        $prop->setValue($this->target, [0.1,0.1,0.1,0.1]);
+        $prop->setValue($this->client, [0.1, 0.2, 0.3, 0.4]);
 
-        $request = $this->getMock('\RestClient\Request');
-        $this->response = $this->getMockBuilder('\RestClient\Response')->disableOriginalConstructor()->getMock();
-        $this->info = new \stdClass();
+        $request = $this->getMock('RestClient\Request');
 
-        $restClient->expects($this->exactly(4))
+        $restClient->expects($this->exactly(5))
             ->method('newRequest')
             ->will($this->returnValue($request));
-        $request->expects($this->exactly(4))
+
+        $request->expects($this->exactly(5))
             ->method('getResponse')
             ->will($this->returnValue($this->response));
-        $this->response->expects($this->exactly(4))
+
+        $this->response->expects($this->exactly(5))
             ->method('getInfo')
             ->will($this->returnValue($this->info));
 
+        $this->info->http_code = 500;
+
         $result = 'Internal Error';
-        $this->response->expects($this->exactly(4))
+        $this->response->expects($this->exactly(5))
             ->method('getParsedResponse')
             ->will($this->returnValue($result));
 
-        $this->info->http_code = 500;
+        $this->logger->expects($this->at(0))
+            ->method('warning')
+            ->with('[Warning] Attempt failed. Error message:' . PHP_EOL . $exceptionMessage);
 
-        $this->target->execute('testCall');
+        $this->logger->expects($this->at(1))
+            ->method('warning')
+            ->with('[Warning] Attempt number 1 with 0.1 sec delay.');
+
+        $this->logger->expects($this->at(2))
+            ->method('warning')
+            ->with('[Warning] Attempt failed. Error message:' . PHP_EOL . $exceptionMessage);
+
+        $this->logger->expects($this->at(3))
+            ->method('warning')
+            ->with('[Warning] Attempt number 2 with 0.2 sec delay.');
+
+        $this->logger->expects($this->at(4))
+            ->method('warning')
+            ->with('[Warning] Attempt failed. Error message:' . PHP_EOL . $exceptionMessage);
+
+        $this->logger->expects($this->at(5))
+            ->method('warning')
+            ->with('[Warning] Attempt number 3 with 0.3 sec delay.');
+
+        $this->logger->expects($this->at(6))
+            ->method('warning')
+            ->with('[Warning] Attempt failed. Error message:' . PHP_EOL . $exceptionMessage);
+
+        $this->logger->expects($this->at(7))
+            ->method('warning')
+            ->with('[Warning] Attempt number 4 with 0.4 sec delay.');
+
+        $this->client->execute('testCall');
+    }
+
+    public function testExecuteAttemptsPassed()
+    {
+        $restClient = $this->getMock('RestClient\Client');
+
+        $class = new \ReflectionClass($this->client);
+        $prop  = $class->getProperty('restClient');
+        $prop->setAccessible(true);
+        $prop->setValue($this->client, $restClient);
+        $prop  = $class->getProperty('sleepBetweenAttempt');
+        $prop->setAccessible(true);
+        $prop->setValue($this->client, [0.1, 0.2, 0.3, 0.4]);
+
+        $request = $this->getMock('RestClient\Request');
+
+        $restClient->expects($this->at(0))
+            ->method('newRequest')
+            ->will($this->throwException(new \Exception('Exception A')));
+
+        $restClient->expects($this->at(1))
+            ->method('newRequest')
+            ->will($this->throwException(new \Exception('Exception B')));
+
+        $restClient->expects($this->at(2))
+            ->method('newRequest')
+            ->will($this->throwException(new \Exception('Exception C')));
+
+        $exceptionMessagePattern = 'Dotmailer REST client exception:' . PHP_EOL .
+            '[exception type] Exception' . PHP_EOL .
+            '[exception message] %s' . PHP_EOL .
+            '[request url] testCall' . PHP_EOL .
+            '[request method] ' . PHP_EOL .
+            '[request data] ' . PHP_EOL .
+            '[response code] ' . PHP_EOL .
+            '[response body] ';
+
+        $this->logger->expects($this->at(0))
+            ->method('warning')
+            ->with(
+                '[Warning] Attempt failed. Error message:' . PHP_EOL .
+                sprintf($exceptionMessagePattern, 'Exception A')
+            );
+
+        $this->logger->expects($this->at(1))
+            ->method('warning')
+            ->with('[Warning] Attempt number 1 with 0.1 sec delay.');
+
+        $this->logger->expects($this->at(2))
+            ->method('warning')
+            ->with(
+                '[Warning] Attempt failed. Error message:' . PHP_EOL .
+                sprintf($exceptionMessagePattern, 'Exception B')
+            );
+
+        $this->logger->expects($this->at(3))
+            ->method('warning')
+            ->with('[Warning] Attempt number 2 with 0.2 sec delay.');
+
+        $this->logger->expects($this->at(4))
+            ->method('warning')
+            ->with(
+                '[Warning] Attempt failed. Error message:' . PHP_EOL .
+                sprintf($exceptionMessagePattern, 'Exception C')
+            );
+
+        $this->logger->expects($this->at(5))
+            ->method('warning')
+            ->with('[Warning] Attempt number 3 with 0.3 sec delay.');
+
+        $restClient->expects($this->at(3))
+            ->method('newRequest')
+            ->will($this->returnValue($request));
+
+        $request->expects($this->once())
+            ->method('getResponse')
+            ->will($this->returnValue($this->response));
+
+        $this->response->expects($this->once())
+            ->method('getInfo')
+            ->will($this->returnValue($this->info));
+
+        $this->info->http_code = 200;
+
+        $expectedResult = 'Some result';
+        $this->response->expects($this->once())
+            ->method('getParsedResponse')
+            ->will($this->returnValue($expectedResult));
+
+        $this->assertEquals($expectedResult, $this->client->execute('testCall'));
     }
 }
