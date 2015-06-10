@@ -5,7 +5,6 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
 use DotMailer\Api\DataTypes\ApiContactList;
 
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
-use Oro\Bundle\IntegrationBundle\Command\SyncCommand;
 
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
@@ -49,7 +48,7 @@ class ContactImportTest extends AbstractImportExportTest
             ->will($this->returnValue($entity));
 
         $channel = $this->getReference('orocrm_dotmailer.channel.first');
-        $processor = $this->getContainer()->get(SyncCommand::SYNC_PROCESSOR);
+        $processor = $this->getContainer()->get(self::SYNC_PROCESSOR);
         $result = $processor->process($channel, ContactConnector::TYPE);
 
         $this->assertTrue($result, 'Failed asserting that import job ran successfully.');

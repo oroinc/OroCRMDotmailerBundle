@@ -2,23 +2,30 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
 
-use DotMailer\Api\Container;
+use Psr\Log\LoggerInterface;
+
 use DotMailer\Api\Resources\IResources;
+use DotMailer\Api\Resources\Resources;
+
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Rest\Client;
 
 class DotmailerResourcesFactory
 {
     /**
-     * @param $username
-     * @param $password
+     * @param string               $username
+     * @param string               $password
+     * @param LoggerInterface|null $logger
      *
      * @return IResources
-     * @throws \DotMailer\Api\Exception
      */
-    public function createResources($username, $password)
+    public function createResources($username, $password, LoggerInterface $logger = null)
     {
-        return Container::newResources([
-            Container::USERNAME => $username,
-            Container::PASSWORD => $password
-        ]);
+        $restClient = new Client($username, $password);
+
+        if ($logger) {
+            $restClient->setLogger($logger);
+        }
+
+        return new Resources($restClient);
     }
 }

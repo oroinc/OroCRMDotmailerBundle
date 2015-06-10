@@ -10,6 +10,9 @@ use Oro\Bundle\ImportExportBundle\Processor\ImportProcessor as BaseImportProcess
 
 class ImportProcessor extends BaseImportProcessor implements StepExecutionAwareInterface
 {
+    const CURRENT_BATCH_READ_ITEMS = 'currentBatchReadItems';
+    const NOT_PROCESSED_ITEMS = 'notProcessedItems';
+
     /**
      * @var ContextRegistry
      */

@@ -2,8 +2,7 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-
+use Oro\Bundle\ImportExportBundle\Exception\LogicException;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 
@@ -12,32 +11,19 @@ abstract class AbstractExportReader extends AbstractReader
     const ADDRESS_BOOK_RESTRICTION_OPTION = 'address-book';
 
     /**
-     * @var ManagerRegistry
-     */
-    protected $registry;
-
-    /**
      * @var MarketingListItemsQueryBuilderProvider
      */
     protected $marketingListItemsQueryBuilderProvider;
 
-
     /**
-     * @param ManagerRegistry $registry
-     *
-     * @return RemovedContactsExportReader
+     * @var bool
      */
-    public function setRegistry(ManagerRegistry $registry)
-    {
-        $this->registry = $registry;
-
-        return $this;
-    }
+    protected $rewound = false;
 
     /**
      * @param MarketingListItemsQueryBuilderProvider $marketingListItemsQueryBuilderProvider
      *
-     * @return RemovedContactsExportReader
+     * @return RemovedContactExportReader
      */
     public function setMarketingListItemsQueryBuilderProvider(
         MarketingListItemsQueryBuilderProvider $marketingListItemsQueryBuilderProvider
@@ -61,5 +47,33 @@ abstract class AbstractExportReader extends AbstractReader
             ->getRepository('OroCRMDotmailerBundle:AddressBook')
             ->getAddressBooksToSync($this->getChannel());
         return $addressBooks;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function read()
+    {
+        $iterator = $this->getSourceIterator();
+
+        if (null === $this->getSourceIterator()) {
+            throw new LogicException('Reader must be configured with source');
+        }
+        if (!$this->rewound) {
+            $iterator->rewind();
+            $this->rewound = true;
+        } else {
+            $iterator->next();
+        }
+
+        $result = null;
+        if ($iterator->valid()) {
+            $result  = $iterator->current();
+            $context = $this->getContext();
+            $context->incrementReadOffset();
+            $context->incrementReadCount();
+        }
+
+        return $result;
     }
 }
