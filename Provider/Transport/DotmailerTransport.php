@@ -4,10 +4,12 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use DotMailer\Api\DataTypes\ApiCampaignSend;
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\ApiFileMedia;
 use DotMailer\Api\DataTypes\ApiResubscribeResult;
 use DotMailer\Api\DataTypes\ApiTransactionalDataImport;
+use DotMailer\Api\DataTypes\ApiTransactionalDataImportReport;
 use DotMailer\Api\DataTypes\ApiTransactionalDataList;
 use DotMailer\Api\DataTypes\Int32List;
 use DotMailer\Api\Resources\IResources;
@@ -241,10 +243,42 @@ class DotmailerTransport implements TransportInterface
         $result = $method->invoke($this->dotmailerResources, $url, 'POST', $list->toJson());
 
         return new ApiTransactionalDataImport($result);
-
         // should be just that
-        return $this->dotmailerResources
-            ->PostContactsTransactionalDataImport($collectionName, $list);
+        //return $this->dotmailerResources
+        //    ->PostContactsTransactionalDataImport($collectionName, $list);
+    }
+
+    /**
+     * @param $importId
+     *
+     * @return ApiTransactionalDataImportReport
+     */
+    public function getContactDataImportReport($importId)
+    {
+        return $this->dotmailerResources->GetContactsTransactionalDataImportReport($importId);
+    }
+
+    /**
+     * Send campaign to contacts specified by contactIds or addressBookIds or all contacts
+     * if no parameters (except campaignId) defined
+     *
+     * @param string $campaignId
+     * @param array  $contactIds
+     * @param array  $addressBookIds
+     *
+     * @return ApiCampaignSend
+     */
+    public function sendCampaign($campaignId, $contactIds = [], array $addressBookIds = [])
+    {
+        $apiCampaignSend = new ApiCampaignSend(
+            [
+                'CampaignId'     => $campaignId,
+                'ContactIds'     => $contactIds,
+                'AddressBookIds' => $addressBookIds,
+            ]
+        );
+
+        return $this->dotmailerResources->PostCampaignsSend($apiCampaignSend);
     }
 
     /**
