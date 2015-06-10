@@ -96,7 +96,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->initTarget();
 
         $result = 'Ok';
-        $this->response->expects($this->once())
+        $this->response->expects($this->exactly(2))
             ->method('getParsedResponse')
             ->will($this->returnValue($result));
 
@@ -106,13 +106,21 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($result, $this->target->execute('testCall', $params));
     }
 
-    /**
-     * @expectedException \OroCRM\Bundle\DotmailerBundle\Exception\RestClientException
-     * @expectedExceptionMessage Response HTTP CODE: 500, Body: Internal Error
-     */
     public function testExecuteException()
     {
-        $restClient = $this->getMock('\RestClient\Client');
+        $this->setExpectedException(
+            'OroCRM\Bundle\DotmailerBundle\Exception\RestClientException',
+            'Dotmailer REST client exception:' . PHP_EOL .
+            '[exception type] OroCRM\Bundle\DotmailerBundle\Exception\RestClientAttemptException' . PHP_EOL .
+            '[exception message] Unexpected response' . PHP_EOL .
+            '[request url] testCall' . PHP_EOL .
+            '[request method]' . PHP_EOL .
+            '[request data] ' . PHP_EOL .
+            '[response code] 500' . PHP_EOL .
+            '[response body] Internal Error'
+        );
+
+        $restClient = $this->getMock('RestClient\Client');
 
         $class = new \ReflectionClass($this->target);
         $prop  = $class->getProperty('restClient');

@@ -56,54 +56,73 @@ class Client implements IClient, LoggerAwareInterface
     }
 
     /**
-     * @param array|string $param_arr
+     * @param array|string $paramArr
      * @param array        $responses
      * @throws RestClientAttemptException
      * @throws RestClientException
      *
      * @return string|null
      */
-    public function execute($param_arr, $responses = [])
+    public function execute($paramArr, $responses = [])
     {
         // when only url is supplied
-        if (is_string($param_arr)) {
-            $param_arr = [$param_arr];
+        if (is_string($paramArr)) {
+            $paramArr = [$paramArr];
         }
 
-        $callback = [$this->restClient, 'newRequest'];
-        /** @var Request $request */
-        $request = call_user_func_array($callback, $param_arr);
+        list($requestUrl, $requestMethod, $requestData) = array_pad(array_values($paramArr), 3, null);
+        $responseCode = null;
+        $responseBody = null;
 
         try {
+            $callback = [$this->restClient, 'newRequest'];
+            /** @var Request $request */
+            $request = call_user_func_array($callback, $paramArr);
+
             $response = $request->getResponse();
-            $returnCode = $response->getInfo()->http_code;
+            $responseCode = $response->getInfo()->http_code;
+            $responseBody = $response->getParsedResponse();
 
             // is there a special action to be done?
-            if (isset($responses[$returnCode])) {
-                return call_user_func($responses[$returnCode], $response);
+            if (isset($responses[$responseCode])) {
+                return call_user_func($responses[$responseCode], $response);
             }
 
-            switch ((int)$returnCode) {
+            switch ((int)$responseCode) {
                 case 200:
                 case 201:
                 case 202:
-                    return $response->getParsedResponse();
+                    $result = $responseBody;
                     break;
                 case 204: // no content
-                    return null;
+                    $result = null;
+                    break;
                 default:
-                    throw new RestClientAttemptException(
-                        sprintf('Response HTTP CODE: %s, Body: %s', $returnCode, $response->getParsedResponse())
-                    );
+                    throw new RestClientAttemptException('Unexpected response');
             }
 
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
+            $errorMessage = implode(
+                PHP_EOL,
+                [
+                    'Dotmailer REST client exception:',
+                    '[exception type] ' . get_class($exception),
+                    '[exception message] ' . $exception->getMessage(),
+                    '[request url] ' . $requestUrl,
+                    '[request method]' . $requestMethod,
+                    '[request data] ' . $requestData,
+                    '[response code] ' . $responseCode,
+                    '[response body] ' . $responseBody,
+                ]
+            );
+
             if ($this->isAttemptNecessary()) {
-                $result = $this->makeNewAttempt($param_arr, $responses);
+                $this->logAttempt($errorMessage);
+                $result = $this->makeNewAttempt($paramArr, $responses);
             } else {
                 $this->resetAttemptCount();
 
-                throw new RestClientException($e->getMessage());
+                throw new RestClientException($errorMessage, 0, $exception);
             }
         }
 
@@ -131,26 +150,30 @@ class Client implements IClient, LoggerAwareInterface
     /**
      * Make new attempt
      *
-     * @param array|string $param_arr
+     * @param array|string $paramArr
      * @param array        $responses
      *
      * @return string|null
      */
-    protected function makeNewAttempt($param_arr, $responses = [])
+    protected function makeNewAttempt($paramArr, $responses = [])
     {
-        $this->logAttempt();
         sleep($this->getSleepBetweenAttempt());
         ++$this->attempted;
 
-        return $this->execute($param_arr, $responses);
+        return $this->execute($paramArr, $responses);
     }
 
     /**
      * Log attempt
+     *
+     * @param string $errorMessage
      */
-    protected function logAttempt()
+    protected function logAttempt($errorMessage)
     {
         if (!empty($this->logger)) {
+            $this->logger->warning(
+                '[Warning] Attempt failed. Error message:' . PHP_EOL . $errorMessage
+            );
             $this->logger->warning(
                 '[Warning] Attempt number ' . ($this->attempted + 1)
                 . ' with ' . $this->getSleepBetweenAttempt() . ' sec delay.'

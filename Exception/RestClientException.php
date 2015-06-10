@@ -2,6 +2,8 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Exception;
 
-class RestClientException extends \Exception implements DotmailerException
+use RestClient\Exception;
+
+class RestClientException extends Exception implements DotmailerException
 {
 }
