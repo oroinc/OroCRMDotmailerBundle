@@ -7,7 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\UnsubscribedContactSyncProcessor;
 
-class OutOfSyncContactIterator extends AbstractMarketingListItemIterator
+class OutOfSyncMarketingListItemIterator extends AbstractMarketingListItemIterator
 {
     const MARKETING_LIST = 'marketingList';
 

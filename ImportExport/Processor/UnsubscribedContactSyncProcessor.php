@@ -10,9 +10,8 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\OutOfSyncContactIterator;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\OutOfSyncMarketingListItemIterator;
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem;
 
 class UnsubscribedContactSyncProcessor implements ItemProcessorInterface, StepExecutionAwareInterface
@@ -54,15 +53,12 @@ class UnsubscribedContactSyncProcessor implements ItemProcessorInterface, StepEx
         $this->context->setValue(self::CURRENT_BATCH_READ_ITEMS, $items);
 
         $entityId = $item[MarketingListItemsQueryBuilderProvider::MARKETING_LIST_ITEM_ID];
-        if (!$item[MarketingListItemsQueryBuilderProvider::MARKETING_LIST_ITEM_ID]) {
-            throw new RuntimeException("Marketing List required for entity $entityId");
-        }
-
+        $marketingList = $item[OutOfSyncMarketingListItemIterator::MARKETING_LIST];
         $object = new MarketingListUnsubscribedItem();
         $object->setEntityId($entityId);
         $marketingList = $this->registry
             ->getRepository('OroCRMMarketingListBundle:MarketingList')
-            ->find($item[OutOfSyncContactIterator::MARKETING_LIST]->getId());
+            ->find($marketingList->getId());
         $object->setMarketingList($marketingList);
 
         return $object;

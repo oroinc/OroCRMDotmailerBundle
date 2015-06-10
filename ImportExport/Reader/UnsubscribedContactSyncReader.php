@@ -4,7 +4,7 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
 
 use Guzzle\Iterator\AppendIterator;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\OutOfSyncContactIterator;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\OutOfSyncMarketingListItemIterator;
 
 class UnsubscribedContactSyncReader extends AbstractExportReader
 {
@@ -17,7 +17,7 @@ class UnsubscribedContactSyncReader extends AbstractExportReader
 
         foreach ($addressBooks as $addressBook) {
             $iterator->append(
-                new OutOfSyncContactIterator(
+                new OutOfSyncMarketingListItemIterator(
                     $addressBook,
                     $this->marketingListItemsQueryBuilderProvider,
                     $this->getContext()
