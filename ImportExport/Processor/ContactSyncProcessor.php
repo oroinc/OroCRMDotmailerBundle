@@ -4,6 +4,8 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Processor;
 
 class ContactSyncProcessor extends ImportProcessor
 {
+    const CURRENT_BATCH_READ_ITEMS = 'currentBatchReadItems';
+
     /**
      * {@inheritdoc}
      */

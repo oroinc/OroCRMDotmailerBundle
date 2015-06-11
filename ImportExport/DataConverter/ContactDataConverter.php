@@ -2,7 +2,7 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExportContactsIterator;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExportContactIterator;
 
 class ContactDataConverter extends AbstractDataConverter
 {
@@ -40,7 +40,7 @@ class ContactDataConverter extends AbstractDataConverter
             'gender',
             'fullName',
             'postcode',
-            ScheduledForExportContactsIterator::ADDRESS_BOOK_KEY
+            ScheduledForExportContactIterator::ADDRESS_BOOK_KEY
         ];
     }
 

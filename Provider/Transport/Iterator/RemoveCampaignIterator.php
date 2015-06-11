@@ -6,7 +6,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
-class RemoveCampaignsIterator extends AbstractIterator
+class RemoveCampaignIterator extends AbstractIterator
 {
     /**
      * @var ManagerRegistry

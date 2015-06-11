@@ -2,9 +2,9 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExportContactsIterator;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExportContactIterator;
 
-class ScheduledForExportContactsIteratorTest extends \PHPUnit_Framework_TestCase
+class ScheduledForExportContactIteratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testIterator()
     {
@@ -18,9 +18,9 @@ class ScheduledForExportContactsIteratorTest extends \PHPUnit_Framework_TestCase
         $secondItem = ['id' => 44];
         $thirdItem = ['id' => 144];
         $expectedItems = [
-            ['id' => 23, ScheduledForExportContactsIterator::ADDRESS_BOOK_KEY => $addressBookOriginId],
-            ['id' => 44, ScheduledForExportContactsIterator::ADDRESS_BOOK_KEY => $addressBookOriginId],
-            ['id' => 144, ScheduledForExportContactsIterator::ADDRESS_BOOK_KEY => $addressBookOriginId],
+            ['id' => 23, ScheduledForExportContactIterator::ADDRESS_BOOK_KEY => $addressBookOriginId],
+            ['id' => 44, ScheduledForExportContactIterator::ADDRESS_BOOK_KEY => $addressBookOriginId],
+            ['id' => 144, ScheduledForExportContactIterator::ADDRESS_BOOK_KEY => $addressBookOriginId],
         ];
 
         $qb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
@@ -73,7 +73,7 @@ class ScheduledForExportContactsIteratorTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->will($this->returnValue($repository));
 
-        $iterator = new ScheduledForExportContactsIterator($addressBook, $registry);
+        $iterator = new ScheduledForExportContactIterator($addressBook, $registry);
         $iterator->setBatchSize($batchSize);
 
         foreach ($iterator as $item) {

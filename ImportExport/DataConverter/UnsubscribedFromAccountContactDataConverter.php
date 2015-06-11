@@ -4,7 +4,7 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
 use Oro\Bundle\ImportExportBundle\Converter\AbstractTableDataConverter;
 
-class UnsubscribedContactsDataConverter extends AbstractTableDataConverter
+class UnsubscribedFromAccountContactDataConverter extends AbstractTableDataConverter
 {
     /**
      * {@inheritdoc}

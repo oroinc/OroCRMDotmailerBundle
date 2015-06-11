@@ -11,7 +11,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactsConnector;
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
 
 class LoadStatusData extends BaseAbstractFixture implements DependentFixtureInterface
 {
@@ -52,7 +52,7 @@ class LoadStatusData extends BaseAbstractFixture implements DependentFixtureInte
         [
             'channel' => 'orocrm_dotmailer.channel.third',
             'code' => Status::STATUS_COMPLETED,
-            'connector' => UnsubscribedContactsConnector::TYPE,
+            'connector' => UnsubscribedContactConnector::TYPE,
             'date' => '2015-11-11'
         ],
         [
