@@ -10,6 +10,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Status;
 use Oro\Bundle\IntegrationBundle\Provider\AbstractConnector;
 use Oro\Bundle\IntegrationBundle\Provider\ConnectorInterface;
 
+use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
 /**
@@ -114,6 +115,10 @@ abstract class AbstractDotmailerConnector extends AbstractConnector
      */
     protected function initializeFromContext(ContextInterface $context)
     {
+        if (!$this->contextMediator->getChannel($context)) {
+            throw new RuntimeException("Channel {$context->getOption('channel')} not exist");
+        }
+
         parent::initializeFromContext($context);
 
         // updating context sync date with current date before actual sync
