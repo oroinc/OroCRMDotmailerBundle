@@ -25,7 +25,7 @@ class UnsubscribedContactConnector extends AbstractDotmailerConnector
      */
     public function getLabel()
     {
-        return 'orocrm.dotmailer.connector.unsubscribed_contacts.label';
+        return 'orocrm.dotmailer.connector.unsubscribed_contact.label';
     }
 
     /**

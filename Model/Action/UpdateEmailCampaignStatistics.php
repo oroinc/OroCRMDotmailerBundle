@@ -95,6 +95,7 @@ class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
             $emailCampaignStatistics->setUnsubscribeCount((int)$activity->isUnsubscribed());
 
             $em->persist($emailCampaignStatistics);
+            $em->flush($marketingListItem);
         }
     }
 
