@@ -51,9 +51,20 @@ class ContactStrategy extends AddOrReplaceStrategy
                     return null;
                 }
 
-                if ($entity->getId()) {
-                    $addressBookContact = $this->getRepository('OroCRMDotmailerBundle:AddressBookContact')
-                        ->findOneBy(['addressBook' => $addressBook, 'contact' => $entity]);
+                /**
+                 * Can Contains duplicates of contact from the same address book because of
+                 * overlap
+                 */
+                $addressBookContact = null;
+                foreach ($entity->getAddressBookContacts() as $existingAddressBookContact) {
+                    $isSameAddressBook = $addressBook->getId() == $existingAddressBookContact
+                            ->getAddressBook()
+                            ->getId();
+                    if ($isSameAddressBook) {
+                        $addressBookContact = $existingAddressBookContact;
+
+                        break;
+                    }
                 }
 
                 if (is_null($addressBookContact)) {
