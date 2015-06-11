@@ -51,7 +51,7 @@ class IntegrationSettingsType extends AbstractType
                 $formData = $event->getForm()->getData();
                 $data = $event->getData();
 
-                if ($formData->getId() && isset($data['password']) && $data['password'] === '') {
+                if ($formData && $formData->getId() && isset($data['password']) && $data['password'] === '') {
                     $data['password'] = $formData->getPassword();
                     $event->setData($data);
                 }
