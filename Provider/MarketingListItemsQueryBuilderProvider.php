@@ -7,6 +7,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
 use Oro\Bundle\SecurityBundle\Owner\Metadata\OwnershipMetadataProvider;
+
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
