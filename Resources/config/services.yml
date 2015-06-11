@@ -25,6 +25,7 @@ parameters:
     orocrm_dotmailer.form.type.integration_select.class:              OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType
     orocrm_dotmailer.form.type.address_book_select.class:             OroCRM\Bundle\DotmailerBundle\Form\Type\AddressBookSelectType
     orocrm_dotmailer.form.type.transport_check.class:                 OroCRM\Bundle\DotmailerBundle\Form\Type\DotmailerTransportCheckButtonType
+    orocrm_dotmailer.form.type.password_type.class:                   OroCRM\Bundle\DotmailerBundle\Form\Type\PasswordType
     orocrm_dotmailer.form.extension.channel_connectors.class:         OroCRM\Bundle\DotmailerBundle\Form\Extension\ChannelConnectorsExtension
 
     #Form handlers
@@ -170,6 +171,11 @@ services:
         class: %orocrm_dotmailer.form.type.transport_check.class%
         tags:
             - { name: form.type, alias: orocrm_dotmailer_transport_check_button }
+
+    orocrm_dotmailer.form.type.password_type:
+        class: %orocrm_dotmailer.form.type.password_type.class%
+        tags:
+            - { name: form.type, alias: "orocrm_dm_password_type" }
 
     #Form handlers
     orocrm_dotmailer.form.handler.connection_update:
