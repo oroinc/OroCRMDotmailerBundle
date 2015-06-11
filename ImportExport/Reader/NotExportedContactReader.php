@@ -4,14 +4,20 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
 
 use Guzzle\Iterator\AppendIterator;
 
+use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
 class NotExportedContactReader extends AbstractReader
 {
     protected function initializeReader()
     {
+        if (!$channel = $this->getChannel()) {
+            $channelId = $this->context->getOption('channel');
+            throw new RuntimeException("Channel $channelId not exist");
+        }
+
         /** @var DotmailerTransport $transport */
-        $transport = $this->contextMediator->getInitializedTransport($this->getChannel());
+        $transport = $this->contextMediator->getInitializedTransport($channel);
 
         $exportEntities = $this->registry
             ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
