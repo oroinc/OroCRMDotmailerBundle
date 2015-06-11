@@ -4,9 +4,9 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
 
 use Guzzle\Iterator\AppendIterator;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExportContactsIterator;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExportContactIterator;
 
-class ScheduledForExportContactsReader extends AbstractExportReader
+class ScheduledForExportContactReader extends AbstractExportReader
 {
     protected function initializeReader()
     {
@@ -17,7 +17,7 @@ class ScheduledForExportContactsReader extends AbstractExportReader
 
         foreach ($addressBooks as $addressBook) {
             $iterator->append(
-                new ScheduledForExportContactsIterator($addressBook, $this->registry)
+                new ScheduledForExportContactIterator($addressBook, $this->registry)
             );
         }
 

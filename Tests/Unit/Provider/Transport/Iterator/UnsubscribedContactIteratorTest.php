@@ -4,16 +4,16 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
 use DotMailer\Api\DataTypes\ApiContactSuppression;
 use DotMailer\Api\DataTypes\ApiContactSuppressionList;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactsIterator;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIterator;
 
-class UnsubscribedContactsIteratorTest extends \PHPUnit_Framework_TestCase
+class UnsubscribedContactIteratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testIterator()
     {
         $resource = $this->getMock('DotMailer\Api\Resources\IResources');
         $expectedAddressBookOriginId = 42;
         $expectedDate = new \DateTime();
-        $iterator = new UnsubscribedContactsIterator($resource, $expectedAddressBookOriginId, $expectedDate);
+        $iterator = new UnsubscribedContactIterator($resource, $expectedAddressBookOriginId, $expectedDate);
         $iterator->setBatchSize(1);
         $items = new ApiContactSuppressionList();
         $expectedContactSuppression = new ApiContactSuppression();
@@ -42,7 +42,7 @@ class UnsubscribedContactsIteratorTest extends \PHPUnit_Framework_TestCase
             ));
         foreach ($iterator as $item) {
             $expectedCampaignArray = $expectedContactSuppression->toArray();
-            $expectedCampaignArray[UnsubscribedContactsIterator::ADDRESS_BOOK_KEY] = $expectedAddressBookOriginId;
+            $expectedCampaignArray[UnsubscribedContactIterator::ADDRESS_BOOK_KEY] = $expectedAddressBookOriginId;
             $this->assertSame($expectedCampaignArray, $item);
         }
     }

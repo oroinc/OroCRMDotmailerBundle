@@ -5,17 +5,19 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 use DotMailer\Api\DataTypes\ApiContactSuppressionList;
 use DotMailer\Api\Resources\IResources;
 
-class UnsubscribedFromAccountContactsIterator extends AbstractIterator
+class UnsubscribedContactIterator extends AbstractIterator
 {
+    const ADDRESS_BOOK_KEY = 'related_address_book';
+
     /**
      * @var IResources
      */
     protected $resources;
 
     /**
-     * @var array
+     * @var int
      */
-    protected $addressBooks;
+    protected $addressBookOriginId;
 
     /**
      * @var \DateTime
@@ -24,11 +26,13 @@ class UnsubscribedFromAccountContactsIterator extends AbstractIterator
 
     /**
      * @param IResources $resources
+     * @param int        $addressBookOriginId
      * @param \DateTime  $lastSyncDate
      */
-    public function __construct(IResources $resources, \DateTime $lastSyncDate)
+    public function __construct(IResources $resources, $addressBookOriginId, \DateTime $lastSyncDate)
     {
         $this->resources = $resources;
+        $this->addressBookOriginId = $addressBookOriginId;
         $this->lastSyncDate = $lastSyncDate;
     }
 
@@ -42,12 +46,18 @@ class UnsubscribedFromAccountContactsIterator extends AbstractIterator
     {
         /** @var ApiContactSuppressionList $contacts */
         $contacts = $this->resources
-            ->GetContactsSuppressedSinceDate(
+            ->GetAddressBookContactsUnsubscribedSinceDate(
+                $this->addressBookOriginId,
                 $this->lastSyncDate->format(\DateTime::ISO8601),
                 $take,
                 $skip
             );
 
-        return $contacts->toArray();
+        $contacts = $contacts->toArray();
+        foreach ($contacts as &$contact) {
+            $contact[self::ADDRESS_BOOK_KEY] = $this->addressBookOriginId;
+        }
+
+        return $contacts;
     }
 }
