@@ -306,7 +306,7 @@ class MarketingListItemsQueryBuilderProvider
             throw new RuntimeException('Contact information is not provided');
         }
 
-        $joinContactsExpr = $expr->orX();
+        $joinContactsExpr = $expr->andX();
         $contactInformationFieldExpr = $this->fieldHelper
             ->getFieldExpr($marketingList->getEntity(), $qb, $contactInformationField);
 
@@ -317,6 +317,9 @@ class MarketingListItemsQueryBuilderProvider
                 sprintf('%s.email', self::CONTACT_ALIAS)
             )
         );
+        $joinContactsExpr->add(
+            self::CONTACT_ALIAS.'.channel =:channel'
+        );
         $qb->andWhere("$contactInformationFieldExpr <> ''");
         $qb->andWhere($expr->isNotNull($contactInformationFieldExpr));
         $this->applyOrganizationRestrictions($addressBook, $qb);
@@ -325,7 +328,7 @@ class MarketingListItemsQueryBuilderProvider
             self::CONTACT_ALIAS,
             Join::WITH,
             $joinContactsExpr
-        );
+        )->setParameter('channel', $addressBook->getChannel());
 
         return $qb;
     }
