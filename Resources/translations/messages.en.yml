@@ -1,8 +1,5 @@
 orocrm:
     dotmailer:
-        campaign:
-            entity_label: Dotmailer Campaign
-
         channel_type.label: Dotmailer
 
         integration:
@@ -20,6 +17,7 @@ orocrm:
         addressbook:
             select.placeholder:                   Select Address Book
             entity_label:                         Address Book
+            entity_plural_label:                  Address Books
             campaigns.label:                      Campaign
             channel.label:                        Channel
             contact_count.label:                  Contacts count
@@ -41,6 +39,7 @@ orocrm:
 
         activity:
             entity_label:                 Dotmailer Activity
+            entity_plural_label:          Dotmailer Activities
             campaign.label:               Campaign
             channel.label:                Channel
             contact.label:                Contact
@@ -63,6 +62,7 @@ orocrm:
 
         contact:
             entity_label:                 Dotmailer Contact
+            entity_plural_label:          Dotmailer Contacts
             activities.label:             Activities
             address_books.label:          Address Books
             channel.label:                Channel
@@ -85,6 +85,7 @@ orocrm:
 
         campaign:
             entity_label:             Dotmailer Campaign
+            entity_plural_label:      Dotmailer Campaigns
             activities.label:         Activities
             address_books.label:      Address Books
             channel.label:            Channel
@@ -103,9 +104,11 @@ orocrm:
             subject.label:            Subject
             campaign_summary.label:   Campaign Summary
             email_campaign.label:     Email Campaign
+            deleted.label:            Is Deleted
 
         campaignsummary:
             entity_label:                       Campaign summary
+            entity_plural_label:                Campaigns summary
             campaign.label:                     Campaign
             channel.label:                      Integration
             date_sent.label:                    Date sent
@@ -155,9 +158,17 @@ orocrm:
             owner.label:                        Owner
             percentage_clicks_to_opens.label:   Clicks to Opens percentage
             percentage_delivered.label:         Delivered percentage
+            percentage_hard_bounces.label:      Percentage Hard Bounces
+            percentage_opens.label:             Percentage Opens
+            percentage_replies.label:           Percentage Replies
+            percentage_soft_bounces.label:      Percentage Soft Bounces
+            percentage_unique_opens.label:      Percentage Unique Opens
+            percentage_unsubscribes.label:      Percentage Unsubscribes
+            percentage_users_clicked.label:     Percentage User Clicked
 
         addressbookcontact:
             entity_label:                     Address Book Contact
+            entity_plural_label:              Address Book Contacts
             address_book.label:               Address Book
             contact.label:                    Contact
             id.label:                         Id
@@ -170,6 +181,7 @@ orocrm:
 
         addressbookcontactsexport:
             entity_label:                     Address Book Contact Export
+            entity_plural_label:              Address Book Contact Exports
             address_book.label:               Address Book
             created_at.label:                 Created At
             id.label:                         Id
