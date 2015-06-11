@@ -128,7 +128,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     public function getUnsubscribedFromAccountsContacts(\DateTime $lastSyncDate = null)
     {
         if (!$lastSyncDate) {
-            $lastSyncDate = date_create_from_format('Y', self::DEFAULT_START_SYNC_DATE, new \DateTimeZone('UTC'));
+            return new \EmptyIterator();
         }
 
         return new UnsubscribedFromAccountContactIterator($this->dotmailerResources, $lastSyncDate);

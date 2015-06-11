@@ -42,7 +42,20 @@ class UnsubscribedFromAccountContactReader extends AbstractReader
         );
 
         if (!$status) {
-            return null;
+            $status = $repository->findOneBy(
+                [
+                    'code'      => Status::STATUS_COMPLETED,
+                    'channel'   => $this->getChannel(),
+                    'connector' => ContactConnector::TYPE
+                ],
+                [
+                    'date' => 'ASC'
+                ]
+            );
+
+            if (!$status) {
+                return null;
+            }
         }
 
         $data = $status->getData();

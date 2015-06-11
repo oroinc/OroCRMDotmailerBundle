@@ -116,27 +116,8 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
 
     public function testGetUnsubscribedFromAccountsContactsWithoutSyncDate()
     {
-        $expectedDate = date_create_from_format(
-            'Y',
-            DotmailerTransport::DEFAULT_START_SYNC_DATE,
-            new \DateTimeZone('UTC')
-        );
-
-        $resource = $this->initTransportStub();
-
         $iterator = $this->target->getUnsubscribedFromAccountsContacts();
-        /**
-         * Test iterator initialized with correct address book origin id and last sync date
-         */
-        $contactsList = $this->getMock('\StdClass', ['toArray']);
-        $contactsList->expects($this->once())
-            ->method('toArray')
-            ->will($this->returnValue([]));
-        $resource->expects($this->once())
-            ->method('GetContactsSuppressedSinceDate')
-            ->with($expectedDate->format(\DateTime::ISO8601))
-            ->will($this->returnValue($contactsList));
-        $iterator->rewind();
+        $this->assertInstanceOf('\EmptyIterator', $iterator);
     }
 
     public function testGetUnsubscribedFromAccountsContacts()
