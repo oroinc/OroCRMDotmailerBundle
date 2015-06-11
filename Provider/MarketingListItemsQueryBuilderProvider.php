@@ -140,7 +140,7 @@ class MarketingListItemsQueryBuilderProvider
          * Get only subscribed to address book contacts because
          * of other type of address book contacts is already removed from address book.
          */
-        $qb->leftJoin('addressBookContacts.status', 'addressBookContactStatus')
+        $qb->leftJoin(sprintf('%s.status', self::ADDRESS_BOOK_CONTACT_ALIAS), 'addressBookContactStatus')
             ->andWhere(
                 $expr->orX()
                     ->add($expr->isNull('addressBookContactStatus.id'))
@@ -215,6 +215,54 @@ class MarketingListItemsQueryBuilderProvider
         }
 
         return $removedItemsQueryBuilder;
+    }
+
+    /**
+     * @param AddressBook $addressBook
+     * @param array       $excludedItems
+     *
+     * @return QueryBuilder
+     */
+    public function getOutOfSyncMarketingListItemsQB(AddressBook $addressBook, array $excludedItems)
+    {
+        $qb = $this->getMarketingListItemQuery($addressBook);
+        $rootAliases = $qb->getRootAliases();
+        $entityAlias = reset($rootAliases);
+
+        $qb->innerJoin(
+            sprintf('%s.addressBookContacts', self::CONTACT_ALIAS),
+            self::ADDRESS_BOOK_CONTACT_ALIAS,
+            Join::WITH,
+            self::ADDRESS_BOOK_CONTACT_ALIAS . '.addressBook =:addressBook'
+        )->setParameter('addressBook', $addressBook);
+
+        $expr = $qb->expr();
+
+        /**
+         * Get only not subscribed to address book contacts for status synchronization
+         */
+        $qb->innerJoin(sprintf('%s.status', self::ADDRESS_BOOK_CONTACT_ALIAS), 'addressBookContactStatus')
+            ->andWhere(
+                $expr->orX()
+                    ->add($expr->isNull('addressBookContactStatus.id'))
+                    ->add(
+                        $expr->notIn(
+                            'addressBookContactStatus.id',
+                            [Contact::STATUS_SUBSCRIBED, Contact::STATUS_SOFTBOUNCED]
+                        )
+                    )
+            );
+
+        if (count($excludedItems) > 0) {
+            $excludedItems = array_map(function ($item) {
+                return $item[self::MARKETING_LIST_ITEM_ID];
+            }, $excludedItems);
+            $qb->andWhere($expr->notIn("$entityAlias.id", $excludedItems));
+        }
+
+        $qb->select("$entityAlias.id as " . self::MARKETING_LIST_ITEM_ID);
+
+        return $qb;
     }
 
     /**

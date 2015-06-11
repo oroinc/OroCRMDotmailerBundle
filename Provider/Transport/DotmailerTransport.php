@@ -29,14 +29,16 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterato
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReportIterator;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactsIterator;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactsIterator;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIterator;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 
 class DotmailerTransport implements TransportInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
+
+    const DEFAULT_START_SYNC_DATE = '1971';
 
     /**
      * @var IResources
@@ -104,18 +106,18 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
      * @param array     $addressBooks
      * @param \DateTime $lastSyncDate
      *
-     * @return UnsubscribedContactsIterator
+     * @return UnsubscribedContactIterator
      */
     public function getUnsubscribedContacts(array $addressBooks, \DateTime $lastSyncDate = null)
     {
         if (!$lastSyncDate) {
-            return new \EmptyIterator();
+            $lastSyncDate = date_create_from_format('Y', self::DEFAULT_START_SYNC_DATE, new \DateTimeZone('UTC'));
         }
 
         $iterator = new AppendIterator();
         foreach ($addressBooks as $addressBook) {
             $iterator->append(
-                new UnsubscribedContactsIterator($this->dotmailerResources, $addressBook['originId'], $lastSyncDate)
+                new UnsubscribedContactIterator($this->dotmailerResources, $addressBook['originId'], $lastSyncDate)
             );
         }
 
@@ -125,7 +127,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     /**
      * @param \DateTime $lastSyncDate
      *
-     * @return UnsubscribedFromAccountContactsIterator
+     * @return UnsubscribedFromAccountContactIterator
      */
     public function getUnsubscribedFromAccountsContacts(\DateTime $lastSyncDate = null)
     {
@@ -133,7 +135,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
             return new \EmptyIterator();
         }
 
-        return new UnsubscribedFromAccountContactsIterator($this->dotmailerResources, $lastSyncDate);
+        return new UnsubscribedFromAccountContactIterator($this->dotmailerResources, $lastSyncDate);
     }
 
     /**
