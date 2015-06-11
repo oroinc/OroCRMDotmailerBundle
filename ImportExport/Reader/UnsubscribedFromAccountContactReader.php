@@ -6,6 +6,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Status;
 
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
 class UnsubscribedFromAccountContactReader extends AbstractReader
@@ -33,7 +34,7 @@ class UnsubscribedFromAccountContactReader extends AbstractReader
             [
                 'code'      => Status::STATUS_COMPLETED,
                 'channel'   => $this->getChannel(),
-                'connector' => ContactConnector::TYPE
+                'connector' => UnsubscribedContactConnector::TYPE
             ],
             [
                 'date' => 'DESC'
