@@ -22,7 +22,7 @@ class UnsubscribedFromAccountContactReader extends AbstractReader
         }
 
         /** @var DotmailerTransport $transport */
-        $transport = $this->contextMediator->getInitializedTransport($this->getChannel());
+        $transport = $this->contextMediator->getInitializedTransport($channel);
         $lastSyncDate = $this->getLastSyncDate();
         $iterator = $transport->getUnsubscribedFromAccountsContacts($lastSyncDate);
         $this->setSourceIterator($iterator);
