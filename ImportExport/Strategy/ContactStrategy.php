@@ -23,8 +23,10 @@ class ContactStrategy extends AddOrReplaceStrategy
             /**
              * Fix case if this contact already imported on this batch
              */
+            $isEntityExists = false;
             if ($batchItems && !$entity->getId() && isset($batchItems[$entity->getOriginId()])) {
                 $entity = $batchItems[$entity->getOriginId()];
+                $isEntityExists = true;
             }
             $addressBook = $this->getAddressBook($entity->getChannel());
             if ($addressBook) {
@@ -75,6 +77,10 @@ class ContactStrategy extends AddOrReplaceStrategy
                 }
 
                 $addressBookContact->setStatus($entity->getStatus());
+
+                if ($isEntityExists) {
+                    return null;
+                }
             } else {
                 throw new RuntimeException(
                     sprintf('Address book for contact %s not found', $entity->getOriginId())
