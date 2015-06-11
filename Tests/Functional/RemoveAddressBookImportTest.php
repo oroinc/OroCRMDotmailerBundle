@@ -5,7 +5,6 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
 use DotMailer\Api\DataTypes\ApiAddressBook;
 use DotMailer\Api\DataTypes\ApiAddressBookList;
 
-use Oro\Bundle\IntegrationBundle\Command\SyncCommand;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
 
 /**
@@ -35,7 +34,7 @@ class RemoveAddressBookImportTest extends AbstractImportExportTest
             ->will($this->returnValue($entity));
         $channel = $this->getReference('orocrm_dotmailer.channel.first');
 
-        $processor = $this->getContainer()->get(SyncCommand::SYNC_PROCESSOR);
+        $processor = $this->getContainer()->get(self::SYNC_PROCESSOR);
         $result = $processor->process($channel, AddressBookConnector::TYPE);
 
         $this->assertTrue($result);

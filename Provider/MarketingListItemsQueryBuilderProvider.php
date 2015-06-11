@@ -99,15 +99,17 @@ class MarketingListItemsQueryBuilderProvider
     /**
      * @param AddressBook $addressBook
      *
-     * @throws \InvalidArgumentException
+     * @param array       $excludedItems
+     *
      * @return QueryBuilder
      */
-    public function getMarketingListItemsQB(AddressBook $addressBook)
+    public function getMarketingListItemsQB(AddressBook $addressBook, array $excludedItems)
     {
         $qb = $this->getMarketingListItemQuery($addressBook);
+        $expr = $qb->expr();
         $rootAliases = $qb->getRootAliases();
         $entityAlias = reset($rootAliases);
-        $qb->addSelect("$entityAlias.id as ". self::MARKETING_LIST_ITEM_ID);
+        $qb->addSelect("$entityAlias.id as " . self::MARKETING_LIST_ITEM_ID);
 
         /**
          * Get create or update marketing list items query builder
@@ -120,9 +122,20 @@ class MarketingListItemsQueryBuilderProvider
             sprintf('%s.addressBookContacts', self::CONTACT_ALIAS),
             self::ADDRESS_BOOK_CONTACT_ALIAS,
             Join::WITH,
-            self::ADDRESS_BOOK_CONTACT_ALIAS.'.addressBook =:addressBook'
+            self::ADDRESS_BOOK_CONTACT_ALIAS . '.addressBook =:addressBook'
         )->setParameter('addressBook', $addressBook);
-        $expr = $qb->expr();
+        $qb->andWhere(
+            $expr->orX()
+                ->add($expr->isNull(self::ADDRESS_BOOK_CONTACT_ALIAS . '.id'))
+                ->add($expr->neq(self::ADDRESS_BOOK_CONTACT_ALIAS . '.scheduledForExport', true))
+        );
+        if (count($excludedItems) > 0) {
+            $excludedItems = array_map(function ($item) {
+                return $item[self::MARKETING_LIST_ITEM_ID];
+            }, $excludedItems);
+            $qb->andWhere($expr->notIn("$entityAlias.id", $excludedItems));
+        }
+
         /**
          * Get only subscribed to address book contacts because
          * of other type of address book contacts is already removed from address book.
@@ -143,9 +156,11 @@ class MarketingListItemsQueryBuilderProvider
     /**
      * @param AddressBook $addressBook
      *
+     * @param array       $excludedItems
+     *
      * @return QueryBuilder
      */
-    public function getRemovedMarketingListItemsQB(AddressBook $addressBook)
+    public function getRemovedMarketingListItemsQB(AddressBook $addressBook, array $excludedItems)
     {
         $qb = $this->getMarketingListItemQuery($addressBook);
         $marketingList = $addressBook->getMarketingList();
@@ -191,6 +206,13 @@ class MarketingListItemsQueryBuilderProvider
             )->andWhere(
                 $removedItemsQueryBuilder->expr()->isNotNull('addressBookContact.marketingListItemId')
             );
+
+        if (count($excludedItems) > 0) {
+            $excludedItems = array_map(function ($item) {
+                return $item['id'];
+            }, $excludedItems);
+            $removedItemsQueryBuilder->andWhere($expr->notIn('addressBookContact.id', $excludedItems));
+        }
 
         return $removedItemsQueryBuilder;
     }

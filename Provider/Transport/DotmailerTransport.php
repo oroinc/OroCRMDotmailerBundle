@@ -17,6 +17,9 @@ use DotMailer\Api\DataTypes\ApiContactResubscription;
 
 use Guzzle\Iterator\AppendIterator;
 
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerAwareInterface;
+
 use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
 
@@ -25,13 +28,16 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIte
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterator;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReportIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactsIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactsIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 
-class DotmailerTransport implements TransportInterface
+class DotmailerTransport implements TransportInterface, LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @var IResources
      */
@@ -65,7 +71,7 @@ class DotmailerTransport implements TransportInterface
             throw new RequiredOptionException('password');
         }
 
-        $this->dotmailerResources = $this->dotMailerResFactory->createResources($username, $password);
+        $this->dotmailerResources = $this->dotMailerResFactory->createResources($username, $password, $this->logger);
     }
 
     /**
@@ -223,6 +229,23 @@ class DotmailerTransport implements TransportInterface
     {
         $apiFileMedia = new ApiFileMedia(['FileName' => 'contacts.csv', 'Data' => $contactsCsv]);
         return $this->dotmailerResources->PostAddressBookContactsImport($addressBookOriginId, $apiFileMedia);
+    }
+
+    /**
+     * @param string[] $importIds Array of GUID
+     * @param int $addressBookId Address Book Id
+     *
+     * @return \Iterator
+     */
+    public function getAddressBookExportReports($importIds, $addressBookId)
+    {
+        $appendIterator = new AppendIterator();
+        foreach ($importIds as $importId) {
+            $iterator = new ExportFaultsReportIterator($this->dotmailerResources, $addressBookId, $importId);
+            $appendIterator->append($iterator);
+        }
+
+        return $appendIterator;
     }
 
     /**

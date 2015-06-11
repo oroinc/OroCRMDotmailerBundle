@@ -4,8 +4,6 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiCampaignContactSummaryList;
 
-use Oro\Bundle\IntegrationBundle\Command\SyncCommand;
-
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
 
 /**
@@ -46,7 +44,7 @@ class ActivityContactImportTest extends AbstractImportExportTest
             ->will($this->returnValue($entity));
         $channel = $this->getReference('orocrm_dotmailer.channel.second');
 
-        $processor = $this->getContainer()->get(SyncCommand::SYNC_PROCESSOR);
+        $processor = $this->getContainer()->get(self::SYNC_PROCESSOR);
         $result = $processor->process($channel, ActivityContactConnector::TYPE);
 
         $this->assertTrue($result);

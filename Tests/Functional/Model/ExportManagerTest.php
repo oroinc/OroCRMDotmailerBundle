@@ -7,6 +7,7 @@ use DotMailer\Api\DataTypes\ApiContactImportStatuses;
 use DotMailer\Api\DataTypes\ApiContactList;
 
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
+use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
 use OroCRM\Bundle\DotmailerBundle\Tests\Functional\AbstractImportExportTest;
 
@@ -59,6 +60,15 @@ class ExportManagerTest extends AbstractImportExportTest
             ->will($this->returnValue($entity));
 
         $channel = $this->getReference('orocrm_dotmailer.channel.fourth');
+
+        $this->resource->expects($this->once())
+            ->method('GetContactsImportReportFaults')
+            ->will(
+                $this->returnValue(
+                    file_get_contents(__DIR__ . '/Fixtures/importFaults.csv')
+                )
+            );
+
         $this->target->updateExportResults($channel);
 
         $contacts = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:Contact')
@@ -73,15 +83,30 @@ class ExportManagerTest extends AbstractImportExportTest
 
         $this->assertCount(1, $exportEntity);
         $exportEntity = reset($exportEntity);
+        $expectedAddressBook = $exportEntity->getAddressBook();
 
         $exportStatus = $exportEntity->getStatus();
         $this->assertEquals(AddressBookContactsExport::STATUS_FINISH, $exportStatus->getId());
 
-        $addressBookStatus = $exportEntity->getAddressBook()->getSyncStatus();
+        $addressBookStatus = $expectedAddressBook->getSyncStatus();
         $this->assertEquals(AddressBookContactsExport::STATUS_FINISH, $addressBookStatus->getId());
 
-        $scheduledForExport = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBookContact')
+        $scheduledForExport = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:AddressBookContact')
             ->findBy(['scheduledForExport' => true ]);
         $this->assertCount(0, $scheduledForExport);
+
+        /**
+         * Test not exported contacts properly handled
+         */
+        $contact = $this->getReference('orocrm_dotmailer.contact.update_1');
+        $addressBookContact = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:AddressBookContact')
+            ->findBy(['contact' => $contact, 'channel' => $channel, 'addressBook' => $expectedAddressBook]);
+
+        $this->assertCount(1, $addressBookContact);
+        $addressBookContact = reset($addressBookContact);
+
+        $this->assertEquals($addressBookContact->getStatus()->getId(), Contact::STATUS_SUPPRESSED);
     }
 }

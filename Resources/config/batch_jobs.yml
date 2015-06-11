@@ -13,7 +13,7 @@ connector:
                         processor: orocrm_dotmailer.importexport.processor.address_book
                         writer:    orocrm_dotmailer.importexport.writer.import
                     parameters:
-                        batch_size: 25
+                        batch_size: 100
                 removeNotExistingAddressBooks:
                     title: import
                     class: Oro\Bundle\BatchBundle\Step\ItemStep
@@ -57,7 +57,7 @@ connector:
                         processor: orocrm_dotmailer.importexport.processor.unsubscribed_contacts
                         writer:    orocrm_dotmailer.importexport.writer.import
                     parameters:
-                        batch_size: 25
+                        batch_size: 1000
                 unsubscribed_from_account_contacts_import:
                     title: import
                     class: Oro\Bundle\BatchBundle\Step\ItemStep
@@ -66,7 +66,7 @@ connector:
                           processor: orocrm_dotmailer.importexport.processor.unsubscribed_from_account_contacts
                           writer:    orocrm_dotmailer.importexport.writer.import
                     parameters:
-                        batch_size: 25
+                        batch_size: 1000
 
         dotmailer_new_contacts:
             title: orocrm.dotmailer.connector.contact.job
@@ -94,7 +94,7 @@ connector:
                         processor: orocrm_dotmailer.importexport.processor.activity_contact
                         writer:    orocrm_dotmailer.importexport.writer.import
                     parameters:
-                        batch_size: 100
+                        batch_size: 1000
 
         dotmailer_campaign_summary_import:
             title: orocrm.dotmailer.connector.campaign_summary.job
@@ -110,6 +110,20 @@ connector:
                     parameters:
                         batch_size: 100
 
+        dotmailer_import_not_exported_contact:
+            title: import
+            type: import
+            steps:
+                import:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.importexport.reader.not_exported_contact
+                        processor: orocrm_dotmailer.importexport.processor.not_exported_contact
+                        writer:    orocrm_dotmailer.importexport.writer.import
+                    parameters:
+                        batch_size: 100
+
         dotmailer_contact_export:
             title: orocrm.dotmailer.connector.contact.export_job
             type: export
@@ -118,20 +132,20 @@ connector:
                     title: export
                     class: Oro\Bundle\BatchBundle\Step\ItemStep
                     services:
-                        reader:    orocrm_dotmailer.importexport.reader.removed_contacts_export
+                        reader:    orocrm_dotmailer.importexport.reader.removed_contact_export
                         processor: orocrm_dotmailer.importexport.processor.export_removed
                         writer:    orocrm_dotmailer.importexport.writer.export.removed_contacts
                     parameters:
-                        batch_size: 10000
+                        batch_size: 1000
                 syncMarketingListItemsWithContacts:
                     title: export
                     class: Oro\Bundle\BatchBundle\Step\ItemStep
                     services:
                         reader:    orocrm_dotmailer.importexport.reader.contact_sync
                         processor: orocrm_dotmailer.importexport.processor.contact_sync
-                        writer:    orocrm_dotmailer.importexport.writer.import
+                        writer:    orocrm_dotmailer.importexport.writer.contact_sync
                     parameters:
-                        batch_size: 2000
+                        batch_size: 1000
                 exportContacts:
                     title: export
                     class: Oro\Bundle\BatchBundle\Step\ItemStep

@@ -17,15 +17,14 @@ use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+
+use OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\RemovedExportProcessor;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemovedContactsExportIterator;
-
 use OroCRM\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 
 class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionAwareInterface
 {
-    const BATCH_SIZE = 2000;
-
     /**
      * @var ManagerRegistry
      */
@@ -87,6 +86,11 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
      */
     public function write(array $items)
     {
+        /**
+         * Clear already read items raw values
+         */
+        $this->context->setValue(RemovedExportProcessor::CURRENT_BATCH_READ_ITEMS, []);
+
         $repository = $this->registry->getRepository('OroCRMDotmailerBundle:AddressBookContact');
 
         $addressBookItems = [];
@@ -122,8 +126,8 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
     {
         try {
             $removingItemsIds = [];
-            $removingItemsIdsCount = 0;
             $removingItemsOriginIds = [];
+
             /**
              * Remove Dotmailer Contacts from DB.
              * Smaller, than step batch used because of "IN" max length
@@ -133,25 +137,17 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
                 $removingItemsOriginIds[] = $item['originId'];
 
                 $this->context->incrementDeleteCount();
-
-                if (++$removingItemsIdsCount != static::BATCH_SIZE) {
-                    continue;
-                }
-
-                $this->removeContacts($repository, $removingItemsIds);
-
-                $removingItemsIds = [];
-                $removingItemsIdsCount = 0;
-            }
-            if ($removingItemsIdsCount > 0) {
-                $this->removeContacts($repository, $removingItemsIds);
             }
 
-            /**
-             * Remove Dotmailer Contacts from Dotmailer
-             * Operation is Async in Dotmailer side
-             */
-            $this->transport->removeContactsFromAddressBook($removingItemsOriginIds, $addressBookOriginId);
+            if (count($removingItemsIds) > 0) {
+                $this->removeContacts($repository, $removingItemsIds);
+
+                /**
+                 * Remove Dotmailer Contacts from Dotmailer
+                 * Operation is Async in Dotmailer side
+                 */
+                $this->transport->removeContactsFromAddressBook($removingItemsOriginIds, $addressBookOriginId);
+            }
 
             $this->logBatchInfo($removingItemsOriginIds, $addressBookOriginId);
         } catch (Exception $e) {

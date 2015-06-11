@@ -2,14 +2,18 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Model\Action;
 
-use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
+use Doctrine\ORM\Query\Expr\Join;
 
+use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface;
 
 class MarketingListStateItemRemoveAction extends AbstractMarketingListEntitiesAction
 {
+    const MARKETING_LIST_ENTITY_QB_ALIAS = 'marketingListEntity';
+    const MARKETING_LIST_STATE_ITEM_ID_ALIAS = 'marketingListStateItemId';
+
     /**
      * @var DoctrineHelper
      */
@@ -19,22 +23,6 @@ class MarketingListStateItemRemoveAction extends AbstractMarketingListEntitiesAc
      * @var string
      */
     protected $marketingListStateItemClassName;
-
-    /**
-     * @param DoctrineHelper $doctrineHelper
-     */
-    public function setDoctrineHelper($doctrineHelper)
-    {
-        $this->doctrineHelper = $doctrineHelper;
-    }
-
-    /**
-     * @param string $marketingListStateItemClassName
-     */
-    public function setMarketingListStateItemClassName($marketingListStateItemClassName)
-    {
-        $this->marketingListStateItemClassName = $marketingListStateItemClassName;
-    }
 
     /**
      * {@inheritdoc}
@@ -72,65 +60,80 @@ class MarketingListStateItemRemoveAction extends AbstractMarketingListEntitiesAc
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function getEntitiesQueryBuilder(MarketingList $marketingList)
-    {
-        $className = $marketingList->getEntity();
-
-        $qb = $this->doctrineHelper
-            ->getEntityManager($className)
-            ->getRepository($className)
-            ->createQueryBuilder('e');
-
-        return $qb;
-    }
-
-    /**
      * @param AddressBookContact $abContact
+     *
      * @return MarketingListStateItemInterface[]
      */
     protected function getMarketingListStateItems(AddressBookContact $abContact)
     {
-        $entities = [];
-
         $marketingList = $abContact->getAddressBook()->getMarketingList();
         if (!$marketingList) {
-            return $entities;
+            return [];
         }
-        $marketingListEntities = $this->getMarketingListEntitiesByEmail(
+
+        $entities = $this->getMarketingListEntitiesByEmail(
             $marketingList,
             $abContact->getContact()->getEmail()
         );
 
-        foreach ($marketingListEntities as $marketingListEntity) {
-            $entityId = $this->doctrineHelper->getSingleEntityIdentifier($marketingListEntity);
+        $em = $this->doctrineHelper->getEntityManager($this->marketingListStateItemClassName);
 
-            $criteria = [
-                'entityId' => $entityId,
-                'marketingList' => $marketingList->getId()
-            ];
-
-            /** @var MarketingListStateItemInterface $marketingListStateItem */
-            $marketingListStateItem = $this->getMarketingListStateItem($criteria);
-
-            if ($marketingListStateItem) {
-                $entities[] = $marketingListStateItem;
-            }
+        $marketingListStateItems = [];
+        foreach ($entities as $entity) {
+            $marketingListStateItems[] = $em->getPartialReference(
+                $this->marketingListStateItemClassName,
+                $entity[self::MARKETING_LIST_STATE_ITEM_ID_ALIAS]
+            );
         }
 
-        return $entities;
+        return $marketingListStateItems;
     }
 
     /**
-     * @param array $criteria
-     * @return MarketingListStateItemInterface|null
+     * {@inheritdoc}
      */
-    protected function getMarketingListStateItem(array $criteria)
+    protected function getMarketingListEntitiesByEmailQueryBuilder(MarketingList $marketingList, $email)
+    {
+        $qb = parent::getMarketingListEntitiesByEmailQueryBuilder($marketingList, $email);
+
+        $qb->innerJoin(
+            $this->marketingListStateItemClassName,
+            'mli',
+            Join::WITH,
+            sprintf('mli.entityId = %s.id and mli.marketingList =:marketingList', self::MARKETING_LIST_ENTITY_QB_ALIAS)
+        )->setParameter('marketingList', $marketingList);
+
+        return $qb->select(
+            sprintf(
+                "mli.id as %s",
+                self::MARKETING_LIST_STATE_ITEM_ID_ALIAS
+            )
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getEntitiesQueryBuilder(MarketingList $marketingList)
     {
         return $this->doctrineHelper
-            ->getEntityManager($this->marketingListStateItemClassName)
-            ->getRepository($this->marketingListStateItemClassName)
-            ->findOneBy($criteria);
+            ->getEntityRepository($marketingList->getEntity())
+            ->createQueryBuilder(self::MARKETING_LIST_ENTITY_QB_ALIAS);
+    }
+
+    /**
+     * @param DoctrineHelper $doctrineHelper
+     */
+    public function setDoctrineHelper(DoctrineHelper $doctrineHelper)
+    {
+        $this->doctrineHelper = $doctrineHelper;
+    }
+
+    /**
+     * @param string $marketingListStateItemClassName
+     */
+    public function setMarketingListStateItemClassName($marketingListStateItemClassName)
+    {
+        $this->marketingListStateItemClassName = $marketingListStateItemClassName;
     }
 }
