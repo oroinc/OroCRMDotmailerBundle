@@ -35,6 +35,7 @@ class ContactStrategy extends AddOrReplaceStrategy
                         PHP_EOL,
                         [
                             'Dotmailer Contact Strategy Error: Contact Id is 0',
+                            'Address Book Id ' . $addressBook->getId(),
                             'Contact OriginId ' . $entity->getOriginId(),
                             'Contact Email ' . $entity->getEmail(),
                             'Contact Status ' . $entity->getStatus()->getName(),
@@ -42,6 +43,7 @@ class ContactStrategy extends AddOrReplaceStrategy
                             'Contact Last Name ' . $entity->getLastName(),
                             'Contact Created At ' . $entity->getCreatedAt()->format(\DateTime::ISO8601),
                             'Contact Updated At ' . $entity->getUpdatedAt()->format(\DateTime::ISO8601),
+                            'Original Value: ' . print_r($this->context->getValue('itemData'), true),
                         ]
                     );
                     $this->context->addError($errorMessage);
