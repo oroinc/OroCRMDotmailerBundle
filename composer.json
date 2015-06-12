@@ -1,7 +1,7 @@
 {
     "name": "oro/crm-dotmailer",
     "description": "OroCRM Dotmailer integration",
-    "homepage": "https://github.com/laboro/OroCRMDotmailerBundle.git",
+    "homepage": "https://github.com/orocrm/OroCRMDotmailerBundle.git",
     "license": "OSL-3.0",
     "authors": [
         {
