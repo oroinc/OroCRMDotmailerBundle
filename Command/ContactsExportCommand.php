@@ -97,9 +97,12 @@ class ContactsExportCommand extends AbstractSyncCronCommand
                 throw new RuntimeException('Channel not found');
             }
         }
-        $channels = $addressBook
-            ? [ $addressBook->getChannel() ]
-            : $this->getChannels($addressBook);
+        if ($addressBook) {
+            $channels = [ $addressBook->getChannel() ];
+        } else {
+            $channels = $this->getChannels();
+        }
+
         foreach ($channels as $channel) {
             if (!$channel->isEnabled()) {
                 $logger->info(sprintf('Integration "%s" disabled an will be skipped', $channel->getName()));
