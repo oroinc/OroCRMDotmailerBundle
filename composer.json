@@ -23,7 +23,7 @@
     ],
     "require": {
         "php": ">=5.4.9",
-        "oro/crm": "1.x-dev",
+        "oro/crm": "1.7.x-dev",
         "romanpitak/dotmailer-api-v2-client": "1.0.11"
     },
     "minimum-stability": "dev",
