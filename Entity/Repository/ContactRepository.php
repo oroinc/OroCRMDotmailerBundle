@@ -23,7 +23,7 @@ class ContactRepository extends EntityRepository
         $expr = $qb->expr();
         $joinCondition = $expr->andX()
             ->add('addressBookContacts.addressBook =:addressBook')
-            ->add($expr->eq('addressBookContacts.scheduledForExport', true));
+            ->add('addressBookContacts.scheduledForExport = TRUE');
 
         return $qb
             ->select(

@@ -126,7 +126,7 @@ class MarketingListItemsQueryBuilderProvider
         $qb->andWhere(
             $expr->orX()
                 ->add($expr->isNull(self::ADDRESS_BOOK_CONTACT_ALIAS . '.id'))
-                ->add($expr->neq(self::ADDRESS_BOOK_CONTACT_ALIAS . '.scheduledForExport', true))
+                ->add(self::ADDRESS_BOOK_CONTACT_ALIAS . '.scheduledForExport <> TRUE')
         );
         if (count($excludedItems) > 0) {
             $excludedItems = array_map(function ($item) {
