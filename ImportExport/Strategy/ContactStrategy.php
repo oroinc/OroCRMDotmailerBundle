@@ -29,6 +29,28 @@ class ContactStrategy extends AddOrReplaceStrategy
             $addressBook = $this->getAddressBook($entity->getChannel());
             if ($addressBook) {
                 $addressBookContact = null;
+
+                if ($entity->getId() === 0) {
+                    $errorMessage = implode(
+                        PHP_EOL,
+                        [
+                            'Dotmailer Contact Strategy Error: Contact Id is 0',
+                            'Address Book Id ' . $addressBook->getId(),
+                            'Contact OriginId ' . $entity->getOriginId(),
+                            'Contact Email ' . $entity->getEmail(),
+                            'Contact Status ' . $entity->getStatus()->getName(),
+                            'Contact First Name ' . $entity->getFirstName(),
+                            'Contact Last Name ' . $entity->getLastName(),
+                            'Contact Created At ' . $entity->getCreatedAt()->format(\DateTime::ISO8601),
+                            'Contact Updated At ' . $entity->getUpdatedAt()->format(\DateTime::ISO8601),
+                            'Original Value: ' . print_r($this->context->getValue('itemData'), true),
+                        ]
+                    );
+                    $this->context->addError($errorMessage);
+
+                    return null;
+                }
+
                 if ($entity->getId()) {
                     $addressBookContact = $this->getRepository('OroCRMDotmailerBundle:AddressBookContact')
                         ->findOneBy(['addressBook' => $addressBook, 'contact' => $entity]);

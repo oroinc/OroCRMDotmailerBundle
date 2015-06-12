@@ -22,6 +22,7 @@ use Psr\Log\LoggerAwareInterface;
 
 use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
+use Oro\Bundle\SecurityBundle\Encoder\Mcrypt;
 
 use OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
@@ -51,11 +52,18 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     protected $dotMailerResFactory;
 
     /**
-     * @param DotmailerResourcesFactory $dotMailerResFactory
+     * @var Mcrypt
      */
-    public function __construct(DotmailerResourcesFactory $dotMailerResFactory)
+    protected $encryptor;
+
+    /**
+     * @param DotmailerResourcesFactory $dotMailerResFactory
+     * @param Mcrypt $encoder
+     */
+    public function __construct(DotmailerResourcesFactory $dotMailerResFactory, Mcrypt $encoder)
     {
         $this->dotMailerResFactory = $dotMailerResFactory;
+        $this->encoder = $encoder;
     }
 
     /**
@@ -68,7 +76,10 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
         if (!$username) {
             throw new RequiredOptionException('username');
         }
+
         $password = $settings->get('password');
+        $password = $this->encoder->decryptData($password);
+
         if (!$password) {
             throw new RequiredOptionException('password');
         }
