@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 
 use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign;
+use OroCRM\Bundle\DotmailerBundle\Exception\RestClientException;
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 
 /**
@@ -87,9 +88,16 @@ class DotmailerController extends Controller
                     'error' => 'Connection failed!'
                 ];
             }
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
+            $message = $exception->getMessage();
+            if ($exception instanceof RestClientException &&
+                $exception->getPrevious() &&
+                $exception->getPrevious()->getMessage()
+            ) {
+                $message = $exception->getPrevious()->getMessage();
+            }
             $result = [
-                'error' => $e->getMessage()
+                'error' => $message
             ];
         }
 
