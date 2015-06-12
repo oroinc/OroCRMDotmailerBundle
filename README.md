@@ -2,80 +2,77 @@
 
 This Bundle provides integration with [Dotmailer](http://www.dotmailer.com/) for OroCRM.
 It allows to relate Marketing List to Dotmailer address book and receive Dotmailer Email Campaign statistics
-back in OroCRM. Synchronization contacts between Dotmailer and OroCRM.
+back in OroCRM. Сontacts between Dotmailer and OroCRM accounts can also be synchronized.
 
 ## Setting Up the Connection
 
 First of all, a new Integration with type "Dotmailer" must be created.
 
-Go to the "System -> Integrations" and click "Create Integration" button.
+Go to the "System -> Integrations" and click "Create Integration" button. Define the following settings:
 
- - *Type*: must be set to Dotmailer
- - *Name*: must be filled with meaningful integration name
- - *Username*: must be a API user name from your Dotmailer "Manage users" page.
- - *Password*: is a password. It should have 8 characters or more.
- - *Check Connection*: is a button. You can check connection and your credentials before save Integration using "Check Connection" button.
- It appears only after the Username and Password with 8 characters or more has been filled..
- - *Default Owner*: Select the owner of the integration. All entities imported from the integration will be assigned to the selected user.
+ - *Type*: Dotmailer
+ - *Name*: meaningful integration name
+ - *Username*: an API user name from your Dotmailer "Manage users" page
+ - *Password*: fill in the password of the API user defined at the previous step (8 characters).
+ - *Default Owner*: Select the owner of the integration. The selected user will be defined as the owenr for all the records     imported within the integration.
 
+After the Username and Password have been filled in, the *Check Connection* button appers. Click the button to check the credentials validity before saving the Integration.
 
 ## Connecting Marketing List to Dotmailer
 
-After integration is created and enabled Marketing Lists may be connected to Dotmailer Address Book.
+After the integration has been created and its status has been set to Active, the list of Address Books will be automatically imported from Dotmailer to OroCRM, and OroCRM Marketing Lists may be connected to the Dotmailer Address Books.
 
 > Only Marketing Lists with Email fields can be connected.
 
-If the Marketing list is suitable for the connection, "Connect to Dotmailer" button will appear on Marketing List view page.
-One Marketing List may be connected only to one Dotmailer Address Book. OroCRM Marketing Lists are represented in Dotmailer as Address Book.
+If a Marketing list is suitable for the connection, the "Connect to Dotmailer" button will appear on the Marketing List view page.
+Each Marketing List may be connected only to one Dotmailer Address Book and each Dotmailer Address Book may be connected only to one Marketing List, so each OroCRM Marketing Lists connected will be represented as an Address Book in Dotmailer.
 
-Before connect Marketing List to Dotmailer you should [create Address Book](https://support.dotmailer.com/entries/20663833-Creating-an-address-book) in Dotmailer User Interface.
+When "Connect to Dotmailer" button is clicked, the form with two selectors will emerge:
 
-When "Connect to Dotmailer" button is clicked, the following form will appear:
+ - *Integration*: the selector contains all the Dotmailer integrations available in the OroCRM instance. Select the integration with the Dotmailer instance, for which the connection must be performed. 
+ - *Address Book*: the selector contains all the Dotmailer Address Book records [created](https://support.dotmailer.com/entries/20663833-Creating-an-address-book) in Dotmailer User Interface and available for connection. The selector does not contain the "All Contacts" and "Test" Address Books (automatically generated in Dotmailer), nor the Address Books that have already been connected to another Marketing List in OroCRM.
 
- - *Integration*: is a Dotmailer integration selector
- - *Address Book*: is a Dotmailer Address Book selector
+After the connection has been saved, the Marketing list contacts will be automatically exported from OroCRM to Dotmailer.
+Since then, data synchronization (import and export) between OroCRM and Dotmailer will be automatically performed once in every 4 minutes.
 
-After the connection has been saved, the Address Book will be scheduled for creation along with contacts synchronization job.
+> Job Queue Daemon has to be running.
 
->Job Queue Daemon has to be running.
+After the connection has been saved, the "Connect to Dotmailer" button will disappear, and the "Dotmailer" action drop-down menu will appear instead. The following options are available in the menu:
 
-Marketing Lists connected to Dotmailer must contain the Email field. Connection settings of the lists are added as a Dotmailer action on their view pages.
-Available options are "Connection Settings", "Disconnect" and "Synchronize".
+- "Connection Settings": edit the connection settings
+- "Disconnect": disconnect the Marketing List from the Address Book
+- "Synchronize": manually start the synchronization between the Marketing List and the Address Book.
 
 
 ## Dotmailer Campaign Creation
 
-Marketing List contacts may be used to send Dotmailer campaigns. OroCRM Marketing list is mapped to Dotmailer Address Book.
-Campaign statistics are collected in OroCRM ONLY when Campaign is sent to Dotmailer Address Book which connected to Marketing List.
-
-You should create and send Campaign to ONE Address Book in Dotmailer before inported campaigns and contact activity are collected.
+Once a Marketing List has been connected to a Dotmailer Address Book, its contacts may be used to send Dotmailer campaigns. OroCRM collects the campaign and user acitivity statistics for the campaigns sent to the contacts in an Address Book connected to a Marketing Lists. The statistics will be collected ONLY WHEN a Dotmailer campaign has been sent to the contacts on the Address Book (unless a Dotmailer Campaign has been sent, no statistics will be collected in OroCRM).
 
 
 ## Import Synchronization Logic
 
-Import is performed with *oro:cron:integration:sync* cron command.
+Import is performed with *oro:cron:integration:sync* cron command after the integration has been saved and once in every four minutes after a connection has been created.
 
- - **Address Book**: All Dotmailer Address Books are imported except "All Contacts" and "Test". These Books were created for each Dotmailer Account by default.
- - **Campaign**: Only sent campaigns to Address book that has connection to OroCRM Marketing List are imported.
+ - **Address Book**: All Dotmailer Address Books are imported except "All Contacts" and "Test" (these Books are created for each Dotmailer Account by default).
+ - **Campaign**:  Details of campaigns sent to the contacts on Address Books connected to OroCRM Marketing Lists are imported.
 
-A new Email Campaign will be created in OroCRM for a Dotmailer Campaign and synchronized during the following imports.
-The OroCRM Email Campaign related to Marketing List that has connection to Dotmailer Address Book.
+For each Dotmailer campaign imported, a new Email Campaign will be created in OroCRM. During the import, the campaign related details are synchronizaed during the following imports as follows:
 
- - **Contact**: All subscribed contacts of already imported Address Books are imported.
- - **Unsubscribed Contact**: All contacts who were suppressed from first import time. And All contacts who unsubscribed from already imported Addres Books.
- - **Contact Activity**: Contact activities are loaded for each contact who had activity for Campaigns that already were imported to OroCRM.
- - **Campaign Summary**: Campaign summary are imported for each Campaigns that already were imported to OroCRM.
+ - **Dotmailer Contact**: Import all the Dotmailer Contacts from all the Address Books imported to OroCRM (the contacts are added to the database and used at the backend, they won't be seen in the UI).
+ - **Unsubscribed Contact**: Imoprt all the contacts suppressed/unsubscribed from the Address Book since the first import. Status of this contacts in the related OroCRM Marketing Lists is set to unsubscribed.
+ - **Contact Activity**: All the contact activities performed within a Dotmailer Campaign previously imported to ORoCRM are imported to OroCRM.
+ - **Campaign Summary**: Campaign summary is imported for each Campaign previously imported to OroCRM.
 
-Each contact activity is mapped to OroCRM Marketing List Item and Email Campaign Statics by Email.
+Each contact activity is mapped to OroCRM Marketing List Item and Email Campaign Statics by the Email value.
 
 
 ## Export Logic
 
-Export is performed with *oro:cron:dotmailer:export* cron command.
+Export of the campaign details from OroCRM to Dotmailer is performed with *oro:cron:dotmailer:export* cron command once in every four minutes after a connection has been created.
 
-During Address Books export we have 4 steps
+Expoert is performed in 4 steps, as follows:
 
- - **Exporting Removed Contacts**: Try to remove from address book unsubscribed contacts from Marketing Lists that connected to Address Books
- - **Sync Marketing List Item State**: Added Marketing List Item States for contacts who unsubscribed from Address Books
- - **Preparing Contacts for Export**: Change export status for contacts who will exports to Dotmailer
- - **Exporting Contacts**: Send csv file with contacts who should exports to Dotmailer
+ - **Exporting Removed Contacts**: If a subscriber has been removed/unsubscribed from an OroCRM marketing list, the contacts are removed from the connected Address Book.
+ - **Sync Marketing List Item State**: Subscibers of the OroCRM Marketing list are checked against the Unsubscribed Contacts of the related Marketing Campaign and unsubscribed from the Marketing List if necessary.
+ - **Preparing Contacts for Export**: Status of contacts to be exported to Dotmailer is changed correpondingly.
+ - **Exporting Contacts**: A csv file with contacts to be exported is sent to Dotmailer
