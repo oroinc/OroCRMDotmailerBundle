@@ -269,19 +269,8 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
      */
     public function updateContactsTransactionalData($collectionName, ApiTransactionalDataList $list)
     {
-        // workaround till https://github.com/romanpitak/dotMailer-API-v2-PHP-client/issues/7 resolved
-        $url = sprintf("contacts/transactional-data/import/%s", $collectionName);
-
-        $reflObject = new \ReflectionObject($this->dotmailerResources);
-        $method = $reflObject->getMethod('execute');
-        $method->setAccessible(true);
-
-        $result = $method->invoke($this->dotmailerResources, $url, 'POST', $list->toJson());
-
-        return new ApiTransactionalDataImport($result);
-        // should be just that
-        //return $this->dotmailerResources
-        //    ->PostContactsTransactionalDataImport($collectionName, $list);
+        return $this->dotmailerResources
+            ->PostContactsTransactionalDataImport($collectionName, $list);
     }
 
     /**
