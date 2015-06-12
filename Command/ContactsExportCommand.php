@@ -101,6 +101,12 @@ class ContactsExportCommand extends AbstractSyncCronCommand
             ? [ $addressBook->getChannel() ]
             : $this->getChannels($addressBook);
         foreach ($channels as $channel) {
+            if (!$channel->isEnabled()) {
+                $logger->info(sprintf('Integration "%s" disabled an will be skipped', $channel->getName()));
+
+                continue;
+            }
+
             /**
              * If previous export not finished we need to update export results from Dotmailer
              * If after update export results all export batches is complete,
@@ -117,14 +123,7 @@ class ContactsExportCommand extends AbstractSyncCronCommand
                 $exportManager->updateExportResults($channel);
             } else {
                 $this->removePreviousAddressBookContactsExport($channel);
-                $this->getReverseSyncProcessor()
-                    ->process(
-                        $channel,
-                        ContactConnector::TYPE,
-                        [
-                            AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION => $addressBook
-                        ]
-                    );
+                $this->startExport($channel, $addressBook);
                 $exportManager->updateExportResults($channel);
             }
         }
@@ -165,5 +164,21 @@ class ContactsExportCommand extends AbstractSyncCronCommand
             ->getRepository('OroIntegrationBundle:Channel')
             ->findBy(['type' => ChannelType::TYPE, 'enabled' => true]);
         return $channels;
+    }
+
+    /**
+     * @param Channel $channel
+     * @param AddressBook $addressBook
+     */
+    protected function startExport(Channel $channel, AddressBook $addressBook = null)
+    {
+        $this->getReverseSyncProcessor()
+            ->process(
+                $channel,
+                ContactConnector::TYPE,
+                [
+                    AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION => $addressBook
+                ]
+            );
     }
 }
