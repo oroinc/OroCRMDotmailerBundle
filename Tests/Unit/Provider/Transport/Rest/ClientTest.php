@@ -113,16 +113,22 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($result, $this->client->execute('testCall', $params));
     }
 
-    public function testExecuteAttemptsFailed()
+    /**
+     * @dataProvider executeAttemptsFailedDataProvider
+     * @param string $responseBody
+     * @param string $responseCode
+     * @param string $expectedMessage
+     */
+    public function testExecuteAttemptsFailed($responseBody, $responseCode, $expectedMessage)
     {
         $exceptionMessage = 'Dotmailer REST client exception:' . PHP_EOL .
             '[exception type] OroCRM\Bundle\DotmailerBundle\Exception\RestClientAttemptException' . PHP_EOL .
-            '[exception message] Unexpected response' . PHP_EOL .
+            '[exception message] ' . $expectedMessage . PHP_EOL .
             '[request url] testCall' . PHP_EOL .
             '[request method] ' . PHP_EOL .
             '[request data] ' . PHP_EOL .
-            '[response code] 500' . PHP_EOL .
-            '[response body] Internal Error';
+            '[response code] ' . $responseCode . PHP_EOL .
+            '[response body] ' . $responseBody;
 
         $this->setExpectedException('OroCRM\Bundle\DotmailerBundle\Exception\RestClientException', $exceptionMessage);
 
@@ -150,12 +156,11 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             ->method('getInfo')
             ->will($this->returnValue($this->info));
 
-        $this->info->http_code = 500;
+        $this->info->http_code = $responseCode;
 
-        $result = 'Internal Error';
         $this->response->expects($this->exactly(5))
             ->method('getParsedResponse')
-            ->will($this->returnValue($result));
+            ->will($this->returnValue($responseBody));
 
         $this->logger->expects($this->at(0))
             ->method('warning')
@@ -190,6 +195,35 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             ->with('[Warning] Attempt number 4 with 0.4 sec delay.');
 
         $this->client->execute('testCall');
+    }
+
+    /**
+     * @return array
+     */
+    public function executeAttemptsFailedDataProvider()
+    {
+        return [
+            [
+                'response_body' => '{"message": "Some error"}',
+                'response_code' => 500,
+                'expected_message' => 'Some error'
+            ],
+            [
+                'response_body' => 'Some error',
+                'response_code' => 500,
+                'expected_message' => 'Unexpected response'
+            ],
+            [
+                'response_body' => '{"error":"Some error"}',
+                'response_code' => 500,
+                'expected_message' => 'Unexpected response'
+            ],
+            [
+                'response_body' => '{"error":"Some error"}',
+                'response_code' => 404,
+                'expected_message' => 'NOT FOUND'
+            ],
+        ];
     }
 
     public function testExecuteAttemptsPassed()

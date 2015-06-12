@@ -98,7 +98,8 @@ class Client implements IClient, LoggerAwareInterface
                     $result = null;
                     break;
                 default:
-                    throw new RestClientAttemptException('Unexpected response');
+                    $message = $this->getExceptionMessage($responseBody, $responseCode);
+                    throw new RestClientAttemptException($message);
             }
 
         } catch (\Exception $exception) {
@@ -129,6 +130,20 @@ class Client implements IClient, LoggerAwareInterface
         $this->resetAttemptCount();
 
         return $result;
+    }
+
+    protected function getExceptionMessage($responseBodyString, $returnCode = null)
+    {
+        switch ((int)$returnCode) {
+            case 404:
+                return 'NOT FOUND';
+            default:
+                $decoded = json_decode($responseBodyString, true);
+                if (is_array($decoded) && isset($decoded['message'])) {
+                    return $decoded['message'];
+                }
+                return 'Unexpected response';
+        }
     }
 
     /**
