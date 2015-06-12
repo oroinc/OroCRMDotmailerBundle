@@ -7,6 +7,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\ImportExportBundle\Processor\ProcessorRegistry;
+use Oro\Bundle\IntegrationBundle\Command\SyncCommand;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\ImportExport\Job\Executor;
 use Oro\Bundle\IntegrationBundle\Provider\SyncProcessor;
@@ -102,10 +103,11 @@ class ExportManager
             if (!$jobResult) {
                 throw new RuntimeException('Update skipped contacts failed.');
             }
-
-            $importJobResult = $this->startImportContactsJob($channel);
-            if (!$importJobResult) {
-                throw new RuntimeException('Import exported data failed.');
+            if (!$this->isImportAlreadyStarted($channel)) {
+                $importJobResult = $this->startImportContactsJob($channel);
+                if (!$importJobResult) {
+                    throw new RuntimeException('Import exported data failed.');
+                }
             }
 
             $addressBookContactRepository->createQueryBuilder('addressBookContact')
@@ -191,5 +193,18 @@ class ExportManager
             }
             $addressBook->setLastSynced($lastSyncDate);
         }
+    }
+
+    /**
+     * @param Channel $channel
+     *
+     * @return bool
+     */
+    protected function isImportAlreadyStarted(Channel $channel)
+    {
+        $running = $this->managerRegistry->getRepository('OroIntegrationBundle:Channel')
+            ->getRunningSyncJobsCount(SyncCommand::COMMAND_NAME, $channel->getId());
+
+        return $running > 0;
     }
 }
