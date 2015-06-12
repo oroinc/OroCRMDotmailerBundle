@@ -1,0 +1,53 @@
+{% block oro_combobox_dataconfig_autocomplete_channel_aware_address_book %}
+    {{ block('oro_combobox_dataconfig_autocomplete') }}
+
+    var $channelSelector = $('select[name="' + {{ channel_field_name|json_encode|raw }} + '"]'),
+        presetChannelId = {{ channel_id|json_encode|raw }},
+        marketingListId = {{ marketing_list_id|json_encode|raw }},
+        getQueryString = function (searchString) {
+            return [searchString, presetChannelId || $channelSelector.val(), marketingListId].join(';');
+        }
+
+    select2Config.ajax.data = function (query, page) {
+        return {
+            page: page,
+            per_page: {{ configs.per_page|default(10)|json_encode|raw }},
+            name: {{ configs.autocomplete_alias|json_encode|raw }},
+            query: getQueryString(query)
+        };
+    };
+{% endblock %}
+
+{% block oro_entity_create_or_select_inline_js_autocomplete_channel_aware_address_book %}
+    {{ block('oro_entity_create_or_select_inline_js_autocomplete_channel_aware') }}
+{% endblock %}
+
+
+{% block oro_combobox_dataconfig_grid_channel_aware_address_book %}
+    {{ block('oro_combobox_dataconfig_grid_channel_aware') }}
+{% endblock %}
+
+{% block oro_entity_create_or_select_inline_js_grid_channel_aware_address_book %}
+    {{ block('oro_entity_create_or_select_inline_js_grid_channel_aware') }}
+{% endblock %}
+
+{% block orocrm_dotmailer_transport_check_button_widget %}
+    {% set options = {
+        'pingUrl': path('orocrm_dotmailer_ping')
+    } %}
+    <div data-page-component-module="orocrmdotmailer/js/app/components/dm-resource-component"
+         data-page-component-options="{{ options|json_encode }}">
+        <div class="control-group">
+            <div class="controls">
+                <div style="margin-top: 10px;display: none;" class="ping-holder">
+                    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ label|trans({}, translation_domain) }}</button>
+                    <div class="connection-status alert" style="display: none"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block orocrm_dotmailer_transport_check_button_row %}
+    {{ block('button_row') }}
+{% endblock %}

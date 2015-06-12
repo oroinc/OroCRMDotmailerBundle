@@ -1,0 +1,46 @@
+datagrid:
+    orocrm_dotmailer_address_books_grid:
+        extended_entity_name: %orocrm_dotmailer.entity.address_book.class%
+        channel_limitation:
+            channel_relation_path: .channel
+        options:
+            entityHint: Address books list
+        source:
+            type: orm
+            query:
+                select:
+                    - addressBook.id
+                    - addressBook.name
+                    - addressBook.contactCount
+                from:
+                    - { table: %orocrm_dotmailer.entity.address_book.class%, alias: addressBook }
+                join:
+                    left:
+                        - { join: addressBook.visibility, alias: address_book_visibility }
+                where:
+                    and:
+                        - addressBook.marketingList IS NULL
+                        - addressBook.owner = @oro_security.security_facade->getOrganizationId
+        columns:
+            name:
+                label: orocrm.dotmailer.addressbook.name.label
+            contactCount:
+                label: orocrm.dotmailer.addressbook.contact_count.label
+        sorters:
+            columns:
+                name:
+                    data_name: addressBook.name
+                contactCount:
+                    data_name: addressBook.contactCount
+            default:
+                name: ASC
+        filters:
+            columns:
+                name:
+                    type: string
+                    data_name: addressBook.name
+                contactCount:
+                    type: string
+                    data_name: addressBook.contactCount
+        properties:
+            id: ~

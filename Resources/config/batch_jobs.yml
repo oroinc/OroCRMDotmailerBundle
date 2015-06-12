@@ -1,0 +1,166 @@
+connector:
+    name: oro_importexport
+    jobs:
+        dotmailer_address_book_import:
+            title: orocrm.dotmailer.connector.address_book.job
+            type: import
+            steps:
+                importAddressBooks:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.connector.address_book
+                        processor: orocrm_dotmailer.importexport.processor.address_book
+                        writer:    orocrm_dotmailer.importexport.writer.import
+                    parameters:
+                        batch_size: 100
+                removeNotExistingAddressBooks:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.importexport.reader.address_book.remove
+                        processor: orocrm_dotmailer.importexport.processor.address_book.remove
+                        writer:    orocrm_dotmailer.importexport.writer.import.removed_address_book
+
+        dotmailer_campaign_import:
+            title: orocrm.dotmailer.connector.campaign.job
+            type: import
+            steps:
+                importCampaigns:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.connector.campaign
+                        processor: orocrm_dotmailer.importexport.processor.campaign
+                        writer:    orocrm_dotmailer.importexport.writer.import
+                    parameters:
+                        batch_size: 100
+                removeCampaigns:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.importexport.reader.campaign.remove
+                        processor: orocrm_dotmailer.importexport.processor.remove_campaign
+                        writer:    oro_integration.writer.persistent_batch_writer
+                    parameters:
+                        batch_size: 100
+
+        dotmailer_unsubscribed_contact_import:
+            title: orocrm.dotmailer.connector.unsubscribed_contact.job
+            type: import
+            steps:
+                unsubscribed_from_account_contacts_import:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                          reader:    orocrm_dotmailer.importexport.reader.unsubscribed_from_account_contact
+                          processor: orocrm_dotmailer.importexport.processor.unsubscribed_from_account_contact
+                          writer:    orocrm_dotmailer.importexport.writer.import
+                    parameters:
+                        batch_size: 1000
+                import:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.connector.unsubscribed_contact
+                        processor: orocrm_dotmailer.importexport.processor.unsubscribed_contact
+                        writer:    orocrm_dotmailer.importexport.writer.import
+                    parameters:
+                        batch_size: 1000
+
+        dotmailer_new_contacts:
+            title: orocrm.dotmailer.connector.contact.job
+            type:  import
+            steps:
+                -
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.connector.contact
+                        processor: orocrm_dotmailer.importexport.processor.contact
+                        writer:    orocrm_dotmailer.importexport.writer.import
+                    parameters:
+                        batch_size: 1000
+
+        dotmailer_activity_contact_import:
+            title: orocrm.dotmailer.connector.activity_contact.job
+            type: import
+            steps:
+                import:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.connector.activity_contact
+                        processor: orocrm_dotmailer.importexport.processor.activity_contact
+                        writer:    orocrm_dotmailer.importexport.writer.import
+                    parameters:
+                        batch_size: 1000
+
+        dotmailer_campaign_summary_import:
+            title: orocrm.dotmailer.connector.campaign_summary.job
+            type: import
+            steps:
+                import:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.connector.campaign_summary
+                        processor: orocrm_dotmailer.importexport.processor.campaign_summary
+                        writer:    orocrm_dotmailer.importexport.writer.import
+                    parameters:
+                        batch_size: 100
+
+        dotmailer_import_not_exported_contact:
+            title: import
+            type: import
+            steps:
+                import:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.importexport.reader.not_exported_contact
+                        processor: orocrm_dotmailer.importexport.processor.not_exported_contact
+                        writer:    orocrm_dotmailer.importexport.writer.import
+                    parameters:
+                        batch_size: 100
+
+        dotmailer_contact_export:
+            title: orocrm.dotmailer.connector.contact.export_job
+            type: export
+            steps:
+                removeContacts:
+                    title: export
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.importexport.reader.removed_contact_export
+                        processor: orocrm_dotmailer.importexport.processor.export_removed
+                        writer:    orocrm_dotmailer.importexport.writer.export.removed_contacts
+                    parameters:
+                        batch_size: 1000
+                updateMarketingListStateItems:
+                    title: export
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.importexport.reader.unsubscribed_contact_sync
+                        processor: orocrm_dotmailer.importexport.processor.unsubscribed_contact_sync
+                        writer:    orocrm_dotmailer.importexport.writer.unsubscribed_contact_sync
+                    parameters:
+                        batch_size: 1000
+                syncMarketingListItemsWithContacts:
+                    title: export
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.importexport.reader.contact_sync
+                        processor: orocrm_dotmailer.importexport.processor.contact_sync
+                        writer:    orocrm_dotmailer.importexport.writer.contact_sync
+                    parameters:
+                        batch_size: 1000
+                exportContacts:
+                    title: export
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    orocrm_dotmailer.importexport.reader.scheduled_for_export
+                        processor: orocrm_dotmailer.importexport.processor.export_contact
+                        writer:    orocrm_dotmailer.importexport.writer.export.contacts
+                    parameters:
+                        batch_size: 10000

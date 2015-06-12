@@ -1,0 +1,76 @@
+OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransport:
+    properties:
+        username:
+            - NotBlank: ~
+            - Length:
+                max: 255
+                maxMessage: "Your username cannot be longer than {{ limit }} characters long"
+        password:
+            - NotBlank:
+                groups: [Create]
+            - Length:
+                min: 8
+                max: 255
+
+OroCRM\Bundle\DotmailerBundle\Entity\AddressBook:
+    properties:
+        channel:
+            - NotBlank: ~
+        name:
+            - NotBlank: ~
+            - Length:
+                max: 255
+        owner:
+            - NotBlank: ~
+
+OroCRM\Bundle\DotmailerBundle\Entity\Campaign:
+    properties:
+        channel:
+            - NotBlank: ~
+        name:
+            - NotBlank: ~
+            - Length:
+                max: 255
+        subject:
+            - Length:
+                max: 255
+        fromName:
+            - Length:
+                max: 255
+        fromAddress:
+            - Length:
+                max: 255
+        replyToAddress:
+            - Length:
+                max: 255
+        owner:
+            - NotBlank: ~
+
+OroCRM\Bundle\DotmailerBundle\Entity\Contact:
+    properties:
+        channel:
+            - NotBlank: ~
+        owner:
+            - NotBlank: ~
+        email:
+            - NotBlank: ~
+
+OroCRM\Bundle\DotmailerBundle\Entity\Activity:
+    properties:
+        channel:
+            - NotBlank: ~
+        contact:
+            - NotBlank: ~
+        campaign:
+            - NotBlank: ~
+        owner:
+            - NotBlank: ~
+
+OroCRM\Bundle\DotmailerBundle\Entity\CampaignSummary:
+    properties:
+        channel:
+            - NotBlank: ~
+        campaign:
+            - NotBlank: ~
+        owner:
+            - NotBlank: ~
