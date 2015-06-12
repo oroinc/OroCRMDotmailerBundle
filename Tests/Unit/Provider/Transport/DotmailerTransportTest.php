@@ -27,14 +27,26 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
      */
     protected $logger;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $encoder;
+
     protected function setUp()
     {
         $this->factory = $this->getMock(
             'OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory'
         );
+
         $this->logger = $this->getMock('Psr\Log\LoggerInterface');
+
+        $this->encoder = $this->getMockBuilder('Oro\Bundle\SecurityBundle\Encoder\Mcrypt')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->target = new DotmailerTransport(
-            $this->factory
+            $this->factory,
+            $this->encoder
         );
         $this->target->setLogger($this->logger);
     }
@@ -43,6 +55,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
     {
         $username = 'John';
         $password = '42';
+        $passwordEncoded = md5($password);
         $transport = $this->getMock(
             'Oro\Bundle\IntegrationBundle\Entity\Transport'
         );
@@ -54,12 +67,17 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValueMap(
                 [
                     ['username', null, false, $username],
-                    ['password', null, false, $password],
+                    ['password', null, false, $passwordEncoded],
                 ]
             ));
         $transport->expects($this->once())
             ->method('getSettingsBag')
             ->will($this->returnValue($settingsBag));
+
+        $this->encoder->expects($this->once())
+            ->method('decryptData')
+            ->with($passwordEncoded)
+            ->will($this->returnValue($password));
 
         $this->factory->expects($this->once())
             ->method('createResources')
@@ -381,6 +399,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
     {
         $username = 'John';
         $password = '42';
+        $passwordEncoded = md5($password);
         $transport = $this->getMock(
             'Oro\Bundle\IntegrationBundle\Entity\Transport'
         );
@@ -392,15 +411,24 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValueMap(
                 [
                     ['username', null, false, $username],
-                    ['password', null, false, $password],
+                    ['password', null, false, $passwordEncoded],
                 ]
             ));
+
         $transport->expects($this->any())
             ->method('getSettingsBag')
             ->will($this->returnValue($settingsBag));
         $resource = $this->getMock('DotMailer\Api\Resources\IResources');
+
+
+        $this->encoder->expects($this->once())
+            ->method('decryptData')
+            ->with($passwordEncoded)
+            ->will($this->returnValue($password));
+
         $this->factory->expects($this->any())
             ->method('createResources')
+            ->with($username, $password, $this->logger)
             ->will($this->returnValue($resource));
 
         $this->target->init($transport);

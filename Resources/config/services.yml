@@ -19,13 +19,13 @@ parameters:
     orocrm_dotmailer.log_helper.class:                                      OroCRM\Bundle\DotmailerBundle\Model\ImportExportLogHelper
 
     # Forms and Extensions
+    orocrm_dotmailer.form.event_listener.integration_transport_settings.class: OroCRM\Bundle\DotmailerBundle\Form\EventListener\IntegrationSettingsSubscriber
     orocrm_dotmailer.form.type.integration_transport_settings.class:  OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSettingsType
     orocrm_dotmailer.form.type.transport_settings.class:              OroCRM\Bundle\DotmailerBundle\Form\Type\DotmailerTransportSettingsType
     orocrm_dotmailer.form.type.marketing_list_connection.class:       OroCRM\Bundle\DotmailerBundle\Form\Type\MarketingListConnectionType
     orocrm_dotmailer.form.type.integration_select.class:              OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType
     orocrm_dotmailer.form.type.address_book_select.class:             OroCRM\Bundle\DotmailerBundle\Form\Type\AddressBookSelectType
     orocrm_dotmailer.form.type.transport_check.class:                 OroCRM\Bundle\DotmailerBundle\Form\Type\DotmailerTransportCheckButtonType
-    orocrm_dotmailer.form.type.password_type.class:                   OroCRM\Bundle\DotmailerBundle\Form\Type\PasswordType
     orocrm_dotmailer.form.extension.channel_connectors.class:         OroCRM\Bundle\DotmailerBundle\Form\Extension\ChannelConnectorsExtension
 
     #Form handlers
@@ -123,8 +123,15 @@ parameters:
 
 services:
     # Forms and Extensions
+    orocrm_dotmailer.form.event_listener.integration_transport_settings:
+        class: %orocrm_dotmailer.form.event_listener.integration_transport_settings.class%
+        arguments:
+            - @oro_security.encoder.mcrypt
+
     orocrm_dotmailer.form.type.integration_transport_settings:
         class: %orocrm_dotmailer.form.type.integration_transport_settings.class%
+        arguments:
+            - @orocrm_dotmailer.form.event_listener.integration_transport_settings
         tags:
             - { name: form.type, alias: "orocrm_dotmailer_transport_setting_type" }
 
@@ -172,11 +179,6 @@ services:
         tags:
             - { name: form.type, alias: orocrm_dotmailer_transport_check_button }
 
-    orocrm_dotmailer.form.type.password_type:
-        class: %orocrm_dotmailer.form.type.password_type.class%
-        tags:
-            - { name: form.type, alias: "orocrm_dm_password_type" }
-
     #Form handlers
     orocrm_dotmailer.form.handler.connection_update:
         class: %orocrm_dotmailer.form.handler.connection_update.class%
@@ -195,6 +197,7 @@ services:
         class: %orocrm_dotmailer.transport.integration_transport.class%
         arguments:
             - @orocrm_dotmailer.transport.resources_factory
+            - @oro_security.encoder.mcrypt
         calls:
             - [setLogger, ["@oro_integration.logger.strategy"]]
         tags:
