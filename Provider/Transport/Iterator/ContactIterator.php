@@ -7,9 +7,10 @@ use DotMailer\Api\Resources\IResources;
 class ContactIterator extends AbstractIterator
 {
     const ADDRESS_BOOK_KEY = 'related_address_book';
+    const OVERLAP = 100;
 
     /** @var int */
-    protected $batchSize = 1000;
+    protected $batchSize = 900;
 
     /** @var IResources */
     protected $resources;
@@ -37,6 +38,16 @@ class ContactIterator extends AbstractIterator
      */
     protected function getItems($select, $skip)
     {
+        /**
+         * overlap necessary because of during import some contacts can be unsubscribed,
+         * and in this case we can miss some entities. Also we can not iterate from the end because of api
+         * restrictions
+         */
+        if ($skip > self::OVERLAP) {
+            $skip -= self::OVERLAP;
+            $select += self::OVERLAP;
+        }
+
         if (is_null($this->dateSince)) {
             $items = $this->resources->GetAddressBookContacts($this->addressBookOriginId, true, $select, $skip);
         } else {
