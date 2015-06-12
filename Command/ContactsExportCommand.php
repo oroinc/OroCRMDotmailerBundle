@@ -14,6 +14,7 @@ use Oro\Bundle\IntegrationBundle\Command\AbstractSyncCronCommand;
 use Oro\Bundle\IntegrationBundle\Provider\ReverseSyncProcessor;
 use Oro\Component\Log\OutputLogger;
 
+use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
@@ -92,6 +93,9 @@ class ContactsExportCommand extends AbstractSyncCronCommand
             $addressBook = $this->registry
                 ->getManager()
                 ->find('OroCRMDotmailerBundle:AddressBook', $addressBookId);
+            if (!$addressBook->getChannel()) {
+                throw new RuntimeException('Channel not found');
+            }
         }
         $channels = $addressBook
             ? [ $addressBook->getChannel() ]
