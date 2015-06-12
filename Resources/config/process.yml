@@ -4,7 +4,7 @@ definitions:
         enabled: true
         order:   10
         entity:  OroCRM\Bundle\DotmailerBundle\Entity\Campaign
-        exclude_definitions: [dotmailer_create_email_creation]
+        exclude_definitions: [dotmailer_email_campaign_creation]
         actions_configuration:
             - @assign_value:
                 attribute: $.addressBook
