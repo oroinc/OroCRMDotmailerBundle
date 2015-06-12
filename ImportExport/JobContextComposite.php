@@ -86,9 +86,9 @@ class JobContextComposite implements ContextInterface
     /**
      * {@inheritdoc}
      */
-    public function incrementReadCount()
+    public function incrementReadCount($incrementBy = 1)
     {
-        $this->currentStepContext->incrementReadCount();
+        $this->currentStepContext->incrementReadCount($incrementBy);
     }
 
     /**
@@ -128,9 +128,9 @@ class JobContextComposite implements ContextInterface
     /**
      * {@inheritdoc}
      */
-    public function incrementAddCount()
+    public function incrementAddCount($incrementBy = 1)
     {
-        $this->currentStepContext->incrementAddCount();
+        $this->currentStepContext->incrementAddCount($incrementBy);
     }
 
     /**
@@ -149,9 +149,9 @@ class JobContextComposite implements ContextInterface
     /**
      * {@inheritdoc}
      */
-    public function incrementUpdateCount()
+    public function incrementUpdateCount($incrementBy = 1)
     {
-        $this->currentStepContext->incrementUpdateCount();
+        $this->currentStepContext->incrementUpdateCount($incrementBy);
     }
 
     /**
@@ -170,9 +170,9 @@ class JobContextComposite implements ContextInterface
     /**
      * {@inheritdoc}
      */
-    public function incrementReplaceCount()
+    public function incrementReplaceCount($incrementBy = 1)
     {
-        $this->currentStepContext->incrementReplaceCount();
+        $this->currentStepContext->incrementReplaceCount($incrementBy);
     }
 
     /**
@@ -191,9 +191,9 @@ class JobContextComposite implements ContextInterface
     /**
      * {@inheritdoc}
      */
-    public function incrementDeleteCount()
+    public function incrementDeleteCount($incrementBy = 1)
     {
-        $this->currentStepContext->incrementDeleteCount();
+        $this->currentStepContext->incrementDeleteCount($incrementBy);
     }
 
     /**
@@ -212,9 +212,9 @@ class JobContextComposite implements ContextInterface
     /**
      * {@inheritdoc}
      */
-    public function incrementErrorEntriesCount()
+    public function incrementErrorEntriesCount($incrementBy = 1)
     {
-        $this->currentStepContext->incrementErrorEntriesCount();
+        $this->currentStepContext->incrementErrorEntriesCount($incrementBy);
     }
 
     /**
