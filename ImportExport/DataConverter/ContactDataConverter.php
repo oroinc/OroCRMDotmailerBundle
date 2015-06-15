@@ -33,8 +33,8 @@ class ContactDataConverter extends AbstractDataConverter
         return [
             'email',
             'originId',
-            'opt_in_type',
-            'email_type',
+            'optInType',
+            'emailType',
             'firstName',
             'lastName',
             'gender',
