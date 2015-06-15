@@ -99,7 +99,7 @@ class UnsubscribedFromAccountContactsImportTest extends AbstractImportExportTest
                     [
                         'suppressedContact' => [
                             'Id'         => 42,
-                            'Email'      => 'test@mail.com',
+                            'Email'      => 'second@mail.com',
                             'EmailType'  => ApiContactEmailTypes::PLAIN_TEXT,
                             'DataFields' => [],
                             'Status'     => ApiContactStatuses::SUBSCRIBED

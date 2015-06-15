@@ -6,13 +6,15 @@ use Oro\Bundle\ImportExportBundle\Converter\AbstractTableDataConverter;
 
 class UnsubscribedFromAccountContactDataConverter extends AbstractTableDataConverter
 {
+    const CONTACT_EMAIL = 'email';
+
     /**
      * {@inheritdoc}
      */
     protected function getHeaderConversionRules()
     {
         return [
-            'suppressedcontact' => 'originId',
+            self::CONTACT_EMAIL => 'email',
             'dateremoved'       => 'unsubscribedDate',
             'reason'            => 'status:id',
         ];
@@ -24,7 +26,7 @@ class UnsubscribedFromAccountContactDataConverter extends AbstractTableDataConve
     public function convertToImportFormat(array $importedRecord, $skipNullValues = true)
     {
         if (is_array($importedRecord['suppressedcontact'])) {
-            $importedRecord['suppressedcontact'] = $importedRecord['suppressedcontact']['id'];
+            $importedRecord[self::CONTACT_EMAIL] = $importedRecord['suppressedcontact']['email'];
         }
 
         return parent::convertToImportFormat($importedRecord, $skipNullValues);
