@@ -5,6 +5,8 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 use Oro\Bundle\IntegrationBundle\ImportExport\Helper\DefaultOwnerHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\ImportExportBundle\Strategy\Import\ConfigurableAddOrReplaceStrategy;
+use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 use OroCRM\Bundle\DotmailerBundle\Entity\ChannelAwareInterface;
 use OroCRM\Bundle\DotmailerBundle\Entity\OriginAwareInterface;
@@ -123,5 +125,18 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
             ->getRepository('OroIntegrationBundle:Channel')
             ->getOrLoadById($this->context->getOption('channel'));
         return $channel;
+    }
+
+    /**
+     * @param string $enumCode
+     * @param string $id
+     *
+     * @return AbstractEnumValue
+     */
+    protected function getEnumValue($enumCode, $id)
+    {
+        $className = ExtendHelper::buildEnumValueClassName($enumCode);
+        return $this->getRepository($className)
+            ->find($id);
     }
 }
