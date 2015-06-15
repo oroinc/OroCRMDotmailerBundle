@@ -35,12 +35,12 @@ class ContactRepository extends EntityRepository
                     'contact.gender',
                     'contact.fullName',
                     'contact.postcode',
-                    'optInType.id as opt_in_type',
-                    'emailType.id as email_type',
+                    'opt_in_type.id as optInType',
+                    'email_type.id as emailType',
                 ]
             )
-            ->leftJoin('contact.opt_in_type', 'optInType')
-            ->leftJoin('contact.email_type', 'emailType')
+            ->leftJoin('contact.opt_in_type', 'opt_in_type')
+            ->leftJoin('contact.email_type', 'email_type')
             ->innerJoin(
                 'contact.addressBookContacts',
                 'addressBookContacts',
