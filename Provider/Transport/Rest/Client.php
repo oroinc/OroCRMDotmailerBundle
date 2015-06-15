@@ -117,7 +117,7 @@ class Client implements IClient, LoggerAwareInterface
                 ]
             );
 
-            if ($this->isAttemptNecessary()) {
+            if ($this->isAttemptNecessary($responseCode)) {
                 $this->logAttempt($errorMessage);
                 $result = $this->makeNewAttempt($paramArr, $responses);
             } else {
@@ -147,11 +147,15 @@ class Client implements IClient, LoggerAwareInterface
     }
 
     /**
+     * @param int $responseCode
      * @return bool
      */
-    protected function isAttemptNecessary()
+    protected function isAttemptNecessary($responseCode)
     {
-        return $this->multipleAttemptsEnabled && ($this->attempted <= count($this->sleepBetweenAttempt) - 1);
+        return
+            401 !== $responseCode &&
+            $this->multipleAttemptsEnabled &&
+            ($this->attempted <= count($this->sleepBetweenAttempt) - 1);
     }
 
     /**
