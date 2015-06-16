@@ -2,6 +2,8 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Command;
 
+use Doctrine\ORM\EntityManager;
+
 use Oro\Bundle\IntegrationBundle\Command\ReverseSyncCommand;
 use Oro\Bundle\IntegrationBundle\Provider\ReverseSyncProcessor;
 use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;

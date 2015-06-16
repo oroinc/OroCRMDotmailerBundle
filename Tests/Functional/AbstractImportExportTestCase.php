@@ -3,6 +3,7 @@
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManager;
 
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 
