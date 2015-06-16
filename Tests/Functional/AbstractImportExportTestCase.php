@@ -8,7 +8,7 @@ use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory;
 
-abstract class AbstractImportExportTest extends WebTestCase
+abstract class AbstractImportExportTestCase extends WebTestCase
 {
     const RESOURCES_FACTORY_ID = 'orocrm_dotmailer.transport.resources_factory';
     const SYNC_PROCESSOR = 'oro_integration.sync.processor';
@@ -38,8 +38,21 @@ abstract class AbstractImportExportTest extends WebTestCase
 
     public function tearDown()
     {
-        parent::tearDown();
         $this->getContainer()->set(self::RESOURCES_FACTORY_ID, $this->oldResourceFactory);
+
+        $jobRepository = $this->getContainer()->get('akeneo_batch.job_repository');
+
+        $reflection = new \ReflectionObject($jobRepository);
+        $property = $reflection->getProperty('jobManager');
+        $property->setAccessible(true);
+        /** @var EntityManager $entityManager */
+        $entityManager = $property->getValue($jobRepository);
+        $entityManager
+            ->getConnection()
+            ->close();
+        $entityManager->close();
+
+        parent::tearDown();
     }
 
     protected function stubResources()
