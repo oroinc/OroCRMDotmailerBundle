@@ -9,8 +9,8 @@ define(function (require) {
 
     return function (options) {
         var $source = options._sourceElement,
-            $username = $('#oro_integration_channel_form_transport_username'),
-            $password = $('#oro_integration_channel_form_transport_password'),
+            $username = $('input.dm-username'),
+            $password = $('input.dm-password'),
             $btn = $source.find('button'),
             $status = $source.find('.connection-status'),
             $pingHolder = $source.find('.ping-holder');
