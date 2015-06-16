@@ -20,6 +20,8 @@ class Client implements IClient, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
+    const EXECUTE_TIMEOUT = 60;
+
     /** @var int */
     protected $attempted = 0;
 
@@ -49,6 +51,7 @@ class Client implements IClient, LoggerAwareInterface
                 ],
                 Request::CURL_OPTIONS_KEY => [
                     CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_TIMEOUT => self::EXECUTE_TIMEOUT,
                 ],
             ]
         );
