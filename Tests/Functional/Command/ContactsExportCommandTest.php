@@ -2,12 +2,11 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Command;
 
-use Doctrine\ORM\EntityManager;
-
 use Oro\Bundle\IntegrationBundle\Command\ReverseSyncCommand;
 use Oro\Bundle\IntegrationBundle\Provider\ReverseSyncProcessor;
 use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
+
 use OroCRM\Bundle\DotmailerBundle\Command\ContactsExportCommand;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 
@@ -71,13 +70,7 @@ class ContactsExportCommandTest extends WebTestCase
         $this->getContainer()
             ->set(ReverseSyncCommand::SYNC_PROCESSOR, $this->syncProcessor);
 
-        $jobRepository = $this->getContainer()->get('akeneo_batch.job_repository');
-
-        $reflection = new \ReflectionObject($jobRepository);
-        $property = $reflection->getProperty('jobManager');
-        $property->setAccessible(true);
-        /** @var EntityManager $entityManager */
-        $entityManager = $property->getValue($jobRepository);
+        $entityManager = $this->getContainer()->get('akeneo_batch.job_repository')->getJobManager();
         $entityManager
             ->getConnection()
             ->close();
