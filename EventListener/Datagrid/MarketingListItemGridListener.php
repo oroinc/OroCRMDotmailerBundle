@@ -4,9 +4,12 @@ namespace OroCRM\Bundle\DotmailerBundle\EventListener\Datagrid;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 
 use Oro\Bundle\DataGridBundle\Datagrid\Common\DatagridConfiguration;
 use Oro\Bundle\DataGridBundle\Datagrid\DatagridInterface;
+use Oro\Bundle\DataGridBundle\Datagrid\ParameterBag;
+use Oro\Bundle\DataGridBundle\Datasource\DatasourceInterface;
 use Oro\Bundle\DataGridBundle\Datasource\Orm\OrmDatasource;
 use Oro\Bundle\DataGridBundle\Datasource\ResultRecordInterface;
 use Oro\Bundle\DataGridBundle\Event\BuildAfter;
@@ -16,38 +19,42 @@ use Oro\Bundle\DataGridBundle\Extension\Formatter\Property\PropertyInterface;
 
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
+use OroCRM\Bundle\DotmailerBundle\Model\FieldHelper;
+use OroCRM\Bundle\MarketingListBundle\Datagrid\MarketingListItemsListener;
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
+use OroCRM\Bundle\MarketingListBundle\Model\MarketingListHelper;
+use OroCRM\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 
 class MarketingListItemGridListener
 {
-    /**
-     * @var ManagerRegistry
-     */
+    /** @var ManagerRegistry */
     protected $registry;
 
+    /** @var ContactInformationFieldsProvider */
+    protected $contactInformationProvider;
+
+    /** @var FieldHelper */
+    protected $fieldHelper;
+
+    /** @var MarketingListHelper */
+    protected $marketingListHelper;
+
     /**
-     * @param ManagerRegistry $registry
+     * @param ManagerRegistry                  $registry
+     * @param ContactInformationFieldsProvider $contactInformationFieldsProvider
+     * @param FieldHelper                      $fieldHelper
+     * @param MarketingListHelper              $marketingListHelper
      */
-    public function __construct(ManagerRegistry $registry)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        ContactInformationFieldsProvider $contactInformationFieldsProvider,
+        FieldHelper $fieldHelper,
+        MarketingListHelper $marketingListHelper
+    ) {
         $this->registry = $registry;
-    }
-
-    public function getMarketingListItemPermissions(ResultRecordInterface $record, array $actions)
-    {
-        $actions     = array_keys($actions);
-        $permissions = array();
-        foreach ($actions as $action) {
-            $permissions[$action] = true;
-        }
-
-        $isSubscribed    = (bool)$record->getValue('subscribed');
-        $wasUnsubscribed = $record->getValue('addressBookSubscribedStatus') == Contact::STATUS_UNSUBSCRIBED;
-
-        $permissions['subscribe']   = !$isSubscribed && !$wasUnsubscribed;
-        $permissions['unsubscribe'] = $isSubscribed;
-
-        return $permissions;
+        $this->contactInformationProvider = $contactInformationFieldsProvider;
+        $this->fieldHelper = $fieldHelper;
+        $this->marketingListHelper = $marketingListHelper;
     }
 
     /**
@@ -55,44 +62,113 @@ class MarketingListItemGridListener
      */
     public function onBuildAfter(BuildAfter $event)
     {
-        $datagrid   = $event->getDatagrid();
+        $datagrid = $event->getDatagrid();
+        if (!$this->isApplicable($datagrid->getName(), $datagrid->getParameters())) {
+            return;
+        }
+
+        /** @var OrmDatasource $datasource */
         $datasource = $datagrid->getDatasource();
+        $marketingList = $this->getMarketingListFromDatasource($datasource);
+        if ($marketingList instanceof MarketingList) {
+            if ((bool)$this->registry->getManager()
+                ->getRepository('OroCRMDotmailerBundle:AddressBook')
+                ->findOneBy(['marketingList' => $marketingList])
+            ) {
+                $config = $datagrid->getConfig();
+                $this->removeColumn($config, 'contactedTimes');
 
-        if ($datasource instanceof OrmDatasource) {
-            $mlParameter = $datasource->getQueryBuilder()->getParameter('marketingListEntity');
-            $marketingList = $mlParameter ? $mlParameter->getValue() : null;
-            if ($marketingList instanceof MarketingList) {
-                if ((bool)$this->registry->getManager()
-                    ->getRepository('OroCRMDotmailerBundle:AddressBook')
-                    ->findOneBy(['marketingList' => $marketingList])
-                ) {
-                    $config = $datagrid->getConfig();
-                    $this->removeColumn($config, 'contactedTimes');
-
-                    // join real subscriber status
-                    $qb = $datasource->getQueryBuilder();
-                    $rootAlias = $qb->getRootAliases()[0];
-                    $rootEntity = $qb->getRootEntities()[0];
-                    $qb->leftJoin(
-                        'OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact',
-                        'dm_ab_contact',
-                        Join::WITH,
-                        'dm_ab_contact.marketingListItemId = ' . $rootAlias . '.id AND ' .
-                        'dm_ab_contact.marketingListItemClass = \'' . $rootEntity . '\''
-                    )
-                    ->leftJoin(
-                        'dm_ab_contact.addressBook',
-                        'dm_ab',
-                        Join::WITH,
-                        'IDENTITY(dm_ab_contact.addressBook) = dm_ab.id AND IDENTITY(dm_ab.marketingList) = ' .
-                        $marketingList->getId()
-                    )
-                    ->addSelect('IDENTITY(dm_ab_contact.status) as addressBookSubscribedStatus');
-
-                    $this->rewriteActionConfiguration($datagrid);
-                }
+                $this->joinSubscriberStatus($marketingList, $datasource->getQueryBuilder());
+                $this->rewriteActionConfiguration($datagrid);
             }
         }
+    }
+
+    /**
+     * @param DatasourceInterface $datasource
+     *
+     * @return MarketingList|null
+     */
+    protected function getMarketingListFromDatasource(DatasourceInterface $datasource)
+    {
+        $marketingList = null;
+        if ($datasource instanceof OrmDatasource) {
+            $mlParameter   = $datasource->getQueryBuilder()->getParameter('marketingListEntity');
+            $marketingList = $mlParameter ? $mlParameter->getValue() : null;
+        }
+
+        return $marketingList;
+    }
+
+    /**
+     * Accept orocrm_marketing_list_items_grid_* grids only in case when they has mixin to apply.
+     *
+     * @param string       $gridName
+     * @param ParameterBag $parameters
+     *
+     * @return bool
+     */
+    public function isApplicable($gridName, $parameters)
+    {
+        if (!$parameters->get(MarketingListItemsListener::MIXIN, false)) {
+            return false;
+        }
+
+        return (bool)$this->marketingListHelper->getMarketingListIdByGridName($gridName);
+    }
+
+    /**
+     * Join real subscriber status
+     *
+     * @param MarketingList $marketingList
+     * @param QueryBuilder  $queryBuilder
+     */
+    protected function joinSubscriberStatus(MarketingList $marketingList, QueryBuilder $queryBuilder)
+    {
+        $contactInformationFields = $this->contactInformationProvider->getMarketingListTypedFields(
+            $marketingList,
+            ContactInformationFieldsProvider::CONTACT_INFORMATION_SCOPE_EMAIL
+        );
+
+        if (!$contactInformationField = reset($contactInformationFields)) {
+            throw new \RuntimeException('Contact information is not provided');
+        }
+
+        $expr = $queryBuilder->expr();
+        $joinContactsExpr = $expr->andX();
+
+        $contactInformationFieldExpr = $this->fieldHelper
+            ->getFieldExpr($marketingList->getEntity(), $queryBuilder, $contactInformationField);
+        $queryBuilder->addSelect($contactInformationFieldExpr . ' AS entityEmail');
+
+        $joinContactsExpr->add(
+            $expr->eq(
+                $contactInformationFieldExpr,
+                sprintf('%s.email', 'dm_contact_subscriber')
+            )
+        );
+        $queryBuilder->andWhere("$contactInformationFieldExpr <> ''");
+        $queryBuilder->andWhere($expr->isNotNull($contactInformationFieldExpr));
+        $queryBuilder->leftJoin(
+            'OroCRM\Bundle\DotmailerBundle\Entity\Contact',
+            'dm_contact_subscriber',
+            Join::WITH,
+            $joinContactsExpr
+        );
+        $queryBuilder->leftJoin(
+            'OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact',
+            'dm_ab_contact',
+            Join::WITH,
+            'IDENTITY(dm_ab_contact.contact) = dm_contact_subscriber.id'
+        )
+        ->leftJoin(
+            'dm_ab_contact.addressBook',
+            'dm_ab',
+            Join::WITH,
+            'IDENTITY(dm_ab_contact.addressBook) = dm_ab.id'
+        )
+        ->andWhere('IDENTITY(dm_ab.marketingList) = ' . $marketingList->getId())
+        ->addSelect('IDENTITY(dm_ab_contact.status) as addressBookSubscribedStatus');
     }
 
     /**
@@ -101,9 +177,8 @@ class MarketingListItemGridListener
     protected function rewriteActionConfiguration(DatagridInterface $datagrid)
     {
         $config = $datagrid->getConfig();
-        $actionConfiguration = [$this, 'getMarketingListItemPermissions'];
-        $callable = function (ResultRecordInterface $record) use ($actionConfiguration, $config) {
-            $result = call_user_func($actionConfiguration, $record, $config->offsetGetOr('actions', []));
+        $callable = function (ResultRecordInterface $record) use ($config) {
+            $result = $this->getMarketingListItemPermissions($record, $config->offsetGetOr('actions', []));
 
             return is_array($result) ? $result : [];
         };
@@ -125,8 +200,31 @@ class MarketingListItemGridListener
     }
 
     /**
+     * @param ResultRecordInterface $record
+     * @param array                 $actions
+     *
+     * @return array
+     */
+    public function getMarketingListItemPermissions(ResultRecordInterface $record, array $actions)
+    {
+        $actions     = array_keys($actions);
+        $permissions = array();
+        foreach ($actions as $action) {
+            $permissions[$action] = true;
+        }
+
+        $isSubscribed    = (bool)$record->getValue('subscribed');
+        $wasUnsubscribed = $record->getValue('addressBookSubscribedStatus') == Contact::STATUS_UNSUBSCRIBED;
+
+        $permissions['subscribe']   = !$isSubscribed && !$wasUnsubscribed;
+        $permissions['unsubscribe'] = $isSubscribed;
+
+        return $permissions;
+    }
+
+    /**
      * @param DatagridConfiguration $config
-     * @param string $fieldName
+     * @param string                $fieldName
      */
     protected function removeColumn(DatagridConfiguration $config, $fieldName)
     {
