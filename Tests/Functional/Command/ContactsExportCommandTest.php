@@ -6,6 +6,7 @@ use Oro\Bundle\IntegrationBundle\Command\ReverseSyncCommand;
 use Oro\Bundle\IntegrationBundle\Provider\ReverseSyncProcessor;
 use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
+
 use OroCRM\Bundle\DotmailerBundle\Command\ContactsExportCommand;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 
@@ -68,6 +69,14 @@ class ContactsExportCommandTest extends WebTestCase
             ->set(ContactsExportCommand::EXPORT_MANAGER, $this->exportManager);
         $this->getContainer()
             ->set(ReverseSyncCommand::SYNC_PROCESSOR, $this->syncProcessor);
+
+        $entityManager = $this->getContainer()->get('akeneo_batch.job_repository')->getJobManager();
+        $entityManager
+            ->getConnection()
+            ->close();
+        $entityManager->close();
+
+        parent::tearDown();
     }
 
     /**
