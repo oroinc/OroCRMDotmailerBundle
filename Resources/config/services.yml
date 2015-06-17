@@ -13,6 +13,7 @@ parameters:
     orocrm_dotmailer.transport.integration_transport.class:                 OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport
     orocrm_dotmailer.transport.resources_factory.class:                     OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory
     orocrm_dotmailer.provider.marketing_list_items.query_builder.class:     OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider
+    orocrm_dotmailer.provider.campaign_statistic_caching.class:             OroCRM\Bundle\DotmailerBundle\Provider\CampaignStatisticCachingProvider
     orocrm_dotmailer.contact.export.query_builder_adapter.class:            OroCRM\Bundle\DotmailerBundle\Provider\ContactExportQBAdapter
     orocrm_dotmailer.contact.export.query_builder_adapter.registry:         OroCRM\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterRegistry
     orocrm_dotmailer.export_manager.class:                                  OroCRM\Bundle\DotmailerBundle\Model\ExportManager
@@ -229,6 +230,13 @@ services:
             - [setUnsubscribedItemClassName, [%orocrm_marketing_list.unsubscribed_item.class%]]
             - [setContactClassName, [%orocrm_dotmailer.entity.contact.class%]]
             - [setAddressBookContactClassName, [%orocrm_dotmailer.entity.address_book_contact.class%]]
+
+    orocrm_dotmailer.provider.campaign_statistic_caching:
+        class: %orocrm_dotmailer.provider.campaign_statistic_caching.class%
+        arguments:
+            - @orocrm_campaign.email_campaign.statistics_connector
+            - @doctrine
+            - @oro_entity.doctrine_helper
 
     orocrm_dotmailer.contact.export.query_builder_adapter:
         class: %orocrm_dotmailer.contact.export.query_builder_adapter.class%
@@ -585,8 +593,7 @@ services:
         class: %orocrm_dotmailer.workflow.action.update_email_campaign_statistics.class%
         parent: orocrm_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
-            - [setCampaignStatisticsConnector, [@orocrm_campaign.email_campaign.statistics_connector]]
-            - [setRegistry, [@doctrine]]
+            - [setCampaignStatisticCachingProvider, [@orocrm_dotmailer.provider.campaign_statistic_caching]]
         tags:
             - { name: oro_workflow.action, alias: update_email_campaign_dm_statistics }
 
