@@ -39,6 +39,9 @@ class MarketingListItemGridListener
     /** @var MarketingListHelper */
     protected $marketingListHelper;
 
+    /** @var array */
+    protected $addressBookByML = [];
+
     /**
      * @param ManagerRegistry                  $registry
      * @param ContactInformationFieldsProvider $contactInformationFieldsProvider
@@ -70,14 +73,25 @@ class MarketingListItemGridListener
         /** @var OrmDatasource $datasource */
         $datasource = $datagrid->getDatasource();
         $marketingList = $this->getMarketingListFromDatasource($datasource);
-        if ($marketingList instanceof MarketingList) {
-            if ((bool)$this->registry->getManager()
-                ->getRepository('OroCRMDotmailerBundle:AddressBook')
-                ->findOneBy(['marketingList' => $marketingList])
-            ) {
-                $config = $datagrid->getConfig();
-                $this->removeColumn($config, 'contactedTimes');
 
+        $isMarketingList = $marketingList instanceof MarketingList;
+        if (!$isMarketingList) {
+            return;
+        }
+
+        if (empty($this->addressBookByML[$marketingList->getId()])) {
+            $this->addressBookByML[$marketingList->getId()] = $this->registry->getManager()
+                ->getRepository('OroCRMDotmailerBundle:AddressBook')
+                ->findOneBy(['marketingList' => $marketingList]);
+        }
+
+        $isLinkedToAddressbook = !empty($this->addressBookByML[$marketingList->getId()]);
+        if ($isLinkedToAddressbook) {
+            $config = $datagrid->getConfig();
+            $this->removeColumn($config, 'contactedTimes');
+
+            $mixin = $datagrid->getParameters()->get(MarketingListItemsListener::MIXIN);
+            if ($mixin == 'orocrm-marketing-list-items-mixin') {
                 $this->joinSubscriberStatus($marketingList, $datasource->getQueryBuilder());
                 $this->rewriteActionConfiguration($datagrid);
             }
@@ -155,19 +169,19 @@ class MarketingListItemGridListener
             Join::WITH,
             $joinContactsExpr
         );
-        $queryBuilder->leftJoin(
+        $queryBuilder->innerJoin(
             'OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact',
             'dm_ab_contact',
             Join::WITH,
-            'IDENTITY(dm_ab_contact.contact) = dm_contact_subscriber.id'
+            'IDENTITY(dm_ab_contact.contact) = dm_contact_subscriber.id AND dm_ab_contact.addressBook = :aBookFilter'
         )
-        ->leftJoin(
+        ->setParameter('aBookFilter', $this->addressBookByML[$marketingList->getId()])
+        ->innerJoin(
             'dm_ab_contact.addressBook',
             'dm_ab',
             Join::WITH,
             'IDENTITY(dm_ab_contact.addressBook) = dm_ab.id'
         )
-        ->andWhere('IDENTITY(dm_ab.marketingList) = ' . $marketingList->getId())
         ->addSelect('IDENTITY(dm_ab_contact.status) as addressBookSubscribedStatus');
     }
 
