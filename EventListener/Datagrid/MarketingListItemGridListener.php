@@ -174,12 +174,6 @@ class MarketingListItemGridListener
             'IDENTITY(dm_ab_contact.contact) = dm_contact_subscriber.id AND dm_ab_contact.addressBook = :aBookFilter'
         )
         ->setParameter('aBookFilter', $this->addressBookByML[$marketingList->getId()])
-        ->leftJoin(
-            'dm_ab_contact.addressBook',
-            'dm_ab',
-            Join::WITH,
-            'IDENTITY(dm_ab_contact.addressBook) = dm_ab.id'
-        )
         ->addSelect('IDENTITY(dm_ab_contact.status) as addressBookSubscribedStatus');
     }
 
