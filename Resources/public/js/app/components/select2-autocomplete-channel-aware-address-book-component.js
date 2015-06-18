@@ -1,20 +1,17 @@
 define(function (require) {
     'use strict';
     var Component,
-        $ = require('jquery'),
         _ = require('underscore'),
-        __ = require('orotranslation/js/translator'),
-        Select2AutocompleteChannelAwareComponent = require('orocrmchannel/js/app/components/select2-autocompletechannel-aware-component');
+        Select2AutocompleteChannelAwareComponent = require('orocrmchannel/js/app/components/select2-autocomplete-channel-aware-component');
     Component = Select2AutocompleteChannelAwareComponent.extend({
-        processExtraConfig: function (select2Config, params) {
-            Component.__super__.processExtraConfig(select2Config, params);
-            var parentDataFunction = select2Config.ajax.data;
-            select2Config.ajax.data = function () {
-                var result = parentDataFunction.apply(this, arguments);
-                result.query += ';' + params.marketingListId;
-                return result;
-            }
-            return select2Config;
+        marketingListId: '',
+        initialize: function (options) {
+            this.marketingListId = _.result(options, 'marketing_list_id', this.marketingListId);
+            Component.__super__.initialize.call(this, options);
+        },
+        makeQuery: function (query) {
+            var result = Component.__super__.makeQuery.call(this, query)
+            return result + ';' + this.marketingListId;
         }
     });
     return Component;
