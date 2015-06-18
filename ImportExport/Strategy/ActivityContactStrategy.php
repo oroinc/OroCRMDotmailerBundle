@@ -84,6 +84,9 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
             $campaign = $this->reattachDetachedEntity(
                 $cachedCampaigns[$originalValue[ActivityContactIterator::CAMPAIGN_KEY]]
             );
+            if (count($cachedCampaigns) > 1000) {
+                $cachedCampaigns = [];
+            }
             $cachedCampaigns[$originalValue[ActivityContactIterator::CAMPAIGN_KEY]] = $campaign;
 
             $this->context->setValue('cachedCampaignEntities', $cachedCampaigns);
