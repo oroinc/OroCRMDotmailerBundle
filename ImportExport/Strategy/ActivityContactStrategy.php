@@ -55,9 +55,9 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
         if (empty($originalValue[ActivityContactIterator::CAMPAIGN_KEY])) {
             throw new RuntimeException('Campaign id is required');
         }
-
+        $campaignOriginId = $originalValue[ActivityContactIterator::CAMPAIGN_KEY];
         $cachedCampaigns = $this->context->getValue('cachedCampaignEntities');
-        if (!$cachedCampaigns || !isset($cachedCampaigns[$originalValue[ActivityContactIterator::CAMPAIGN_KEY]])) {
+        if (!$cachedCampaigns || !isset($cachedCampaigns[$campaignOriginId])) {
             $campaign = $this->getRepository('OroCRMDotmailerBundle:Campaign')
                 ->createQueryBuilder('dmCampaign')
                 ->addSelect('addressBooks')
@@ -70,25 +70,18 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
                 ->innerJoin('dmCampaign.emailCampaign', 'emailCampaign')
                 ->setParameters([
                     'channel'  => $channel,
-                    'originId' => $originalValue[ActivityContactIterator::CAMPAIGN_KEY]
+                    'originId' => $campaignOriginId
                 ])
                 ->setMaxResults(1)
                 ->getQuery()
                 ->useQueryCache(false)
                 ->getOneOrNullResult();
 
-            $cachedCampaigns[$originalValue[ActivityContactIterator::CAMPAIGN_KEY]] = $campaign;
-
-            $this->context->setValue('cachedCampaignEntities', $cachedCampaigns);
+            $this->context->setValue('cachedCampaignEntities', [$campaignOriginId => $campaign]);
         } else {
-            $campaign = $this->reattachDetachedEntity(
-                $cachedCampaigns[$originalValue[ActivityContactIterator::CAMPAIGN_KEY]]
-            );
-            if (count($cachedCampaigns) > 1000) {
-                $cachedCampaigns = [];
-            }
-            $cachedCampaigns[$originalValue[ActivityContactIterator::CAMPAIGN_KEY]] = $campaign;
+            $campaign = $this->reattachDetachedEntity($cachedCampaigns[$campaignOriginId]);
 
+            $cachedCampaigns[$campaignOriginId] = $campaign;
             $this->context->setValue('cachedCampaignEntities', $cachedCampaigns);
         }
 
