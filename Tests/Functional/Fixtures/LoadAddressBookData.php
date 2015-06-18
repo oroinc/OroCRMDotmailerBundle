@@ -97,6 +97,7 @@ class LoadAddressBookData extends AbstractFixture implements DependentFixtureInt
     public function getDependencies()
     {
         return [
+            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadCampaignData',
             'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadMarketingListData',
             'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData',
         ];
