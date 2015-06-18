@@ -85,8 +85,8 @@ class MarketingListItemGridListener
                 ->findOneBy(['marketingList' => $marketingList]);
         }
 
-        $isLinkedToAddressbook = !empty($this->addressBookByML[$marketingList->getId()]);
-        if ($isLinkedToAddressbook) {
+        $isLinkedToAddressBook = !empty($this->addressBookByML[$marketingList->getId()]);
+        if ($isLinkedToAddressBook) {
             $config = $datagrid->getConfig();
             $this->removeColumn($config, 'contactedTimes');
 
@@ -148,19 +148,17 @@ class MarketingListItemGridListener
             throw new \RuntimeException('Contact information is not provided');
         }
 
-        $expr = $queryBuilder->expr();
-        $joinContactsExpr = $expr->andX();
 
         $contactInformationFieldExpr = $this->fieldHelper
             ->getFieldExpr($marketingList->getEntity(), $queryBuilder, $contactInformationField);
         $queryBuilder->addSelect($contactInformationFieldExpr . ' AS entityEmail');
 
-        $joinContactsExpr->add(
-            $expr->eq(
-                $contactInformationFieldExpr,
-                sprintf('%s.email', 'dm_contact_subscriber')
-            )
+        $expr = $queryBuilder->expr();
+        $joinContactsExpr = $expr->eq(
+            $contactInformationFieldExpr,
+            sprintf('%s.email', 'dm_contact_subscriber')
         );
+
         $queryBuilder->andWhere("$contactInformationFieldExpr <> ''");
         $queryBuilder->andWhere($expr->isNotNull($contactInformationFieldExpr));
         $queryBuilder->leftJoin(
@@ -228,7 +226,11 @@ class MarketingListItemGridListener
         }
 
         $isSubscribed    = (bool)$record->getValue('subscribed');
-        $wasUnsubscribed = $record->getValue('addressBookSubscribedStatus') == Contact::STATUS_UNSUBSCRIBED;
+        // treat as unsubscribed all statuses except these
+        $wasUnsubscribed = false === in_array(
+            $record->getValue('addressBookSubscribedStatus'),
+            [Contact::STATUS_SUBSCRIBED, Contact::STATUS_SOFTBOUNCED]
+        );
 
         $permissions['subscribe']   = !$isSubscribed && !$wasUnsubscribed;
         $permissions['unsubscribe'] = $isSubscribed;
