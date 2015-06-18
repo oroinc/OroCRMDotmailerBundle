@@ -30,6 +30,7 @@ class LoadAddressBookData extends AbstractFixture implements DependentFixtureInt
             'visibility'    => 'Private',
             'channel'       => 'orocrm_dotmailer.channel.first',
             'marketingList' => 'orocrm_dotmailer.marketing_list.second',
+            'campaign'      => 'orocrm_dotmailer.campaign.first',
             'owner'         => 'orocrm_dotmailer.organization.foo',
             'reference'     => 'orocrm_dotmailer.address_book.second'
         ],
@@ -40,6 +41,7 @@ class LoadAddressBookData extends AbstractFixture implements DependentFixtureInt
             'visibility'    => 'Private',
             'channel'       => 'orocrm_dotmailer.channel.third',
             'marketingList' => 'orocrm_dotmailer.marketing_list.third',
+            'campaign'      => 'orocrm_dotmailer.campaign.fifth',
             'owner'         => 'orocrm_dotmailer.organization.foo',
             'reference'     => 'orocrm_dotmailer.address_book.third'
         ],
@@ -73,10 +75,14 @@ class LoadAddressBookData extends AbstractFixture implements DependentFixtureInt
         foreach ($this->data as $data) {
             $entity = new AddressBook();
             $data['visibility'] = $this->findEnum('dm_ab_visibility', $data['visibility']);
+            $this->resolveReferenceIfExist($data, 'campaign');
             $this->resolveReferenceIfExist($data, 'channel');
             $this->resolveReferenceIfExist($data, 'marketingList');
             $this->resolveReferenceIfExist($data, 'owner');
-            $this->setEntityPropertyValues($entity, $data, ['reference']);
+            if (isset($data['campaign'])) {
+                $entity->addCampaign($data['campaign']);
+            }
+            $this->setEntityPropertyValues($entity, $data, ['reference', 'campaign']);
 
             $this->addReference($data['reference'], $entity);
             $manager->persist($entity);

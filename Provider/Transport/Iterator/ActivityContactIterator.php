@@ -70,7 +70,7 @@ class ActivityContactIterator extends AbstractIterator
             );
         }
 
-        $items = $items ? $items->toArray() : [];
+        $items = $items->toArray();
         foreach ($items as &$item) {
             $item[self::CAMPAIGN_KEY] = $this->campaignOriginId;
         }
