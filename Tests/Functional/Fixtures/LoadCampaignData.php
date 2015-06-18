@@ -10,13 +10,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
 
-class LoadCampaignData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
+class LoadCampaignData extends AbstractFixture implements DependentFixtureInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
     /**
      * @var array
      */
@@ -32,6 +27,7 @@ class LoadCampaignData extends AbstractFixture implements ContainerAwareInterfac
             'status'        => 'Sent',
             'owner'         => 'orocrm_dotmailer.organization.foo',
             'channel'       => 'orocrm_dotmailer.channel.second',
+            'emailCampaign' => 'orocrm_dotmailer.email_campaign.first',
             'reference'     => 'orocrm_dotmailer.campaign.first',
         ],
         [
@@ -85,6 +81,7 @@ class LoadCampaignData extends AbstractFixture implements ContainerAwareInterfac
             'status'        => 'Sent',
             'owner'         => 'orocrm_dotmailer.organization.foo',
             'channel'       => 'orocrm_dotmailer.channel.second',
+            'emailCampaign' => 'orocrm_dotmailer.email_campaign.second',
             'reference'     => 'orocrm_dotmailer.campaign.fifth',
         ],
     ];
@@ -98,6 +95,7 @@ class LoadCampaignData extends AbstractFixture implements ContainerAwareInterfac
             $entity = new Campaign();
             $data['reply_action'] = $this->findEnum('dm_cmp_reply_action', $data['reply_action']);
             $data['status'] = $this->findEnum('dm_cmp_status', $data['status']);
+            $this->resolveReferenceIfExist($data, 'emailCampaign');
             $this->resolveReferenceIfExist($data, 'channel');
             $this->resolveReferenceIfExist($data, 'owner');
             $this->setEntityPropertyValues($entity, $data, ['reference']);
@@ -117,6 +115,7 @@ class LoadCampaignData extends AbstractFixture implements ContainerAwareInterfac
         return [
             'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadOrganizationData',
             'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData',
+            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadEmailCampaignData',
         ];
     }
 }

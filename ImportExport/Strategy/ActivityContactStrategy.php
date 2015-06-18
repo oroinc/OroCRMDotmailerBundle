@@ -55,16 +55,28 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
         if (empty($originalValue[ActivityContactIterator::CAMPAIGN_KEY])) {
             throw new RuntimeException('Campaign id is required');
         }
-        $em = $this->strategyHelper->getEntityManager('OroCRMDotmailerBundle:Campaign');
+
         $cachedCampaigns = $this->context->getValue('cachedCampaignEntities');
         if (!$cachedCampaigns || !isset($cachedCampaigns[$originalValue[ActivityContactIterator::CAMPAIGN_KEY]])) {
-            $campaign = $em->getRepository('OroCRMDotmailerBundle:Campaign')
-                ->findOneBy(
-                    [
-                        'channel'  => $channel,
-                        'originId' => $originalValue[ActivityContactIterator::CAMPAIGN_KEY]
-                    ]
-                );
+            $campaign = $this->getRepository('OroCRMDotmailerBundle:Campaign')
+                ->createQueryBuilder('dmCampaign')
+                ->addSelect('addressBooks')
+                ->addSelect('emailCampaign')
+                ->addSelect('marketingList')
+                ->where('dmCampaign.channel =:channel')
+                ->andWhere('dmCampaign.originId =:originId')
+                ->innerJoin('dmCampaign.addressBooks', 'addressBooks')
+                ->innerJoin('addressBooks.marketingList', 'marketingList')
+                ->innerJoin('dmCampaign.emailCampaign', 'emailCampaign')
+                ->setParameters([
+                    'channel'  => $channel,
+                    'originId' => $originalValue[ActivityContactIterator::CAMPAIGN_KEY]
+                ])
+                ->setMaxResults(1)
+                ->getQuery()
+                ->useQueryCache(false)
+                ->getOneOrNullResult();
+
             $cachedCampaigns[$originalValue[ActivityContactIterator::CAMPAIGN_KEY]] = $campaign;
 
             $this->context->setValue('cachedCampaignEntities', $cachedCampaigns);
