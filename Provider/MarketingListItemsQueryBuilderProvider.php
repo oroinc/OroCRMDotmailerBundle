@@ -75,7 +75,7 @@ class MarketingListItemsQueryBuilderProvider
     /**
      * @var QueryBuilder[]
      */
-    protected $cachedQueryBuilder = [];
+    protected $cachedQueryBuilders = [];
 
     /**
      * @param MarketingListProvider            $marketingListProvider
@@ -277,12 +277,16 @@ class MarketingListItemsQueryBuilderProvider
      */
     public function getCachedMarketingListItemsByEmailQB(MarketingList $marketingList)
     {
-        if (!isset($this->cachedQueryBuilder[$marketingList->getId()])) {
-            $this->cachedQueryBuilder[$marketingList->getId()] = $this->marketingListProvider
+        if (count($this->cachedQueryBuilders) > 100) {
+            $this->cachedQueryBuilders = [];
+        }
+
+        if (!isset($this->cachedQueryBuilders[$marketingList->getId()])) {
+            $this->cachedQueryBuilders[$marketingList->getId()] = $this->marketingListProvider
                 ->getMarketingListEntitiesQueryBuilder($marketingList, MarketingListProvider::FULL_ENTITIES_MIXIN);
         }
 
-        return clone $this->cachedQueryBuilder[$marketingList->getId()];
+        return clone $this->cachedQueryBuilders[$marketingList->getId()];
     }
 
     /**
