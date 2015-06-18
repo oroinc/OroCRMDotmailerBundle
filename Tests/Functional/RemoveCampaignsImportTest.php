@@ -11,7 +11,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
  * @dbIsolation
  * @dbReindex
  */
-class RemoveCampaignsImportTest extends AbstractImportExportTest
+class RemoveCampaignsImportTest extends AbstractImportExportTestCase
 {
     protected function setUp()
     {
