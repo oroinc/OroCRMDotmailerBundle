@@ -5,7 +5,6 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
 
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
-use OroCRM\Bundle\DotmailerBundle\Entity\Activity;
 use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
@@ -56,15 +55,35 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
         if (empty($originalValue[ActivityContactIterator::CAMPAIGN_KEY])) {
             throw new RuntimeException('Campaign id is required');
         }
-        $campaign = $this->strategyHelper
-            ->getEntityManager('OroCRMDotmailerBundle:Campaign')
-            ->getRepository('OroCRMDotmailerBundle:Campaign')
-            ->findOneBy(
-                [
-                    'channel' => $channel,
-                    'originId' => $originalValue[ActivityContactIterator::CAMPAIGN_KEY]
-                ]
-            );
+        $campaignOriginId = $originalValue[ActivityContactIterator::CAMPAIGN_KEY];
+        $cachedCampaigns = $this->context->getValue('cachedCampaignEntities');
+        if (!$cachedCampaigns || !isset($cachedCampaigns[$campaignOriginId])) {
+            $campaign = $this->getRepository('OroCRMDotmailerBundle:Campaign')
+                ->createQueryBuilder('dmCampaign')
+                ->addSelect('addressBooks')
+                ->addSelect('emailCampaign')
+                ->addSelect('marketingList')
+                ->where('dmCampaign.channel =:channel')
+                ->andWhere('dmCampaign.originId =:originId')
+                ->innerJoin('dmCampaign.addressBooks', 'addressBooks')
+                ->innerJoin('addressBooks.marketingList', 'marketingList')
+                ->innerJoin('dmCampaign.emailCampaign', 'emailCampaign')
+                ->setParameters([
+                    'channel'  => $channel,
+                    'originId' => $campaignOriginId
+                ])
+                ->setMaxResults(1)
+                ->getQuery()
+                ->useQueryCache(false)
+                ->getOneOrNullResult();
+
+            $this->context->setValue('cachedCampaignEntities', [$campaignOriginId => $campaign]);
+        } else {
+            $campaign = $this->reattachDetachedEntity($cachedCampaigns[$campaignOriginId]);
+
+            $cachedCampaigns[$campaignOriginId] = $campaign;
+            $this->context->setValue('cachedCampaignEntities', $cachedCampaigns);
+        }
 
         return $campaign;
     }
@@ -97,7 +116,7 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
         $isFullData = false,
         $isPersistNew = false,
         $itemData = null,
-        array $searchContext = array()
+        array $searchContext = []
     ) {
         if (!$entity) {
             return null;

@@ -38,9 +38,15 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
         }
 
         $expectedCampaignOriginId = 15662;
-        $this->resource->expects($this->once())
+        $expectedSecondCampaignOriginId = 15666;
+
+        $this->resource->expects($this->at(0))
             ->method('GetCampaignActivities')
             ->with($expectedCampaignOriginId)
+            ->will($this->returnValue($entity));
+        $this->resource->expects($this->at(1))
+            ->method('GetCampaignActivities')
+            ->with($expectedSecondCampaignOriginId)
             ->will($this->returnValue($entity));
         $channel = $this->getReference('orocrm_dotmailer.channel.second');
 
@@ -73,7 +79,7 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
 
             $activitiesEntities = $activityContactRepository->findBy($searchCriteria);
 
-            $this->assertCount(1, $activitiesEntities);
+            $this->assertCount(2, $activitiesEntities);
         }
     }
 
@@ -83,7 +89,7 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
             [
                 'expected'        => [
                     [
-                        'email' => 'test@example.com',
+                        'email' => 'alex.case@example.com',
                         'numOpens' => 3,
                         'numPageViews' => 0,
                         'numClicks' => 0,
@@ -102,7 +108,7 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
                 ],
                 'activityList' => [
                     [
-                        'email' => 'test@example.com',
+                        'email' => 'alex.case@example.com',
                         'numopens' => 3,
                         'numpageviews' => 0,
                         'numclicks' => 0,
