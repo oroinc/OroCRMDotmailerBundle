@@ -5,7 +5,6 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
 
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
-use OroCRM\Bundle\DotmailerBundle\Entity\Activity;
 use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
@@ -56,15 +55,27 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
         if (empty($originalValue[ActivityContactIterator::CAMPAIGN_KEY])) {
             throw new RuntimeException('Campaign id is required');
         }
-        $campaign = $this->strategyHelper
-            ->getEntityManager('OroCRMDotmailerBundle:Campaign')
-            ->getRepository('OroCRMDotmailerBundle:Campaign')
-            ->findOneBy(
-                [
-                    'channel' => $channel,
-                    'originId' => $originalValue[ActivityContactIterator::CAMPAIGN_KEY]
-                ]
+        $em = $this->strategyHelper->getEntityManager('OroCRMDotmailerBundle:Campaign');
+        $cachedCampaigns = $this->context->getValue('cachedCampaignEntities');
+        if (!$cachedCampaigns || !isset($cachedCampaigns[$originalValue[ActivityContactIterator::CAMPAIGN_KEY]])) {
+            $campaign = $em->getRepository('OroCRMDotmailerBundle:Campaign')
+                ->findOneBy(
+                    [
+                        'channel'  => $channel,
+                        'originId' => $originalValue[ActivityContactIterator::CAMPAIGN_KEY]
+                    ]
+                );
+            $cachedCampaigns[$originalValue[ActivityContactIterator::CAMPAIGN_KEY]] = $campaign;
+
+            $this->context->setValue('cachedCampaignEntities', $cachedCampaigns);
+        } else {
+            $campaign = $this->reattachDetachedEntity(
+                $cachedCampaigns[$originalValue[ActivityContactIterator::CAMPAIGN_KEY]]
             );
+            $cachedCampaigns[$originalValue[ActivityContactIterator::CAMPAIGN_KEY]] = $campaign;
+
+            $this->context->setValue('cachedCampaignEntities', $cachedCampaigns);
+        }
 
         return $campaign;
     }
@@ -97,7 +108,7 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
         $isFullData = false,
         $isPersistNew = false,
         $itemData = null,
-        array $searchContext = array()
+        array $searchContext = []
     ) {
         if (!$entity) {
             return null;

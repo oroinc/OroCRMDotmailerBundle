@@ -2,6 +2,8 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
+use Doctrine\Common\Util\ClassUtils;
+
 use Oro\Bundle\IntegrationBundle\ImportExport\Helper\DefaultOwnerHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\ImportExportBundle\Strategy\Import\ConfigurableAddOrReplaceStrategy;
@@ -121,10 +123,18 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
      */
     protected function getChannel()
     {
-        $channel = $this->strategyHelper->getEntityManager('OroIntegrationBundle:Channel')
-            ->getRepository('OroIntegrationBundle:Channel')
-            ->getOrLoadById($this->context->getOption('channel'));
-        return $channel;
+        $cachedChannel =  $this->context->getValue('cachedChannelEntity');
+        if (!$cachedChannel) {
+            $channel = $this->strategyHelper->getEntityManager('OroIntegrationBundle:Channel')
+                ->getRepository('OroIntegrationBundle:Channel')
+                ->getOrLoadById($this->context->getOption('channel'));
+
+            $this->context->setValue('cachedChannelEntity', $channel);
+        } else {
+            $this->context->setValue('cachedChannelEntity', $this->reattachDetachedEntity($cachedChannel));
+        }
+
+        return $this->context->getValue('cachedChannelEntity');
     }
 
     /**
@@ -138,5 +148,21 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
         $className = ExtendHelper::buildEnumValueClassName($enumCode);
         return $this->getRepository($className)
             ->find($id);
+    }
+
+    /**
+     * @param object $entity
+     *
+     * @return object
+     */
+    protected function reattachDetachedEntity($entity)
+    {
+        $entityClassName = ClassUtils::getClass($entity);
+        $manager = $this->strategyHelper
+            ->getEntityManager($entityClassName);
+        if (!$manager->contains($entity)) {
+            return $manager->find($entityClassName, $entity);
+        }
+        return $entity;
     }
 }
