@@ -690,5 +690,8 @@ services:
         class: %orocrm_dotmailer.listener.datagrid.marketing_list_item.class%
         arguments:
             - @doctrine
+            - @orocrm_marketing_list.provider.contact_information_fields
+            - @orocrm_dotmailer.model.field_helper
+            - @orocrm_marketing_list.model.helper
         tags:
             - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.after, method: onBuildAfter }
