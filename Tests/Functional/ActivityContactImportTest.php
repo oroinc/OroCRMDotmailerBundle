@@ -89,7 +89,7 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
             [
                 'expected'        => [
                     [
-                        'email' => 'test@example.com',
+                        'email' => 'alex.case@example.com',
                         'numOpens' => 3,
                         'numPageViews' => 0,
                         'numClicks' => 0,
@@ -108,7 +108,7 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
                 ],
                 'activityList' => [
                     [
-                        'email' => 'test@example.com',
+                        'email' => 'alex.case@example.com',
                         'numopens' => 3,
                         'numpageviews' => 0,
                         'numclicks' => 0,

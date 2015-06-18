@@ -121,6 +121,7 @@ parameters:
 
     #listeners
     orocrm_dotmailer.listener.datagrid.marketing_list_item.class: OroCRM\Bundle\DotmailerBundle\EventListener\Datagrid\MarketingListItemGridListener
+    orocrm_dotmailer.listener.cache_clear.class:                  OroCRM\Bundle\DotmailerBundle\EventListener\CacheClearListener
 
 services:
     # Forms and Extensions
@@ -699,3 +700,10 @@ services:
             - @doctrine
         tags:
             - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.after, method: onBuildAfter }
+
+    orocrm_dotmailer.listener.cache_clear:
+        class: %orocrm_dotmailer.listener.cache_clear.class%
+        arguments:
+            - @orocrm_dotmailer.provider.campaign_statistic_caching
+        tags:
+            - { name: doctrine.event_subscriber }

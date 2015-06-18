@@ -11,17 +11,10 @@ use OroCRM\Bundle\CampaignBundle\Model\EmailCampaignStatisticsConnector;
 
 class CampaignStatisticCachingProvider
 {
-    const BATCH_SIZE = 1000;
-
     /**
      * @var EmailCampaignStatisticsConnector
      */
     protected $campaignStatisticsConnector;
-
-    /**
-     * @var array
-     */
-    protected $campaignStatistics = [];
 
     /**
      * @var ManagerRegistry
@@ -32,6 +25,11 @@ class CampaignStatisticCachingProvider
      * @var DoctrineHelper
      */
     protected $doctrineHelper;
+
+    /**
+     * @var array
+     */
+    protected $campaignStatistics = [];
 
     /**
      * @param EmailCampaignStatisticsConnector $connector
@@ -56,22 +54,13 @@ class CampaignStatisticCachingProvider
      */
     public function getCampaignStatistic(EmailCampaign $emailCampaign, $relatedEntity)
     {
-        $this->clearCacheIfOverflow();
         $record = $this->getCampaignStatisticRecord($emailCampaign, $relatedEntity);
 
         return $record;
     }
 
-    protected function clearCacheIfOverflow()
+    public function clearCache()
     {
-        if (count($this->campaignStatistics) < self::BATCH_SIZE) {
-            return;
-        }
-
-        $this->registry
-            ->getManager()
-            ->flush(array_values($this->campaignStatistics));
-
         $this->campaignStatistics = [];
     }
 
