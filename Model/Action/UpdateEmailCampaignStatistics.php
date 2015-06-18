@@ -2,42 +2,31 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Model\Action;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-
 use Oro\Bundle\WorkflowBundle\Model\EntityAwareInterface;
 
 use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaignStatistics;
-use OroCRM\Bundle\CampaignBundle\Model\EmailCampaignStatisticsConnector;
 use OroCRM\Bundle\DotmailerBundle\Entity\Activity;
+use OroCRM\Bundle\DotmailerBundle\Provider\CampaignStatisticCachingProvider;
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
-use OroCRM\Bundle\MarketingListBundle\Provider\MarketingListProvider;
 
 class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
 {
     /**
-     * @var EmailCampaignStatisticsConnector
+     * @var CampaignStatisticCachingProvider
      */
-    protected $campaignStatisticsConnector;
+    protected $campaignStatisticCachingProvider;
 
     /**
-     * @var ManagerRegistry
+     * @param CampaignStatisticCachingProvider $campaignStatisticCachingProvider
+     *
+     * @return UpdateEmailCampaignStatistics
      */
-    protected $registry;
+    public function setCampaignStatisticCachingProvider(
+        CampaignStatisticCachingProvider $campaignStatisticCachingProvider
+    ) {
+        $this->campaignStatisticCachingProvider = $campaignStatisticCachingProvider;
 
-    /**
-     * @param EmailCampaignStatisticsConnector $campaignStatisticsConnector
-     */
-    public function setCampaignStatisticsConnector($campaignStatisticsConnector)
-    {
-        $this->campaignStatisticsConnector = $campaignStatisticsConnector;
-    }
-
-    /**
-     * @param ManagerRegistry $registry
-     */
-    public function setRegistry(ManagerRegistry $registry)
-    {
-        $this->registry = $registry;
+        return $this;
     }
 
     /**
@@ -79,13 +68,13 @@ class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
         $marketingList = $dmCampaign->getAddressBooks()->first()->getMarketingList();
         $relatedEntities = $this->getMarketingListEntitiesByEmail($marketingList, $activity->getEmail());
 
-        $em = $this->registry->getManager();
         foreach ($relatedEntities as $relatedEntity) {
             /** @var EmailCampaignStatistics $emailCampaignStatistics */
-            $emailCampaignStatistics = $this->campaignStatisticsConnector->getStatisticsRecord(
-                $emailCampaign,
-                $relatedEntity
-            );
+            $emailCampaignStatistics = $this->campaignStatisticCachingProvider
+                ->getCampaignStatistic(
+                    $emailCampaign,
+                    $relatedEntity
+                );
 
             $marketingListItem = $emailCampaignStatistics->getMarketingListItem();
             $marketingListItem->setLastContactedAt($activity->getDateSent());
@@ -93,9 +82,6 @@ class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
             $emailCampaignStatistics->setClickCount($activity->getNumClicks());
             $emailCampaignStatistics->setBounceCount((int)$activity->isSoftBounced() + (int)$activity->isHardBounced());
             $emailCampaignStatistics->setUnsubscribeCount((int)$activity->isUnsubscribed());
-
-            $em->persist($emailCampaignStatistics);
-            $em->flush($marketingListItem);
         }
     }
 
@@ -104,10 +90,6 @@ class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
      */
     public function initialize(array $options)
     {
-        if (!$this->campaignStatisticsConnector) {
-            throw new \InvalidArgumentException('EmailCampaignStatisticsConnector is not provided');
-        }
-
         return $this;
     }
 
@@ -116,7 +98,7 @@ class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
      */
     protected function getEntitiesQueryBuilder(MarketingList $marketingList)
     {
-        return $this->marketingListProvider
-            ->getMarketingListEntitiesQueryBuilder($marketingList, MarketingListProvider::FULL_ENTITIES_MIXIN);
+        return $this->marketingListItemsQueryBuilderProvider
+            ->getCachedMarketingListItemsByEmailQB($marketingList);
     }
 }

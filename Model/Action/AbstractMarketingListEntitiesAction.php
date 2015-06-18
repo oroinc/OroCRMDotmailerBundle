@@ -9,9 +9,9 @@ use Oro\Bundle\WorkflowBundle\Model\Action\AbstractAction;
 use Oro\Bundle\WorkflowBundle\Model\ContextAccessor;
 
 use OroCRM\Bundle\DotmailerBundle\Model\FieldHelper;
+use OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 use OroCRM\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
-use OroCRM\Bundle\MarketingListBundle\Provider\MarketingListProvider;
 
 abstract class AbstractMarketingListEntitiesAction extends AbstractAction
 {
@@ -21,9 +21,9 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
     protected $contactInformationFieldsProvider;
 
     /**
-     * @var MarketingListProvider
+     * @var MarketingListItemsQueryBuilderProvider
      */
-    protected $marketingListProvider;
+    protected $marketingListItemsQueryBuilderProvider;
 
     /**
      * @var FieldHelper
@@ -33,19 +33,19 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
     /**
      * @param ContextAccessor $contextAccessor
      * @param ContactInformationFieldsProvider $contactInformationFieldsProvider
-     * @param MarketingListProvider $marketingListProvider
+     * @param MarketingListItemsQueryBuilderProvider $marketingListItemsQueryBuilderProvider
      * @param FieldHelper $fieldHelper
      */
     public function __construct(
         ContextAccessor $contextAccessor,
         ContactInformationFieldsProvider $contactInformationFieldsProvider,
-        MarketingListProvider $marketingListProvider,
+        MarketingListItemsQueryBuilderProvider $marketingListItemsQueryBuilderProvider,
         FieldHelper $fieldHelper
     ) {
         parent::__construct($contextAccessor);
 
         $this->contactInformationFieldsProvider = $contactInformationFieldsProvider;
-        $this->marketingListProvider = $marketingListProvider;
+        $this->marketingListItemsQueryBuilderProvider = $marketingListItemsQueryBuilderProvider;
         $this->fieldHelper = $fieldHelper;
     }
 
@@ -59,8 +59,8 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
         $query = $this->getMarketingListEntitiesByEmailQueryBuilder($marketingList, $email)
             ->getQuery()
             /**
-             * Call multiple times during import
-             * and because of it cache grows larger and script getting out of memory.
+             * Call multiple times during import and because of it
+             * cache grows larger and script getting out of memory.
              */
             ->useQueryCache(false);
 

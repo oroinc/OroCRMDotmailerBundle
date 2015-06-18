@@ -16,7 +16,7 @@ class ActivityContactIterator extends AbstractIterator
     /**
      * {@inheritdoc}
      */
-    protected $batchSize = 100;
+    protected $batchSize = 1000;
 
     /**
      * @var int
