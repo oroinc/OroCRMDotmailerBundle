@@ -167,14 +167,14 @@ class MarketingListItemGridListener
             Join::WITH,
             $joinContactsExpr
         );
-        $queryBuilder->innerJoin(
+        $queryBuilder->leftJoin(
             'OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact',
             'dm_ab_contact',
             Join::WITH,
             'IDENTITY(dm_ab_contact.contact) = dm_contact_subscriber.id AND dm_ab_contact.addressBook = :aBookFilter'
         )
         ->setParameter('aBookFilter', $this->addressBookByML[$marketingList->getId()])
-        ->innerJoin(
+        ->leftJoin(
             'dm_ab_contact.addressBook',
             'dm_ab',
             Join::WITH,
