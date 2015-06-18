@@ -16,7 +16,7 @@ class ActivityContactIterator extends AbstractIterator
     /**
      * {@inheritdoc}
      */
-    protected $batchSize = 100;
+    protected $batchSize = 1000;
 
     /**
      * @var int
@@ -70,7 +70,7 @@ class ActivityContactIterator extends AbstractIterator
             );
         }
 
-        $items = $items->toArray();
+        $items = $items ? $items->toArray() : [];
         foreach ($items as &$item) {
             $item[self::CAMPAIGN_KEY] = $this->campaignOriginId;
         }

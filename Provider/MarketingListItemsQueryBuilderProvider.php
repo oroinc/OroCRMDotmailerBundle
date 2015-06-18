@@ -13,6 +13,7 @@ use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactSyncDataConverter;
 use OroCRM\Bundle\DotmailerBundle\Model\FieldHelper;
+use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 use OroCRM\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 use OroCRM\Bundle\MarketingListBundle\Provider\MarketingListProvider;
 
@@ -42,7 +43,6 @@ class MarketingListItemsQueryBuilderProvider
      */
     protected $fieldHelper;
 
-
     /**
      * @var ManagerRegistry
      */
@@ -71,6 +71,11 @@ class MarketingListItemsQueryBuilderProvider
      * @var ContactExportQBAdapterRegistry
      */
     protected $exportQBAdapterRegistry;
+
+    /**
+     * @var QueryBuilder[]
+     */
+    protected $cachedQueryBuilder = [];
 
     /**
      * @param MarketingListProvider            $marketingListProvider
@@ -266,6 +271,21 @@ class MarketingListItemsQueryBuilderProvider
     }
 
     /**
+     * @param MarketingList $marketingList
+     *
+     * @return QueryBuilder
+     */
+    public function getCachedMarketingListItemsByEmailQB(MarketingList $marketingList)
+    {
+        if (!isset($this->cachedQueryBuilder[$marketingList->getId()])) {
+            $this->cachedQueryBuilder[$marketingList->getId()] = $this->marketingListProvider
+                ->getMarketingListEntitiesQueryBuilder($marketingList, MarketingListProvider::FULL_ENTITIES_MIXIN);
+        }
+
+        return clone $this->cachedQueryBuilder[$marketingList->getId()];
+    }
+
+    /**
      * @param AddressBook $addressBook
      *
      * @return QueryBuilder
@@ -319,7 +339,7 @@ class MarketingListItemsQueryBuilderProvider
             )
         );
         $joinContactsExpr->add(
-            self::CONTACT_ALIAS.'.channel =:channel'
+            self::CONTACT_ALIAS . '.channel =:channel'
         );
         $qb->andWhere("$contactInformationFieldExpr <> ''");
         $qb->andWhere($expr->isNotNull($contactInformationFieldExpr));

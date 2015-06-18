@@ -8,7 +8,6 @@ use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaignStatistics;
 use OroCRM\Bundle\DotmailerBundle\Entity\Activity;
 use OroCRM\Bundle\DotmailerBundle\Provider\CampaignStatisticCachingProvider;
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
-use OroCRM\Bundle\MarketingListBundle\Provider\MarketingListProvider;
 
 class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
 {
@@ -71,10 +70,11 @@ class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
 
         foreach ($relatedEntities as $relatedEntity) {
             /** @var EmailCampaignStatistics $emailCampaignStatistics */
-            $emailCampaignStatistics = $this->campaignStatisticCachingProvider->getCampaignStatistic(
-                $emailCampaign,
-                $relatedEntity
-            );
+            $emailCampaignStatistics = $this->campaignStatisticCachingProvider
+                ->getCampaignStatistic(
+                    $emailCampaign,
+                    $relatedEntity
+                );
 
             $marketingListItem = $emailCampaignStatistics->getMarketingListItem();
             $marketingListItem->setLastContactedAt($activity->getDateSent());
@@ -98,7 +98,7 @@ class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
      */
     protected function getEntitiesQueryBuilder(MarketingList $marketingList)
     {
-        return $this->marketingListProvider
-            ->getMarketingListEntitiesQueryBuilder($marketingList, MarketingListProvider::FULL_ENTITIES_MIXIN);
+        return $this->marketingListItemsQueryBuilderProvider
+            ->getCachedMarketingListItemsByEmailQB($marketingList);
     }
 }

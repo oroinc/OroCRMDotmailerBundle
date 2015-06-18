@@ -60,10 +60,10 @@ class CampaignSummaryUpdateTest extends AbstractImportExportTest
         ];
 
         $summaryEntities = $campaignSummaryRepository->findBy($searchCriteria);
-        $this->assertCount(1, $summaryEntities);
+        $this->assertCount(2, $summaryEntities);
 
         $summaryEntities = $campaignSummaryRepository->findAll();
-        $this->assertCount(1, $summaryEntities);
+        $this->assertCount(2, $summaryEntities);
     }
 
     public function importDataProvider()
