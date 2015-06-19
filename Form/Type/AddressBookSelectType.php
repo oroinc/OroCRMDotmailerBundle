@@ -35,13 +35,10 @@ class AddressBookSelectType extends CreateOrSelectInlineChannelAwareType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
-        if (isset($options['configs']['component'])) {
-            $component = end(explode('/', $options['configs']['component']));
-            if (strcmp($component, 'select2-autocomplete-channel-aware-component') == 0) {
-                $view->vars['configs']['component'] = 'orocrmdotmailer/js/app/components/select2-autocomplete-channel-aware-address-book-component';
-            }
-        }
+
+        $view->vars['configs']['component'] .= '-address-book';
         $view->vars['marketing_list_id'] = isset($options['marketing_list_id']) ? $options['marketing_list_id'] : null;
+        $view->vars['component_options']['marketing_list_id'] = $view->vars['marketing_list_id'];
     }
 
     /**
