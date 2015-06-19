@@ -36,8 +36,9 @@ class AddressBookSelectType extends CreateOrSelectInlineChannelAwareType
     {
         parent::buildView($view, $form, $options);
 
-        $view->vars['configs']['extra_config'] .= '_address_book';
+        $view->vars['configs']['component'] .= '-address-book';
         $view->vars['marketing_list_id'] = isset($options['marketing_list_id']) ? $options['marketing_list_id'] : null;
+        $view->vars['component_options']['marketing_list_id'] = $view->vars['marketing_list_id'];
     }
 
     /**
