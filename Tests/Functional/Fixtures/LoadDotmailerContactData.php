@@ -200,25 +200,41 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
         $admin = $userManager->findUserByEmail(LoadAdminUserData::DEFAULT_ADMIN_EMAIL);
 
         foreach ($this->data as $item) {
-            if ($item['reference'] == 'orocrm_dotmailer.contact.first') {
-                for ($i=0; $i<0; $i++) {
-                    $newItem = [
-                        'originId'     => 42,
-                        'channel'      => 'orocrm_dotmailer.channel.second',
-                        'email'        => 'first@mail.com',
-                        'status'       => ApiContactStatuses::SUBSCRIBED,
-                        'addressBooks' => ['orocrm_dotmailer.address_book.third'],
-                        'reference'    => 'orocrm_dotmailer.contact.first',
-                    ];
+            $contact = new Contact();
+            $contact->setOwner($admin->getOrganization());
+            $this->resolveReferenceIfExist($item, 'channel');
 
-                    $newItem['reference'] = $newItem['reference'].$i;
-                    $newItem['email'] = $i.$newItem['reference'];
-                    $newItem['originId'] = ($newItem['originId']+$i)*10;
-
-                    $this->createContact($manager, $admin, $newItem);
-                }
+            if (!empty($item['addressBooks'])) {
+                $item = $this->resolveAddressBookRelations($item, $contact, $manager);
             }
-            $this->createContact($manager, $admin, $item);
+
+
+            if (!empty($item['createdAt'])) {
+                $item['createdAt'] = new \DateTime($item['createdAt']);
+            }
+            if (!empty($item['lastSubscribedDate'])) {
+                $item['lastSubscribedDate'] = new \DateTime($item['lastSubscribedDate']);
+            }
+
+            $item['status'] = $this->findEnum('dm_cnt_status', $item['status']);
+            if (isset($item['opt_in_type'])) {
+                $item['opt_in_type'] = $this->findEnum('dm_cnt_opt_in_type', $item['opt_in_type']);
+            }
+            if (isset($item['email_type'])) {
+                $item['email_type'] = $this->findEnum('dm_cnt_email_type', $item['email_type']);
+            }
+            $this->setEntityPropertyValues(
+                $contact,
+                $item,
+                [
+                    'addressBooks',
+                    'reference'
+                ]
+            );
+
+            $manager->persist($contact);
+
+            $this->setReference($item['reference'], $contact);
         }
 
         $manager->flush();
@@ -274,53 +290,6 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             }
             $contact->addAddressBookContact($addressBookContact);
         }
-
-        return $item;
-    }
-
-    /**
-     * @param ObjectManager $manager
-     * @param               $admin
-     * @param               $item
-     *
-     * @return mixed
-     */
-    protected function createContact(ObjectManager $manager, $admin, $item)
-    {
-        $contact = new Contact();
-        $contact->setOwner($admin->getOrganization());
-        $this->resolveReferenceIfExist($item, 'channel');
-
-        if (!empty($item['addressBooks'])) {
-            $item = $this->resolveAddressBookRelations($item, $contact, $manager);
-        }
-
-        if (!empty($item['createdAt'])) {
-            $item['createdAt'] = new \DateTime($item['createdAt']);
-        }
-        if (!empty($item['lastSubscribedDate'])) {
-            $item['lastSubscribedDate'] = new \DateTime($item['lastSubscribedDate']);
-        }
-
-        $item['status'] = $this->findEnum('dm_cnt_status', $item['status']);
-        if (isset($item['opt_in_type'])) {
-            $item['opt_in_type'] = $this->findEnum('dm_cnt_opt_in_type', $item['opt_in_type']);
-        }
-        if (isset($item['email_type'])) {
-            $item['email_type'] = $this->findEnum('dm_cnt_email_type', $item['email_type']);
-        }
-        $this->setEntityPropertyValues(
-            $contact,
-            $item,
-            [
-                'addressBooks',
-                'reference'
-            ]
-        );
-
-        $manager->persist($contact);
-
-        $this->setReference($item['reference'], $contact);
 
         return $item;
     }
