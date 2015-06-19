@@ -4,6 +4,7 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
+use Doctrine\Common\Util\ClassUtils;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
@@ -59,5 +60,19 @@ abstract class AbstractImportStrategy implements StrategyInterface, ContextAware
     public function setRegistry(ManagerRegistry $registry)
     {
         $this->registry = $registry;
+    }
+
+    /**
+     * @param object $entity
+     *
+     * @return object
+     */
+    protected function reattachDetachedEntity($entity)
+    {
+        $manager = $this->registry->getManager();
+        if (!$manager->contains($entity)) {
+            return $manager->find(ClassUtils::getClass($entity), $entity);
+        }
+        return $entity;
     }
 }
