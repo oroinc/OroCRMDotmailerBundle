@@ -12,6 +12,7 @@ use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 use OroCRM\Bundle\DotmailerBundle\Entity\ChannelAwareInterface;
 use OroCRM\Bundle\DotmailerBundle\Entity\OriginAwareInterface;
+use OroCRM\Bundle\DotmailerBundle\Provider\CacheProvider;
 
 class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
 {
@@ -23,16 +24,24 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
     protected $ownerHelper;
 
     /**
+     * @var CacheProvider
+     */
+    protected $cacheProvider;
+
+    /**
      * {@inheritdoc}
      */
     public function process($entity)
     {
         $entity = parent::process($entity);
+        $entity = $this->afterProcessAndValidationEntity($entity);
+        return $entity;
+    }
 
+    protected function afterProcessAndValidationEntity($entity)
+    {
         if ($entity instanceof OriginAwareInterface) {
-            $batchItems = $this->context->getValue(self::BATCH_ITEMS)?:[];
-            $batchItems[$entity->getOriginId()] = $entity;
-            $this->context->setValue(self::BATCH_ITEMS, $batchItems);
+            $this->cacheProvider->setCachedItem(self::BATCH_ITEMS, $entity->getOriginId(), $entity);
         }
 
         return $entity;
@@ -44,6 +53,18 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
     public function setOwnerHelper($ownerHelper)
     {
         $this->ownerHelper = $ownerHelper;
+    }
+
+    /**
+     * @param CacheProvider $cacheProvider
+     *
+     * @return AddOrReplaceStrategy
+     */
+    public function setCacheProvider(CacheProvider $cacheProvider)
+    {
+        $this->cacheProvider = $cacheProvider;
+
+        return $this;
     }
 
     /**

@@ -6,23 +6,23 @@ use Oro\Bundle\WorkflowBundle\Model\EntityAwareInterface;
 
 use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaignStatistics;
 use OroCRM\Bundle\DotmailerBundle\Entity\Activity;
-use OroCRM\Bundle\DotmailerBundle\Provider\CampaignStatisticCachingProvider;
+use OroCRM\Bundle\DotmailerBundle\Provider\CacheProvider;
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 
 class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
 {
     /**
-     * @var CampaignStatisticCachingProvider
+     * @var CacheProvider
      */
     protected $campaignStatisticCachingProvider;
 
     /**
-     * @param CampaignStatisticCachingProvider $campaignStatisticCachingProvider
+     * @param CacheProvider $campaignStatisticCachingProvider
      *
      * @return UpdateEmailCampaignStatistics
      */
     public function setCampaignStatisticCachingProvider(
-        CampaignStatisticCachingProvider $campaignStatisticCachingProvider
+        CacheProvider $campaignStatisticCachingProvider
     ) {
         $this->campaignStatisticCachingProvider = $campaignStatisticCachingProvider;
 

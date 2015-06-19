@@ -32,7 +32,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
     /**
      * {@inheritdoc}
      */
-    public function process($entity)
+    public function beforeProcessEntity($entity)
     {
         $this->channel = $this->getChannel();
         $this->addressBook = $this->getAddressBook($this->channel);
@@ -42,14 +42,17 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
             );
         }
 
-        $entity = parent::process($entity);
+        return parent::beforeProcessEntity($entity);
+    }
 
+    /**
+     * {@inheritdoc}
+     */
+    protected function afterProcessAndValidationEntity($entity)
+    {
         if ($entity instanceof Contact) {
-            $batchItems = $this->context->getValue(self::BATCH_ITEMS) ?: [];
-            $batchItems[$entity->getEmail()] = $entity;
-            $this->context->setValue(self::BATCH_ITEMS, $batchItems);
+            $this->cacheProvider->setCachedItem(self::BATCH_ITEMS, $entity->getEmail(), $entity);
         }
-
         return $entity;
     }
 
@@ -131,11 +134,13 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
             throw new RuntimeException('Address book id required');
         }
 
+        $addressBookOriginId = $originalValue[MarketingListItemIterator::ADDRESS_BOOK_KEY];
+        if ($addressBook = $this->cacheProvider->getCachedItem('addressBook', $addressBookOriginId))
         $addressBook = $this->getRepository('OroCRMDotmailerBundle:AddressBook')
             ->findOneBy(
                 [
                     'channel'  => $channel,
-                    'originId' => $originalValue[MarketingListItemIterator::ADDRESS_BOOK_KEY]
+                    'originId' => $addressBookOriginId
                 ]
             );
 
