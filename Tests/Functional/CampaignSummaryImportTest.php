@@ -32,16 +32,21 @@ class CampaignSummaryImportTest extends AbstractImportExportTestCase
     {
         $entity = new ApiCampaignSummary($summary);
 
-        $expectedCampaignOriginId = 15662;
-        $secondCampaignOriginId = 15666;
-        $this->resource->expects($this->at(0))
+        /**
+         * Necessary to be string for PostgreSQL
+         */
+        $expectedCampaignOriginId = '15662';
+        $secondCampaignOriginId = '15666';
+        $this->resource->expects($this->exactly(2))
             ->method('GetCampaignSummary')
-            ->with($expectedCampaignOriginId)
-            ->will($this->returnValue($entity));
-        $this->resource->expects($this->at(1))
-            ->method('GetCampaignSummary')
-            ->with($secondCampaignOriginId)
-            ->will($this->returnValue([]));
+            ->will(
+                $this->returnValueMap(
+                    [
+                        [$expectedCampaignOriginId, $entity],
+                        [$secondCampaignOriginId, null],
+                    ]
+                )
+            );
         $channel = $this->getReference('orocrm_dotmailer.channel.second');
 
         $processor = $this->getContainer()->get(self::SYNC_PROCESSOR);
@@ -52,15 +57,15 @@ class CampaignSummaryImportTest extends AbstractImportExportTestCase
         $campaignSummaryRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:CampaignSummary');
 
         $searchCriteria = [
-            'numUniqueOpens' => $expected['numUniqueOpens'],
-            'numUniqueTextOpens' => $expected['numUniqueTextOpens'],
+            'numUniqueOpens'      => $expected['numUniqueOpens'],
+            'numUniqueTextOpens'  => $expected['numUniqueTextOpens'],
             'numTotalUniqueOpens' => $expected['numTotalUniqueOpens'],
-            'numOpens' => $expected['numOpens'],
-            'numTextOpens' => $expected['numTextOpens'],
-            'numTotalOpens' => $expected['numTotalOpens'],
-            'numClicks' => $expected['numClicks'],
-            'numTextClicks' => $expected['numTextClicks'],
-            'numTotalClicks' => $expected['numTotalClicks'],
+            'numOpens'            => $expected['numOpens'],
+            'numTextOpens'        => $expected['numTextOpens'],
+            'numTotalOpens'       => $expected['numTotalOpens'],
+            'numClicks'           => $expected['numClicks'],
+            'numTextClicks'       => $expected['numTextClicks'],
+            'numTotalClicks'      => $expected['numTotalClicks'],
         ];
 
         $summaryEntities = $campaignSummaryRepository->findBy($searchCriteria);
@@ -72,27 +77,27 @@ class CampaignSummaryImportTest extends AbstractImportExportTestCase
     {
         return [
             [
-                'expected'        => [
-                    'numUniqueOpens' => 5,
-                    'numUniqueTextOpens' => 5,
+                'expected' => [
+                    'numUniqueOpens'      => 5,
+                    'numUniqueTextOpens'  => 5,
                     'numTotalUniqueOpens' => 5,
-                    'numOpens' => 5,
-                    'numTextOpens' => 5,
-                    'numTotalOpens' => 5,
-                    'numClicks' => 5,
-                    'numTextClicks' => 5,
-                    'numTotalClicks' => 5,
+                    'numOpens'            => 5,
+                    'numTextOpens'        => 5,
+                    'numTotalOpens'       => 5,
+                    'numClicks'           => 5,
+                    'numTextClicks'       => 5,
+                    'numTotalClicks'      => 5,
                 ],
-                'summary' => [
-                    'numUniqueOpens' => 5,
-                    'numUniqueTextOpens' => 5,
+                'summary'  => [
+                    'numUniqueOpens'      => 5,
+                    'numUniqueTextOpens'  => 5,
                     'numTotalUniqueOpens' => 5,
-                    'numOpens' => 5,
-                    'numTextOpens' => 5,
-                    'numTotalOpens' => 5,
-                    'numClicks' => 5,
-                    'numTextClicks' => 5,
-                    'numTotalClicks' => 5,
+                    'numOpens'            => 5,
+                    'numTextOpens'        => 5,
+                    'numTotalOpens'       => 5,
+                    'numClicks'           => 5,
+                    'numTextClicks'       => 5,
+                    'numTotalClicks'      => 5,
                 ]
             ]
         ];
