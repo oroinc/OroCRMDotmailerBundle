@@ -68,14 +68,13 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
                 ->addSelect('marketingList')
                 ->where('dmCampaign.channel =:channel')
                 ->andWhere('dmCampaign.originId =:originId')
-                ->innerJoin('dmCampaign.addressBooks', 'addressBooks')
-                ->innerJoin('addressBooks.marketingList', 'marketingList')
-                ->innerJoin('dmCampaign.emailCampaign', 'emailCampaign')
+                ->leftJoin('dmCampaign.addressBooks', 'addressBooks')
+                ->leftJoin('addressBooks.marketingList', 'marketingList')
+                ->leftJoin('dmCampaign.emailCampaign', 'emailCampaign')
                 ->setParameters([
                     'channel'  => $channel,
                     'originId' => $campaignOriginId
                 ])
-                ->setMaxResults(1)
                 ->getQuery()
                 ->useQueryCache(false)
                 ->getOneOrNullResult();
