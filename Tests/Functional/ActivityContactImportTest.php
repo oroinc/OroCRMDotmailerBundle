@@ -37,16 +37,18 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
             $entity[] = $listItem;
         }
 
-        $expectedCampaignOriginId = 15662;
-        $expectedSecondCampaignOriginId = 15666;
+        $expectedCampaigns = [15662, 15666];
+        $assertCampaignCorrectDelegate = function ($actualId) use ($expectedCampaigns) {
+            $campaignKey = array_search($actualId, $expectedCampaigns);
+            if ($campaignKey === false) {
+                $this->assertTrue(false, "Unexpected request for activities for campaign $actualId");
+            }
 
-        $this->resource->expects($this->at(0))
+            return true;
+        };
+        $this->resource->expects($this->exactly(2))
             ->method('GetCampaignActivities')
-            ->with($expectedCampaignOriginId)
-            ->will($this->returnValue($entity));
-        $this->resource->expects($this->at(1))
-            ->method('GetCampaignActivities')
-            ->with($expectedSecondCampaignOriginId)
+            ->with($this->callback($assertCampaignCorrectDelegate))
             ->will($this->returnValue($entity));
         $channel = $this->getReference('orocrm_dotmailer.channel.second');
 
@@ -59,22 +61,22 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
 
         foreach ($expected as $activityExpected) {
             $searchCriteria = [
-                'email' => $activityExpected['email'],
-                'numOpens' => $activityExpected['numOpens'],
-                'numPageViews' => $activityExpected['numPageViews'],
-                'numClicks' => $activityExpected['numClicks'],
-                'numForwards' => $activityExpected['numForwards'],
+                'email'                => $activityExpected['email'],
+                'numOpens'             => $activityExpected['numOpens'],
+                'numPageViews'         => $activityExpected['numPageViews'],
+                'numClicks'            => $activityExpected['numClicks'],
+                'numForwards'          => $activityExpected['numForwards'],
                 'numEstimatedForwards' => $activityExpected['numEstimatedForwards'],
-                'numReplies' => $activityExpected['numReplies'],
-                'dateSent' => $activityExpected['dateSent'],
-                'dateFirstOpened' => $activityExpected['dateFirstOpened'],
-                'dateLastOpened' => $activityExpected['dateLastOpened'],
-                'firstOpenIp' => $activityExpected['firstOpenIp'],
-                'unsubscribed' => $activityExpected['unsubscribed'],
-                'softBounced' => $activityExpected['softBounced'],
-                'hardBounced' => $activityExpected['hardBounced'],
-                'contact' => $this->getReference($activityExpected['contactid']),
-                'channel' => $channel,
+                'numReplies'           => $activityExpected['numReplies'],
+                'dateSent'             => $activityExpected['dateSent'],
+                'dateFirstOpened'      => $activityExpected['dateFirstOpened'],
+                'dateLastOpened'       => $activityExpected['dateLastOpened'],
+                'firstOpenIp'          => $activityExpected['firstOpenIp'],
+                'unsubscribed'         => $activityExpected['unsubscribed'],
+                'softBounced'          => $activityExpected['softBounced'],
+                'hardBounced'          => $activityExpected['hardBounced'],
+                'contact'              => $this->getReference($activityExpected['contactid']),
+                'channel'              => $channel,
             ];
 
             $activitiesEntities = $activityContactRepository->findBy($searchCriteria);
@@ -87,42 +89,42 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
     {
         return [
             [
-                'expected'        => [
+                'expected'     => [
                     [
-                        'email' => 'alex.case@example.com',
-                        'numOpens' => 3,
-                        'numPageViews' => 0,
-                        'numClicks' => 0,
-                        'numForwards' => 0,
+                        'email'                => 'alex.case@example.com',
+                        'numOpens'             => 3,
+                        'numPageViews'         => 0,
+                        'numClicks'            => 0,
+                        'numForwards'          => 0,
                         'numEstimatedForwards' => 2,
-                        'numReplies' => 0,
-                        'dateSent' => new \DateTime('2015-04-15T13:48:33.013Z'),
-                        'dateFirstOpened' => new \DateTime('2015-04-16T13:48:33.013Z'),
-                        'dateLastOpened' => new \DateTime('2015-04-16T13:48:33.013Z'),
-                        'firstOpenIp' => '61.249.92.173',
-                        'unsubscribed' => false,
-                        'softBounced' => false,
-                        'hardBounced' => false,
-                        'contactid' => 'orocrm_dotmailer.contact.first',
+                        'numReplies'           => 0,
+                        'dateSent'             => new \DateTime('2015-04-15T13:48:33.013Z'),
+                        'dateFirstOpened'      => new \DateTime('2015-04-16T13:48:33.013Z'),
+                        'dateLastOpened'       => new \DateTime('2015-04-16T13:48:33.013Z'),
+                        'firstOpenIp'          => '61.249.92.173',
+                        'unsubscribed'         => false,
+                        'softBounced'          => false,
+                        'hardBounced'          => false,
+                        'contactid'            => 'orocrm_dotmailer.contact.first',
                     ],
                 ],
                 'activityList' => [
                     [
-                        'email' => 'alex.case@example.com',
-                        'numopens' => 3,
-                        'numpageviews' => 0,
-                        'numclicks' => 0,
-                        'numforwards' => 0,
+                        'email'                => 'alex.case@example.com',
+                        'numopens'             => 3,
+                        'numpageviews'         => 0,
+                        'numclicks'            => 0,
+                        'numforwards'          => 0,
                         'numestimatedforwards' => 2,
-                        'numreplies' => 0,
-                        'datesent' => '2015-04-15T13:48:33.013Z',
-                        'datefirstopened' => '2015-04-16T13:48:33.013Z',
-                        'datelastopened' => '2015-04-16T13:48:33.013Z',
-                        'firstopenip' => '61.249.92.173',
-                        'unsubscribed' => 'false',
-                        'softbounced' => 'false',
-                        'hardbounced' => 'false',
-                        'contactid' => 42,
+                        'numreplies'           => 0,
+                        'datesent'             => '2015-04-15T13:48:33.013Z',
+                        'datefirstopened'      => '2015-04-16T13:48:33.013Z',
+                        'datelastopened'       => '2015-04-16T13:48:33.013Z',
+                        'firstopenip'          => '61.249.92.173',
+                        'unsubscribed'         => 'false',
+                        'softbounced'          => 'false',
+                        'hardbounced'          => 'false',
+                        'contactid'            => 42,
                     ],
                 ]
             ]
