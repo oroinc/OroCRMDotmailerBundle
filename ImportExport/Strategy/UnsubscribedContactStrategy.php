@@ -11,6 +11,8 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContac
 
 class UnsubscribedContactStrategy extends AbstractImportStrategy
 {
+    const CACHED_ADDRESS_BOOK = 'cachedAddressBook';
+
     /**
      * {@inheritdoc}
      */
@@ -56,9 +58,7 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
                 ->getManager()
                 ->persist($contact);
 
-            $items = $this->context->getValue(AddOrReplaceStrategy::BATCH_ITEMS);
-            $items[$contact->getOriginId()] = $contact;
-            $this->context->setValue(AddOrReplaceStrategy::BATCH_ITEMS, $items);
+            $this->cacheProvider->setCachedItem(AddOrReplaceStrategy::BATCH_ITEMS, $contact->getOriginId(), $contact);
         } elseif ($addressBookContact = $this->getExistingAddressBookContact($addressBook, $contact)) {
             $entity = $addressBookContact
                 ->setUnsubscribedDate($entity->getUnsubscribedDate())
@@ -134,24 +134,22 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
     protected function getExistingContact(AddressBookContact $entity, Channel $channel)
     {
         $contactOriginId = $entity->getContact()->getOriginId();
-        $contact = $this->registry
-            ->getRepository('OroCRMDotmailerBundle:Contact')
-            ->findOneBy(['email' => $entity->getContact()->getEmail(), 'channel' => $channel]);
+        $contact = $this->cacheProvider->getCachedItem(AddOrReplaceStrategy::BATCH_ITEMS, $contactOriginId);
+        if (!$contact) {
+            $contact = $this->registry
+                ->getRepository('OroCRMDotmailerBundle:Contact')
+                ->findOneBy(['email' => $entity->getContact()->getEmail(), 'channel' => $channel]);
 
-        $cachedItems = $this->context->getValue(AddOrReplaceStrategy::BATCH_ITEMS);
-        if (!$contact && $cachedItems && isset($cachedItems[$contactOriginId])) {
-            return $cachedItems[$contactOriginId];
+            $this->cacheProvider->setCachedItem(AddOrReplaceStrategy::BATCH_ITEMS, $contactOriginId, $contact);
         }
 
         return $contact;
     }
 
     /**
-     * @param Channel $channel
-     *
      * @return AddressBook
      */
-    protected function getAddressBook(Channel $channel)
+    protected function getAddressBook()
     {
         $originalValue = $this->context->getValue('itemData');
         if (empty($originalValue[UnsubscribedContactIterator::ADDRESS_BOOK_KEY])) {
@@ -159,24 +157,17 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
         }
 
         $addressBookOriginId = $originalValue[UnsubscribedContactIterator::ADDRESS_BOOK_KEY];
-
-        $cachedAddressBooks = $this->context->getValue('cachedAddressBookEntities');
-        if (!$cachedAddressBooks || !isset($cachedAddressBooks[$addressBookOriginId])) {
-            $addressBook = $this->registry
-                ->getRepository('OroCRMDotmailerBundle:AddressBook')
+        $addressBook = $this->cacheProvider->getCachedItem(self::CACHED_ADDRESS_BOOK, $addressBookOriginId);
+        if (!$addressBook) {
+            $addressBook = $this->registry->getRepository('OroCRMDotmailerBundle:AddressBook')
                 ->findOneBy(
                     [
-                        'channel'  => $channel,
+                        'channel'  => $this->getChannel(),
                         'originId' => $addressBookOriginId
                     ]
                 );
 
-            $this->context->setValue('cachedAddressBookEntities', [$addressBookOriginId => $addressBook]);
-        } else {
-            $addressBook = $this->reattachDetachedEntity($cachedAddressBooks[$addressBookOriginId]);
-
-            $cachedAddressBooks[$addressBookOriginId] = $addressBook;
-            $this->context->setValue('cachedAddressBookEntities', $cachedAddressBooks);
+            $this->cacheProvider->setCachedItem(self::CACHED_ADDRESS_BOOK, $addressBookOriginId, $addressBook);
         }
 
         return $addressBook;
