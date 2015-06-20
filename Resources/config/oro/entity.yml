@@ -21,3 +21,24 @@ oro_entity:
         OroCRM\Bundle\DotmailerBundle\Entity\Contact:
             alias:        dotmailercontact
             plural_alias: dotmailercontacts
+        Extend\Entity\EV_Dm_Cnt_Status:
+            alias:        dotmailercontactstatus
+            plural_alias: dotmailercontactstatuses
+        Extend\Entity\EV_Dm_Cnt_Email_Type:
+            alias:        dotmailercontactemailtype
+            plural_alias: dotmailercontactemailtypes
+        Extend\Entity\EV_Dm_Cnt_Opt_In_Type:
+            alias:        dotmailercontactoptintype
+            plural_alias: dotmailercontactoptintypes
+        Extend\Entity\EV_Dm_Cmp_Status:
+            alias:        dotmailercampaignstatus
+            plural_alias: dotmailercampaignstatuses
+        Extend\Entity\EV_Dm_Cmp_Reply_Action:
+            alias:        dotmailercampaignreplyaction
+            plural_alias: dotmailercampaignreplyactions
+        Extend\Entity\EV_Dm_Ab_Visibility:
+            alias:        dotmaileraddressbookvisibility
+            plural_alias: dotmaileraddressbookvisibilities
+        Extend\Entity\EV_Dm_Import_Status:
+            alias:        dotmailerimportstatus
+            plural_alias: dotmailerimportstatuses
