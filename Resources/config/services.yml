@@ -407,6 +407,7 @@ services:
         abstract: true
         calls:
             - [setRegistry, [@doctrine]]
+            - [setCacheProvider, [@orocrm_dotmailer.provider.cache]]
 
     orocrm_dotmailer.importexport.strategy.not_exported_contact:
         class: %orocrm_dotmailer.importexport.strategy.not_exported_contact.class%
@@ -600,7 +601,7 @@ services:
         class: %orocrm_dotmailer.workflow.action.update_email_campaign_statistics.class%
         parent: orocrm_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
-            - [setCampaignStatisticCachingProvider, [@orocrm_dotmailer.provider.campaign_statistic]]
+            - [setCampaignStatisticProvider, [@orocrm_dotmailer.provider.campaign_statistic]]
         tags:
             - { name: oro_workflow.action, alias: update_email_campaign_dm_statistics }
 

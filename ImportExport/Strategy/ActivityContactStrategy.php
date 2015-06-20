@@ -11,6 +11,8 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIte
 
 class ActivityContactStrategy extends AddOrReplaceStrategy
 {
+    const CACHED_CAMPAIGN_ENTITIES = 'cachedCampaignEntities';
+
     /**
      * {@inheritdoc}
      */
@@ -51,13 +53,14 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
     protected function getCampaign(Integration $channel)
     {
         $originalValue = $this->context->getValue('itemData');
-
         if (empty($originalValue[ActivityContactIterator::CAMPAIGN_KEY])) {
             throw new RuntimeException('Campaign id is required');
         }
+
         $campaignOriginId = $originalValue[ActivityContactIterator::CAMPAIGN_KEY];
-        $cachedCampaigns = $this->context->getValue('cachedCampaignEntities');
-        if (!$cachedCampaigns || !isset($cachedCampaigns[$campaignOriginId])) {
+
+        $campaign = $this->cacheProvider->getCachedItem(self::CACHED_CAMPAIGN_ENTITIES, $campaignOriginId);
+        if (!$campaign) {
             $campaign = $this->getRepository('OroCRMDotmailerBundle:Campaign')
                 ->createQueryBuilder('dmCampaign')
                 ->addSelect('addressBooks')
@@ -77,12 +80,7 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
                 ->useQueryCache(false)
                 ->getOneOrNullResult();
 
-            $this->context->setValue('cachedCampaignEntities', [$campaignOriginId => $campaign]);
-        } else {
-            $campaign = $this->reattachDetachedEntity($cachedCampaigns[$campaignOriginId]);
-
-            $cachedCampaigns[$campaignOriginId] = $campaign;
-            $this->context->setValue('cachedCampaignEntities', $cachedCampaigns);
+            $this->cacheProvider->setCachedItem(self::CACHED_CAMPAIGN_ENTITIES, $campaignOriginId, $campaign);
         }
 
         return $campaign;

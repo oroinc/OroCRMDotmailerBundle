@@ -2,7 +2,6 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
@@ -11,6 +10,8 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
 
 class ContactStrategy extends AddOrReplaceStrategy
 {
+    const CACHED_ADDRESS_BOOK_ENTITIES = 'cachedAddressBookEntities';
+
     /**
      * {@inheritdoc}
      */
@@ -18,17 +19,7 @@ class ContactStrategy extends AddOrReplaceStrategy
     {
         /** @var Contact $entity */
         if ($entity) {
-            $batchItems = $this->context->getValue(self::BATCH_ITEMS);
-
-            /**
-             * Fix case if this contact already imported on this batch
-             */
-            $isEntityExists = false;
-            if ($batchItems && !$entity->getId() && isset($batchItems[$entity->getOriginId()])) {
-                $entity = $batchItems[$entity->getOriginId()];
-                $isEntityExists = true;
-            }
-            $addressBook = $this->getAddressBook($entity->getChannel());
+            $addressBook = $this->getAddressBook();
             if ($addressBook) {
                 if ($entity->getId() === 0) {
                     $errorMessage = implode(
@@ -75,10 +66,6 @@ class ContactStrategy extends AddOrReplaceStrategy
                 }
 
                 $addressBookContact->setStatus($entity->getStatus());
-
-                if ($isEntityExists) {
-                    return null;
-                }
             } else {
                 throw new RuntimeException(
                     sprintf('Address book for contact %s not found', $entity->getOriginId())
@@ -92,40 +79,44 @@ class ContactStrategy extends AddOrReplaceStrategy
     /**
      * {@inheritdoc}
      */
-    protected function findExistingEntity($entity, array $searchContext = [])
+    protected function findProcessedEntity($entity, array $searchContext = [])
     {
-        /**
-         * Required for match contact after export new one to dotmailer
-         */
-        if ($entity instanceof Contact) {
-            if (!$entity->getEmail() || !$entity->getChannel()) {
-                throw new RuntimeException("Channel and email required for contact {$entity->getOriginId()}");
-            }
+        if (!$entity instanceof Contact) {
+            throw new RuntimeException('Entity of `\OroCRM\Bundle\DotmailerBundle\Entity\Contact` expected.');
+        }
 
-            return $this->getRepository('OroCRMDotmailerBundle:Contact')
+        if (!$entity->getEmail() || !$entity->getChannel()) {
+            throw new RuntimeException("Channel and email required for contact {$entity->getOriginId()}");
+        }
+
+        /**
+         * Fix case if this contact already imported on this batch  but for different address book
+         */
+        if (!$contact = $this->cacheProvider->getCachedItem(self::BATCH_ITEMS, $entity->getEmail())) {
+            $contact = $this->getRepository('OroCRMDotmailerBundle:Contact')
                 ->createQueryBuilder('contact')
                 ->addSelect('addressBookContacts')
                 ->addSelect('addressBook')
                 ->where('contact.channel = :channel')
                 ->andWhere('contact.email = :email')
                 ->leftJoin('contact.addressBookContacts', 'addressBookContacts')
-                ->innerJoin('addressBookContacts.addressBook', 'addressBook')
+                ->leftJoin('addressBookContacts.addressBook', 'addressBook')
                 ->setMaxResults(1)
                 ->setParameters(['channel' => $entity->getChannel(), 'email' => $entity->getEmail()])
                 ->getQuery()
                 ->useQueryCache(false)
                 ->getOneOrNullResult();
-        } else {
-            return parent::findExistingEntity($entity, $searchContext);
+
+            $this->cacheProvider->setCachedItem(self::BATCH_ITEMS, $entity->getEmail(), $contact ?: $entity);
         }
+
+        return $contact;
     }
 
     /**
-     * @param Channel $channel
-     *
      * @return AddressBook
      */
-    protected function getAddressBook(Channel $channel)
+    protected function getAddressBook()
     {
         $originalValue = $this->context->getValue('itemData');
         if (empty($originalValue[ContactIterator::ADDRESS_BOOK_KEY])) {
@@ -134,24 +125,6 @@ class ContactStrategy extends AddOrReplaceStrategy
 
         $addressBookOriginId = $originalValue[ContactIterator::ADDRESS_BOOK_KEY];
 
-        $cachedAddressBooks = $this->context->getValue('cachedAddressBookEntities');
-        if (!$cachedAddressBooks || !isset($cachedAddressBooks[$addressBookOriginId])) {
-            $addressBook = $this->getRepository('OroCRMDotmailerBundle:AddressBook')
-                ->findOneBy(
-                    [
-                        'channel'  => $channel,
-                        'originId' => $addressBookOriginId
-                    ]
-                );
-
-            $this->context->setValue('cachedAddressBookEntities', [$addressBookOriginId => $addressBook]);
-        } else {
-            $addressBook = $this->reattachDetachedEntity($cachedAddressBooks[$addressBookOriginId]);
-
-            $cachedAddressBooks[$addressBookOriginId] = $addressBook;
-            $this->context->setValue('cachedAddressBookEntities', $cachedAddressBooks);
-        }
-
-        return $addressBook;
+        return $this->getAddressBookByOriginId($addressBookOriginId);
     }
 }

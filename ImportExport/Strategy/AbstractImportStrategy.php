@@ -4,16 +4,17 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
-use Doctrine\Common\Util\ClassUtils;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\ImportExportBundle\Context\ContextAwareInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Strategy\StrategyInterface;
+use OroCRM\Bundle\DotmailerBundle\Provider\CacheProvider;
 
 abstract class AbstractImportStrategy implements StrategyInterface, ContextAwareInterface
 {
+    const CACHED_CHANNEL = 'cachedChannel';
     /**
      * @var ContextInterface
      */
@@ -25,12 +26,26 @@ abstract class AbstractImportStrategy implements StrategyInterface, ContextAware
     protected $registry;
 
     /**
+     * @var CacheProvider
+     */
+    protected $cacheProvider;
+
+    /**
      * @return Channel
      */
     protected function getChannel()
     {
-        return $this->registry->getRepository('OroIntegrationBundle:Channel')
-            ->getOrLoadById($this->context->getOption('channel'));
+        $channelId = $this->context->getOption('channel');
+        $channel = $this->cacheProvider->getCachedItem(self::CACHED_CHANNEL, $channelId);
+        if (!$channel) {
+            $channel = $this->registry
+                ->getRepository('OroIntegrationBundle:Channel')
+                ->getOrLoadById($channelId);
+
+            $this->cacheProvider->setCachedItem(self::CACHED_CHANNEL, $channelId, $channel);
+        }
+
+        return $channel;
     }
 
     /**
@@ -63,16 +78,14 @@ abstract class AbstractImportStrategy implements StrategyInterface, ContextAware
     }
 
     /**
-     * @param object $entity
+     * @param CacheProvider $cacheProvider
      *
-     * @return object
+     * @return AbstractImportStrategy
      */
-    protected function reattachDetachedEntity($entity)
+    public function setCacheProvider(CacheProvider $cacheProvider)
     {
-        $manager = $this->registry->getManager();
-        if (!$manager->contains($entity)) {
-            return $manager->find(ClassUtils::getClass($entity), $entity);
-        }
-        return $entity;
+        $this->cacheProvider = $cacheProvider;
+
+        return $this;
     }
 }
