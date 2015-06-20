@@ -101,7 +101,6 @@ class ContactStrategy extends AddOrReplaceStrategy
                 ->andWhere('contact.email = :email')
                 ->leftJoin('contact.addressBookContacts', 'addressBookContacts')
                 ->leftJoin('addressBookContacts.addressBook', 'addressBook')
-                ->setMaxResults(1)
                 ->setParameters(['channel' => $entity->getChannel(), 'email' => $entity->getEmail()])
                 ->getQuery()
                 ->useQueryCache(false)
