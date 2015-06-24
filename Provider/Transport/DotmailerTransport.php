@@ -167,6 +167,16 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     }
 
     /**
+     * @param int $campaignId
+     *
+     * @return \ArrayIterator
+     */
+    public function getCampaignById($campaignId)
+    {
+        return new \ArrayIterator([$this->dotmailerResources->GetCampaignById($campaignId)->toArray()]);
+    }
+
+    /**
      * @param array|ArrayCollection $campaignsToSynchronize
      * @param \DateTime             $lastSyncDate = null
      *
