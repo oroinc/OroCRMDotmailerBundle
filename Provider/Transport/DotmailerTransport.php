@@ -4,6 +4,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use DotMailer\Api\DataTypes\ApiCampaign;
 use DotMailer\Api\DataTypes\ApiCampaignSend;
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\ApiFileMedia;
@@ -169,11 +170,11 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     /**
      * @param int $campaignId
      *
-     * @return \ArrayIterator
+     * @return ApiCampaign
      */
     public function getCampaignById($campaignId)
     {
-        return new \ArrayIterator([$this->dotmailerResources->GetCampaignById($campaignId)->toArray()]);
+        return $this->dotmailerResources->GetCampaignById($campaignId);
     }
 
     /**
