@@ -41,9 +41,7 @@ class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
                 $dmCampaign = $entity->getCampaign();
                 $isAllowed = $dmCampaign
                     && $dmCampaign->getEmailCampaign()
-                    && $dmCampaign->hasAddressBooks()
-                    && $dmCampaign->getAddressBooks()->first()
-                    && $dmCampaign->getAddressBooks()->first()->getMarketingList();
+                    && $dmCampaign->getEmailCampaign()->getMarketingList();
             }
         }
 
@@ -65,7 +63,7 @@ class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
     {
         $dmCampaign = $activity->getCampaign();
         $emailCampaign = $dmCampaign->getEmailCampaign();
-        $marketingList = $dmCampaign->getAddressBooks()->first()->getMarketingList();
+        $marketingList = $emailCampaign->getMarketingList();
         $relatedEntities = $this->getMarketingListEntitiesByEmail($marketingList, $activity->getEmail());
 
         foreach ($relatedEntities as $relatedEntity) {
