@@ -29,7 +29,7 @@
                     'orocrm.dotmailer.emailcampaign.percentageDelivered.tooltip'
                 ) }}
 
-                <h2>{{ 'orocrm.dotmailer.emailcampaign.engagement.label'|trans }}</h2>
+                <h5>{{ 'orocrm.dotmailer.emailcampaign.engagement.label'|trans }}</h5>
                 {{ ui.renderAttributeWithTooltip(
                     'orocrm.dotmailer.emailcampaign.opens.label',
                     campaignStats.numTotalOpens|oro_format_decimal,
@@ -61,7 +61,7 @@
                     'orocrm.dotmailer.emailcampaign.nonOpeners.tooltip')
                 }}
 
-                <h2>{{ 'orocrm.dotmailer.emailcampaign.interaction.label'|trans }}</h2>
+                <h5>{{ 'orocrm.dotmailer.emailcampaign.interaction.label'|trans }}</h5>
                 {{ ui.renderAttributeWithTooltip(
                     'orocrm.dotmailer.emailcampaign.user_clicks.label',
                     campaignStats.numRecipientsClicked|oro_format_decimal,
