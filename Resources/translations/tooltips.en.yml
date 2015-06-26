@@ -8,8 +8,24 @@ orocrm:
         emailcampaign:
             emailsSent.tooltip: Emails Sent
             hardBounces.tooltip: Number of email addresses in campaign that hard bounced.
+            hardBouncesPercentage.tooltip: Percent of email addresses in campaign that hard bounced.
             softBounces.tooltip: Number of email addresses in campaign that soft bounced.
+            Percentage.tooltip: Percent of email addresses in campaign that soft bounced.
             unsubscribes.tooltip: Number of email addresses in campaign that unsubscribed.
+            unsubscribesPercentage.tooltip: Percent of email addresses in campaign that unsubscribed.
             forwards.tooltip: Number of times email was forwarded to a friend.
             opens.tooltip: Number of times the campaign was opened.
+            unique_opens.tooltip: Number of times the campaign was opened by unique user.
             clicks.tooltip: Number of times a link in the campaign was clicked.
+            totalDelivered.tooltip: Total delivered percentage.
+            percentageUniqueOpens.tooltip: Unique total opens percentage.
+            views_and_forwards.tooltip: Sum of sent number and forwards.
+            estimatedForwards.tooltip: Estimated forwards.
+            nonOpeners.tooltip: Non openers.
+            user_clicks.tooltip: Unique user click through.
+            user_clicks_percentage.tooltip: "Unique user click through %".
+            click_to_open.tooltip: "Click to open rate, %".
+            page_views.tooltip: "Page views amount.".
+            total_replies.tooltip: "Replies number.".
+            replies_percentage.tooltip: "Replies percentage from sent amount.".
+            isp_complaints.tooltip: "ISP complaints.".
