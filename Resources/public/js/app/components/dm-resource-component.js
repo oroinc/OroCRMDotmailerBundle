@@ -1,13 +1,13 @@
 /*jslint nomen: true*/
 /*global define*/
-define(function (require) {
+define(function(require) {
     'use strict';
 
     var _ = require('underscore'),
         __ = require('orotranslation/js/translator'),
         $ = require('jquery');
 
-    return function (options) {
+    return function(options) {
         var $source = options._sourceElement,
             $username = $('input.dm-username'),
             $password = $('input.dm-password'),
@@ -15,14 +15,14 @@ define(function (require) {
             $status = $source.find('.connection-status'),
             $pingHolder = $source.find('.ping-holder');
 
-        var onError = function (message) {
+        var onError = function(message) {
             message = message || __('orocrm.mailchimp.integration_transport.api_key.check.message');
             $status.removeClass('alert-info')
                 .addClass('alert-error')
                 .html(message)
         };
 
-        var localCheckCredentials = function () {
+        var localCheckCredentials = function() {
             if ($username.val().length && $password.val().length && $password.valid()) {
                 $pingHolder.show();
             } else {
@@ -31,19 +31,19 @@ define(function (require) {
         };
 
         localCheckCredentials();
-        $username.on('keyup', function () {
+        $username.on('keyup', function() {
             localCheckCredentials();
         });
-        $password.on('keyup', function () {
+        $password.on('keyup', function() {
             localCheckCredentials();
         });
 
-        $btn.on('click', function () {
+        $btn.on('click', function() {
             if ($username.valid() && $password.valid()) {
                 $.getJSON(
                     options.pingUrl,
                     {'username': $username.val(), 'password': $password.val()},
-                    function (response) {
+                    function(response) {
                         if (_.isUndefined(response.error)) {
                             $status.removeClass('alert-error')
                                 .addClass('alert-info')
@@ -53,7 +53,7 @@ define(function (require) {
                         }
                     }
                 ).always(
-                    function () {
+                    function() {
                         $status.show();
                     }
                 ).fail(
