@@ -2,8 +2,6 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
-use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
-
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
@@ -39,12 +37,11 @@ class CampaignStrategy extends AddOrReplaceStrategy
     {
         /** @var Campaign $entity */
         if ($entity) {
-            $batchItems = $this->context->getValue(self::BATCH_ITEMS);
             /**
              * Fix case if this campaign already imported on this batch
              */
-            if ($batchItems && !$entity->getId() && isset($batchItems[$entity->getOriginId()])) {
-                $entity = $batchItems[$entity->getOriginId()];
+            if ($campaign = $this->cacheProvider->getCachedItem(self::BATCH_ITEMS, $entity->getOriginId())) {
+                $entity = $campaign;
             }
 
             $addressBook = $this->getAddressBook($entity->getChannel());
@@ -60,27 +57,16 @@ class CampaignStrategy extends AddOrReplaceStrategy
     }
 
     /**
-     * @param Integration $channel
-     *
      * @return AddressBook
      */
-    protected function getAddressBook(Integration $channel)
+    protected function getAddressBook()
     {
         $originalValue = $this->context->getValue('itemData');
         if (empty($originalValue[CampaignIterator::ADDRESS_BOOK_KEY])) {
             throw new RuntimeException('Address book id required');
         }
 
-        $addressBook = $this->strategyHelper
-            ->getEntityManager('OroCRMDotmailerBundle:AddressBook')
-            ->getRepository('OroCRMDotmailerBundle:AddressBook')
-            ->findOneBy(
-                [
-                    'channel'  => $channel,
-                    'originId' => $originalValue[CampaignIterator::ADDRESS_BOOK_KEY]
-                ]
-            );
-
-        return $addressBook;
+        $addressBookOriginId = $originalValue[CampaignIterator::ADDRESS_BOOK_KEY];
+        return $this->getAddressBookByOriginId($addressBookOriginId);
     }
 }

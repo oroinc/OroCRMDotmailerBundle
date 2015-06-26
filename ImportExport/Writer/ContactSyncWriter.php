@@ -2,7 +2,6 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Writer;
 
-use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\ContactSyncProcessor;
 
 class ContactSyncWriter extends ImportWriter
@@ -10,12 +9,16 @@ class ContactSyncWriter extends ImportWriter
     /**
      * {@inheritdoc}
      */
-    protected function clearTempValues(ContextInterface $context)
+    public function write(array $items)
     {
-        parent::clearTempValues($context);
+        $context = $this->contextRegistry
+            ->getByStepExecution($this->stepExecution);
+
         /**
          * Clear already read items raw values
          */
         $context->setValue(ContactSyncProcessor::CURRENT_BATCH_READ_ITEMS, []);
+
+        parent::write($items);
     }
 }
