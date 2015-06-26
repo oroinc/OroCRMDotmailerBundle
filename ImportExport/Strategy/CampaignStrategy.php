@@ -37,13 +37,7 @@ class CampaignStrategy extends AddOrReplaceStrategy
     {
         /** @var Campaign $entity */
         if ($entity) {
-            /**
-             * Fix case if this campaign already imported on this batch
-             */
-            if ($campaign = $this->cacheProvider->getCachedItem(self::BATCH_ITEMS, $entity->getOriginId())) {
-                $entity = $campaign;
-            }
-
+            $entity->setDeleted(false);
             $addressBook = $this->getAddressBook($entity->getChannel());
             if ($addressBook) {
                 $entity->addAddressBook($addressBook);
