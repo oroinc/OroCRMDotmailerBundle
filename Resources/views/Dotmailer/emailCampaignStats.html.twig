@@ -17,16 +17,87 @@
                     campaignStats.numTotalSent|oro_format_decimal,
                     'orocrm.dotmailer.emailcampaign.emailsSent.tooltip'
                 ) }}
+
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.totalDelivered.label',
+                    campaignStats.numTotalDelivered|oro_format_decimal,
+                    'orocrm.dotmailer.emailcampaign.totalDelivered.tooltip'
+                ) }}
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.percentageDelivered.label',
+                    campaignStats.percentageDelivered|oro_format_percent,
+                    'orocrm.dotmailer.emailcampaign.percentageDelivered.tooltip'
+                ) }}
+
+                <h2>{{ 'orocrm.dotmailer.emailcampaign.engagement.label'|trans }}</h2>
                 {{ ui.renderAttributeWithTooltip(
                     'orocrm.dotmailer.emailcampaign.opens.label',
                     campaignStats.numTotalOpens|oro_format_decimal,
                     'orocrm.dotmailer.emailcampaign.opens.tooltip')
                 }}
                 {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.unique_opens.label',
+                    campaignStats.numTotalUniqueOpens|oro_format_decimal,
+                    'orocrm.dotmailer.emailcampaign.unique_opens.tooltip')
+                }}
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.percentageUniqueOpens.label',
+                    campaignStats.percentageUniqueOpens|oro_format_percent,
+                    'orocrm.dotmailer.emailcampaign.percentageUniqueOpens.tooltip')
+                }}
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.views_and_forwards.label',
+                    campaignStats.numTotalSent|oro_format_decimal + campaignStats.numForwards|oro_format_decimal,
+                    'orocrm.dotmailer.emailcampaign.views_and_forwards.tooltip')
+                }}
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.estimatedForwards.label',
+                    campaignStats.numTotalEstimatedForwards|oro_format_decimal,
+                    'orocrm.dotmailer.emailcampaign.estimatedForwards.tooltip')
+                }}
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.nonOpeners.label',
+                    campaignStats.numTotalDelivered|oro_format_decimal - campaignStats.numTotalUniqueOpens|oro_format_decimal,
+                    'orocrm.dotmailer.emailcampaign.nonOpeners.tooltip')
+                }}
+
+                <h2>{{ 'orocrm.dotmailer.emailcampaign.interaction.label'|trans }}</h2>
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.user_clicks.label',
+                    campaignStats.numRecipientsClicked|oro_format_decimal,
+                    'orocrm.dotmailer.emailcampaign.user_clicks.tooltip')
+                }}
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.user_clicks_percentage.label',
+                    campaignStats.percentageUsersClicked|oro_format_percent,
+                    'orocrm.dotmailer.emailcampaign.user_clicks_percentage.tooltip')
+                }}
+                {{ ui.renderAttributeWithTooltip(
                     'orocrm.dotmailer.emailcampaign.clicks.label',
                     campaignStats.numTotalClicks|oro_format_decimal,
                     'orocrm.dotmailer.emailcampaign.clicks.tooltip')
                 }}
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.click_to_open.label',
+                    campaignStats.percentageClicksToOpens|oro_format_percent,
+                    'orocrm.dotmailer.emailcampaign.click_to_open.tooltip')
+                }}
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.page_views.label',
+                    campaignStats.numTotalPageViews|oro_format_percent,
+                    'orocrm.dotmailer.emailcampaign.page_views.tooltip')
+                }}
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.total_replies.label',
+                    campaignStats.numTotalReplies|oro_format_percent,
+                    'orocrm.dotmailer.emailcampaign.total_replies.tooltip')
+                }}
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.replies_percentage.label',
+                    campaignStats.percentageReplies|oro_format_percent,
+                    'orocrm.dotmailer.emailcampaign.replies_percentage.tooltip')
+                }}
+
                 {{ ui.renderAttributeWithTooltip(
                     'orocrm.dotmailer.emailcampaign.forwards.label',
                     campaignStats.numForwards|oro_format_decimal,
@@ -45,14 +116,37 @@
                     'orocrm.dotmailer.emailcampaign.hardBounces.tooltip')
                 }}
                 {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.hardBouncesPercentage.label',
+                    campaignStats.percentageHardBounces|oro_format_percent,
+                    'orocrm.dotmailer.emailcampaign.hardBouncesPercentage.tooltip')
+                }}
+
+                {{ ui.renderAttributeWithTooltip(
                     'orocrm.dotmailer.emailcampaign.softBounces.label',
                     campaignStats.numTotalSoftBounces|oro_format_decimal,
                     'orocrm.dotmailer.emailcampaign.softBounces.tooltip')
                 }}
                 {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.Percentage.label',
+                    campaignStats.percentageSoftBounces|oro_format_percent,
+                    'orocrm.dotmailer.emailcampaign.Percentage.tooltip')
+                }}
+
+                {{ ui.renderAttributeWithTooltip(
                     'orocrm.dotmailer.emailcampaign.unsubscribes.label',
                     campaignStats.numTotalUnsubscribes|oro_format_decimal,
                     'orocrm.dotmailer.emailcampaign.unsubscribes.tooltip')
+                }}
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.unsubscribesPercentage.label',
+                    campaignStats.percentageUnsubscribes|oro_format_percent,
+                    'orocrm.dotmailer.emailcampaign.unsubscribesPercentage.tooltip')
+                }}
+
+                {{ ui.renderAttributeWithTooltip(
+                    'orocrm.dotmailer.emailcampaign.isp_complaints.label',
+                    campaignStats.numTotalIspComplaints|oro_format_decimal,
+                    'orocrm.dotmailer.emailcampaign.harisp_complaintsdBounces.tooltip')
                 }}
             </div>
         </div>

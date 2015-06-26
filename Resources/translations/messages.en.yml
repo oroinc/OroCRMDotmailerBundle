@@ -222,11 +222,30 @@ orocrm:
             negative.label: Negative
             emailsSent.label: Emails Sent
             hardBounces.label: Hard Bounces
+            hardBouncesPercentage.label: "Hard Bounces %"
             softBounces.label: Soft Bounces
+            Percentage.label: "Soft Bounces %"
             unsubscribes.label: Unsubscribes
+            unsubscribesPercentage.label: "Unsubscribes %"
             forwards.label: Forwards
             opens.label: Opens
+            unique_opens.label: Unique Opens
             clicks.label: Clicks
+            totalDelivered.label: "Delivered %"
+            percentageDelivered.label: "Delivered %"
+            percentageUniqueOpens.label: "Unique opens %"
+            estimatedForwards.label: "Estimated forwards"
+            views_and_forwards.label: Views and forwards
+            nonOpeners.label: Non openers
+            engagement.label: Engagement
+            interaction.label: Interaction
+            user_clicks.label: Recipient clicks
+            user_clicks_percentage.label: "Recipient clicks %"
+            click_to_open.label: "Click to open rate"
+            page_views.label: "Page views"
+            total_replies.label: "Total replies"
+            replies_percentage.label: "Replies %"
+            isp_complaints.label: "ISP Complaints"
 
         connection:
             name: Dotmailer Connection
