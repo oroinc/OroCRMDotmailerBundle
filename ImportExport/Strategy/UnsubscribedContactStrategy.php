@@ -11,6 +11,8 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContac
 
 class UnsubscribedContactStrategy extends AbstractImportStrategy
 {
+    const CACHED_ADDRESS_BOOK = 'cachedAddressBook';
+
     /**
      * {@inheritdoc}
      */
@@ -34,16 +36,9 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
         if (empty($originalValue[UnsubscribedContactIterator::ADDRESS_BOOK_KEY])) {
             throw new RuntimeException('Address book id required');
         }
-        $addressBookOriginId = $originalValue[UnsubscribedContactIterator::ADDRESS_BOOK_KEY];
 
         $channel = $this->getChannel();
-
-        $addressBook = $this->registry
-            ->getRepository('OroCRMDotmailerBundle:AddressBook')
-            ->findOneBy(['originId' => $addressBookOriginId, 'channel' => $channel]);
-        if (!$addressBook) {
-            throw new RuntimeException("Address book '{$addressBookOriginId}'' not found");
-        }
+        $addressBook = $this->getAddressBook($channel);
 
         $this->updateAddressBookContact($entity, $channel, $addressBook);
 
@@ -63,9 +58,7 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
                 ->getManager()
                 ->persist($contact);
 
-            $items = $this->context->getValue(AddOrReplaceStrategy::BATCH_ITEMS);
-            $items[$contact->getOriginId()] = $contact;
-            $this->context->setValue(AddOrReplaceStrategy::BATCH_ITEMS, $items);
+            $this->cacheProvider->setCachedItem(AddOrReplaceStrategy::BATCH_ITEMS, $contact->getOriginId(), $contact);
         } elseif ($addressBookContact = $this->getExistingAddressBookContact($addressBook, $contact)) {
             $entity = $addressBookContact
                 ->setUnsubscribedDate($entity->getUnsubscribedDate())
@@ -81,7 +74,7 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
 
     /**
      * @param AddressBook $addressBook
-     * @param Contact $contact
+     * @param Contact     $contact
      *
      * @return AddressBookContact
      */
@@ -121,8 +114,8 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
 
     /**
      * @param AddressBookContact $entity
-     * @param Channel $channel
-     * @param AddressBook $addressBook
+     * @param Channel            $channel
+     * @param AddressBook        $addressBook
      */
     protected function updateAddressBookContact(AddressBookContact $entity, Channel $channel, AddressBook $addressBook)
     {
@@ -134,22 +127,49 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
 
     /**
      * @param AddressBookContact $entity
-     * @param Channel $channel
+     * @param Channel            $channel
      *
      * @return Contact|null
      */
     protected function getExistingContact(AddressBookContact $entity, Channel $channel)
     {
         $contactOriginId = $entity->getContact()->getOriginId();
-        $contact = $this->registry
-            ->getRepository('OroCRMDotmailerBundle:Contact')
-            ->findOneBy(['originId' => $contactOriginId, 'channel' => $channel]);
+        $contact = $this->cacheProvider->getCachedItem(AddOrReplaceStrategy::BATCH_ITEMS, $contactOriginId);
+        if (!$contact) {
+            $contact = $this->registry
+                ->getRepository('OroCRMDotmailerBundle:Contact')
+                ->findOneBy(['email' => $entity->getContact()->getEmail(), 'channel' => $channel]);
 
-        $cachedItems = $this->context->getValue(AddOrReplaceStrategy::BATCH_ITEMS);
-        if (!$contact && $cachedItems && isset($cachedItems[$contactOriginId])) {
-            return $cachedItems[$contactOriginId];
+            $this->cacheProvider->setCachedItem(AddOrReplaceStrategy::BATCH_ITEMS, $contactOriginId, $contact);
         }
 
         return $contact;
+    }
+
+    /**
+     * @return AddressBook
+     */
+    protected function getAddressBook()
+    {
+        $originalValue = $this->context->getValue('itemData');
+        if (empty($originalValue[UnsubscribedContactIterator::ADDRESS_BOOK_KEY])) {
+            throw new RuntimeException('Address book id required');
+        }
+
+        $addressBookOriginId = $originalValue[UnsubscribedContactIterator::ADDRESS_BOOK_KEY];
+        $addressBook = $this->cacheProvider->getCachedItem(self::CACHED_ADDRESS_BOOK, $addressBookOriginId);
+        if (!$addressBook) {
+            $addressBook = $this->registry->getRepository('OroCRMDotmailerBundle:AddressBook')
+                ->findOneBy(
+                    [
+                        'channel'  => $this->getChannel(),
+                        'originId' => $addressBookOriginId
+                    ]
+                );
+
+            $this->cacheProvider->setCachedItem(self::CACHED_ADDRESS_BOOK, $addressBookOriginId, $addressBook);
+        }
+
+        return $addressBook;
     }
 }
