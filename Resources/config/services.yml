@@ -91,6 +91,7 @@ parameters:
     orocrm_dotmailer.importexport.writer.contact_sync.class:                OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\ContactSyncWriter
     orocrm_dotmailer.importexport.writer.unsubscribed_contact_sync.class:   OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\UnsubscribedContactSyncWriter
     orocrm_dotmailer.importexport.writer.import.removed_address_book.class: OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\RemoveAddressBookWriter
+    orocrm_dotmailer.importexport.writer.import.removed_contact.class:      OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\RemoveCampaignWriter
     orocrm_dotmailer.importexport.writer.export.contacts.class:             OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\ContactsExportWriter
     orocrm_dotmailer.importexport.writer.export.removed_contacts.class:     OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\RemovedContactsExportWriter
 
@@ -659,6 +660,10 @@ services:
             - @doctrine
             - @oro_integration.logger.strategy
             - @orocrm_dotmailer.log_helper
+
+    orocrm_dotmailer.importexport.writer.import.removed_contact:
+        class: %orocrm_dotmailer.importexport.writer.import.removed_contact.class%
+        parent: orocrm_dotmailer.importexport.writer.import
 
     orocrm_dotmailer.importexport.writer.export.removed_contacts:
         class: %orocrm_dotmailer.importexport.writer.export.removed_contacts.class%
