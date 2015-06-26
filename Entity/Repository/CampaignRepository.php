@@ -19,7 +19,8 @@ class CampaignRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('campaign');
         $qb->select('campaign.id')
-            ->where('campaign.channel =:channel');
+            ->where('campaign.channel =:channel')
+            ->andWhere('campaign.deleted <> TRUE');
 
         if (count($keepCampaigns) > 0) {
             $qb->andWhere(
