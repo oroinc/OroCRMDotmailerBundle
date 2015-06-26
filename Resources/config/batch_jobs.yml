@@ -41,7 +41,7 @@ connector:
                     services:
                         reader:    orocrm_dotmailer.importexport.reader.campaign.remove
                         processor: orocrm_dotmailer.importexport.processor.remove_campaign
-                        writer:    oro_integration.writer.persistent_batch_writer
+                        writer:    orocrm_dotmailer.importexport.writer.import.removed_contact
                     parameters:
                         batch_size: 100
 

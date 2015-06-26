@@ -10,8 +10,8 @@ define(['jquery', 'oroui/js/mediator', 'oroui/js/app/components/widget-component
      * @param {string} syncButtonsSelector JQuery selector
      */
     return function (syncButtonsSelector) {
-        const updateSyncSettingsAction = 'connect-with-dotmailer-setting-update';
-        const startSyncAction = 'sync-with-dotmailer';
+        var updateSyncSettingsAction = 'connect-with-dotmailer-setting-update';
+        var startSyncAction = 'sync-with-dotmailer';
 
         var self = this;
 
