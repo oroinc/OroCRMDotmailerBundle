@@ -4,6 +4,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use DotMailer\Api\DataTypes\ApiCampaign;
 use DotMailer\Api\DataTypes\ApiCampaignSend;
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\ApiFileMedia;
@@ -24,6 +25,8 @@ use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
 use Oro\Bundle\SecurityBundle\Encoder\Mcrypt;
 
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
+use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
@@ -33,7 +36,6 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReport
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 
 class DotmailerTransport implements TransportInterface, LoggerAwareInterface
 {
@@ -167,6 +169,16 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     }
 
     /**
+     * @param int $campaignId
+     *
+     * @return ApiCampaign
+     */
+    public function getCampaignById($campaignId)
+    {
+        return $this->dotmailerResources->GetCampaignById($campaignId);
+    }
+
+    /**
      * @param array|ArrayCollection $campaignsToSynchronize
      * @param \DateTime             $lastSyncDate = null
      *
@@ -201,24 +213,46 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     }
 
     /**
-     * @param AddressBookContact $abContact
+     * @param Contact     $contact
+     * @param AddressBook $addressBook
      *
      * @return ApiResubscribeResult
      */
-    public function resubscribeAddressBookContact(AddressBookContact $abContact)
+    public function resubscribeAddressBookContact(Contact $contact, AddressBook $addressBook)
     {
-        $resubscription = [
-            'UnsubscribedContact' => [
-                'Email' => $abContact->getContact()->getEmail(),
-            ],
-            'PreferredLocale' => '',
-            'ReturnUrlToUseIfChallenged' => '',
-        ];
-        $apiContactResubscription = new ApiContactResubscription($resubscription);
+        $apiContactResubscription = new ApiContactResubscription(
+            [
+                'UnsubscribedContact' => [
+                    'Email' => $contact->getEmail(),
+                ],
+                'PreferredLocale' => '',
+                'ReturnUrlToUseIfChallenged' => '',
+            ]
+        );
 
         return $this->dotmailerResources->PostAddressBookContactsResubscribe(
-            $abContact->getAddressBook()->getOriginId(),
+            $addressBook->getOriginId(),
             $apiContactResubscription
+        );
+    }
+
+    /**
+     * @param Contact $contact
+     *
+     * @return ApiResubscribeResult
+     */
+    public function resubscribeContact(Contact $contact)
+    {
+        return $this->dotmailerResources->PostContactsResubscribe(
+            new ApiContactResubscription(
+                [
+                    'UnsubscribedContact' => [
+                        'Email' => $contact->getEmail(),
+                    ],
+                    'PreferredLocale' => '',
+                    'ReturnUrlToUseIfChallenged' => '',
+                ]
+            )
         );
     }
 
