@@ -6,9 +6,31 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
 
 class CampaignRepository extends EntityRepository
 {
+    /**
+     * @param Channel $channel
+     *
+     * @return Campaign[]
+     */
+    public function getCampaignsToSyncStatistic(Channel $channel)
+    {
+        $invalidCampaignStatuses = [
+            Campaign::STATUS_SENDING,
+            Campaign::STATUS_UNSENT
+        ];
+        $qb = $this->createQueryBuilder('campaign');
+        $expression = $qb->expr();
+        $qb->where('campaign.channel =:channel and campaign.deleted <> TRUE')
+            ->leftJoin('campaign.status', 'campaignStatus')
+            ->andWhere($expression->notIn('campaignStatus.id', $invalidCampaignStatuses));
+
+        return $qb->getQuery()
+            ->execute(['channel' => $channel]);
+    }
+
     /**
      * @param Channel $channel
      * @param array   $keepCampaigns

@@ -19,10 +19,11 @@ class CampaignSummaryRepository extends EntityRepository
     {
         return $this->createQueryBuilder('cs')
             ->select('cs')
-            ->join('cs.campaign', 'c')
+            ->innerJoin('cs.campaign', 'c')
             ->where('c.emailCampaign = :emailCampaign')
             ->setParameter('emailCampaign', $emailCampaign)
+            ->setMaxResults(1)
             ->getQuery()
-            ->getSingleResult();
+            ->getOneOrNullResult();
     }
 }
