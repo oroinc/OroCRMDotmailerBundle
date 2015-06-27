@@ -307,17 +307,10 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
     public function testResubscribeAddressBookContact()
     {
         $resource = $this->initTransportStub();
-        $entity = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact');
         $contact = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\Contact');
         $addressBook = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\AddressBook');
         $expected = new ApiResubscribeResult();
         $addressBookId = 42;
-        $entity->expects($this->once())
-            ->method('getContact')
-            ->will($this->returnValue($contact));
-        $entity->expects($this->once())
-            ->method('getAddressBook')
-            ->will($this->returnValue($addressBook));
         $addressBook->expects($this->once())
             ->method('getOriginId')
             ->will($this->returnValue($addressBookId));
@@ -334,7 +327,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             }))
             ->will($this->returnValue($expected));
 
-        $actual = $this->target->resubscribeAddressBookContact($entity);
+        $actual = $this->target->resubscribeAddressBookContact($contact, $addressBook);
         $this->assertEquals($expected, $actual);
     }
 
