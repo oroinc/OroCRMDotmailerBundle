@@ -279,7 +279,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($contactsList));
 
         $dateSince = null;
-        $iterator = $this->target->getContacts([0 => ['originId' => $addressBookId]], $dateSince);
+        $iterator = $this->target->getAddressBookContacts([0 => ['originId' => $addressBookId]], $dateSince);
         $iterator->rewind();
     }
 
@@ -300,7 +300,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->with($addressBookId, $dateSince->format(\DateTime::ISO8601), true, 900, 0)
             ->will($this->returnValue($contactsList));
 
-        $iterator = $this->target->getContacts([0 => ['originId' => $addressBookId]], $dateSince);
+        $iterator = $this->target->getAddressBookContacts([0 => ['originId' => $addressBookId]], $dateSince);
         $iterator->rewind();
     }
 
