@@ -55,7 +55,7 @@ class UnsubscribedFromAccountContactReader extends AbstractReader
                     'connector' => ContactConnector::TYPE
                 ],
                 [
-                    'date' => 'ASC'
+                    'date' => 'DESC'
                 ]
             );
 
