@@ -50,7 +50,7 @@ class ContactIterator extends AbstractIterator
         }
 
         if (is_null($this->addressBookOriginId)) {
-            $items = $this->resources->GetContactsModifiedSinceDate($this->dateSince->format(\DateTime::ISO8601), true);
+            $items = $this->getContacts($select, $skip);
         } else {
             $items = $this->getContactsByAddressBook($select, $skip);
         }
@@ -61,6 +61,21 @@ class ContactIterator extends AbstractIterator
         }
 
         return $items;
+    }
+
+    /**
+     * @param int $select
+     * @param int $skip
+     *
+     * @return ApiContactList
+     */
+    protected function getContacts($select, $skip)
+    {
+        if (is_null($this->dateSince)) {
+            return $this->resources->GetContacts(true, $select, $skip);
+        } else {
+            return $this->resources->GetContactsModifiedSinceDate($this->dateSince->format(\DateTime::ISO8601), true);
+        }
     }
 
     /**
