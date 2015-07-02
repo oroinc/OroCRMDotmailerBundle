@@ -46,19 +46,9 @@
                     'orocrm.dotmailer.emailcampaign.percentageUniqueOpens.tooltip')
                 }}
                 {{ ui.renderAttributeWithTooltip(
-                    'orocrm.dotmailer.emailcampaign.views_and_forwards.label',
-                    campaignStats.numTotalSent|oro_format_decimal + campaignStats.numForwards|oro_format_decimal,
-                    'orocrm.dotmailer.emailcampaign.views_and_forwards.tooltip')
-                }}
-                {{ ui.renderAttributeWithTooltip(
                     'orocrm.dotmailer.emailcampaign.estimatedForwards.label',
                     campaignStats.numTotalEstimatedForwards|oro_format_decimal,
                     'orocrm.dotmailer.emailcampaign.estimatedForwards.tooltip')
-                }}
-                {{ ui.renderAttributeWithTooltip(
-                    'orocrm.dotmailer.emailcampaign.nonOpeners.label',
-                    campaignStats.numTotalDelivered|oro_format_decimal - campaignStats.numTotalUniqueOpens|oro_format_decimal,
-                    'orocrm.dotmailer.emailcampaign.nonOpeners.tooltip')
                 }}
 
                 <h5>{{ 'orocrm.dotmailer.emailcampaign.interaction.label'|trans }}</h5>
