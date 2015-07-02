@@ -55,6 +55,10 @@ class ContactIterator extends AbstractIterator
             $items = $this->getContactsByAddressBook($select, $skip);
         }
 
+        if (!$items) {
+            return [];
+        }
+
         $items = $items->toArray();
         foreach ($items as &$item) {
             $item[self::ADDRESS_BOOK_KEY] = $this->addressBookOriginId;
