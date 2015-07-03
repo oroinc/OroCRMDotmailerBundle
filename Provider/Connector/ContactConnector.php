@@ -19,7 +19,7 @@ class ContactConnector extends AbstractDotmailerConnector implements TwoWaySyncC
             ->getRepository('OroCRMDotmailerBundle:AddressBook')
             ->getAddressBooksToSyncOriginIds($this->getChannel());
 
-        return $this->transport->getContacts($aBooksToSynchronize, $this->getLastSyncDate());
+        return $this->transport->getAddressBookContacts($aBooksToSynchronize, $this->getLastSyncDate());
     }
 
     /**

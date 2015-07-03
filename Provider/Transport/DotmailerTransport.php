@@ -95,7 +95,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
      *
      * @return ContactIterator
      */
-    public function getContacts($addressBooks, $dateSince = null)
+    public function getAddressBookContacts($addressBooks, $dateSince = null)
     {
         $iterator = new AppendIterator();
         foreach ($addressBooks as $addressBook) {
@@ -105,6 +105,16 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
         }
 
         return $iterator;
+    }
+
+    /**
+     * @param \DateTime|null $dateSince
+     *
+     * @return ContactIterator
+     */
+    public function getContacts($dateSince = null)
+    {
+        return new ContactIterator($this->dotmailerResources, null, $dateSince);
     }
 
     /**
