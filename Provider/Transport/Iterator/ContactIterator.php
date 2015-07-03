@@ -78,7 +78,12 @@ class ContactIterator extends AbstractIterator
         if (is_null($this->dateSince)) {
             return $this->resources->GetContacts(true, $select, $skip);
         } else {
-            return $this->resources->GetContactsModifiedSinceDate($this->dateSince->format(\DateTime::ISO8601), true);
+            return $this->resources->GetContactsModifiedSinceDate(
+                $this->dateSince->format(\DateTime::ISO8601),
+                true,
+                $select,
+                $skip
+            );
         }
     }
 
