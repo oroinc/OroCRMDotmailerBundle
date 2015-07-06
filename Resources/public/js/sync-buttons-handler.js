@@ -1,6 +1,8 @@
-/*jslint nomen: true*/
-/*global define*/
-define(['jquery', 'oroui/js/mediator', 'oroui/js/app/components/widget-component'], function($, mediator, WidgetComponent) {
+define([
+    'jquery',
+    'oroui/js/mediator',
+    'oroui/js/app/components/widget-component'
+], function($, mediator, WidgetComponent) {
     'use strict';
 
     /**

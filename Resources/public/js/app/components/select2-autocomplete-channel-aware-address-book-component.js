@@ -1,8 +1,10 @@
 define(function(require) {
     'use strict';
-    var Component,
-        _ = require('underscore'),
-        Select2AutocompleteChannelAwareComponent = require('oro/select2-autocomplete-channel-aware-component');
+
+    var Component;
+    var _ = require('underscore');
+    var Select2AutocompleteChannelAwareComponent = require('oro/select2-autocomplete-channel-aware-component');
+
     Component = Select2AutocompleteChannelAwareComponent.extend({
         marketingListId: '',
         initialize: function(options) {
@@ -10,7 +12,7 @@ define(function(require) {
             Component.__super__.initialize.call(this, options);
         },
         makeQuery: function(query) {
-            var result = Component.__super__.makeQuery.call(this, query)
+            var result = Component.__super__.makeQuery.call(this, query);
             return result + ';' + this.marketingListId;
         }
     });
