@@ -86,6 +86,7 @@ define([
                     self.updateSettingsDelegate.call($this);
                     return;
             }
+            /*jshint devel:true*/
             if (console && console.warn) {
                 console.warn('Unrecognized sync button action');
             }
