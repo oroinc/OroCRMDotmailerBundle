@@ -5,6 +5,8 @@ define([
 ], function($, mediator, WidgetComponent) {
     'use strict';
 
+    var console = window.console;
+
     /**
      * @export  orocrmdotmailer/js/sync-buttons-handler
      * @class   orocrm.dotmailer.handler.syncButtons
@@ -86,7 +88,6 @@ define([
                     self.updateSettingsDelegate.call($this);
                     return;
             }
-            /*jshint devel:true*/
             if (console && console.warn) {
                 console.warn('Unrecognized sync button action');
             }
