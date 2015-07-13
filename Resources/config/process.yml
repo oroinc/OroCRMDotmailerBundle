@@ -90,7 +90,7 @@ definitions:
                     - @remove_marketing_list_unsubscribed_item: ~
                     - @remove_marketing_list_removed_item: ~
             # Create OroCRM MarketingListUnsubscribedItem
-            - @create_marketing_list_unsubscribed_item:
+            - @dm_create_marketing_list_unsubscribed_item:
                 conditions:
                     @and:
                         - @not_equal: [$status, $.statusSubscribed]
