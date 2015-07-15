@@ -64,6 +64,7 @@ definitions:
         enabled: true
         order:   20
         entity:  OroCRM\Bundle\DotmailerBundle\Entity\Activity
+        exclude_definitions: [dotmailer_contact_activity_update]
         actions_configuration:
             - @update_email_campaign_dm_statistics: ~
 

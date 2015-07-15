@@ -2,8 +2,6 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
-use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
@@ -22,10 +20,28 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
     protected $allowedFields = [];
 
     /**
+     * @var Channel|null
+     */
+    protected $channel = null;
+
+    /**
+     * @var AddressBook
+     */
+    protected $addressBook;
+
+    /**
      * {@inheritdoc}
      */
     public function process($entity)
     {
+        $this->channel = $this->getChannel();
+        $this->addressBook = $this->getAddressBook($this->channel);
+        if (!$this->addressBook) {
+            throw new RuntimeException(
+                sprintf('Address book for contact %s not found', $entity->getOriginId())
+            );
+        }
+
         $entity = parent::process($entity);
 
         if ($entity instanceof Contact) {
@@ -44,13 +60,6 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
     {
         /** @var Contact $entity */
         if ($entity) {
-            $addressBook = $this->getAddressBook($entity->getChannel());
-            if (!$addressBook) {
-                throw new RuntimeException(
-                    sprintf('Address book for contact %s not found', $entity->getOriginId())
-                );
-            }
-
             $batchItems = $this->context->getValue(self::BATCH_ITEMS);
             $addressBookContact = null;
 
@@ -60,7 +69,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
             if ($batchItems && isset($batchItems[$entity->getEmail()])) {
                 $entity = $batchItems[$entity->getEmail()];
                 foreach ($entity->getAddressBookContacts() as $abContacts) {
-                    if ($abContacts->getAddressBook()->getId() == $addressBook->getId()) {
+                    if ($abContacts->getAddressBook()->getId() == $this->addressBook->getId()) {
                         $addressBookContact = $abContacts;
 
                         break;
@@ -69,7 +78,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
 
             } elseif ($entity->getId()) {
                 $addressBookContact = $this->getRepository('OroCRMDotmailerBundle:AddressBookContact')
-                    ->findOneBy(['addressBook' => $addressBook, 'contact' => $entity]);
+                    ->findOneBy(['addressBook' => $this->addressBook, 'contact' => $entity]);
             }
 
             if (!$entity->getId()) {
@@ -79,8 +88,8 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
 
             if (is_null($addressBookContact)) {
                 $addressBookContact = new AddressBookContact();
-                $addressBookContact->setAddressBook($addressBook);
-                $addressBookContact->setChannel($addressBook->getChannel());
+                $addressBookContact->setAddressBook($this->addressBook);
+                $addressBookContact->setChannel($this->channel);
 
                 $status = $this->getEnumValue('dm_cnt_status', Contact::STATUS_SUBSCRIBED);
                 $addressBookContact->setStatus($status);
@@ -90,7 +99,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
                 $this->getMarketingListItemId()
             );
             $addressBookContact->setMarketingListItemClass(
-                $addressBook->getMarketingList()->getEntity()
+                $this->addressBook->getMarketingList()->getEntity()
             );
             $addressBookContact->setScheduledForExport(true);
         }
@@ -143,7 +152,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
         }
 
         return $this->getRepository('OroCRMDotmailerBundle:Contact')
-            ->findOneBy(['email' => $entity->getEmail(), 'channel' => $this->getChannel()]);
+            ->findOneBy(['email' => $entity->getEmail(), 'channel' => $this->channel]);
     }
 
     /**
@@ -164,24 +173,14 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
      */
     protected function isFieldExcluded($entityName, $fieldName, $itemData = null)
     {
-        if (empty($this->allowedFields[$entityName])) {
+        $marketingListEntityName = $this->addressBook
+            ->getMarketingList()
+            ->getEntity();
+
+        if (empty($this->allowedFields[$marketingListEntityName])) {
             return true;
         }
 
-        return !isset($this->allowedFields[$entityName]);
-    }
-
-
-    /**
-     * @param string $enumCode
-     * @param string $id
-     *
-     * @return AbstractEnumValue
-     */
-    protected function getEnumValue($enumCode, $id)
-    {
-        $className = ExtendHelper::buildEnumValueClassName($enumCode);
-        return $this->getRepository($className)
-            ->find($id);
+        return !in_array($fieldName, $this->allowedFields[$marketingListEntityName]);
     }
 }
