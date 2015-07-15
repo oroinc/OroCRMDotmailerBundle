@@ -42,10 +42,9 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
 
         $this->updateAddressBookContact($entity, $channel, $addressBook);
 
-        $contact = $this->getExistingContact($entity, $channel);
-        if (!$contact) {
+        if (!$contact = $this->getExistingContact($entity, $channel)) {
             $contact = $entity->getContact();
-            $this->updateContact($contact, $channel);
+            $this->updateNewContactFields($contact, $channel);
 
             $contact->addAddressBookContact($entity);
 
@@ -66,6 +65,8 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
         } else {
             $contact->addAddressBookContact($entity);
         }
+
+        $this->updateContactEmail($entity, $contact);
 
         $this->context->incrementUpdateCount();
 
@@ -91,7 +92,7 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
      * @param Contact $contact
      * @param Channel $channel
      */
-    protected function updateContact(Contact $contact, Channel $channel)
+    protected function updateNewContactFields(Contact $contact, Channel $channel)
     {
         $contact->setChannel($channel);
         $contact->setOwner($channel->getOrganization());
@@ -126,21 +127,27 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
     }
 
     /**
-     * @param AddressBookContact $entity
+     * @param AddressBookContact $addressBookContact
      * @param Channel            $channel
      *
      * @return Contact|null
      */
-    protected function getExistingContact(AddressBookContact $entity, Channel $channel)
+    protected function getExistingContact(AddressBookContact $addressBookContact, Channel $channel)
     {
-        $contactOriginId = $entity->getContact()->getOriginId();
+        $contactOriginId = $addressBookContact->getContact()->getOriginId();
+        $contactEmail = $addressBookContact->getContact()->getEmail();
+
         $contact = $this->cacheProvider->getCachedItem(AddOrReplaceStrategy::BATCH_ITEMS, $contactOriginId);
         if (!$contact) {
             $contact = $this->registry
                 ->getRepository('OroCRMDotmailerBundle:Contact')
-                ->findOneBy(['email' => $entity->getContact()->getEmail(), 'channel' => $channel]);
+                ->findOneBy(['email' => $contactEmail, 'channel' => $channel]);
 
-            $this->cacheProvider->setCachedItem(AddOrReplaceStrategy::BATCH_ITEMS, $contactOriginId, $contact);
+            if (!$contact) {
+                $contact = $this->registry
+                    ->getRepository('OroCRMDotmailerBundle:Contact')
+                    ->findOneBy(['originId' => $contactOriginId, 'channel' => $channel]);
+            }
         }
 
         return $contact;
@@ -171,5 +178,24 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
         }
 
         return $addressBook;
+    }
+
+    /**
+     * Update an email for case if Subscriber updates own email from Dotmailer or
+     * Dotmailer administrator updates email from UI. In this case we need to synchronize emails
+     *
+     * @param AddressBookContact $entity
+     * @param Contact            $contact
+     */
+    protected function updateContactEmail(AddressBookContact $entity, Contact $contact)
+    {
+        $newEmail = $entity->getContact()->getEmail();
+        if ($contact->getEmail() != $newEmail) {
+            $this->logger->info(
+                "Email for Contact '{$contact->getOriginId()}' changed. From '{$contact->getEmail()}' to '$newEmail'"
+            );
+
+            $contact->setEmail($newEmail);
+        }
     }
 }

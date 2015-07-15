@@ -96,7 +96,6 @@ class ContactUpdateTest extends AbstractImportExportTestCase
         }
     }
 
-
     /**
      * @return array
      */
@@ -107,7 +106,7 @@ class ContactUpdateTest extends AbstractImportExportTestCase
                 'expected'        => [
                     [
                         'originId'  => 142,
-                        'email'     => 'test1@ex.com',
+                        'email'     => 'test1@example.com',
                         'optInType' => 'VerifiedDouble',
                         'emailType' => 'Html',
                         'status'    => 'Unsubscribed',
@@ -126,7 +125,7 @@ class ContactUpdateTest extends AbstractImportExportTestCase
                 'contactList' => [
                     [
                         'id'        => 142,
-                        'email'     => 'test1@ex.com',
+                        'email'     => 'test1@example.com',
                         'optInType' => 'VerifiedDouble',
                         'emailType' => 'Html',
                         'status'    => 'Unsubscribed',

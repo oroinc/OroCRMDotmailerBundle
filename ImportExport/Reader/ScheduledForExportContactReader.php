@@ -20,7 +20,11 @@ class ScheduledForExportContactReader extends AbstractExportReader
                 new ScheduledForExportContactIterator($addressBook, $this->registry)
             );
         }
-
+        /**
+         * Hot fix of invalid iterator behaviour
+         * iterator skip first iterator
+         */
+        $iterator->rewind();
         $this->setSourceIterator($iterator);
     }
 }

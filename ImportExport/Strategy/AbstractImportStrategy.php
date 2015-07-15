@@ -2,6 +2,8 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
+use Psr\Log\LoggerInterface;
+
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
@@ -29,6 +31,11 @@ abstract class AbstractImportStrategy implements StrategyInterface, ContextAware
      * @var CacheProvider
      */
     protected $cacheProvider;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * @return Channel
@@ -62,7 +69,7 @@ abstract class AbstractImportStrategy implements StrategyInterface, ContextAware
     }
 
     /**
-     * @param ContextInterface $context
+     * {@inheritdoc}
      */
     public function setImportExportContext(ContextInterface $context)
     {
@@ -79,13 +86,17 @@ abstract class AbstractImportStrategy implements StrategyInterface, ContextAware
 
     /**
      * @param CacheProvider $cacheProvider
-     *
-     * @return AbstractImportStrategy
      */
     public function setCacheProvider(CacheProvider $cacheProvider)
     {
         $this->cacheProvider = $cacheProvider;
+    }
 
-        return $this;
+    /**
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }

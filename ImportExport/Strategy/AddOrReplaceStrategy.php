@@ -2,6 +2,8 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
+use Psr\Log\LoggerInterface;
+
 use Oro\Bundle\IntegrationBundle\ImportExport\Helper\DefaultOwnerHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\ImportExportBundle\Strategy\Import\ConfigurableAddOrReplaceStrategy;
@@ -30,6 +32,11 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
     protected $cacheProvider;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @param DefaultOwnerHelper $ownerHelper
      */
     public function setOwnerHelper($ownerHelper)
@@ -39,14 +46,18 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
 
     /**
      * @param CacheProvider $cacheProvider
-     *
-     * @return AddOrReplaceStrategy
      */
     public function setCacheProvider(CacheProvider $cacheProvider)
     {
         $this->cacheProvider = $cacheProvider;
+    }
 
-        return $this;
+    /**
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 
     /**

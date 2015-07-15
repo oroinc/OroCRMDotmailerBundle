@@ -19,29 +19,7 @@ class ContactStrategy extends AddOrReplaceStrategy
     {
         /** @var Contact $entity */
         if ($entity) {
-            $addressBook = $this->getAddressBook();
-            if ($addressBook) {
-                if ($entity->getId() === 0) {
-                    $errorMessage = implode(
-                        PHP_EOL,
-                        [
-                            'Dotmailer Contact Strategy Error: Contact Id is 0',
-                            'Address Book Id ' . $addressBook->getId(),
-                            'Contact OriginId ' . $entity->getOriginId(),
-                            'Contact Email ' . $entity->getEmail(),
-                            'Contact Status ' . $entity->getStatus()->getName(),
-                            'Contact First Name ' . $entity->getFirstName(),
-                            'Contact Last Name ' . $entity->getLastName(),
-                            'Contact Created At ' . $entity->getCreatedAt()->format(\DateTime::ISO8601),
-                            'Contact Updated At ' . $entity->getUpdatedAt()->format(\DateTime::ISO8601),
-                            'Original Value: ' . print_r($this->context->getValue('itemData'), true),
-                        ]
-                    );
-                    $this->context->addError($errorMessage);
-
-                    return null;
-                }
-
+            if ($addressBook = $this->getAddressBook()) {
                 /**
                  * Can Contains duplicates of contact from the same address book because of
                  * overlap
@@ -93,20 +71,56 @@ class ContactStrategy extends AddOrReplaceStrategy
          * Fix case if this contact already imported on this batch  but for different address book
          */
         if (!$contact = $this->cacheProvider->getCachedItem(self::BATCH_ITEMS, $entity->getEmail())) {
-            $contact = $this->getRepository('OroCRMDotmailerBundle:Contact')
-                ->createQueryBuilder('contact')
-                ->addSelect('addressBookContacts')
-                ->addSelect('addressBook')
-                ->where('contact.channel = :channel')
-                ->andWhere('contact.email = :email')
-                ->leftJoin('contact.addressBookContacts', 'addressBookContacts')
-                ->leftJoin('addressBookContacts.addressBook', 'addressBook')
-                ->setParameters(['channel' => $entity->getChannel(), 'email' => $entity->getEmail()])
-                ->getQuery()
-                ->useQueryCache(false)
-                ->getOneOrNullResult();
+            $contact = $this->findExistingContact($entity);
 
             $this->cacheProvider->setCachedItem(self::BATCH_ITEMS, $entity->getEmail(), $contact ?: $entity);
+        }
+
+        return $contact;
+    }
+
+    /**
+     * @param Contact $entity
+     *
+     * @return mixed
+     */
+    protected function findExistingContact(Contact $entity)
+    {
+        $contact = $this->getRepository('OroCRMDotmailerBundle:Contact')
+            ->createQueryBuilder('contact')
+            ->addSelect('addressBookContacts')
+            ->addSelect('addressBook')
+            ->where('contact.channel = :channel')
+            ->andWhere('contact.email = :email')
+            ->leftJoin('contact.addressBookContacts', 'addressBookContacts')
+            ->leftJoin('addressBookContacts.addressBook', 'addressBook')
+            ->setParameters(['channel' => $entity->getChannel(), 'email' => $entity->getEmail()])
+            ->getQuery()
+            ->useQueryCache(false)
+            ->getOneOrNullResult();
+
+        if ($contact) {
+            return $contact;
+        }
+
+        $contact = $this->getRepository('OroCRMDotmailerBundle:Contact')
+            ->createQueryBuilder('contact')
+            ->addSelect('addressBookContacts')
+            ->addSelect('addressBook')
+            ->where('contact.channel = :channel')
+            ->andWhere('contact.originId = :originId')
+            ->leftJoin('contact.addressBookContacts', 'addressBookContacts')
+            ->leftJoin('addressBookContacts.addressBook', 'addressBook')
+            ->setParameters(['channel' => $entity->getChannel(), 'originId' => $entity->getOriginId()])
+            ->getQuery()
+            ->useQueryCache(false)
+            ->getOneOrNullResult();
+
+        if ($contact) {
+            $this->logger->info(
+                "Email for Contact '{$contact->getOriginId()}' changed." .
+                " From '{$contact->getEmail()}' to '{$entity->getEmail()}'"
+            );
         }
 
         return $contact;
