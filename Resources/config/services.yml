@@ -402,6 +402,7 @@ services:
         calls:
             - [setOwnerHelper, [@oro_integration.helper.default_owner_helper]]
             - [setCacheProvider, [@orocrm_dotmailer.provider.cache]]
+            - [setLogger, [@oro_integration.logger.strategy]]
 
     orocrm_dotmailer.importexport.strategy.import.abstract:
         class: %orocrm_dotmailer.importexport.strategy.import.abstract.class%
@@ -409,6 +410,7 @@ services:
         calls:
             - [setRegistry, [@doctrine]]
             - [setCacheProvider, [@orocrm_dotmailer.provider.cache]]
+            - [setLogger, [@oro_integration.logger.strategy]]
 
     orocrm_dotmailer.importexport.strategy.not_exported_contact:
         class: %orocrm_dotmailer.importexport.strategy.not_exported_contact.class%
