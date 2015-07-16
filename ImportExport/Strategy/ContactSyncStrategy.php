@@ -2,7 +2,6 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
@@ -20,38 +19,9 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
     protected $allowedFields = [];
 
     /**
-     * @var Channel|null
-     */
-    protected $channel = null;
-
-    /**
      * @var AddressBook
      */
     protected $addressBook;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function process($entity)
-    {
-        $this->channel = $this->getChannel();
-        $this->addressBook = $this->getAddressBook($this->channel);
-        if (!$this->addressBook) {
-            throw new RuntimeException(
-                sprintf('Address book for contact %s not found', $entity->getOriginId())
-            );
-        }
-
-        $entity = parent::process($entity);
-
-        if ($entity instanceof Contact) {
-            $batchItems = $this->context->getValue(self::BATCH_ITEMS) ?: [];
-            $batchItems[$entity->getEmail()] = $entity;
-            $this->context->setValue(self::BATCH_ITEMS, $batchItems);
-        }
-
-        return $entity;
-    }
 
     /**
      * {@inheritdoc}
@@ -60,25 +30,15 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
     {
         /** @var Contact $entity */
         if ($entity) {
-            $batchItems = $this->context->getValue(self::BATCH_ITEMS);
             $addressBookContact = null;
 
-            /**
-             * Fix case if this contact already imported on this batch  but for different address book
-             */
-            if ($batchItems && isset($batchItems[$entity->getEmail()])) {
-                $entity = $batchItems[$entity->getEmail()];
-                foreach ($entity->getAddressBookContacts() as $abContacts) {
-                    if ($abContacts->getAddressBook()->getId() == $this->addressBook->getId()) {
-                        $addressBookContact = $abContacts;
+            $addressBook = $this->getAddressBook();
+            foreach ($entity->getAddressBookContacts() as $abContacts) {
+                if ($abContacts->getAddressBook()->getId() == $addressBook->getId()) {
+                    $addressBookContact = $abContacts;
 
-                        break;
-                    }
+                    break;
                 }
-
-            } elseif ($entity->getId()) {
-                $addressBookContact = $this->getRepository('OroCRMDotmailerBundle:AddressBookContact')
-                    ->findOneBy(['addressBook' => $this->addressBook, 'contact' => $entity]);
             }
 
             if (!$entity->getId()) {
@@ -88,8 +48,8 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
 
             if (is_null($addressBookContact)) {
                 $addressBookContact = new AddressBookContact();
-                $addressBookContact->setAddressBook($this->addressBook);
-                $addressBookContact->setChannel($this->channel);
+                $addressBookContact->setAddressBook($addressBook);
+                $addressBookContact->setChannel($this->getChannel());
 
                 $status = $this->getEnumValue('dm_cnt_status', Contact::STATUS_SUBSCRIBED);
                 $addressBookContact->setStatus($status);
@@ -99,7 +59,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
                 $this->getMarketingListItemId()
             );
             $addressBookContact->setMarketingListItemClass(
-                $this->addressBook->getMarketingList()->getEntity()
+                $addressBook->getMarketingList()->getEntity()
             );
             $addressBookContact->setScheduledForExport(true);
         }
@@ -120,39 +80,53 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
     }
 
     /**
-     * @param Channel $channel
-     *
      * @return AddressBook
      */
-    protected function getAddressBook(Channel $channel)
+    protected function getAddressBook()
     {
         $originalValue = $this->context->getValue('itemData');
         if (empty($originalValue[MarketingListItemIterator::ADDRESS_BOOK_KEY])) {
             throw new RuntimeException('Address book id required');
         }
 
-        $addressBook = $this->getRepository('OroCRMDotmailerBundle:AddressBook')
-            ->findOneBy(
-                [
-                    'channel'  => $channel,
-                    'originId' => $originalValue[MarketingListItemIterator::ADDRESS_BOOK_KEY]
-                ]
-            );
-
-        return $addressBook;
+        $addressBookOriginId = $originalValue[MarketingListItemIterator::ADDRESS_BOOK_KEY];
+        return $this->getAddressBookByOriginId($addressBookOriginId);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function findExistingEntity($entity, array $searchContext = [])
+    protected function findProcessedEntity($entity, array $searchContext = [])
     {
         if (!$entity instanceof Contact) {
-            return parent::findExistingEntity($entity, $searchContext);
+            throw new RuntimeException('Entity of `\OroCRM\Bundle\DotmailerBundle\Entity\Contact`expected.');
         }
 
-        return $this->getRepository('OroCRMDotmailerBundle:Contact')
-            ->findOneBy(['email' => $entity->getEmail(), 'channel' => $this->channel]);
+        if (!$entity->getEmail() || !$entity->getChannel()) {
+            throw new RuntimeException("Channel and email required for contact {$entity->getOriginId()}");
+        }
+
+        /**
+         * Fix case if this contact already imported on this batch  but for different address book
+         */
+        if (!$contact = $this->cacheProvider->getCachedItem(self::BATCH_ITEMS, $entity->getEmail())) {
+            $contact = $this->getRepository('OroCRMDotmailerBundle:Contact')
+                ->createQueryBuilder('contact')
+                ->addSelect('addressBookContacts')
+                ->addSelect('addressBook')
+                ->where('contact.channel = :channel')
+                ->andWhere('contact.email = :email')
+                ->leftJoin('contact.addressBookContacts', 'addressBookContacts')
+                ->leftJoin('addressBookContacts.addressBook', 'addressBook')
+                ->setParameters(['channel' => $entity->getChannel(), 'email' => $entity->getEmail()])
+                ->getQuery()
+                ->useQueryCache(false)
+                ->getOneOrNullResult();
+
+            $this->cacheProvider->setCachedItem(self::BATCH_ITEMS, $entity->getEmail(), $contact ?: $entity);
+        }
+
+        return $contact;
     }
 
     /**
@@ -173,7 +147,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
      */
     protected function isFieldExcluded($entityName, $fieldName, $itemData = null)
     {
-        $marketingListEntityName = $this->addressBook
+        $marketingListEntityName = $this->getAddressBook()
             ->getMarketingList()
             ->getEntity();
 

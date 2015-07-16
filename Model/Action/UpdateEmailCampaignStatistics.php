@@ -6,25 +6,25 @@ use Oro\Bundle\WorkflowBundle\Model\EntityAwareInterface;
 
 use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaignStatistics;
 use OroCRM\Bundle\DotmailerBundle\Entity\Activity;
-use OroCRM\Bundle\DotmailerBundle\Provider\CampaignStatisticCachingProvider;
+use OroCRM\Bundle\DotmailerBundle\Provider\CampaignStatisticProvider;
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 
 class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
 {
     /**
-     * @var CampaignStatisticCachingProvider
+     * @var CampaignStatisticProvider
      */
-    protected $campaignStatisticCachingProvider;
+    protected $campaignStatisticProvider;
 
     /**
-     * @param CampaignStatisticCachingProvider $campaignStatisticCachingProvider
+     * @param CampaignStatisticProvider $campaignStatisticProvider
      *
      * @return UpdateEmailCampaignStatistics
      */
-    public function setCampaignStatisticCachingProvider(
-        CampaignStatisticCachingProvider $campaignStatisticCachingProvider
+    public function setCampaignStatisticProvider(
+        CampaignStatisticProvider $campaignStatisticProvider
     ) {
-        $this->campaignStatisticCachingProvider = $campaignStatisticCachingProvider;
+        $this->campaignStatisticProvider = $campaignStatisticProvider;
 
         return $this;
     }
@@ -41,9 +41,7 @@ class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
                 $dmCampaign = $entity->getCampaign();
                 $isAllowed = $dmCampaign
                     && $dmCampaign->getEmailCampaign()
-                    && $dmCampaign->hasAddressBooks()
-                    && $dmCampaign->getAddressBooks()->first()
-                    && $dmCampaign->getAddressBooks()->first()->getMarketingList();
+                    && $dmCampaign->getEmailCampaign()->getMarketingList();
             }
         }
 
@@ -65,12 +63,12 @@ class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
     {
         $dmCampaign = $activity->getCampaign();
         $emailCampaign = $dmCampaign->getEmailCampaign();
-        $marketingList = $dmCampaign->getAddressBooks()->first()->getMarketingList();
+        $marketingList = $emailCampaign->getMarketingList();
         $relatedEntities = $this->getMarketingListEntitiesByEmail($marketingList, $activity->getEmail());
 
         foreach ($relatedEntities as $relatedEntity) {
             /** @var EmailCampaignStatistics $emailCampaignStatistics */
-            $emailCampaignStatistics = $this->campaignStatisticCachingProvider
+            $emailCampaignStatistics = $this->campaignStatisticProvider
                 ->getCampaignStatistic(
                     $emailCampaign,
                     $relatedEntity

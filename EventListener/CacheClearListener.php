@@ -4,19 +4,19 @@ namespace OroCRM\Bundle\DotmailerBundle\EventListener;
 
 use Doctrine\Common\EventSubscriber;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\CampaignStatisticCachingProvider;
+use OroCRM\Bundle\DotmailerBundle\Provider\CacheProvider;
 
 class CacheClearListener implements EventSubscriber
 {
     /**
-     * @var CampaignStatisticCachingProvider
+     * @var CacheProvider
      */
     protected $campaignStatisticCachingProvider;
 
     /**
-     * @param CampaignStatisticCachingProvider $campaignStatisticCachingProvider
+     * @param CacheProvider $campaignStatisticCachingProvider
      */
-    public function __construct(CampaignStatisticCachingProvider $campaignStatisticCachingProvider)
+    public function __construct(CacheProvider $campaignStatisticCachingProvider)
     {
         $this->campaignStatisticCachingProvider = $campaignStatisticCachingProvider;
     }

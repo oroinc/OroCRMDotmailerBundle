@@ -1,7 +1,11 @@
-/*jslint nomen: true*/
-/*global define*/
-define(['jquery', 'oroui/js/mediator', 'oroui/js/app/components/widget-component'], function ($, mediator, WidgetComponent) {
+define([
+    'jquery',
+    'oroui/js/mediator',
+    'oroui/js/app/components/widget-component'
+], function($, mediator, WidgetComponent) {
     'use strict';
+
+    var console = window.console;
 
     /**
      * @export  orocrmdotmailer/js/sync-buttons-handler
@@ -9,23 +13,23 @@ define(['jquery', 'oroui/js/mediator', 'oroui/js/app/components/widget-component
      *
      * @param {string} syncButtonsSelector JQuery selector
      */
-    return function (syncButtonsSelector) {
-        const updateSyncSettingsAction = 'connect-with-dotmailer-setting-update';
-        const startSyncAction = 'sync-with-dotmailer';
+    return function(syncButtonsSelector) {
+        var updateSyncSettingsAction = 'connect-with-dotmailer-setting-update';
+        var startSyncAction = 'sync-with-dotmailer';
 
         var self = this;
 
         /**
          * @this jQuery current button
          */
-        this.startSyncDelegate = function(){
+        this.startSyncDelegate = function() {
             mediator.execute('showLoading');
             $.post(this.data('url')).done(function(data) {
                 mediator.execute('addMessage', 'success', data.message);
                 mediator.execute('refreshPage');
-            }).fail(function(data){
+            }).fail(function(data) {
                 mediator.execute('showFlashMessage', 'error', data.message);
-            }).always(function(){
+            }).always(function() {
                 mediator.execute('hideLoading');
             });
         };
@@ -33,7 +37,7 @@ define(['jquery', 'oroui/js/mediator', 'oroui/js/app/components/widget-component
         /**
          * @this jQuery current button
          */
-        this.updateSettingsDelegate = function(){
+        this.updateSettingsDelegate = function() {
             var message = this.data('message');
             var StatelessWidgetComponent = WidgetComponent.extend({
                 defaults: {
@@ -51,8 +55,8 @@ define(['jquery', 'oroui/js/mediator', 'oroui/js/app/components/widget-component
                     }
                 },
 
-                _bindEnvironmentEvent: function (widget) {
-                    this.listenTo(widget, 'formSave', function () {
+                _bindEnvironmentEvent: function(widget) {
+                    this.listenTo(widget, 'formSave', function() {
                         widget.remove();
                         if (message) {
                             mediator.execute('addMessage', 'success', message);
@@ -73,7 +77,7 @@ define(['jquery', 'oroui/js/mediator', 'oroui/js/app/components/widget-component
             widget.openWidget();
         };
 
-        this.syncButtonsClickHandlerDelegate = function(){
+        this.syncButtonsClickHandlerDelegate = function() {
             var $this = $(this);
             var action = $this.data('action');
             switch (action) {
@@ -89,7 +93,7 @@ define(['jquery', 'oroui/js/mediator', 'oroui/js/app/components/widget-component
             }
         };
 
-        this.bindElementsEvents = function () {
+        this.bindElementsEvents = function() {
             $(syncButtonsSelector).click(this.syncButtonsClickHandlerDelegate);
         };
 
