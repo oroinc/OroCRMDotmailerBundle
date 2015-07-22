@@ -23,11 +23,6 @@ class ContactSyncReader extends AbstractExportReader
             );
             $iterator->append($marketingListItemIterator);
         }
-        /**
-         * Hot fix of invalid iterator behaviour
-         * iterator skip first iterator
-         */
-        $iterator->rewind();
 
         $this->setSourceIterator($iterator);
     }

@@ -141,13 +141,21 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
         if (!$contact) {
             $contact = $this->registry
                 ->getRepository('OroCRMDotmailerBundle:Contact')
-                ->findOneBy(['email' => $contactEmail, 'channel' => $channel]);
-
-            if (!$contact) {
-                $contact = $this->registry
-                    ->getRepository('OroCRMDotmailerBundle:Contact')
-                    ->findOneBy(['originId' => $contactOriginId, 'channel' => $channel]);
-            }
+                ->createQueryBuilder('contact')
+                ->addSelect('addressBookContacts')
+                ->where('contact.channel = :channel')
+                ->andWhere('(contact.email = :email OR contact.originId = :originId)')
+                ->leftJoin('contact.addressBookContacts', 'addressBookContacts')
+                ->setParameters(
+                    [
+                        'channel' => $channel,
+                        'email' => $contactEmail,
+                        'originId' => $contactOriginId
+                    ]
+                )
+                ->getQuery()
+                ->useQueryCache(false)
+                ->getOneOrNullResult();
         }
 
         return $contact;
