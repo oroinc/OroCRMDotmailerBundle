@@ -91,32 +91,21 @@ class ContactStrategy extends AddOrReplaceStrategy
             ->addSelect('addressBookContacts')
             ->addSelect('addressBook')
             ->where('contact.channel = :channel')
-            ->andWhere('contact.email = :email')
+            ->andWhere('(contact.email = :email OR contact.originId = :originId)')
             ->leftJoin('contact.addressBookContacts', 'addressBookContacts')
             ->leftJoin('addressBookContacts.addressBook', 'addressBook')
-            ->setParameters(['channel' => $entity->getChannel(), 'email' => $entity->getEmail()])
+            ->setParameters(
+                [
+                    'channel' => $entity->getChannel(),
+                    'email' => $entity->getEmail(),
+                    'originId' => $entity->getOriginId()
+                ]
+            )
             ->getQuery()
             ->useQueryCache(false)
             ->getOneOrNullResult();
 
-        if ($contact) {
-            return $contact;
-        }
-
-        $contact = $this->getRepository('OroCRMDotmailerBundle:Contact')
-            ->createQueryBuilder('contact')
-            ->addSelect('addressBookContacts')
-            ->addSelect('addressBook')
-            ->where('contact.channel = :channel')
-            ->andWhere('contact.originId = :originId')
-            ->leftJoin('contact.addressBookContacts', 'addressBookContacts')
-            ->leftJoin('addressBookContacts.addressBook', 'addressBook')
-            ->setParameters(['channel' => $entity->getChannel(), 'originId' => $entity->getOriginId()])
-            ->getQuery()
-            ->useQueryCache(false)
-            ->getOneOrNullResult();
-
-        if ($contact) {
+        if ($contact && $contact->getEmail() != $entity->getEmail()) {
             $this->logger->info(
                 "Email for Contact '{$contact->getOriginId()}' changed." .
                 " From '{$contact->getEmail()}' to '{$entity->getEmail()}'"
