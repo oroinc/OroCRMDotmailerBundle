@@ -56,8 +56,6 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
             $this->registry
                 ->getManager()
                 ->persist($contact);
-
-            $this->cacheProvider->setCachedItem(AddOrReplaceStrategy::BATCH_ITEMS, $contact->getOriginId(), $contact);
         } elseif ($addressBookContact = $this->getExistingAddressBookContact($addressBook, $contact)) {
             $entity = $addressBookContact
                 ->setUnsubscribedDate($entity->getUnsubscribedDate())
@@ -65,6 +63,11 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
         } else {
             $contact->addAddressBookContact($entity);
         }
+        $this->cacheProvider->setCachedItem(
+            AddOrReplaceStrategy::BATCH_ITEMS,
+            $contact->getEmail(),
+            $contact
+        );
 
         $this->updateContactEmail($entity, $contact);
 
@@ -137,7 +140,7 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
         $contactOriginId = $addressBookContact->getContact()->getOriginId();
         $contactEmail = $addressBookContact->getContact()->getEmail();
 
-        $contact = $this->cacheProvider->getCachedItem(AddOrReplaceStrategy::BATCH_ITEMS, $contactOriginId);
+        $contact = $this->cacheProvider->getCachedItem(AddOrReplaceStrategy::BATCH_ITEMS, $contactEmail);
         if (!$contact) {
             $contact = $this->registry
                 ->getRepository('OroCRMDotmailerBundle:Contact')
