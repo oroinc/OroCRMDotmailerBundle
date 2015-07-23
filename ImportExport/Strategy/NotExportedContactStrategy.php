@@ -7,6 +7,14 @@ use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReportIterator;
 
+/**
+ * Responsibility:
+ *      Update status of not exported contacts. Set their status to suppressed
+ * Reason:
+ *      We need to update Dotmailer contacts which is not exported. If this contacts is not exported then
+ *      there is very high possibility that this Contacts is in suppressed list. At this time Dotmailer API
+ *      does not return reason as constant and we can not describe a reason for export faults.
+ */
 class NotExportedContactStrategy extends AbstractImportStrategy
 {
     /**

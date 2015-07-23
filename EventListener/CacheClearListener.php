@@ -11,19 +11,19 @@ class CacheClearListener implements EventSubscriber
     /**
      * @var CacheProvider
      */
-    protected $campaignStatisticCachingProvider;
+    protected $cacheProvider;
 
     /**
-     * @param CacheProvider $campaignStatisticCachingProvider
+     * @param CacheProvider $cacheProvider
      */
-    public function __construct(CacheProvider $campaignStatisticCachingProvider)
+    public function __construct(CacheProvider $cacheProvider)
     {
-        $this->campaignStatisticCachingProvider = $campaignStatisticCachingProvider;
+        $this->cacheProvider = $cacheProvider;
     }
 
     public function onClear()
     {
-        $this->campaignStatisticCachingProvider->clearCache();
+        $this->cacheProvider->clearCache();
     }
 
     /**
