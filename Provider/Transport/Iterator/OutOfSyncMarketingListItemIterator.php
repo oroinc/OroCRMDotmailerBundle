@@ -36,4 +36,15 @@ class OutOfSyncMarketingListItemIterator extends AbstractMarketingListItemIterat
         return $this->marketingListItemsQueryBuilderProvider
             ->getOutOfSyncMarketingListItemsQB($addressBook, $currentItemsInBatch);
     }
+
+    /**
+     * Clear cache after Append Iterator starts to iterate new iterator with different Address Book
+     */
+    public function rewind()
+    {
+        $this->importExportContext
+            ->setValue(UnsubscribedContactSyncProcessor::CURRENT_BATCH_READ_ITEMS, []);
+
+        parent::rewind();
+    }
 }

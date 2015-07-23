@@ -16,13 +16,12 @@ class ContactSyncReader extends AbstractExportReader
         $addressBooks = $this->getAddressBooksToSync();
 
         foreach ($addressBooks as $addressBook) {
-            $iterator->append(
-                new MarketingListItemIterator(
-                    $addressBook,
-                    $this->marketingListItemsQueryBuilderProvider,
-                    $this->getContext()
-                )
+            $marketingListItemIterator = new MarketingListItemIterator(
+                $addressBook,
+                $this->marketingListItemsQueryBuilderProvider,
+                $this->getContext()
             );
+            $iterator->append($marketingListItemIterator);
         }
 
         $this->setSourceIterator($iterator);
