@@ -107,7 +107,7 @@ class MarketingListItemGridListener
     {
         $marketingList = null;
         if ($datasource instanceof OrmDatasource) {
-            $mlParameter   = $datasource->getQueryBuilder()->getParameter('marketingListEntity');
+            $mlParameter = $datasource->getQueryBuilder()->getParameter('marketingListEntity');
             $marketingList = $mlParameter ? $mlParameter->getValue() : null;
         }
 
@@ -159,8 +159,6 @@ class MarketingListItemGridListener
             sprintf('%s.email', 'dm_contact_subscriber')
         );
 
-        $queryBuilder->andWhere("$contactInformationFieldExpr <> ''");
-        $queryBuilder->andWhere($expr->isNotNull($contactInformationFieldExpr));
         $queryBuilder->leftJoin(
             'OroCRM\Bundle\DotmailerBundle\Entity\Contact',
             'dm_contact_subscriber',
@@ -173,8 +171,8 @@ class MarketingListItemGridListener
             Join::WITH,
             'IDENTITY(dm_ab_contact.contact) = dm_contact_subscriber.id AND dm_ab_contact.addressBook = :aBookFilter'
         )
-        ->setParameter('aBookFilter', $this->addressBookByML[$marketingList->getId()])
-        ->addSelect('IDENTITY(dm_ab_contact.status) as addressBookSubscribedStatus');
+            ->setParameter('aBookFilter', $this->addressBookByML[$marketingList->getId()])
+            ->addSelect('IDENTITY(dm_ab_contact.status) as addressBookSubscribedStatus');
     }
 
     /**
@@ -213,20 +211,24 @@ class MarketingListItemGridListener
      */
     public function getMarketingListItemPermissions(ResultRecordInterface $record, array $actions)
     {
-        $actions     = array_keys($actions);
-        $permissions = array();
+        $actions = array_keys($actions);
+        $permissions = [];
         foreach ($actions as $action) {
             $permissions[$action] = true;
         }
 
-        $isSubscribed    = (bool)$record->getValue('subscribed');
+        $isSubscribed = (bool)$record->getValue('subscribed');
+
+        $subscriberStatus = $record->getValue('addressBookSubscribedStatus');
+        $syncedWithDotmailer = $subscriberStatus !== null;
+
         // treat as unsubscribed all statuses except these
         $wasUnsubscribed = false === in_array(
-            $record->getValue('addressBookSubscribedStatus'),
+            $subscriberStatus,
             [Contact::STATUS_SUBSCRIBED, Contact::STATUS_SOFTBOUNCED]
         );
 
-        $permissions['subscribe']   = !$isSubscribed && !$wasUnsubscribed;
+        $permissions['subscribe'] = !$isSubscribed && (!$syncedWithDotmailer || !$wasUnsubscribed);
         $permissions['unsubscribe'] = $isSubscribed;
 
         return $permissions;
