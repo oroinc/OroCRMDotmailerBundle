@@ -40,6 +40,10 @@ class ContactStrategy extends AddOrReplaceStrategy
                     $addressBookContact = new AddressBookContact();
                     $addressBookContact->setAddressBook($addressBook);
                     $addressBookContact->setChannel($addressBook->getChannel());
+                    $this->strategyHelper
+                        ->getEntityManager('OroCRMDotmailerBundle:AddressBookContact')
+                        ->persist($addressBookContact);
+
                     $entity->addAddressBookContact($addressBookContact);
                 }
 

@@ -97,7 +97,7 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
     /**
      * @var Collection|AddressBookContact[]
      *
-     * @ORM\OneToMany(targetEntity="AddressBookContact", mappedBy="addressBook", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="AddressBookContact", mappedBy="addressBook", cascade={"remove"})
      * @ConfigField(
      *      defaultValues={
      *          "importexport"={
