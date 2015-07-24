@@ -142,23 +142,34 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
 
         $contact = $this->cacheProvider->getCachedItem(AddOrReplaceStrategy::BATCH_ITEMS, $contactEmail);
         if (!$contact) {
+            /**
+             * Two separated query used because of performance issue
+             */
             $contact = $this->registry
                 ->getRepository('OroCRMDotmailerBundle:Contact')
                 ->createQueryBuilder('contact')
                 ->addSelect('addressBookContacts')
                 ->where('contact.channel = :channel')
-                ->andWhere('(contact.email = :email OR contact.originId = :originId)')
+                ->andWhere('contact.email = :email')
                 ->leftJoin('contact.addressBookContacts', 'addressBookContacts')
-                ->setParameters(
-                    [
-                        'channel' => $channel,
-                        'email' => $contactEmail,
-                        'originId' => $contactOriginId
-                    ]
-                )
+                ->setParameters(['channel' => $channel, 'email' => $contactEmail])
                 ->getQuery()
                 ->useQueryCache(false)
                 ->getOneOrNullResult();
+
+            if (!$contact) {
+                $contact = $this->registry
+                    ->getRepository('OroCRMDotmailerBundle:Contact')
+                    ->createQueryBuilder('contact')
+                    ->addSelect('addressBookContacts')
+                    ->where('contact.channel = :channel')
+                    ->andWhere('contact.originId = :originId')
+                    ->leftJoin('contact.addressBookContacts', 'addressBookContacts')
+                    ->setParameters(['channel' => $channel, 'originId' => $contactOriginId])
+                    ->getQuery()
+                    ->useQueryCache(false)
+                    ->getOneOrNullResult();
+            }
         }
 
         return $contact;
