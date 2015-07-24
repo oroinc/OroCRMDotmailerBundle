@@ -289,6 +289,8 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
                 $addressBookContact->setScheduledForExport(true);
             }
             $contact->addAddressBookContact($addressBookContact);
+
+            $manager->persist($addressBookContact);
         }
 
         return $item;

@@ -53,6 +53,10 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
 
                 $status = $this->getEnumValue('dm_cnt_status', Contact::STATUS_SUBSCRIBED);
                 $addressBookContact->setStatus($status);
+                $this->strategyHelper
+                    ->getEntityManager('OroCRMDotmailerBundle:AddressBookContact')
+                    ->persist($addressBookContact);
+
                 $entity->addAddressBookContact($addressBookContact);
             }
             $addressBookContact->setMarketingListItemId(
