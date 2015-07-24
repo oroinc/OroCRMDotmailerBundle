@@ -151,7 +151,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     /**
      * @var Collection|AddressBookContact[]
      *
-     * @ORM\OneToMany(targetEntity="AddressBookContact", mappedBy="contact", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="AddressBookContact", mappedBy="contact", cascade={"remove"})
      * @ConfigField(
      *      defaultValues={
      *          "importexport"={
