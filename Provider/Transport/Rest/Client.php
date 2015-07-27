@@ -99,7 +99,7 @@ class Client implements IClient, LoggerAwareInterface
                 case 202:
                     $result = $responseBody;
                     break;
-                case 204: // no content
+                case 204:
                     $result = null;
                     break;
                 default:
