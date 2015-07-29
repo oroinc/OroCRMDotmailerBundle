@@ -52,14 +52,25 @@ class RemovedContactsExportTest extends AbstractImportExportTestCase
             $this->assertNotNull($addressBookContact);
         }
 
-
-        $import = new ApiContactImport();
-        $import->id = '391da8d7-70f0-405b-98d4-02faa41d499d';
+        $import         = new ApiContactImport();
+        $import->id     = '391da8d7-70f0-405b-98d4-02faa41d499d';
         $import->status = AddressBookContactsExport::STATUS_NOT_FINISHED;
 
+        $import2         = new ApiContactImport();
+        $import2->id     = '451da8d7-70f0-405b-98d4-02faa41d499d';
+        $import2->status = AddressBookContactsExport::STATUS_NOT_FINISHED;
+
+        $imports = [$import, $import2];
         $this->resource->expects($this->exactly(2))
             ->method('PostAddressBookContactsImport')
-            ->will($this->returnValue($import));
+            ->will(
+                $this->returnCallback(function () use ($imports) {
+                    static $i = 0;
+
+                    return $imports[$i++];
+                })
+            );
+
         $expectedApiContact = new Int32List(
             array_map(function ($contact) {
                 return $contact->getOriginId();
