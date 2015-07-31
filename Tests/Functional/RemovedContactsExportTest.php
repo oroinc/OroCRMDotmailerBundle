@@ -60,16 +60,9 @@ class RemovedContactsExportTest extends AbstractImportExportTestCase
         $import2->id     = '451da8d7-70f0-405b-98d4-02faa41d499d';
         $import2->status = AddressBookContactsExport::STATUS_NOT_FINISHED;
 
-        $imports = [$import, $import2];
         $this->resource->expects($this->exactly(2))
             ->method('PostAddressBookContactsImport')
-            ->will(
-                $this->returnCallback(function () use ($imports) {
-                    static $i = 0;
-
-                    return $imports[$i++];
-                })
-            );
+            ->will($this->onConsecutiveCalls($import, $import2));
 
         $expectedApiContact = new Int32List(
             array_map(function ($contact) {
