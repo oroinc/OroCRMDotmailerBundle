@@ -20,9 +20,11 @@ class ContactExportQueryBuilderAdapterCompilerPath implements CompilerPassInterf
         $adapters = $container->findTaggedServiceIds(self::ADAPTERS_TAG);
         if (!empty($adapters)) {
             $definition = $container->getDefinition(self::REGISTRY);
-            foreach ($adapters as $id => $arguments) {
-                $priority = isset($arguments['priority']) ? $arguments['priority'] : 0;
-                $definition->addMethodCall(self::ADD_ADAPTER_METHOD, [new Reference($id), $priority]);
+            foreach ($adapters as $id => $tags) {
+                foreach ($tags as $tag) {
+                    $priority = isset($tag['priority']) ? $tag['priority'] : 0;
+                    $definition->addMethodCall(self::ADD_ADAPTER_METHOD, [new Reference($id), $priority]);
+                }
             }
         }
     }
