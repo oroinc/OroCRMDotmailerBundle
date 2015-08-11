@@ -61,7 +61,7 @@ class AddressBookContactsExport extends ExtendAddressBookContactsExport implemen
     /**
      * @var AddressBook
      *
-     * @ORM\ManyToOne(targetEntity="AddressBook")
+     * @ORM\ManyToOne(targetEntity="AddressBook", inversedBy="addressBookContactsExports")
      * @ORM\JoinColumn(name="address_book_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $addressBook;
