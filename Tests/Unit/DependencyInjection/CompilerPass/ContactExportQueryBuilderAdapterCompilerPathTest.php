@@ -38,8 +38,8 @@ class ContactExportQueryBuilderAdapterCompilerPathTest extends \PHPUnit_Framewor
         $secondAdapterPriority = 200;
 
         $services = [
-            $firstAdapterId => [],
-            $secondAdapterId => ['priority' => $secondAdapterPriority],
+            $firstAdapterId => [[]],
+            $secondAdapterId => [['priority' => $secondAdapterPriority]],
         ];
 
         $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
