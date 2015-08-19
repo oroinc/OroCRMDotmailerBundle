@@ -154,10 +154,15 @@ class MarketingListItemGridListener
         $queryBuilder->addSelect($contactInformationFieldExpr . ' AS entityEmail');
 
         $expr = $queryBuilder->expr();
-        $joinContactsExpr = $expr->eq(
-            $contactInformationFieldExpr,
-            sprintf('%s.email', 'dm_contact_subscriber')
-        );
+        $joinContactsExpr = $expr->andX()
+            ->add(
+                $expr->eq(
+                    $contactInformationFieldExpr,
+                    'dm_contact_subscriber.email'
+                )
+            );
+
+        $joinContactsExpr->add('dm_contact_subscriber.channel =:channel');
 
         $queryBuilder->leftJoin(
             'OroCRM\Bundle\DotmailerBundle\Entity\Contact',
@@ -165,13 +170,16 @@ class MarketingListItemGridListener
             Join::WITH,
             $joinContactsExpr
         );
+        /** @var AddressBook $addressBook */
+        $addressBook = $this->addressBookByML[$marketingList->getId()];
         $queryBuilder->leftJoin(
             'OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact',
             'dm_ab_contact',
             Join::WITH,
             'IDENTITY(dm_ab_contact.contact) = dm_contact_subscriber.id AND dm_ab_contact.addressBook = :aBookFilter'
         )
-            ->setParameter('aBookFilter', $this->addressBookByML[$marketingList->getId()])
+            ->setParameter('aBookFilter', $addressBook)
+            ->setParameter('channel', $addressBook->getChannel())
             ->addSelect('IDENTITY(dm_ab_contact.status) as addressBookSubscribedStatus');
     }
 
