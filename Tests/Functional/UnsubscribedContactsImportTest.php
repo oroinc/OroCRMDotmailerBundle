@@ -15,7 +15,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnecto
  * @dbIsolation
  * @dbReindex
  */
-class UnsubscribedContactsImportTest extends AbstractImportExportTest
+class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
 {
     protected function setUp()
     {
@@ -125,7 +125,7 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTest
                         [
                             'suppressedContact' => [
                                 'Id'         => 42,
-                                'Email'      => 'test@mail.com',
+                                'Email'      => 'second@mail.com',
                                 'EmailType'  => ApiContactEmailTypes::PLAIN_TEXT,
                                 'DataFields' => [],
                                 'Status'     => ApiContactStatuses::SUBSCRIBED

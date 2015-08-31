@@ -2,16 +2,24 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
+use Psr\Log\LoggerInterface;
+
 use Oro\Bundle\IntegrationBundle\ImportExport\Helper\DefaultOwnerHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\ImportExportBundle\Strategy\Import\ConfigurableAddOrReplaceStrategy;
+use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\ChannelAwareInterface;
 use OroCRM\Bundle\DotmailerBundle\Entity\OriginAwareInterface;
+use OroCRM\Bundle\DotmailerBundle\Provider\CacheProvider;
 
 class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
 {
     const BATCH_ITEMS = 'batchItems';
+    const CACHED_ADDRESS_BOOK = 'cachedAddressBook';
+    const CACHED_CHANNEL = 'cachedChannel';
 
     /**
      * @var DefaultOwnerHelper
@@ -19,20 +27,14 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
     protected $ownerHelper;
 
     /**
-     * {@inheritdoc}
+     * @var CacheProvider
      */
-    public function process($entity)
-    {
-        $entity = parent::process($entity);
+    protected $cacheProvider;
 
-        if ($entity instanceof OriginAwareInterface) {
-            $batchItems = $this->context->getValue(self::BATCH_ITEMS)?:[];
-            $batchItems[$entity->getOriginId()] = $entity;
-            $this->context->setValue(self::BATCH_ITEMS, $batchItems);
-        }
-
-        return $entity;
-    }
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * @param DefaultOwnerHelper $ownerHelper
@@ -40,6 +42,22 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
     public function setOwnerHelper($ownerHelper)
     {
         $this->ownerHelper = $ownerHelper;
+    }
+
+    /**
+     * @param CacheProvider $cacheProvider
+     */
+    public function setCacheProvider(CacheProvider $cacheProvider)
+    {
+        $this->cacheProvider = $cacheProvider;
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 
     /**
@@ -57,6 +75,38 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
         $this->setOwner($entity);
 
         return $entity;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function findExistingEntity($entity, array $searchContext = [])
+    {
+        $entityName = $this->entityName;
+        if ($entity instanceof $entityName) {
+            return $this->findProcessedEntity($entity, $searchContext);
+        } else {
+            return parent::findExistingEntity($entity, $searchContext);
+        }
+    }
+
+    protected function findProcessedEntity($entity, array $searchContext)
+    {
+        if (!$entity instanceof OriginAwareInterface) {
+            return parent::findExistingEntity($entity, $searchContext);
+        }
+
+        /**
+         * Fix case if this entity already imported on this batch and it is new entity
+         * Also improve performance for case if it is existing one
+         */
+        if (!$existingEntity = $this->cacheProvider->getCachedItem(self::BATCH_ITEMS, $entity->getOriginId())) {
+            $existingEntity = parent::findExistingEntity($entity, $searchContext);
+
+            $this->cacheProvider->setCachedItem(self::BATCH_ITEMS, $entity->getOriginId(), $existingEntity ?: $entity);
+        }
+
+        return $existingEntity;
     }
 
     /**
@@ -119,9 +169,53 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
      */
     protected function getChannel()
     {
-        $channel = $this->strategyHelper->getEntityManager('OroIntegrationBundle:Channel')
-            ->getRepository('OroIntegrationBundle:Channel')
-            ->getOrLoadById($this->context->getOption('channel'));
+        $channelId = $this->context->getOption('channel');
+        $channel = $this->cacheProvider->getCachedItem(self::CACHED_CHANNEL, $channelId);
+        if (!$channel) {
+            $channel = $this->strategyHelper->getEntityManager('OroIntegrationBundle:Channel')
+                ->getRepository('OroIntegrationBundle:Channel')
+                ->getOrLoadById($channelId);
+
+            $this->cacheProvider->setCachedItem(self::CACHED_CHANNEL, $channelId, $channel);
+        }
+
         return $channel;
+    }
+
+    /**
+     * @param string $enumCode
+     * @param string $id
+     *
+     * @return AbstractEnumValue
+     */
+    protected function getEnumValue($enumCode, $id)
+    {
+        $className = ExtendHelper::buildEnumValueClassName($enumCode);
+
+        return $this->getRepository($className)
+            ->find($id);
+    }
+
+    /**
+     * @param  int $addressBookOriginId
+     *
+     * @return null|AddressBook
+     */
+    protected function getAddressBookByOriginId($addressBookOriginId)
+    {
+        $addressBook = $this->cacheProvider->getCachedItem(self::CACHED_ADDRESS_BOOK, $addressBookOriginId);
+        if (!$addressBook) {
+            $addressBook = $this->getRepository('OroCRMDotmailerBundle:AddressBook')
+                ->findOneBy(
+                    [
+                        'channel'  => $this->getChannel(),
+                        'originId' => $addressBookOriginId
+                    ]
+                );
+
+            $this->cacheProvider->setCachedItem(self::CACHED_ADDRESS_BOOK, $addressBookOriginId, $addressBook);
+        }
+
+        return $addressBook;
     }
 }

@@ -13,7 +13,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
  * @dbIsolation
  * @dbReindex
  */
-class RemovedContactsExportTest extends AbstractImportExportTest
+class RemovedContactsExportTest extends AbstractImportExportTestCase
 {
     protected function setUp()
     {
@@ -52,14 +52,18 @@ class RemovedContactsExportTest extends AbstractImportExportTest
             $this->assertNotNull($addressBookContact);
         }
 
-
-        $import = new ApiContactImport();
-        $import->id = '391da8d7-70f0-405b-98d4-02faa41d499d';
+        $import         = new ApiContactImport();
+        $import->id     = '391da8d7-70f0-405b-98d4-02faa41d499d';
         $import->status = AddressBookContactsExport::STATUS_NOT_FINISHED;
 
-        $this->resource->expects($this->once())
+        $import2         = new ApiContactImport();
+        $import2->id     = '451da8d7-70f0-405b-98d4-02faa41d499d';
+        $import2->status = AddressBookContactsExport::STATUS_NOT_FINISHED;
+
+        $this->resource->expects($this->exactly(2))
             ->method('PostAddressBookContactsImport')
-            ->will($this->returnValue($import));
+            ->will($this->onConsecutiveCalls($import, $import2));
+
         $expectedApiContact = new Int32List(
             array_map(function ($contact) {
                 return $contact->getOriginId();

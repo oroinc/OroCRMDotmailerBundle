@@ -2,6 +2,7 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
+use DotMailer\Api\DataTypes\ApiContactList;
 use DotMailer\Api\Resources\IResources;
 
 class ContactIterator extends AbstractIterator
@@ -26,7 +27,7 @@ class ContactIterator extends AbstractIterator
      * @param int        $addressBookOriginId
      * @param \DateTime  $dateSince
      */
-    public function __construct(IResources $resources, $addressBookOriginId, \DateTime $dateSince = null)
+    public function __construct(IResources $resources, $addressBookOriginId = null, \DateTime $dateSince = null)
     {
         $this->resources = $resources;
         $this->dateSince = $dateSince;
@@ -48,6 +49,52 @@ class ContactIterator extends AbstractIterator
             $select += self::OVERLAP;
         }
 
+        if (is_null($this->addressBookOriginId)) {
+            $items = $this->getContacts($select, $skip);
+        } else {
+            $items = $this->getContactsByAddressBook($select, $skip);
+        }
+
+        if (!$items) {
+            return [];
+        }
+
+        $items = $items->toArray();
+        foreach ($items as &$item) {
+            $item[self::ADDRESS_BOOK_KEY] = $this->addressBookOriginId;
+        }
+
+        return $items;
+    }
+
+    /**
+     * @param int $select
+     * @param int $skip
+     *
+     * @return ApiContactList
+     */
+    protected function getContacts($select, $skip)
+    {
+        if (is_null($this->dateSince)) {
+            return $this->resources->GetContacts(true, $select, $skip);
+        } else {
+            return $this->resources->GetContactsModifiedSinceDate(
+                $this->dateSince->format(\DateTime::ISO8601),
+                true,
+                $select,
+                $skip
+            );
+        }
+    }
+
+    /**
+     * @param int $select
+     * @param int $skip
+     *
+     * @return ApiContactList
+     */
+    protected function getContactsByAddressBook($select, $skip)
+    {
         if (is_null($this->dateSince)) {
             $items = $this->resources->GetAddressBookContacts($this->addressBookOriginId, true, $select, $skip);
         } else {
@@ -58,11 +105,6 @@ class ContactIterator extends AbstractIterator
                 $select,
                 $skip
             );
-        }
-
-        $items = $items->toArray();
-        foreach ($items as &$item) {
-            $item[self::ADDRESS_BOOK_KEY] = $this->addressBookOriginId;
         }
 
         return $items;

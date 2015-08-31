@@ -279,7 +279,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($contactsList));
 
         $dateSince = null;
-        $iterator = $this->target->getContacts([0 => ['originId' => $addressBookId]], $dateSince);
+        $iterator = $this->target->getAddressBookContacts([0 => ['originId' => $addressBookId]], $dateSince);
         $iterator->rewind();
     }
 
@@ -300,24 +300,17 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->with($addressBookId, $dateSince->format(\DateTime::ISO8601), true, 900, 0)
             ->will($this->returnValue($contactsList));
 
-        $iterator = $this->target->getContacts([0 => ['originId' => $addressBookId]], $dateSince);
+        $iterator = $this->target->getAddressBookContacts([0 => ['originId' => $addressBookId]], $dateSince);
         $iterator->rewind();
     }
 
     public function testResubscribeAddressBookContact()
     {
         $resource = $this->initTransportStub();
-        $entity = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact');
         $contact = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\Contact');
         $addressBook = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\AddressBook');
         $expected = new ApiResubscribeResult();
         $addressBookId = 42;
-        $entity->expects($this->once())
-            ->method('getContact')
-            ->will($this->returnValue($contact));
-        $entity->expects($this->once())
-            ->method('getAddressBook')
-            ->will($this->returnValue($addressBook));
         $addressBook->expects($this->once())
             ->method('getOriginId')
             ->will($this->returnValue($addressBookId));
@@ -334,7 +327,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             }))
             ->will($this->returnValue($expected));
 
-        $actual = $this->target->resubscribeAddressBookContact($entity);
+        $actual = $this->target->resubscribeAddressBookContact($contact, $addressBook);
         $this->assertEquals($expected, $actual);
     }
 

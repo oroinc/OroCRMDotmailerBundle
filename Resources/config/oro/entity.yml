@@ -1,0 +1,44 @@
+oro_entity:
+    entity_aliases:
+        OroCRM\Bundle\DotmailerBundle\Entity\Activity:
+            alias:        dotmaileractivity
+            plural_alias: dotmaileractivities
+        OroCRM\Bundle\DotmailerBundle\Entity\AddressBook:
+            alias:        dotmaileraddressbook
+            plural_alias: dotmaileraddressbook
+        OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact:
+            alias:        dotmaileraddressbookcontact
+            plural_alias: dotmaileraddressbookcontacts
+        OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport:
+            alias:        dotmaileraddressbookcontactsexport
+            plural_alias: dotmaileraddressbookcontactsexport
+        OroCRM\Bundle\DotmailerBundle\Entity\Campaign:
+            alias:        dotmailercampaign
+            plural_alias: dotmailercampaigns
+        OroCRM\Bundle\DotmailerBundle\Entity\CampaignSummary:
+            alias:        dotmailercampaignsummary
+            plural_alias: dotmailercampaignsummary
+        OroCRM\Bundle\DotmailerBundle\Entity\Contact:
+            alias:        dotmailercontact
+            plural_alias: dotmailercontacts
+        Extend\Entity\EV_Dm_Cnt_Status:
+            alias:        dotmailercontactstatus
+            plural_alias: dotmailercontactstatuses
+        Extend\Entity\EV_Dm_Cnt_Email_Type:
+            alias:        dotmailercontactemailtype
+            plural_alias: dotmailercontactemailtypes
+        Extend\Entity\EV_Dm_Cnt_Opt_In_Type:
+            alias:        dotmailercontactoptintype
+            plural_alias: dotmailercontactoptintypes
+        Extend\Entity\EV_Dm_Cmp_Status:
+            alias:        dotmailercampaignstatus
+            plural_alias: dotmailercampaignstatuses
+        Extend\Entity\EV_Dm_Cmp_Reply_Action:
+            alias:        dotmailercampaignreplyaction
+            plural_alias: dotmailercampaignreplyactions
+        Extend\Entity\EV_Dm_Ab_Visibility:
+            alias:        dotmaileraddressbookvisibility
+            plural_alias: dotmaileraddressbookvisibilities
+        Extend\Entity\EV_Dm_Import_Status:
+            alias:        dotmailerimportstatus
+            plural_alias: dotmailerimportstatuses

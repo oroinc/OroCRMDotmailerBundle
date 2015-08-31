@@ -9,13 +9,13 @@ use DotMailer\Api\DataTypes\ApiContactList;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
-use OroCRM\Bundle\DotmailerBundle\Tests\Functional\AbstractImportExportTest;
+use OroCRM\Bundle\DotmailerBundle\Tests\Functional\AbstractImportExportTestCase;
 
 /**
  * @dbIsolation
  * @dbReindex
  */
-class ExportManagerTest extends AbstractImportExportTest
+class ExportManagerTest extends AbstractImportExportTestCase
 {
     /**
      * @var ExportManager

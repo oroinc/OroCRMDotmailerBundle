@@ -12,7 +12,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
  * @dbIsolation
  * @dbReindex
  */
-class ContactUpdateTest extends AbstractImportExportTest
+class ContactUpdateTest extends AbstractImportExportTestCase
 {
     /**
      * {@inheritdoc}
@@ -95,7 +95,6 @@ class ContactUpdateTest extends AbstractImportExportTest
             }
         }
     }
-
 
     /**
      * @return array

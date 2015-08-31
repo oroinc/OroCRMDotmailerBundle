@@ -41,17 +41,23 @@ class IntegrationSettingsType extends AbstractType
                 [
                     'label'    => 'orocrm.dotmailer.integration_transport.username.label',
                     'tooltip'  => 'orocrm.dotmailer.form.username.tooltip',
-                    'required' => true
+                    'required' => true,
+                    'attr'     => [
+                        'class' => 'dm-username',
+                    ],
                 ]
             )
             ->add(
                 'password',
                 'password',
                 [
-                    'label'    => 'orocrm.dotmailer.integration_transport.password.label',
-                    'tooltip'  => 'orocrm.dotmailer.form.password.tooltip',
+                    'label'       => 'orocrm.dotmailer.integration_transport.password.label',
+                    'tooltip'     => 'orocrm.dotmailer.form.password.tooltip',
                     'required'    => true,
-                    'constraints' => [new NotBlank()]
+                    'constraints' => [new NotBlank()],
+                    'attr'        => [
+                        'class' => 'dm-password',
+                    ],
                 ]
             )->add(
                 'check',

@@ -21,4 +21,17 @@ class MarketingListItemIterator extends AbstractMarketingListItemIterator
         return $this->marketingListItemsQueryBuilderProvider
             ->getMarketingListItemsQB($addressBook, array_merge($currentItemsInBatch, $failedToExportItems));
     }
+
+    /**
+     * Clear cache after Append Iterator starts to iterate new iterator with different Address Book
+     */
+    public function rewind()
+    {
+        $this->importExportContext
+            ->setValue(ContactSyncProcessor::CURRENT_BATCH_READ_ITEMS, []);
+        $this->importExportContext
+            ->setValue(ContactSyncProcessor::NOT_PROCESSED_ITEMS, []);
+
+        parent::rewind();
+    }
 }
