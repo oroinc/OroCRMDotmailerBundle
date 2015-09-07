@@ -85,14 +85,13 @@ class AbstractDotmailerConnectorTest extends WebTestCase
             ->will($this->returnValue($this->getReference($channel)));
 
         $connector = new CampaignConnector(
-            $this->getContainer()
-                ->get('oro_importexport.context_registry'),
-            $this->getContainer()
-                ->get('oro_integration.logger.strategy'),
+            $this->getContainer()->get('oro_importexport.context_registry'),
+            $this->getContainer()->get('oro_integration.logger.strategy'),
             $this->contextMediator
         );
-        $connector->setManagerRegistry($this->getContainer()
-            ->get('doctrine'));
+        $connector->setManagerRegistry(
+            $this->getContainer()->get('doctrine')
+        );
         $this->context = $this->getMock('Akeneo\Bundle\BatchBundle\Item\ExecutionContext');
         $stepExecution->expects($this->any())
             ->method('getExecutionContext')

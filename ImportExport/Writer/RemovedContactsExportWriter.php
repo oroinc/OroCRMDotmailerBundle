@@ -203,8 +203,7 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
     {
         $qb = $repository->createQueryBuilder('contact');
         $qb->delete()
-            ->where($qb->expr()
-                ->in('contact.id', $removingItemsIds));
+            ->where($qb->expr()->in('contact.id', $removingItemsIds));
         $qb->getQuery()
             ->execute();
     }
