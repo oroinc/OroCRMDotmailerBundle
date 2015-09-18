@@ -19,6 +19,11 @@
     filter: gray; /* IE 6-9 */;
 }
 
+.icon-dotmailer.hide-text {
+    font-size: 16px;
+    line-height: 16px;
+}
+
 .connection-status {
     width: 294px;
 }
