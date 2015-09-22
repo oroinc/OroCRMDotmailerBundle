@@ -61,6 +61,8 @@ class ContactsExportCommandTest extends WebTestCase
             ->set(ContactsExportCommand::EXPORT_MANAGER, $this->exportManagerMock);
         $this->getContainer()
             ->set(ReverseSyncCommand::SYNC_PROCESSOR, $this->syncProcessorMock);
+
+        $this->getContainer()->get('akeneo_batch.job_repository')->getJobManager()->beginTransaction();
     }
 
     protected function tearDown()
@@ -70,11 +72,11 @@ class ContactsExportCommandTest extends WebTestCase
         $this->getContainer()
             ->set(ReverseSyncCommand::SYNC_PROCESSOR, $this->syncProcessor);
 
-        $entityManager = $this->getContainer()->get('akeneo_batch.job_repository')->getJobManager();
-        $entityManager
-            ->getConnection()
-            ->close();
-        $entityManager->close();
+        // clear DB from separate connection
+        $manager = $this->getContainer()->get('akeneo_batch.job_repository')->getJobManager();
+        $manager->rollback();
+        $manager->getConnection()->close();
+
 
         parent::tearDown();
     }
