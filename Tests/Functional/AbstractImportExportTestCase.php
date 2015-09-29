@@ -35,17 +35,18 @@ abstract class AbstractImportExportTestCase extends WebTestCase
         $this->stubResources();
         $this->managerRegistry = $this->getContainer()
             ->get('doctrine');
+
+        $this->getContainer()->get('akeneo_batch.job_repository')->getJobManager()->beginTransaction();
     }
 
     public function tearDown()
     {
         $this->getContainer()->set(self::RESOURCES_FACTORY_ID, $this->oldResourceFactory);
 
-        $jobRepository = $this->getContainer()->get('akeneo_batch.job_repository');
-
-        $entityManager = $jobRepository->getJobManager();
-        $entityManager->getConnection()->close();
-        $entityManager->close();
+        // clear DB from separate connection, close to avoid connection limit and memory leak
+        $manager = $this->getContainer()->get('akeneo_batch.job_repository')->getJobManager();
+        $manager->rollback();
+        $manager->getConnection()->close();
 
         parent::tearDown();
     }
