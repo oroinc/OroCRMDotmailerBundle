@@ -43,7 +43,7 @@ abstract class AbstractImportExportTestCase extends WebTestCase
     {
         $this->getContainer()->set(self::RESOURCES_FACTORY_ID, $this->oldResourceFactory);
 
-        // clear DB from separate connection
+        // clear DB from separate connection, close to avoid connection limit and memory leak
         $manager = $this->getContainer()->get('akeneo_batch.job_repository')->getJobManager();
         $manager->rollback();
         $manager->getConnection()->close();
