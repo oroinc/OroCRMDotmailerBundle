@@ -6,7 +6,7 @@ use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 
 use Psr\Log\LoggerInterface;
 
-use Symfony\Bridge\Doctrine\ManagerRegistry;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\IntegrationBundle\Provider\ConnectorContextMediator;
