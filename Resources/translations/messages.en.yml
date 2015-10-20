@@ -139,7 +139,7 @@ orocrm:
             num_text_sent.label:                Text Sent number
             num_text_soft_bounces.label:        Text Soft bounces number
             num_text_unsubscribes.label:        Text Unsubscribed number
-            num_total_clicks.label:             Total Clics number
+            num_total_clicks.label:             Total Clicks number
             num_total_delivered.label:          Total Delivered number
             num_total_estimated_forwards.label: Total Estimated Forwards number
             num_total_hard_bounces.label:       Total Hard Bounces number
