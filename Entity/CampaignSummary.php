@@ -1567,7 +1567,7 @@ class CampaignSummary implements ChannelAwareInterface
     /**
      * @param \DateTime $createdAt
      *
-     * @return Activity
+     * @return CampaignSummary
      */
     public function setCreatedAt(\DateTime $createdAt = null)
     {
@@ -1587,7 +1587,7 @@ class CampaignSummary implements ChannelAwareInterface
     /**
      * @param \DateTime $updatedAt
      *
-     * @return Activity
+     * @return CampaignSummary
      */
     public function setUpdatedAt(\DateTime $updatedAt = null)
     {
@@ -1607,7 +1607,7 @@ class CampaignSummary implements ChannelAwareInterface
     /**
      * @param Organization $owner
      *
-     * @return Activity
+     * @return CampaignSummary
      */
     public function setOwner(Organization $owner = null)
     {
@@ -1627,7 +1627,7 @@ class CampaignSummary implements ChannelAwareInterface
     /**
      * @param Campaign $campaign
      *
-     * @return Activity
+     * @return CampaignSummary
      */
     public function setCampaign(Campaign $campaign = null)
     {
