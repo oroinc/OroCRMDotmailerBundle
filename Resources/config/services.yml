@@ -125,6 +125,7 @@ parameters:
     orocrm_dotmailer.listener.datagrid.marketing_list_item.class: OroCRM\Bundle\DotmailerBundle\EventListener\Datagrid\MarketingListItemGridListener
     orocrm_dotmailer.listener.cache_clear.class:                  OroCRM\Bundle\DotmailerBundle\EventListener\CacheClearListener
 
+    orocrm_dotmailer.transport.dotmailer.class: OroCRM\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport
 services:
     # Forms and Extensions
     orocrm_dotmailer.form.event_listener.integration_transport_settings:
@@ -724,3 +725,8 @@ services:
             - @orocrm_dotmailer.provider.cache
         tags:
             - { name: doctrine.event_subscriber }
+
+    orocrm_dotmailer.transport.dotmailer:
+        class: %orocrm_dotmailer.transport.dotmailer.class%
+        tags:
+            - { name: orocrm_campaign.email_transport }
