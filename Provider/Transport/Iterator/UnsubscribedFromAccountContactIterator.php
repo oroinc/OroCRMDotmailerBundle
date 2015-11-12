@@ -5,7 +5,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 use DotMailer\Api\DataTypes\ApiContactSuppressionList;
 use DotMailer\Api\Resources\IResources;
 
-class UnsubscribedFromAccountContactIterator extends AbstractIterator
+class UnsubscribedFromAccountContactIterator extends OverlapIterator
 {
     /**
      * @var IResources
@@ -33,10 +33,7 @@ class UnsubscribedFromAccountContactIterator extends AbstractIterator
     }
 
     /**
-     * @param int $take Count of requested records
-     * @param int $skip Count of skipped records
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function getItems($take, $skip)
     {
@@ -49,5 +46,13 @@ class UnsubscribedFromAccountContactIterator extends AbstractIterator
             );
 
         return $contacts->toArray();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOverlapSize()
+    {
+        return 100;
     }
 }

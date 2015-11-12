@@ -5,7 +5,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 use DotMailer\Api\DataTypes\ApiContactSuppressionList;
 use DotMailer\Api\Resources\IResources;
 
-class UnsubscribedContactIterator extends AbstractIterator
+class UnsubscribedContactIterator extends OverlapIterator
 {
     const ADDRESS_BOOK_KEY = 'related_address_book';
 
@@ -59,5 +59,13 @@ class UnsubscribedContactIterator extends AbstractIterator
         }
 
         return $contacts;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOverlapSize()
+    {
+        return 100;
     }
 }
