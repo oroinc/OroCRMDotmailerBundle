@@ -46,4 +46,45 @@ class UnsubscribedContactIteratorTest extends \PHPUnit_Framework_TestCase
             $this->assertSame($expectedCampaignArray, $item);
         }
     }
+
+    public function testIteratorOverlap()
+    {
+        $resource = $this->getMock('DotMailer\Api\Resources\IResources');
+        $expectedAddressBookOriginId = 42;
+        $expectedDate = new \DateTime();
+        $iterator = new UnsubscribedContactIterator($resource, $expectedAddressBookOriginId, $expectedDate);
+        $iterator->setBatchSize(200);
+
+
+        $expectedItems = [];
+        $firstBatch = new ApiContactSuppressionList();
+        for ($itemNumber = 0; $itemNumber < 200; $itemNumber++) {
+            $expectedContactSuppression = new ApiContactSuppression();
+            $expectedContactSuppression['suppressedcontact'] = ['id' => $itemNumber];
+            $firstBatch[] = $expectedContactSuppression;
+            $expectedItems[] = $itemNumber;
+        }
+
+        $secondBatch = new ApiContactSuppressionList();
+        for ($itemNumber = 200; $itemNumber < 400; $itemNumber++) {
+            $expectedContactSuppression = new ApiContactSuppression();
+            $expectedContactSuppression['suppressedcontact'] = ['id' => $itemNumber];
+            $secondBatch[] = $expectedContactSuppression;
+            $expectedItems[] = $itemNumber;
+        }
+
+        $resource->expects($this->exactly(3))
+            ->method('GetAddressBookContactsUnsubscribedSinceDate')
+            ->withConsecutive(
+                [$expectedAddressBookOriginId, $expectedDate->format(\DateTime::ISO8601), 200, 0],
+                [$expectedAddressBookOriginId, $expectedDate->format(\DateTime::ISO8601), 200, 100],
+                [$expectedAddressBookOriginId, $expectedDate->format(\DateTime::ISO8601), 200, 200]
+            )
+            ->willReturnOnConsecutiveCalls($firstBatch, $secondBatch, new ApiContactSuppressionList());
+        foreach ($iterator as $item) {
+            $this->assertArrayHasKey('suppressedcontact', $item);
+            $this->assertEquals(current($expectedItems), $item['suppressedcontact']['id']);
+            next($expectedItems);
+        }
+    }
 }
