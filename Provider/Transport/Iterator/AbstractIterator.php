@@ -7,11 +7,6 @@ abstract class AbstractIterator implements \Iterator
     const DEFAULT_BATCH_SIZE = 1000;
 
     /**
-     * @var int
-     */
-    protected $pageNumber = 0;
-
-    /**
      * @var array
      */
     protected $items = [];
@@ -49,29 +44,30 @@ abstract class AbstractIterator implements \Iterator
      */
     public function next()
     {
-        if (next($this->items) !== false || $this->tryToLoadItems()) {
+        if (next($this->items) !== false || $this->tryToLoadItems($this->currentItemIndex + 1)) {
             $this->currentItemIndex++;
         }
     }
 
     /**
+     * @param int $skip
+     *
      * @return bool
      */
-    protected function tryToLoadItems()
+    protected function tryToLoadItems($skip = 0)
     {
         /** Requests count optimization */
         if ($this->lastPage) {
             return false;
         }
 
-        $this->items = $this->getItems($this->batchSize, $this->batchSize * $this->pageNumber);
+        $this->items = $this->getItems($this->batchSize, $skip);
         reset($this->items);
 
         if (count($this->items) == 0) {
             return false;
         }
 
-        $this->pageNumber++;
         if (count($this->items) < $this->batchSize) {
             $this->lastPage = true;
         }
@@ -103,9 +99,7 @@ abstract class AbstractIterator implements \Iterator
     {
         $this->lastPage = false;
         $this->items = [];
-        reset($this->items);
         $this->currentItemIndex = 0;
-        $this->pageNumber = 0;
 
         $this->isValid = $this->tryToLoadItems();
     }
