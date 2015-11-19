@@ -9,9 +9,6 @@ class ContactIterator extends OverlapIterator
 {
     const ADDRESS_BOOK_KEY = 'related_address_book';
 
-    /** @var int */
-    protected $batchSize = 900;
-
     /** @var IResources */
     protected $resources;
 
@@ -97,13 +94,5 @@ class ContactIterator extends OverlapIterator
         }
 
         return $items;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getOverlapSize()
-    {
-        return 100;
     }
 }

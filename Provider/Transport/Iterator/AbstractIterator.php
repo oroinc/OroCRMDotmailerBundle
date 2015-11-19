@@ -99,7 +99,6 @@ abstract class AbstractIterator implements \Iterator
     {
         $this->lastPage = false;
         $this->items = [];
-        reset($this->items);
         $this->currentItemIndex = 0;
 
         $this->isValid = $this->tryToLoadItems();

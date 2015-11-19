@@ -7,7 +7,7 @@ abstract class OverlapIterator extends AbstractIterator
     /**
      * @var integer
      */
-    protected $overlap;
+    protected $overlap = 100;
 
     /**
      * {@inheritdoc}
@@ -17,9 +17,13 @@ abstract class OverlapIterator extends AbstractIterator
         $overlap = $this->getOverlapSize();
 
         /**
-         * overlap necessary because of during import some records can be removed or added to records set and
-         * Dotmailer API does not support any filtering or ordering, because of it we can miss some entities.
-         * This is workaround and it should be removed as soon as Dotmailer API will be updated
+         * Overlap necessary because during import some records can be removed or added and it causes shift of records
+         * during iteration over them when records are loaded with  batches.
+         *
+         * At the moment Dotmailer API does not support any filtering or ordering, so overlap is an only workaround
+         * solution.
+         *
+         * @todo Fix in CRM-4627 as soon as Dotmailer API will be updated.
          */
         if ($skip > $overlap) {
             $this->currentItemIndex -= $overlap;
@@ -32,5 +36,16 @@ abstract class OverlapIterator extends AbstractIterator
     /**
      * @return int
      */
-    abstract public function getOverlapSize();
+    public function getOverlapSize()
+    {
+        return $this->overlap;
+    }
+
+    /**
+     * @param int $overlap
+     */
+    public function setOverlapSize($overlap)
+    {
+        $this->overlap = (int)$overlap;
+    }
 }
