@@ -60,12 +60,4 @@ class UnsubscribedContactIterator extends OverlapIterator
 
         return $contacts;
     }
-
-    /**
-     * @return int
-     */
-    public function getOverlapSize()
-    {
-        return 100;
-    }
 }
