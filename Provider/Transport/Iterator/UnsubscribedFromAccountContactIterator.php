@@ -47,12 +47,4 @@ class UnsubscribedFromAccountContactIterator extends OverlapIterator
 
         return $contacts->toArray();
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getOverlapSize()
-    {
-        return 100;
-    }
 }
