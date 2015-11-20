@@ -5,13 +5,9 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 use DotMailer\Api\DataTypes\ApiContactList;
 use DotMailer\Api\Resources\IResources;
 
-class ContactIterator extends AbstractIterator
+class ContactIterator extends OverlapIterator
 {
     const ADDRESS_BOOK_KEY = 'related_address_book';
-    const OVERLAP = 100;
-
-    /** @var int */
-    protected $batchSize = 900;
 
     /** @var IResources */
     protected $resources;
@@ -37,22 +33,12 @@ class ContactIterator extends AbstractIterator
     /**
      * {@inheritdoc}
      */
-    protected function getItems($select, $skip)
+    protected function getItems($take, $skip)
     {
-        /**
-         * overlap necessary because of during import some contacts can be unsubscribed,
-         * and in this case we can miss some entities. Also we can not iterate from the end because of api
-         * restrictions
-         */
-        if ($skip > self::OVERLAP) {
-            $skip -= self::OVERLAP;
-            $select += self::OVERLAP;
-        }
-
         if (is_null($this->addressBookOriginId)) {
-            $items = $this->getContacts($select, $skip);
+            $items = $this->getContacts($take, $skip);
         } else {
-            $items = $this->getContactsByAddressBook($select, $skip);
+            $items = $this->getContactsByAddressBook($take, $skip);
         }
 
         if (!$items) {
