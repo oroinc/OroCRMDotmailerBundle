@@ -115,7 +115,7 @@ class ContactsExportCommand extends AbstractSyncCronCommand
     protected function runExport(ExportManager $exportManager, AddressBook $addressBook = null)
     {
         if ($addressBook) {
-            $channels = [ $addressBook->getChannel() ];
+            $channels = [$addressBook->getChannel()];
         } else {
             $channels = $this->getChannels();
         }
@@ -129,38 +129,36 @@ class ContactsExportCommand extends AbstractSyncCronCommand
                 continue;
             }
 
-            /**
-             * If previous export not finished we need to update export results from Dotmailer
-             * If after update export results all export batches is complete, import will be started,
-             * because we need to update exported contacts contacts Dotmailer ID.
-             * Else we need to start new export
-             */
-            if (!$exportManager->isExportFinished($channel)) {
+            if ($exportManager->isExportFinished($channel)) {
+                /**
+                 * If previous export finished we can start another pending export in case if
+                 * integration import is not running, because parallel processing of import and export lead to
+                 * unexpected conflicts.
+                 */
+                if (!$isImportRunning) {
+                    $this->startExport($channel, $addressBook);
+                    $exportManager->updateExportResults($channel);
+                } else {
+                    $this->logger->warning(
+                        sprintf(
+                            'Export of integration "%s" was not started because import is already running.',
+                            $channel->getId()
+                        )
+                    );
+                }
+            } else {
+                /**
+                 * If previous export was not finished we need to update export results from Dotmailer.
+                 * If after update export results all export batches is complete, import will be started,
+                 * because we need to update exported contacts contacts Dotmailer ID.
+                 */
                 $this->logger->info(
                     sprintf(
-                        'Previous export do not complete for Integration "%s", checking previous export state ...',
+                        'Previous export was not completed for integration "%s", checking previous export state...',
                         $channel->getName()
                     )
                 );
                 $exportManager->updateExportResults($channel);
-            } elseif (!$isImportRunning) {
-                $this->removePreviousAddressBookContactsExport($channel);
-                $this->getReverseSyncProcessor()
-                    ->process(
-                        $channel,
-                        ContactConnector::TYPE,
-                        [
-                            AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION => $addressBook
-                        ]
-                    );
-                $exportManager->updateExportResults($channel);
-            } else {
-                $this->logger->warning(
-                    sprintf(
-                        'Export of Integration Channel %s not started because import is already running.',
-                        $channel->getId()
-                    )
-                );
             }
         }
     }
@@ -177,15 +175,20 @@ class ContactsExportCommand extends AbstractSyncCronCommand
     }
 
     /**
-     * @return ReverseSyncProcessor
+     * @param Channel $channel
+     * @param AddressBook $addressBook
      */
-    protected function getReverseSyncProcessor()
+    protected function startExport(Channel $channel, AddressBook $addressBook = null)
     {
-        if (!$this->reverseSyncProcessor) {
-            $this->reverseSyncProcessor = $this->getContainer()->get(ReverseSyncCommand::SYNC_PROCESSOR);
-        }
-
-        return $this->reverseSyncProcessor;
+        $this->removePreviousAddressBookContactsExport($channel);
+        $this->getReverseSyncProcessor()
+            ->process(
+                $channel,
+                ContactConnector::TYPE,
+                [
+                    AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION => $addressBook
+                ]
+            );
     }
 
     /**
@@ -200,6 +203,18 @@ class ContactsExportCommand extends AbstractSyncCronCommand
             ->where('abContactsExport.channel =:channel')
             ->getQuery()
             ->execute(['channel' => $channel]);
+    }
+
+    /**
+     * @return ReverseSyncProcessor
+     */
+    protected function getReverseSyncProcessor()
+    {
+        if (!$this->reverseSyncProcessor) {
+            $this->reverseSyncProcessor = $this->getContainer()->get(ReverseSyncCommand::SYNC_PROCESSOR);
+        }
+
+        return $this->reverseSyncProcessor;
     }
 
     /**
