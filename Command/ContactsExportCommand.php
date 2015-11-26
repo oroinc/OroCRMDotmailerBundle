@@ -4,10 +4,13 @@ namespace OroCRM\Bundle\DotmailerBundle\Command;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
+use Psr\Log\LoggerInterface;
+
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use Oro\Bundle\IntegrationBundle\Command\SyncCommand;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Command\ReverseSyncCommand;
 use Oro\Bundle\IntegrationBundle\Command\AbstractSyncCronCommand;
@@ -33,17 +36,22 @@ class ContactsExportCommand extends AbstractSyncCronCommand
     protected $registry;
 
     /**
+     * @var ReverseSyncProcessor
+     */
+    protected $reverseSyncProcessor;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * {@inheritdoc}
      */
     public function getDefaultDefinition()
     {
         return '*/5 * * * *';
     }
-
-    /**
-     * @var ReverseSyncProcessor
-     */
-    protected $reverseSyncProcessor;
 
     /**
      * {@inheritdoc}
@@ -70,18 +78,17 @@ class ContactsExportCommand extends AbstractSyncCronCommand
             $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
         }
 
-        $logger = new OutputLogger($output);
+        $this->registry = $this->getService('doctrine');
+        $this->logger = new OutputLogger($output);
         $this->getContainer()
             ->get('oro_integration.logger.strategy')
-            ->setLogger($logger);
+            ->setLogger($this->logger);
 
         if ($this->isJobRunning(null)) {
-            $logger->warning('Job already running. Terminating....');
+            $this->logger->warning('Job already running. Terminating....');
 
             return;
         }
-
-        $this->registry = $this->getService('doctrine');
 
         /** @var ExportManager $exportManager */
         $exportManager = $this->getService(self::EXPORT_MANAGER);
@@ -97,39 +104,76 @@ class ContactsExportCommand extends AbstractSyncCronCommand
                 throw new RuntimeException('Channel not found');
             }
         }
+
+        $this->runExport($exportManager, $addressBook);
+    }
+
+    /**
+     * @param ExportManager    $exportManager
+     * @param AddressBook|null $addressBook
+     */
+    protected function runExport(ExportManager $exportManager, AddressBook $addressBook = null)
+    {
         if ($addressBook) {
             $channels = [ $addressBook->getChannel() ];
         } else {
             $channels = $this->getChannels();
         }
 
+        $isImportRunning = $this->isImportJobRunning();
+
         foreach ($channels as $channel) {
             if (!$channel->isEnabled()) {
-                $logger->info(sprintf('Integration "%s" disabled an will be skipped', $channel->getName()));
+                $this->logger->info(sprintf('Integration "%s" disabled an will be skipped', $channel->getName()));
 
                 continue;
             }
 
             /**
              * If previous export not finished we need to update export results from Dotmailer
-             * If after update export results all export batches is complete,
-             * import updated contacts from Dotmailer will be started.
+             * If after update export results all export batches is complete, import will be started,
+             * because we need to update exported contacts contacts Dotmailer ID.
              * Else we need to start new export
              */
             if (!$exportManager->isExportFinished($channel)) {
-                $logger->info(
+                $this->logger->info(
                     sprintf(
                         'Previous export do not complete for Integration "%s", checking previous export state ...',
                         $channel->getName()
                     )
                 );
                 $exportManager->updateExportResults($channel);
-            } else {
+            } elseif (!$isImportRunning) {
                 $this->removePreviousAddressBookContactsExport($channel);
-                $this->startExport($channel, $addressBook);
+                $this->getReverseSyncProcessor()
+                    ->process(
+                        $channel,
+                        ContactConnector::TYPE,
+                        [
+                            AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION => $addressBook
+                        ]
+                    );
                 $exportManager->updateExportResults($channel);
+            } else {
+                $this->logger->warning(
+                    sprintf(
+                        'Export of Integration Channel %s not started because import is already running.',
+                        $channel->getId()
+                    )
+                );
             }
         }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isImportJobRunning()
+    {
+        $running = $this->registry->getRepository('OroIntegrationBundle:Channel')
+            ->getRunningSyncJobsCount(SyncCommand::COMMAND_NAME);
+
+        return $running > 0;
     }
 
     /**
@@ -167,21 +211,5 @@ class ContactsExportCommand extends AbstractSyncCronCommand
             ->getRepository('OroIntegrationBundle:Channel')
             ->findBy(['type' => ChannelType::TYPE, 'enabled' => true]);
         return $channels;
-    }
-
-    /**
-     * @param Channel $channel
-     * @param AddressBook $addressBook
-     */
-    protected function startExport(Channel $channel, AddressBook $addressBook = null)
-    {
-        $this->getReverseSyncProcessor()
-            ->process(
-                $channel,
-                ContactConnector::TYPE,
-                [
-                    AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION => $addressBook
-                ]
-            );
     }
 }
