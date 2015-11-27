@@ -31,7 +31,7 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
         if ($existingContact) {
             $entity->setContact($existingContact);
         } else {
-            $this->logger->critical(sprintf('No Contact for activity[email=%s]', $entity->getEmail()));
+            $this->logger->critical(sprintf('Contact for activity[email=%s] not found', $entity->getEmail()));
             return null;
         }
 
