@@ -16,14 +16,6 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
     /**
      * {@inheritdoc}
      */
-    public function getMigrationVersion()
-    {
-        return 'v1_0';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getOrder()
     {
         return 0;
