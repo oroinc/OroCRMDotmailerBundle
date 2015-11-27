@@ -47,10 +47,16 @@ class ContactUpdateTest extends AbstractImportExportTestCase
             ->will($this->returnValue($entity));
 
         $channel = $this->getReference('orocrm_dotmailer.channel.fourth');
-        $processor = $this->getContainer()->get(self::SYNC_PROCESSOR);
-        $result = $processor->process($channel, ContactConnector::TYPE);
 
-        $this->assertTrue($result, 'Failed asserting that import job ran successfully.');
+        $result = $this->runImportExportConnectorsJob(
+            self::SYNC_PROCESSOR,
+            $channel,
+            ContactConnector::TYPE,
+            [],
+            $jobLog
+        );
+        $log = $this->formatImportExportJobLog($jobLog);
+        $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $contactRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:Contact');
         $optInTypeRepository = $this->managerRegistry->getRepository(

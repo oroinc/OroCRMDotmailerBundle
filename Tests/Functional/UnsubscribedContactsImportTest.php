@@ -56,10 +56,15 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
             ->will($this->returnValue(new ApiContactSuppressionList()));
         $channel = $this->getReference('orocrm_dotmailer.channel.third');
 
-        $processor = $this->getContainer()->get(self::SYNC_PROCESSOR);
-        $result = $processor->process($channel, UnsubscribedContactConnector::TYPE);
-
-        $this->assertTrue($result);
+        $result = $this->runImportExportConnectorsJob(
+            self::SYNC_PROCESSOR,
+            $channel,
+            UnsubscribedContactConnector::TYPE,
+            [],
+            $jobLog
+        );
+        $log = $this->formatImportExportJobLog($jobLog);
+        $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $contactRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:Contact');
         $statusRepository = $this->managerRegistry->getRepository(

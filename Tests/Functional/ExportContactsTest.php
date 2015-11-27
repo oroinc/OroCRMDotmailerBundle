@@ -39,17 +39,14 @@ class ExportContactsTest extends AbstractImportExportTestCase
             AddressBookContactsExport::STATUS_NOT_FINISHED
         );
         $statusClass = ExtendHelper::buildEnumValueClassName('dm_import_status');
-        $firstAddressBookStatusEnum = $this->managerRegistry
-            ->getRepository($statusClass)
-            ->find(AddressBookContactsExport::STATUS_NOT_FINISHED);
+        $statusRepository = $this->managerRegistry->getRepository($statusClass);
+        $firstAddressBookStatusEnum = $statusRepository->find(AddressBookContactsExport::STATUS_NOT_FINISHED);
         $secondAddressBook = $this->getReference('orocrm_dotmailer.address_book.six');
         $secondAddressBookImportStatus = $this->getImportStatus(
             $secondAddressBookId = '451da8d7-70f0-405b-98d4-02faa41d499d',
             AddressBookContactsExport::STATUS_FINISH
         );
-        $secondAddressBookStatusEnum = $this->managerRegistry
-            ->getRepository($statusClass)
-            ->find(AddressBookContactsExport::STATUS_FINISH);
+        $secondAddressBookStatusEnum = $statusRepository->find(AddressBookContactsExport::STATUS_FINISH);
 
         $expectedAddressBookMap = [
             (int)$firstAddressBook->getOriginId()  => $firstAddressBookImportStatus,
@@ -68,8 +65,15 @@ class ExportContactsTest extends AbstractImportExportTestCase
                 return $expectedAddressBookMap[$originId];
             });
 
-        $processor = $this->getContainer()->get(ReverseSyncCommand::SYNC_PROCESSOR);
-        $processor->process($channel, ContactConnector::TYPE, []);
+        $result = $this->runImportExportConnectorsJob(
+            ReverseSyncCommand::SYNC_PROCESSOR,
+            $channel,
+            ContactConnector::TYPE,
+            [],
+            $jobLog
+        );
+        $log = $this->formatImportExportJobLog($jobLog);
+        $this->assertTrue($result, "Job Failed with output:\n $log");
 
         /**
          * Check new contact exported correctly

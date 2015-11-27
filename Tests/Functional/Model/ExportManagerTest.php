@@ -78,11 +78,12 @@ class ExportManagerTest extends AbstractImportExportTestCase
 
         $this->assertCount(1, $contacts);
 
-        $exportEntity = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+        $exportEntities = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
             ->findBy(['channel' => $channel, 'importId' => '1fb9cba7-e588-445a-8731-4796c86b1097']);
 
-        $this->assertCount(1, $exportEntity);
-        $exportEntity = reset($exportEntity);
+        $this->assertCount(1, $exportEntities);
+        /** @var AddressBookContactsExport|bool $exportEntity */
+        $exportEntity = reset($exportEntities);
         $expectedAddressBook = $exportEntity->getAddressBook();
 
         $exportStatus = $exportEntity->getStatus();
