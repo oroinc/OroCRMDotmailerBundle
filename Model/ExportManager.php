@@ -191,7 +191,7 @@ class ExportManager
             } else {
                 $addressBook->setSyncStatus($finishStatus);
             }
-            $addressBook->setLastSynced($lastSyncDate);
+            $addressBook->setLastExportedAt($lastSyncDate);
         }
     }
 
