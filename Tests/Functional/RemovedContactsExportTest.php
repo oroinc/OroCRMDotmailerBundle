@@ -74,9 +74,15 @@ class RemovedContactsExportTest extends AbstractImportExportTestCase
             ->expects($this->once())
             ->method('PostAddressBookContactsDelete')
             ->with($expectedAddressBook, $expectedApiContact);
-
-        $processor = $this->getContainer()->get(ReverseSyncCommand::SYNC_PROCESSOR);
-        $processor->process($channel, ContactConnector::TYPE, []);
+        $result = $this->runImportExportConnectorsJob(
+            ReverseSyncCommand::SYNC_PROCESSOR,
+            $channel,
+            ContactConnector::TYPE,
+            [],
+            $jobLog
+        );
+        $log = $this->formatImportExportJobLog($jobLog);
+        $this->assertTrue($result, "Job Failed with output:\n $log");
 
 
         foreach ($expectedRemoved as $contact) {

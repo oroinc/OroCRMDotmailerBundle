@@ -43,10 +43,15 @@ class CampaignImportTest extends AbstractImportExportTestCase
             ->will($this->returnValue($entity));
         $channel = $this->getReference('orocrm_dotmailer.channel.first');
 
-        $processor = $this->getContainer()->get(self::SYNC_PROCESSOR);
-        $result = $processor->process($channel, CampaignConnector::TYPE);
-
-        $this->assertTrue($result);
+        $result = $this->runImportExportConnectorsJob(
+            self::SYNC_PROCESSOR,
+            $channel,
+            CampaignConnector::TYPE,
+            [],
+            $jobLog
+        );
+        $log = $this->formatImportExportJobLog($jobLog);
+        $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $campaignRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:Campaign');
         $replyActionRepository = $this->managerRegistry->getRepository(
