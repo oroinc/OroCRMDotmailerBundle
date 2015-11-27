@@ -90,9 +90,15 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
         }
     }
 
+    /**
+     * @param object $entity
+     * @param array  $searchContext
+     *
+     * @return null|object
+     */
     protected function findProcessedEntity($entity, array $searchContext)
     {
-        if (!$entity instanceof OriginAwareInterface) {
+        if (!$cacheKey = $this->getCurrentBatchItemsCacheKey($entity)) {
             return parent::findExistingEntity($entity, $searchContext);
         }
 
@@ -100,13 +106,27 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
          * Fix case if this entity already imported on this batch and it is new entity
          * Also improve performance for case if it is existing one
          */
-        if (!$existingEntity = $this->cacheProvider->getCachedItem(self::BATCH_ITEMS, $entity->getOriginId())) {
+        if (!$existingEntity = $this->cacheProvider->getCachedItem(self::BATCH_ITEMS, $cacheKey)) {
             $existingEntity = parent::findExistingEntity($entity, $searchContext);
 
-            $this->cacheProvider->setCachedItem(self::BATCH_ITEMS, $entity->getOriginId(), $existingEntity ?: $entity);
+            $this->cacheProvider->setCachedItem(self::BATCH_ITEMS, $cacheKey, $existingEntity ?: $entity);
         }
 
         return $existingEntity;
+    }
+
+    /**
+     * @param object $entity
+     *
+     * @return int|null
+     */
+    protected function getCurrentBatchItemsCacheKey($entity)
+    {
+        if ($entity instanceof OriginAwareInterface) {
+            return $entity->getOriginId();
+        }
+
+        return null;
     }
 
     /**
