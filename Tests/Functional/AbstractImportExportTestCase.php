@@ -94,7 +94,6 @@ abstract class AbstractImportExportTestCase extends WebTestCase
         $output = array_reduce(
             $jobLog,
             function ($carry, $record) {
-                print_r($record);
                 return $carry . sprintf(
                     '%s> [level: %s] Message: %s',
                     PHP_EOL,
