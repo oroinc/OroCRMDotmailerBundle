@@ -4,6 +4,8 @@ namespace OroCRM\Bundle\DotmailerBundle\Command;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
+use JMS\JobQueueBundle\Entity\Job;
+
 use Psr\Log\LoggerInterface;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -100,6 +102,10 @@ class ContactsExportCommand extends AbstractSyncCronCommand
             $addressBook = $this->registry
                 ->getManager()
                 ->find('OroCRMDotmailerBundle:AddressBook', $addressBookId);
+            if (!$addressBook) {
+                throw new RuntimeException("Address Book '{$addressBookId}' not found");
+            }
+
             if (!$addressBook->getChannel()) {
                 throw new RuntimeException('Channel not found');
             }
@@ -120,7 +126,7 @@ class ContactsExportCommand extends AbstractSyncCronCommand
             $channels = $this->getChannels();
         }
 
-        $isImportRunning = $this->isImportJobRunning();
+        $runningImportJob = $this->getRunningImportJob();
 
         foreach ($channels as $channel) {
             if (!$channel->isEnabled()) {
@@ -135,7 +141,7 @@ class ContactsExportCommand extends AbstractSyncCronCommand
                  * integration import is not running, because parallel processing of import and export lead to
                  * unexpected conflicts.
                  */
-                if (!$isImportRunning) {
+                if (!$runningImportJob) {
                     $this->startExport($channel, $addressBook);
                     $exportManager->updateExportResults($channel);
                 } else {
@@ -161,17 +167,48 @@ class ContactsExportCommand extends AbstractSyncCronCommand
                 $exportManager->updateExportResults($channel);
             }
         }
+
+        if ($runningImportJob) {
+            $this->addHighPriorityExportJobToQueueIfNeeded($runningImportJob, $this->getCurrentJob());
+        }
     }
 
     /**
-     * @return bool
+     * @param Job $dependentJob
+     * @param Job $currentJob
      */
-    protected function isImportJobRunning()
+    protected function addHighPriorityExportJobToQueueIfNeeded(Job $dependentJob, Job $currentJob)
     {
-        $running = $this->registry->getRepository('OroIntegrationBundle:Channel')
-            ->getRunningSyncJobsCount(SyncCommand::COMMAND_NAME);
+        /** @var Job $job */
+        foreach ($dependentJob->getDependencies() as $job) {
+            if ($job->getCommand() == $this->getName()) {
+                return;
+            }
+        }
 
-        return $running > 0;
+        $job = new Job($this->getName(), $currentJob->getArgs(), true, Job::DEFAULT_QUEUE, Job::PRIORITY_HIGH);
+        $job->addDependency($dependentJob);
+        $em = $this->registry->getManager();
+        $em->persist($job);
+        $em->flush();
+    }
+
+    /**
+     * @return Job|null
+     */
+    protected function getCurrentJob()
+    {
+        return $this->registry->getRepository('OroIntegrationBundle:Channel')
+            ->getFirstRunningSyncJob($this->getName());
+    }
+
+    /**
+     * @return Job|null
+     */
+    protected function getRunningImportJob()
+    {
+        return $this->registry->getRepository('OroIntegrationBundle:Channel')
+            ->getFirstRunningSyncJob(SyncCommand::COMMAND_NAME);
     }
 
     /**
