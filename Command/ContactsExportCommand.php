@@ -92,6 +92,20 @@ class ContactsExportCommand extends AbstractSyncCronCommand
             return;
         }
 
+        /**
+         * If previous export finished we can start another pending export in case if
+         * integration import is not running, because parallel processing of import and export lead to
+         * unexpected conflicts.
+         */
+        if ($runningImportJob = $this->getRunningImportJob()) {
+            $this->logger->warning('Export was not started because import is already running.');
+            if ($currentJob = $this->getCurrentJob()) {
+                $this->addHighPriorityExportJobToQueueIfNeeded($runningImportJob, $currentJob);
+            }
+
+            return;
+        }
+
         /** @var ExportManager $exportManager */
         $exportManager = $this->getService(self::EXPORT_MANAGER);
 
@@ -126,8 +140,6 @@ class ContactsExportCommand extends AbstractSyncCronCommand
             $channels = $this->getChannels();
         }
 
-        $runningImportJob = $this->getRunningImportJob();
-
         foreach ($channels as $channel) {
             if (!$channel->isEnabled()) {
                 $this->logger->info(sprintf('Integration "%s" disabled an will be skipped', $channel->getName()));
@@ -136,22 +148,9 @@ class ContactsExportCommand extends AbstractSyncCronCommand
             }
 
             if ($exportManager->isExportFinished($channel)) {
-                /**
-                 * If previous export finished we can start another pending export in case if
-                 * integration import is not running, because parallel processing of import and export lead to
-                 * unexpected conflicts.
-                 */
-                if (!$runningImportJob) {
-                    $this->startExport($channel, $addressBook);
-                    $exportManager->updateExportResults($channel);
-                } else {
-                    $this->logger->warning(
-                        sprintf(
-                            'Export of integration "%s" was not started because import is already running.',
-                            $channel->getId()
-                        )
-                    );
-                }
+                $this->startExport($channel, $addressBook);
+                $exportManager->updateExportResults($channel);
+
             } else {
                 /**
                  * If previous export was not finished we need to update export results from Dotmailer.
@@ -166,10 +165,6 @@ class ContactsExportCommand extends AbstractSyncCronCommand
                 );
                 $exportManager->updateExportResults($channel);
             }
-        }
-
-        if ($runningImportJob) {
-            $this->addHighPriorityExportJobToQueueIfNeeded($runningImportJob, $this->getCurrentJob());
         }
     }
 
