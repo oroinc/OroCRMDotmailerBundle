@@ -2,7 +2,12 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Command;
 
+use Doctrine\ORM\EntityRepository;
+
+use JMS\JobQueueBundle\Entity\Job;
+
 use Oro\Bundle\IntegrationBundle\Command\ReverseSyncCommand;
+use Oro\Bundle\IntegrationBundle\Command\SyncCommand;
 use Oro\Bundle\IntegrationBundle\Provider\ReverseSyncProcessor;
 use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
@@ -12,7 +17,6 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 
 /**
  * @dbIsolation
- * @dbReindex
  */
 class ContactsExportCommandTest extends WebTestCase
 {
@@ -42,6 +46,7 @@ class ContactsExportCommandTest extends WebTestCase
         $this->loadFixtures(
             [
                 'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookContactsExportData',
+                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadJobData',
             ]
         );
 
@@ -76,7 +81,6 @@ class ContactsExportCommandTest extends WebTestCase
         $manager = $this->getContainer()->get('akeneo_batch.job_repository')->getJobManager();
         $manager->rollback();
         $manager->getConnection()->close();
-
 
         parent::tearDown();
     }
@@ -147,5 +151,36 @@ class ContactsExportCommandTest extends WebTestCase
         $this->assertNotNull($repository->findOneBy(
             ['importId' => '1fb9cba7-e588-445a-8731-4796c86b1097']
         ));
+    }
+
+    public function testJobWillBeAddedToQueueIfImportRunning()
+    {
+        $em = $this->getContainer()->get('doctrine')->getManager();
+
+        $job = new Job(SyncCommand::COMMAND_NAME);
+        /** Could not set Running status directly because of setter logic */
+        $job->setState(Job::STATE_PENDING);
+        $job->setState(Job::STATE_RUNNING);
+        $em->persist($job);
+        $em->flush();
+
+        $result = $this->runCommand(ContactsExportCommand::NAME, ['--verbose' => true]);
+
+        /**
+         * Check no errors in output
+         */
+        $this->assertEquals('Export was not started because import is already running.', trim($result));
+
+        /** @var EntityRepository $entityRepository */
+        $entityRepository = $em->getRepository('JMSJobQueueBundle:Job');
+        /** @var Job $actual */
+        $actual = $entityRepository->findOneBy(['command' => ContactsExportCommand::NAME], ['id' => 'desc']);
+
+        $this->assertEquals(Job::PRIORITY_HIGH, $actual->getPriority());
+
+        $dependencies = $actual->getDependencies()->toArray();
+        $this->assertCount(1, $dependencies);
+
+        $this->assertSame($job, $dependencies[0]);
     }
 }
