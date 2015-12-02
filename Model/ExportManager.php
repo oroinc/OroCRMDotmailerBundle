@@ -2,18 +2,15 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Model;
 
-use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\ImportExportBundle\Processor\ProcessorRegistry;
-use Oro\Bundle\IntegrationBundle\Command\SyncCommand;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\ImportExport\Job\Executor;
 use Oro\Bundle\IntegrationBundle\Provider\SyncProcessor;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
 class ExportManager
@@ -79,11 +76,7 @@ class ExportManager
             ->getRepository($className);
         $this->dotmailerTransport->init($channel->getTransport());
 
-        /**
-         * @var EntityRepository $addressBookContactRepository
-         */
-        $addressBookContactRepository = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContact');
+
         $isExportFinished = true;
 
         $importStatuses = $addressBookContactsExportRepository->getNotFinishedExports($channel);
@@ -103,19 +96,6 @@ class ExportManager
             if (!$jobResult) {
                 throw new RuntimeException('Update skipped contacts failed.');
             }
-            if (!$this->isImportAlreadyStarted($channel)) {
-                $importJobResult = $this->startImportContactsJob($channel);
-                if (!$importJobResult) {
-                    throw new RuntimeException('Import exported data failed.');
-                }
-            }
-
-            $addressBookContactRepository->createQueryBuilder('addressBookContact')
-                ->update()
-                ->where('addressBookContact.channel =:channel')
-                ->set('addressBookContact.scheduledForExport', ':scheduledForExport')
-                ->getQuery()
-                ->execute(['channel' => $channel, 'scheduledForExport' => false]);
 
             $this->updateAddressBookStatus($channel);
         }
@@ -139,20 +119,6 @@ class ExportManager
             ProcessorRegistry::TYPE_IMPORT,
             'dotmailer_import_not_exported_contact',
             $configuration
-        );
-    }
-
-    /**
-     * @param Channel $channel
-     *
-     * @return bool
-     */
-    protected function startImportContactsJob(Channel $channel)
-    {
-        return $this->syncProcessor->process(
-            $channel,
-            ContactConnector::TYPE,
-            []
         );
     }
 
@@ -193,18 +159,5 @@ class ExportManager
             }
             $addressBook->setLastSynced($lastSyncDate);
         }
-    }
-
-    /**
-     * @param Channel $channel
-     *
-     * @return bool
-     */
-    protected function isImportAlreadyStarted(Channel $channel)
-    {
-        $running = $this->managerRegistry->getRepository('OroIntegrationBundle:Channel')
-            ->getRunningSyncJobsCount(SyncCommand::COMMAND_NAME, $channel->getId());
-
-        return $running > 0;
     }
 }
