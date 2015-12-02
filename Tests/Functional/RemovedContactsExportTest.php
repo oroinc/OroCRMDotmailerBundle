@@ -5,9 +5,8 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\Int32List;
 
-use Oro\Bundle\IntegrationBundle\Command\ReverseSyncCommand;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 
 /**
  * @dbIsolation
@@ -73,9 +72,9 @@ class RemovedContactsExportTest extends AbstractImportExportTestCase
             ->method('PostAddressBookContactsDelete')
             ->with($expectedAddressBook, $expectedApiContact);
         $result = $this->runImportExportConnectorsJob(
-            ReverseSyncCommand::SYNC_PROCESSOR,
+            self::SYNC_PROCESSOR,
             $channel,
-            ContactConnector::TYPE,
+            ExportContactConnector::TYPE,
             [],
             $jobLog
         );

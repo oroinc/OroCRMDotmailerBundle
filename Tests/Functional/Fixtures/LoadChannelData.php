@@ -11,6 +11,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
@@ -39,6 +40,7 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
                 ActivityContactConnector::TYPE,
                 CampaignSummaryConnector::TYPE,
                 ContactConnector::TYPE,
+                ExportContactConnector::TYPE
             ],
             'transport' => 'orocrm_dotmailer.transport.first',
             'reference' => 'orocrm_dotmailer.channel.first'
@@ -52,6 +54,7 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
                 ActivityContactConnector::TYPE,
                 CampaignSummaryConnector::TYPE,
                 ContactConnector::TYPE,
+                ExportContactConnector::TYPE
             ],
             'transport' => 'orocrm_dotmailer.transport.second',
             'reference' => 'orocrm_dotmailer.channel.second'
@@ -65,6 +68,7 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
                 ActivityContactConnector::TYPE,
                 CampaignSummaryConnector::TYPE,
                 ContactConnector::TYPE,
+                ExportContactConnector::TYPE
             ],
             'transport' => 'orocrm_dotmailer.transport.third',
             'reference' => 'orocrm_dotmailer.channel.third'
@@ -78,6 +82,7 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
                 ActivityContactConnector::TYPE,
                 CampaignSummaryConnector::TYPE,
                 ContactConnector::TYPE,
+                ExportContactConnector::TYPE
             ],
             'transport' => 'orocrm_dotmailer.transport.fourth',
             'reference' => 'orocrm_dotmailer.channel.fourth'

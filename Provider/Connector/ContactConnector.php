@@ -2,13 +2,10 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Connector;
 
-use Oro\Bundle\IntegrationBundle\Provider\TwoWaySyncConnectorInterface;
-
-class ContactConnector extends AbstractDotmailerConnector implements TwoWaySyncConnectorInterface
+class ContactConnector extends AbstractDotmailerConnector
 {
     const TYPE = 'contact';
     const IMPORT_JOB = 'dotmailer_new_contacts';
-    const EXPORT_JOB = 'dotmailer_contact_export';
 
     /**
      * {@inheritdoc}
@@ -44,13 +41,5 @@ class ContactConnector extends AbstractDotmailerConnector implements TwoWaySyncC
     public function getType()
     {
         return self::TYPE;
-    }
-
-    /**
-     * @return string
-     */
-    public function getExportJobName()
-    {
-        return self::EXPORT_JOB;
     }
 }
