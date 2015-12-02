@@ -15,6 +15,10 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  *      name="orocrm_dm_activity",
  *      uniqueConstraints={
  *          @ORM\UniqueConstraint(name="orocrm_dm_activity_unq", columns={"campaign_id", "contact_id", "channel_id"})
+ *     },
+ *     indexes={
+ *         @ORM\Index(name="orocrm_dm_activity_email_idx", columns={"email"}),
+ *         @ORM\Index(name="orocrm_dm_activity_dt_sent_idx", columns={"date_sent"})
  *     }
  * )
  * @ORM\HasLifecycleCallbacks()
