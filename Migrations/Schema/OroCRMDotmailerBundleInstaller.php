@@ -10,6 +10,7 @@ use Oro\Bundle\MigrationBundle\Migration\Installation;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 
 use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0;
+use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_2;
 
 class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwareInterface
 {
@@ -23,7 +24,7 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
      */
     public function getMigrationVersion()
     {
-        return 'v1_0';
+        return 'v1_2';
     }
 
     /**
