@@ -6,13 +6,12 @@ use DotMailer\Api\DataTypes\ApiContactImport;
 
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
-use Oro\Bundle\IntegrationBundle\Command\ReverseSyncCommand;
 use OroCRM\Bundle\ContactBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact as DotmailerContact;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 
 /**
  * @dbIsolation
@@ -66,9 +65,9 @@ class ExportContactsTest extends AbstractImportExportTestCase
             });
 
         $result = $this->runImportExportConnectorsJob(
-            ReverseSyncCommand::SYNC_PROCESSOR,
+            self::SYNC_PROCESSOR,
             $channel,
-            ContactConnector::TYPE,
+            ExportContactConnector::TYPE,
             [],
             $jobLog
         );
@@ -169,7 +168,10 @@ class ExportContactsTest extends AbstractImportExportTestCase
                 return $id == $addressBook->getId();
             })
             ->first();
-        $this->assertTrue($addressBookContact->isScheduledForExport());
+        /**
+         * Check status was reset after export
+         */
+        $this->assertFalse($addressBookContact->isScheduledForExport());
 
         if (!$isNew) {
             /**
