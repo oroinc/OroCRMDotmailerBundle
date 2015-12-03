@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_2;
+namespace OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0_1;
 
 use Doctrine\DBAL\Schema\Schema;
 

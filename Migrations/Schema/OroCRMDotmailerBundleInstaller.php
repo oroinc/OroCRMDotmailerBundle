@@ -10,7 +10,7 @@ use Oro\Bundle\MigrationBundle\Migration\Installation;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 
 use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0;
-use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_2;
+use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0_1\AddActivityIndexes;
 
 class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwareInterface
 {
@@ -24,7 +24,7 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
      */
     public function getMigrationVersion()
     {
-        return 'v1_2';
+        return 'v1_0_1';
     }
 
     /**
@@ -39,6 +39,9 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
         $addEnumFieldsMigration = new v1_0\AddEnumFields();
         $addEnumFieldsMigration->setExtendExtension($this->extendExtension);
         $addEnumFieldsMigration->up($schema, $queries);
+
+        $activityIndexes = new AddActivityIndexes();
+        $activityIndexes->up($schema, $queries);
     }
 
 
