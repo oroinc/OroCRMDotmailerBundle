@@ -17,9 +17,9 @@ use Oro\Component\Log\OutputLogger;
 use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
 use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
 
-class ContactsExportCommand extends AbstractSyncCronCommand
+class ContactsExportStatusUpdateCommand extends AbstractSyncCronCommand
 {
-    const NAME = 'oro:cron:dotmailer:export';
+    const NAME = 'oro:cron:dotmailer:export-status:update';
     const EXPORT_MANAGER = 'orocrm_dotmailer.export_manager';
 
     /**

@@ -6,6 +6,8 @@ use FOS\RestBundle\Util\Codes;
 
 use JMS\JobQueueBundle\Entity\Job;
 
+use Oro\Bundle\IntegrationBundle\Command\SyncCommand;
+use OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
@@ -15,7 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
-use OroCRM\Bundle\DotmailerBundle\Command\ContactsExportCommand;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
@@ -40,27 +41,35 @@ class AddressBookController extends Controller
      *      permission="EDIT",
      *      class="OroCRMDotmailerBundle:AddressBook"
      * )
+     * @param AddressBook $addressBook
+     *
+     * @return JsonResponse
      */
     public function synchronizeAddressBook(AddressBook $addressBook)
     {
-        $job = new Job(
-            ContactsExportCommand::NAME,
-            ['--address-book=' . $addressBook->getId(),'-v']
-        );
-
-        $status  = Codes::HTTP_OK;
-        $response = [
-            'message'    => '',
-        ];
-
         try {
-            $registry = $this->get('doctrine');
-            $em = $registry->getManager();
+            $job = new Job(
+                SyncCommand::COMMAND_NAME,
+                [
+                    sprintf(
+                        '%s=%s',
+                        AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION,
+                        $addressBook->getId()
+                    ),
+                    sprintf(
+                        '--%s=%s',
+                        SyncCommand::INTEGRATION_ID_OPTION,
+                        $addressBook->getChannel()->getId()
+                    ),
+                    '-v'
+                ]
+            );
+
+            $status = Codes::HTTP_OK;
+            $response = [ 'message' => '' ];
+
+            $em = $this->get('doctrine')->getManager();
             $em->persist($job);
-            $statusClass = ExtendHelper::buildEnumValueClassName('dm_import_status');
-            $syncStatus = $registry->getRepository($statusClass)
-                ->find(AddressBookContactsExport::STATUS_NOT_FINISHED);
-            $addressBook->setSyncStatus($syncStatus);
             $em->flush();
 
             $jobViewLink = sprintf(
@@ -75,8 +84,8 @@ class AddressBookController extends Controller
                 $this->get('translator')->trans('orocrm.dotmailer.addressbook.sync')
             );
         } catch (\Exception $e) {
-            $status  = Codes::HTTP_BAD_REQUEST;
-            $response['message']    = sprintf(
+            $status = Codes::HTTP_BAD_REQUEST;
+            $response['message'] = sprintf(
                 $this->get('translator')->trans('oro.integration.sync_error'),
                 $e->getMessage()
             );
@@ -97,6 +106,9 @@ class AddressBookController extends Controller
      *      permission="EDIT",
      *      class="OroCRMDotmailerBundle:AddressBook"
      * )
+     * @param AddressBook $addressBook
+     *
+     * @return Response
      */
     public function disconnectMarketingListAction(AddressBook $addressBook)
     {
@@ -118,6 +130,9 @@ class AddressBookController extends Controller
      * @AclAncestor("orocrm_marketing_list_update")
      *
      * @Template("OroCRMDotmailerBundle:AddressBook/widget:addressBookConnectionUpdate.html.twig")
+     * @param MarketingList $marketingList
+     *
+     * @return array
      */
     public function addressBookConnectionUpdateAction(MarketingList $marketingList)
     {

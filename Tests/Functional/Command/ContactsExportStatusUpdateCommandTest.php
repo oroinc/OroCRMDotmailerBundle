@@ -6,12 +6,12 @@ use Oro\Bundle\IntegrationBundle\Provider\ReverseSyncProcessor;
 use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 
-use OroCRM\Bundle\DotmailerBundle\Command\ContactsExportCommand;
+use OroCRM\Bundle\DotmailerBundle\Command\ContactsExportStatusUpdateCommand;
 
 /**
  * @dbIsolation
  */
-class ContactsExportCommandTest extends WebTestCase
+class ContactsExportStatusUpdateCommandTest extends WebTestCase
 {
     /**
      * @var ExportManager
@@ -38,12 +38,12 @@ class ContactsExportCommandTest extends WebTestCase
         );
 
         $this->exportManager = $this->getContainer()
-            ->get(ContactsExportCommand::EXPORT_MANAGER);
+            ->get(ContactsExportStatusUpdateCommand::EXPORT_MANAGER);
         $this->exportManagerMock = $this->getMockBuilder('OroCRM\Bundle\DotmailerBundle\Model\ExportManager')
             ->disableOriginalConstructor()
             ->getMock();
         $this->getContainer()
-            ->set(ContactsExportCommand::EXPORT_MANAGER, $this->exportManagerMock);
+            ->set(ContactsExportStatusUpdateCommand::EXPORT_MANAGER, $this->exportManagerMock);
 
         $this->getContainer()->get('akeneo_batch.job_repository')->getJobManager()->beginTransaction();
     }
@@ -51,7 +51,7 @@ class ContactsExportCommandTest extends WebTestCase
     protected function tearDown()
     {
         $this->getContainer()
-            ->set(ContactsExportCommand::EXPORT_MANAGER, $this->exportManager);
+            ->set(ContactsExportStatusUpdateCommand::EXPORT_MANAGER, $this->exportManager);
 
         // clear DB from separate connection, close to avoid connection limit and memory leak
         $manager = $this->getContainer()->get('akeneo_batch.job_repository')->getJobManager();
@@ -89,6 +89,6 @@ class ContactsExportCommandTest extends WebTestCase
             ->method('updateExportResults')
             ->withConsecutive([$expectedChannel], [$secondExpectedChannel]);
 
-        $this->runCommand(ContactsExportCommand::NAME, ['--verbose' => true]);
+        $this->runCommand(ContactsExportStatusUpdateCommand::NAME, ['--verbose' => true]);
     }
 }
