@@ -39,6 +39,7 @@ class OverlapIteratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @return array
      */
     public function iteratorDataProvider()
