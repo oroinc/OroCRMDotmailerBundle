@@ -4,6 +4,7 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
 
 use Oro\Bundle\ImportExportBundle\Exception\LogicException;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
+use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 
 abstract class AbstractExportReader extends AbstractReader
@@ -38,8 +39,15 @@ abstract class AbstractExportReader extends AbstractReader
      */
     protected function getAddressBooksToSync()
     {
-        $addressBook = $this->context->getOption(self::ADDRESS_BOOK_RESTRICTION_OPTION);
-        if ($addressBook) {
+        $addressBookId = $this->context->getOption(self::ADDRESS_BOOK_RESTRICTION_OPTION);
+        if ($addressBookId) {
+            $addressBook = $this->registry
+                ->getRepository('OroCRMDotmailerBundle:AddressBook')
+                ->find($addressBookId);
+            if (!$addressBook) {
+                throw new RuntimeException("Address book '{$addressBookId}' not found");
+            }
+
             return [$addressBook];
         }
 

@@ -13,7 +13,6 @@ use OroCRM\Bundle\DotmailerBundle\Tests\Functional\AbstractImportExportTestCase;
 
 /**
  * @dbIsolation
- * @dbReindex
  */
 class ExportManagerTest extends AbstractImportExportTestCase
 {
