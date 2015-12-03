@@ -11,7 +11,12 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 /**
  * @ORM\Entity(repositoryClass="OroCRM\Bundle\DotmailerBundle\Entity\Repository\CampaignSummaryRepository")
- * @ORM\Table(name="orocrm_dm_campaign_summary")
+ * @ORM\Table(
+ *     name="orocrm_dm_campaign_summary",
+ *     indexes={
+ *          @ORM\Index(name="orocrm_dm_camp_sum_dt_sent_idx", columns={"date_sent"})
+ *     }
+ * )
  * @ORM\HasLifecycleCallbacks()
  * @Config(
  *  defaultValues={
