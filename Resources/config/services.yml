@@ -122,8 +122,9 @@ parameters:
     orocrm_dotmailer.acl.voter.marketing_list_state_item.class:       OroCRM\Bundle\DotmailerBundle\Acl\Voter\MarketingListStateItemVoter
 
     #listeners
-    orocrm_dotmailer.listener.datagrid.marketing_list_item.class: OroCRM\Bundle\DotmailerBundle\EventListener\Datagrid\MarketingListItemGridListener
-    orocrm_dotmailer.listener.cache_clear.class:                  OroCRM\Bundle\DotmailerBundle\EventListener\CacheClearListener
+    orocrm_dotmailer.listener.datagrid.marketing_list_item.class:     OroCRM\Bundle\DotmailerBundle\EventListener\Datagrid\MarketingListItemGridListener
+    orocrm_dotmailer.listener.cache_clear.class:                      OroCRM\Bundle\DotmailerBundle\EventListener\CacheClearListener
+    orocrm_dotmailer.listener.update_address_book_sync_status.class:  OroCRM\Bundle\DotmailerBundle\EventListener\UpdateAddressBookSyncStatusListener
 
     orocrm_dotmailer.transport.dotmailer.class: OroCRM\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport
 services:
@@ -216,7 +217,6 @@ services:
         arguments:
             - @doctrine
             - @orocrm_dotmailer.transport.integration_transport
-            - @oro_integration.sync.processor
             - @oro_integration.job_executor
             - %orocrm_dotmailer.entity.address_book_contact.class%
 
@@ -731,6 +731,14 @@ services:
             - @orocrm_dotmailer.provider.cache
         tags:
             - { name: doctrine.event_subscriber }
+
+    orocrm_dotmailer.listener.update_address_book_sync_status:
+        class: %orocrm_dotmailer.listener.update_address_book_sync_status.class%
+        arguments:
+            - @doctrine
+            - @orocrm_dotmailer.export_manager
+        tags:
+            - { name: kernel.event_subscriber }
 
     orocrm_dotmailer.transport.dotmailer:
         class: %orocrm_dotmailer.transport.dotmailer.class%

@@ -6,6 +6,7 @@ use Guzzle\Iterator\AppendIterator;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Provider\AllowedConnectorInterface;
+use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
 use OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
@@ -34,11 +35,21 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
         $this->logger->info('Preparing Contacts for Export');
 
         $iterator = new AppendIterator();
-        $addressBook = $this->getContext()->getOption(AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION);
-        $addressBooks = $addressBook
-            ? [$addressBook]
-            : $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBook')
+        $addressBookId = $this->getContext()->getOption(AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION);
+
+        if ($addressBookId) {
+            $addressBook = $this->managerRegistry
+                ->getRepository('OroCRMDotmailerBundle:AddressBook')
+                ->find($addressBookId);
+            if (!$addressBook) {
+                throw new RuntimeException("Address book '{$addressBookId}' not found");
+            }
+
+            $addressBooks = [$addressBook];
+        } else {
+            $addressBooks = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBook')
                 ->getAddressBooksToSync($this->getChannel());
+        }
 
         foreach ($addressBooks as $addressBook) {
             $marketingListItemIterator = new MarketingListItemIterator(
@@ -48,7 +59,6 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
             );
             $iterator->append($marketingListItemIterator);
         }
-
 
         return $iterator;
     }
@@ -103,7 +113,7 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
      *
      * @return ExportContactConnector
      */
-    public function setExportManager(ExportManager $exportManager = null)
+    public function setExportManager(ExportManager $exportManager)
     {
         $this->exportManager = $exportManager;
 

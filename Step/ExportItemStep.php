@@ -55,7 +55,6 @@ class ExportItemStep extends ItemStep
             ->set('addressBookContact.scheduledForExport', ':scheduledForExport')
             ->getQuery()
             ->execute(['channel' => $channel, 'scheduledForExport' => false]);
-
     }
 
     /**
@@ -90,12 +89,8 @@ class ExportItemStep extends ItemStep
     protected function getChannel(StepExecution $stepExecution)
     {
         $context = $this->contextRegistry->getByStepExecution($stepExecution);
-
-        $channelId = $context->getOption('channel');
-        $channel = $this->registry
+        return $this->registry
             ->getRepository('OroIntegrationBundle:Channel')
-            ->getOrLoadById($channelId);
-
-        return $channel;
+            ->getOrLoadById($context->getOption('channel'));
     }
 }

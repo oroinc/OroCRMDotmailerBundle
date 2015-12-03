@@ -58,27 +58,15 @@ class AddressBookContactsExportRepository extends EntityRepository
     /**
      * @param AddressBook $addressBook
      *
-     * @return AddressBookContactsExport
+     * @return AddressBookContactsExport[]
      */
-    public function getLastFailedExport(AddressBook $addressBook)
+    public function getExportResults(AddressBook $addressBook)
     {
         $qb = $this->createQueryBuilder('addressBookContactExport');
         $qb->innerJoin('addressBookContactExport.status', 'status')
             ->where('addressBookContactExport.addressBook =:addressBook')
-            ->andWhere(
-                $qb->expr()
-                    ->notIn(
-                        'status.id',
-                        [
-                            AddressBookContactsExport::STATUS_FINISH,
-                            AddressBookContactsExport::STATUS_NOT_FINISHED
-                        ]
-                    )
-            )
-            ->setMaxResults(1)
-            ->orderBy('addressBookContactExport.updatedAt', 'desc')
-            ->setParameters(['addressBook' => $addressBook]);
+            ->orderBy('addressBookContactExport.updatedAt', 'desc');
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()->execute(['addressBook' => $addressBook]);
     }
 }

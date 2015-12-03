@@ -4,11 +4,13 @@ namespace OroCRM\Bundle\DotmailerBundle\Model;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
+use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
+use Oro\Bundle\ImportExportBundle\Job\JobResult;
 use Oro\Bundle\ImportExportBundle\Processor\ProcessorRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\ImportExport\Job\Executor;
-use Oro\Bundle\IntegrationBundle\Provider\SyncProcessor;
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
@@ -26,11 +28,6 @@ class ExportManager
     protected $dotmailerTransport;
 
     /**
-     * @var SyncProcessor
-     */
-    protected $syncProcessor;
-
-    /**
      * @var Executor
      */
     protected $executor;
@@ -38,27 +35,36 @@ class ExportManager
     /**
      * @var string
      */
-    protected $addressBookContact;
+    protected $addressBookContactClassName;
 
     /**
      * @param ManagerRegistry    $managerRegistry
      * @param DotmailerTransport $dotmailerTransport
-     * @param SyncProcessor      $syncProcessor
      * @param Executor           $executor
-     * @param string             $addressBookContact
+     * @param string             $addressBookContactClassName
      */
     public function __construct(
         ManagerRegistry $managerRegistry,
         DotmailerTransport $dotmailerTransport,
-        SyncProcessor $syncProcessor,
         Executor $executor,
-        $addressBookContact
+        $addressBookContactClassName
     ) {
         $this->managerRegistry = $managerRegistry;
         $this->dotmailerTransport = $dotmailerTransport;
-        $this->syncProcessor = $syncProcessor;
         $this->executor = $executor;
-        $this->addressBookContact = $addressBookContact;
+        $this->addressBookContactClassName = $addressBookContactClassName;
+    }
+
+    /**
+     * @param Channel $channel
+     *
+     * @return bool
+     */
+    public function isExportFinished(Channel $channel)
+    {
+        return $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+            ->isExportFinished($channel);
     }
 
     /**
@@ -76,12 +82,12 @@ class ExportManager
             ->getRepository($className);
         $this->dotmailerTransport->init($channel->getTransport());
 
-
         $isExportFinished = true;
 
         $importStatuses = $addressBookContactsExportRepository->getNotFinishedExports($channel);
         foreach ($importStatuses as $importStatus) {
             $apiImportStatus = $this->dotmailerTransport->getImportStatus($importStatus->getImportId());
+            /** @var AbstractEnumValue|null $status */
             if (!$status = $statusRepository->find($apiImportStatus->status)) {
                 throw new RuntimeException('Status is not exist');
             }
@@ -97,7 +103,7 @@ class ExportManager
                 throw new RuntimeException('Update skipped contacts failed.');
             }
 
-            $this->updateAddressBookStatus($channel);
+            $this->updateAddressBooksSyncStatus($channel);
         }
 
         $this->managerRegistry->getManager()->flush();
@@ -105,11 +111,81 @@ class ExportManager
         return $isExportFinished;
     }
 
+    /**
+     * @param Channel $channel
+     */
+    public function updateAddressBooksSyncStatus(Channel $channel)
+    {
+        $statusRepository = $this->managerRegistry
+            ->getRepository(ExtendHelper::buildEnumValueClassName('dm_import_status'));
+        $addressBookContactsExportRepository = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport');
+
+        /** @var AbstractEnumValue $finishStatus */
+        $finishStatus = $statusRepository->find(AddressBookContactsExport::STATUS_FINISH);
+        /** @var AbstractEnumValue $inProgressStatus */
+        $inProgressStatus = $statusRepository->find(AddressBookContactsExport::STATUS_NOT_FINISHED);
+
+        $addressBooks = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->findBy(['channel' => $channel]);
+        foreach ($addressBooks as $addressBook) {
+            $exports = $addressBookContactsExportRepository->getExportResults($addressBook);
+
+            $isExportFinished = true;
+            foreach ($exports as $export) {
+                if ($export->getStatus() != AddressBookContactsExport::STATUS_FINISH) {
+                    $isExportFinished = false;
+                }
+            }
+            if ($isExportFinished) {
+                $this->updateAddressBookSyncStatus($addressBook, $finishStatus);
+            } else {
+                if ($failedExport = $this->getLastFailedExport($exports)) {
+                    $this->updateAddressBookSyncStatus($addressBook, $failedExport->getStatus());
+                } else {
+                    $addressBook->setSyncStatus($inProgressStatus);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param AddressBookContactsExport[] $exports
+     *
+     * @return AddressBookContactsExport|null
+     */
+    protected function getLastFailedExport(array $exports)
+    {
+        foreach ($exports as $export) {
+            if ($export->getStatus() != AddressBookContactsExport::STATUS_NOT_FINISHED) {
+                return $export;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param AddressBook       $addressBook
+     * @param AbstractEnumValue $status
+     */
+    protected function updateAddressBookSyncStatus(AddressBook $addressBook, AbstractEnumValue $status)
+    {
+        $addressBook->setSyncStatus($status);
+        $addressBook->setLastSynced(new \DateTime('now', new \DateTimeZone('UTC')));
+    }
+
+    /**
+     * @param Channel $channel
+     *
+     * @return JobResult
+     */
     protected function startUpdateSkippedContactsStatusJob(Channel $channel)
     {
         $configuration = [
             ProcessorRegistry::TYPE_IMPORT => [
-                'entityName'     => $this->addressBookContact,
+                'entityName'     => $this->addressBookContactClassName,
                 'channel'        => $channel->getId(),
                 'channelType'    => $channel->getType(),
             ],
@@ -120,44 +196,5 @@ class ExportManager
             'dotmailer_import_not_exported_contact',
             $configuration
         );
-    }
-
-    /**
-     * @param Channel $channel
-     *
-     * @return bool
-     */
-    public function isExportFinished(Channel $channel)
-    {
-        return $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
-            ->isExportFinished($channel);
-    }
-
-    /**
-     * @param Channel $channel
-     */
-    protected function updateAddressBookStatus(Channel $channel)
-    {
-        $addressBookRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBook');
-        $className = ExtendHelper::buildEnumValueClassName('dm_import_status');
-        $statusRepository = $this->managerRegistry
-            ->getRepository($className);
-        $addressBookContactsExportRepository = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport');
-
-        $finishStatus = $statusRepository->find(AddressBookContactsExport::STATUS_FINISH);
-        $addressBooks = $addressBookRepository->findBy(['channel' => $channel]);
-        $lastSyncDate = new \DateTime('now', new \DateTimeZone('UTC'));
-        foreach ($addressBooks as $addressBook) {
-            $failedExport = $addressBookContactsExportRepository->getLastFailedExport($addressBook);
-
-            if ($failedExport) {
-                $addressBook->setSyncStatus($failedExport->getStatus());
-            } else {
-                $addressBook->setSyncStatus($finishStatus);
-            }
-            $addressBook->setLastSynced($lastSyncDate);
-        }
     }
 }

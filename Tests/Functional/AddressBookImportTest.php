@@ -9,7 +9,6 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
 
 /**
  * @dbIsolation
- * @dbReindex
  */
 class AddressBookImportTest extends AbstractImportExportTestCase
 {
