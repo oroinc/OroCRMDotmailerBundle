@@ -15,10 +15,16 @@ class AddActivityIndexes implements Migration
     public function up(Schema $schema, QueryBag $queries)
     {
         $table = $schema->getTable('orocrm_dm_activity');
-        $table->addIndex(['email'], 'orocrm_dm_activity_email_idx', []);
-        $table->addIndex(['date_sent'], 'orocrm_dm_activity_dt_sent_idx', []);
+        if (!$table->hasIndex('orocrm_dm_activity_email_idx')) {
+            $table->addIndex(['email'], 'orocrm_dm_activity_email_idx', []);
+        }
+        if (!$table->hasIndex('orocrm_dm_activity_dt_sent_idx')) {
+            $table->addIndex(['date_sent'], 'orocrm_dm_activity_dt_sent_idx', []);
+        }
 
         $table = $schema->getTable('orocrm_dm_campaign_summary');
-        $table->addIndex(['date_sent'], 'orocrm_dm_camp_sum_dt_sent_idx', []);
+        if (!$table->hasIndex('orocrm_dm_camp_sum_dt_sent_idx')) {
+            $table->addIndex(['date_sent'], 'orocrm_dm_camp_sum_dt_sent_idx', []);
+        }
     }
 }
