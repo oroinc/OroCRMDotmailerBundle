@@ -33,7 +33,7 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
         } else {
             $this->logger->critical(
                 sprintf(
-                    'Activity Contact %s not found',
+                    'Contact \'%s\', which is associated with Activity not found.',
                     $entity->getContact()->getOriginId()
                 )
             );
