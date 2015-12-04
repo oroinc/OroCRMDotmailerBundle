@@ -52,7 +52,7 @@ class ContactsExportStatusUpdateCommand extends AbstractSyncCronCommand
     {
         $this
             ->setName(self::NAME)
-            ->setDescription('Export contacts to Dotmailer');
+            ->setDescription('Update Dotmailer Address Book Contacts sync status');
     }
 
     /**

@@ -11,6 +11,7 @@ use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
+use OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
@@ -109,10 +110,15 @@ class UpdateAddressBookSyncStatusListener implements EventSubscriberInterface
         $repository = $this->registry
             ->getRepository('OroCRMDotmailerBundle:AddressBook');
 
-        if (!empty($configuration['import']['address-book'])) {
+        if (!empty($configuration['import'][AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION])) {
             $addressBook = $repository->find($configuration['import']['address-book']);
             if (!$addressBook) {
-                throw new RuntimeException("Address book '{$configuration['import']['address-book']}' not found.");
+                throw new RuntimeException(
+                    sprintf(
+                        'Address book \'%s\' not found.',
+                        $configuration['import'][AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION]
+                    )
+                );
             }
         }
 
