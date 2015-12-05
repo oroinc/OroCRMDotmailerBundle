@@ -40,21 +40,10 @@ abstract class AbstractExportReader extends AbstractReader
     protected function getAddressBooksToSync()
     {
         $addressBookId = $this->context->getOption(self::ADDRESS_BOOK_RESTRICTION_OPTION);
-        if ($addressBookId) {
-            $addressBook = $this->registry
-                ->getRepository('OroCRMDotmailerBundle:AddressBook')
-                ->find($addressBookId);
-            if (!$addressBook) {
-                throw new RuntimeException("Address book '{$addressBookId}' not found");
-            }
 
-            return [$addressBook];
-        }
-
-        $addressBooks = $this->registry
+        return $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBook')
-            ->getAddressBooksToSync($this->getChannel());
-        return $addressBooks;
+            ->getAddressBooksToSync($this->getChannel(), $addressBookId);
     }
 
     /**
