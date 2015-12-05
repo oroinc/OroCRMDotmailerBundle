@@ -47,7 +47,7 @@ class UpdateAddressBookSyncStatusListener implements EventSubscriberInterface
     {
         return array(
             SyncEvent::SYNC_BEFORE => 'beforeSyncStarted',
-            SyncEvent::SYNC_AFTER => 'afterSyncStarted'
+            SyncEvent::SYNC_AFTER => 'afterSyncFinished'
         );
     }
 
@@ -62,12 +62,12 @@ class UpdateAddressBookSyncStatusListener implements EventSubscriberInterface
 
         $configuration = $syncEvent->getConfiguration();
 
-        $channel= $this->getChannel($configuration);
+        $channel = $this->getChannel($configuration);
 
         /** @var AbstractEnumValue $inProgressStatus */
         $inProgressStatus = $this->registry
-            ->getRepository(ExtendHelper::buildEnumValueClassName('dm_import_status'))
-            ->find(AddressBookContactsExport::STATUS_NOT_FINISHED);
+            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+            ->getNotFinishedStatus();
         $addressBooks = $this->getAddressBooksToSync($channel, $configuration);
         foreach ($addressBooks as $addressBook) {
             $addressBook->setSyncStatus($inProgressStatus);
@@ -77,7 +77,7 @@ class UpdateAddressBookSyncStatusListener implements EventSubscriberInterface
     /**
      * @param SyncEvent $syncEvent
      */
-    public function afterSyncStarted(SyncEvent $syncEvent)
+    public function afterSyncFinished(SyncEvent $syncEvent)
     {
         if (!$this->isApplicable($syncEvent)) {
             return;
