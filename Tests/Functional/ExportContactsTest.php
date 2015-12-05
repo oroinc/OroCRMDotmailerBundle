@@ -37,15 +37,12 @@ class ExportContactsTest extends AbstractImportExportTestCase
             $firstAddressBookId = '391da8d7-70f0-405b-98d4-02faa41d499d',
             AddressBookContactsExport::STATUS_NOT_FINISHED
         );
-        $statusClass = ExtendHelper::buildEnumValueClassName('dm_import_status');
-        $statusRepository = $this->managerRegistry->getRepository($statusClass);
-        $syncInProgressStatus = $statusRepository->find(AddressBookContactsExport::STATUS_NOT_FINISHED);
+
         $secondAddressBook = $this->getReference('orocrm_dotmailer.address_book.six');
         $secondAddressBookImportStatus = $this->getImportStatus(
             $secondAddressBookId = '451da8d7-70f0-405b-98d4-02faa41d499d',
             AddressBookContactsExport::STATUS_FINISH
         );
-        $syncFinishedStatus = $statusRepository->find(AddressBookContactsExport::STATUS_FINISH);
 
         $expectedAddressBookMap = [
             (int)$firstAddressBook->getOriginId()  => $firstAddressBookImportStatus,
@@ -104,6 +101,11 @@ class ExportContactsTest extends AbstractImportExportTestCase
          */
         $expectedContact = $this->getReference('orocrm_dotmailer.orocrm_contact.allen.case');
         $this->assertContactUpdated($channel, 'allen.case@example.com', $expectedContact, $firstAddressBook);
+
+        $statusClass = ExtendHelper::buildEnumValueClassName('dm_import_status');
+        $statusRepository = $this->managerRegistry->getRepository($statusClass);
+        $syncInProgressStatus = $statusRepository->find(AddressBookContactsExport::STATUS_NOT_FINISHED);
+        $syncFinishedStatus = $statusRepository->find(AddressBookContactsExport::STATUS_FINISH);
 
         $this->assertEquals($syncFinishedStatus, $upToDateAddressBook->getSyncStatus());
         $this->assertAddressBookExportStatus($firstAddressBook, $firstAddressBookId, $syncInProgressStatus);
@@ -196,11 +198,11 @@ class ExportContactsTest extends AbstractImportExportTestCase
         $this->assertEquals($status, $addressBook->getSyncStatus());
     }
 
-    protected function refreshAddressBook(AddressBook $firstAddressBook)
+    protected function refreshAddressBook(AddressBook $addressBook)
     {
         return $this->getContainer()
             ->get('doctrine')
             ->getRepository('OroCRMDotmailerBundle:AddressBook')
-            ->find($firstAddressBook->getId());
+            ->find($addressBook->getId());
     }
 }

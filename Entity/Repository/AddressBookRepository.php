@@ -2,6 +2,7 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Entity\Repository;
 
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
@@ -46,15 +47,33 @@ class AddressBookRepository extends EntityRepository
 
     /**
      * @param Channel $channel
-     *
+     * @param int|null $addressBookId
      * @return AddressBook[]
+     * @throws EntityNotFoundException
      */
-    public function getAddressBooksToSync(Channel $channel)
+    public function getAddressBooksToSync(Channel $channel, $addressBookId = null)
     {
-        return $this->createQueryBuilder('addressBook')
-            ->where('addressBook.channel = :channel AND addressBook.marketingList IS NOT NULL')
-            ->getQuery()
-            ->execute(['channel' => $channel]);
+        $queryBuilder = $this->createQueryBuilder('addressBook')
+            ->where('addressBook.channel = :channel AND addressBook.marketingList IS NOT NULL');
+
+        if ($addressBookId) {
+            $queryBuilder->andWhere('addressBook = :addressBookId')
+                ->setParameter('addressBookId', $addressBookId);
+        }
+
+        $result = $queryBuilder->getQuery()->execute(['channel' => $channel]);
+
+        if ($addressBookId && !$result) {
+            throw new EntityNotFoundException(
+                sprintf(
+                    'Address book for ID %d, integration "%s" and existing marketing list was not found.',
+                    $addressBookId,
+                    $channel->getName()
+                )
+            );
+        }
+
+        return $result;
     }
 
     /**
