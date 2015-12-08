@@ -54,14 +54,15 @@ class AddressBookRepository extends EntityRepository
     public function getAddressBooksToSync(Channel $channel, $addressBookId = null)
     {
         $queryBuilder = $this->createQueryBuilder('addressBook')
-            ->where('addressBook.channel = :channel AND addressBook.marketingList IS NOT NULL');
+            ->where('addressBook.channel = :channel AND addressBook.marketingList IS NOT NULL')
+            ->setParameter('channel', $channel);
 
         if ($addressBookId) {
             $queryBuilder->andWhere('addressBook = :addressBookId')
                 ->setParameter('addressBookId', $addressBookId);
         }
 
-        $result = $queryBuilder->getQuery()->execute(['channel' => $channel]);
+        $result = $queryBuilder->getQuery()->execute();
 
         if ($addressBookId && !$result) {
             throw new EntityNotFoundException(
