@@ -80,6 +80,39 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
             ],
             'reference' => 'orocrm_dotmailer.segment.second',
         ],
+        [
+            'type' => 'dynamic',
+            'name' => 'Test ML Segment 3',
+            'description' => 'description',
+            'entity' => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
+            'owner' => 'orocrm_dotmailer.business_unit.foo',
+            'organization' => 'orocrm_dotmailer.organization.foo',
+            'definition' => [
+                'columns' => [
+                    [
+                        'name' => 'primaryEmail',
+                        'label' => 'Primary Email',
+                        'sorting' => '',
+                        'func' => null,
+                    ],
+                ],
+                'filters' => [
+                    [
+                        'columnName' => 'firstName',
+                        'criterion' =>
+                            [
+                                'filter' => 'string',
+                                'data' =>
+                                    [
+                                        'value' => 'Not Exist',
+                                        'type' => '1',
+                                    ],
+                            ],
+                    ],
+                ],
+            ],
+            'reference' => 'orocrm_dotmailer.segment.empty',
+        ],
     ];
 
     /**

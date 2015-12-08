@@ -8,7 +8,6 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 
 /**
  * @dbIsolation
- * @dbReindex
  */
 class AbstractDotmailerConnectorTest extends WebTestCase
 {
