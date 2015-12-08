@@ -8,7 +8,6 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector;
 
 /**
  * @dbIsolation
- * @dbReindex
  */
 class CampaignSummaryUpdateTest extends AbstractImportExportTestCase
 {
@@ -42,10 +41,15 @@ class CampaignSummaryUpdateTest extends AbstractImportExportTestCase
             ->will($this->returnValue($entity));
         $channel = $this->getReference('orocrm_dotmailer.channel.second');
 
-        $processor = $this->getContainer()->get(self::SYNC_PROCESSOR);
-        $result = $processor->process($channel, CampaignSummaryConnector::TYPE);
-
-        $this->assertTrue($result);
+        $result = $this->runImportExportConnectorsJob(
+            self::SYNC_PROCESSOR,
+            $channel,
+            CampaignSummaryConnector::TYPE,
+            [],
+            $jobLog
+        );
+        $log = $this->formatImportExportJobLog($jobLog);
+        $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $searchCriteria = [
             'numUniqueOpens' => $expected['numUniqueOpens'],
