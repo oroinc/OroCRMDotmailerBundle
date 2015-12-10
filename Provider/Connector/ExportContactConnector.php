@@ -90,7 +90,8 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
      */
     public function isAllowed(Channel $integration, array $processedConnectorsStatuses)
     {
-        return $this->exportManager->isExportFinished($integration);
+        return $this->exportManager->isExportFinished($integration)
+            && $this->exportManager->isExportFaultsProcessed($integration);
     }
 
     /**

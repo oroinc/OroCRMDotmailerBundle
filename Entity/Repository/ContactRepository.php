@@ -28,6 +28,7 @@ class ContactRepository extends EntityRepository
         return $qb
             ->select(
                 [
+                    'addressBookContacts.id as addressBookContactId',
                     'contact.email',
                     'contact.originId',
                     'contact.firstName',

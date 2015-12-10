@@ -17,10 +17,12 @@ use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\ImportExportBundle\Writer\CsvEchoWriter;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+
+use OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactDataConverter;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemovedContactsExportIterator;
-
 use OroCRM\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 
 class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareInterface
@@ -86,18 +88,28 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
         try {
             $manager->beginTransaction();
             $addressBookItems = [];
+            $addressBookContactIds = [];
+
             foreach ($items as $item) {
                 $addressBookOriginId = $item[RemovedContactsExportIterator::ADDRESS_BOOK_KEY];
                 if (!isset($addressBookItems[$addressBookOriginId])) {
                     $addressBookItems[$addressBookOriginId] = [];
                 }
+                $addressBookContactIds[$addressBookOriginId][] = $item[ContactDataConverter::ADDRESS_BOOK_CONTACT_ID];
+
+                unset($item[ContactDataConverter::ADDRESS_BOOK_CONTACT_ID]);
                 unset($item[RemovedContactsExportIterator::ADDRESS_BOOK_KEY]);
+
                 $addressBookItems[$addressBookOriginId][] = $item;
 
                 $this->context->incrementReplaceCount();
             }
             foreach ($addressBookItems as $addressBookOriginId => $items) {
-                $this->updateAddressBookContacts($items, $manager, $addressBookOriginId);
+                $this->updateAddressBookContacts(
+                    $items,
+                    $addressBookContactIds[$addressBookOriginId],
+                    $addressBookOriginId
+                );
             }
 
             $manager->flush();
@@ -115,11 +127,13 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
 
     /**
      * @param array         $items
-     * @param EntityManager $manager
+     * @param array         $addressBookContactIds
      * @param int           $addressBookOriginId
      */
-    protected function updateAddressBookContacts(array $items, EntityManager $manager, $addressBookOriginId)
+    protected function updateAddressBookContacts(array $items, array $addressBookContactIds, $addressBookOriginId)
     {
+        $manager = $this->registry->getManager();
+
         ob_start();
         parent::write($items);
         $csv = ob_get_contents();
@@ -151,10 +165,13 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
         $exportEntity->setAddressBook($addressBook);
 
         $className = ExtendHelper::buildEnumValueClassName('dm_import_status');
-        $status = (string)$importStatus->status;
-        $status = $manager->find($className, $status);
+        /** @var AbstractEnumValue $status */
+        $status = $manager->find($className, (string)$importStatus->status);
         $exportEntity->setStatus($status);
         $exportEntity->setChannel($channel);
+
+        $manager->getRepository('OroCRMDotmailerBundle:AddressBookContact')
+            ->bulkUpdateAddressBookContactsExportId($addressBookContactIds, $importId);
 
         $manager->persist($exportEntity);
 

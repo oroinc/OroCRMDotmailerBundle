@@ -24,7 +24,7 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
      */
     public function getMigrationVersion()
     {
-        return 'v1_0_1';
+        return 'v1_2';
     }
 
     /**
@@ -42,6 +42,10 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
 
         $activityIndexes = new AddActivityIndexes();
         $activityIndexes->up($schema, $queries);
+
+        $migration = new v1_2\OroCRMDotmailerBundle();
+        $migration->setExtendExtension($this->extendExtension);
+        $migration->up($schema, $queries);
     }
 
 

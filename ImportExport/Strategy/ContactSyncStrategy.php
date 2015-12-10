@@ -59,6 +59,17 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
 
                 $entity->addAddressBookContact($addressBookContact);
             }
+
+            if ($entity->getOriginId()) {
+                $operationTypeId = $addressBookContact->getId()
+                    ? AddressBookContact::EXPORT_UPDATE_CONTACT
+                    : AddressBookContact::EXPORT_ADD_TO_ADDRESS_BOOK;
+                $this->updateOperationType($operationTypeId, $addressBookContact);
+            } else {
+                $this->updateOperationType(AddressBookContact::EXPORT_NEW_CONTACT, $addressBookContact);
+            }
+
+
             $addressBookContact->setMarketingListItemId(
                 $this->getMarketingListItemId()
             );
@@ -160,5 +171,15 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
         }
 
         return !in_array($fieldName, $this->allowedFields[$marketingListEntityName]);
+    }
+
+    /**
+     * @param string             $operationTypeId
+     * @param AddressBookContact $addressBookContact
+     */
+    protected function updateOperationType($operationTypeId, AddressBookContact $addressBookContact)
+    {
+        $operationType = $this->getEnumValue('dm_ab_cnt_exp_type', $operationTypeId);
+        $addressBookContact->setExportOperationType($operationType);
     }
 }
