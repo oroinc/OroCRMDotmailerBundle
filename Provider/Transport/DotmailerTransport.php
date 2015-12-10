@@ -59,12 +59,14 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     protected $encryptor;
 
     /**
-     * @param DotmailerResourcesFactory $dotMailerResFactory
-     * @param Mcrypt $encoder
+     * @param DotmailerResourcesFactory $dotmailerResourcesFactory
+     * @param Mcrypt                    $encoder
      */
-    public function __construct(DotmailerResourcesFactory $dotMailerResFactory, Mcrypt $encoder)
-    {
-        $this->dotMailerResFactory = $dotMailerResFactory;
+    public function __construct(
+        DotmailerResourcesFactory $dotmailerResourcesFactory,
+        Mcrypt $encoder
+    ) {
+        $this->dotMailerResFactory = $dotmailerResourcesFactory;
         $this->encoder = $encoder;
     }
 

@@ -54,6 +54,7 @@ parameters:
     orocrm_dotmailer.importexport.reader.scheduled_for_export.class:                OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\ScheduledForExportContactReader
     orocrm_dotmailer.importexport.reader.address_book.remove.class:                 OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\RemoveAddressBookReader
     orocrm_dotmailer.importexport.reader.campaign.remove.class:                     OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\RemoveCampaignReader
+    orocrm_dotmailer.importexport.reader.export.rejected_contact.class:             OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\RejectedContactExportReader
 
     #connectors
     orocrm_dotmailer.connector.abstract.class:                            OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector
@@ -85,6 +86,7 @@ parameters:
     orocrm_dotmailer.importexport.processor.contact_sync.class:               OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\ContactSyncProcessor
     orocrm_dotmailer.importexport.processor.export_removed.class:             OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\RemovedExportProcessor
     orocrm_dotmailer.importexport.processor.export_contact.class:             OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\ExportContactProcessor
+    orocrm_dotmailer.importexport.processor.export.rejected_contact.class:    OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\RejectedContactExportProcessor
 
     #writers
     orocrm_dotmailer.importexport.writer.import.class:                      OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\ImportWriter
@@ -94,6 +96,7 @@ parameters:
     orocrm_dotmailer.importexport.writer.import.removed_contact.class:      OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\RemoveCampaignWriter
     orocrm_dotmailer.importexport.writer.export.contacts.class:             OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\ContactsExportWriter
     orocrm_dotmailer.importexport.writer.export.removed_contacts.class:     OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\RemovedContactsExportWriter
+    orocrm_dotmailer.importexport.writer.export.rejected_contact.class:    OroCRM\Bundle\DotmailerBundle\ImportExport\Writer\RejectedContactExportWriter
 
     #serializer
     orocrm_dotmailer.importexport.normalizer.enum.class:              OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer\EnumNormalizer
@@ -295,6 +298,10 @@ services:
     orocrm_dotmailer.importexport.reader.campaign.remove:
         parent: orocrm_dotmailer.importexport.reader.abstract
         class: %orocrm_dotmailer.importexport.reader.campaign.remove.class%
+
+    orocrm_dotmailer.importexport.reader.export.rejected_contact:
+        parent: orocrm_dotmailer.importexport.reader.abstract
+        class: %orocrm_dotmailer.importexport.reader.export.rejected_contact.class%
 
     orocrm_dotmailer.importexport.reader.removed_contact_export:
         class: %orocrm_dotmailer.importexport.reader.removed_contact_export.class%
@@ -562,6 +569,13 @@ services:
             - [setContextRegistry, [@oro_importexport.context_registry]]
             - [setEntityName, [%orocrm_dotmailer.entity.contact.class%]]
 
+    orocrm_dotmailer.importexport.processor.export.rejected_contact:
+        class: %orocrm_dotmailer.importexport.processor.export.rejected_contact.class%
+        arguments:
+            - @oro_importexport.context_registry
+            - @oro_integration.logger.strategy
+            - @doctrine
+
     #serializer
     orocrm_dotmailer.importexport.normalizer.enum:
         class: %orocrm_dotmailer.importexport.normalizer.enum.class%
@@ -679,6 +693,14 @@ services:
         arguments:
             - @doctrine
             - @orocrm_dotmailer.transport.integration_transport
+            - @oro_importexport.context_registry
+            - @oro_integration.logger.strategy
+            - @orocrm_dotmailer.log_helper
+
+    orocrm_dotmailer.importexport.writer.export.rejected_contact:
+        class: %orocrm_dotmailer.importexport.writer.export.rejected_contact.class%
+        arguments:
+            - @doctrine
             - @oro_importexport.context_registry
             - @oro_integration.logger.strategy
             - @orocrm_dotmailer.log_helper

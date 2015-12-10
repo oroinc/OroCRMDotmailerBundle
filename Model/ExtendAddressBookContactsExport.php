@@ -5,8 +5,8 @@ namespace OroCRM\Bundle\DotmailerBundle\Model;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 
 /**
- * @method AbstractEnumValue getStatus()                                  Get enum status object
- * @method ExtendContact     setStatus(AbstractEnumValue $enumValue)      Set enum status object
+ * @method AbstractEnumValue getStatus()
+ * @method ExtendAddressBookContactsExport setStatus(AbstractEnumValue $enumValue)
  */
 class ExtendAddressBookContactsExport
 {

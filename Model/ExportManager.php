@@ -72,6 +72,18 @@ class ExportManager
      *
      * @return bool
      */
+    public function isExportFaultsProcessed(Channel $channel)
+    {
+        return $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+            ->isExportFaultsProcessed($channel);
+    }
+
+    /**
+     * @param Channel $channel
+     *
+     * @return bool
+     */
     public function updateExportResults(Channel $channel)
     {
         $addressBookContactsExportRepository = $this->managerRegistry
@@ -98,17 +110,27 @@ class ExportManager
         }
 
         if ($isExportFinished) {
-            $jobResult = $this->startUpdateSkippedContactsStatusJob($channel);
-            if (!$jobResult) {
-                throw new RuntimeException('Update skipped contacts failed.');
-            }
-
-            $this->updateAddressBooksSyncStatus($channel);
+            $this->processExportFaults($channel);
+        } else {
+            $this->managerRegistry->getManager()->flush();
         }
 
-        $this->managerRegistry->getManager()->flush();
-
         return $isExportFinished;
+    }
+
+    /**
+     * @param Channel $channel
+     */
+    public function processExportFaults(Channel $channel)
+    {
+        $jobResult = $this->startUpdateSkippedContactsStatusJob($channel);
+        if (!$jobResult) {
+            throw new RuntimeException('Update skipped contacts failed.');
+        }
+
+        $this->updateAddressBooksSyncStatus($channel);
+
+        $this->managerRegistry->getManager()->flush();
     }
 
     /**

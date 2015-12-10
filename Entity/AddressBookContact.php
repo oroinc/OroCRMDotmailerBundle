@@ -9,17 +9,24 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBookContact;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="OroCRM\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactRepository")
  * @ORM\Table(
  *      name="orocrm_dm_ab_contact",
  *      uniqueConstraints={
  *          @ORM\UniqueConstraint(name="orocrm_dm_ab_cnt_unq", columns={"address_book_id", "contact_id"})
+ *     },
+ *     indexes={
+ *          @ORM\Index(name="orocrm_dm_ab_cnt_export_id_idx", columns={"export_id"}),
  *     }
  * )
  * @Config()
  */
 class AddressBookContact extends ExtendAddressBookContact implements ChannelAwareInterface
 {
+    const EXPORT_NEW_CONTACT = 'export_new_contact';
+    const EXPORT_ADD_TO_ADDRESS_BOOK = 'export_add_to_address_book';
+    const EXPORT_UPDATE_CONTACT = 'export_update_contact';
+
     /**
      * @var int
      *
@@ -80,6 +87,13 @@ class AddressBookContact extends ExtendAddressBookContact implements ChannelAwar
      * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $channel;
+
+    /**
+     * @var string Dotmailer import Id
+     *
+     * @ORM\Column(name="export_id", type="string", length=100, nullable=true)
+     */
+    protected $exportId;
 
     /**
      * @return int
@@ -225,6 +239,26 @@ class AddressBookContact extends ExtendAddressBookContact implements ChannelAwar
     public function setChannel(Channel $channel = null)
     {
         $this->channel = $channel;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExportId()
+    {
+        return $this->exportId;
+    }
+
+    /**
+     * @param string $exportId
+     *
+     * @return AddressBookContact
+     */
+    public function setExportId($exportId)
+    {
+        $this->exportId = $exportId;
 
         return $this;
     }
