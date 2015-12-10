@@ -254,7 +254,6 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
      */
     protected $campaignSummary;
 
-
     /**
      * @var bool
      *

@@ -114,13 +114,26 @@ connector:
             title: import
             type: import
             steps:
-                import:
+                importRejectedExports:
                     title: import
-                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    class: OroCRM\Bundle\DotmailerBundle\Step\ImportRejectedExportsStep
                     services:
-                        reader:    orocrm_dotmailer.importexport.reader.not_exported_contact
-                        processor: orocrm_dotmailer.importexport.processor.not_exported_contact
-                        writer:    orocrm_dotmailer.importexport.writer.import
+                        reader:           orocrm_dotmailer.importexport.reader.export.rejected_contact
+                        processor:        orocrm_dotmailer.importexport.processor.export.rejected_contact
+                        writer:           orocrm_dotmailer.importexport.writer.export.rejected_contact
+                        contextRegistry:  oro_importexport.context_registry
+                        registry:         doctrine
+                    parameters:
+                        batch_size: 1000
+                importExportErrorReports:
+                    title: import
+                    class: OroCRM\Bundle\DotmailerBundle\Step\ImportExportErrorReportsStep
+                    services:
+                        reader:           orocrm_dotmailer.importexport.reader.not_exported_contact
+                        processor:        orocrm_dotmailer.importexport.processor.not_exported_contact
+                        writer:           orocrm_dotmailer.importexport.writer.import
+                        contextRegistry:  oro_importexport.context_registry
+                        registry:         doctrine
                     parameters:
                         batch_size: 100
 
