@@ -127,7 +127,7 @@ parameters:
     #listeners
     orocrm_dotmailer.listener.datagrid.marketing_list_item.class:     OroCRM\Bundle\DotmailerBundle\EventListener\Datagrid\MarketingListItemGridListener
     orocrm_dotmailer.listener.cache_clear.class:                      OroCRM\Bundle\DotmailerBundle\EventListener\CacheClearListener
-    orocrm_dotmailer.listener.update_address_book_sync_status.class:  OroCRM\Bundle\DotmailerBundle\EventListener\UpdateAddressBookSyncStatusListener
+    orocrm_dotmailer.listener.contact_export.class:                   OroCRM\Bundle\DotmailerBundle\EventListener\ContactExportListener
 
     orocrm_dotmailer.transport.dotmailer.class: OroCRM\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport
 services:
@@ -638,6 +638,15 @@ services:
         tags:
             - { name: oro_workflow.action, alias: dm_create_marketing_list_unsubscribed_item }
 
+    orocrm_dotmailer.workflow.action.create_marketing_list_removed_item:
+        class: %orocrm_dotmailer.workflow.action.create_marketing_list_state_item.class%
+        parent: orocrm_dotmailer.workflow.action.abstract_marketing_list_entities
+        calls:
+            - [setMarketingListStateItemClassName, [%orocrm_marketing_list.removed_item.class%]]
+            - [setDoctrineHelper, [@oro_entity.doctrine_helper]]
+        tags:
+            - { name: oro_workflow.action, alias: dm_create_marketing_list_removed_item }
+
     orocrm_dotmailer.workflow.action.remove_marketing_list_unsubscribed_item:
         class: %orocrm_dotmailer.workflow.action.remove_marketing_list_state_item.class%
         parent: orocrm_dotmailer.workflow.action.abstract_marketing_list_entities
@@ -754,8 +763,8 @@ services:
         tags:
             - { name: doctrine.event_subscriber }
 
-    orocrm_dotmailer.listener.update_address_book_sync_status:
-        class: %orocrm_dotmailer.listener.update_address_book_sync_status.class%
+    orocrm_dotmailer.listener.contact_export:
+        class: %orocrm_dotmailer.listener.contact_export.class%
         arguments:
             - @doctrine
             - @orocrm_dotmailer.export_manager
