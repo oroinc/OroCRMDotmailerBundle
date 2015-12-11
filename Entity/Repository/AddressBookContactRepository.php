@@ -39,10 +39,10 @@ class AddressBookContactRepository extends EntityRepository
      */
     public function bulkUpdateAddressBookContactsExportId(array $contactIds, $exportId)
     {
-        $qb = $this->createQueryBuilder('contact');
+        $qb = $this->createQueryBuilder('address_book_contact');
         $qb->update()
-            ->where($qb->expr()->in('contact.id', $contactIds))
-            ->set('contact.exportId', ':exportId')
+            ->where($qb->expr()->in('address_book_contact.id', $contactIds))
+            ->set('address_book_contact.exportId', ':exportId')
             ->setParameter('exportId', $exportId)
             ->getQuery()
             ->execute();

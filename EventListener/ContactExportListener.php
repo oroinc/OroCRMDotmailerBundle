@@ -18,7 +18,7 @@ use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Event\SyncEvent;
 
-class UpdateAddressBookSyncStatusListener implements EventSubscriberInterface
+class ContactExportListener implements EventSubscriberInterface
 {
     /**
      * @var ManagerRegistry
@@ -86,6 +86,12 @@ class UpdateAddressBookSyncStatusListener implements EventSubscriberInterface
         $configuration = $syncEvent->getConfiguration();
         $channel= $this->getChannel($configuration);
         $this->exportManager->updateAddressBooksSyncStatus($channel);
+
+        /**
+         * Remove contact drafts which was not fully exported to Dotmailer
+         */
+        $this->registry->getRepository('OroCRMDotmailerBundle:Contact')
+            ->bulkRemoveNotExportedContacts($channel);
     }
 
     /**
