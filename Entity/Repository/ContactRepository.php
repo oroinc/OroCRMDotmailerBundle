@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
@@ -106,5 +107,18 @@ class ContactRepository extends EntityRepository
         }
 
         return $map;
+    }
+
+    /**
+     * @param Channel $channel
+     */
+    public function bulkRemoveNotExportedContacts(Channel $channel)
+    {
+        $qb = $this->createQueryBuilder('contact');
+        $qb->delete()
+            ->where('contact.channel = :channel')
+            ->andWhere('contact.originId IS NULL')
+            ->getQuery()
+            ->execute(['channel' => $channel]);
     }
 }
