@@ -21,7 +21,7 @@ class NotExportedContactReader extends AbstractReader
 
         $addressBookExports = [];
 
-        $exportEntities = $this->registry
+        $exportEntities = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
             ->getNotRejectedExports($channel);
         foreach ($exportEntities as $exportEntity) {

@@ -102,10 +102,10 @@ class ExportManager
             }
         }
 
+        $this->managerRegistry->getManager()->flush();
+
         if ($isExportFinished) {
             $this->processExportFaults($channel);
-        } else {
-            $this->managerRegistry->getManager()->flush();
         }
 
         return $isExportFinished;

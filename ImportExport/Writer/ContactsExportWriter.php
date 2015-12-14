@@ -57,6 +57,12 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
      */
     protected $logHelper;
 
+
+    /**
+     * @var ContextRegistry
+     */
+    protected $contextRegistry;
+
     /**
      * @param ManagerRegistry       $registry
      * @param DotmailerTransport    $transport
