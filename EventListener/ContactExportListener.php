@@ -14,7 +14,6 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 use OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
-use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Event\SyncEvent;
 
@@ -64,6 +63,12 @@ class ContactExportListener implements EventSubscriberInterface
 
         $channel = $this->getChannel($configuration);
 
+        /**
+         * Remove contact drafts which was not fully exported to Dotmailer
+         */
+        $this->registry->getRepository('OroCRMDotmailerBundle:Contact')
+            ->bulkRemoveNotExportedContacts($channel);
+
         /** @var AbstractEnumValue $inProgressStatus */
         $inProgressStatus = $this->registry
             ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
@@ -86,12 +91,6 @@ class ContactExportListener implements EventSubscriberInterface
         $configuration = $syncEvent->getConfiguration();
         $channel= $this->getChannel($configuration);
         $this->exportManager->updateAddressBooksSyncStatus($channel);
-
-        /**
-         * Remove contact drafts which was not fully exported to Dotmailer
-         */
-        $this->registry->getRepository('OroCRMDotmailerBundle:Contact')
-            ->bulkRemoveNotExportedContacts($channel);
     }
 
     /**
