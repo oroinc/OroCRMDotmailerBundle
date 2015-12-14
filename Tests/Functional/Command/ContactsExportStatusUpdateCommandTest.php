@@ -2,7 +2,6 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Command;
 
-use Oro\Bundle\IntegrationBundle\Provider\ReverseSyncProcessor;
 use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 
@@ -22,11 +21,6 @@ class ContactsExportStatusUpdateCommandTest extends WebTestCase
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $exportManagerMock;
-
-    /**
-     * @var ReverseSyncProcessor
-     */
-    protected $syncProcessor;
 
     protected function setUp()
     {
@@ -61,14 +55,13 @@ class ContactsExportStatusUpdateCommandTest extends WebTestCase
         parent::tearDown();
     }
 
-    /**
-     * Test execute started jos with correct parameters, call Export Manager before start new export
-     * and remove old export status records before start new one
-     */
     public function testExecute()
     {
-        $expectedChannel = $this->getReference('orocrm_dotmailer.channel.third');
-        $secondExpectedChannel = $this->getReference('orocrm_dotmailer.channel.fourth');
+        $notExportedChannel = $this->getReference('orocrm_dotmailer.channel.third');
+        $secondNotExportedChannel = $this->getReference('orocrm_dotmailer.channel.fourth');
+
+        $exportedChannel = $this->getReference('orocrm_dotmailer.channel.first');
+        $secondExportedChannel = $this->getReference('orocrm_dotmailer.channel.second');
 
         $this->exportManagerMock
             ->expects($this->any())
@@ -76,10 +69,10 @@ class ContactsExportStatusUpdateCommandTest extends WebTestCase
             ->will(
                 $this->returnValueMap(
                     [
-                        [$this->getReference('orocrm_dotmailer.channel.first'), true],
-                        [$this->getReference('orocrm_dotmailer.channel.second'), true],
-                        [$expectedChannel, false],
-                        [$secondExpectedChannel, false],
+                        [$exportedChannel, true],
+                        [$secondExportedChannel, true],
+                        [$notExportedChannel, false],
+                        [$secondNotExportedChannel, false],
                     ]
                 )
             );
@@ -87,7 +80,12 @@ class ContactsExportStatusUpdateCommandTest extends WebTestCase
         $this->exportManagerMock
             ->expects($this->exactly(2))
             ->method('updateExportResults')
-            ->withConsecutive([$expectedChannel], [$secondExpectedChannel]);
+            ->withConsecutive([$notExportedChannel], [$secondNotExportedChannel]);
+
+        $this->exportManagerMock
+            ->expects($this->exactly(2))
+            ->method('processExportFaults')
+            ->withConsecutive([$exportedChannel], [$secondExportedChannel]);
 
         $this->runCommand(ContactsExportStatusUpdateCommand::NAME, ['--verbose' => true]);
     }

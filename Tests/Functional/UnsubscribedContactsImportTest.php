@@ -115,7 +115,10 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
                         'originId'               => 42,
                         'channel'                => 'orocrm_dotmailer.channel.third',
                         'status'                 => ApiContactStatuses::SUBSCRIBED,
-                        'subscribedAddressBooks' => ['orocrm_dotmailer.address_book.fourth'],
+                        'subscribedAddressBooks' => [
+                            'orocrm_dotmailer.address_book.fourth',
+                            'orocrm_dotmailer.address_book.six'
+                        ],
                         'unsubscribedDate'       => [
                             'orocrm_dotmailer.address_book.third' => new \DateTime(
                                 '2015-10-10',
