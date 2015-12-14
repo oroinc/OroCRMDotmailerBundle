@@ -18,13 +18,13 @@ class RejectedContactExportReader extends AbstractReader
             throw new RuntimeException("Channel $channelId not exist");
         }
 
-        $imports = $this->registry
+        $imports = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
             ->getRejectedExportImportIds($channel);
 
         $iterator = new AppendIterator();
         foreach ($imports as $import) {
-            $exportContactsIterator = new RejectedContactExportIterator($this->registry, $import['importId']);
+            $exportContactsIterator = new RejectedContactExportIterator($this->managerRegistry, $import['importId']);
             $iterator->append($exportContactsIterator);
         }
 
