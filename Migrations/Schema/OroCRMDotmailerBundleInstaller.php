@@ -8,7 +8,6 @@ use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtension;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareInterface;
 use Oro\Bundle\MigrationBundle\Migration\Installation;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
-
 use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0;
 use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0_1\AddActivityIndexes;
 
@@ -24,7 +23,7 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
      */
     public function getMigrationVersion()
     {
-        return 'v1_2';
+        return 'v1_0_2';
     }
 
     /**
@@ -43,7 +42,7 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
         $activityIndexes = new AddActivityIndexes();
         $activityIndexes->up($schema, $queries);
 
-        $migration = new v1_2\OroCRMDotmailerBundle();
+        $migration = new v1_0_2\OroCRMDotmailerBundle();
         $migration->setExtendExtension($this->extendExtension);
         $migration->up($schema, $queries);
     }
