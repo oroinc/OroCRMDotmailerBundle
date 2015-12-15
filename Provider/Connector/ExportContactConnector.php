@@ -6,7 +6,7 @@ use Guzzle\Iterator\AppendIterator;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Provider\AllowedConnectorInterface;
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
 use OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
@@ -35,21 +35,7 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
         $this->logger->info('Preparing Contacts for Export');
 
         $iterator = new AppendIterator();
-        $addressBookId = $this->getContext()->getOption(AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION);
-
-        if ($addressBookId) {
-            $addressBook = $this->managerRegistry
-                ->getRepository('OroCRMDotmailerBundle:AddressBook')
-                ->find($addressBookId);
-            if (!$addressBook) {
-                throw new RuntimeException("Address book '{$addressBookId}' not found");
-            }
-
-            $addressBooks = [$addressBook];
-        } else {
-            $addressBooks = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBook')
-                ->getAddressBooksToSync($this->getChannel());
-        }
+        $addressBooks = $this->getAddressBooksToSync();
 
         foreach ($addressBooks as $addressBook) {
             $marketingListItemIterator = new MarketingListItemIterator(
@@ -61,6 +47,18 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
         }
 
         return $iterator;
+    }
+
+    /**
+     * @return AddressBook[]
+     */
+    protected function getAddressBooksToSync()
+    {
+        $addressBookId = $this->getContext()->getOption(AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION);
+
+        return $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->getAddressBooksToSync($this->getChannel(), $addressBookId);
     }
 
     /**

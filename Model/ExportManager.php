@@ -5,7 +5,6 @@ namespace OroCRM\Bundle\DotmailerBundle\Model;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
-use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\ImportExportBundle\Job\JobResult;
 use Oro\Bundle\ImportExportBundle\Processor\ProcessorRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
@@ -86,27 +85,21 @@ class ExportManager
      */
     public function updateExportResults(Channel $channel)
     {
-        $addressBookContactsExportRepository = $this->managerRegistry
+        $exportRepository = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport');
 
-        $className = ExtendHelper::buildEnumValueClassName('dm_import_status');
-        $statusRepository = $this->managerRegistry
-            ->getRepository($className);
         $this->dotmailerTransport->init($channel->getTransport());
 
         $isExportFinished = true;
 
-        $importStatuses = $addressBookContactsExportRepository->getNotFinishedExports($channel);
-        foreach ($importStatuses as $importStatus) {
-            $apiImportStatus = $this->dotmailerTransport->getImportStatus($importStatus->getImportId());
-            /** @var AbstractEnumValue|null $status */
-            if (!$status = $statusRepository->find($apiImportStatus->status)) {
-                throw new RuntimeException('Status is not exist');
-            }
-            if ($apiImportStatus->status == AddressBookContactsExport::STATUS_NOT_FINISHED) {
+        foreach ($exportRepository->getNotFinishedExports($channel) as $export) {
+            $dotmailerStatus = $this->dotmailerTransport->getImportStatus($export->getImportId());
+            $exportStatus = $exportRepository->getStatus($dotmailerStatus->status);
+
+            $export->setStatus($exportStatus);
+            if ($exportRepository->isNotFinishedStatus($exportStatus)) {
                 $isExportFinished = false;
             }
-            $importStatus->setStatus($status);
         }
 
         if ($isExportFinished) {
@@ -138,64 +131,53 @@ class ExportManager
      */
     public function updateAddressBooksSyncStatus(Channel $channel)
     {
-        $statusRepository = $this->managerRegistry
-            ->getRepository(ExtendHelper::buildEnumValueClassName('dm_import_status'));
-        $addressBookContactsExportRepository = $this->managerRegistry
+        $exportRepository = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport');
-
-        /** @var AbstractEnumValue $finishStatus */
-        $finishStatus = $statusRepository->find(AddressBookContactsExport::STATUS_FINISH);
-        /** @var AbstractEnumValue $inProgressStatus */
-        $inProgressStatus = $statusRepository->find(AddressBookContactsExport::STATUS_NOT_FINISHED);
 
         $addressBooks = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBook')
             ->findBy(['channel' => $channel]);
+
+        $lastFinishedStatus = null;
         foreach ($addressBooks as $addressBook) {
-            $exports = $addressBookContactsExportRepository->getExportResults($addressBook);
+            $addressBookExports = $exportRepository->getExportsByAddressBook($addressBook);
 
             $isExportFinished = true;
-            foreach ($exports as $export) {
-                if ($export->getStatus() != AddressBookContactsExport::STATUS_FINISH) {
-                    $isExportFinished = false;
+            $lastErrorStatus = null;
+            foreach ($addressBookExports as $addressBookExport) {
+                $status = $addressBookExport->getStatus();
+
+                if ($exportRepository->isErrorStatus($status) && !$lastErrorStatus) {
+                    $lastErrorStatus = $status;
                 }
+
+                $isExportFinished = $isExportFinished && $exportRepository->isFinishedStatus($status);
             }
+
             if ($isExportFinished) {
-                $this->updateAddressBookSyncStatus($addressBook, $finishStatus);
+                $this->updateAddressBookSyncStatus($addressBook, $exportRepository->getFinishedStatus(), true);
+            } elseif ($lastErrorStatus) {
+                $this->updateAddressBookSyncStatus($addressBook, $lastErrorStatus, true);
             } else {
-                if ($failedExport = $this->getLastFailedExport($exports)) {
-                    $this->updateAddressBookSyncStatus($addressBook, $failedExport->getStatus());
-                } else {
-                    $addressBook->setSyncStatus($inProgressStatus);
-                }
+                $this->updateAddressBookSyncStatus($addressBook, $exportRepository->getNotFinishedStatus(), false);
             }
         }
-    }
-
-    /**
-     * @param AddressBookContactsExport[] $exports
-     *
-     * @return AddressBookContactsExport|null
-     */
-    protected function getLastFailedExport(array $exports)
-    {
-        foreach ($exports as $export) {
-            if ($export->getStatus() != AddressBookContactsExport::STATUS_NOT_FINISHED) {
-                return $export;
-            }
-        }
-
-        return null;
     }
 
     /**
      * @param AddressBook       $addressBook
      * @param AbstractEnumValue $status
+     * @param bool              $updateLastSyncedDate
      */
-    protected function updateAddressBookSyncStatus(AddressBook $addressBook, AbstractEnumValue $status)
-    {
+    protected function updateAddressBookSyncStatus(
+        AddressBook $addressBook,
+        AbstractEnumValue $status,
+        $updateLastSyncedDate
+    ) {
         $addressBook->setSyncStatus($status);
-        $addressBook->setLastSynced(new \DateTime('now', new \DateTimeZone('UTC')));
+        if ($updateLastSyncedDate) {
+            $addressBook->setLastSynced(new \DateTime('now', new \DateTimeZone('UTC')));
+        }
     }
 
     /**
