@@ -15,7 +15,7 @@ class AddressBookContactRepository extends EntityRepository
      *
      * @return AddressBookContact[]
      */
-    public function getAddressBookContactByExportId($exportId, $take, $skip)
+    public function getAddressBookContactsByExportId($exportId, $take, $skip)
     {
         $qb = $this->createQueryBuilder('address_book_contact');
 

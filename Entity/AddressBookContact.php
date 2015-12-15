@@ -91,7 +91,7 @@ class AddressBookContact extends ExtendAddressBookContact implements ChannelAwar
     /**
      * @var string Dotmailer import Id
      *
-     * @ORM\Column(name="export_id", type="string", length=100, nullable=true)
+     * @ORM\Column(name="export_id", type="string", length=36, nullable=true)
      */
     protected $exportId;
 

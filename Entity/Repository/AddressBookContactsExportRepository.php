@@ -17,7 +17,7 @@ class AddressBookContactsExportRepository extends EntityRepository
     protected $rejectedExportStatuses = [
         AddressBookContactsExport::STATUS_REJECTED_BY_WATCHDOG,
         AddressBookContactsExport::STATUS_NOT_AVAILABLE_IN_THIS_VERSION,
-        AddressBookContactsExport::STATUS_EXCEEDS_ALLOWED_CONTACT_LIMIT,
+        AddressBookContactsExport::STATUS_INVALID_FILE_FORMAT,
     ];
 
     /**
@@ -116,9 +116,11 @@ class AddressBookContactsExportRepository extends EntityRepository
         $result = $statusRepository->find($statusCode);
 
         if (!$result) {
-            throw EntityNotFoundException::fromClassNameAndIdentifier(
-                $statusClassName,
-                $statusCode
+            throw new EntityNotFoundException(
+                sprintf(
+                    'Dotmailer import status "%s" was not found.',
+                    $statusCode
+                )
             );
         }
 
@@ -142,7 +144,7 @@ class AddressBookContactsExportRepository extends EntityRepository
     }
 
     /**
-     * @return AbstractEnumValue
+     * @param AbstractEnumValue $status
      * @return bool
      */
     public function isFinishedStatus(AbstractEnumValue $status)
@@ -151,7 +153,7 @@ class AddressBookContactsExportRepository extends EntityRepository
     }
 
     /**
-     * @return AbstractEnumValue
+     * @param AbstractEnumValue $status
      * @return bool
      */
     public function isNotFinishedStatus(AbstractEnumValue $status)
@@ -160,6 +162,7 @@ class AddressBookContactsExportRepository extends EntityRepository
     }
 
     /**
+     * @param AbstractEnumValue $status
      * @return bool
      */
     public function isErrorStatus(AbstractEnumValue $status)
