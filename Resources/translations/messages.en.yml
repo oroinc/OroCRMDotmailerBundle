@@ -180,7 +180,6 @@ orocrm:
             scheduled_for_export.label:       Scheduled for Export
             export_id.label:                  Dotmailer Export Id
             export_operation_type.label:      Export Operation Type
-            faults_processed.label:           Faults Processed
 
         addressbookcontactsexport:
             entity_label:                     Address Book Contact Export
@@ -192,6 +191,7 @@ orocrm:
             status.label:                     Status
             updated_at.label:                 Updated At
             channel.label:                    Integration
+            faults_processed.label:           Faults Processed
 
         connector:
             campaign:
