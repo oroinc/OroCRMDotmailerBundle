@@ -178,6 +178,9 @@ orocrm:
             marketing_list_item_class.label:  Marketing List Item Class Name
             marketing_list_item_id.label:     Marketing List Item Id
             scheduled_for_export.label:       Scheduled for Export
+            export_id.label:                  Dotmailer Export Id
+            export_operation_type.label:      Export Operation Type
+            faults_processed.label:           Faults Processed
 
         addressbookcontactsexport:
             entity_label:                     Address Book Contact Export
