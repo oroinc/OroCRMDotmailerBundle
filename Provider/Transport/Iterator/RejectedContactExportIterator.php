@@ -33,7 +33,7 @@ class RejectedContactExportIterator extends AbstractIterator
     {
         $items = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBookContact')
-            ->getAddressBookContactByExportId($this->exportId, $take, $skip);
+            ->getAddressBookContactsByExportId($this->exportId, $take, $skip);
 
         return $items;
     }

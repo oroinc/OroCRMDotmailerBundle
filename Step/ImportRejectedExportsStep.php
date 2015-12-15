@@ -9,6 +9,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Oro\Bundle\BatchBundle\Step\ItemStep;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 
 class ImportRejectedExportsStep extends ItemStep
 {
@@ -30,6 +31,10 @@ class ImportRejectedExportsStep extends ItemStep
         parent::doExecute($stepExecution);
 
         $channel = $this->getChannel($stepExecution);
+        if (!$channel) {
+            throw new RuntimeException('Channel not found');
+        }
+
         $this->registry
             ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
             ->setRejectedExportFaultsProcessed($channel);

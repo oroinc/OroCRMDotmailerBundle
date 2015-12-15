@@ -17,7 +17,7 @@ class AddressBookContactsExportRepository extends EntityRepository
     protected $rejectedExportStatuses = [
         AddressBookContactsExport::STATUS_REJECTED_BY_WATCHDOG,
         AddressBookContactsExport::STATUS_NOT_AVAILABLE_IN_THIS_VERSION,
-        AddressBookContactsExport::STATUS_EXCEEDS_ALLOWED_CONTACT_LIMIT,
+        AddressBookContactsExport::STATUS_INVALID_FILE_FORMAT,
     ];
 
     /**
@@ -101,6 +101,78 @@ class AddressBookContactsExportRepository extends EntityRepository
     }
 
     /**
+     * Get Dotmailer status object (enum "dm_import_status").
+     *
+     * @param string $statusCode
+     * @return AbstractEnumValue
+     * @throws EntityNotFoundException
+     */
+    public function getStatus($statusCode)
+    {
+        $statusClassName = ExtendHelper::buildEnumValueClassName('dm_import_status');
+        $statusRepository = $this->getEntityManager()->getRepository($statusClassName);
+
+        /** @var AbstractEnumValue|null $result */
+        $result = $statusRepository->find($statusCode);
+
+        if (!$result) {
+            throw new EntityNotFoundException(
+                sprintf(
+                    'Dotmailer import status "%s" was not found.',
+                    $statusCode
+                )
+            );
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return AbstractEnumValue
+     */
+    public function getFinishedStatus()
+    {
+        return $this->getStatus(AddressBookContactsExport::STATUS_FINISH);
+    }
+
+    /**
+     * @return AbstractEnumValue
+     */
+    public function getNotFinishedStatus()
+    {
+        return $this->getStatus(AddressBookContactsExport::STATUS_NOT_FINISHED);
+    }
+
+    /**
+     * @param AbstractEnumValue $status
+     * @return bool
+     */
+    public function isFinishedStatus(AbstractEnumValue $status)
+    {
+        return $status->getId() == AddressBookContactsExport::STATUS_FINISH;
+    }
+
+    /**
+     * @param AbstractEnumValue $status
+     * @return bool
+     */
+    public function isNotFinishedStatus(AbstractEnumValue $status)
+    {
+        return $status->getId() == AddressBookContactsExport::STATUS_NOT_FINISHED;
+    }
+
+    /**
+     * @param AbstractEnumValue $status
+     * @return bool
+     */
+    public function isErrorStatus(AbstractEnumValue $status)
+    {
+        return $status->getId() !== AddressBookContactsExport::STATUS_FINISH &&
+            $status->getId() !== AddressBookContactsExport::STATUS_NOT_FINISHED;
+    }
+
+
+    /**
      * @param Channel $channel
      *
      * @return string[]
@@ -181,73 +253,5 @@ class AddressBookContactsExportRepository extends EntityRepository
             ->setParameter('channel', $channel);
 
         return $qb;
-    }
-
-    /**
-     * Get Dotmailer status object (enum "dm_import_status").
-     *
-     * @param string $statusCode
-     * @return AbstractEnumValue
-     * @throws EntityNotFoundException
-     */
-    public function getStatus($statusCode)
-    {
-        $statusClassName = ExtendHelper::buildEnumValueClassName('dm_import_status');
-        $statusRepository = $this->getEntityManager()->getRepository($statusClassName);
-
-        /** @var AbstractEnumValue|null $result */
-        $result = $statusRepository->find($statusCode);
-
-        if (!$result) {
-            throw EntityNotFoundException::fromClassNameAndIdentifier(
-                $statusClassName,
-                $statusCode
-            );
-        }
-
-        return $result;
-    }
-
-    /**
-     * @return AbstractEnumValue
-     */
-    public function getFinishedStatus()
-    {
-        return $this->getStatus(AddressBookContactsExport::STATUS_FINISH);
-    }
-
-    /**
-     * @return AbstractEnumValue
-     */
-    public function getNotFinishedStatus()
-    {
-        return $this->getStatus(AddressBookContactsExport::STATUS_NOT_FINISHED);
-    }
-
-    /**
-     * @return AbstractEnumValue
-     * @return bool
-     */
-    public function isFinishedStatus(AbstractEnumValue $status)
-    {
-        return $status->getId() == AddressBookContactsExport::STATUS_FINISH;
-    }
-
-    /**
-     * @return AbstractEnumValue
-     * @return bool
-     */
-    public function isNotFinishedStatus(AbstractEnumValue $status)
-    {
-        return $status->getId() == AddressBookContactsExport::STATUS_NOT_FINISHED;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isErrorStatus(AbstractEnumValue $status)
-    {
-        return $status->getId() !== AddressBookContactsExport::STATUS_FINISH &&
-            $status->getId() !== AddressBookContactsExport::STATUS_NOT_FINISHED;
     }
 }
