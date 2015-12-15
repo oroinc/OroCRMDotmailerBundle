@@ -32,7 +32,7 @@ class OroCRMDotmailerBundle implements Migration
         $table->addIndex(['faults_processed'], 'orocrm_dm_ab_cnt_exp_fault_idx', []);
 
         $table = $schema->getTable('orocrm_dm_ab_contact');
-        $table->addColumn('export_id', 'string', ['notnull' => false, 'length' => 100]);
+        $table->addColumn('export_id', 'string', ['notnull' => false, 'length' => 36]);
         $table->addIndex(['export_id'], 'orocrm_dm_ab_cnt_export_id_idx', []);
 
         $this->extendExtension->addEnumField(
