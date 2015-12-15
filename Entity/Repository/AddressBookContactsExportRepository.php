@@ -171,7 +171,6 @@ class AddressBookContactsExportRepository extends EntityRepository
             $status->getId() !== AddressBookContactsExport::STATUS_NOT_FINISHED;
     }
 
-
     /**
      * @param Channel $channel
      *
