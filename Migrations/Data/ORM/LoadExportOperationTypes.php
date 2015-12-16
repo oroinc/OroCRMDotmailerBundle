@@ -12,9 +12,9 @@ class LoadExportOperationTypes extends AbstractEnumFixture
     /** @var array */
     protected $enumData = [
         'dm_ab_cnt_exp_type' => [
-            AddressBookContact::EXPORT_NEW_CONTACT         => 'New',
-            AddressBookContact::EXPORT_UPDATE_CONTACT      => 'Update',
-            AddressBookContact::EXPORT_ADD_TO_ADDRESS_BOOK => 'Add',
+            AddressBookContact::EXPORT_NEW_CONTACT         => 'Export New Contact',
+            AddressBookContact::EXPORT_UPDATE_CONTACT      => 'Update Contact',
+            AddressBookContact::EXPORT_ADD_TO_ADDRESS_BOOK => 'Add Contact to Address Book',
         ],
     ];
 
