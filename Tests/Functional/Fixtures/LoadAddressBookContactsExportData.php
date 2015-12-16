@@ -36,8 +36,8 @@ class LoadAddressBookContactsExportData extends AbstractFixture implements Depen
             'channel'     => 'orocrm_dotmailer.channel.fourth',
             'importId'    => '5fb9cba7-e588-445a-8731-4796c86b1097',
             'contacts'    => [
-                'orocrm_dotmailer.contact.second',
-                'orocrm_dotmailer.contact.test_concurrent_statuses',
+                'orocrm_dotmailer.contact.add_contact_rejected',
+                'orocrm_dotmailer.contact.update_contact_rejected',
                 'orocrm_dotmailer.contact.update_2'
             ],
             'reference'   => 'orocrm_dotmailer.address_book_contacts_export.rejected'

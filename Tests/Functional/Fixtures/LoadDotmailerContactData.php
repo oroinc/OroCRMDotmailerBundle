@@ -47,11 +47,7 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'addressBooks' => [
                 'orocrm_dotmailer.address_book.third',
                 'orocrm_dotmailer.address_book.fourth',
-                [
-                    'addressBook'           =>  'orocrm_dotmailer.address_book.six',
-                    'status'                =>  Contact::STATUS_SUBSCRIBED,
-                    'exportOperationType'   =>  AddressBookContact::EXPORT_NEW_CONTACT
-                ]
+                'orocrm_dotmailer.address_book.six'
             ],
             'reference'    => 'orocrm_dotmailer.contact.second',
         ],
@@ -63,6 +59,35 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'addressBooks'       => [
                 'orocrm_dotmailer.address_book.third',
                 'orocrm_dotmailer.address_book.fourth',
+                'orocrm_dotmailer.address_book.six'
+            ],
+            'lastSubscribedDate' => '2015-10-11',
+            'reference'          => 'orocrm_dotmailer.contact.test_concurrent_statuses',
+        ],
+        [
+            'originId'     => 42,
+            'email'        => 'second@mail.com',
+            'channel'      => 'orocrm_dotmailer.channel.fourth',
+            'status'       => ApiContactStatuses::SUBSCRIBED,
+            'addressBooks' => [
+                'orocrm_dotmailer.address_book.third',
+                'orocrm_dotmailer.address_book.fourth',
+                [
+                    'addressBook'           =>  'orocrm_dotmailer.address_book.six',
+                    'status'                =>  Contact::STATUS_SUBSCRIBED,
+                    'exportOperationType'   =>  AddressBookContact::EXPORT_NEW_CONTACT
+                ]
+            ],
+            'reference'    => 'orocrm_dotmailer.contact.add_contact_rejected',
+        ],
+        [
+            'originId'           => 13,
+            'email'              => 'test_concurrent_statuses@mail.com',
+            'channel'            => 'orocrm_dotmailer.channel.fourth',
+            'status'             => ApiContactStatuses::SUBSCRIBED,
+            'addressBooks'       => [
+                'orocrm_dotmailer.address_book.third',
+                'orocrm_dotmailer.address_book.fourth',
                 [
                     'addressBook'           =>  'orocrm_dotmailer.address_book.six',
                     'status'                =>  Contact::STATUS_SUBSCRIBED,
@@ -70,7 +95,7 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
                 ]
             ],
             'lastSubscribedDate' => '2015-10-11',
-            'reference'          => 'orocrm_dotmailer.contact.test_concurrent_statuses',
+            'reference'          => 'orocrm_dotmailer.contact.update_contact_rejected',
         ],
         // contact for contact update test
         [
