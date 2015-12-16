@@ -102,7 +102,14 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
                     );
                 }
             }
-            $this->assertEquals($expectedContact['subscribedAddressBooks'], $actualAddressBooks);
+            $this->assertEquals(
+                $expectedContact['subscribedAddressBooks'],
+                $actualAddressBooks,
+                'Subscribed Address Book Contacts is not equal',
+                0,
+                10,
+                true
+            );
         }
     }
 
