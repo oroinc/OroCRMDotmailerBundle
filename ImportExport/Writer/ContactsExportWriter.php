@@ -57,7 +57,6 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
      */
     protected $logHelper;
 
-
     /**
      * @var ContextRegistry
      */

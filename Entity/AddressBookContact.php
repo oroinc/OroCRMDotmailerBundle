@@ -23,9 +23,9 @@ use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBookContact;
  */
 class AddressBookContact extends ExtendAddressBookContact implements ChannelAwareInterface
 {
-    const EXPORT_NEW_CONTACT = 'export_new_contact';
-    const EXPORT_ADD_TO_ADDRESS_BOOK = 'export_add_to_address_book';
-    const EXPORT_UPDATE_CONTACT = 'export_update_contact';
+    const EXPORT_NEW_CONTACT = 'new';
+    const EXPORT_ADD_TO_ADDRESS_BOOK = 'add';
+    const EXPORT_UPDATE_CONTACT = 'update';
 
     /**
      * @var int
