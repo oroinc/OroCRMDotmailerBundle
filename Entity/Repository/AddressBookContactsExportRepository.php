@@ -189,9 +189,9 @@ class AddressBookContactsExportRepository extends EntityRepository
      */
     public function setRejectedExportFaultsProcessed(Channel $channel)
     {
-        $this->getRejectedExportRestrictionQB($channel)
-            ->update()
-            ->set('addressBookContactExport.faultsProcessed', true)
+        $qb = $this->getRejectedExportRestrictionQB($channel);
+        $qb->update()
+            ->set('addressBookContactExport.faultsProcessed', $qb->expr()->literal(true))
             ->getQuery()
             ->execute();
     }
@@ -215,9 +215,9 @@ class AddressBookContactsExportRepository extends EntityRepository
      */
     public function setNotRejectedExportFaultsProcessed(Channel $channel)
     {
-        $this->getNotRejectedExportRestrictionsQB($channel)
-            ->update()
-            ->set('addressBookContactExport.faultsProcessed', true)
+        $qb = $this->getNotRejectedExportRestrictionsQB($channel);
+        $qb->update()
+            ->set('addressBookContactExport.faultsProcessed', $qb->expr()->literal(true))
             ->getQuery()
             ->execute();
     }
