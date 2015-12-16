@@ -16,8 +16,6 @@ class AddressBookContactsExportRepository extends EntityRepository
 {
     protected $rejectedExportStatuses = [
         AddressBookContactsExport::STATUS_REJECTED_BY_WATCHDOG,
-        AddressBookContactsExport::STATUS_NOT_AVAILABLE_IN_THIS_VERSION,
-        AddressBookContactsExport::STATUS_INVALID_FILE_FORMAT,
     ];
 
     /**
