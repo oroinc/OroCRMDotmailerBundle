@@ -25,7 +25,7 @@ class AddressBookContactsExport extends ExtendAddressBookContactsExport implemen
     const STATUS_UNKNOWN = 'Unknown';
     const STATUS_FAILED = 'Failed';
     const STATUS_EXCEEDS_ALLOWED_CONTACT_LIMIT = 'ExceedsAllowedContactLimit';
-    const STATUS_NOT_AVAILABLE_IN__THIS_VERSION = 'NotAvailableInThisVersion';
+    const STATUS_NOT_AVAILABLE_IN_THIS_VERSION = 'NotAvailableInThisVersion';
 
     /**
      * @var int

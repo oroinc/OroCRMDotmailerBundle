@@ -126,10 +126,10 @@ connector:
 
         dotmailer_contact_export:
             title: orocrm.dotmailer.connector.contact.export_job
-            type: export
+            type: import
             steps:
                 removeContacts:
-                    title: export
+                    title: import
                     class: Oro\Bundle\BatchBundle\Step\ItemStep
                     services:
                         reader:    orocrm_dotmailer.importexport.reader.removed_contact_export
@@ -138,7 +138,7 @@ connector:
                     parameters:
                         batch_size: 1000
                 updateMarketingListStateItems:
-                    title: export
+                    title: import
                     class: Oro\Bundle\BatchBundle\Step\ItemStep
                     services:
                         reader:    orocrm_dotmailer.importexport.reader.unsubscribed_contact_sync
@@ -147,20 +147,22 @@ connector:
                     parameters:
                         batch_size: 1000
                 syncMarketingListItemsWithContacts:
-                    title: export
+                    title: import
                     class: Oro\Bundle\BatchBundle\Step\ItemStep
                     services:
-                        reader:    orocrm_dotmailer.importexport.reader.contact_sync
+                        reader:    orocrm_dotmailer.connector.export_contacts
                         processor: orocrm_dotmailer.importexport.processor.contact_sync
                         writer:    orocrm_dotmailer.importexport.writer.contact_sync
                     parameters:
                         batch_size: 1000
                 exportContacts:
-                    title: export
-                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    title: import
+                    class: OroCRM\Bundle\DotmailerBundle\Step\ExportItemStep
                     services:
-                        reader:    orocrm_dotmailer.importexport.reader.scheduled_for_export
-                        processor: orocrm_dotmailer.importexport.processor.export_contact
-                        writer:    orocrm_dotmailer.importexport.writer.export.contacts
+                        reader:           orocrm_dotmailer.importexport.reader.scheduled_for_export
+                        processor:        orocrm_dotmailer.importexport.processor.export_contact
+                        writer:           orocrm_dotmailer.importexport.writer.export.contacts
+                        contextRegistry:  oro_importexport.context_registry
+                        registry:         doctrine
                     parameters:
                         batch_size: 10000

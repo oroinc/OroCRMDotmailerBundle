@@ -2,8 +2,9 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
 
-use Oro\Bundle\IntegrationBundle\Entity\Status;
+use Doctrine\ORM\EntityRepository;
 
+use Oro\Bundle\IntegrationBundle\Entity\Status;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
@@ -33,14 +34,33 @@ class UnsubscribedFromAccountContactReader extends AbstractReader
      */
     protected function getLastSyncDate()
     {
-        $repository = $this->registry->getRepository('OroIntegrationBundle:Status');
+        /** @var EntityRepository $repository */
+        $repository = $this->managerRegistry->getRepository('OroIntegrationBundle:Status');
 
-        /** @var Status $status */
+        if ($lastSyncDate = $this->getConnectorLastSyncDate($repository, UnsubscribedContactConnector::TYPE)) {
+            return $lastSyncDate;
+        }
+
+        if ($lastSyncDate = $this->getConnectorLastSyncDate($repository, ContactConnector::TYPE)) {
+            return $lastSyncDate;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param EntityRepository $repository
+     * @param string           $connectorType
+     *
+     * @return \DateTime|null
+     */
+    protected function getConnectorLastSyncDate(EntityRepository $repository, $connectorType)
+    {
         $status = $repository->findOneBy(
             [
                 'code'      => Status::STATUS_COMPLETED,
                 'channel'   => $this->getChannel(),
-                'connector' => UnsubscribedContactConnector::TYPE
+                'connector' => $connectorType
             ],
             [
                 'date' => 'DESC'
@@ -48,20 +68,7 @@ class UnsubscribedFromAccountContactReader extends AbstractReader
         );
 
         if (!$status) {
-            $status = $repository->findOneBy(
-                [
-                    'code'      => Status::STATUS_COMPLETED,
-                    'channel'   => $this->getChannel(),
-                    'connector' => ContactConnector::TYPE
-                ],
-                [
-                    'date' => 'DESC'
-                ]
-            );
-
-            if (!$status) {
-                return null;
-            }
+            return null;
         }
 
         $data = $status->getData();

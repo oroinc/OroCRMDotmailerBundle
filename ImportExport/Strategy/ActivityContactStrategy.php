@@ -4,6 +4,7 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
 
+use OroCRM\Bundle\DotmailerBundle\Entity\Activity;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
@@ -30,6 +31,12 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
         if ($existingContact) {
             $entity->setContact($existingContact);
         } else {
+            $this->logger->critical(
+                sprintf(
+                    'Contact \'%s\', which is associated with Activity not found.',
+                    $entity->getContact()->getOriginId()
+                )
+            );
             return null;
         }
 
@@ -43,6 +50,16 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
         }
 
         return $entity;
+    }
+
+    /**
+     * @param Activity $entity
+     *
+     * @return string
+     */
+    protected function getCurrentBatchItemsCacheKey($entity)
+    {
+        return "{$entity->getCampaign()->getId()}_{$entity->getContact()->getId()}";
     }
 
     /**
@@ -103,22 +120,5 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
             );
 
         return $existing;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function processEntity(
-        $entity,
-        $isFullData = false,
-        $isPersistNew = false,
-        $itemData = null,
-        array $searchContext = []
-    ) {
-        if (!$entity) {
-            return null;
-        }
-
-        return parent::processEntity($entity, $isFullData, $isPersistNew, $itemData, $searchContext);
     }
 }

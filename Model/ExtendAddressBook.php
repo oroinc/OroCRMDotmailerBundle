@@ -7,6 +7,8 @@ use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 /**
  * @method AbstractEnumValue getVisibility()                             Get enum visibility object
  * @method ExtendAddressBook setVisibility(AbstractEnumValue $enumValue) Set enum visibility object
+ * @method AbstractEnumValue getSyncStatus()                             Get enum status object
+ * @method ExtendContact     setSyncStatus(AbstractEnumValue $enumValue) Set enum status object
  */
 class ExtendAddressBook
 {

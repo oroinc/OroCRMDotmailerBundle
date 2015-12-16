@@ -5,13 +5,11 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\Int32List;
 
-use Oro\Bundle\IntegrationBundle\Command\ReverseSyncCommand;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 
 /**
  * @dbIsolation
- * @dbReindex
  */
 class RemovedContactsExportTest extends AbstractImportExportTestCase
 {
@@ -74,9 +72,15 @@ class RemovedContactsExportTest extends AbstractImportExportTestCase
             ->expects($this->once())
             ->method('PostAddressBookContactsDelete')
             ->with($expectedAddressBook, $expectedApiContact);
-
-        $processor = $this->getContainer()->get(ReverseSyncCommand::SYNC_PROCESSOR);
-        $processor->process($channel, ContactConnector::TYPE, []);
+        $result = $this->runImportExportConnectorsJob(
+            self::SYNC_PROCESSOR,
+            $channel,
+            ExportContactConnector::TYPE,
+            [],
+            $jobLog
+        );
+        $log = $this->formatImportExportJobLog($jobLog);
+        $this->assertTrue($result, "Job Failed with output:\n $log");
 
 
         foreach ($expectedRemoved as $contact) {
