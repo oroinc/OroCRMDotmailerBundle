@@ -110,12 +110,12 @@ connector:
                     parameters:
                         batch_size: 100
 
-        # This Job responsible for receive not exported contacts from dotmailer
-        # Import from dotmailer will not cover this case because:
-        # Not synced contact with Oro if DM contact can be unsubscribed before initial sync
+        # This Job responsible for receive not exported contacts from Dotmailer.
+        # Import from Dotmailer will not cover this case because there could be not synced contact with Oro if DM
+        # contact is unsubscribed before initial sync.
         # In this case we will not import such unsubscription.
-        # Also we cant get them all, because it can be very large ammount of data(most of which is not needed)
-        # Also there is alot of more not dirrect reasons
+        # Also we can't get them all, because it can be very large ammount of data (most of which is not needed).
+        # Also there is a lot of more not direct reasons.
         dotmailer_import_not_exported_contact:
             title: orocrm.dotmailer.import_not_exported_contact.job
             type: import

@@ -40,40 +40,46 @@ class ExportManagerTest extends AbstractImportExportTestCase
         /** @var Channel $channel */
         $channel = $this->getReference('orocrm_dotmailer.channel.fourth');
 
-        $rejectedByWatchDogImportId = '5fb9cba7-e588-445a-8731-4796c86b1097';
-        $importWithFaultsId = '1fb9cba7-e588-445a-8731-4796c86b1097';
+        $rejectedByWatchDogImportId = $this->getReference('orocrm_dotmailer.address_book_contacts_export.rejected')
+            ->getImportId();
+
+        $importWithFaultsId = $this->getReference('orocrm_dotmailer.address_book_contacts_export.first')
+            ->getImportId();
+
+        $importAddToAddressBook = $this
+            ->getReference('orocrm_dotmailer.address_book_contacts_export.add_to_address_book')
+            ->getImportId();
 
         $scheduledForExport = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBookContact')
-            ->findBy(['scheduledForExport' => true ]);
+            ->findBy(['scheduledForExport' => true]);
         $this->assertCount(2, $scheduledForExport);
 
+        // Expect Dotmailer will return FINISHED status for import with id=$importWithFaultsId which was NOT_FINISHED
         $apiContactImportStatus = new ApiContactImport();
         $apiContactImportStatus->status = ApiContactImportStatuses::FINISHED;
 
         $this->resource->expects($this->once())
             ->method('GetContactsImportByImportId')
-            ->with('1fb9cba7-e588-445a-8731-4796c86b1097')
+            ->with($importWithFaultsId)
             ->willReturn($apiContactImportStatus);
 
         $expectedEmail = 'test2@ex.com';
         $expectedId = 143;
         $entity = new ApiContactList();
         $entity[] = [
-            'id'        => $expectedId,
-            'email'     => $expectedEmail
+            'id'    => $expectedId,
+            'email' => $expectedEmail
         ];
         $this->resource->expects($this->any())
             ->method('GetAddressBookContacts')
             ->will($this->returnValue($entity));
 
-
         $this->resource->expects($this->exactly(2))
             ->method('GetContactsImportReportFaults')
-            ->withConsecutive([$importWithFaultsId], ['6fb9cba7-e588-445a-8731-4796c86b1097'])
+            ->withConsecutive([$importWithFaultsId], [$importAddToAddressBook])
             ->willReturnOnConsecutiveCalls(file_get_contents(__DIR__ . '/Fixtures/importFaults.csv'), '');
 
         $this->target->updateExportResults($channel);
-
 
         $this->assertFinishedExportResultsUpdated($channel, $importWithFaultsId);
         $this->assertRejectedExportResultsUpdated($channel, $rejectedByWatchDogImportId);

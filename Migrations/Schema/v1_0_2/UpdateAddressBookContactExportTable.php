@@ -9,7 +9,7 @@ use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtension;
 use Oro\Bundle\MigrationBundle\Migration\Migration;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 
-class OroCRMDotmailerBundle implements Migration
+class UpdateAddressBookContactExportTable implements Migration
 {
     /** @var ExtendExtension */
     protected $extendExtension;
