@@ -215,6 +215,9 @@ orocrm:
             campaign_summary:
                 label: Campaign Summary Connector
                 job: Import campaigns summary from Dotmailer
+            contact_export:
+                label: Export Contact Connector
+                job: Export Contacts to Dotmailer
 
         import_not_exported_contact:
             job: Import Export faults from Dotmailer
