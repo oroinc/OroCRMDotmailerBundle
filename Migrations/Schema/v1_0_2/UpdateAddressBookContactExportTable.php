@@ -9,6 +9,7 @@ use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtension;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareInterface;
 use Oro\Bundle\MigrationBundle\Migration\Migration;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
+use OroCRM\Bundle\DotmailerBundle\Migration\AddContactExportConnectorToExistedIntegrationsQuery;
 
 class UpdateAddressBookContactExportTable implements Migration, ExtendExtensionAwareInterface
 {
@@ -47,5 +48,7 @@ class UpdateAddressBookContactExportTable implements Migration, ExtendExtensionA
                 'extend' => ['owner' => ExtendScope::OWNER_CUSTOM]
             ]
         );
+
+        $queries->addPostQuery(new AddContactExportConnectorToExistedIntegrationsQuery());
     }
 }
