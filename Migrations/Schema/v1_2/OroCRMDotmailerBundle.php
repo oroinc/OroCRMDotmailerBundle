@@ -10,6 +10,7 @@ use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareInterf
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\MigrationBundle\Migration\Migration;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
+use OroCRM\Bundle\DotmailerBundle\Migration\AddContactExportConnectorToExistedIntegrationsQuery;
 
 class OroCRMDotmailerBundle implements Migration, ExtendExtensionAwareInterface
 {
@@ -56,6 +57,8 @@ class OroCRMDotmailerBundle implements Migration, ExtendExtensionAwareInterface
                     'extend' => ['owner' => ExtendScope::OWNER_CUSTOM]
                 ]
             );
+
+            $queries->addPostQuery(new AddContactExportConnectorToExistedIntegrationsQuery());
         }
     }
 }
