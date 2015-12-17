@@ -14,7 +14,8 @@ use OroCRM\Bundle\DotmailerBundle\Exception\RestClientAttemptException;
 use OroCRM\Bundle\DotmailerBundle\Exception\RestClientException;
 
 /**
- * Overload Rest Client class from romanpitak/dotmailer-api-v2-php-client bundle
+ * Override Rest Client class from romanpitak/dotmailer-api-v2-php-client bundle is not possible because of
+ * private fields.
  */
 class Client implements IClient, LoggerAwareInterface
 {

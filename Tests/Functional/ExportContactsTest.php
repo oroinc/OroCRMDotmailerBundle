@@ -32,6 +32,11 @@ class ExportContactsTest extends AbstractImportExportTestCase
     {
         $channel = $this->getReference('orocrm_dotmailer.channel.fourth');
 
+        $previousNotExportedContact = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:Contact')
+            ->findOneBy(['email' => 'test2@ex.com']);
+        $this->assertNotNull($previousNotExportedContact);
+
         $firstAddressBook = $this->getReference('orocrm_dotmailer.address_book.fifth');
         $firstAddressBookImportStatus = $this->getImportStatus(
             $firstAddressBookId = '391da8d7-70f0-405b-98d4-02faa41d499d',
@@ -110,6 +115,14 @@ class ExportContactsTest extends AbstractImportExportTestCase
         $this->assertEquals($syncFinishedStatus, $upToDateAddressBook->getSyncStatus());
         $this->assertAddressBookExportStatus($firstAddressBook, $firstAddressBookId, $syncInProgressStatus);
         $this->assertAddressBookExportStatus($secondAddressBook, $secondAddressBookId, $syncFinishedStatus);
+
+        /**
+         * Check previous not exported contact was removed before new export start
+         */
+        $previousNotExportedContact = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:Contact')
+            ->findOneBy(['email' => 'test2@ex.com']);
+        $this->assertNull($previousNotExportedContact);
     }
 
     /**

@@ -6,6 +6,8 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExport
 
 class ContactDataConverter extends AbstractDataConverter
 {
+    const ADDRESS_BOOK_CONTACT_ID = 'addressBookContactId';
+
     /**
      * {@inheritdoc}
      */
@@ -31,6 +33,7 @@ class ContactDataConverter extends AbstractDataConverter
     protected function getBackendHeader()
     {
         return [
+            static::ADDRESS_BOOK_CONTACT_ID,
             'email',
             'originId',
             'optInType',

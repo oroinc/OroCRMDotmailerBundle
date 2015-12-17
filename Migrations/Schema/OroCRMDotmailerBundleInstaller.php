@@ -8,9 +8,9 @@ use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtension;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareInterface;
 use Oro\Bundle\MigrationBundle\Migration\Installation;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
-
 use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0;
-use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0_1\AddActivityIndexes;
+use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0_1;
+use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0_2;
 
 class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwareInterface
 {
@@ -24,7 +24,7 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
      */
     public function getMigrationVersion()
     {
-        return 'v1_0_1';
+        return 'v1_0_2';
     }
 
     /**
@@ -40,8 +40,12 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
         $addEnumFieldsMigration->setExtendExtension($this->extendExtension);
         $addEnumFieldsMigration->up($schema, $queries);
 
-        $activityIndexes = new AddActivityIndexes();
+        $activityIndexes = new v1_0_1\AddActivityIndexes();
         $activityIndexes->up($schema, $queries);
+
+        $migration = new v1_0_2\UpdateAddressBookContactExportTable();
+        $migration->setExtendExtension($this->extendExtension);
+        $migration->up($schema, $queries);
     }
 
 
