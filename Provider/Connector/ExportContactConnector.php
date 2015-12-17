@@ -66,7 +66,7 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
      */
     public function getLabel()
     {
-        return 'orocrm.dotmailer.connector.contact.label';
+        return 'orocrm.dotmailer.connector.contact_export.label';
     }
 
     /**
