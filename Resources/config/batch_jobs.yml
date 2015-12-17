@@ -144,7 +144,7 @@ connector:
                         batch_size: 100
 
         dotmailer_contact_export:
-            title: orocrm.dotmailer.connector.contact.export_job
+            title: orocrm.dotmailer.connector.contact_export.job
             type: import
             steps:
                 removeContacts:
