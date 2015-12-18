@@ -19,12 +19,11 @@ class NotExportedContactReader extends AbstractReader
         /** @var DotmailerTransport $transport */
         $transport = $this->contextMediator->getInitializedTransport($channel);
 
-        $exportEntities = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
-            ->findBy(['channel' => $this->getChannel()]);
-
         $addressBookExports = [];
 
+        $exportEntities = $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+            ->getNotRejectedExports($channel);
         foreach ($exportEntities as $exportEntity) {
             $addressBookExports[$exportEntity->getAddressBook()->getId()][] = $exportEntity->getImportId();
         }

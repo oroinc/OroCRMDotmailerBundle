@@ -2,8 +2,6 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Entity;
 
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
-
 interface OriginAwareInterface extends ChannelAwareInterface
 {
     /**

@@ -102,7 +102,14 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
                     );
                 }
             }
-            $this->assertEquals($expectedContact['subscribedAddressBooks'], $actualAddressBooks);
+            $this->assertEquals(
+                $expectedContact['subscribedAddressBooks'],
+                $actualAddressBooks,
+                'Subscribed Address Book Contacts is not equal',
+                0,
+                10,
+                true
+            );
         }
     }
 
@@ -115,7 +122,10 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
                         'originId'               => 42,
                         'channel'                => 'orocrm_dotmailer.channel.third',
                         'status'                 => ApiContactStatuses::SUBSCRIBED,
-                        'subscribedAddressBooks' => ['orocrm_dotmailer.address_book.fourth'],
+                        'subscribedAddressBooks' => [
+                            'orocrm_dotmailer.address_book.fourth',
+                            'orocrm_dotmailer.address_book.six'
+                        ],
                         'unsubscribedDate'       => [
                             'orocrm_dotmailer.address_book.third' => new \DateTime(
                                 '2015-10-10',

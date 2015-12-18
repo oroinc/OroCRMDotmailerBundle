@@ -42,6 +42,10 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
 
         $migration = new v1_2\AddActivityIndexes();
         $migration->up($schema, $queries);
+
+        $migration = new v1_2\OroCRMDotmailerBundle();
+        $migration->setExtendExtension($this->extendExtension);
+        $migration->up($schema, $queries);
     }
 
 

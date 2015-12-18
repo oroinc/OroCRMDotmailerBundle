@@ -4,7 +4,6 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
 
 use Oro\Bundle\ImportExportBundle\Exception\LogicException;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 
 abstract class AbstractExportReader extends AbstractReader

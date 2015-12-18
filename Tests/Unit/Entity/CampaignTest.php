@@ -11,6 +11,9 @@ use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\Activity;
 use OroCRM\Bundle\DotmailerBundle\Entity\CampaignSummary;
 
+/**
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ */
 class CampaignTest extends \PHPUnit_Framework_TestCase
 {
     /**
