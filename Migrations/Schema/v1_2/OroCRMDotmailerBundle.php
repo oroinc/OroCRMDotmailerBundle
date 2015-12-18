@@ -7,15 +7,23 @@ use Doctrine\DBAL\Schema\Schema;
 use Oro\Bundle\EntityExtendBundle\EntityConfig\ExtendScope;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtension;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareInterface;
-use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendDbIdentifierNameGenerator;
+use Oro\Bundle\MigrationBundle\Migration\Extension\NameGeneratorAwareInterface;
 use Oro\Bundle\MigrationBundle\Migration\Migration;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
+use Oro\Bundle\MigrationBundle\Tools\DbIdentifierNameGenerator;
+
 use OroCRM\Bundle\DotmailerBundle\Migration\AddContactExportConnectorToExistedIntegrationsQuery;
 
-class OroCRMDotmailerBundle implements Migration, ExtendExtensionAwareInterface
+class OroCRMDotmailerBundle implements Migration, ExtendExtensionAwareInterface, NameGeneratorAwareInterface
 {
     /** @var ExtendExtension */
     protected $extendExtension;
+
+    /**
+     * @var ExtendDbIdentifierNameGenerator
+     */
+    protected $nameGenerator;
 
     /**
      * {@inheritdoc}
@@ -42,9 +50,7 @@ class OroCRMDotmailerBundle implements Migration, ExtendExtensionAwareInterface
             $table->addIndex(['export_id'], 'orocrm_dm_ab_cnt_export_id_idx', []);
         }
 
-        $tableName = $this->extendExtension->getTableNameByEntityClass(
-            ExtendHelper::buildEnumValueClassName('dm_ab_cnt_exp_type')
-        );
+        $tableName = $this->nameGenerator->generateEnumTableName('dm_ab_cnt_exp_type');
         if (!$tableName || !$schema->hasTable($tableName)) {
             $this->extendExtension->addEnumField(
                 $schema,
@@ -60,5 +66,13 @@ class OroCRMDotmailerBundle implements Migration, ExtendExtensionAwareInterface
 
             $queries->addPostQuery(new AddContactExportConnectorToExistedIntegrationsQuery());
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setNameGenerator(DbIdentifierNameGenerator $nameGenerator)
+    {
+        $this->nameGenerator = $nameGenerator;
     }
 }
