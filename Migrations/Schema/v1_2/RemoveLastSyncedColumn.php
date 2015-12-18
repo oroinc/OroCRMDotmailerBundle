@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_1;
+namespace OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_2;
 
 use Doctrine\DBAL\Schema\Schema;
 
@@ -16,7 +16,9 @@ class RemoveLastSyncedColumn implements Migration, OrderedMigrationInterface
     public function up(Schema $schema, QueryBag $queries)
     {
         $table = $schema->getTable('orocrm_dm_address_book');
-        $table->dropColumn('last_synced');
+        if ($table->hasColumn('last_synced')) {
+            $table->dropColumn('last_synced');
+        }
     }
 
     /**
