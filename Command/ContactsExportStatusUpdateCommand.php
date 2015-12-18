@@ -87,9 +87,12 @@ class ContactsExportStatusUpdateCommand extends AbstractSyncCronCommand
 
             /**
              * If previous export was not finished we need to update export results from Dotmailer.
+             * If finished we need to process export faults reports
              */
             if (!$exportManager->isExportFinished($channel)) {
                 $exportManager->updateExportResults($channel);
+            } elseif (!$exportManager->isExportFaultsProcessed($channel)) {
+                $exportManager->processExportFaults($channel);
             }
         }
     }

@@ -105,8 +105,8 @@ abstract class AbstractIterator implements \Iterator
     }
 
     /**
-     * @param int $take   Count of requested records
-     * @param int $skip   Count of skipped records
+     * @param int $take Count of requested records
+     * @param int $skip Count of skipped records
      *
      * @return array
      */

@@ -38,7 +38,7 @@ class CampaignStrategy extends AddOrReplaceStrategy
         /** @var Campaign $entity */
         if ($entity) {
             $entity->setDeleted(false);
-            $addressBook = $this->getAddressBook($entity->getChannel());
+            $addressBook = $this->getAddressBook();
             if ($addressBook) {
                 $entity->addAddressBook($addressBook);
             } else {

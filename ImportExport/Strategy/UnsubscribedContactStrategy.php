@@ -38,7 +38,7 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
         }
 
         $channel = $this->getChannel();
-        $addressBook = $this->getAddressBook($channel);
+        $addressBook = $this->getAddressBook();
 
         $this->updateAddressBookContact($entity, $channel, $addressBook);
 

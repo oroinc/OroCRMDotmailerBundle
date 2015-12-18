@@ -59,13 +59,15 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     protected $encryptor;
 
     /**
-     * @param DotmailerResourcesFactory $dotMailerResFactory
-     * @param Mcrypt $encoder
+     * @param DotmailerResourcesFactory $dotmailerResourcesFactory
+     * @param Mcrypt                    $encryptor
      */
-    public function __construct(DotmailerResourcesFactory $dotMailerResFactory, Mcrypt $encoder)
-    {
-        $this->dotMailerResFactory = $dotMailerResFactory;
-        $this->encoder = $encoder;
+    public function __construct(
+        DotmailerResourcesFactory $dotmailerResourcesFactory,
+        Mcrypt $encryptor
+    ) {
+        $this->dotMailerResFactory = $dotmailerResourcesFactory;
+        $this->encryptor = $encryptor;
     }
 
     /**
@@ -80,7 +82,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
         }
 
         $password = $settings->get('password');
-        $password = $this->encoder->decryptData($password);
+        $password = $this->encryptor->decryptData($password);
 
         if (!$password) {
             throw new RequiredOptionException('password');
