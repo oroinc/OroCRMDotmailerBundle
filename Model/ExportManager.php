@@ -154,7 +154,7 @@ class ExportManager
     ) {
         $addressBook->setSyncStatus($status);
         if ($updateLastSyncedDate) {
-            $addressBook->setLastSynced(new \DateTime('now', new \DateTimeZone('UTC')));
+            $addressBook->setLastExportedAt(new \DateTime('now', new \DateTimeZone('UTC')));
         }
     }
 

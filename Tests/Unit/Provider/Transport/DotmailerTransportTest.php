@@ -166,13 +166,18 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
         $resource = $this->initTransportStub();
 
         $expectedAddressBookOriginId = 15645;
+        $expectedAddressBook = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\AddressBook');
+        $expectedAddressBook->expects($this->any())
+            ->method('getOriginId')
+            ->willReturn($expectedAddressBookOriginId);
+
         $expectedDate = date_create_from_format(
             'Y',
             DotmailerTransport::DEFAULT_START_SYNC_DATE,
             new \DateTimeZone('UTC')
         );
         $iterator = $this->target->getUnsubscribedContacts(
-            [0 => ['originId' => $expectedAddressBookOriginId]]
+            [$expectedAddressBook]
         );
         $this->assertInstanceOf(
             'Guzzle\Iterator\AppendIterator',
@@ -202,9 +207,16 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
 
         $expectedAddressBookOriginId = 15645;
         $expectedDate = new \DateTime();
+        $expectedAddressBook = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\AddressBook');
+        $expectedAddressBook->expects($this->any())
+            ->method('getOriginId')
+            ->willReturn($expectedAddressBookOriginId);
+        $expectedAddressBook->expects($this->any())
+            ->method('getLastImportedAt')
+            ->willReturn($expectedDate);
+
         $iterator = $this->target->getUnsubscribedContacts(
-            [0 => ['originId' => $expectedAddressBookOriginId]],
-            $expectedDate
+            [$expectedAddressBook]
         );
         $this->assertInstanceOf(
             'Guzzle\Iterator\AppendIterator',
@@ -264,9 +276,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
     public function testGetContactsWithoutSyncDate()
     {
         $resource = $this->initTransportStub();
-        $addressBookId = 42;
-
-        $dateSince = null;
+        $expectedAddressBookOriginId = 42;
 
         $contactsList = $this->getMock('\StdClass', ['toArray']);
         $contactsList->expects($this->once())
@@ -275,18 +285,25 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
 
         $resource->expects($this->once())
             ->method('GetAddressBookContacts')
-            ->with($addressBookId, true, 1000, 0)
+            ->with($expectedAddressBookOriginId, true, 1000, 0)
             ->will($this->returnValue($contactsList));
 
-        $dateSince = null;
-        $iterator = $this->target->getAddressBookContacts([0 => ['originId' => $addressBookId]], $dateSince);
+        $expectedAddressBook = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\AddressBook');
+        $expectedAddressBook->expects($this->any())
+            ->method('getOriginId')
+            ->willReturn($expectedAddressBookOriginId);
+        $expectedAddressBook->expects($this->any())
+            ->method('getLastImportedAt')
+            ->willReturn(null);
+
+        $iterator = $this->target->getAddressBookContacts([$expectedAddressBook]);
         $iterator->rewind();
     }
 
     public function testGetContacts()
     {
         $resource = $this->initTransportStub();
-        $addressBookId = 42;
+        $expectedAddressBookOriginId = 42;
 
         $dateSince = new \DateTime();
 
@@ -297,10 +314,18 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
 
         $resource->expects($this->once())
             ->method('GetAddressBookContactsModifiedSinceDate')
-            ->with($addressBookId, $dateSince->format(\DateTime::ISO8601), true, 1000, 0)
+            ->with($expectedAddressBookOriginId, $dateSince->format(\DateTime::ISO8601), true, 1000, 0)
             ->will($this->returnValue($contactsList));
 
-        $iterator = $this->target->getAddressBookContacts([0 => ['originId' => $addressBookId]], $dateSince);
+        $expectedAddressBook = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\AddressBook');
+        $expectedAddressBook->expects($this->any())
+            ->method('getOriginId')
+            ->willReturn($expectedAddressBookOriginId);
+        $expectedAddressBook->expects($this->any())
+            ->method('getLastImportedAt')
+            ->willReturn($dateSince);
+
+        $iterator = $this->target->getAddressBookContacts([$expectedAddressBook]);
         $iterator->rewind();
     }
 

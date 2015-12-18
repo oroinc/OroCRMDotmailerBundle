@@ -14,7 +14,6 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 use OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
-use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Event\SyncEvent;
 

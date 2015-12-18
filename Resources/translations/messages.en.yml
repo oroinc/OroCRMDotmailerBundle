@@ -32,7 +32,8 @@ orocrm:
             status.label:                         Status
             address_book_contacts.label:          Address Book Contacts
             address_book_contacts_exports.label:  Address Book Contacts Export
-            last_synced.label:                    Last Synced At
+            last_imported_at.label:               Last Imported At
+            last_exported_at.label:               Last Exported At
             sync_status.label:                    Sync Status
 
             sync: Marketing list synchronization started. {{ job_view_link }}

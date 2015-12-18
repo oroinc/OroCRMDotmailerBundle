@@ -11,8 +11,8 @@ use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 
 use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0;
 use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0_1\AddActivityIndexes;
-use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_1\AddSyncDateColumns;
-use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_1\RemoveLastSyncedColumn;
+use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0_3\AddSyncDateColumns;
+use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0_3\RemoveLastSyncedColumn;
 
 class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwareInterface
 {
@@ -26,7 +26,7 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
      */
     public function getMigrationVersion()
     {
-        return 'v1_0_1';
+        return 'v1_0_3';
     }
 
     /**
