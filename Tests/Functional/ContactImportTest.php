@@ -58,6 +58,7 @@ class ContactImportTest extends AbstractImportExportTestCase
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $contactRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:Contact');
+        $addressBookRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBook');
         $optInTypeRepository = $this->managerRegistry->getRepository(
             ExtendHelper::buildEnumValueClassName('dm_cnt_opt_in_type')
         );
@@ -75,32 +76,20 @@ class ContactImportTest extends AbstractImportExportTestCase
                 'email'     => $contact['email'],
             ];
 
-            if (!empty($contact['firstName'])) {
-                $searchCriteria['firstName'] = $contact['firstName'];
-            }
-
-            if (!empty($contact['lastName'])) {
-                $searchCriteria['lastName'] = $contact['lastName'];
-            }
-
-            if (!empty($contact['fullName'])) {
-                $searchCriteria['fullName'] = $contact['fullName'];
-            }
-
-            if (!empty($contact['gender'])) {
-                $searchCriteria['gender'] = $contact['gender'];
-            }
-
-            if (!empty($contact['postcode'])) {
-                $searchCriteria['postcode'] = $contact['postcode'];
-            }
-
-            if (!empty($contact['lastSubscribedDate'])) {
-                $searchCriteria['lastSubscribedDate'] = $contact['lastSubscribedDate'];
-            }
-
             $contactEntity = $contactRepository->findOneBy($searchCriteria);
             $this->assertNotNull($contactEntity, 'Failed asserting that contact imported.');
+
+            $this->assertEquals($contact['firstName'], $contactEntity->getFirstName());
+            $this->assertEquals($contact['lastName'], $contactEntity->getLastName());
+            $this->assertEquals($contact['fullName'], $contactEntity->getFullName());
+            $this->assertEquals($contact['gender'], $contactEntity->getGender());
+            $this->assertEquals($contact['postcode'], $contactEntity->getPostcode());
+
+            if (!empty($contact['lastSubscribedDate'])) {
+                $this->assertEquals($contact['lastSubscribedDate'], $contactEntity->getLastSubscribedDate());
+            } else {
+                $this->assertNull($contactEntity->getLastSubscribedDate());
+            }
 
             if (empty($contact['optInType'])) {
                 $this->assertNull($contactEntity->getOptInType());
@@ -126,6 +115,22 @@ class ContactImportTest extends AbstractImportExportTestCase
                 $this->assertEquals($status, $addressBookContact->getStatus());
             }
         }
+
+        /**
+         * Check Last imported at update for address books with marketing lists
+         */
+        $notLinkedAddressBookId = $this->getReference('orocrm_dotmailer.address_book.first')->getId();
+        $notLinkedAddressBook = $addressBookRepository->find($notLinkedAddressBookId);
+        $this->assertNull($notLinkedAddressBook->getLastImportedAt());
+
+        $linkedAddressBookId = $this->getReference('orocrm_dotmailer.address_book.second')->getId();
+        $linkedAddressBook = $addressBookRepository->find($linkedAddressBookId);
+        $this->assertEquals(
+            $linkedAddressBook->getLastImportedAt(),
+            new \DateTime('now', new \DateTimeZone('UTC')),
+            'Last updated At was not updated',
+            10 /** Max delta in seconds */
+        );
     }
 
     public function importDataProvider()
@@ -137,6 +142,11 @@ class ContactImportTest extends AbstractImportExportTestCase
                         'originId' => 11,
                         'email'    => 'test11@test.com',
                         'status'   => 'SoftBounced',
+                        'firstName' => null,
+                        'lastName' => null,
+                        'fullName' => null,
+                        'gender' => null,
+                        'postcode' => null,
                     ],
                     [
                         'originId'  => 67,
@@ -145,6 +155,8 @@ class ContactImportTest extends AbstractImportExportTestCase
                         'emailType' => 'PlainText',
                         'status'    => 'Subscribed',
                         'lastName'  => 'Test',
+                        'firstName' => 'Alex',
+                        'fullName' => null,
                         'gender'    => 'male',
                         'lastSubscribedDate' => new \DateTime('2015-01-01', new \DateTimeZone('UTC'))
                     ],
@@ -153,7 +165,12 @@ class ContactImportTest extends AbstractImportExportTestCase
                         'email'              => 'test43@test.com',
                         'optInType'          => 'VerifiedDouble',
                         'emailType'          => 'Html',
-                        'status'             => 'Subscribed'
+                        'status'             => 'Subscribed',
+                        'firstName' => null,
+                        'lastName' => null,
+                        'fullName' => null,
+                        'gender' => null,
+                        'postcode' => null,
                     ],
                 ],
                 'contactList'     => [
@@ -171,7 +188,7 @@ class ContactImportTest extends AbstractImportExportTestCase
                         'datafields' => [
                             [
                                 'key'   => 'FIRSTNAME',
-                                'value' => 'null'
+                                'value' => ['Alex']
                             ],
                             [
                                 'key'   => 'LASTNAME',

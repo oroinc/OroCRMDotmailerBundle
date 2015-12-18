@@ -6,7 +6,9 @@ use DotMailer\Api\DataTypes\ApiContactList;
 
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
+use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
 
 /**
  * @dbIsolation
@@ -36,16 +38,28 @@ class ContactUpdateTest extends AbstractImportExportTestCase
      */
     public function testImportUpdate($expected, $contactList)
     {
+        $this->preparePreconditions();
+
+        /** @var AddressBook $expectedAddressBook */
+        $expectedAddressBook = $this->getReference('orocrm_dotmailer.address_book.fourth');
+
         $entity = new ApiContactList();
         foreach ($contactList as $listItem) {
             $entity[] = $listItem;
         }
 
-        $this->resource->expects($this->any())
+        $this->resource->expects($this->once())
             ->method('GetAddressBookContactsModifiedSinceDate')
-            ->will($this->returnValue($entity));
+            ->with(
+                $expectedAddressBook->getOriginId(),
+                $expectedAddressBook->getLastImportedAt()->format(\DateTime::ISO8601),
+                true,
+                ContactIterator::DEFAULT_BATCH_SIZE,
+                0
+            )
+            ->willReturn($entity);
 
-        $channel = $this->getReference('orocrm_dotmailer.channel.fourth');
+        $channel = $this->getReference('orocrm_dotmailer.channel.third');
 
         $result = $this->runImportExportConnectorsJob(
             self::SYNC_PROCESSOR,
@@ -76,7 +90,19 @@ class ContactUpdateTest extends AbstractImportExportTestCase
             ];
 
             $contactEntity = $contactRepository->findOneBy($searchCriteria);
-            $this->assertNotNull($contactEntity, 'Failed asserting that contact updated.');
+            $this->assertNotNull($contactEntity, 'Failed asserting that contact updated.'. $log);
+
+            $this->assertEquals($contact['firstName'], $contactEntity->getFirstName());
+            $this->assertEquals($contact['lastName'], $contactEntity->getLastName());
+            $this->assertEquals($contact['fullName'], $contactEntity->getFullName());
+            $this->assertEquals($contact['gender'], $contactEntity->getGender());
+            $this->assertEquals($contact['postcode'], $contactEntity->getPostcode());
+
+            if (!empty($contact['lastSubscribedDate'])) {
+                $this->assertEquals($contact['lastSubscribedDate'], $contactEntity->getLastSubscribedDate());
+            } else {
+                $this->assertNull($contactEntity->getLastSubscribedDate());
+            }
 
             if (empty($contact['optInType'])) {
                 $this->assertNull($contactEntity->getOptInType());
@@ -115,6 +141,11 @@ class ContactUpdateTest extends AbstractImportExportTestCase
                         'optInType' => 'VerifiedDouble',
                         'emailType' => 'Html',
                         'status'    => 'Unsubscribed',
+                        'firstName' => null,
+                        'lastName'  => null,
+                        'fullName'  => null,
+                        'gender'    => null,
+                        'postcode'  => null,
                     ],
                     [
                         'originId'  => 143,
@@ -124,19 +155,20 @@ class ContactUpdateTest extends AbstractImportExportTestCase
                         'status'    => 'Suppressed',
                         'lastName'  => 'Test',
                         'gender'    => 'male',
+                        'firstName'    => 'Test2',
                         'lastSubscribedDate' => new \DateTime('2015-01-01', new \DateTimeZone('UTC'))
                     ],
                 ],
                 'contactList' => [
                     [
-                        'id'        => 142,
+                        'id'        => 142, //orocrm_dotmailer.contact.update_1
                         'email'     => 'test1@example.com',
                         'optInType' => 'VerifiedDouble',
                         'emailType' => 'Html',
                         'status'    => 'Unsubscribed',
                     ],
                     [
-                        'id'        => 143,
+                        'id'        => 143, //orocrm_dotmailer.contact.update_2
                         'email'     => 'test2@ex.com',
                         'optInType' => 'Double',
                         'emailType' => 'Html',
@@ -144,7 +176,7 @@ class ContactUpdateTest extends AbstractImportExportTestCase
                         'datafields' => [
                             [
                                 'key'   => 'FIRSTNAME',
-                                'value' => 'null'
+                                'value' => ['Test2']
                             ],
                             [
                                 'key'   => 'LASTNAME',
@@ -171,5 +203,14 @@ class ContactUpdateTest extends AbstractImportExportTestCase
                 ]
             ]
         ];
+    }
+
+    private function preparePreconditions()
+    {
+        /** @var AddressBook $addressBook */
+        $addressBook = $this->getReference('orocrm_dotmailer.address_book.fourth');
+        $addressBook->setLastImportedAt(new \DateTime());
+
+        $this->managerRegistry->getManager()->flush();
     }
 }

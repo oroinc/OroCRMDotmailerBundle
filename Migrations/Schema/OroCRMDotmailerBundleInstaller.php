@@ -46,6 +46,12 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
         $migration = new v1_2\OroCRMDotmailerBundle();
         $migration->setExtendExtension($this->extendExtension);
         $migration->up($schema, $queries);
+
+        $addSyncDateColumns = new v1_2\AddSyncDateColumns();
+        $addSyncDateColumns->addSyncDateColumns($schema);
+
+        $removeLastSyncDate = new v1_2\RemoveLastSyncedColumn();
+        $removeLastSyncDate->up($schema, $queries);
     }
 
 
