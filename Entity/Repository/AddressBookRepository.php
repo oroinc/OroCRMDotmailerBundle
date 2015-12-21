@@ -88,12 +88,14 @@ class AddressBookRepository extends EntityRepository
      */
     public function bulkUpdateLastImportedAt(\DateTime $importedAt, array $addressBookIds)
     {
-        $qb = $this->createQueryBuilder('addressBook');
-        $qb->update()
-            ->where($qb->expr()->in('addressBook.id', $addressBookIds))
-            ->set('addressBook.lastImportedAt', ':lastImportedAt')
-            ->setParameter('lastImportedAt', $importedAt)
-            ->getQuery()
-            ->execute();
+        if (count($addressBookIds)) {
+            $qb = $this->createQueryBuilder('addressBook');
+            $qb->update()
+                ->where($qb->expr()->in('addressBook.id', $addressBookIds))
+                ->set('addressBook.lastImportedAt', ':lastImportedAt')
+                ->setParameter('lastImportedAt', $importedAt)
+                ->getQuery()
+                ->execute();
+        }
     }
 }
