@@ -16,19 +16,33 @@ class AddSyncDateColumns implements Migration, OrderedMigrationInterface
      */
     public function up(Schema $schema, QueryBag $queries)
     {
-        $this->addSyncDateColumns($schema, $queries);
+        $this->addSyncDateColumns($schema);
+        $this->addSyncColumnDataMigration($schema, $queries);
+    }
+
+    /**
+     * @param Schema   $schema
+     */
+    public function addSyncDateColumns(Schema $schema)
+    {
+        $table = $schema->getTable('orocrm_dm_address_book');
+        if (!$table->hasColumn('last_exported_at')) {
+            $table->addColumn('last_exported_at', 'datetime', ['comment' => '(DC2Type:datetime)', 'notnull' => false]);
+        }
+
+        if (!$table->hasColumn('last_imported_at')) {
+            $table->addColumn('last_imported_at', 'datetime', ['comment' => '(DC2Type:datetime)', 'notnull' => false]);
+            $table->addIndex(['last_imported_at'], 'orocrm_dm_ab_imported_at_idx', []);
+        }
     }
 
     /**
      * @param Schema   $schema
      * @param QueryBag $queries
      */
-    public function addSyncDateColumns(Schema $schema, QueryBag $queries)
+    protected function addSyncColumnDataMigration(Schema $schema, QueryBag $queries)
     {
         $table = $schema->getTable('orocrm_dm_address_book');
-        if (!$table->hasColumn('last_exported_at')) {
-            $table->addColumn('last_exported_at', 'datetime', ['comment' => '(DC2Type:datetime)', 'notnull' => false]);
-        }
         if ($table->hasColumn('last_synced')) {
             $dql = <<<DQL
             UPDATE orocrm_dm_address_book as ab
@@ -37,11 +51,6 @@ class AddSyncDateColumns implements Migration, OrderedMigrationInterface
 DQL;
 
             $queries->addPostQuery($dql);
-        }
-
-        if (!$table->hasColumn('last_imported_at')) {
-            $table->addColumn('last_imported_at', 'datetime', ['comment' => '(DC2Type:datetime)', 'notnull' => false]);
-            $table->addIndex(['last_imported_at'], 'orocrm_dm_ab_imported_at_idx', []);
         }
     }
 
