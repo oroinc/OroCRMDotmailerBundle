@@ -10,6 +10,9 @@ use DotMailer\Api\DataTypes\Int32List;
 
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
+/**
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ */
 class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
 {
     /**

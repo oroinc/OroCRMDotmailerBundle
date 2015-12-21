@@ -13,7 +13,6 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnecto
 
 /**
  * @dbIsolation
- * @dbReindex
  */
 class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
 {
@@ -56,10 +55,15 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
             ->will($this->returnValue(new ApiContactSuppressionList()));
         $channel = $this->getReference('orocrm_dotmailer.channel.third');
 
-        $processor = $this->getContainer()->get(self::SYNC_PROCESSOR);
-        $result = $processor->process($channel, UnsubscribedContactConnector::TYPE);
-
-        $this->assertTrue($result);
+        $result = $this->runImportExportConnectorsJob(
+            self::SYNC_PROCESSOR,
+            $channel,
+            UnsubscribedContactConnector::TYPE,
+            [],
+            $jobLog
+        );
+        $log = $this->formatImportExportJobLog($jobLog);
+        $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $contactRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:Contact');
         $statusRepository = $this->managerRegistry->getRepository(
@@ -98,7 +102,14 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
                     );
                 }
             }
-            $this->assertEquals($expectedContact['subscribedAddressBooks'], $actualAddressBooks);
+            $this->assertEquals(
+                $expectedContact['subscribedAddressBooks'],
+                $actualAddressBooks,
+                'Subscribed Address Book Contacts is not equal',
+                0,
+                10,
+                true
+            );
         }
     }
 
@@ -111,7 +122,10 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
                         'originId'               => 42,
                         'channel'                => 'orocrm_dotmailer.channel.third',
                         'status'                 => ApiContactStatuses::SUBSCRIBED,
-                        'subscribedAddressBooks' => ['orocrm_dotmailer.address_book.fourth'],
+                        'subscribedAddressBooks' => [
+                            'orocrm_dotmailer.address_book.fourth',
+                            'orocrm_dotmailer.address_book.six'
+                        ],
                         'unsubscribedDate'       => [
                             'orocrm_dotmailer.address_book.third' => new \DateTime(
                                 '2015-10-10',

@@ -8,7 +8,6 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
 
 /**
  * @dbIsolation
- * @dbReindex
  */
 class ActivityContactImportTest extends AbstractImportExportTestCase
 {
@@ -17,8 +16,7 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
         parent::setUp();
         $this->loadFixtures(
             [
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadCampaignData',
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData',
+                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadActivityData',
                 'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData',
             ]
         );
@@ -37,25 +35,28 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
             $entity[] = $listItem;
         }
 
-        $expectedCampaigns = [15662, 15666];
-        $assertCampaignCorrectDelegate = function ($actualId) use ($expectedCampaigns) {
-            $campaignKey = array_search($actualId, $expectedCampaigns);
-            if ($campaignKey === false) {
-                $this->assertTrue(false, "Unexpected request for activities for campaign $actualId");
-            }
+        $firstCampaignId = 15662;
+        $secondCampaignId = 15666;
 
-            return true;
-        };
-        $this->resource->expects($this->exactly(2))
+        $this->resource->expects($this->once())
+            ->method('GetCampaignActivitiesSinceDateByDate')
+            ->with($firstCampaignId)
+            ->will($this->returnValue($entity));
+        $this->resource->expects($this->once())
             ->method('GetCampaignActivities')
-            ->with($this->callback($assertCampaignCorrectDelegate))
+            ->with($secondCampaignId)
             ->will($this->returnValue($entity));
         $channel = $this->getReference('orocrm_dotmailer.channel.second');
 
-        $processor = $this->getContainer()->get(self::SYNC_PROCESSOR);
-        $result = $processor->process($channel, ActivityContactConnector::TYPE);
-
-        $this->assertTrue($result);
+        $result = $this->runImportExportConnectorsJob(
+            self::SYNC_PROCESSOR,
+            $channel,
+            ActivityContactConnector::TYPE,
+            [],
+            $jobLog
+        );
+        $log = $this->formatImportExportJobLog($jobLog);
+        $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $activityContactRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:Activity');
 
@@ -81,7 +82,14 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
 
             $activitiesEntities = $activityContactRepository->findBy($searchCriteria);
 
-            $this->assertCount(2, $activitiesEntities);
+            $this->assertCount(
+                2,
+                $activitiesEntities,
+                sprintf(
+                    'Incorrect activities count for %s.',
+                    $activityExpected['email']
+                )
+            );
         }
     }
 
@@ -105,12 +113,63 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
                         'unsubscribed'         => false,
                         'softBounced'          => false,
                         'hardBounced'          => false,
+                        'contactid'            => 'orocrm_dotmailer.contact.alex_case.second_channel',
+                    ],
+                    [
+                        'email'                => 'first@mail.com',
+                        'numOpens'             => 3,
+                        'numPageViews'         => 0,
+                        'numClicks'            => 0,
+                        'numForwards'          => 0,
+                        'numEstimatedForwards' => 2,
+                        'numReplies'           => 0,
+                        'dateSent'             => new \DateTime('2015-04-15T13:48:33.013Z'),
+                        'dateFirstOpened'      => new \DateTime('2015-04-16T13:48:33.013Z'),
+                        'dateLastOpened'       => new \DateTime('2015-04-16T13:48:33.013Z'),
+                        'firstOpenIp'          => '61.249.92.173',
+                        'unsubscribed'         => false,
+                        'softBounced'          => false,
+                        'hardBounced'          => false,
                         'contactid'            => 'orocrm_dotmailer.contact.first',
                     ],
                 ],
                 'activityList' => [
                     [
                         'email'                => 'alex.case@example.com',
+                        'numopens'             => 3,
+                        'numpageviews'         => 0,
+                        'numclicks'            => 0,
+                        'numforwards'          => 0,
+                        'numestimatedforwards' => 2,
+                        'numreplies'           => 0,
+                        'datesent'             => '2015-04-15T13:48:33.013Z',
+                        'datefirstopened'      => '2015-04-16T13:48:33.013Z',
+                        'datelastopened'       => '2015-04-16T13:48:33.013Z',
+                        'firstopenip'          => '61.249.92.173',
+                        'unsubscribed'         => 'false',
+                        'softbounced'          => 'false',
+                        'hardbounced'          => 'false',
+                        'contactid'            => 147,
+                    ],
+                    [
+                        'email'                => 'first@mail.com',
+                        'numopens'             => 3,
+                        'numpageviews'         => 0,
+                        'numclicks'            => 0,
+                        'numforwards'          => 0,
+                        'numestimatedforwards' => 2,
+                        'numreplies'           => 0,
+                        'datesent'             => '2015-04-15T13:48:33.013Z',
+                        'datefirstopened'      => '2015-04-16T13:48:33.013Z',
+                        'datelastopened'       => '2015-04-16T13:48:33.013Z',
+                        'firstopenip'          => '61.249.92.173',
+                        'unsubscribed'         => 'false',
+                        'softbounced'          => 'false',
+                        'hardbounced'          => 'false',
+                        'contactid'            => 42,
+                    ],
+                    [
+                        'email'                => 'first@mail.com',
                         'numopens'             => 3,
                         'numpageviews'         => 0,
                         'numclicks'            => 0,

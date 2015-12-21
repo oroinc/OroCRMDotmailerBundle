@@ -5,8 +5,10 @@ namespace OroCRM\Bundle\DotmailerBundle\Model;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 
 /**
- * @method AbstractEnumValue getVisibility()                             Get enum visibility object
- * @method ExtendAddressBook setVisibility(AbstractEnumValue $enumValue) Set enum visibility object
+ * @method AbstractEnumValue getVisibility()
+ * @method ExtendAddressBook setVisibility(AbstractEnumValue $enumValue)
+ * @method AbstractEnumValue getSyncStatus()
+ * @method ExtendAddressBook setSyncStatus(AbstractEnumValue $enumValue)
  */
 class ExtendAddressBook
 {

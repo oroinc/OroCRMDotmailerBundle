@@ -6,12 +6,15 @@ use Doctrine\DBAL\Schema\Schema;
 
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtension;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareInterface;
+use Oro\Bundle\MigrationBundle\Migration\Extension\NameGeneratorAwareInterface;
 use Oro\Bundle\MigrationBundle\Migration\Installation;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
+use Oro\Bundle\MigrationBundle\Tools\DbIdentifierNameGenerator;
 
 use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0;
+use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_2;
 
-class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwareInterface
+class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwareInterface, NameGeneratorAwareInterface
 {
     /**
      * @var ExtendExtension
@@ -19,11 +22,16 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
     protected $extendExtension;
 
     /**
+     * @var DbIdentifierNameGenerator
+     */
+    protected $nameGenerator;
+
+    /**
      * {@inheritdoc}
      */
     public function getMigrationVersion()
     {
-        return 'v1_1';
+        return 'v1_2';
     }
 
     /**
@@ -38,6 +46,14 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
         $addEnumFieldsMigration = new v1_0\AddEnumFields();
         $addEnumFieldsMigration->setExtendExtension($this->extendExtension);
         $addEnumFieldsMigration->up($schema, $queries);
+
+        $migration = new v1_2\AddActivityIndexes();
+        $migration->up($schema, $queries);
+
+        $migration = new v1_2\OroCRMDotmailerBundle();
+        $migration->setExtendExtension($this->extendExtension);
+        $migration->setNameGenerator($this->nameGenerator);
+        $migration->up($schema, $queries);
     }
 
 
@@ -47,5 +63,13 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
     public function setExtendExtension(ExtendExtension $extendExtension)
     {
         $this->extendExtension = $extendExtension;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setNameGenerator(DbIdentifierNameGenerator $nameGenerator)
+    {
+        $this->nameGenerator = $nameGenerator;
     }
 }

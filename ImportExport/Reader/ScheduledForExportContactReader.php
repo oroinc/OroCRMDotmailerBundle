@@ -17,7 +17,7 @@ class ScheduledForExportContactReader extends AbstractExportReader
 
         foreach ($addressBooks as $addressBook) {
             $iterator->append(
-                new ScheduledForExportContactIterator($addressBook, $this->registry)
+                new ScheduledForExportContactIterator($addressBook, $this->managerRegistry)
             );
         }
 

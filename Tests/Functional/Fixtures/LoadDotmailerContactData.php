@@ -28,11 +28,27 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'reference'    => 'orocrm_dotmailer.contact.first',
         ],
         [
+            'originId'    => 147,
+            'email'       => 'alex.case@example.com',
+            'firstName'   => 'Test147',
+            'lastName'    => 'Test147',
+            'gender'      => 'male',
+            'channel'     => 'orocrm_dotmailer.channel.second',
+            'reference'   => 'orocrm_dotmailer.contact.alex_case.second_channel',
+            'status'      => ApiContactStatuses::SUBSCRIBED,
+            'opt_in_type' => Contact::OPT_IN_TYPE_SINGLE,
+            'email_type'  => Contact::EMAIL_TYPE_PLAINTEXT
+        ],
+        [
             'originId'     => 42,
             'email'        => 'second@mail.com',
             'channel'      => 'orocrm_dotmailer.channel.third',
             'status'       => ApiContactStatuses::SUBSCRIBED,
-            'addressBooks' => ['orocrm_dotmailer.address_book.third', 'orocrm_dotmailer.address_book.fourth'],
+            'addressBooks' => [
+                'orocrm_dotmailer.address_book.third',
+                'orocrm_dotmailer.address_book.fourth',
+                'orocrm_dotmailer.address_book.six'
+            ],
             'reference'    => 'orocrm_dotmailer.contact.second',
         ],
         [
@@ -40,9 +56,46 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'email'              => 'test_concurrent_statuses@mail.com',
             'channel'            => 'orocrm_dotmailer.channel.third',
             'status'             => ApiContactStatuses::SUBSCRIBED,
-            'addressBooks'       => ['orocrm_dotmailer.address_book.third', 'orocrm_dotmailer.address_book.fourth'],
+            'addressBooks'       => [
+                'orocrm_dotmailer.address_book.third',
+                'orocrm_dotmailer.address_book.fourth',
+                'orocrm_dotmailer.address_book.six'
+            ],
             'lastSubscribedDate' => '2015-10-11',
-            'reference'          => 'orocrm_dotmailer.contact.second',
+            'reference'          => 'orocrm_dotmailer.contact.test_concurrent_statuses',
+        ],
+        [
+            'originId'     => 42,
+            'email'        => 'second@mail.com',
+            'channel'      => 'orocrm_dotmailer.channel.fourth',
+            'status'       => ApiContactStatuses::SUBSCRIBED,
+            'addressBooks' => [
+                'orocrm_dotmailer.address_book.third',
+                'orocrm_dotmailer.address_book.fourth',
+                [
+                    'addressBook'           =>  'orocrm_dotmailer.address_book.six',
+                    'status'                =>  Contact::STATUS_SUBSCRIBED,
+                    'exportOperationType'   =>  AddressBookContact::EXPORT_NEW_CONTACT
+                ]
+            ],
+            'reference'    => 'orocrm_dotmailer.contact.add_contact_rejected',
+        ],
+        [
+            'originId'           => 13,
+            'email'              => 'test_concurrent_statuses@mail.com',
+            'channel'            => 'orocrm_dotmailer.channel.fourth',
+            'status'             => ApiContactStatuses::SUBSCRIBED,
+            'addressBooks'       => [
+                'orocrm_dotmailer.address_book.third',
+                'orocrm_dotmailer.address_book.fourth',
+                [
+                    'addressBook'           =>  'orocrm_dotmailer.address_book.six',
+                    'status'                =>  Contact::STATUS_SUBSCRIBED,
+                    'exportOperationType'   =>  AddressBookContact::EXPORT_UPDATE_CONTACT
+                ]
+            ],
+            'lastSubscribedDate' => '2015-10-11',
+            'reference'          => 'orocrm_dotmailer.contact.update_contact_rejected',
         ],
         // contact for contact update test
         [
@@ -52,7 +105,7 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'reference'    => 'orocrm_dotmailer.contact.update_1',
             'createdAt'    => 'first day of January 2008',
             'status'       => ApiContactStatuses::SUBSCRIBED,
-            'addressBooks' => ['orocrm_dotmailer.address_book.fourth'],
+            'addressBooks' => ['orocrm_dotmailer.address_book.fourth', 'orocrm_dotmailer.address_book.fifth'],
         ],
         [
             'originId'     => null,
@@ -64,7 +117,14 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'reference'    => 'orocrm_dotmailer.contact.update_2',
             'createdAt'    => 'first day of January 2008',
             'status'       => ApiContactStatuses::SUBSCRIBED,
-            'addressBooks' => ['orocrm_dotmailer.address_book.fourth'],
+            'addressBooks' => [
+                'orocrm_dotmailer.address_book.fourth',
+                [
+                    'addressBook'           =>  'orocrm_dotmailer.address_book.six',
+                    'status'                =>  Contact::STATUS_SUBSCRIBED,
+                    'exportOperationType'   =>  AddressBookContact::EXPORT_ADD_TO_ADDRESS_BOOK
+                ]
+            ],
         ],
         [
             'originId'     => 144,
@@ -144,6 +204,11 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'opt_in_type'  => Contact::OPT_IN_TYPE_SINGLE,
             'email_type'   => Contact::EMAIL_TYPE_PLAINTEXT,
             'addressBooks' => [
+                [
+                    'addressBook'           =>  'orocrm_dotmailer.address_book.six',
+                    'status'                =>  Contact::STATUS_SUBSCRIBED,
+                    'exportOperationType'   =>  AddressBookContact::EXPORT_UPDATE_CONTACT
+                ],
                 [
                     'addressBook' => 'orocrm_dotmailer.address_book.fifth',
                     'status'      => Contact::STATUS_SUBSCRIBED
@@ -287,6 +352,10 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             $addressBookContact->setChannel($item['channel']);
             if (empty($item['originId'])) {
                 $addressBookContact->setScheduledForExport(true);
+            }
+            if (!empty($data['exportOperationType'])) {
+                $operationType = $this->findEnum('dm_ab_cnt_exp_type', $data['exportOperationType']);
+                $addressBookContact->setExportOperationType($operationType);
             }
             $contact->addAddressBookContact($addressBookContact);
 
