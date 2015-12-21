@@ -179,6 +179,8 @@ orocrm:
             marketing_list_item_class.label:  Marketing List Item Class Name
             marketing_list_item_id.label:     Marketing List Item Id
             scheduled_for_export.label:       Scheduled for Export
+            export_id.label:                  Dotmailer Export Id
+            export_operation_type.label:      Export Operation Type
 
         addressbookcontactsexport:
             entity_label:                     Address Book Contact Export
@@ -190,6 +192,7 @@ orocrm:
             status.label:                     Status
             updated_at.label:                 Updated At
             channel.label:                    Integration
+            faults_processed.label:           Faults Processed
 
         connector:
             campaign:
@@ -213,6 +216,12 @@ orocrm:
             campaign_summary:
                 label: Campaign Summary Connector
                 job: Import campaigns summary from Dotmailer
+            contact_export:
+                label: Export Contact Connector
+                job: Export Contacts to Dotmailer
+
+        import_not_exported_contact:
+            job: Import Export faults from Dotmailer
 
         emailcampaign:
             transport.dotmailer: Dotmailer

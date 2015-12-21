@@ -10,9 +10,9 @@ use Oro\Bundle\MigrationBundle\Migration\Installation;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 
 use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0;
-use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0_1\AddActivityIndexes;
-use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0_3\AddSyncDateColumns;
-use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0_3\RemoveLastSyncedColumn;
+use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0_1;
+use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0_2;
+use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0_3;
 
 class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwareInterface
 {
@@ -42,14 +42,18 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
         $addEnumFieldsMigration->setExtendExtension($this->extendExtension);
         $addEnumFieldsMigration->up($schema, $queries);
 
-        $addSyncDateColumns = new AddSyncDateColumns();
+        $activityIndexes = new v1_0_1\AddActivityIndexes();
+        $activityIndexes->up($schema, $queries);
+
+        $migration = new v1_0_2\UpdateAddressBookContactExportTable();
+        $migration->setExtendExtension($this->extendExtension);
+        $migration->up($schema, $queries);
+
+        $addSyncDateColumns = new v1_0_3\AddSyncDateColumns();
         $addSyncDateColumns->addSyncDateColumns($schema);
 
-        $removeLastSyncDate = new RemoveLastSyncedColumn();
+        $removeLastSyncDate = new v1_0_3\RemoveLastSyncedColumn();
         $removeLastSyncDate->up($schema, $queries);
-
-        $activityIndexes = new AddActivityIndexes();
-        $activityIndexes->up($schema, $queries);
     }
 
 

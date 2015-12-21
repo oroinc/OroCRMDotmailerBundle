@@ -4,6 +4,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
@@ -13,6 +14,10 @@ use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 
 class AddressBookContactsExportRepository extends EntityRepository
 {
+    protected $rejectedExportStatuses = [
+        AddressBookContactsExport::STATUS_REJECTED_BY_WATCHDOG,
+    ];
+
     /**
      * @param Channel $channel
      *
@@ -35,6 +40,24 @@ class AddressBookContactsExportRepository extends EntityRepository
 
         $result = $qb->getQuery()->getOneOrNullResult();
         return $result === null ? true : false;
+    }
+
+    /**
+     * @param Channel $channel
+     *
+     * @return bool
+     */
+    public function isExportFaultsProcessed(Channel $channel)
+    {
+        $qb = $this->createQueryBuilder('addressBookContactExport');
+        $notProcessedExportFaultsCount = $qb->select('COUNT(addressBookContactExport.id)')
+            ->where('addressBookContactExport.faultsProcessed = :faultsProcessed')
+            ->andWhere('addressBookContactExport.channel = :channel')
+            ->setParameters(['faultsProcessed' => false, 'channel' => $channel])
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $notProcessedExportFaultsCount == 0;
     }
 
     /**
@@ -91,9 +114,11 @@ class AddressBookContactsExportRepository extends EntityRepository
         $result = $statusRepository->find($statusCode);
 
         if (!$result) {
-            throw EntityNotFoundException::fromClassNameAndIdentifier(
-                $statusClassName,
-                $statusCode
+            throw new EntityNotFoundException(
+                sprintf(
+                    'Dotmailer import status "%s" was not found.',
+                    $statusCode
+                )
             );
         }
 
@@ -117,7 +142,7 @@ class AddressBookContactsExportRepository extends EntityRepository
     }
 
     /**
-     * @return AbstractEnumValue
+     * @param AbstractEnumValue $status
      * @return bool
      */
     public function isFinishedStatus(AbstractEnumValue $status)
@@ -126,7 +151,7 @@ class AddressBookContactsExportRepository extends EntityRepository
     }
 
     /**
-     * @return AbstractEnumValue
+     * @param AbstractEnumValue $status
      * @return bool
      */
     public function isNotFinishedStatus(AbstractEnumValue $status)
@@ -135,11 +160,95 @@ class AddressBookContactsExportRepository extends EntityRepository
     }
 
     /**
+     * @param AbstractEnumValue $status
      * @return bool
      */
     public function isErrorStatus(AbstractEnumValue $status)
     {
         return $status->getId() !== AddressBookContactsExport::STATUS_FINISH &&
             $status->getId() !== AddressBookContactsExport::STATUS_NOT_FINISHED;
+    }
+
+    /**
+     * @param Channel $channel
+     *
+     * @return string[]
+     */
+    public function getRejectedExportImportIds(Channel $channel)
+    {
+        return $this->getRejectedExportRestrictionQB($channel)
+            ->select('addressBookContactExport.importId')
+            ->getQuery()
+            ->execute();
+    }
+
+    /**
+     * @param Channel $channel
+     */
+    public function setRejectedExportFaultsProcessed(Channel $channel)
+    {
+        $qb = $this->getRejectedExportRestrictionQB($channel);
+        $qb->update()
+            ->set('addressBookContactExport.faultsProcessed', $qb->expr()->literal(true))
+            ->getQuery()
+            ->execute();
+    }
+
+    /**
+     * @param Channel $channel
+     *
+     * @return AddressBookContactsExport[]
+     */
+    public function getNotRejectedExports(Channel $channel)
+    {
+        return $this->getNotRejectedExportRestrictionsQB($channel)
+            ->innerJoin('addressBookContactExport.addressBook', 'addressBook')
+            ->addSelect('addressBook')
+            ->getQuery()
+            ->execute();
+    }
+
+    /**
+     * @param Channel $channel
+     */
+    public function setNotRejectedExportFaultsProcessed(Channel $channel)
+    {
+        $qb = $this->getNotRejectedExportRestrictionsQB($channel);
+        $qb->update()
+            ->set('addressBookContactExport.faultsProcessed', $qb->expr()->literal(true))
+            ->getQuery()
+            ->execute();
+    }
+
+    /**
+     * @param Channel      $channel
+     *
+     * @return QueryBuilder
+     */
+    protected function getNotRejectedExportRestrictionsQB(Channel $channel)
+    {
+        $qb = $this->createQueryBuilder('addressBookContactExport');
+        $qb->innerJoin('addressBookContactExport.status', 'status')
+            ->where($qb->expr()->notIn('addressBookContactExport.status', $this->rejectedExportStatuses))
+            ->andWhere('addressBookContactExport.channel = :channel')
+            ->setParameter('channel', $channel);
+
+        return $qb;
+    }
+
+    /**
+     * @param Channel      $channel
+     *
+     * @return QueryBuilder
+     */
+    protected function getRejectedExportRestrictionQB(Channel $channel)
+    {
+        $qb = $this->createQueryBuilder('addressBookContactExport');
+        $qb->innerJoin('addressBookContactExport.status', 'status')
+            ->where($qb->expr()->in('addressBookContactExport.status', $this->rejectedExportStatuses))
+            ->andWhere('addressBookContactExport.channel = :channel')
+            ->setParameter('channel', $channel);
+
+        return $qb;
     }
 }
