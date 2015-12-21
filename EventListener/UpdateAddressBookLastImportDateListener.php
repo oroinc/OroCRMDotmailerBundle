@@ -51,7 +51,8 @@ class UpdateAddressBookLastImportDateListener implements EventSubscriberInterfac
      */
     protected function isApplicable(SyncEvent $syncEvent)
     {
-        return $syncEvent->getJobName() == ContactConnector::IMPORT_JOB && $syncEvent->getJobResult()->isSuccessful();
+        return $syncEvent->getJobName() == ContactConnector::IMPORT_JOB
+            && $syncEvent->getJobResult()->isSuccessful();
     }
 
     /**
