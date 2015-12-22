@@ -6,6 +6,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\IntegrationBundle\Event\SyncEvent;
@@ -37,11 +38,15 @@ class UpdateAddressBookLastImportDateListener implements EventSubscriberInterfac
         $jobResult = $syncEvent->getJobResult();
         $addressBookIds = $jobResult->getContext()->getValue(ContactConnector::PROCESSED_ADDRESS_BOOK_IDS);
 
-        $now = new \DateTime('now', new \DateTimeZone('UTC'));
+        $connectorData = $jobResult->getContext()->getValue(ContactConnector::CONTEXT_CONNECTOR_DATA_KEY);
+        if (empty($connectorData['lastSyncDate'])) {
+            throw new RuntimeException('Connector Last Sync Date not found');
+        }
+        $contactConnectorLastSyncDate = new \DateTime($connectorData['lastSyncDate'], new \DateTimeZone('UTC'));
 
         $this->registry
             ->getRepository('OroCRMDotmailerBundle:AddressBook')
-            ->bulkUpdateLastImportedAt($now, $addressBookIds);
+            ->bulkUpdateLastImportedAt($contactConnectorLastSyncDate, $addressBookIds);
     }
 
     /**

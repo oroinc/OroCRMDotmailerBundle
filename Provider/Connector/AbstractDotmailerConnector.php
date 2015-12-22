@@ -92,6 +92,21 @@ abstract class AbstractDotmailerConnector extends AbstractConnector
     }
 
     /**
+     * @param ContextInterface $context
+     */
+    protected function initializeFromContext(ContextInterface $context)
+    {
+        if (!$this->contextMediator->getChannel($context)) {
+            throw new RuntimeException("Channel {$context->getOption('channel')} not exist");
+        }
+
+        parent::initializeFromContext($context);
+
+        // updating context sync date with current date before actual sync
+        $this->updateContextLastSyncDate();
+    }
+
+    /**
      * Updates last sync date in execution context with current date and time (now)
      *
      * @param \DateTime $date
@@ -108,21 +123,6 @@ abstract class AbstractDotmailerConnector extends AbstractConnector
             ConnectorInterface::CONTEXT_CONNECTOR_DATA_KEY,
             $data
         );
-    }
-
-    /**
-     * @param ContextInterface $context
-     */
-    protected function initializeFromContext(ContextInterface $context)
-    {
-        if (!$this->contextMediator->getChannel($context)) {
-            throw new RuntimeException("Channel {$context->getOption('channel')} not exist");
-        }
-
-        parent::initializeFromContext($context);
-
-        // updating context sync date with current date before actual sync
-        $this->updateContextLastSyncDate();
     }
 
     /**
