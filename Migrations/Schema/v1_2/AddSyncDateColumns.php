@@ -4,32 +4,45 @@ namespace OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_2;
 
 use Doctrine\DBAL\Schema\Schema;
 
+use Oro\Bundle\MigrationBundle\Migration\Extension\RenameExtension;
+use Oro\Bundle\MigrationBundle\Migration\Extension\RenameExtensionAwareInterface;
 use Oro\Bundle\MigrationBundle\Migration\Migration;
 use Oro\Bundle\MigrationBundle\Migration\OrderedMigrationInterface;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 
-class AddSyncDateColumns implements Migration, OrderedMigrationInterface
+class AddSyncDateColumns implements Migration, OrderedMigrationInterface, RenameExtensionAwareInterface
 {
+    /**
+     * @var RenameExtension
+     */
+    protected $renameExtension;
 
     /**
      * {@inheritdoc}
      */
     public function up(Schema $schema, QueryBag $queries)
     {
-        $this->addSyncDateColumns($schema);
-        $this->addSyncColumnDataMigration($schema, $queries);
+        $this->renameLastSyncDateColumn($schema, $queries);
+        $this->addLastImportedAt($schema);
     }
 
     /**
-     * @param Schema   $schema
+     * @param Schema $schema
      */
-    public function addSyncDateColumns(Schema $schema)
+    public function renameLastSyncDateColumn(Schema $schema, QueryBag $queries)
     {
         $table = $schema->getTable('orocrm_dm_address_book');
-        if (!$table->hasColumn('last_exported_at')) {
-            $table->addColumn('last_exported_at', 'datetime', ['comment' => '(DC2Type:datetime)', 'notnull' => false]);
+        if ($table->hasColumn('last_synced')) {
+            $this->renameExtension->renameColumn($schema, $queries, $table, 'last_synced', 'last_exported_at');
         }
+    }
 
+    /**
+     * @param Schema $schema
+     */
+    public function addLastImportedAt(Schema $schema)
+    {
+        $table = $schema->getTable('orocrm_dm_address_book');
         if (!$table->hasColumn('last_imported_at')) {
             $table->addColumn('last_imported_at', 'datetime', ['comment' => '(DC2Type:datetime)', 'notnull' => false]);
             $table->addIndex(['last_imported_at'], 'orocrm_dm_ab_imported_at_idx', []);
@@ -37,27 +50,16 @@ class AddSyncDateColumns implements Migration, OrderedMigrationInterface
     }
 
     /**
-     * @param Schema   $schema
-     * @param QueryBag $queries
+     * {@inheritdoc}
      */
-    protected function addSyncColumnDataMigration(Schema $schema, QueryBag $queries)
+    public function setRenameExtension(RenameExtension $renameExtension)
     {
-        $table = $schema->getTable('orocrm_dm_address_book');
-        if ($table->hasColumn('last_synced')) {
-            $dql = <<<DQL
-            UPDATE orocrm_dm_address_book as ab
-            SET ab.last_exported_at = ab.last_synced
-            WHERE ab.last_synced IS NOT NULL
-DQL;
-
-            $queries->addPostQuery($dql);
-        }
+        $this->renameExtension = $renameExtension;
     }
 
+
     /**
-     * Get the order of this migration
-     *
-     * @return integer
+     * {@inheritdoc}
      */
     public function getOrder()
     {
