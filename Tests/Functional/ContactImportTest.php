@@ -31,6 +31,7 @@ class ContactImportTest extends AbstractImportExportTestCase
     /**
      * @dataProvider importDataProvider
      * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @param array $expected
      * @param array $contactList
@@ -125,11 +126,14 @@ class ContactImportTest extends AbstractImportExportTestCase
 
         $linkedAddressBookId = $this->getReference('orocrm_dotmailer.address_book.second')->getId();
         $linkedAddressBook = $addressBookRepository->find($linkedAddressBookId);
+
+        $expectedLastImportedAt = $this->getContainer()
+            ->get('orocrm_dotmailer.connector.contact')
+            ->getLastSyncDate();
+        $this->assertNotNull($expectedLastImportedAt);
         $this->assertEquals(
             $linkedAddressBook->getLastImportedAt(),
-            new \DateTime('now', new \DateTimeZone('UTC')),
-            'Last updated At was not updated',
-            10 /** Max delta in seconds */
+            $expectedLastImportedAt
         );
     }
 
