@@ -77,6 +77,7 @@ parameters:
     orocrm_dotmailer.importexport.strategy.unsubscribed_from_account_contact.class:   OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\UnsubscribedFromAccountContactStrategy
     orocrm_dotmailer.importexport.strategy.campaign.class:                            OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\CampaignStrategy
     orocrm_dotmailer.importexport.strategy.activity_contact.class:                    OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\ActivityContactStrategy
+    orocrm_dotmailer.importexport.strategy.campaign_summary.class:                    OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\CampaignSummaryStrategy
     orocrm_dotmailer.importexport.strategy.contact.class:                             OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\ContactStrategy
     orocrm_dotmailer.importexport.strategy.contact_sync.class:                        OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\ContactSyncStrategy
 
@@ -458,6 +459,10 @@ services:
         class: %orocrm_dotmailer.importexport.strategy.activity_contact.class%
         parent: orocrm_dotmailer.importexport.strategy.add_or_replace
 
+    orocrm_dotmailer.importexport.strategy.campaign_summary:
+        class: %orocrm_dotmailer.importexport.strategy.campaign_summary.class%
+        parent: orocrm_dotmailer.importexport.strategy.add_or_replace
+
     orocrm_dotmailer.importexport.strategy.contact:
         class: %orocrm_dotmailer.importexport.strategy.contact.class%
         parent: orocrm_dotmailer.importexport.strategy.add_or_replace
@@ -553,7 +558,7 @@ services:
         parent: orocrm_dotmailer.importexport.processor.import_abstract
         calls:
             - [setDataConverter, [@orocrm_dotmailer.importexport.data_converter.campaign_summary]]
-            - [setStrategy, [@orocrm_dotmailer.importexport.strategy.add_or_replace]]
+            - [setStrategy, [@orocrm_dotmailer.importexport.strategy.campaign_summary]]
             - [setEntityName, [%orocrm_dotmailer.entity.campaign_summary.class%]]
 
     orocrm_dotmailer.importexport.processor.export_removed:
