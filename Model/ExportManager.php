@@ -167,15 +167,15 @@ class ExportManager
     /**
      * @param AddressBook       $addressBook
      * @param AbstractEnumValue $status
-     * @param bool              $updateLastSyncedDate
+     * @param bool              $updateLastExportedAt
      */
     protected function updateAddressBookSyncStatus(
         AddressBook $addressBook,
         AbstractEnumValue $status,
-        $updateLastSyncedDate
+        $updateLastExportedAt
     ) {
         $addressBook->setSyncStatus($status);
-        if ($updateLastSyncedDate) {
+        if ($updateLastExportedAt) {
             $addressBook->setLastExportedAt(new \DateTime('now', new \DateTimeZone('UTC')));
         }
     }

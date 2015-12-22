@@ -10,7 +10,7 @@
                     {% set status = 'oro.ui.empty'|trans %}
                 {% endif %}
 
-                {{ 'orocrm.dotmailer.syncstatus.list_is_connected.lebel'|trans({
+                {{ 'orocrm.dotmailer.syncstatus.list_is_connected.label'|trans({
                     '%address_book%': '<strong>' ~ address_book.name ~ '</strong>',
                     '%synced%': '<strong>'
                         ~ address_book.lastExportedAt|oro_format_date|default('oro.ui.empty'|trans)
