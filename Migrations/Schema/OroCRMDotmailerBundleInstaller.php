@@ -8,9 +8,11 @@ use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtension;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareInterface;
 use Oro\Bundle\MigrationBundle\Migration\Installation;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
+
 use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0;
 use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0_1;
 use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0_2;
+use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0_3;
 
 class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwareInterface
 {
@@ -24,7 +26,7 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
      */
     public function getMigrationVersion()
     {
-        return 'v1_0_2';
+        return 'v1_0_3';
     }
 
     /**
@@ -46,8 +48,12 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
         $migration = new v1_0_2\UpdateAddressBookContactExportTable();
         $migration->setExtendExtension($this->extendExtension);
         $migration->up($schema, $queries);
-    }
 
+        $addSyncDateColumns = new v1_0_3\AddSyncDateColumns();
+        $addSyncDateColumns->addLastImportedAt($schema);
+
+        $this->renameLastSyncedColumn($schema);
+    }
 
     /**
      * {@inheritdoc}
@@ -55,5 +61,15 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
     public function setExtendExtension(ExtendExtension $extendExtension)
     {
         $this->extendExtension = $extendExtension;
+    }
+
+    /**
+     * @param Schema $schema
+     */
+    protected function renameLastSyncedColumn(Schema $schema)
+    {
+        $table = $schema->getTable('orocrm_dm_address_book');
+        $table->dropColumn('last_synced');
+        $table->addColumn('last_exported_at', 'datetime', ['comment' => '(DC2Type:datetime)', 'notnull' => false]);
     }
 }
