@@ -29,23 +29,6 @@ class AddressBookRepository extends EntityRepository
     }
 
     /**
-     * Get addressBook Ids
-     *
-     * @param Channel $channel
-     *
-     * @return array
-     */
-    public function getAddressBooksToSyncOriginIds(Channel $channel)
-    {
-        return $this->createQueryBuilder('addressBook')
-            ->select('addressBook.originId')
-            ->where('addressBook.channel = :channel')
-            ->setParameter('channel', $channel)
-            ->getQuery()
-            ->getScalarResult();
-    }
-
-    /**
      * @param Channel $channel
      * @param int|null $addressBookId
      * @return AddressBook[]
@@ -97,5 +80,22 @@ class AddressBookRepository extends EntityRepository
         }
 
         return $qb->setParameters(['channel' => $channel]);
+    }
+
+    /**
+     * @param \DateTime $importedAt
+     * @param array $addressBookIds
+     */
+    public function bulkUpdateLastImportedAt(\DateTime $importedAt, array $addressBookIds)
+    {
+        if (count($addressBookIds)) {
+            $qb = $this->createQueryBuilder('addressBook');
+            $qb->update()
+                ->where($qb->expr()->in('addressBook.id', $addressBookIds))
+                ->set('addressBook.lastImportedAt', ':lastImportedAt')
+                ->setParameter('lastImportedAt', $importedAt)
+                ->getQuery()
+                ->execute();
+        }
     }
 }

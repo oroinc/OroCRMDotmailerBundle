@@ -129,6 +129,7 @@ parameters:
     orocrm_dotmailer.listener.datagrid.marketing_list_item.class:     OroCRM\Bundle\DotmailerBundle\EventListener\Datagrid\MarketingListItemGridListener
     orocrm_dotmailer.listener.cache_clear.class:                      OroCRM\Bundle\DotmailerBundle\EventListener\CacheClearListener
     orocrm_dotmailer.listener.contact_export.class:                   OroCRM\Bundle\DotmailerBundle\EventListener\ContactExportListener
+    orocrm_dotmailer.listener.update_address_book_last_imported_date.class: OroCRM\Bundle\DotmailerBundle\EventListener\UpdateAddressBookLastImportDateListener
 
     orocrm_dotmailer.transport.dotmailer.class: OroCRM\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport
 services:
@@ -773,6 +774,13 @@ services:
         arguments:
             - @doctrine
             - @orocrm_dotmailer.export_manager
+        tags:
+            - { name: kernel.event_subscriber }
+
+    orocrm_dotmailer.listener.update_address_book_last_imported_date:
+        class: %orocrm_dotmailer.listener.update_address_book_last_imported_date.class%
+        arguments:
+            - @doctrine
         tags:
             - { name: kernel.event_subscriber }
 
