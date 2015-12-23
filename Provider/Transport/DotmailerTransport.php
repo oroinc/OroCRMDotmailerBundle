@@ -92,17 +92,23 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     }
 
     /**
-     * @param array          $addressBooks
-     * @param \DateTime|null $dateSince
+     * @param AddressBook[]  $addressBooks
      *
      * @return ContactIterator
      */
-    public function getAddressBookContacts($addressBooks, $dateSince = null)
+    public function getAddressBookContacts($addressBooks)
     {
         $iterator = new AppendIterator();
         foreach ($addressBooks as $addressBook) {
             $iterator->append(
-                new ContactIterator($this->dotmailerResources, $addressBook['originId'], $dateSince)
+                new ContactIterator(
+                    $this->dotmailerResources,
+                    $addressBook->getOriginId(),
+                    $addressBook->getLastImportedAt(),
+                    true,
+                    1000,
+                    0
+                )
             );
         }
 
@@ -128,21 +134,19 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     }
 
     /**
-     * @param array     $addressBooks
-     * @param \DateTime $lastSyncDate
+     * @param AddressBook[] $addressBooks
      *
      * @return UnsubscribedContactIterator
      */
-    public function getUnsubscribedContacts(array $addressBooks, \DateTime $lastSyncDate = null)
+    public function getUnsubscribedContacts(array $addressBooks)
     {
-        if (!$lastSyncDate) {
-            $lastSyncDate = date_create_from_format('Y', self::DEFAULT_START_SYNC_DATE, new \DateTimeZone('UTC'));
-        }
+        $defaultLastSyncDate = date_create_from_format('Y', self::DEFAULT_START_SYNC_DATE, new \DateTimeZone('UTC'));
 
         $iterator = new AppendIterator();
         foreach ($addressBooks as $addressBook) {
+            $lastSyncDate = $addressBook->getLastImportedAt() ?: $defaultLastSyncDate;
             $iterator->append(
-                new UnsubscribedContactIterator($this->dotmailerResources, $addressBook['originId'], $lastSyncDate)
+                new UnsubscribedContactIterator($this->dotmailerResources, $addressBook->getOriginId(), $lastSyncDate)
             );
         }
 

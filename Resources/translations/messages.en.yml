@@ -28,11 +28,11 @@ orocrm:
             origin_id.label:                      Origin Id
             owner.label:                          Owner
             visibility.label:                     Visibility
-            lastSynced.label:                     Last Synced Date
             status.label:                         Status
             address_book_contacts.label:          Address Book Contacts
             address_book_contacts_exports.label:  Address Book Contacts Export
-            last_synced.label:                    Last Synced At
+            last_imported_at.label:               Last Imported At
+            last_exported_at.label:               Last Exported At
             sync_status.label:                    Sync Status
 
             sync: Marketing list synchronization started. {{ job_view_link }}
@@ -290,7 +290,7 @@ orocrm:
             ExceedsAllowedContactLimit: Dotmailer Contacts Limit Exceeds
             NotAvailableInThisVersion: Not Synced
             NotFinished: In Progress
-            list_is_connected.lebel: This list is linked to "%address_book%" Dotmailer address book. Last synchronization date: %synced%. Synchronization status: %status%.
+            list_is_connected.label: This list is linked to "%address_book%" Dotmailer address book. Last synchronization date: %synced%. Synchronization status: %status%.
 
         acl:
             action:
