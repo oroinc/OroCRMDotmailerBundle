@@ -75,6 +75,11 @@ class CampaignSummaryImportTest extends AbstractImportExportTestCase
         $summaryEntities = $campaignSummaryRepository->findBy($searchCriteria);
 
         $this->assertCount(1, $summaryEntities);
+
+        $actual = $summaryEntities[0];
+        $this->assertNotNull($actual->getCampaign());
+        $this->assertNotNull($actual->getCampaign()->getEmailCampaign());
+        $this->assertNull($actual->getCampaign()->getEmailCampaign()->getSentAt());
     }
 
     public function importDataProvider()
@@ -102,6 +107,7 @@ class CampaignSummaryImportTest extends AbstractImportExportTestCase
                     'numClicks'           => 5,
                     'numTextClicks'       => 5,
                     'numTotalClicks'      => 5,
+                    'dateSent'            => null
                 ]
             ]
         ];
