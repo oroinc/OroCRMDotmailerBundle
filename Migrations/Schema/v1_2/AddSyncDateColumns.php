@@ -27,7 +27,8 @@ class AddSyncDateColumns implements Migration, OrderedMigrationInterface, Rename
     }
 
     /**
-     * @param Schema $schema
+     * @param Schema   $schema
+     * @param QueryBag $queries
      */
     public function renameLastSyncDateColumn(Schema $schema, QueryBag $queries)
     {
