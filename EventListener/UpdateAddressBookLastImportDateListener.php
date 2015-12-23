@@ -39,10 +39,15 @@ class UpdateAddressBookLastImportDateListener implements EventSubscriberInterfac
         $addressBookIds = $jobResult->getContext()->getValue(ContactConnector::PROCESSED_ADDRESS_BOOK_IDS);
 
         $connectorData = $jobResult->getContext()->getValue(ContactConnector::CONTEXT_CONNECTOR_DATA_KEY);
-        if (empty($connectorData['lastSyncDate'])) {
-            throw new RuntimeException('Connector Last Sync Date not found');
+        if (empty($connectorData[ContactConnector::LAST_SYNC_DATE_KEY])) {
+            throw new RuntimeException(
+                sprintf('Connector context value "%s" not found.', ContactConnector::LAST_SYNC_DATE_KEY)
+            );
         }
-        $contactConnectorLastSyncDate = new \DateTime($connectorData['lastSyncDate'], new \DateTimeZone('UTC'));
+        $contactConnectorLastSyncDate = new \DateTime(
+            $connectorData[ContactConnector::LAST_SYNC_DATE_KEY],
+            new \DateTimeZone('UTC')
+        );
 
         $this->registry
             ->getRepository('OroCRMDotmailerBundle:AddressBook')
