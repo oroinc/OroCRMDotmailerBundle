@@ -134,7 +134,7 @@ class ContactUpdateTest extends AbstractImportExportTestCase
     {
         return [
             [
-                'expected'        => [
+                'expected' => [
                     [
                         'originId'  => 142,
                         'email'     => 'test1@example.com',
@@ -154,8 +154,10 @@ class ContactUpdateTest extends AbstractImportExportTestCase
                         'emailType' => 'Html',
                         'status'    => 'Suppressed',
                         'lastName'  => 'Test',
+                        'fullName'  => null,
                         'gender'    => 'male',
-                        'firstName'    => 'Test2',
+                        'firstName' => 'Test2',
+                        'postcode'  => null,
                         'lastSubscribedDate' => new \DateTime('2015-01-01', new \DateTimeZone('UTC'))
                     ],
                 ],
