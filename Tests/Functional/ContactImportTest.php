@@ -162,6 +162,7 @@ class ContactImportTest extends AbstractImportExportTestCase
                         'firstName' => 'Alex',
                         'fullName' => null,
                         'gender'    => 'male',
+                        'postcode' => null,
                         'lastSubscribedDate' => new \DateTime('2015-01-01', new \DateTimeZone('UTC'))
                     ],
                     [
