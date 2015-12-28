@@ -159,18 +159,6 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
             $entity = new Segment();
             $this->resolveReferenceIfExist($data, 'owner');
             $this->resolveReferenceIfExist($data, 'organization');
-
-            if (!empty($data['definition']['filters'])) {
-                foreach ($data['definition']['filters'] as &$filter) {
-                    if (!empty($filter['columnName'])) {
-                        $filter['columnName'] = is_array($filter['columnName'])
-                            ? implode('', $filter['columnName'])
-                            : $filter['columnName'];
-                    }
-                }
-            }
-
-
             $data['definition'] = json_encode($data['definition']);
             $data['type'] = $manager
                 ->getRepository('OroSegmentBundle:SegmentType')
