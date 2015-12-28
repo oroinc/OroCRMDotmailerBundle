@@ -55,7 +55,7 @@ class LoadMarketingListData extends AbstractFixture implements DependentFixtureI
             'type'          => 'static',
             'owner'         => 'orocrm_dotmailer.user.john.doe',
             'organization'  => 'orocrm_dotmailer.organization.foo',
-            'segment'       => 'orocrm_dotmailer.segment.first',
+            'segment'       => 'orocrm_dotmailer.segment.case',
             'reference'     => 'orocrm_dotmailer.marketing_list.fifth',
         ],
         [
