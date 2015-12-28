@@ -36,11 +36,10 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
                         'criterion' =>
                             [
                                 'filter' => 'string',
-                                'data' =>
-                                    [
-                                        'value' => 'Case',
-                                        'type' => '1',
-                                    ],
+                                'data' => [
+                                    'value' => 'Case',
+                                    'type' => '1',
+                                ],
                             ],
                     ],
                 ],
@@ -69,11 +68,10 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
                         'criterion' =>
                             [
                                 'filter' => 'string',
-                                'data' =>
-                                    [
-                                        'value' => 'Jack',
-                                        'type' => '1',
-                                    ],
+                                'data' => [
+                                    'value' => 'Jack',
+                                    'type' => '1',
+                                ],
                             ],
                     ],
                 ],
@@ -102,16 +100,53 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
                         'criterion' =>
                             [
                                 'filter' => 'string',
-                                'data' =>
-                                    [
-                                        'value' => 'Not Exist',
-                                        'type' => '1',
-                                    ],
+                                'data' => [
+                                    'value' => 'Not Exist',
+                                    'type' => '1',
+                                ],
                             ],
                     ],
                 ],
             ],
             'reference' => 'orocrm_dotmailer.segment.empty',
+        ],
+        [
+            'type' => 'dynamic',
+            'name' => 'Test ML Segment by Case last name',
+            'description' => 'description',
+            'entity' => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
+            'owner' => 'orocrm_dotmailer.business_unit.foo',
+            'organization' => 'orocrm_dotmailer.organization.foo',
+            'definition' => [
+                'filters' => [
+                    [
+                        'columnName' => 'lastName',
+                        'criterion' =>
+                            [
+                                'filter' => 'string',
+                                'data' => [
+                                    'value' => 'Case',
+                                    'type' => '1',
+                                ],
+                            ],
+                    ]
+                ],
+                'columns' => [
+                    [
+                        'name' => 'primaryEmail',
+                        'label' => 'Primary Email',
+                        'sorting' => '',
+                        'func' => null,
+                    ],
+                    [
+                        'name' => 'mlLastContactedAt',
+                        'label' => 'Last Contacted At',
+                        'sorting' => '',
+                        'func' => null,
+                    ],
+                ],
+            ],
+            'reference' => 'orocrm_dotmailer.segment.case',
         ],
     ];
 
@@ -124,6 +159,18 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
             $entity = new Segment();
             $this->resolveReferenceIfExist($data, 'owner');
             $this->resolveReferenceIfExist($data, 'organization');
+
+            if (!empty($data['definition']['filters'])) {
+                foreach ($data['definition']['filters'] as &$filter) {
+                    if (!empty($filter['columnName'])) {
+                        $filter['columnName'] = is_array($filter['columnName'])
+                            ? implode('', $filter['columnName'])
+                            : $filter['columnName'];
+                    }
+                }
+            }
+
+
             $data['definition'] = json_encode($data['definition']);
             $data['type'] = $manager
                 ->getRepository('OroSegmentBundle:SegmentType')

@@ -275,7 +275,7 @@ class MarketingListItemsQueryBuilderProvider
      *
      * @return QueryBuilder
      */
-    public function getCachedMarketingListItemsByEmailQB(MarketingList $marketingList)
+    public function getCachedMarketingListEntitiesQB(MarketingList $marketingList)
     {
         if (count($this->cachedQueryBuilders) > 100) {
             $this->cachedQueryBuilders = [];
@@ -283,7 +283,12 @@ class MarketingListItemsQueryBuilderProvider
 
         if (!isset($this->cachedQueryBuilders[$marketingList->getId()])) {
             $this->cachedQueryBuilders[$marketingList->getId()] = $this->marketingListProvider
-                ->getMarketingListEntitiesQueryBuilder($marketingList, MarketingListProvider::FULL_ENTITIES_MIXIN);
+                ->getMarketingListEntitiesQueryBuilder($marketingList, MarketingListProvider::FULL_ENTITIES_MIXIN)
+                /**
+                 * In some cases Marketing list segment can contain duplicate records because of
+                 * join to many entities. Duplicate records should not be processed during import
+                 */
+                ->distinct(true);
         }
 
         return clone $this->cachedQueryBuilders[$marketingList->getId()];
@@ -354,6 +359,12 @@ class MarketingListItemsQueryBuilderProvider
             Join::WITH,
             $joinContactsExpr
         )->setParameter('channel', $addressBook->getChannel());
+
+        /**
+         * In some cases Marketing list segment can contain duplicate records because of
+         * join to many entities. Duplicate records should not be processed during import
+         */
+        $qb->distinct(true);
 
         return $qb;
     }
