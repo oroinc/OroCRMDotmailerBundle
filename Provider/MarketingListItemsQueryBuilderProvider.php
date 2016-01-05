@@ -179,7 +179,13 @@ class MarketingListItemsQueryBuilderProvider
         }
         $contactInformationFieldExpr = $this->fieldHelper
             ->getFieldExpr($marketingList->getEntity(), $qb, $contactInformationField);
+
+        /**
+         * Distinct used in select leads to exception in postgresql
+         * in case if order by field not presented in select
+         */
         $qb->select($contactInformationFieldExpr);
+        $qb->resetDQLPart('orderBy');
 
         $removedItemsQueryBuilder = clone $qb;
         $expr = $removedItemsQueryBuilder->expr();
