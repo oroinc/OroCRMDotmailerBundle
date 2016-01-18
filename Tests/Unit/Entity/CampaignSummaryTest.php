@@ -5,6 +5,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Entity;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Tests\Unit\Fixture\Entity\Organization;
 
+use OroCRM\Bundle\DotmailerBundle\Entity\Activity;
 use OroCRM\Bundle\DotmailerBundle\Entity\CampaignSummary;
 use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
 

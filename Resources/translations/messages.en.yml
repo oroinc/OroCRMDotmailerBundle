@@ -28,11 +28,11 @@ orocrm:
             origin_id.label:                      Origin Id
             owner.label:                          Owner
             visibility.label:                     Visibility
-            lastSynced.label:                     Last Synced Date
             status.label:                         Status
             address_book_contacts.label:          Address Book Contacts
             address_book_contacts_exports.label:  Address Book Contacts Export
-            last_synced.label:                    Last Synced At
+            last_imported_at.label:               Last Imported At
+            last_exported_at.label:               Last Exported At
             sync_status.label:                    Sync Status
 
             sync: Marketing list synchronization started. {{ job_view_link }}
@@ -178,6 +178,8 @@ orocrm:
             marketing_list_item_class.label:  Marketing List Item Class Name
             marketing_list_item_id.label:     Marketing List Item Id
             scheduled_for_export.label:       Scheduled for Export
+            export_id.label:                  Dotmailer Export Id
+            export_operation_type.label:      Export Operation Type
 
         addressbookcontactsexport:
             entity_label:                     Address Book Contact Export
@@ -189,6 +191,7 @@ orocrm:
             status.label:                     Status
             updated_at.label:                 Updated At
             channel.label:                    Integration
+            faults_processed.label:           Faults Processed
 
         connector:
             campaign:
@@ -212,6 +215,12 @@ orocrm:
             campaign_summary:
                 label: Campaign Summary Connector
                 job: Import campaigns summary from Dotmailer
+            contact_export:
+                label: Export Contact Connector
+                job: Export Contacts to Dotmailer
+
+        import_not_exported_contact:
+            job: Import Export faults from Dotmailer
 
         emailcampaign:
             transport.dotmailer: Dotmailer
@@ -304,7 +313,7 @@ orocrm:
             ExceedsAllowedContactLimit: Dotmailer Contacts Limit Exceeds
             NotAvailableInThisVersion: Not Synced
             NotFinished: In Progress
-            list_is_connected.lebel: This list is linked to "%address_book%" Dotmailer address book. Last synchronization date: %synced%. Synchronization status: %status%.
+            list_is_connected.label: This list is linked to "%address_book%" Dotmailer address book. Last synchronization date: %synced%. Synchronization status: %status%.
 
         acl:
             action:
