@@ -1,0 +1,10 @@
+oro_api:
+    entities:
+        OroCRM\Bundle\DotmailerBundle\Entity\Activity: ~
+        OroCRM\Bundle\DotmailerBundle\Entity\AddressBook: ~
+        OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact: ~
+        OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport: ~
+        OroCRM\Bundle\DotmailerBundle\Entity\Campaign: ~
+        OroCRM\Bundle\DotmailerBundle\Entity\CampaignSummary: ~
+        OroCRM\Bundle\DotmailerBundle\Entity\Contact: ~
+        OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransport: ~
