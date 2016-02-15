@@ -13,6 +13,7 @@ use Oro\Bundle\DataGridBundle\Datasource\DatasourceInterface;
 use Oro\Bundle\DataGridBundle\Datasource\Orm\OrmDatasource;
 use Oro\Bundle\DataGridBundle\Datasource\ResultRecordInterface;
 use Oro\Bundle\DataGridBundle\Event\BuildAfter;
+use Oro\Bundle\DataGridBundle\EventListener\MixinListener;
 use Oro\Bundle\DataGridBundle\Extension\Action\ActionExtension;
 use Oro\Bundle\DataGridBundle\Extension\Formatter\Configuration;
 use Oro\Bundle\DataGridBundle\Extension\Formatter\Property\PropertyInterface;
@@ -20,7 +21,6 @@ use Oro\Bundle\DataGridBundle\Extension\Formatter\Property\PropertyInterface;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Model\FieldHelper;
-use OroCRM\Bundle\MarketingListBundle\Datagrid\MarketingListItemsListener;
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 use OroCRM\Bundle\MarketingListBundle\Model\MarketingListHelper;
 use OroCRM\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
@@ -90,8 +90,8 @@ class MarketingListItemGridListener
             $config = $datagrid->getConfig();
             $this->removeColumn($config, 'contactedTimes');
 
-            $mixin = $datagrid->getParameters()->get(MarketingListItemsListener::MIXIN);
-            if ($mixin == 'orocrm-marketing-list-items-mixin') {
+            $mixin = $datagrid->getParameters()->get(MixinListener::GRID_MIXIN);
+            if ($mixin === 'orocrm-marketing-list-items-mixin') {
                 $this->joinSubscriberStatus($marketingList, $datasource->getQueryBuilder());
                 $this->rewriteActionConfiguration($datagrid);
             }
@@ -124,7 +124,7 @@ class MarketingListItemGridListener
      */
     public function isApplicable($gridName, $parameters)
     {
-        if (!$parameters->get(MarketingListItemsListener::MIXIN, false)) {
+        if (!$parameters->get(MixinListener::GRID_MIXIN, false)) {
             return false;
         }
 
