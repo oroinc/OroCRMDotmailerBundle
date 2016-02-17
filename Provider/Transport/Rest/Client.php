@@ -62,6 +62,14 @@ class Client implements IClient, LoggerAwareInterface
     }
 
     /**
+     * @param string $url
+     */
+    public function setBaseUrl($url)
+    {
+        $this->restClient->setOption(Request::BASE_URL_KEY, $url);
+    }
+
+    /**
      * @param array|string $paramArr
      * @param array        $responses
      * @throws RestClientAttemptException
