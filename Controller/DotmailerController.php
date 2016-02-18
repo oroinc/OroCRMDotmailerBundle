@@ -2,8 +2,6 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Controller;
 
-use DotMailer\Api\DataTypes\ApiAccount;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -76,18 +74,11 @@ class DotmailerController extends Controller
         $password = $this->getRequest()->get('password');
 
         $dotmailerResourceFactory = $this->get('orocrm_dotmailer.transport.resources_factory');
-        $resource = $dotmailerResourceFactory->createResources($username, $password);
         try {
-            $result = $resource->GetAccountInfo();
-            if ($result instanceof ApiAccount) {
-                $result = [
-                    'msg' => 'Connection successful!'
-                ];
-            } else {
-                $result = [
-                    'error' => 'Connection failed!'
-                ];
-            }
+            $dotmailerResourceFactory->createResources($username, $password);
+            $result = [
+                'msg' => $this->get('translator')->trans('orocrm.dotmailer.integration.connection_successful.label')
+            ];
         } catch (\Exception $exception) {
             $message = $exception->getMessage();
             if ($exception instanceof RestClientException &&
