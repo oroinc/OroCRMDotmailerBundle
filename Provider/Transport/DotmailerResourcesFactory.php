@@ -9,7 +9,6 @@ use DotMailer\Api\Resources\Resources;
 use DotMailer\Api\DataTypes\ApiAccount;
 
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Rest\Client;
-use OroCRM\Bundle\DotmailerBundle\Exception\RestClientException;
 
 class DotmailerResourcesFactory
 {
@@ -30,16 +29,10 @@ class DotmailerResourcesFactory
 
         $resources = new Resources($restClient);
 
-        try {
-            $account = $resources->GetAccountInfo();
-            $url     = $this->getApiEndpoint($account);
-            if ($url) {
-                $restClient->setBaseUrl($url);
-            }
-        } catch (RestClientException $exception) {
-            if ($logger) {
-                $logger->notice($exception->getMessage());
-            }
+        $account = $resources->GetAccountInfo();
+        $url     = $this->getApiEndpoint($account);
+        if ($url) {
+            $restClient->setBaseUrl($url);
         }
 
         return $resources;
