@@ -6,6 +6,7 @@ orocrm:
             select.placeholder: Choose Dotmailer integration
             label: Integration
             check_connection.label: Check Connection
+            connection_successful.label: Connection successful!
 
         integration_transport:
             label: Dotmailer
@@ -143,7 +144,7 @@ orocrm:
             num_total_delivered.label:          Total Delivered number
             num_total_estimated_forwards.label: Total Estimated Forwards number
             num_total_hard_bounces.label:       Total Hard Bounces number
-            num_total_isp_complaints.label:     Total Isp Complains number
+            num_total_isp_complaints.label:     Total ISP Complaints number
             num_total_mail_blocks.label:        Total Mail Blocks number
             num_total_opens.label:              Total Opens number
             num_total_page_views.label:         Total Page Views number
