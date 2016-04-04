@@ -318,7 +318,9 @@ orocrm:
 
         acl:
             action:
-                general: Dotmailer Statistic
+                general:
+                    label: Dotmailer Statistic
+                    description: See statistics collected from Dotmailer for a campaign
         form:
             username:
                 tooltip: API User.

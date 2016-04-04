@@ -1,5 +1,6 @@
 orocrm_dotmailer:
-    label:      orocrm.dotmailer.acl.action.general
+    label:      orocrm.dotmailer.acl.action.general.label
+    description: orocrm.dotmailer.acl.action.general.description
     type:       action
     group_name: ""
     bindings:   ~
