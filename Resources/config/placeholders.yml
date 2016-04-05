@@ -12,12 +12,12 @@ placeholders:
 items:
     orocrm_dotmailer_marketing_list_buttons:
         action: OroCRMDotmailerBundle:AddressBook:connectionButtons
-        applicable: @orocrm_dotmailer.placeholder.filter.buttons_filter->isApplicable($entity$)
+        applicable: "@orocrm_dotmailer.placeholder.filter.buttons_filter->isApplicable($entity$)"
 
     orocrm_dotmailer_emailcampaign_stats:
         action: OroCRMDotmailerBundle:Dotmailer:emailCampaignStats
-        applicable: @orocrm_dotmailer.placeholder.filter.email_campaign->isApplicableOnEmailCampaign($entity$)
+        applicable: "@orocrm_dotmailer.placeholder.filter.email_campaign->isApplicableOnEmailCampaign($entity$)"
 
     orocrm_dotmailer_marketing_list_sync_data:
         action: OroCRMDotmailerBundle:Dotmailer:marketingListSyncStatus
-        applicable: @orocrm_dotmailer.placeholder.filter.sync_status->isApplicableOnMarketingList($marketingList$)
+        applicable: "@orocrm_dotmailer.placeholder.filter.sync_status->isApplicableOnMarketingList($marketingList$)"

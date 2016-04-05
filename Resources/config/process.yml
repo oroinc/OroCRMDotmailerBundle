@@ -6,39 +6,39 @@ definitions:
         entity:  OroCRM\Bundle\DotmailerBundle\Entity\Campaign
         exclude_definitions: [dotmailer_email_campaign_creation]
         actions_configuration:
-            - @assign_value:
+            - '@assign_value':
                 attribute: $.addressBook
                 value: null
-            - @call_method:
+            - '@call_method':
                 conditions:
-                    @not_empty: $addressBooks
+                    '@not_empty': $addressBooks
                 parameters:
                     attribute: $.addressBook
                     method: first
                     object: $addressBooks
             # Prepare constants values
-            - @assign_constant_value:
+            - '@assign_constant_value':
                 attribute: $.statusSent
                 value: OroCRM\Bundle\DotmailerBundle\Entity\Campaign::STATUS_SENT
-            - @assign_constant_value:
+            - '@assign_constant_value':
                 attribute: $.scheduleManual
                 value: OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign::SCHEDULE_MANUAL
-            - @assign_constant_value:
+            - '@assign_constant_value':
                 attribute: $.dotmailerTransport
                 value: OroCRM\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport::NAME
             # Create OroCRM EmailCampaign
-            - @tree:
+            - '@tree':
                 # If OroCRM EmailCampaign not exists and
                 # Dotmailer Campaign relates to OroCRM MarketingList and
                 # Dotmailer Campaign has "sent" status
                 conditions:
-                    @and:
-                        - @empty: $emailCampaign
-                        - @not_empty: $.addressBook
-                        - @not_empty: $.addressBook.marketingList
-                        - @equal: [$status, $.statusSent]
+                    '@and':
+                        - '@empty': $emailCampaign
+                        - '@not_empty': $.addressBook
+                        - '@not_empty': $.addressBook.marketingList
+                        - '@equal': [$status, $.statusSent]
                 actions:
-                    - @create_entity: # Create OroCRM EmailCampaign
+                    - '@create_entity': # Create OroCRM EmailCampaign
                         class:     OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign
                         attribute: $emailCampaign
                         data:
@@ -53,7 +53,7 @@ definitions:
                             owner: $channel.defaultUserOwner
                             organization: $channel.defaultUserOwner.organization
                             marketingLIst: $.addressBook.marketingList
-                    - @create_entity: # Create DotmailerTransportSettings
+                    - '@create_entity': # Create DotmailerTransportSettings
                         class:     OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransportSettings
                         attribute: $emailCampaign.transportSettings
                         data:
@@ -66,7 +66,7 @@ definitions:
         entity:  OroCRM\Bundle\DotmailerBundle\Entity\Activity
         exclude_definitions: [dotmailer_contact_activity_update]
         actions_configuration:
-            - @update_email_campaign_dm_statistics: ~
+            - '@update_email_campaign_dm_statistics': ~
 
     dotmailer_handle_contact_state:
         label:   Check MarketingListItem State for Dotmailer Contact
@@ -75,49 +75,49 @@ definitions:
         exclude_definitions: [dotmailer_handle_contact_state]
         actions_configuration:
             # Prepare constants values
-            - @assign_constant_value:
+            - '@assign_constant_value':
                 attribute: $.statusSubscribed
                 value: OroCRM\Bundle\DotmailerBundle\Entity\Contact::STATUS_SUBSCRIBED
-            - @assign_constant_value:
+            - '@assign_constant_value':
                 attribute: $.statusSoftBounced
                 value: OroCRM\Bundle\DotmailerBundle\Entity\Contact::STATUS_SOFTBOUNCED
-            - @tree:
+            - '@tree':
                 conditions:
-                    @or:
-                        - @equal: [$status, $.statusSubscribed]
-                        - @equal: [$status, $.statusSoftBounced]
+                    '@or':
+                        - '@equal': [$status, $.statusSubscribed]
+                        - '@equal': [$status, $.statusSoftBounced]
                 actions:
-                    - @remove_marketing_list_unsubscribed_item: ~
-                    - @remove_marketing_list_removed_item: ~
+                    - '@remove_marketing_list_unsubscribed_item': ~
+                    - '@remove_marketing_list_removed_item': ~
             # Create OroCRM MarketingListUnsubscribedItem
-            - @dm_create_marketing_list_unsubscribed_item:
+            - '@dm_create_marketing_list_unsubscribed_item':
                 conditions:
-                    @and:
-                        - @not_equal: [$status, $.statusSubscribed]
-                        - @not_equal: [$status, $.statusSoftBounced]
+                    '@and':
+                        - '@not_equal': [$status, $.statusSubscribed]
+                        - '@not_equal': [$status, $.statusSoftBounced]
 
     schedule_dotmailer_address_book_synchronization:
         label:   Schedule Dotmailer Address Book synchronization
         enabled: true
         entity:  OroCRM\Bundle\DotmailerBundle\Entity\AddressBook
         actions_configuration:
-            - @tree:
+            - '@tree':
                 conditions:
-                    @and:
-                        - @not_empty: $marketingList
-                        - @not_empty: $channel
+                    '@and':
+                        - '@not_empty': $marketingList
+                        - '@not_empty': $channel
                 actions:
-                    - @format_string:
+                    - '@format_string':
                         attribute: $.addressBook
                         string: 'address-book=%adddress_book_id%'
                         arguments:
                             adddress_book_id: $id
-                    - @format_string:
+                    - '@format_string':
                         attribute: $.integration
                         string: '--integration-id=%integration_id%'
                         arguments:
                             integration_id: $channel.id
-                    - @create_entity:
+                    - '@create_entity':
                         class: JMS\JobQueueBundle\Entity\Job
                         attribute: $.syncJob
                         flush: true
@@ -130,7 +130,7 @@ definitions:
         enabled: true
         entity:  OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact
         actions_configuration:
-            - @dm_create_marketing_list_removed_item: ~
+            - '@dm_create_marketing_list_removed_item': ~
 
 triggers:
     dotmailer_email_campaign_creation:
