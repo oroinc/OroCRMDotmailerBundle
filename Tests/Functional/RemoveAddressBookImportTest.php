@@ -9,9 +9,8 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
 
 /**
  * @dbIsolation
- * @dbReindex
  */
-class RemoveAddressBookImportTest extends AbstractImportExportTest
+class RemoveAddressBookImportTest extends AbstractImportExportTestCase
 {
     protected function setUp()
     {
@@ -34,10 +33,15 @@ class RemoveAddressBookImportTest extends AbstractImportExportTest
             ->will($this->returnValue($entity));
         $channel = $this->getReference('orocrm_dotmailer.channel.first');
 
-        $processor = $this->getContainer()->get(self::SYNC_PROCESSOR);
-        $result = $processor->process($channel, AddressBookConnector::TYPE);
-
-        $this->assertTrue($result);
+        $result = $this->runImportExportConnectorsJob(
+            self::SYNC_PROCESSOR,
+            $channel,
+            AddressBookConnector::TYPE,
+            [],
+            $jobLog
+        );
+        $log = $this->formatImportExportJobLog($jobLog);
+        $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $addressBook = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBook')

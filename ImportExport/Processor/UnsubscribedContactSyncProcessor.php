@@ -53,15 +53,14 @@ class UnsubscribedContactSyncProcessor implements ItemProcessorInterface, StepEx
         $this->context->setValue(self::CURRENT_BATCH_READ_ITEMS, $items);
 
         $entityId = $item[MarketingListItemsQueryBuilderProvider::MARKETING_LIST_ITEM_ID];
-        $marketingList = $item[OutOfSyncMarketingListItemIterator::MARKETING_LIST];
-        $object = new MarketingListUnsubscribedItem();
-        $object->setEntityId($entityId);
+        $marketingListUnsubscribedItem = new MarketingListUnsubscribedItem();
+        $marketingListUnsubscribedItem->setEntityId($entityId);
         $marketingList = $this->registry
             ->getRepository('OroCRMMarketingListBundle:MarketingList')
-            ->find($marketingList->getId());
-        $object->setMarketingList($marketingList);
+            ->find($item[OutOfSyncMarketingListItemIterator::MARKETING_LIST]->getId());
+        $marketingListUnsubscribedItem->setMarketingList($marketingList);
 
-        return $object;
+        return $marketingListUnsubscribedItem;
     }
 
     /**

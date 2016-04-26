@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
@@ -28,6 +29,7 @@ class ContactRepository extends EntityRepository
         return $qb
             ->select(
                 [
+                    'addressBookContacts.id as addressBookContactId',
                     'contact.email',
                     'contact.originId',
                     'contact.firstName',
@@ -35,12 +37,12 @@ class ContactRepository extends EntityRepository
                     'contact.gender',
                     'contact.fullName',
                     'contact.postcode',
-                    'optInType.id as opt_in_type',
-                    'emailType.id as email_type',
+                    'opt_in_type.id as optInType',
+                    'email_type.id as emailType',
                 ]
             )
-            ->leftJoin('contact.opt_in_type', 'optInType')
-            ->leftJoin('contact.email_type', 'emailType')
+            ->leftJoin('contact.opt_in_type', 'opt_in_type')
+            ->leftJoin('contact.email_type', 'email_type')
             ->innerJoin(
                 'contact.addressBookContacts',
                 'addressBookContacts',
@@ -105,5 +107,18 @@ class ContactRepository extends EntityRepository
         }
 
         return $map;
+    }
+
+    /**
+     * @param Channel $channel
+     */
+    public function bulkRemoveNotExportedContacts(Channel $channel)
+    {
+        $qb = $this->createQueryBuilder('contact');
+        $qb->delete()
+            ->where('contact.channel = :channel')
+            ->andWhere('contact.originId IS NULL')
+            ->getQuery()
+            ->execute(['channel' => $channel]);
     }
 }

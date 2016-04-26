@@ -6,7 +6,7 @@ use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 
 use Psr\Log\LoggerInterface;
 
-use Symfony\Bridge\Doctrine\ManagerRegistry;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\IntegrationBundle\Provider\ConnectorContextMediator;
@@ -36,7 +36,7 @@ abstract class AbstractReader extends IteratorBasedReader
     /**
      * @var ManagerRegistry
      */
-    protected $registry;
+    protected $managerRegistry;
 
     /**
      * @var LoggerInterface
@@ -57,7 +57,7 @@ abstract class AbstractReader extends IteratorBasedReader
     ) {
         parent::__construct($contextRegistry);
         $this->contextMediator = $contextMediator;
-        $this->registry = $managerRegistry;
+        $this->managerRegistry = $managerRegistry;
         $this->logger = $logger;
     }
 

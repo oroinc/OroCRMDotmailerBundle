@@ -75,7 +75,7 @@ class LoadEnumValues extends AbstractEnumFixture
             AddressBookContactsExport::STATUS_UNKNOWN                        => 'Unknown',
             AddressBookContactsExport::STATUS_FAILED                         => 'Failed',
             AddressBookContactsExport::STATUS_EXCEEDS_ALLOWED_CONTACT_LIMIT  => 'ExceedsAllowedContactLimit',
-            AddressBookContactsExport::STATUS_NOT_AVAILABLE_IN__THIS_VERSION => 'NotAvailableInThisVersion',
+            AddressBookContactsExport::STATUS_NOT_AVAILABLE_IN_THIS_VERSION  => 'NotAvailableInThisVersion',
         ]
     ];
 

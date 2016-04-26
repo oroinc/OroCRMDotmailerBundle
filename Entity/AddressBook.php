@@ -20,7 +20,10 @@ use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBook;
  *      name="orocrm_dm_address_book",
  *      uniqueConstraints={
  *          @ORM\UniqueConstraint(name="orocrm_dm_address_book_unq", columns={"origin_id", "channel_id"})
- *     }
+ *     },
+ *     indexes={
+ *          @ORM\Index(name="orocrm_dm_ab_imported_at_idx", columns={"last_imported_at"})
+ *      },
  * )
  * @ORM\HasLifecycleCallbacks()
  * @Config(
@@ -97,7 +100,7 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
     /**
      * @var Collection|AddressBookContact[]
      *
-     * @ORM\OneToMany(targetEntity="AddressBookContact", mappedBy="addressBook", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="AddressBookContact", mappedBy="addressBook", cascade={"remove"})
      * @ConfigField(
      *      defaultValues={
      *          "importexport"={
@@ -133,7 +136,7 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="last_synced", type="datetime", nullable=true)
+     * @ORM\Column(name="last_exported_at", type="datetime", nullable=true)
      * @ConfigField(
      *      defaultValues={
      *          "importexport"={
@@ -142,7 +145,22 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
      *      }
      * )
      */
-    protected $lastSynced;
+    protected $lastExportedAt;
+
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="last_imported_at", type="datetime", nullable=true)
+     * @ConfigField(
+     *      defaultValues={
+     *          "importexport"={
+     *              "excluded"=true
+     *          }
+     *      }
+     * )
+     */
+    protected $lastImportedAt;
 
     /**
      * @var Organization
@@ -283,6 +301,46 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
     public function setContactCount($contactCount)
     {
         $this->contactCount = $contactCount;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getLastExportedAt()
+    {
+        return $this->lastExportedAt;
+    }
+
+    /**
+     * @param \DateTime $lastExportedAt
+     *
+     * @return AddressBook
+     */
+    public function setLastExportedAt(\DateTime $lastExportedAt = null)
+    {
+        $this->lastExportedAt = $lastExportedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getLastImportedAt()
+    {
+        return $this->lastImportedAt;
+    }
+
+    /**
+     * @param \DateTime $lastImportedAt
+     *
+     * @return AddressBook
+     */
+    public function setLastImportedAt(\DateTime $lastImportedAt = null)
+    {
+        $this->lastImportedAt = $lastImportedAt;
 
         return $this;
     }
@@ -529,26 +587,6 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
         if ($this->addressBookContactsExports->contains($addressBookContactsExport)) {
             $this->addressBookContactsExports->removeElement($addressBookContactsExport);
         }
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getLastSynced()
-    {
-        return $this->lastSynced;
-    }
-
-    /**
-     * @param \DateTime $lastSynced
-     *
-     * @return AddressBook
-     */
-    public function setLastSynced(\DateTime $lastSynced = null)
-    {
-        $this->lastSynced = $lastSynced;
 
         return $this;
     }

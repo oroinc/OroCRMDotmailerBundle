@@ -36,16 +36,117 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
                         'criterion' =>
                             [
                                 'filter' => 'string',
-                                'data' =>
-                                    [
-                                        'value' => 'Case',
-                                        'type' => '1',
-                                    ],
+                                'data' => [
+                                    'value' => 'Case',
+                                    'type' => '1',
+                                ],
                             ],
                     ],
                 ],
             ],
             'reference' => 'orocrm_dotmailer.segment.first',
+        ],
+        [
+            'type' => 'dynamic',
+            'name' => 'Test ML Segment 2',
+            'description' => 'description',
+            'entity' => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
+            'owner' => 'orocrm_dotmailer.business_unit.foo',
+            'organization' => 'orocrm_dotmailer.organization.foo',
+            'definition' => [
+                'columns' => [
+                    [
+                        'name' => 'primaryEmail',
+                        'label' => 'Primary Email',
+                        'sorting' => '',
+                        'func' => null,
+                    ],
+                ],
+                'filters' => [
+                    [
+                        'columnName' => 'firstName',
+                        'criterion' =>
+                            [
+                                'filter' => 'string',
+                                'data' => [
+                                    'value' => 'Jack',
+                                    'type' => '1',
+                                ],
+                            ],
+                    ],
+                ],
+            ],
+            'reference' => 'orocrm_dotmailer.segment.second',
+        ],
+        [
+            'type' => 'dynamic',
+            'name' => 'Test ML Segment 3',
+            'description' => 'description',
+            'entity' => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
+            'owner' => 'orocrm_dotmailer.business_unit.foo',
+            'organization' => 'orocrm_dotmailer.organization.foo',
+            'definition' => [
+                'columns' => [
+                    [
+                        'name' => 'primaryEmail',
+                        'label' => 'Primary Email',
+                        'sorting' => '',
+                        'func' => null,
+                    ],
+                ],
+                'filters' => [
+                    [
+                        'columnName' => 'firstName',
+                        'criterion' =>
+                            [
+                                'filter' => 'string',
+                                'data' => [
+                                    'value' => 'Not Exist',
+                                    'type' => '1',
+                                ],
+                            ],
+                    ],
+                ],
+            ],
+            'reference' => 'orocrm_dotmailer.segment.empty',
+        ],
+        [
+            'type' => 'dynamic',
+            'name' => 'Test ML Segment by Case last name',
+            'description' => 'description',
+            'entity' => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
+            'owner' => 'orocrm_dotmailer.business_unit.foo',
+            'organization' => 'orocrm_dotmailer.organization.foo',
+            'definition' => [
+                'filters' => [
+                    [
+                        'columnName' => 'lastName',
+                        'criterion' =>
+                            [
+                                'filter' => 'string',
+                                'data' => [
+                                    'value' => 'Case',
+                                    'type' => '1',
+                                ],
+                            ],
+                    ]
+                ],
+                'columns' => [
+                    [
+                        'name' => 'primaryEmail',
+                        'label' => 'Primary Email',
+                        'sorting' => '',
+                        'func' => null,
+                    ],
+                    [
+                        'name' => 'mlLastContactedAt',
+                        'label' => 'Last Contacted At',
+                        'sorting' => '',
+                        'func' => null,
+                    ],
+                ],
+            ],
+            'reference' => 'orocrm_dotmailer.segment.case',
         ],
     ];
 

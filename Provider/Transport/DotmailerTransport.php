@@ -4,6 +4,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use DotMailer\Api\DataTypes\ApiCampaign;
 use DotMailer\Api\DataTypes\ApiCampaignSend;
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\ApiFileMedia;
@@ -24,6 +25,8 @@ use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
 use Oro\Bundle\SecurityBundle\Encoder\Mcrypt;
 
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
+use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
@@ -33,7 +36,6 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReport
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactIterator;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 
 class DotmailerTransport implements TransportInterface, LoggerAwareInterface
 {
@@ -57,13 +59,15 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     protected $encryptor;
 
     /**
-     * @param DotmailerResourcesFactory $dotMailerResFactory
-     * @param Mcrypt $encoder
+     * @param DotmailerResourcesFactory $dotmailerResourcesFactory
+     * @param Mcrypt                    $encryptor
      */
-    public function __construct(DotmailerResourcesFactory $dotMailerResFactory, Mcrypt $encoder)
-    {
-        $this->dotMailerResFactory = $dotMailerResFactory;
-        $this->encoder = $encoder;
+    public function __construct(
+        DotmailerResourcesFactory $dotmailerResourcesFactory,
+        Mcrypt $encryptor
+    ) {
+        $this->dotMailerResFactory = $dotmailerResourcesFactory;
+        $this->encryptor = $encryptor;
     }
 
     /**
@@ -78,7 +82,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
         }
 
         $password = $settings->get('password');
-        $password = $this->encoder->decryptData($password);
+        $password = $this->encryptor->decryptData($password);
 
         if (!$password) {
             throw new RequiredOptionException('password');
@@ -88,21 +92,37 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     }
 
     /**
-     * @param array          $addressBooks
-     * @param \DateTime|null $dateSince
+     * @param AddressBook[]  $addressBooks
      *
      * @return ContactIterator
      */
-    public function getContacts($addressBooks, $dateSince = null)
+    public function getAddressBookContacts($addressBooks)
     {
         $iterator = new AppendIterator();
         foreach ($addressBooks as $addressBook) {
             $iterator->append(
-                new ContactIterator($this->dotmailerResources, $addressBook['originId'], $dateSince)
+                new ContactIterator(
+                    $this->dotmailerResources,
+                    $addressBook->getOriginId(),
+                    $addressBook->getLastImportedAt(),
+                    true,
+                    1000,
+                    0
+                )
             );
         }
 
         return $iterator;
+    }
+
+    /**
+     * @param \DateTime|null $dateSince
+     *
+     * @return ContactIterator
+     */
+    public function getContacts($dateSince = null)
+    {
+        return new ContactIterator($this->dotmailerResources, null, $dateSince);
     }
 
     /**
@@ -114,21 +134,19 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     }
 
     /**
-     * @param array     $addressBooks
-     * @param \DateTime $lastSyncDate
+     * @param AddressBook[] $addressBooks
      *
      * @return UnsubscribedContactIterator
      */
-    public function getUnsubscribedContacts(array $addressBooks, \DateTime $lastSyncDate = null)
+    public function getUnsubscribedContacts(array $addressBooks)
     {
-        if (!$lastSyncDate) {
-            $lastSyncDate = date_create_from_format('Y', self::DEFAULT_START_SYNC_DATE, new \DateTimeZone('UTC'));
-        }
+        $defaultLastSyncDate = date_create_from_format('Y', self::DEFAULT_START_SYNC_DATE, new \DateTimeZone('UTC'));
 
         $iterator = new AppendIterator();
         foreach ($addressBooks as $addressBook) {
+            $lastSyncDate = $addressBook->getLastImportedAt() ?: $defaultLastSyncDate;
             $iterator->append(
-                new UnsubscribedContactIterator($this->dotmailerResources, $addressBook['originId'], $lastSyncDate)
+                new UnsubscribedContactIterator($this->dotmailerResources, $addressBook->getOriginId(), $lastSyncDate)
             );
         }
 
@@ -167,6 +185,16 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     }
 
     /**
+     * @param int $campaignId
+     *
+     * @return ApiCampaign
+     */
+    public function getCampaignById($campaignId)
+    {
+        return $this->dotmailerResources->GetCampaignById($campaignId);
+    }
+
+    /**
      * @param array|ArrayCollection $campaignsToSynchronize
      * @param \DateTime             $lastSyncDate = null
      *
@@ -201,24 +229,46 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     }
 
     /**
-     * @param AddressBookContact $abContact
+     * @param Contact     $contact
+     * @param AddressBook $addressBook
      *
      * @return ApiResubscribeResult
      */
-    public function resubscribeAddressBookContact(AddressBookContact $abContact)
+    public function resubscribeAddressBookContact(Contact $contact, AddressBook $addressBook)
     {
-        $resubscription = [
-            'UnsubscribedContact' => [
-                'Email' => $abContact->getContact()->getEmail(),
-            ],
-            'PreferredLocale' => '',
-            'ReturnUrlToUseIfChallenged' => '',
-        ];
-        $apiContactResubscription = new ApiContactResubscription($resubscription);
+        $apiContactResubscription = new ApiContactResubscription(
+            [
+                'UnsubscribedContact' => [
+                    'Email' => $contact->getEmail(),
+                ],
+                'PreferredLocale' => '',
+                'ReturnUrlToUseIfChallenged' => '',
+            ]
+        );
 
         return $this->dotmailerResources->PostAddressBookContactsResubscribe(
-            $abContact->getAddressBook()->getOriginId(),
+            $addressBook->getOriginId(),
             $apiContactResubscription
+        );
+    }
+
+    /**
+     * @param Contact $contact
+     *
+     * @return ApiResubscribeResult
+     */
+    public function resubscribeContact(Contact $contact)
+    {
+        return $this->dotmailerResources->PostContactsResubscribe(
+            new ApiContactResubscription(
+                [
+                    'UnsubscribedContact' => [
+                        'Email' => $contact->getEmail(),
+                    ],
+                    'PreferredLocale' => '',
+                    'ReturnUrlToUseIfChallenged' => '',
+                ]
+            )
         );
     }
 

@@ -64,6 +64,7 @@ definitions:
         enabled: true
         order:   20
         entity:  OroCRM\Bundle\DotmailerBundle\Entity\Activity
+        exclude_definitions: [dotmailer_contact_activity_update]
         actions_configuration:
             - @update_email_campaign_dm_statistics: ~
 
@@ -89,7 +90,7 @@ definitions:
                     - @remove_marketing_list_unsubscribed_item: ~
                     - @remove_marketing_list_removed_item: ~
             # Create OroCRM MarketingListUnsubscribedItem
-            - @create_marketing_list_unsubscribed_item:
+            - @dm_create_marketing_list_unsubscribed_item:
                 conditions:
                     @and:
                         - @not_equal: [$status, $.statusSubscribed]
@@ -104,19 +105,32 @@ definitions:
                 conditions:
                     @and:
                         - @not_empty: $marketingList
+                        - @not_empty: $channel
                 actions:
                     - @format_string:
                         attribute: $.addressBook
-                        string: '--address-book=%adddress_book_id%'
+                        string: 'address-book=%adddress_book_id%'
                         arguments:
                             adddress_book_id: $id
+                    - @format_string:
+                        attribute: $.integration
+                        string: '--integration-id=%integration_id%'
+                        arguments:
+                            integration_id: $channel.id
                     - @create_entity:
                         class: JMS\JobQueueBundle\Entity\Job
                         attribute: $.syncJob
                         flush: true
                         arguments:
-                            - 'oro:cron:dotmailer:export'
-                            - [$.addressBook,'-v']
+                            - 'oro:cron:integration:sync'
+                            - [$.addressBook, $.integration, '-v']
+
+    dotmailer_handle_removed_address_book_contact:
+        label:   Update MarketingListItem State in case of Dotmailer contact export was rejected
+        enabled: true
+        entity:  OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact
+        actions_configuration:
+            - @dm_create_marketing_list_removed_item: ~
 
 triggers:
     dotmailer_email_campaign_creation:
@@ -139,6 +153,12 @@ triggers:
         -
             event:    update
             queued:   false
+
+    dotmailer_handle_removed_address_book_contact:
+        -
+            event:    delete
+            queued:   false
+
 
     schedule_dotmailer_address_book_synchronization:
         -

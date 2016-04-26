@@ -4,14 +4,16 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Entity\Activity;
+use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
 
 class ActivityContactStrategy extends AddOrReplaceStrategy
 {
+    const CACHED_CAMPAIGN_ENTITIES = 'cachedCampaignEntities';
+
     /**
      * {@inheritdoc}
      */
@@ -29,6 +31,12 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
         if ($existingContact) {
             $entity->setContact($existingContact);
         } else {
+            $this->logger->critical(
+                sprintf(
+                    'Contact \'%s\', which is associated with Activity not found.',
+                    $entity->getContact()->getOriginId()
+                )
+            );
             return null;
         }
 
@@ -45,6 +53,16 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
     }
 
     /**
+     * @param Activity $entity
+     *
+     * @return string
+     */
+    protected function getCurrentBatchItemsCacheKey($entity)
+    {
+        return "{$entity->getCampaign()->getId()}_{$entity->getContact()->getId()}";
+    }
+
+    /**
      * @param Integration $channel
      *
      * @return Campaign
@@ -52,19 +70,34 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
     protected function getCampaign(Integration $channel)
     {
         $originalValue = $this->context->getValue('itemData');
-
         if (empty($originalValue[ActivityContactIterator::CAMPAIGN_KEY])) {
             throw new RuntimeException('Campaign id is required');
         }
-        $campaign = $this->strategyHelper
-            ->getEntityManager('OroCRMDotmailerBundle:Campaign')
-            ->getRepository('OroCRMDotmailerBundle:Campaign')
-            ->findOneBy(
-                [
-                    'channel' => $channel,
-                    'originId' => $originalValue[ActivityContactIterator::CAMPAIGN_KEY]
-                ]
-            );
+
+        $campaignOriginId = $originalValue[ActivityContactIterator::CAMPAIGN_KEY];
+
+        $campaign = $this->cacheProvider->getCachedItem(self::CACHED_CAMPAIGN_ENTITIES, $campaignOriginId);
+        if (!$campaign) {
+            $campaign = $this->getRepository('OroCRMDotmailerBundle:Campaign')
+                ->createQueryBuilder('dmCampaign')
+                ->addSelect('addressBooks')
+                ->addSelect('emailCampaign')
+                ->addSelect('marketingList')
+                ->where('dmCampaign.channel =:channel')
+                ->andWhere('dmCampaign.originId =:originId')
+                ->leftJoin('dmCampaign.addressBooks', 'addressBooks')
+                ->leftJoin('addressBooks.marketingList', 'marketingList')
+                ->leftJoin('dmCampaign.emailCampaign', 'emailCampaign')
+                ->setParameters([
+                    'channel'  => $channel,
+                    'originId' => $campaignOriginId
+                ])
+                ->getQuery()
+                ->useQueryCache(false)
+                ->getOneOrNullResult();
+
+            $this->cacheProvider->setCachedItem(self::CACHED_CAMPAIGN_ENTITIES, $campaignOriginId, $campaign);
+        }
 
         return $campaign;
     }
@@ -87,22 +120,5 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
             );
 
         return $existing;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function processEntity(
-        $entity,
-        $isFullData = false,
-        $isPersistNew = false,
-        $itemData = null,
-        array $searchContext = array()
-    ) {
-        if (!$entity) {
-            return null;
-        }
-
-        return parent::processEntity($entity, $isFullData, $isPersistNew, $itemData, $searchContext);
     }
 }

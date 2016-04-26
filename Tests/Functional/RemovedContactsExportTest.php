@@ -5,15 +5,13 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\Int32List;
 
-use Oro\Bundle\IntegrationBundle\Command\ReverseSyncCommand;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 
 /**
  * @dbIsolation
- * @dbReindex
  */
-class RemovedContactsExportTest extends AbstractImportExportTest
+class RemovedContactsExportTest extends AbstractImportExportTestCase
 {
     protected function setUp()
     {
@@ -52,14 +50,16 @@ class RemovedContactsExportTest extends AbstractImportExportTest
             $this->assertNotNull($addressBookContact);
         }
 
+        $importFirstAddressBook = new ApiContactImport();
+        $importFirstAddressBook->id = '391da8d7-70f0-405b-98d4-02faa41d499d';
+        $importFirstAddressBook->status = AddressBookContactsExport::STATUS_NOT_FINISHED;
+        $importSecondAddressBook = new ApiContactImport();
+        $importSecondAddressBook->id = '291da8d7-70f0-405b-98d4-02faa41d499d';
+        $importSecondAddressBook->status = AddressBookContactsExport::STATUS_NOT_FINISHED;
 
-        $import = new ApiContactImport();
-        $import->id = '391da8d7-70f0-405b-98d4-02faa41d499d';
-        $import->status = AddressBookContactsExport::STATUS_NOT_FINISHED;
-
-        $this->resource->expects($this->once())
+        $this->resource->expects($this->exactly(2))
             ->method('PostAddressBookContactsImport')
-            ->will($this->returnValue($import));
+            ->willReturnOnConsecutiveCalls($importFirstAddressBook, $importSecondAddressBook);
         $expectedApiContact = new Int32List(
             array_map(function ($contact) {
                 return $contact->getOriginId();
@@ -70,9 +70,15 @@ class RemovedContactsExportTest extends AbstractImportExportTest
             ->expects($this->once())
             ->method('PostAddressBookContactsDelete')
             ->with($expectedAddressBook, $expectedApiContact);
-
-        $processor = $this->getContainer()->get(ReverseSyncCommand::SYNC_PROCESSOR);
-        $processor->process($channel, ContactConnector::TYPE, []);
+        $result = $this->runImportExportConnectorsJob(
+            self::SYNC_PROCESSOR,
+            $channel,
+            ExportContactConnector::TYPE,
+            [],
+            $jobLog
+        );
+        $log = $this->formatImportExportJobLog($jobLog);
+        $this->assertTrue($result, "Job Failed with output:\n $log");
 
 
         foreach ($expectedRemoved as $contact) {

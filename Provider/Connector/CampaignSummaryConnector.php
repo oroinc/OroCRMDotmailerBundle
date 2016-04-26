@@ -15,7 +15,7 @@ class CampaignSummaryConnector extends AbstractDotmailerConnector
         //Synchronize only campaign activities that are connected with address book that are used within OroCRM.
         $campaignsToSynchronize = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:Campaign')
-            ->findBy(['channel' => $this->getChannel(), 'deleted' => false]);
+            ->getCampaignsToSyncStatistic($this->getChannel());
 
         return $this->transport->getCampaignSummary($campaignsToSynchronize);
     }

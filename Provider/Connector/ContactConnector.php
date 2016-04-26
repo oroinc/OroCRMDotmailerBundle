@@ -2,24 +2,29 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Connector;
 
-use Oro\Bundle\IntegrationBundle\Provider\TwoWaySyncConnectorInterface;
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 
-class ContactConnector extends AbstractDotmailerConnector implements TwoWaySyncConnectorInterface
+class ContactConnector extends AbstractDotmailerConnector
 {
     const TYPE = 'contact';
     const IMPORT_JOB = 'dotmailer_new_contacts';
-    const EXPORT_JOB = 'dotmailer_contact_export';
+    const PROCESSED_ADDRESS_BOOK_IDS = 'processed_address_book_ids';
 
     /**
      * {@inheritdoc}
      */
     protected function getConnectorSource()
     {
-        $aBooksToSynchronize = $this->managerRegistry
+        $addressBooksToSynchronize = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBook')
-            ->getAddressBooksToSyncOriginIds($this->getChannel());
+            ->getAddressBooksToSync($this->getChannel());
 
-        return $this->transport->getContacts($aBooksToSynchronize, $this->getLastSyncDate());
+        $this->getContext()
+            ->setValue(self::PROCESSED_ADDRESS_BOOK_IDS, array_map(function (AddressBook $addressBook) {
+                return $addressBook->getId();
+            }, $addressBooksToSynchronize));
+
+        return $this->transport->getAddressBookContacts($addressBooksToSynchronize);
     }
 
     /**
@@ -44,13 +49,5 @@ class ContactConnector extends AbstractDotmailerConnector implements TwoWaySyncC
     public function getType()
     {
         return self::TYPE;
-    }
-
-    /**
-     * @return string
-     */
-    public function getExportJobName()
-    {
-        return self::EXPORT_JOB;
     }
 }

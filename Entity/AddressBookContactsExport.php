@@ -12,6 +12,9 @@ use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBookContactsExport;
  * @ORM\Entity(repositoryClass="OroCRM\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactsExportRepository")
  * @ORM\Table(
  *      name="orocrm_dm_ab_cnt_export",
+ *     indexes={
+ *          @ORM\Index(name="orocrm_dm_ab_cnt_exp_fault_idx", columns={"faults_processed"}),
+ *     }
  * )
  * @ORM\HasLifecycleCallbacks()
  * @Config()
@@ -25,7 +28,7 @@ class AddressBookContactsExport extends ExtendAddressBookContactsExport implemen
     const STATUS_UNKNOWN = 'Unknown';
     const STATUS_FAILED = 'Failed';
     const STATUS_EXCEEDS_ALLOWED_CONTACT_LIMIT = 'ExceedsAllowedContactLimit';
-    const STATUS_NOT_AVAILABLE_IN__THIS_VERSION = 'NotAvailableInThisVersion';
+    const STATUS_NOT_AVAILABLE_IN_THIS_VERSION = 'NotAvailableInThisVersion';
 
     /**
      * @var int
@@ -61,7 +64,7 @@ class AddressBookContactsExport extends ExtendAddressBookContactsExport implemen
     /**
      * @var AddressBook
      *
-     * @ORM\ManyToOne(targetEntity="AddressBook")
+     * @ORM\ManyToOne(targetEntity="AddressBook", inversedBy="addressBookContactsExports")
      * @ORM\JoinColumn(name="address_book_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $addressBook;
@@ -73,6 +76,13 @@ class AddressBookContactsExport extends ExtendAddressBookContactsExport implemen
      * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $channel;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="faults_processed", type="boolean")
+     */
+    protected $faultsProcessed = false;
 
     /**
      * @return int
@@ -178,6 +188,26 @@ class AddressBookContactsExport extends ExtendAddressBookContactsExport implemen
     public function setChannel(Channel $channel = null)
     {
         $this->channel = $channel;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isFaultsProcessed()
+    {
+        return $this->faultsProcessed;
+    }
+
+    /**
+     * @param bool $faultsProcessed
+     *
+     * @return AddressBookContactsExport
+     */
+    public function setFaultsProcessed($faultsProcessed)
+    {
+        $this->faultsProcessed = $faultsProcessed;
 
         return $this;
     }

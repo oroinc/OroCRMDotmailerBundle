@@ -4,13 +4,14 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiCampaignSummary;
 
+use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
+use OroCRM\Bundle\DotmailerBundle\Entity\CampaignSummary;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector;
 
 /**
  * @dbIsolation
- * @dbReindex
  */
-class CampaignSummaryUpdateTest extends AbstractImportExportTest
+class CampaignSummaryUpdateTest extends AbstractImportExportTestCase
 {
     protected function setUp()
     {
@@ -36,16 +37,30 @@ class CampaignSummaryUpdateTest extends AbstractImportExportTest
         $summaryEntities = null;
 
         $entity = new ApiCampaignSummary($summary);
+        /** @var Campaign $expectedCampaign */
+        $expectedCampaign = $this->getReference('orocrm_dotmailer.campaign.first');
 
         $this->resource->expects($this->any())
             ->method('GetCampaignSummary')
-            ->will($this->returnValue($entity));
+            ->willReturnMap(
+                [
+                    [
+                        $expectedCampaign->getOriginId(),
+                        $entity
+                    ]
+                ]
+            );
         $channel = $this->getReference('orocrm_dotmailer.channel.second');
 
-        $processor = $this->getContainer()->get(self::SYNC_PROCESSOR);
-        $result = $processor->process($channel, CampaignSummaryConnector::TYPE);
-
-        $this->assertTrue($result);
+        $result = $this->runImportExportConnectorsJob(
+            self::SYNC_PROCESSOR,
+            $channel,
+            CampaignSummaryConnector::TYPE,
+            [],
+            $jobLog
+        );
+        $log = $this->formatImportExportJobLog($jobLog);
+        $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $searchCriteria = [
             'numUniqueOpens' => $expected['numUniqueOpens'],
@@ -64,6 +79,13 @@ class CampaignSummaryUpdateTest extends AbstractImportExportTest
 
         $summaryEntities = $campaignSummaryRepository->findAll();
         $this->assertCount(1, $summaryEntities);
+
+        /** @var CampaignSummary $actual */
+        $actual = $summaryEntities[0];
+        $this->assertEquals($expectedCampaign->getId(), $actual->getCampaign()->getId());
+
+        $this->assertNotNull($expectedCampaign->getEmailCampaign());
+        $this->assertEquals($expectedCampaign->getEmailCampaign()->getSentAt(), $expected['sentAt']);
     }
 
     public function importDataProvider()
@@ -80,6 +102,8 @@ class CampaignSummaryUpdateTest extends AbstractImportExportTest
                     'numClicks' => 5,
                     'numTextClicks' => 5,
                     'numTotalClicks' => 5,
+                    'id' => 15662,
+                    'sentAt' => date_create_from_format('Y-m-d H:i:s', '2015-03-02 10:02:03', new \DateTimeZone('UTC'))
                 ],
                 'summary' => [
                     'numUniqueOpens' => 15,
@@ -91,6 +115,7 @@ class CampaignSummaryUpdateTest extends AbstractImportExportTest
                     'numClicks' => 5,
                     'numTextClicks' => 5,
                     'numTotalClicks' => 5,
+                    'dateSent' => '2015-03-02T10:02:03z'
                 ]
             ]
         ];

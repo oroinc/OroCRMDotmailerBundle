@@ -38,15 +38,11 @@ abstract class AbstractExportReader extends AbstractReader
      */
     protected function getAddressBooksToSync()
     {
-        $addressBook = $this->context->getOption(self::ADDRESS_BOOK_RESTRICTION_OPTION);
-        if ($addressBook) {
-            return [$addressBook];
-        }
+        $addressBookId = $this->context->getOption(self::ADDRESS_BOOK_RESTRICTION_OPTION);
 
-        $addressBooks = $this->registry
+        return $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBook')
-            ->getAddressBooksToSync($this->getChannel());
-        return $addressBooks;
+            ->getAddressBooksToSync($this->getChannel(), $addressBookId);
     }
 
     /**
@@ -63,6 +59,13 @@ abstract class AbstractExportReader extends AbstractReader
             $iterator->rewind();
             $this->rewound = true;
         } else {
+            /**
+             * Original reader method load next row after read current.
+             * For MarketingListItemIterator last item will be not stored to
+             * `ContactSyncProcessor::CURRENT_BATCH_READ_ITEMS` and we can read already read item from the database.
+             * Also we need to read new item from iterator only if it actually needed for prevent additional requests
+             * to the DB or remote API.
+             */
             $iterator->next();
         }
 
@@ -75,5 +78,14 @@ abstract class AbstractExportReader extends AbstractReader
         }
 
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSourceIterator(\Iterator $sourceIterator)
+    {
+        parent::setSourceIterator($sourceIterator);
+        $this->rewound        = false;
     }
 }

@@ -27,7 +27,7 @@ class UnsubscribedFromAccountContactStrategy extends AbstractImportStrategy
         }
 
         $contact = $this->registry->getRepository('OroCRMDotmailerBundle:Contact')
-            ->findOneBy(['originId' => $entity->getOriginId(), 'channel' => $this->getChannel()]);
+            ->findOneBy(['email' => $entity->getEmail(), 'channel' => $this->getChannel()]);
         if (!$contact) {
             $this->context->addError("Contact {$entity->getOriginId()} not found.");
             $this->context->incrementErrorEntriesCount();

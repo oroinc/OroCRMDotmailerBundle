@@ -14,11 +14,15 @@ use OroCRM\Bundle\DotmailerBundle\Exception\RestClientAttemptException;
 use OroCRM\Bundle\DotmailerBundle\Exception\RestClientException;
 
 /**
- * Overload Rest Client class from romanpitak/dotmailer-api-v2-php-client bundle
+ * Override Rest Client class from romanpitak/dotmailer-api-v2-php-client bundle is not possible because of
+ * private fields.
  */
 class Client implements IClient, LoggerAwareInterface
 {
     use LoggerAwareTrait;
+
+    const CONNECT_TIMEOUT = 300;
+    const EXECUTE_TIMEOUT = 360;
 
     /** @var int */
     protected $attempted = 0;
@@ -49,10 +53,20 @@ class Client implements IClient, LoggerAwareInterface
                 ],
                 Request::CURL_OPTIONS_KEY => [
                     CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_CONNECTTIMEOUT => self::CONNECT_TIMEOUT,
+                    CURLOPT_TIMEOUT => self::EXECUTE_TIMEOUT,
                 ],
             ]
         );
 
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setBaseUrl($url)
+    {
+        $this->restClient->setOption(Request::BASE_URL_KEY, $url);
     }
 
     /**

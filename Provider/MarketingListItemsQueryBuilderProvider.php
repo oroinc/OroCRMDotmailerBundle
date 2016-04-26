@@ -13,6 +13,7 @@ use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactSyncDataConverter;
 use OroCRM\Bundle\DotmailerBundle\Model\FieldHelper;
+use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 use OroCRM\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 use OroCRM\Bundle\MarketingListBundle\Provider\MarketingListProvider;
 
@@ -42,7 +43,6 @@ class MarketingListItemsQueryBuilderProvider
      */
     protected $fieldHelper;
 
-
     /**
      * @var ManagerRegistry
      */
@@ -71,6 +71,11 @@ class MarketingListItemsQueryBuilderProvider
      * @var ContactExportQBAdapterRegistry
      */
     protected $exportQBAdapterRegistry;
+
+    /**
+     * @var QueryBuilder[]
+     */
+    protected $cachedQueryBuilders = [];
 
     /**
      * @param MarketingListProvider            $marketingListProvider
@@ -174,7 +179,13 @@ class MarketingListItemsQueryBuilderProvider
         }
         $contactInformationFieldExpr = $this->fieldHelper
             ->getFieldExpr($marketingList->getEntity(), $qb, $contactInformationField);
+
+        /**
+         * Distinct used in select leads to exception in postgresql
+         * in case if order by field not presented in select
+         */
         $qb->select($contactInformationFieldExpr);
+        $qb->resetDQLPart('orderBy');
 
         $removedItemsQueryBuilder = clone $qb;
         $expr = $removedItemsQueryBuilder->expr();
@@ -266,6 +277,30 @@ class MarketingListItemsQueryBuilderProvider
     }
 
     /**
+     * @param MarketingList $marketingList
+     *
+     * @return QueryBuilder
+     */
+    public function getCachedMarketingListEntitiesQB(MarketingList $marketingList)
+    {
+        if (count($this->cachedQueryBuilders) > 100) {
+            $this->cachedQueryBuilders = [];
+        }
+
+        if (!isset($this->cachedQueryBuilders[$marketingList->getId()])) {
+            $this->cachedQueryBuilders[$marketingList->getId()] = $this->marketingListProvider
+                ->getMarketingListEntitiesQueryBuilder($marketingList, MarketingListProvider::FULL_ENTITIES_MIXIN)
+                /**
+                 * In some cases Marketing list segment can contain duplicate records because of
+                 * join to many entities. Duplicate records should not be processed during import
+                 */
+                ->distinct(true);
+        }
+
+        return clone $this->cachedQueryBuilders[$marketingList->getId()];
+    }
+
+    /**
      * @param AddressBook $addressBook
      *
      * @return QueryBuilder
@@ -319,7 +354,7 @@ class MarketingListItemsQueryBuilderProvider
             )
         );
         $joinContactsExpr->add(
-            self::CONTACT_ALIAS.'.channel =:channel'
+            self::CONTACT_ALIAS . '.channel =:channel'
         );
         $qb->andWhere("$contactInformationFieldExpr <> ''");
         $qb->andWhere($expr->isNotNull($contactInformationFieldExpr));
@@ -330,6 +365,12 @@ class MarketingListItemsQueryBuilderProvider
             Join::WITH,
             $joinContactsExpr
         )->setParameter('channel', $addressBook->getChannel());
+
+        /**
+         * In some cases Marketing list segment can contain duplicate records because of
+         * join to many entities. Duplicate records should not be processed during import
+         */
+        $qb->distinct(true);
 
         return $qb;
     }
