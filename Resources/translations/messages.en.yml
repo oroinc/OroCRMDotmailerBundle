@@ -314,7 +314,7 @@ orocrm:
             ExceedsAllowedContactLimit: Dotmailer Contacts Limit Exceeds
             NotAvailableInThisVersion: Not Synced
             NotFinished: In Progress
-            list_is_connected.label: This list is linked to "%address_book%" Dotmailer address book. Last synchronization date: %synced%. Synchronization status: %status%.
+            list_is_connected.label: 'This list is linked to "%address_book%" Dotmailer address book. Last synchronization date: %synced%. Synchronization status: %status%.'
 
         acl:
             action:
