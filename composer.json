@@ -16,7 +16,7 @@
     },
     "target-dir": "src/OroCRM/Bundle/DotmailerBundle",
     "require": {
-        "php": ">=5.5.0",
+        "php": ">=5.5.9",
         "oro/crm": "self.version",
         "romanpitak/dotmailer-api-v2-client": "1.0.11"
     },
