@@ -6,6 +6,8 @@ use FOS\RestBundle\Util\Codes;
 
 use JMS\JobQueueBundle\Entity\Job;
 
+use Oro\Bundle\IntegrationBundle\Async\Topics;
+use Oro\Bundle\IntegrationBundle\Manager\GenuineSyncScheduler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
@@ -46,39 +48,17 @@ class AddressBookController extends Controller
     public function synchronizeAddressBook(AddressBook $addressBook)
     {
         try {
-            $job = new Job(
-                SyncCommand::COMMAND_NAME,
-                [
-                    sprintf(
-                        '%s=%s',
-                        AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION,
-                        $addressBook->getId()
-                    ),
-                    sprintf(
-                        '--%s=%s',
-                        SyncCommand::INTEGRATION_ID_OPTION,
-                        $addressBook->getChannel()->getId()
-                    ),
-                    '-v'
-                ]
-            );
+            $this->getSyncScheduler()->schedule($addressBook->getChannel()->getId(), null, [
+                AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION => $addressBook->getId(),
+            ]);
 
             $status = Codes::HTTP_OK;
             $response = [ 'message' => '' ];
 
-            $em = $this->get('doctrine')->getManager();
-            $em->persist($job);
-            $em->flush();
-
-            $jobViewLink = sprintf(
-                '<a href="%s" class="job-view-link">%s</a>',
-                $this->get('router')->generate('oro_cron_job_view', ['id' => $job->getId()]),
-                $this->get('translator')->trans('oro.integration.progress')
-            );
-
+            // TODO CRM-5839 job_view_link is not available any more
             $response['message'] = str_replace(
                 '{{ job_view_link }}',
-                $jobViewLink,
+                '#',
                 $this->get('translator')->trans('orocrm.dotmailer.addressbook.sync')
             );
         } catch (\Exception $e) {
@@ -191,5 +171,13 @@ class AddressBookController extends Controller
             ->findOneBy(['marketingList' => $marketingList]);
 
         return $addressBook;
+    }
+
+    /**
+     * @return GenuineSyncScheduler
+     */
+    private function getSyncScheduler()
+    {
+        return $this->container->get('oro_integration.genuine_sync_scheduler');
     }
 }
