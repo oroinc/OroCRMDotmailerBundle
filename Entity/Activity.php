@@ -25,7 +25,8 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  * @Config(
  *  defaultValues={
  *      "entity"={
- *          "icon"="icon-user"
+ *          "icon"="icon-user",
+ *          "category"="Dotmailer"
  *      },
  *      "ownership"={
  *          "owner_type"="ORGANIZATION",

@@ -26,7 +26,8 @@ use OroCRM\Bundle\DotmailerBundle\Model\ExtendCampaign;
  * @Config(
  *  defaultValues={
  *      "entity"={
- *          "icon"="icon-envelope"
+ *          "icon"="icon-envelope",
+ *          "category"="Dotmailer"
  *      },
  *      "ownership"={
  *          "owner_type"="ORGANIZATION",
