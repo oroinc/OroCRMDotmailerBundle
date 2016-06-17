@@ -29,7 +29,7 @@ use OroCRM\Bundle\DotmailerBundle\Model\ExtendContact;
  *  defaultValues={
  *      "entity"={
  *          "icon"="icon-user",
- *          "category"="Dotmailer"
+ *          "category"="dotmailer"
  *      },
  *      "ownership"={
  *          "owner_type"="ORGANIZATION",

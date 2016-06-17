@@ -30,7 +30,7 @@ use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBook;
  *  defaultValues={
  *      "entity"={
  *          "icon"="icon-group",
- *          "category"="Dotmailer"
+ *          "category"="dotmailer"
  *      },
  *      "ownership"={
  *          "owner_type"="ORGANIZATION",
