@@ -4,4 +4,4 @@ orocrm_dotmailer:
     type:       action
     group_name: ""
     bindings:   ~
-    category: "application"
+    category: "marketing"

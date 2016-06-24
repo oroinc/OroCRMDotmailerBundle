@@ -25,8 +25,7 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  * @Config(
  *  defaultValues={
  *      "entity"={
- *          "icon"="icon-user",
- *          "category"="account_management"
+ *          "icon"="icon-user"
  *      },
  *      "ownership"={
  *          "owner_type"="ORGANIZATION",
@@ -35,7 +34,8 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  *      },
  *      "security"={
  *          "type"="ACL",
- *          "group_name"=""
+ *          "group_name"="",
+ *          "category"="account_management"
  *      }
  *  }
  * )

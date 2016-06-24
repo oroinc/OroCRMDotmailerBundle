@@ -29,8 +29,7 @@ use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBook;
  * @Config(
  *  defaultValues={
  *      "entity"={
- *          "icon"="icon-group",
- *          "category"="account_management"
+ *          "icon"="icon-group"
  *      },
  *      "ownership"={
  *          "owner_type"="ORGANIZATION",
@@ -39,7 +38,8 @@ use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBook;
  *      },
  *      "security"={
  *          "type"="ACL",
- *          "group_name"=""
+ *          "group_name"="",
+ *          "category"="account_management"
  *      }
  *  }
  * )

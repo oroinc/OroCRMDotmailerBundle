@@ -26,8 +26,7 @@ use OroCRM\Bundle\DotmailerBundle\Model\ExtendCampaign;
  * @Config(
  *  defaultValues={
  *      "entity"={
- *          "icon"="icon-envelope",
- *          "category"="marketing"
+ *          "icon"="icon-envelope"
  *      },
  *      "ownership"={
  *          "owner_type"="ORGANIZATION",
@@ -36,7 +35,8 @@ use OroCRM\Bundle\DotmailerBundle\Model\ExtendCampaign;
  *      },
  *      "security"={
  *          "type"="ACL",
- *          "group_name"=""
+ *          "group_name"="",
+ *          "category"="marketing"
  *      }
  *  }
  * )
