@@ -18,12 +18,12 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "http://packagist.orocrm.com"
+            "url": "https://packagist.orocrm.com"
         }
     ],
     "require": {
         "php": ">=5.4.9",
-        "oro/crm": "self.version",
+        "oro/crm": "1.8.x-dev",
         "romanpitak/dotmailer-api-v2-client": "1.0.11"
     },
     "minimum-stability": "dev",
