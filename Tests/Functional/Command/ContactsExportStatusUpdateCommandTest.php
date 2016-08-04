@@ -2,91 +2,49 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Command;
 
-use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-
-use OroCRM\Bundle\DotmailerBundle\Command\ContactsExportStatusUpdateCommand;
+use Oro\Component\MessageQueue\Client\TraceableMessageProducer;
+use OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData;
+use OroCRM\Bundle\DotmailerBundle\Topics\Topics;
 
 /**
- * @dbIsolation
+ * @dbIsolationPerTest
  */
 class ContactsExportStatusUpdateCommandTest extends WebTestCase
 {
-    /**
-     * @var ExportManager
-     */
-    protected $exportManager;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $exportManagerMock;
-
     protected function setUp()
     {
+        parent::setUp();
+
         $this->initClient();
-        $this->loadFixtures(
-            [
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData',
-            ]
-        );
-
-        $this->exportManager = $this->getContainer()
-            ->get(ContactsExportStatusUpdateCommand::EXPORT_MANAGER);
-        $this->exportManagerMock = $this->getMockBuilder('OroCRM\Bundle\DotmailerBundle\Model\ExportManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->getContainer()
-            ->set(ContactsExportStatusUpdateCommand::EXPORT_MANAGER, $this->exportManagerMock);
-
-        $this->getContainer()->get('akeneo_batch.job_repository')->getJobManager()->beginTransaction();
+        $this->loadFixtures([LoadChannelData::class]);
     }
 
-    protected function tearDown()
+    public function testShouldOutputHelpForTheCommand()
     {
-        $this->getContainer()
-            ->set(ContactsExportStatusUpdateCommand::EXPORT_MANAGER, $this->exportManager);
+        $result = $this->runCommand('oro:cron:dotmailer:export-status:update', ['--help']);
 
-        // clear DB from separate connection, close to avoid connection limit and memory leak
-        $manager = $this->getContainer()->get('akeneo_batch.job_repository')->getJobManager();
-        $manager->rollback();
-        $manager->getConnection()->close();
-
-        parent::tearDown();
+        self::assertContains("Usage:", $result);
+        self::assertContains("oro:cron:dotmailer:export-status:update", $result);
     }
 
-    public function testExecute()
+    public function testShouldSendExportContactStatusUpdatesToMessageQueue()
     {
-        $notExportedChannel = $this->getReference('orocrm_dotmailer.channel.third');
-        $secondNotExportedChannel = $this->getReference('orocrm_dotmailer.channel.fourth');
+        $result = $this->runCommand('oro:cron:dotmailer:export-status:update');
 
-        $exportedChannel = $this->getReference('orocrm_dotmailer.channel.first');
-        $secondExportedChannel = $this->getReference('orocrm_dotmailer.channel.second');
+        $this->assertContains('Send export contacts status update for channel:', $result);
+        $this->assertContains('Completed', $result);
 
-        $this->exportManagerMock
-            ->expects($this->any())
-            ->method('isExportFinished')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        [$exportedChannel, true],
-                        [$secondExportedChannel, true],
-                        [$notExportedChannel, false],
-                        [$secondNotExportedChannel, false],
-                    ]
-                )
-            );
+        $traces = $this->getMessageProducer()->getTopicTraces(Topics::EXPORT_CONTACTS_STATUS_UPDATE);
 
-        $this->exportManagerMock
-            ->expects($this->exactly(2))
-            ->method('updateExportResults')
-            ->withConsecutive([$notExportedChannel], [$secondNotExportedChannel]);
+        $this->assertCount(4, $traces);
+    }
 
-        $this->exportManagerMock
-            ->expects($this->exactly(2))
-            ->method('processExportFaults')
-            ->withConsecutive([$exportedChannel], [$secondExportedChannel]);
-
-        $this->runCommand(ContactsExportStatusUpdateCommand::NAME, ['--verbose' => true]);
+    /**
+     * @return TraceableMessageProducer
+     */
+    private function getMessageProducer()
+    {
+        return $this->getContainer()->get('oro_message_queue.message_producer');
     }
 }

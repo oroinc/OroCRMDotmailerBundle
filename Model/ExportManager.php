@@ -3,7 +3,6 @@
 namespace OroCRM\Bundle\DotmailerBundle\Model;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\ImportExportBundle\Job\JobResult;
 use Oro\Bundle\ImportExportBundle\Processor\ProcessorRegistry;
@@ -11,6 +10,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\ImportExport\Job\Executor;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
+use OroCRM\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactsExportRepository;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
@@ -61,9 +61,7 @@ class ExportManager
      */
     public function isExportFinished(Channel $channel)
     {
-        return $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
-            ->isExportFinished($channel);
+        return $this->getAddressBookContactsExportRepostiry()->isExportFinished($channel);
     }
 
     /**
@@ -73,9 +71,7 @@ class ExportManager
      */
     public function isExportFaultsProcessed(Channel $channel)
     {
-        return $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
-            ->isExportFaultsProcessed($channel);
+        return $this->getAddressBookContactsExportRepostiry()->isExportFaultsProcessed($channel);
     }
 
     /**
@@ -85,8 +81,7 @@ class ExportManager
      */
     public function updateExportResults(Channel $channel)
     {
-        $exportRepository = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport');
+        $exportRepository = $this->getAddressBookContactsExportRepostiry();
 
         $this->dotmailerTransport->init($channel->getTransport());
 
@@ -131,8 +126,7 @@ class ExportManager
      */
     public function updateAddressBooksSyncStatus(Channel $channel)
     {
-        $exportRepository = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport');
+        $exportRepository = $this->getAddressBookContactsExportRepostiry();
 
         $addressBooks = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBook')
@@ -200,5 +194,13 @@ class ExportManager
             'dotmailer_import_not_exported_contact',
             $configuration
         );
+    }
+
+    /**
+     * @return AddressBookContactsExportRepository
+     */
+    private function getAddressBookContactsExportRepostiry()
+    {
+        return $this->managerRegistry->getRepository(AddressBookContactsExport::class);
     }
 }
