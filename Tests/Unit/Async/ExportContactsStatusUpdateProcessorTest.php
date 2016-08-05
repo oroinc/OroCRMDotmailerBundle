@@ -30,7 +30,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $this->assertClassImplements(TopicSubscriberInterface::class, ExportContactsStatusUpdateProcessor::class);
     }
 
-    public function testShouldSubscribeOnSyncIntegrationTopic()
+    public function testShouldSubscribeOnExportContactsStatusUpdateTopic()
     {
         $this->assertEquals(
             [Topics::EXPORT_CONTACTS_STATUS_UPDATE],
