@@ -6,6 +6,7 @@ use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Component\MessageQueue\Client\TopicSubscriberInterface;
 use Oro\Component\MessageQueue\Consumption\MessageProcessorInterface;
+use Oro\Component\MessageQueue\Job\JobProcessor;
 use Oro\Component\MessageQueue\Transport\MessageInterface;
 use Oro\Component\MessageQueue\Transport\SessionInterface;
 use Oro\Component\MessageQueue\Util\JSON;
@@ -24,13 +25,23 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
     private $exportManager;
 
     /**
+     * @var JobProcessor
+     */
+    private $jobProcessor;
+
+    /**
      * @param DoctrineHelper $doctrineHelper
      * @param ExportManager $exportManager
+     * @param JobProcessor $jobProcessor
      */
-    public function __construct(DoctrineHelper $doctrineHelper, ExportManager $exportManager)
-    {
+    public function __construct(
+        DoctrineHelper $doctrineHelper,
+        ExportManager $exportManager,
+        JobProcessor $jobProcessor
+    ) {
         $this->doctrineHelper = $doctrineHelper;
         $this->exportManager = $exportManager;
+        $this->jobProcessor = $jobProcessor;
     }
 
     /**
@@ -38,7 +49,6 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
      */
     public function process(MessageInterface $message, SessionInterface $session)
     {
-        // TODO CRM-5838 unique job
         // TODO CRM-5838 message could be redelivered on dbal transport if run for a long time.
 
         $body = JSON::decode($message->getBody());
@@ -48,31 +58,39 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
             throw new \LogicException('The message invalid. It must have integrationId set');
         }
 
-        /** @var EntityManagerInterface $em */
-        $em = $this->doctrineHelper->getEntityManagerForClass(Channel::class);
+        $jobName = 'oro_dotmailer:export_contacts_status_update:'.$body['integrationId'];
+        $ownerId = $message->getMessageId();
 
-        /** @var Channel $channel */
-        $channel = $em->find(Channel::class, $body['integrationId']);
-        if (false == $channel) {
-            return self::REJECT;
-        }
-        if (false == $channel->isEnabled()) {
-            return self::REJECT;
-        }
+        $jobRunner = $this->jobProcessor->createJobRunner();
+        $result = $jobRunner->runUnique($ownerId, $jobName, function () use ($body) {
+            /** @var EntityManagerInterface $em */
+            $em = $this->doctrineHelper->getEntityManagerForClass(Channel::class);
 
-        $em->getConnection()->getConfiguration()->setSQLLogger(null);
+            /** @var Channel $channel */
+            $channel = $em->find(Channel::class, $body['integrationId']);
+            if (false == $channel) {
+                return false;
+            }
+            if (false == $channel->isEnabled()) {
+                return false;
+            }
 
-        /**
-         * If previous export was not finished we need to update export results from Dotmailer.
-         * If finished we need to process export faults reports
-         */
-        if (!$this->exportManager->isExportFinished($channel)) {
-            $this->exportManager->updateExportResults($channel);
-        } elseif (!$this->exportManager->isExportFaultsProcessed($channel)) {
-            $this->exportManager->processExportFaults($channel);
-        }
+            $em->getConnection()->getConfiguration()->setSQLLogger(null);
 
-        return self::ACK;
+            /**
+             * If previous export was not finished we need to update export results from Dotmailer.
+             * If finished we need to process export faults reports
+             */
+            if (!$this->exportManager->isExportFinished($channel)) {
+                $this->exportManager->updateExportResults($channel);
+            } elseif (!$this->exportManager->isExportFaultsProcessed($channel)) {
+                $this->exportManager->processExportFaults($channel);
+            }
+
+            return true;
+        });
+
+        return $result ? self::ACK : self::REJECT;
     }
 
     /**
