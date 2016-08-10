@@ -8,7 +8,7 @@ use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Component\MessageQueue\Client\TopicSubscriberInterface;
 use Oro\Component\MessageQueue\Consumption\MessageProcessorInterface;
-use Oro\Component\MessageQueue\Test\JobExtensionTrait;
+use Oro\Component\MessageQueue\Test\JobRunner;
 use Oro\Component\MessageQueue\Transport\Null\NullMessage;
 use Oro\Component\MessageQueue\Transport\Null\NullSession;
 use Oro\Component\MessageQueue\Util\JSON;
@@ -20,7 +20,6 @@ use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
 class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCase
 {
     use ClassExtensionTrait;
-    use JobExtensionTrait;
 
     public function testShouldImplementMessageProcessorInterface()
     {
@@ -45,7 +44,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         new ExportContactsStatusUpdateProcessor(
             $this->createDoctrineHelperStub(),
             $this->createExportManagerMock(),
-            $this->createJobProcessorStub()
+            new JobRunner()
         );
     }
 
@@ -58,7 +57,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $this->createDoctrineHelperStub(),
             $this->createExportManagerMock(),
-            $this->createJobProcessorStub()
+            new JobRunner()
         );
 
         $message = new NullMessage();
@@ -76,7 +75,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $this->createDoctrineHelperStub(),
             $this->createExportManagerMock(),
-            $this->createJobProcessorStub()
+            new JobRunner()
         );
 
         $message = new NullMessage();
@@ -100,7 +99,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
             $this->createExportManagerMock(),
-            $this->createJobProcessorStub()
+            new JobRunner()
         );
 
         $message = new NullMessage();
@@ -129,7 +128,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
             $this->createExportManagerMock(),
-            $this->createJobProcessorStub()
+            new JobRunner()
         );
 
         $message = new NullMessage();
@@ -178,7 +177,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
             $exportManagerMock,
-            $this->createJobProcessorStub()
+            new JobRunner()
         );
 
         $message = new NullMessage();
@@ -227,7 +226,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
             $exportManagerMock,
-            $this->createJobProcessorStub()
+            new JobRunner()
         );
 
         $message = new NullMessage();
@@ -276,7 +275,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
             $exportManagerMock,
-            $this->createJobProcessorStub()
+            new JobRunner()
         );
 
         $message = new NullMessage();
@@ -302,12 +301,12 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
 
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
 
-        $jobRunner = $this->createJobRunner();
+        $jobRunner = new JobRunner();
 
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
             $this->createExportManagerMock(),
-            $this->createJobProcessorStub($jobRunner)
+            $jobRunner
         );
 
         $message = new NullMessage();

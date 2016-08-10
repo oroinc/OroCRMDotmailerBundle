@@ -6,7 +6,7 @@ use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Component\MessageQueue\Client\TopicSubscriberInterface;
 use Oro\Component\MessageQueue\Consumption\MessageProcessorInterface;
-use Oro\Component\MessageQueue\Job\JobProcessor;
+use Oro\Component\MessageQueue\Job\JobRunner;
 use Oro\Component\MessageQueue\Transport\MessageInterface;
 use Oro\Component\MessageQueue\Transport\SessionInterface;
 use Oro\Component\MessageQueue\Util\JSON;
@@ -25,23 +25,23 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
     private $exportManager;
 
     /**
-     * @var JobProcessor
+     * @var JobRunner
      */
-    private $jobProcessor;
+    private $jobRunner;
 
     /**
      * @param DoctrineHelper $doctrineHelper
      * @param ExportManager $exportManager
-     * @param JobProcessor $jobProcessor
+     * @param JobRunner $jobRunner
      */
     public function __construct(
         DoctrineHelper $doctrineHelper,
         ExportManager $exportManager,
-        JobProcessor $jobProcessor
+        JobRunner $jobRunner
     ) {
         $this->doctrineHelper = $doctrineHelper;
         $this->exportManager = $exportManager;
-        $this->jobProcessor = $jobProcessor;
+        $this->jobRunner = $jobRunner;
     }
 
     /**
@@ -61,8 +61,7 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
         $jobName = 'oro_dotmailer:export_contacts_status_update:'.$body['integrationId'];
         $ownerId = $message->getMessageId();
 
-        $jobRunner = $this->jobProcessor->createJobRunner();
-        $result = $jobRunner->runUnique($ownerId, $jobName, function () use ($body) {
+        $result = $this->jobRunner->runUnique($ownerId, $jobName, function () use ($body) {
             /** @var EntityManagerInterface $em */
             $em = $this->doctrineHelper->getEntityManagerForClass(Channel::class);
 

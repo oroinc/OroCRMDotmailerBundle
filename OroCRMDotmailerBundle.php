@@ -21,7 +21,7 @@ class OroCRMDotmailerBundle extends Bundle
 
         $addTopicMetaPass = AddTopicMetaPass::create();
         $addTopicMetaPass
-            ->add(Topics::EXPORT_CONTACTS_STATUS_UPDATE, '')
+            ->add(Topics::EXPORT_CONTACTS_STATUS_UPDATE)
         ;
 
         $container->addCompilerPass($addTopicMetaPass);
