@@ -3,26 +3,18 @@
 namespace OroCRM\Bundle\DotmailerBundle\Controller;
 
 use FOS\RestBundle\Util\Codes;
-
-use JMS\JobQueueBundle\Entity\Job;
-
-use Oro\Bundle\IntegrationBundle\Async\Topics;
 use Oro\Bundle\IntegrationBundle\Manager\GenuineSyncScheduler;
+use Oro\Bundle\SecurityBundle\Annotation\Acl;
+use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
+use OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
+use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
-use Oro\Bundle\SecurityBundle\Annotation\Acl;
-use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
-use Oro\Bundle\IntegrationBundle\Command\SyncCommand;
-
-use OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 
 /**
  * @Route("/address-book")
@@ -55,7 +47,7 @@ class AddressBookController extends Controller
             $status = Codes::HTTP_OK;
             $response = [ 'message' => '' ];
 
-            // TODO CRM-5839 job_view_link is not available any more
+            // TODO CRM-5838 job_view_link is not available any more
             $response['message'] = str_replace(
                 '{{ job_view_link }}',
                 '#',
