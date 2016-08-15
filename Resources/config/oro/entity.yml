@@ -36,6 +36,9 @@ oro_entity:
         Extend\Entity\EV_Dm_Cmp_Reply_Action:
             alias:        dotmailercampaignreplyaction
             plural_alias: dotmailercampaignreplyactions
+        Extend\Entity\EV_Dm_Ab_Cnt_Exp_Type:
+            alias:        dotmaileraddressbookexporttype
+            plural_alias: dotmaileraddressbookexporttypes
         Extend\Entity\EV_Dm_Ab_Visibility:
             alias:        dotmaileraddressbookvisibility
             plural_alias: dotmaileraddressbookvisibilities
