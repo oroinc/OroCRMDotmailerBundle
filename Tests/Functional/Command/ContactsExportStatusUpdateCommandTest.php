@@ -4,8 +4,8 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Command;
 
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Oro\Component\MessageQueue\Client\TraceableMessageProducer;
+use OroCRM\Bundle\DotmailerBundle\Async\Topics;
 use OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData;
-use OroCRM\Bundle\DotmailerBundle\Topics\Topics;
 
 /**
  * @dbIsolationPerTest

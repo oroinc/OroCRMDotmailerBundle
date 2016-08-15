@@ -43,7 +43,7 @@ class AddressBookTest extends WebTestCase
 
         self::assertCount(1, $traces);
         self::assertEquals([
-            'integrationId' => $addressBook->getChannel()->getId(),
+            'integration_id' => $addressBook->getChannel()->getId(),
             'connector' => null,
             'connector_parameters' => [
                 'address-book' => $addressBook->getId()
