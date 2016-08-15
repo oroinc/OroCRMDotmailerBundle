@@ -30,7 +30,8 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  *      },
  *      "security"={
  *          "type"="ACL",
- *          "group_name"=""
+ *          "group_name"="",
+ *          "category"="marketing"
  *      }
  *  }
  * )

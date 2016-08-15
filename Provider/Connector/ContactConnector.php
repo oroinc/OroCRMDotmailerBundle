@@ -2,21 +2,29 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Provider\Connector;
 
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
+
 class ContactConnector extends AbstractDotmailerConnector
 {
     const TYPE = 'contact';
     const IMPORT_JOB = 'dotmailer_new_contacts';
+    const PROCESSED_ADDRESS_BOOK_IDS = 'processed_address_book_ids';
 
     /**
      * {@inheritdoc}
      */
     protected function getConnectorSource()
     {
-        $aBooksToSynchronize = $this->managerRegistry
+        $addressBooksToSynchronize = $this->managerRegistry
             ->getRepository('OroCRMDotmailerBundle:AddressBook')
-            ->getAddressBooksToSyncOriginIds($this->getChannel());
+            ->getAddressBooksToSync($this->getChannel());
 
-        return $this->transport->getAddressBookContacts($aBooksToSynchronize, $this->getLastSyncDate());
+        $this->getContext()
+            ->setValue(self::PROCESSED_ADDRESS_BOOK_IDS, array_map(function (AddressBook $addressBook) {
+                return $addressBook->getId();
+            }, $addressBooksToSynchronize));
+
+        return $this->transport->getAddressBookContacts($addressBooksToSynchronize);
     }
 
     /**

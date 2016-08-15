@@ -5,10 +5,10 @@ namespace OroCRM\Bundle\DotmailerBundle\Model;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 
 /**
- * @method AbstractEnumValue getReplyAction()                               Get enum reply_action object
- * @method ExtendCampaign    setReplyAction(AbstractEnumValue $enumValue)   Set enum reply_action object
- * @method AbstractEnumValue getStatus()                                    Get enum status object
- * @method ExtendCampaign    setStatus(AbstractEnumValue $enumValue)        Set enum status object
+ * @method AbstractEnumValue getReplyAction()
+ * @method ExtendCampaign    setReplyAction(AbstractEnumValue $enumValue)
+ * @method AbstractEnumValue getStatus()
+ * @method ExtendCampaign    setStatus(AbstractEnumValue $enumValue)
  */
 class ExtendCampaign
 {

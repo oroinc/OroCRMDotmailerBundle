@@ -71,6 +71,18 @@ class ExportManager
      *
      * @return bool
      */
+    public function isExportFaultsProcessed(Channel $channel)
+    {
+        return $this->managerRegistry
+            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+            ->isExportFaultsProcessed($channel);
+    }
+
+    /**
+     * @param Channel $channel
+     *
+     * @return bool
+     */
     public function updateExportResults(Channel $channel)
     {
         $exportRepository = $this->managerRegistry
@@ -90,18 +102,28 @@ class ExportManager
             }
         }
 
-        if ($isExportFinished) {
-            $jobResult = $this->startUpdateSkippedContactsStatusJob($channel);
-            if (!$jobResult) {
-                throw new RuntimeException('Update skipped contacts failed.');
-            }
-
-            $this->updateAddressBooksSyncStatus($channel);
-        }
-
         $this->managerRegistry->getManager()->flush();
 
+        if ($isExportFinished) {
+            $this->processExportFaults($channel);
+        }
+
         return $isExportFinished;
+    }
+
+    /**
+     * @param Channel $channel
+     */
+    public function processExportFaults(Channel $channel)
+    {
+        $jobResult = $this->startUpdateSkippedContactsStatusJob($channel);
+        if (!$jobResult) {
+            throw new RuntimeException('Update skipped contacts failed.');
+        }
+
+        $this->updateAddressBooksSyncStatus($channel);
+
+        $this->managerRegistry->getManager()->flush();
     }
 
     /**
@@ -145,16 +167,16 @@ class ExportManager
     /**
      * @param AddressBook       $addressBook
      * @param AbstractEnumValue $status
-     * @param bool              $updateLastSyncedDate
+     * @param bool              $updateLastExportedAt
      */
     protected function updateAddressBookSyncStatus(
         AddressBook $addressBook,
         AbstractEnumValue $status,
-        $updateLastSyncedDate
+        $updateLastExportedAt
     ) {
         $addressBook->setSyncStatus($status);
-        if ($updateLastSyncedDate) {
-            $addressBook->setLastSynced(new \DateTime('now', new \DateTimeZone('UTC')));
+        if ($updateLastExportedAt) {
+            $addressBook->setLastExportedAt(new \DateTime('now', new \DateTimeZone('UTC')));
         }
     }
 

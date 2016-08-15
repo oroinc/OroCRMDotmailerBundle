@@ -42,8 +42,16 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
 
         $migration = new v1_2\AddActivityIndexes();
         $migration->up($schema, $queries);
-    }
 
+        $migration = new v1_2\OroCRMDotmailerBundle();
+        $migration->setExtendExtension($this->extendExtension);
+        $migration->up($schema, $queries);
+
+        $addSyncDateColumns = new v1_2\AddSyncDateColumns();
+        $addSyncDateColumns->addLastImportedAt($schema);
+
+        $this->renameLastSyncedColumn($schema);
+    }
 
     /**
      * {@inheritdoc}
@@ -51,5 +59,15 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
     public function setExtendExtension(ExtendExtension $extendExtension)
     {
         $this->extendExtension = $extendExtension;
+    }
+
+    /**
+     * @param Schema $schema
+     */
+    protected function renameLastSyncedColumn(Schema $schema)
+    {
+        $table = $schema->getTable('orocrm_dm_address_book');
+        $table->dropColumn('last_synced');
+        $table->addColumn('last_exported_at', 'datetime', ['comment' => '(DC2Type:datetime)', 'notnull' => false]);
     }
 }

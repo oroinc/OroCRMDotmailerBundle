@@ -37,7 +37,8 @@ use OroCRM\Bundle\DotmailerBundle\Model\ExtendContact;
  *      },
  *      "security"={
  *          "type"="ACL",
- *          "group_name"=""
+ *          "group_name"="",
+ *          "category"="marketing"
  *      }
  *  }
  * )

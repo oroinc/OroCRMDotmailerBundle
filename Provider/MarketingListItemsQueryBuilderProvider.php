@@ -179,7 +179,13 @@ class MarketingListItemsQueryBuilderProvider
         }
         $contactInformationFieldExpr = $this->fieldHelper
             ->getFieldExpr($marketingList->getEntity(), $qb, $contactInformationField);
+
+        /**
+         * Distinct used in select leads to exception in postgresql
+         * in case if order by field not presented in select
+         */
         $qb->select($contactInformationFieldExpr);
+        $qb->resetDQLPart('orderBy');
 
         $removedItemsQueryBuilder = clone $qb;
         $expr = $removedItemsQueryBuilder->expr();
@@ -275,7 +281,7 @@ class MarketingListItemsQueryBuilderProvider
      *
      * @return QueryBuilder
      */
-    public function getCachedMarketingListItemsByEmailQB(MarketingList $marketingList)
+    public function getCachedMarketingListEntitiesQB(MarketingList $marketingList)
     {
         if (count($this->cachedQueryBuilders) > 100) {
             $this->cachedQueryBuilders = [];
@@ -283,7 +289,12 @@ class MarketingListItemsQueryBuilderProvider
 
         if (!isset($this->cachedQueryBuilders[$marketingList->getId()])) {
             $this->cachedQueryBuilders[$marketingList->getId()] = $this->marketingListProvider
-                ->getMarketingListEntitiesQueryBuilder($marketingList, MarketingListProvider::FULL_ENTITIES_MIXIN);
+                ->getMarketingListEntitiesQueryBuilder($marketingList, MarketingListProvider::FULL_ENTITIES_MIXIN)
+                /**
+                 * In some cases Marketing list segment can contain duplicate records because of
+                 * join to many entities. Duplicate records should not be processed during import
+                 */
+                ->distinct(true);
         }
 
         return clone $this->cachedQueryBuilders[$marketingList->getId()];
@@ -354,6 +365,12 @@ class MarketingListItemsQueryBuilderProvider
             Join::WITH,
             $joinContactsExpr
         )->setParameter('channel', $addressBook->getChannel());
+
+        /**
+         * In some cases Marketing list segment can contain duplicate records because of
+         * join to many entities. Duplicate records should not be processed during import
+         */
+        $qb->distinct(true);
 
         return $qb;
     }

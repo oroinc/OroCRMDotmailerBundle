@@ -110,22 +110,41 @@ connector:
                     parameters:
                         batch_size: 100
 
+        # This Job responsible for receive not exported contacts from Dotmailer.
+        # Import from Dotmailer will not cover this case because there could be not synced contact with Oro if DM
+        # contact is unsubscribed before initial sync.
+        # In this case we will not import such unsubscription.
+        # Also we can't get them all, because it can be very large ammount of data (most of which is not needed).
+        # Also there is a lot of more not direct reasons.
         dotmailer_import_not_exported_contact:
-            title: import
+            title: orocrm.dotmailer.import_not_exported_contact.job
             type: import
             steps:
-                import:
+                importRejectedExports:
                     title: import
-                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    class: OroCRM\Bundle\DotmailerBundle\Step\ImportRejectedExportsStep
                     services:
-                        reader:    orocrm_dotmailer.importexport.reader.not_exported_contact
-                        processor: orocrm_dotmailer.importexport.processor.not_exported_contact
-                        writer:    orocrm_dotmailer.importexport.writer.import
+                        reader:           orocrm_dotmailer.importexport.reader.export.rejected_contact
+                        processor:        orocrm_dotmailer.importexport.processor.export.rejected_contact
+                        writer:           orocrm_dotmailer.importexport.writer.export.rejected_contact
+                        contextRegistry:  oro_importexport.context_registry
+                        registry:         doctrine
+                    parameters:
+                        batch_size: 1000
+                importExportErrorReports:
+                    title: import
+                    class: OroCRM\Bundle\DotmailerBundle\Step\ImportExportErrorReportsStep
+                    services:
+                        reader:           orocrm_dotmailer.importexport.reader.not_exported_contact
+                        processor:        orocrm_dotmailer.importexport.processor.not_exported_contact
+                        writer:           orocrm_dotmailer.importexport.writer.import
+                        contextRegistry:  oro_importexport.context_registry
+                        registry:         doctrine
                     parameters:
                         batch_size: 100
 
         dotmailer_contact_export:
-            title: orocrm.dotmailer.connector.contact.export_job
+            title: orocrm.dotmailer.connector.contact_export.job
             type: import
             steps:
                 removeContacts:

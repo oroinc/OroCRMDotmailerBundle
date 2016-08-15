@@ -8,7 +8,6 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
-use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 
 class AddressBookTest extends \PHPUnit_Framework_TestCase
