@@ -5,10 +5,11 @@ namespace OroCRM\Bundle\DotmailerBundle\Command;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Oro\Bundle\CronBundle\Command\CronCommandInterface;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Component\MessageQueue\Client\Message;
 use Oro\Component\MessageQueue\Client\MessagePriority;
 use Oro\Component\MessageQueue\Client\MessageProducerInterface;
+use OroCRM\Bundle\DotmailerBundle\Async\Topics;
 use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
-use OroCRM\Bundle\DotmailerBundle\Topics\Topics;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -56,9 +57,13 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
 
             $output->writeln(sprintf('Channel "%s"', $channel->getId()));
 
-            $this->getMessageProducer()->send(Topics::EXPORT_CONTACTS_STATUS_UPDATE, [
+            $message = new Message();
+            $message->setPriority(MessagePriority::VERY_LOW);
+            $message->setBody([
                 'integrationId' => $channel->getId(),
-            ], MessagePriority::VERY_LOW);
+            ]);
+
+            $this->getMessageProducer()->send(Topics::EXPORT_CONTACTS_STATUS_UPDATE, $message);
         }
 
         $output->writeln('Completed');
