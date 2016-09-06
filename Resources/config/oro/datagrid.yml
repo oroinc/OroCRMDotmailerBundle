@@ -1,4 +1,4 @@
-datagrids:
+datagrid:
     orocrm_dotmailer_address_books_grid:
         extended_entity_name: %orocrm_dotmailer.entity.address_book.class%
         channel_limitation:
