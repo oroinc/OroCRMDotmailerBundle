@@ -1,8 +1,8 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Writer;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Writer;
 
-use OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\ContactSyncProcessor;
+use Oro\Bundle\DotmailerBundle\ImportExport\Processor\ContactSyncProcessor;
 
 class ContactSyncWriter extends ImportWriter
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
-use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
 
 class ContactStrategy extends AddOrReplaceStrategy
 {
@@ -41,7 +41,7 @@ class ContactStrategy extends AddOrReplaceStrategy
                     $addressBookContact->setAddressBook($addressBook);
                     $addressBookContact->setChannel($addressBook->getChannel());
                     $this->strategyHelper
-                        ->getEntityManager('OroCRMDotmailerBundle:AddressBookContact')
+                        ->getEntityManager('OroDotmailerBundle:AddressBookContact')
                         ->persist($addressBookContact);
 
                     $entity->addAddressBookContact($addressBookContact);
@@ -64,7 +64,7 @@ class ContactStrategy extends AddOrReplaceStrategy
     protected function findProcessedEntity($entity, array $searchContext = [])
     {
         if (!$entity instanceof Contact) {
-            throw new RuntimeException('Entity of `\OroCRM\Bundle\DotmailerBundle\Entity\Contact` expected.');
+            throw new RuntimeException('Entity of `\Oro\Bundle\DotmailerBundle\Entity\Contact` expected.');
         }
 
         if (!$entity->getEmail() || !$entity->getChannel()) {
@@ -93,7 +93,7 @@ class ContactStrategy extends AddOrReplaceStrategy
         /**
          * Two separated query used because of performance issue
          */
-        $contact = $this->getRepository('OroCRMDotmailerBundle:Contact')
+        $contact = $this->getRepository('OroDotmailerBundle:Contact')
             ->createQueryBuilder('contact')
             ->addSelect('addressBookContacts')
             ->addSelect('addressBook')
@@ -110,7 +110,7 @@ class ContactStrategy extends AddOrReplaceStrategy
             return $contact;
         }
 
-        $contact = $this->getRepository('OroCRMDotmailerBundle:Contact')
+        $contact = $this->getRepository('OroDotmailerBundle:Contact')
             ->createQueryBuilder('contact')
             ->addSelect('addressBookContacts')
             ->addSelect('addressBook')

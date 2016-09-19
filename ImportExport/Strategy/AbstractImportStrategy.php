@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
 use Psr\Log\LoggerInterface;
 
@@ -12,7 +12,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\ImportExportBundle\Context\ContextAwareInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Strategy\StrategyInterface;
-use OroCRM\Bundle\DotmailerBundle\Provider\CacheProvider;
+use Oro\Bundle\DotmailerBundle\Provider\CacheProvider;
 
 abstract class AbstractImportStrategy implements StrategyInterface, ContextAwareInterface
 {

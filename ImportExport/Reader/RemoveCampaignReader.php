@@ -1,9 +1,9 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Reader;
 
-use OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\CampaignStrategy;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemoveCampaignIterator;
+use Oro\Bundle\DotmailerBundle\ImportExport\Strategy\CampaignStrategy;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemoveCampaignIterator;
 
 class RemoveCampaignReader extends AbstractReader
 {

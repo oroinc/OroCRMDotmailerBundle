@@ -1,12 +1,12 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Acl\Voter;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Acl\Voter;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
-use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign;
-use OroCRM\Bundle\DotmailerBundle\Acl\Voter\EmailCampaignVoter;
+use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
+use Oro\Bundle\DotmailerBundle\Acl\Voter\EmailCampaignVoter;
 
 class EmailCampaignVoterTest extends \PHPUnit_Framework_TestCase
 {

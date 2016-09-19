@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -10,12 +10,11 @@ use Monolog\Logger;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Provider\SyncProcessor;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory;
 
 abstract class AbstractImportExportTestCase extends WebTestCase
 {
-    const RESOURCES_FACTORY_ID = 'orocrm_dotmailer.transport.resources_factory';
+    const RESOURCES_FACTORY_ID = 'oro_dotmailer.transport.resources_factory';
     const SYNC_PROCESSOR = 'oro_integration.sync.processor';
 
     /**
@@ -109,7 +108,7 @@ abstract class AbstractImportExportTestCase extends WebTestCase
     protected function stubResources()
     {
         $this->resource = $this->getMock('DotMailer\Api\Resources\IResources');
-        $resourceFactory = $this->getMock('OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory');
+        $resourceFactory = $this->getMock('Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory');
         $resourceFactory->expects($this->any())
             ->method('createResources')
             ->will($this->returnValue($this->resource));

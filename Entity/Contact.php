@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Entity;
+namespace Oro\Bundle\DotmailerBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,11 +12,10 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Bundle\LocaleBundle\Model\FirstNameInterface;
 use Oro\Bundle\LocaleBundle\Model\LastNameInterface;
-
-use OroCRM\Bundle\DotmailerBundle\Model\ExtendContact;
+use Oro\Bundle\DotmailerBundle\Model\ExtendContact;
 
 /**
- * @ORM\Entity(repositoryClass="OroCRM\Bundle\DotmailerBundle\Entity\Repository\ContactRepository")
+ * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository")
  * @ORM\Table(
  *      name="orocrm_dm_contact",
  *      uniqueConstraints={

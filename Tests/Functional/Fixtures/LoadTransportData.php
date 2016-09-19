@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture as BaseAbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Oro\Bundle\SecurityBundle\Encoder\Mcrypt;
-use OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransport;
+use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport;
 
 class LoadTransportData extends BaseAbstractFixture implements ContainerAwareInterface
 {
@@ -20,22 +20,22 @@ class LoadTransportData extends BaseAbstractFixture implements ContainerAwareInt
         [
             'username' => 'John',
             'password' => 'Johns password',
-            'reference' => 'orocrm_dotmailer.transport.first'
+            'reference' => 'oro_dotmailer.transport.first'
         ],
         [
             'username' => 'John',
             'password' => 'Johns password',
-            'reference' => 'orocrm_dotmailer.transport.second'
+            'reference' => 'oro_dotmailer.transport.second'
         ],
         [
             'username' => 'John',
             'password' => 'Johns password',
-            'reference' => 'orocrm_dotmailer.transport.third'
+            'reference' => 'oro_dotmailer.transport.third'
         ],
         [
             'username' => 'John',
             'password' => 'Johns password',
-            'reference' => 'orocrm_dotmailer.transport.fourth'
+            'reference' => 'oro_dotmailer.transport.fourth'
         ]
     ];
 

@@ -1,20 +1,20 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\MarketingListItemIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\MarketingListItemIterator;
 
 class MarketingListItemIteratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testIterator()
     {
         $marketingListItemsQueryBuilderProvider = $this->getMockBuilder(
-            'OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider'
+            'Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider'
         )
             ->disableOriginalConstructor()
             ->getMock();
         $context = $this->getMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
-        $addressBook = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\AddressBook');
+        $addressBook = $this->getMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
         $addressBook->expects($this->any())
             ->method('getOriginId')
             ->will($this->returnValue($addressBookOriginId = 42));

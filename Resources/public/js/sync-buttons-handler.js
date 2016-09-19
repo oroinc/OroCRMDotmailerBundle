@@ -9,7 +9,7 @@ define([
 
     /**
      * @export  orocrmdotmailer/js/sync-buttons-handler
-     * @class   orocrm.dotmailer.handler.syncButtons
+     * @class   oro.dotmailer.handler.syncButtons
      *
      * @param {string} syncButtonsSelector JQuery selector
      */

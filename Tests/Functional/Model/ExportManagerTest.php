@@ -1,17 +1,17 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Model;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Model;
 
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\ApiContactImportStatuses;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
-use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
-use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
-use OroCRM\Bundle\DotmailerBundle\Tests\Functional\AbstractImportExportTestCase;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Model\ExportManager;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\AbstractImportExportTestCase;
 
 /**
  * @dbIsolation
@@ -28,25 +28,25 @@ class ExportManagerTest extends AbstractImportExportTestCase
         parent::setUp();
         $this->loadFixtures(
             [
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookContactsExportData',
+                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookContactsExportData',
             ]
         );
-        $this->target = $this->getContainer()->get('orocrm_dotmailer.export_manager');
+        $this->target = $this->getContainer()->get('oro_dotmailer.export_manager');
     }
 
     public function testUpdateExportResults()
     {
         /** @var Channel $channel */
-        $channel = $this->getReference('orocrm_dotmailer.channel.fourth');
+        $channel = $this->getReference('oro_dotmailer.channel.fourth');
 
-        $importWithFaultsId = $this->getReference('orocrm_dotmailer.address_book_contacts_export.first')
+        $importWithFaultsId = $this->getReference('oro_dotmailer.address_book_contacts_export.first')
             ->getImportId();
 
         $importAddToAddressBook = $this
-            ->getReference('orocrm_dotmailer.address_book_contacts_export.add_to_address_book')
+            ->getReference('oro_dotmailer.address_book_contacts_export.add_to_address_book')
             ->getImportId();
 
-        $scheduledForExport = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBookContact')
+        $scheduledForExport = $this->managerRegistry->getRepository('OroDotmailerBundle:AddressBookContact')
             ->findBy(['scheduledForExport' => true]);
         $this->assertCount(2, $scheduledForExport);
 
@@ -66,17 +66,17 @@ class ExportManagerTest extends AbstractImportExportTestCase
         $this->target->updateExportResults($channel);
 
         /** @var AddressBook $expectedAddressBook */
-        $expectedAddressBook = $this->getReference('orocrm_dotmailer.address_book.fifth');
+        $expectedAddressBook = $this->getReference('oro_dotmailer.address_book.fifth');
         $this->assertExportStatusUpdated($channel, $importWithFaultsId, $expectedAddressBook);
 
         /**
          * Check not exported contacts properly handled
          */
         $addressBookContact = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContact')
+            ->getRepository('OroDotmailerBundle:AddressBookContact')
             ->findBy(
                 [
-                    'contact' => $this->getReference('orocrm_dotmailer.contact.update_1'),
+                    'contact' => $this->getReference('oro_dotmailer.contact.update_1'),
                     'channel' => $channel,
                     'addressBook' => $expectedAddressBook
                 ]
@@ -95,7 +95,7 @@ class ExportManagerTest extends AbstractImportExportTestCase
      */
     protected function assertExportStatusUpdated(Channel $channel, $importId, AddressBook $expectedAddressBook)
     {
-        $exportEntities = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+        $exportEntities = $this->managerRegistry->getRepository('OroDotmailerBundle:AddressBookContactsExport')
             ->findBy(['channel' => $channel, 'importId' => $importId]);
         $this->assertCount(1, $exportEntities);
 

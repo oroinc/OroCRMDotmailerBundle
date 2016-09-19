@@ -1,11 +1,11 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
+namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use DotMailer\Api\DataTypes\Guid;
 use DotMailer\Api\Resources\IResources;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\CsvStringReader;
+use Oro\Bundle\DotmailerBundle\Provider\CsvStringReader;
 
 class ExportFaultsReportIterator implements \Iterator
 {

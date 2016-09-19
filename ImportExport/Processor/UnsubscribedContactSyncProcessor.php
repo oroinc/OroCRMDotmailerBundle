@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Processor;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Processor;
 
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 use Akeneo\Bundle\BatchBundle\Item\ItemProcessorInterface;
@@ -10,9 +10,9 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
-use OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\OutOfSyncMarketingListItemIterator;
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem;
+use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\OutOfSyncMarketingListItemIterator;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem;
 
 class UnsubscribedContactSyncProcessor implements ItemProcessorInterface, StepExecutionAwareInterface
 {
@@ -56,7 +56,7 @@ class UnsubscribedContactSyncProcessor implements ItemProcessorInterface, StepEx
         $marketingListUnsubscribedItem = new MarketingListUnsubscribedItem();
         $marketingListUnsubscribedItem->setEntityId($entityId);
         $marketingList = $this->registry
-            ->getRepository('OroCRMMarketingListBundle:MarketingList')
+            ->getRepository('OroMarketingListBundle:MarketingList')
             ->find($item[OutOfSyncMarketingListItemIterator::MARKETING_LIST]->getId());
         $marketingListUnsubscribedItem->setMarketingList($marketingList);
 

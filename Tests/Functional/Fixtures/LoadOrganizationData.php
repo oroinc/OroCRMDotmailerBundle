@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -13,12 +13,12 @@ class LoadOrganizationData extends AbstractFixture
         [
             'name'      => 'Foo Inc.',
             'enabled'   => true,
-            'reference' => 'orocrm_dotmailer.organization.foo',
+            'reference' => 'oro_dotmailer.organization.foo',
         ],
         [
             'name'      => 'Bar Inc.',
             'enabled'   => true,
-            'reference' => 'orocrm_dotmailer.organization.bar',
+            'reference' => 'oro_dotmailer.organization.bar',
         ],
     ];
 

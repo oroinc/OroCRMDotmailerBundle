@@ -1,17 +1,16 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Model\Action;
+namespace Oro\Bundle\DotmailerBundle\Model\Action;
 
 use Doctrine\ORM\QueryBuilder;
 
 use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIterator;
 use Oro\Bundle\WorkflowBundle\Model\Action\AbstractAction;
 use Oro\Bundle\WorkflowBundle\Model\ContextAccessor;
-
-use OroCRM\Bundle\DotmailerBundle\Model\FieldHelper;
-use OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
-use OroCRM\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
+use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
+use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 
 abstract class AbstractMarketingListEntitiesAction extends AbstractAction
 {

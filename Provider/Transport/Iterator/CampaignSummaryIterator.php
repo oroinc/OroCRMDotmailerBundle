@@ -1,12 +1,12 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
+namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use Doctrine\Common\Collections\Collection;
 
 use DotMailer\Api\Resources\IResources;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
+use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 
 class CampaignSummaryIterator implements \Iterator
 {

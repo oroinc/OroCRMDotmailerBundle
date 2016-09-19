@@ -1,11 +1,11 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Reader;
 
 use Guzzle\Iterator\AppendIterator;
 
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
 class NotExportedContactReader extends AbstractReader
 {
@@ -22,7 +22,7 @@ class NotExportedContactReader extends AbstractReader
         $addressBookExports = [];
 
         $exportEntities = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+            ->getRepository('OroDotmailerBundle:AddressBookContactsExport')
             ->getNotRejectedExports($channel);
         foreach ($exportEntities as $exportEntity) {
             $addressBookExports[$exportEntity->getAddressBook()->getId()][] = $exportEntity->getImportId();

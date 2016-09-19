@@ -1,13 +1,13 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Form\Type;
+namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class DotmailerTransportCheckButtonType extends ButtonType
 {
-    const NAME = 'orocrm_dotmailer_transport_check_button';
+    const NAME = 'oro_dotmailer_transport_check_button';
 
     /**
      * {@inheritdoc}

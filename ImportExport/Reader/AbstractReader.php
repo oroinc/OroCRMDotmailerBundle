@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Reader;
 
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 
@@ -13,8 +13,7 @@ use Oro\Bundle\IntegrationBundle\Provider\ConnectorContextMediator;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Reader\IteratorBasedReader;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-
-use OroCRM\Bundle\DotmailerBundle\ImportExport\JobContextComposite;
+use Oro\Bundle\DotmailerBundle\ImportExport\JobContextComposite;
 
 abstract class AbstractReader extends IteratorBasedReader
 {

@@ -1,13 +1,12 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Model\Action;
+namespace Oro\Bundle\DotmailerBundle\Model\Action;
 
 use Oro\Bundle\WorkflowBundle\Model\EntityAwareInterface;
-
-use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaignStatistics;
-use OroCRM\Bundle\DotmailerBundle\Entity\Activity;
-use OroCRM\Bundle\DotmailerBundle\Provider\CampaignStatisticProvider;
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
+use Oro\Bundle\CampaignBundle\Entity\EmailCampaignStatistics;
+use Oro\Bundle\DotmailerBundle\Entity\Activity;
+use Oro\Bundle\DotmailerBundle\Provider\CampaignStatisticProvider;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 
 class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
 {

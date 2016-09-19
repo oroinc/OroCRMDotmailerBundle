@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Writer;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Writer;
 
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 use Akeneo\Bundle\BatchBundle\Item\ItemWriterInterface;
@@ -10,7 +10,7 @@ use Psr\Log\LoggerInterface;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
-use OroCRM\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
+use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 
 class RemoveAddressBookWriter implements ItemWriterInterface, StepExecutionAwareInterface
 {

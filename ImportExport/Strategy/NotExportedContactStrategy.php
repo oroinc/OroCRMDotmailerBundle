@@ -1,11 +1,11 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
-use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReportIterator;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReportIterator;
 
 /**
  * Responsibility:
@@ -27,7 +27,7 @@ class NotExportedContactStrategy extends AbstractImportStrategy
             $this->context->addError(
                 sprintf(
                     'Instance of %s expected. Instance of %s given.',
-                    'OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact',
+                    'Oro\Bundle\DotmailerBundle\Entity\AddressBookContact',
                     $type
                 )
             );
@@ -42,7 +42,7 @@ class NotExportedContactStrategy extends AbstractImportStrategy
         }
 
         $contact = $this->registry
-            ->getRepository('OroCRMDotmailerBundle:Contact')
+            ->getRepository('OroDotmailerBundle:Contact')
             ->findOneBy(['email' => $email, 'channel' => $this->getChannel()]);
 
         if (!$contact) {
@@ -52,7 +52,7 @@ class NotExportedContactStrategy extends AbstractImportStrategy
         }
 
         $addressBook = $this->registry
-            ->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->getRepository('OroDotmailerBundle:AddressBook')
             ->find($entity->getAddressBook()->getId());
 
         if (!$addressBook) {
@@ -62,7 +62,7 @@ class NotExportedContactStrategy extends AbstractImportStrategy
         }
 
         $addressBookContact = $this->registry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContact')
+            ->getRepository('OroDotmailerBundle:AddressBookContact')
             ->findOneBy(['contact' => $contact, 'addressBook' => $addressBook]);
 
         if (!$addressBookContact) {

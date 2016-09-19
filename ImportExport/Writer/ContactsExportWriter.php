@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Writer;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Writer;
 
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
@@ -18,12 +18,11 @@ use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\ImportExportBundle\Writer\CsvEchoWriter;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
-
-use OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactDataConverter;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemovedContactsExportIterator;
-use OroCRM\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
+use Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactDataConverter;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemovedContactsExportIterator;
+use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 
 class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareInterface
 {
@@ -165,7 +164,7 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
         $exportEntity->setImportId($importId);
 
         $channel = $this->getChannel();
-        $addressBook = $manager->getRepository('OroCRMDotmailerBundle:AddressBook')
+        $addressBook = $manager->getRepository('OroDotmailerBundle:AddressBook')
             ->findOneBy(['originId' => $addressBookOriginId, 'channel' => $channel]);
         $exportEntity->setAddressBook($addressBook);
 
@@ -175,7 +174,7 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
         $exportEntity->setStatus($status);
         $exportEntity->setChannel($channel);
 
-        $manager->getRepository('OroCRMDotmailerBundle:AddressBookContact')
+        $manager->getRepository('OroDotmailerBundle:AddressBookContact')
             ->bulkUpdateAddressBookContactsExportId($addressBookContactIds, $importId);
 
         $manager->persist($exportEntity);

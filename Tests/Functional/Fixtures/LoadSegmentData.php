@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -18,9 +18,9 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
             'type' => 'dynamic',
             'name' => 'Test ML Segment',
             'description' => 'description',
-            'entity' => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
-            'owner' => 'orocrm_dotmailer.business_unit.foo',
-            'organization' => 'orocrm_dotmailer.organization.foo',
+            'entity' => 'Oro\Bundle\ContactBundle\Entity\Contact',
+            'owner' => 'oro_dotmailer.business_unit.foo',
+            'organization' => 'oro_dotmailer.organization.foo',
             'definition' => [
                 'columns' => [
                     [
@@ -44,15 +44,15 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
                     ],
                 ],
             ],
-            'reference' => 'orocrm_dotmailer.segment.first',
+            'reference' => 'oro_dotmailer.segment.first',
         ],
         [
             'type' => 'dynamic',
             'name' => 'Test ML Segment 2',
             'description' => 'description',
-            'entity' => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
-            'owner' => 'orocrm_dotmailer.business_unit.foo',
-            'organization' => 'orocrm_dotmailer.organization.foo',
+            'entity' => 'Oro\Bundle\ContactBundle\Entity\Contact',
+            'owner' => 'oro_dotmailer.business_unit.foo',
+            'organization' => 'oro_dotmailer.organization.foo',
             'definition' => [
                 'columns' => [
                     [
@@ -76,15 +76,15 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
                     ],
                 ],
             ],
-            'reference' => 'orocrm_dotmailer.segment.second',
+            'reference' => 'oro_dotmailer.segment.second',
         ],
         [
             'type' => 'dynamic',
             'name' => 'Test ML Segment 3',
             'description' => 'description',
-            'entity' => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
-            'owner' => 'orocrm_dotmailer.business_unit.foo',
-            'organization' => 'orocrm_dotmailer.organization.foo',
+            'entity' => 'Oro\Bundle\ContactBundle\Entity\Contact',
+            'owner' => 'oro_dotmailer.business_unit.foo',
+            'organization' => 'oro_dotmailer.organization.foo',
             'definition' => [
                 'columns' => [
                     [
@@ -108,15 +108,15 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
                     ],
                 ],
             ],
-            'reference' => 'orocrm_dotmailer.segment.empty',
+            'reference' => 'oro_dotmailer.segment.empty',
         ],
         [
             'type' => 'dynamic',
             'name' => 'Test ML Segment by Case last name',
             'description' => 'description',
-            'entity' => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
-            'owner' => 'orocrm_dotmailer.business_unit.foo',
-            'organization' => 'orocrm_dotmailer.organization.foo',
+            'entity' => 'Oro\Bundle\ContactBundle\Entity\Contact',
+            'owner' => 'oro_dotmailer.business_unit.foo',
+            'organization' => 'oro_dotmailer.organization.foo',
             'definition' => [
                 'filters' => [
                     [
@@ -146,7 +146,7 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
                     ],
                 ],
             ],
-            'reference' => 'orocrm_dotmailer.segment.case',
+            'reference' => 'oro_dotmailer.segment.case',
         ],
     ];
 
@@ -179,7 +179,7 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
     public function getDependencies()
     {
         return [
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadUserData'
+            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadUserData'
         ];
     }
 }

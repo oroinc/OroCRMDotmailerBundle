@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Rest;
+namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Rest;
 
 use RestClient\Request;
 
@@ -10,8 +10,8 @@ use DotMailer\Api\Rest;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerAwareInterface;
 
-use OroCRM\Bundle\DotmailerBundle\Exception\RestClientAttemptException;
-use OroCRM\Bundle\DotmailerBundle\Exception\RestClientException;
+use Oro\Bundle\DotmailerBundle\Exception\RestClientAttemptException;
+use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 
 /**
  * Override Rest Client class from romanpitak/dotmailer-api-v2-php-client bundle is not possible because of

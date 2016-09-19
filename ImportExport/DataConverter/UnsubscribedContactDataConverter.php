@@ -1,9 +1,9 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
 use Oro\Bundle\ImportExportBundle\Converter\DataConverterInterface;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIterator;
 
 class UnsubscribedContactDataConverter implements DataConverterInterface
 {
