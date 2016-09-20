@@ -12,6 +12,7 @@ use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\OutOfSyncMarketingListItemIterator;
+
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem;
 
 class UnsubscribedContactSyncProcessor implements ItemProcessorInterface, StepExecutionAwareInterface
