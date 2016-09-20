@@ -5,7 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 
 class LoadMarketingListData extends AbstractFixture implements DependentFixtureInterface
 {
@@ -15,7 +15,7 @@ class LoadMarketingListData extends AbstractFixture implements DependentFixtureI
     protected $data = [
         [
             'name'          => 'list1',
-            'entity'        => 'Oro\Bundle\ContactBundle\Entity\Contact',
+            'entity'        => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
             'type'          => 'dynamic',
             'owner'         => 'oro_dotmailer.user.john.doe',
             'organization'  => 'oro_dotmailer.organization.foo',
@@ -24,7 +24,7 @@ class LoadMarketingListData extends AbstractFixture implements DependentFixtureI
         ],
         [
             'name'          => 'list2',
-            'entity'        => 'Oro\Bundle\ContactBundle\Entity\Contact',
+            'entity'        => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
             'type'          => 'dynamic',
             'owner'         => 'oro_dotmailer.user.john.doe',
             'organization'  => 'oro_dotmailer.organization.foo',
@@ -33,7 +33,7 @@ class LoadMarketingListData extends AbstractFixture implements DependentFixtureI
         ],
         [
             'name'          => 'list3',
-            'entity'        => 'Oro\Bundle\ContactBundle\Entity\Contact',
+            'entity'        => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
             'type'          => 'static',
             'owner'         => 'oro_dotmailer.user.john.doe',
             'organization'  => 'oro_dotmailer.organization.foo',
@@ -42,7 +42,7 @@ class LoadMarketingListData extends AbstractFixture implements DependentFixtureI
         ],
         [
             'name'          => 'list4',
-            'entity'        => 'Oro\Bundle\ContactBundle\Entity\Contact',
+            'entity'        => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
             'type'          => 'static',
             'owner'         => 'oro_dotmailer.user.john.doe',
             'organization'  => 'oro_dotmailer.organization.foo',
@@ -51,7 +51,7 @@ class LoadMarketingListData extends AbstractFixture implements DependentFixtureI
         ],
         [
             'name'          => 'list5',
-            'entity'        => 'Oro\Bundle\ContactBundle\Entity\Contact',
+            'entity'        => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
             'type'          => 'static',
             'owner'         => 'oro_dotmailer.user.john.doe',
             'organization'  => 'oro_dotmailer.organization.foo',
@@ -60,7 +60,7 @@ class LoadMarketingListData extends AbstractFixture implements DependentFixtureI
         ],
         [
             'name'          => 'list6',
-            'entity'        => 'Oro\Bundle\ContactBundle\Entity\Contact',
+            'entity'        => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
             'type'          => 'static',
             'owner'         => 'oro_dotmailer.user.john.doe',
             'organization'  => 'oro_dotmailer.organization.foo',
@@ -69,7 +69,7 @@ class LoadMarketingListData extends AbstractFixture implements DependentFixtureI
         ],
         [
             'name'          => 'list7',
-            'entity'        => 'Oro\Bundle\ContactBundle\Entity\Contact',
+            'entity'        => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
             'type'          => 'static',
             'owner'         => 'oro_dotmailer.user.john.doe',
             'organization'  => 'oro_dotmailer.organization.foo',
@@ -83,7 +83,7 @@ class LoadMarketingListData extends AbstractFixture implements DependentFixtureI
      */
     public function load(ObjectManager $manager)
     {
-        $listTypeRepository = $manager->getRepository('OroMarketingListBundle:MarketingListType');
+        $listTypeRepository = $manager->getRepository('OroCRMMarketingListBundle:MarketingListType');
 
         foreach ($this->data as $data) {
             $entity = new MarketingList();

@@ -19,7 +19,7 @@ use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Oro\Bundle\IntegrationBundle\Command\SyncCommand;
 use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
-use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 
 /**
  * @Route("/address-book")
@@ -158,7 +158,7 @@ class AddressBookController extends Controller
      * )
      * @ParamConverter(
      *      "marketingList",
-     *      class="OroMarketingListBundle:MarketingList",
+     *      class="OroCRMMarketingListBundle:MarketingList",
      *      options={"id" = "entity"}
      * )
      * @AclAncestor("orocrm_marketing_list_update")

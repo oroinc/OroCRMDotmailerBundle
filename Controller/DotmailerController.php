@@ -10,9 +10,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
-use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
+use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
-use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 
 /**
  * @Route("/dotmailer")
@@ -46,7 +46,7 @@ class DotmailerController extends Controller
      *      name="oro_dotmailer_sync_status",
      *      requirements={"marketingList"="\d+"})
      * @ParamConverter("marketingList",
-     *      class="OroMarketingListBundle:MarketingList",
+     *      class="OroCRMMarketingListBundle:MarketingList",
      *      options={"id" = "marketingList"})
      * @AclAncestor("oro_dotmailer")
      *

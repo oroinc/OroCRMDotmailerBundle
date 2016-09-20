@@ -28,7 +28,7 @@ class ExportSyncsUnsubscribedDMContactsWithMarketingListItemsTest extends Abstra
         $channel = $this->getReference('oro_dotmailer.channel.fourth');
 
         $unsubscribedItem = $this->managerRegistry
-            ->getRepository('OroMarketingListBundle:MarketingListUnsubscribedItem')
+            ->getRepository('OroCRMMarketingListBundle:MarketingListUnsubscribedItem')
             ->findOneBy(
                 [
                     'marketingList' => $this->getReference('oro_dotmailer.marketing_list.fifth')->getId(),
@@ -84,7 +84,7 @@ class ExportSyncsUnsubscribedDMContactsWithMarketingListItemsTest extends Abstra
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $unsubscribedItem = $this->managerRegistry
-            ->getRepository('OroMarketingListBundle:MarketingListUnsubscribedItem')
+            ->getRepository('OroCRMMarketingListBundle:MarketingListUnsubscribedItem')
             ->findOneBy(
                 [
                     'marketingList' => $this->getReference('oro_dotmailer.marketing_list.fifth')->getId(),

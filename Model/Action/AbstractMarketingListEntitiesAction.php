@@ -9,8 +9,8 @@ use Oro\Bundle\WorkflowBundle\Model\Action\AbstractAction;
 use Oro\Bundle\WorkflowBundle\Model\ContextAccessor;
 use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
-use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
-use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
+use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
+use OroCRM\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 
 abstract class AbstractMarketingListEntitiesAction extends AbstractAction
 {

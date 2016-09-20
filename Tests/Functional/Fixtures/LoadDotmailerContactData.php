@@ -338,7 +338,7 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
                     $marketingListItem = $this->getReference($data['marketing_list_item']);
                     $addressBookContact->setMarketingListItemId($marketingListItem->getId());
                     $addressBookContact->setMarketingListItemClass(
-                        'Oro\Bundle\ContactBundle\Entity\Contact'
+                        'OroCRM\Bundle\ContactBundle\Entity\Contact'
                     );
                 }
 
