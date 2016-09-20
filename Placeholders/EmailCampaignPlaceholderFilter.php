@@ -4,7 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Placeholders;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
-use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
+use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign;
 use Oro\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport;
 
 class EmailCampaignPlaceholderFilter

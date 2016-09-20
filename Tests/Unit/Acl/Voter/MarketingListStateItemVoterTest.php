@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Oro\Bundle\DotmailerBundle\Acl\Voter\MarketingListStateItemVoter;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
-use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
+use OroCRM\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 
 class MarketingListStateItemVoterTest extends \PHPUnit_Framework_TestCase
 {
@@ -40,7 +40,7 @@ class MarketingListStateItemVoterTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->contactInformationFieldsProvider = $this->getMockBuilder(
-            'Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider'
+            'OroCRM\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider'
         )
             ->disableOriginalConstructor()
             ->getMock();
@@ -212,8 +212,8 @@ class MarketingListStateItemVoterTest extends \PHPUnit_Framework_TestCase
      */
     protected function getItem()
     {
-        $item = $this->getMock('Oro\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface');
-        $marketingList = $this->getMock('Oro\Bundle\MarketingListBundle\Entity\MarketingList');
+        $item = $this->getMock('OroCRM\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface');
+        $marketingList = $this->getMock('OroCRM\Bundle\MarketingListBundle\Entity\MarketingList');
 
         $item
             ->expects($this->any())

@@ -9,7 +9,7 @@ use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
-use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 
 class ContactRepository extends EntityRepository
 {
