@@ -8,7 +8,7 @@ define([
     var console = window.console;
 
     /**
-     * @export  orocrmdotmailer/js/sync-buttons-handler
+     * @export  orodotmailer/js/sync-buttons-handler
      * @class   oro.dotmailer.handler.syncButtons
      *
      * @param {string} syncButtonsSelector JQuery selector

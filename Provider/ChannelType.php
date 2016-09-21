@@ -22,6 +22,6 @@ class ChannelType implements ChannelInterface, IconAwareIntegrationInterface
      */
     public function getIcon()
     {
-        return 'bundles/orocrmdotmailer/img/dotmailer.ico';
+        return 'bundles/orodotmailer/img/dotmailer.ico';
     }
 }
