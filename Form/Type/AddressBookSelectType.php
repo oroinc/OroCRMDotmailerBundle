@@ -6,7 +6,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use OroCRM\Bundle\ChannelBundle\Form\Type\CreateOrSelectInlineChannelAwareType;
+use Oro\Bundle\ChannelBundle\Form\Type\CreateOrSelectInlineChannelAwareType;
 
 class AddressBookSelectType extends CreateOrSelectInlineChannelAwareType
 {

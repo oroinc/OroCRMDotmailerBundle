@@ -227,15 +227,15 @@ services:
     oro_dotmailer.provider.marketing_list_items.query_builder:
         class: %oro_dotmailer.provider.marketing_list_items.query_builder.class%
         arguments:
-            - "@orocrm_marketing_list.provider.marketing_list"
-            - "@orocrm_marketing_list.provider.contact_information_fields"
+            - "@oro_marketing_list.provider.marketing_list"
+            - "@oro_marketing_list.provider.contact_information_fields"
             - "@oro_security.owner.ownership_metadata_provider"
             - "@doctrine"
             - "@oro_dotmailer.model.field_helper"
             - "@oro_dotmailer.contact.export.query_builder_adapter.registry"
         calls:
-            - [setRemovedItemClassName, [%orocrm_marketing_list.removed_item.class%]]
-            - [setUnsubscribedItemClassName, [%orocrm_marketing_list.unsubscribed_item.class%]]
+            - [setRemovedItemClassName, [%oro_marketing_list.removed_item.class%]]
+            - [setUnsubscribedItemClassName, [%oro_marketing_list.unsubscribed_item.class%]]
             - [setContactClassName, [%oro_dotmailer.entity.contact.class%]]
             - [setAddressBookContactClassName, [%oro_dotmailer.entity.address_book_contact.class%]]
 
@@ -245,7 +245,7 @@ services:
     oro_dotmailer.provider.campaign_statistic:
         class: %oro_dotmailer.provider.campaign_statistic.class%
         arguments:
-            - "@orocrm_campaign.email_campaign.statistics_connector"
+            - "@oro_campaign.email_campaign.statistics_connector"
             - "@doctrine"
             - "@oro_entity.doctrine_helper"
             - "@oro_dotmailer.provider.cache"
@@ -600,7 +600,7 @@ services:
     oro_dotmailer.placeholder.filter.buttons_filter:
         class: %oro_dotmailer.placeholder.filter.buttons_filter.class%
         arguments:
-            - "@orocrm_marketing_list.provider.contact_information_fields"
+            - "@oro_marketing_list.provider.contact_information_fields"
 
     oro_dotmailer.placeholder.filter.email_campaign:
         class: %oro_dotmailer.placeholder.filter.email_campaign.class%
@@ -618,7 +618,7 @@ services:
         astract: true
         arguments:
             - "@oro_workflow.context_accessor"
-            - "@orocrm_marketing_list.provider.contact_information_fields"
+            - "@oro_marketing_list.provider.contact_information_fields"
             - "@oro_dotmailer.provider.marketing_list_items.query_builder"
             - "@oro_dotmailer.model.field_helper"
 
@@ -634,7 +634,7 @@ services:
         class: %oro_dotmailer.workflow.action.create_marketing_list_state_item.class%
         parent: oro_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
-            - [setMarketingListStateItemClassName, [%orocrm_marketing_list.unsubscribed_item.class%]]
+            - [setMarketingListStateItemClassName, [%oro_marketing_list.unsubscribed_item.class%]]
             - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
         tags:
             - { name: oro_workflow.action, alias: dm_create_marketing_list_unsubscribed_item }
@@ -643,7 +643,7 @@ services:
         class: %oro_dotmailer.workflow.action.create_marketing_list_state_item.class%
         parent: oro_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
-            - [setMarketingListStateItemClassName, [%orocrm_marketing_list.removed_item.class%]]
+            - [setMarketingListStateItemClassName, [%oro_marketing_list.removed_item.class%]]
             - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
         tags:
             - { name: oro_workflow.action, alias: dm_create_marketing_list_removed_item }
@@ -652,7 +652,7 @@ services:
         class: %oro_dotmailer.workflow.action.remove_marketing_list_state_item.class%
         parent: oro_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
-            - [setMarketingListStateItemClassName, [%orocrm_marketing_list.unsubscribed_item.class%]]
+            - [setMarketingListStateItemClassName, [%oro_marketing_list.unsubscribed_item.class%]]
             - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
         tags:
             - { name: oro_workflow.action, alias: remove_marketing_list_unsubscribed_item }
@@ -661,7 +661,7 @@ services:
         class: %oro_dotmailer.workflow.action.remove_marketing_list_state_item.class%
         parent: oro_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
-            - [setMarketingListStateItemClassName, [%orocrm_marketing_list.removed_item.class%]]
+            - [setMarketingListStateItemClassName, [%oro_marketing_list.removed_item.class%]]
             - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
         tags:
             - { name: oro_workflow.action, alias: remove_marketing_list_removed_item }
@@ -730,7 +730,7 @@ services:
         arguments:
             - "@oro_entity.doctrine_helper"
         calls:
-            - [setClassName, [%orocrm_campaign.email_campaign.entity.class%]]
+            - [setClassName, [%oro_campaign.email_campaign.entity.class%]]
         tags:
             - { name: security.voter, priority: 500 }
 
@@ -738,11 +738,11 @@ services:
         class: %oro_dotmailer.acl.voter.marketing_list_state_item.class%
         arguments:
             - "@oro_entity.doctrine_helper"
-            - "@orocrm_marketing_list.provider.contact_information_fields"
+            - "@oro_marketing_list.provider.contact_information_fields"
             - "@oro_dotmailer.model.field_helper"
             - %oro_dotmailer.entity.contact.class%
         calls:
-            - [setClassName, [%orocrm_marketing_list.unsubscribed_item.class%]]
+            - [setClassName, [%oro_marketing_list.unsubscribed_item.class%]]
         tags:
             - { name: security.voter, priority: 500 }
 
@@ -751,9 +751,9 @@ services:
         class: %oro_dotmailer.listener.datagrid.marketing_list_item.class%
         arguments:
             - "@doctrine"
-            - "@orocrm_marketing_list.provider.contact_information_fields"
+            - "@oro_marketing_list.provider.contact_information_fields"
             - "@oro_dotmailer.model.field_helper"
-            - "@orocrm_marketing_list.model.helper"
+            - "@oro_marketing_list.model.helper"
         tags:
             - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.after, method: onBuildAfter }
 
@@ -782,4 +782,4 @@ services:
     oro_dotmailer.transport.dotmailer:
         class: %oro_dotmailer.transport.dotmailer.class%
         tags:
-            - { name: orocrm_campaign.email_transport }
+            - { name: oro_campaign.email_transport }

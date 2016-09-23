@@ -4,7 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign;
+use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 
 class CampaignSummaryRepository extends EntityRepository
 {

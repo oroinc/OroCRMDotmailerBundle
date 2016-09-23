@@ -10,7 +10,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\DotmailerBundle\Model\ExtendAddressBook;
 
 /**
@@ -114,7 +114,7 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
     /**
      * @var MarketingList
      *
-     * @ORM\OneToOne(targetEntity="OroCRM\Bundle\MarketingListBundle\Entity\MarketingList")
+     * @ORM\OneToOne(targetEntity="Oro\Bundle\MarketingListBundle\Entity\MarketingList")
      * @ORM\JoinColumn(name="marketing_list_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $marketingList;

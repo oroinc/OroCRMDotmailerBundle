@@ -5,7 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Form\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use OroCRM\Bundle\CampaignBundle\Form\Type\AbstractTransportSettingsType;
+use Oro\Bundle\CampaignBundle\Form\Type\AbstractTransportSettingsType;
 
 class DotmailerTransportSettingsType extends AbstractTransportSettingsType
 {

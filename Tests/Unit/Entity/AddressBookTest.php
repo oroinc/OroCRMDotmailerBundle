@@ -5,7 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 

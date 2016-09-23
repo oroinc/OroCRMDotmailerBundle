@@ -3,7 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Placeholder;
 
 use Oro\Bundle\DotmailerBundle\Placeholders\ButtonFilter;
-use OroCRM\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
+use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 
 class ButtonFilterTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,7 @@ class ButtonFilterTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->fieldsProvider = $this->getMockBuilder(
-            'OroCRM\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider'
+            'Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider'
         )
             ->disableOriginalConstructor()
             ->getMock();
@@ -33,7 +33,7 @@ class ButtonFilterTest extends \PHPUnit_Framework_TestCase
         $actual = $this->target->isApplicable(new \StdClass());
         $this->assertFalse($actual);
 
-        $entity = $this->getMock('OroCRM\Bundle\MarketingListBundle\Entity\MarketingList');
+        $entity = $this->getMock('Oro\Bundle\MarketingListBundle\Entity\MarketingList');
 
         $actual = $this->target->isApplicable($entity);
         $this->assertFalse($actual);

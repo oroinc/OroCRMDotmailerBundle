@@ -5,7 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign;
+use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 
 class LoadEmailCampaignData extends AbstractFixture implements DependentFixtureInterface
 {

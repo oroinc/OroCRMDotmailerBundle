@@ -18,7 +18,7 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
             'type' => 'dynamic',
             'name' => 'Test ML Segment',
             'description' => 'description',
-            'entity' => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
+            'entity' => 'Oro\Bundle\ContactBundle\Entity\Contact',
             'owner' => 'oro_dotmailer.business_unit.foo',
             'organization' => 'oro_dotmailer.organization.foo',
             'definition' => [
@@ -50,7 +50,7 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
             'type' => 'dynamic',
             'name' => 'Test ML Segment 2',
             'description' => 'description',
-            'entity' => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
+            'entity' => 'Oro\Bundle\ContactBundle\Entity\Contact',
             'owner' => 'oro_dotmailer.business_unit.foo',
             'organization' => 'oro_dotmailer.organization.foo',
             'definition' => [
@@ -82,7 +82,7 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
             'type' => 'dynamic',
             'name' => 'Test ML Segment 3',
             'description' => 'description',
-            'entity' => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
+            'entity' => 'Oro\Bundle\ContactBundle\Entity\Contact',
             'owner' => 'oro_dotmailer.business_unit.foo',
             'organization' => 'oro_dotmailer.organization.foo',
             'definition' => [
@@ -114,7 +114,7 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
             'type' => 'dynamic',
             'name' => 'Test ML Segment by Case last name',
             'description' => 'description',
-            'entity' => 'OroCRM\Bundle\ContactBundle\Entity\Contact',
+            'entity' => 'Oro\Bundle\ContactBundle\Entity\Contact',
             'owner' => 'oro_dotmailer.business_unit.foo',
             'organization' => 'oro_dotmailer.organization.foo',
             'definition' => [

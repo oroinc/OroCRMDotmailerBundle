@@ -13,7 +13,7 @@ use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\OutOfSyncMarketingListItemIterator;
 
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem;
 
 class UnsubscribedContactSyncProcessor implements ItemProcessorInterface, StepExecutionAwareInterface
 {
@@ -57,7 +57,7 @@ class UnsubscribedContactSyncProcessor implements ItemProcessorInterface, StepEx
         $marketingListUnsubscribedItem = new MarketingListUnsubscribedItem();
         $marketingListUnsubscribedItem->setEntityId($entityId);
         $marketingList = $this->registry
-            ->getRepository('OroCRMMarketingListBundle:MarketingList')
+            ->getRepository('OroMarketingListBundle:MarketingList')
             ->find($item[OutOfSyncMarketingListItemIterator::MARKETING_LIST]->getId());
         $marketingListUnsubscribedItem->setMarketingList($marketingList);
 

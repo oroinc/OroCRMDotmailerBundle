@@ -6,8 +6,8 @@ use Doctrine\ORM\Query\Expr\Join;
 
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface;
 
 class MarketingListStateItemRemoveAction extends AbstractMarketingListEntitiesAction
 {

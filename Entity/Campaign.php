@@ -10,7 +10,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
-use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign;
+use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 use Oro\Bundle\DotmailerBundle\Model\ExtendCampaign;
 
 /**
@@ -238,7 +238,7 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
     /**
      * @var EmailCampaign
      *
-     * @ORM\OneToOne(targetEntity="OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign")
+     * @ORM\OneToOne(targetEntity="Oro\Bundle\CampaignBundle\Entity\EmailCampaign")
      * @ORM\JoinColumn(name="email_campaign_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $emailCampaign;
