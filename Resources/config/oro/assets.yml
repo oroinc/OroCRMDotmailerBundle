@@ -1,4 +1,4 @@
 assets:
     css:
-      'orodotmailer':
-          - 'bundles/orodotmailer/css/styles.css'
+      'orocrmdotmailer':
+          - 'bundles/orocrmdotmailer/css/styles.css'
