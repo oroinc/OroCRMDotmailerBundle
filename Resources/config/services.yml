@@ -617,7 +617,7 @@ services:
         class: %orocrm_dotmailer.workflow.action.abstract_marketing_list_entities.class%
         astract: true
         arguments:
-            - "@oro_workflow.context_accessor"
+            - "@oro_action.context_accessor"
             - "@orocrm_marketing_list.provider.contact_information_fields"
             - "@orocrm_dotmailer.provider.marketing_list_items.query_builder"
             - "@orocrm_dotmailer.model.field_helper"
@@ -628,7 +628,7 @@ services:
         calls:
             - [setCampaignStatisticProvider, ["@orocrm_dotmailer.provider.campaign_statistic"]]
         tags:
-            - { name: oro_workflow.action, alias: update_email_campaign_dm_statistics }
+            - { name: oro_action.action, alias: update_email_campaign_dm_statistics }
 
     orocrm_dotmailer.workflow.action.create_marketing_list_unsubscribed_item:
         class: %orocrm_dotmailer.workflow.action.create_marketing_list_state_item.class%
@@ -637,7 +637,7 @@ services:
             - [setMarketingListStateItemClassName, [%orocrm_marketing_list.unsubscribed_item.class%]]
             - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
         tags:
-            - { name: oro_workflow.action, alias: dm_create_marketing_list_unsubscribed_item }
+            - { name: oro_action.action, alias: dm_create_marketing_list_unsubscribed_item }
 
     orocrm_dotmailer.workflow.action.create_marketing_list_removed_item:
         class: %orocrm_dotmailer.workflow.action.create_marketing_list_state_item.class%
@@ -646,7 +646,7 @@ services:
             - [setMarketingListStateItemClassName, [%orocrm_marketing_list.removed_item.class%]]
             - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
         tags:
-            - { name: oro_workflow.action, alias: dm_create_marketing_list_removed_item }
+            - { name: oro_action.action, alias: dm_create_marketing_list_removed_item }
 
     orocrm_dotmailer.workflow.action.remove_marketing_list_unsubscribed_item:
         class: %orocrm_dotmailer.workflow.action.remove_marketing_list_state_item.class%
@@ -655,7 +655,7 @@ services:
             - [setMarketingListStateItemClassName, [%orocrm_marketing_list.unsubscribed_item.class%]]
             - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
         tags:
-            - { name: oro_workflow.action, alias: remove_marketing_list_unsubscribed_item }
+            - { name: oro_action.action, alias: remove_marketing_list_unsubscribed_item }
 
     orocrm_dotmailer.workflow.action.remove_marketing_list_removed_item:
         class: %orocrm_dotmailer.workflow.action.remove_marketing_list_state_item.class%
@@ -664,7 +664,7 @@ services:
             - [setMarketingListStateItemClassName, [%orocrm_marketing_list.removed_item.class%]]
             - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
         tags:
-            - { name: oro_workflow.action, alias: remove_marketing_list_removed_item }
+            - { name: oro_action.action, alias: remove_marketing_list_removed_item }
 
     #helpers
     orocrm_dotmailer.model.field_helper:
