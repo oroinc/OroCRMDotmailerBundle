@@ -5,7 +5,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\IntegrationBundle\Async\Topics;
 use Oro\Bundle\MessageQueueBundle\Test\Functional\MessageQueueExtension;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-use Oro\Component\MessageQueue\Client\TraceableMessageProducer;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData;
 use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
@@ -23,7 +22,6 @@ class AddressBookTest extends WebTestCase
 
         $this->initClient();
         $this->loadFixtures([LoadAddressBookData::class]);
-        $this->getMessageProducer()->clear();
     }
 
     public function testShouldScheduleSyncWhenMarketingListIsChanged()
@@ -42,7 +40,7 @@ class AddressBookTest extends WebTestCase
         $this->getEntityManager()->persist($addressBook);
         $this->getEntityManager()->flush();
 
-        $traces = $this->getMessageProducer()->getTopicSentMessages(Topics::SYNC_INTEGRATION);
+        $traces = self::getMessageCollector()->getTopicSentMessages(Topics::SYNC_INTEGRATION);
 
         self::assertCount(1, $traces);
         self::assertEquals([
@@ -61,13 +59,5 @@ class AddressBookTest extends WebTestCase
     private function getEntityManager()
     {
         return self::getContainer()->get('doctrine.orm.entity_manager');
-    }
-
-    /**
-     * @return TraceableMessageProducer
-     */
-    private function getMessageProducer()
-    {
-        return self::getContainer()->get('oro_message_queue.message_producer');
     }
 }

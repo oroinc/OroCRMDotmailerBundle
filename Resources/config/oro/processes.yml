@@ -108,23 +108,13 @@ processes:
                             - '@not_empty': $marketingList
                             - '@not_empty': $channel
                     actions:
-                        - '@format_string':
-                            attribute: $.addressBook
-                            string: 'address-book=%adddress_book_id%'
-                            arguments:
-                                adddress_book_id: $id
-                        - '@format_string':
-                            attribute: $.integration
-                            string: '--integration-id=%integration_id%'
-                            arguments:
-                                integration_id: $channel.id
-                        - '@create_entity':
-                            class: JMS\JobQueueBundle\Entity\Job
-                            attribute: $.syncJob
-                            flush: true
-                            arguments:
-                                - 'oro:cron:integration:sync'
-                                - [$.addressBook, $.integration, '-v']
+                        - '@call_service_method':
+                            service: 'oro_integration.genuine_sync_scheduler'
+                            method: 'schedule'
+                            method_parameters:
+                                - $channel.id
+                                - ~
+                                - { address-book: $id }
 
         dotmailer_handle_removed_address_book_contact:
             label:   Update MarketingListItem State in case of Dotmailer contact export was rejected
