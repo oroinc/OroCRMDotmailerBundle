@@ -2,14 +2,13 @@
 
 namespace Oro\Bundle\DotmailerBundle;
 
+use Oro\Bundle\DotmailerBundle\Async\Topics;
+use Oro\Bundle\DotmailerBundle\DependencyInjection\CompilerPass\ContactExportQueryBuilderAdapterCompilerPath;
+use Oro\Bundle\MessageQueueBundle\DependencyInjection\Compiler\AddTopicMetaPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-use Oro\Bundle\MessageQueueBundle\DependencyInjection\Compiler\AddTopicMetaPass;
-use Oro\Bundle\DotmailerBundle\Async\Topics;
-use Oro\Bundle\DotmailerBundle\DependencyInjection\CompilerPass\ContactExportQueryBuilderAdapterCompilerPath;
-
-class OroCRMDotmailerBundle extends Bundle
+class OroDotmailerBundle extends Bundle
 {
     /**
      * {@inheritdoc}
