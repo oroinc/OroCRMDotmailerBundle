@@ -1,13 +1,13 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider;
+namespace Oro\Bundle\DotmailerBundle\Provider;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
-use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign;
-use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaignStatistics;
-use OroCRM\Bundle\CampaignBundle\Model\EmailCampaignStatisticsConnector;
+use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
+use Oro\Bundle\CampaignBundle\Entity\EmailCampaignStatistics;
+use Oro\Bundle\CampaignBundle\Model\EmailCampaignStatisticsConnector;
 
 class CampaignStatisticProvider
 {

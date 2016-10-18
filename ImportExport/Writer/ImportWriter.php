@@ -1,10 +1,9 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Writer;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Writer;
 
 use Oro\Bundle\IntegrationBundle\ImportExport\Writer\PersistentBatchWriter;
-
-use OroCRM\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
+use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 
 class ImportWriter extends PersistentBatchWriter
 {

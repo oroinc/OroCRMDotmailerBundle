@@ -1,15 +1,15 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExportContactIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExportContactIterator;
 
 class ScheduledForExportContactIteratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testIterator()
     {
         $registry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
-        $addressBook = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\AddressBook');
+        $addressBook = $this->getMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
         $addressBook->expects($this->any())
             ->method('getOriginId')
             ->will($this->returnValue($addressBookOriginId = 234));
@@ -61,7 +61,7 @@ class ScheduledForExportContactIteratorTest extends \PHPUnit_Framework_TestCase
                     }
                 )
             );
-        $repository = $this->getMockBuilder('OroCRM\Bundle\DotmailerBundle\Entity\Repository\ContactRepository')
+        $repository = $this->getMockBuilder('Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository')
             ->disableOriginalConstructor()
             ->getMock();
         $repository->expects($this->exactly(2))

@@ -1,11 +1,11 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
+namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use Doctrine\ORM\QueryBuilder;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\UnsubscribedContactSyncProcessor;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\ImportExport\Processor\UnsubscribedContactSyncProcessor;
 
 class OutOfSyncMarketingListItemIterator extends AbstractMarketingListItemIterator
 {

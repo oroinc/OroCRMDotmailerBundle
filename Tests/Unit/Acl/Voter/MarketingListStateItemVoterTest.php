@@ -1,15 +1,15 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Acl\Voter;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Acl\Voter;
 
 use Doctrine\ORM\Query\Expr;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-use OroCRM\Bundle\DotmailerBundle\Acl\Voter\MarketingListStateItemVoter;
+use Oro\Bundle\DotmailerBundle\Acl\Voter\MarketingListStateItemVoter;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
-use OroCRM\Bundle\DotmailerBundle\Model\FieldHelper;
-use OroCRM\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
+use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
+use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 
 class MarketingListStateItemVoterTest extends \PHPUnit_Framework_TestCase
 {
@@ -40,12 +40,12 @@ class MarketingListStateItemVoterTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->contactInformationFieldsProvider = $this->getMockBuilder(
-            'OroCRM\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider'
+            'Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider'
         )
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->fieldHelper = $this->getMockBuilder('OroCRM\Bundle\DotmailerBundle\Model\FieldHelper')
+        $this->fieldHelper = $this->getMockBuilder('Oro\Bundle\DotmailerBundle\Model\FieldHelper')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -53,7 +53,7 @@ class MarketingListStateItemVoterTest extends \PHPUnit_Framework_TestCase
             $this->doctrineHelper,
             $this->contactInformationFieldsProvider,
             $this->fieldHelper,
-            'OroCRM\Bundle\DotmailerBundle\Entity\Contact'
+            'Oro\Bundle\DotmailerBundle\Entity\Contact'
         );
     }
 
@@ -129,7 +129,7 @@ class MarketingListStateItemVoterTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $contactRepository = $this->getMockBuilder(
-            'OroCRM\Bundle\DotmailerBundle\Entity\Repository\ContactRepository'
+            'Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository'
         )
             ->setMethods(['isUnsubscribedFromAddressBookByMarketingList'])
             ->disableOriginalConstructor()
@@ -154,7 +154,7 @@ class MarketingListStateItemVoterTest extends \PHPUnit_Framework_TestCase
                 $this->returnValueMap(
                     [
                         ['stdClass', $repository],
-                        ['OroCRM\Bundle\DotmailerBundle\Entity\Contact', $contactRepository],
+                        ['Oro\Bundle\DotmailerBundle\Entity\Contact', $contactRepository],
                     ]
                 )
             );
@@ -212,8 +212,8 @@ class MarketingListStateItemVoterTest extends \PHPUnit_Framework_TestCase
      */
     protected function getItem()
     {
-        $item = $this->getMock('OroCRM\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface');
-        $marketingList = $this->getMock('OroCRM\Bundle\MarketingListBundle\Entity\MarketingList');
+        $item = $this->getMock('Oro\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface');
+        $marketingList = $this->getMock('Oro\Bundle\MarketingListBundle\Entity\MarketingList');
 
         $item
             ->expects($this->any())

@@ -1,4 +1,4 @@
-OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransport:
+Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport:
     properties:
         username:
             - NotBlank: ~
@@ -12,7 +12,7 @@ OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransport:
                 min: 8
                 max: 255
 
-OroCRM\Bundle\DotmailerBundle\Entity\AddressBook:
+Oro\Bundle\DotmailerBundle\Entity\AddressBook:
     properties:
         channel:
             - NotBlank: ~
@@ -23,7 +23,7 @@ OroCRM\Bundle\DotmailerBundle\Entity\AddressBook:
         owner:
             - NotBlank: ~
 
-OroCRM\Bundle\DotmailerBundle\Entity\Campaign:
+Oro\Bundle\DotmailerBundle\Entity\Campaign:
     properties:
         channel:
             - NotBlank: ~
@@ -46,7 +46,7 @@ OroCRM\Bundle\DotmailerBundle\Entity\Campaign:
         owner:
             - NotBlank: ~
 
-OroCRM\Bundle\DotmailerBundle\Entity\Contact:
+Oro\Bundle\DotmailerBundle\Entity\Contact:
     properties:
         channel:
             - NotBlank: ~
@@ -55,7 +55,7 @@ OroCRM\Bundle\DotmailerBundle\Entity\Contact:
         email:
             - NotBlank: ~
 
-OroCRM\Bundle\DotmailerBundle\Entity\Activity:
+Oro\Bundle\DotmailerBundle\Entity\Activity:
     properties:
         channel:
             - NotBlank: ~
@@ -66,7 +66,7 @@ OroCRM\Bundle\DotmailerBundle\Entity\Activity:
         owner:
             - NotBlank: ~
 
-OroCRM\Bundle\DotmailerBundle\Entity\CampaignSummary:
+Oro\Bundle\DotmailerBundle\Entity\CampaignSummary:
     properties:
         channel:
             - NotBlank: ~

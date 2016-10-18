@@ -1,14 +1,13 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Acl\Voter;
+namespace Oro\Bundle\DotmailerBundle\Acl\Voter;
 
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\SecurityBundle\Acl\Voter\AbstractEntityVoter;
-
-use OroCRM\Bundle\DotmailerBundle\Entity\Repository\ContactRepository;
-use OroCRM\Bundle\DotmailerBundle\Model\FieldHelper;
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface;
-use OroCRM\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository;
+use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface;
+use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 
 class MarketingListStateItemVoter extends AbstractEntityVoter
 {

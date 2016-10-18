@@ -1,2 +1,2 @@
 bundles:
-    - OroCRMDotmailerBundle:Form:fields.html.twig
+    - OroDotmailerBundle:Form:fields.html.twig

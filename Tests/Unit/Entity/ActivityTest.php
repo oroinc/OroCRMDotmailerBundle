@@ -1,13 +1,12 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Entity;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Entity;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Tests\Unit\Fixture\Entity\Organization;
-
-use OroCRM\Bundle\DotmailerBundle\Entity\Activity;
-use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
-use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Entity\Activity;
+use Oro\Bundle\DotmailerBundle\Entity\Campaign;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
 
 class ActivityTest extends \PHPUnit_Framework_TestCase
 {

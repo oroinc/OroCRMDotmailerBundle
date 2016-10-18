@@ -4,7 +4,7 @@ processes:
             label:   'Create Email Campaign for Dotmailer Campaign'
             enabled: true
             order:   10
-            entity:  OroCRM\Bundle\DotmailerBundle\Entity\Campaign
+            entity:  Oro\Bundle\DotmailerBundle\Entity\Campaign
             exclude_definitions: [dotmailer_email_campaign_creation]
             actions_configuration:
                 - '@assign_value':
@@ -20,17 +20,17 @@ processes:
                 # Prepare constants values
                 - '@assign_constant_value':
                     attribute: $.statusSent
-                    value: OroCRM\Bundle\DotmailerBundle\Entity\Campaign::STATUS_SENT
+                    value: Oro\Bundle\DotmailerBundle\Entity\Campaign::STATUS_SENT
                 - '@assign_constant_value':
                     attribute: $.scheduleManual
-                    value: OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign::SCHEDULE_MANUAL
+                    value: Oro\Bundle\CampaignBundle\Entity\EmailCampaign::SCHEDULE_MANUAL
                 - '@assign_constant_value':
                     attribute: $.dotmailerTransport
-                    value: OroCRM\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport::NAME
-                # Create OroCRM EmailCampaign
+                    value: Oro\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport::NAME
+                # Create Oro EmailCampaign
                 - '@tree':
-                    # If OroCRM EmailCampaign not exists and
-                    # Dotmailer Campaign relates to OroCRM MarketingList and
+                    # If Oro EmailCampaign not exists and
+                    # Dotmailer Campaign relates to Oro MarketingList and
                     # Dotmailer Campaign has "sent" status
                     conditions:
                         '@and':
@@ -39,8 +39,8 @@ processes:
                             - '@not_empty': $.addressBook.marketingList
                             - '@equal': [$status, $.statusSent]
                     actions:
-                        - '@create_entity': # Create OroCRM EmailCampaign
-                            class:     OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign
+                        - '@create_entity': # Create Oro EmailCampaign
+                            class:     Oro\Bundle\CampaignBundle\Entity\EmailCampaign
                             attribute: $emailCampaign
                             data:
                                 name: $name
@@ -55,16 +55,16 @@ processes:
                                 organization: $channel.defaultUserOwner.organization
                                 marketingLIst: $.addressBook.marketingList
                         - '@create_entity': # Create DotmailerTransportSettings
-                            class:     OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransportSettings
+                            class:     Oro\Bundle\DotmailerBundle\Entity\DotmailerTransportSettings
                             attribute: $emailCampaign.transportSettings
                             data:
                                 channel: $channel
 
         dotmailer_contact_activity_update:
-            label:   'Synchronizes OroCRM Marketing List Item with Dotmailer Contact Activity'
+            label:   'Synchronizes Oro Marketing List Item with Dotmailer Contact Activity'
             enabled: true
             order:   20
-            entity:  OroCRM\Bundle\DotmailerBundle\Entity\Activity
+            entity:  Oro\Bundle\DotmailerBundle\Entity\Activity
             exclude_definitions: [dotmailer_contact_activity_update]
             actions_configuration:
                 - '@update_email_campaign_dm_statistics': ~
@@ -72,16 +72,16 @@ processes:
         dotmailer_handle_contact_state:
             label:   Check MarketingListItem State for Dotmailer Contact
             enabled: true
-            entity:  OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact
+            entity:  Oro\Bundle\DotmailerBundle\Entity\AddressBookContact
             exclude_definitions: [dotmailer_handle_contact_state]
             actions_configuration:
                 # Prepare constants values
                 - '@assign_constant_value':
                     attribute: $.statusSubscribed
-                    value: OroCRM\Bundle\DotmailerBundle\Entity\Contact::STATUS_SUBSCRIBED
+                    value: Oro\Bundle\DotmailerBundle\Entity\Contact::STATUS_SUBSCRIBED
                 - '@assign_constant_value':
                     attribute: $.statusSoftBounced
-                    value: OroCRM\Bundle\DotmailerBundle\Entity\Contact::STATUS_SOFTBOUNCED
+                    value: Oro\Bundle\DotmailerBundle\Entity\Contact::STATUS_SOFTBOUNCED
                 - '@tree':
                     conditions:
                         '@or':
@@ -90,7 +90,7 @@ processes:
                     actions:
                         - '@remove_marketing_list_unsubscribed_item': ~
                         - '@remove_marketing_list_removed_item': ~
-                # Create OroCRM MarketingListUnsubscribedItem
+                # Create Oro MarketingListUnsubscribedItem
                 - '@dm_create_marketing_list_unsubscribed_item':
                     conditions:
                         '@and':
@@ -100,7 +100,7 @@ processes:
         schedule_dotmailer_address_book_synchronization:
             label:   Schedule Dotmailer Address Book synchronization
             enabled: true
-            entity:  OroCRM\Bundle\DotmailerBundle\Entity\AddressBook
+            entity:  Oro\Bundle\DotmailerBundle\Entity\AddressBook
             actions_configuration:
                 - '@tree':
                     conditions:
@@ -119,7 +119,7 @@ processes:
         dotmailer_handle_removed_address_book_contact:
             label:   Update MarketingListItem State in case of Dotmailer contact export was rejected
             enabled: true
-            entity:  OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact
+            entity:  Oro\Bundle\DotmailerBundle\Entity\AddressBookContact
             actions_configuration:
                 - '@dm_create_marketing_list_removed_item': ~
 

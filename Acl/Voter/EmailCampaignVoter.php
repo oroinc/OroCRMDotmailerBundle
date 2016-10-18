@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Acl\Voter;
+namespace Oro\Bundle\DotmailerBundle\Acl\Voter;
 
 use Oro\Bundle\SecurityBundle\Acl\Voter\AbstractEntityVoter;
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\Activity;
+use Oro\Bundle\DotmailerBundle\Entity\Activity;
 
 class LoadActivityData extends AbstractFixture implements DependentFixtureInterface
 {
@@ -28,11 +28,11 @@ class LoadActivityData extends AbstractFixture implements DependentFixtureInterf
             'unsubscribed'         => false,
             'softBounced'          => false,
             'hardBounced'          => false,
-            'contact'              => 'orocrm_dotmailer.contact.first',
-            'campaign'             => 'orocrm_dotmailer.campaign.first',
-            'channel'              => 'orocrm_dotmailer.channel.second',
-            'owner'                => 'orocrm_dotmailer.organization.foo',
-            'reference'            => 'orocrm_dotmailer.activity.first'
+            'contact'              => 'oro_dotmailer.contact.first',
+            'campaign'             => 'oro_dotmailer.campaign.first',
+            'channel'              => 'oro_dotmailer.channel.second',
+            'owner'                => 'oro_dotmailer.organization.foo',
+            'reference'            => 'oro_dotmailer.activity.first'
         ]
     ];
 
@@ -67,8 +67,8 @@ class LoadActivityData extends AbstractFixture implements DependentFixtureInterf
     public function getDependencies()
     {
         return [
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData',
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadCampaignData',
+            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData',
+            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadCampaignData',
         ];
     }
 }

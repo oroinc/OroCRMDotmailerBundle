@@ -1,10 +1,10 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Reader;
 
 use Guzzle\Iterator\AppendIterator;
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\RejectedContactExportIterator;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RejectedContactExportIterator;
 
 class RejectedContactExportReader extends AbstractReader
 {
@@ -19,7 +19,7 @@ class RejectedContactExportReader extends AbstractReader
         }
 
         $imports = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+            ->getRepository('OroDotmailerBundle:AddressBookContactsExport')
             ->getRejectedExportImportIds($channel);
 
         $iterator = new AppendIterator();

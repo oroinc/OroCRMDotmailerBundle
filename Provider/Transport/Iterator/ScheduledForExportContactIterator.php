@@ -1,9 +1,9 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
+namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 
 class ScheduledForExportContactIterator extends AbstractIterator
 {
@@ -37,7 +37,7 @@ class ScheduledForExportContactIterator extends AbstractIterator
     protected function getItems($take, $skip)
     {
         $contacts = $this->registry
-            ->getRepository('OroCRMDotmailerBundle:Contact')
+            ->getRepository('OroDotmailerBundle:Contact')
             ->getScheduledForExportByChannelQB($this->addressBook)
             ->setFirstResult($skip)
             ->setMaxResults($take)

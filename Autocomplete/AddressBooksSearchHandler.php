@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Autocomplete;
+namespace Oro\Bundle\DotmailerBundle\Autocomplete;
 
 use Oro\Bundle\FormBundle\Autocomplete\SearchHandler;
 

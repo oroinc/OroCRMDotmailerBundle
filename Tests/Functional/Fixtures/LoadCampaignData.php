@@ -1,11 +1,11 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
+use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 
 class LoadCampaignData extends AbstractFixture implements DependentFixtureInterface
 {
@@ -22,10 +22,10 @@ class LoadCampaignData extends AbstractFixture implements DependentFixtureInterf
             'reply_action'  => 'Webmail',
             'isSplitTest'   => false,
             'status'        => 'Sent',
-            'owner'         => 'orocrm_dotmailer.organization.foo',
-            'channel'       => 'orocrm_dotmailer.channel.second',
-            'emailCampaign' => 'orocrm_dotmailer.email_campaign.first',
-            'reference'     => 'orocrm_dotmailer.campaign.first',
+            'owner'         => 'oro_dotmailer.organization.foo',
+            'channel'       => 'oro_dotmailer.channel.second',
+            'emailCampaign' => 'oro_dotmailer.email_campaign.first',
+            'reference'     => 'oro_dotmailer.campaign.first',
         ],
         [
             'originId'      => 15663,
@@ -36,9 +36,9 @@ class LoadCampaignData extends AbstractFixture implements DependentFixtureInterf
             'reply_action'  => 'Webmail',
             'isSplitTest'   => false,
             'status'        => 'Unsent',
-            'owner'         => 'orocrm_dotmailer.organization.foo',
-            'channel'       => 'orocrm_dotmailer.channel.first',
-            'reference'     => 'orocrm_dotmailer.campaign.second'
+            'owner'         => 'oro_dotmailer.organization.foo',
+            'channel'       => 'oro_dotmailer.channel.first',
+            'reference'     => 'oro_dotmailer.campaign.second'
         ],
         [
             'originId'      => 15664,
@@ -49,9 +49,9 @@ class LoadCampaignData extends AbstractFixture implements DependentFixtureInterf
             'reply_action'  => 'Webmail',
             'isSplitTest'   => false,
             'status'        => 'Unsent',
-            'owner'         => 'orocrm_dotmailer.organization.foo',
-            'channel'       => 'orocrm_dotmailer.channel.first',
-            'reference'     => 'orocrm_dotmailer.campaign.third'
+            'owner'         => 'oro_dotmailer.organization.foo',
+            'channel'       => 'oro_dotmailer.channel.first',
+            'reference'     => 'oro_dotmailer.campaign.third'
         ],
         [
             'originId'      => 15665,
@@ -63,9 +63,9 @@ class LoadCampaignData extends AbstractFixture implements DependentFixtureInterf
             'isSplitTest'   => false,
             'deleted'       => true,
             'status'        => 'Sent',
-            'owner'         => 'orocrm_dotmailer.organization.foo',
-            'channel'       => 'orocrm_dotmailer.channel.second',
-            'reference'     => 'orocrm_dotmailer.campaign.fourth',
+            'owner'         => 'oro_dotmailer.organization.foo',
+            'channel'       => 'oro_dotmailer.channel.second',
+            'reference'     => 'oro_dotmailer.campaign.fourth',
         ],
         [
             'originId'      => 15666,
@@ -76,10 +76,10 @@ class LoadCampaignData extends AbstractFixture implements DependentFixtureInterf
             'reply_action'  => 'Webmail',
             'isSplitTest'   => false,
             'status'        => 'Sent',
-            'owner'         => 'orocrm_dotmailer.organization.foo',
-            'channel'       => 'orocrm_dotmailer.channel.second',
-            'emailCampaign' => 'orocrm_dotmailer.email_campaign.second',
-            'reference'     => 'orocrm_dotmailer.campaign.fifth',
+            'owner'         => 'oro_dotmailer.organization.foo',
+            'channel'       => 'oro_dotmailer.channel.second',
+            'emailCampaign' => 'oro_dotmailer.email_campaign.second',
+            'reference'     => 'oro_dotmailer.campaign.fifth',
         ],
     ];
 
@@ -110,9 +110,9 @@ class LoadCampaignData extends AbstractFixture implements DependentFixtureInterf
     public function getDependencies()
     {
         return [
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadOrganizationData',
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData',
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadEmailCampaignData',
+            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadOrganizationData',
+            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData',
+            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadEmailCampaignData',
         ];
     }
 }

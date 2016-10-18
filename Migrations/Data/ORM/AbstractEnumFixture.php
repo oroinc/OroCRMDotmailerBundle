@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Migrations\Data\ORM;
+namespace Oro\Bundle\DotmailerBundle\Migrations\Data\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\ORM\EntityManagerInterface;

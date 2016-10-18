@@ -1,9 +1,9 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Entity\Campaign;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 
 class RemoveCampaignStrategy extends AbstractImportStrategy
 {
@@ -19,7 +19,7 @@ class RemoveCampaignStrategy extends AbstractImportStrategy
 
             $existingEntity = $this->registry
                 ->getManager()
-                ->find('OroCRMDotmailerBundle:Campaign', $entity->getId());
+                ->find('OroDotmailerBundle:Campaign', $entity->getId());
 
             if (!$existingEntity) {
                 return null;

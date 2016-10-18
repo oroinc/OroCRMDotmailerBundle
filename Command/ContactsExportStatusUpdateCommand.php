@@ -1,21 +1,23 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Command;
+namespace Oro\Bundle\DotmailerBundle\Command;
 
 use Doctrine\Common\Persistence\ObjectRepository;
-use Oro\Bundle\CronBundle\Command\CronCommandInterface;
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Oro\Component\MessageQueue\Client\Message;
-use Oro\Component\MessageQueue\Client\MessagePriority;
-use Oro\Component\MessageQueue\Client\MessageProducerInterface;
-use OroCRM\Bundle\DotmailerBundle\Async\Topics;
-use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
+
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+
+use Oro\Bundle\CronBundle\Command\CronCommandInterface;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Component\MessageQueue\Client\Message;
+use Oro\Component\MessageQueue\Client\MessagePriority;
+use Oro\Component\MessageQueue\Client\MessageProducerInterface;
+use Oro\Bundle\DotmailerBundle\Async\Topics;
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 
 class ContactsExportStatusUpdateCommand extends Command implements CronCommandInterface, ContainerAwareInterface
 {

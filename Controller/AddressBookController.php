@@ -1,20 +1,24 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Controller;
+namespace Oro\Bundle\DotmailerBundle\Controller;
 
 use FOS\RestBundle\Util\Codes;
-use Oro\Bundle\IntegrationBundle\Manager\GenuineSyncScheduler;
-use Oro\Bundle\SecurityBundle\Annotation\Acl;
-use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
+use Oro\Bundle\IntegrationBundle\Manager\GenuineSyncScheduler;
+use Oro\Bundle\SecurityBundle\Annotation\Acl;
+use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+
 
 /**
  * @Route("/address-book")
@@ -24,14 +28,14 @@ class AddressBookController extends Controller
     /**
      * @Route(
      *      "/synchronize/{id}",
-     *      name="orocrm_dotmailer_synchronize_adddress_book",
+     *      name="oro_dotmailer_synchronize_adddress_book",
      *      requirements={"id"="\d+"}
      * )
      * @Acl(
-     *      id="orocrm_dotmailer_address_book_update",
+     *      id="oro_dotmailer_address_book_update",
      *      type="entity",
      *      permission="EDIT",
-     *      class="OroCRMDotmailerBundle:AddressBook"
+     *      class="OroDotmailerBundle:AddressBook"
      * )
      * @param AddressBook $addressBook
      *
@@ -47,11 +51,10 @@ class AddressBookController extends Controller
             $status = Codes::HTTP_OK;
             $response = [ 'message' => '' ];
 
-            // TODO CRM-5838 job_view_link is not available any more
-            $response['message'] = str_replace(
+           $response['message'] = str_replace(
                 '{{ job_view_link }}',
                 '#',
-                $this->get('translator')->trans('orocrm.dotmailer.addressbook.sync')
+                $this->get('translator')->trans('oro.dotmailer.addressbook.sync')
             );
         } catch (\Exception $e) {
             $status = Codes::HTTP_BAD_REQUEST;
@@ -67,14 +70,14 @@ class AddressBookController extends Controller
     /**
      * @Route(
      *      "/marketing-list/disconnect/{id}",
-     *      name="orocrm_dotmailer_marketing_list_disconnect",
+     *      name="oro_dotmailer_marketing_list_disconnect",
      *      requirements={"id"="\d+"}
      * )
      * @Acl(
-     *      id="orocrm_dotmailer_address_book_update",
+     *      id="oro_dotmailer_address_book_update",
      *      type="entity",
      *      permission="EDIT",
-     *      class="OroCRMDotmailerBundle:AddressBook"
+     *      class="OroDotmailerBundle:AddressBook"
      * )
      * @param AddressBook $addressBook
      *
@@ -94,12 +97,12 @@ class AddressBookController extends Controller
     /**
      * @Route(
      *      "/widget/manage-connection/marketing-list/{id}",
-     *      name="orocrm_dotmailer_marketing_list_connect",
+     *      name="oro_dotmailer_marketing_list_connect",
      *      requirements={"id"="\d+"}
      * )
      * @AclAncestor("orocrm_marketing_list_update")
      *
-     * @Template("OroCRMDotmailerBundle:AddressBook/widget:addressBookConnectionUpdate.html.twig")
+     * @Template("OroDotmailerBundle:AddressBook/widget:addressBookConnectionUpdate.html.twig")
      * @param MarketingList $marketingList
      *
      * @return array
@@ -107,14 +110,14 @@ class AddressBookController extends Controller
     public function addressBookConnectionUpdateAction(MarketingList $marketingList)
     {
         $form = $this->createForm(
-            'orocrm_dotmailer_marketing_list_connection',
+            'oro_dotmailer_marketing_list_connection',
             null,
             [ 'marketingList' => $marketingList ]
         );
 
         $addressBook = $this->getAddressBook($marketingList);
         $formData = $addressBook ? ['addressBook' => $addressBook, 'channel' => $addressBook->getChannel()] : [];
-        $savedId = $this->get('orocrm_dotmailer.form.handler.connection_update')->handle($form, $formData);
+        $savedId = $this->get('oro_dotmailer.form.handler.connection_update')->handle($form, $formData);
 
         return [
             'form'    => $form->createView(),
@@ -126,12 +129,12 @@ class AddressBookController extends Controller
     /**
      * @Route(
      *      "/marketing-list/buttons/{entity}",
-     *      name="orocrm_dotmailer_marketing_list_buttons",
+     *      name="oro_dotmailer_marketing_list_buttons",
      *      requirements={"entity"="\d+"}
      * )
      * @ParamConverter(
      *      "marketingList",
-     *      class="OroCRMMarketingListBundle:MarketingList",
+     *      class="OroMarketingListBundle:MarketingList",
      *      options={"id" = "entity"}
      * )
      * @AclAncestor("orocrm_marketing_list_update")
@@ -159,7 +162,7 @@ class AddressBookController extends Controller
     protected function getAddressBook(MarketingList $marketingList)
     {
         $addressBook = $this->get('doctrine')
-            ->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->getRepository('OroDotmailerBundle:AddressBook')
             ->findOneBy(['marketingList' => $marketingList]);
 
         return $addressBook;

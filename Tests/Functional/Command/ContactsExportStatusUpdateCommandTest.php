@@ -1,12 +1,12 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Command;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Command;
 
 use Oro\Bundle\MessageQueueBundle\Test\Functional\MessageQueueExtension;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Oro\Component\MessageQueue\Client\TraceableMessageProducer;
-use OroCRM\Bundle\DotmailerBundle\Async\Topics;
-use OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData;
+use Oro\Bundle\DotmailerBundle\Async\Topics;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData;
 
 /**
  * @dbIsolationPerTest

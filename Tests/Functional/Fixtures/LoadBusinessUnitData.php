@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -13,13 +13,13 @@ class LoadBusinessUnitData extends AbstractFixture implements DependentFixtureIn
     protected $data = [
         [
             'name'         => 'Foo Main BU',
-            'organization' => 'orocrm_dotmailer.organization.foo',
-            'reference'    => 'orocrm_dotmailer.business_unit.foo',
+            'organization' => 'oro_dotmailer.organization.foo',
+            'reference'    => 'oro_dotmailer.business_unit.foo',
         ],
         [
             'name'         => 'Bar Main BU',
-            'organization' => 'orocrm_dotmailer.organization.bar',
-            'reference'    => 'orocrm_dotmailer.business_unit.bar',
+            'organization' => 'oro_dotmailer.organization.bar',
+            'reference'    => 'oro_dotmailer.business_unit.bar',
         ],
     ];
 
@@ -47,6 +47,6 @@ class LoadBusinessUnitData extends AbstractFixture implements DependentFixtureIn
      */
     public function getDependencies()
     {
-        return ['OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadOrganizationData'];
+        return ['Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadOrganizationData'];
     }
 }

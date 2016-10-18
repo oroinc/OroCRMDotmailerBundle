@@ -1,10 +1,10 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Reader;
 
 use Guzzle\Iterator\AppendIterator;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\OutOfSyncMarketingListItemIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\OutOfSyncMarketingListItemIterator;
 
 class UnsubscribedContactSyncReader extends AbstractExportReader
 {

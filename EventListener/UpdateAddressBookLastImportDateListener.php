@@ -1,14 +1,14 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\EventListener;
+namespace Oro\Bundle\DotmailerBundle\EventListener;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\IntegrationBundle\Event\SyncEvent;
 
 class UpdateAddressBookLastImportDateListener implements EventSubscriberInterface
@@ -50,7 +50,7 @@ class UpdateAddressBookLastImportDateListener implements EventSubscriberInterfac
         );
 
         $this->registry
-            ->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->getRepository('OroDotmailerBundle:AddressBook')
             ->bulkUpdateLastImportedAt($contactConnectorLastSyncDate, $addressBookIds);
     }
 

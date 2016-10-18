@@ -1,9 +1,9 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 
 class UnsubscribedFromAccountContactStrategy extends AbstractImportStrategy
 {
@@ -16,7 +16,7 @@ class UnsubscribedFromAccountContactStrategy extends AbstractImportStrategy
             throw new RuntimeException(
                 sprintf(
                     'Argument must be an instance of "%s", but "%s" is given',
-                    'OroCRM\Bundle\DotmailerBundle\Entity\Contact',
+                    'Oro\Bundle\DotmailerBundle\Entity\Contact',
                     is_object($entity) ? get_class($entity) : gettype($entity)
                 )
             );
@@ -26,7 +26,7 @@ class UnsubscribedFromAccountContactStrategy extends AbstractImportStrategy
             throw new RuntimeException('Channel not found');
         }
 
-        $contact = $this->registry->getRepository('OroCRMDotmailerBundle:Contact')
+        $contact = $this->registry->getRepository('OroDotmailerBundle:Contact')
             ->findOneBy(['email' => $entity->getEmail(), 'channel' => $this->getChannel()]);
         if (!$contact) {
             $this->context->addError("Contact {$entity->getOriginId()} not found.");

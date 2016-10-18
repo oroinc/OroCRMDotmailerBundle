@@ -1,11 +1,11 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Placeholders;
+namespace Oro\Bundle\DotmailerBundle\Placeholders;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
-use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign;
-use OroCRM\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport;
+use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
+use Oro\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport;
 
 class EmailCampaignPlaceholderFilter
 {
@@ -32,7 +32,7 @@ class EmailCampaignPlaceholderFilter
     {
         if ($entity instanceof EmailCampaign && $entity->getTransport() == DotmailerEmailCampaignTransport::NAME) {
             $campaign = $this->registry
-                ->getRepository('OroCRMDotmailerBundle:Campaign')
+                ->getRepository('OroDotmailerBundle:Campaign')
                 ->findOneBy(['emailCampaign' => $entity]);
 
             return (bool) $campaign;

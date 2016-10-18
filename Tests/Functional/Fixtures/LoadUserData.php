@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -19,9 +19,9 @@ class LoadUserData extends AbstractFixture implements DependentFixtureInterface
             'email'         => 'john.doe@example.com',
             'plainPassword' => 'password',
             'role'          => 'ROLE_ADMIN',
-            'owner'         => 'orocrm_dotmailer.business_unit.foo',
-            'organization'  => 'orocrm_dotmailer.organization.foo',
-            'reference'     => 'orocrm_dotmailer.user.john.doe',
+            'owner'         => 'oro_dotmailer.business_unit.foo',
+            'organization'  => 'oro_dotmailer.organization.foo',
+            'reference'     => 'oro_dotmailer.user.john.doe',
         ],
         [
             'username'      => 'jane.smith',
@@ -30,9 +30,9 @@ class LoadUserData extends AbstractFixture implements DependentFixtureInterface
             'email'         => 'jane.smith@example.com',
             'plainPassword' => 'password',
             'role'          => 'ROLE_MANAGER',
-            'owner'         => 'orocrm_dotmailer.business_unit.foo',
-            'organization'  => 'orocrm_dotmailer.organization.foo',
-            'reference'     => 'orocrm_dotmailer.user.jane.smith',
+            'owner'         => 'oro_dotmailer.business_unit.foo',
+            'organization'  => 'oro_dotmailer.organization.foo',
+            'reference'     => 'oro_dotmailer.user.jane.smith',
         ],
         [
             'username'      => 'jack.tailor',
@@ -41,9 +41,9 @@ class LoadUserData extends AbstractFixture implements DependentFixtureInterface
             'email'         => 'jack.tailor@example.com',
             'plainPassword' => 'password',
             'role'          => 'ROLE_USER',
-            'owner'         => 'orocrm_dotmailer.business_unit.foo',
-            'organization'  => 'orocrm_dotmailer.organization.foo',
-            'reference'     => 'orocrm_dotmailer.user.jack.tailor',
+            'owner'         => 'oro_dotmailer.business_unit.foo',
+            'organization'  => 'oro_dotmailer.organization.foo',
+            'reference'     => 'oro_dotmailer.user.jack.tailor',
         ],
         [
             'username'      => 'daniel.wilson',
@@ -52,9 +52,9 @@ class LoadUserData extends AbstractFixture implements DependentFixtureInterface
             'email'         => 'daniel.wilson@example.com',
             'plainPassword' => 'password',
             'role'          => 'ROLE_ADMIN',
-            'owner'         => 'orocrm_dotmailer.business_unit.foo',
-            'organization'  => 'orocrm_dotmailer.organization.foo',
-            'reference'     => 'orocrm_dotmailer.user.daniel.wilson',
+            'owner'         => 'oro_dotmailer.business_unit.foo',
+            'organization'  => 'oro_dotmailer.organization.foo',
+            'reference'     => 'oro_dotmailer.user.daniel.wilson',
         ],
     ];
 
@@ -107,6 +107,6 @@ class LoadUserData extends AbstractFixture implements DependentFixtureInterface
      */
     public function getDependencies()
     {
-        return ['OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadBusinessUnitData'];
+        return ['Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadBusinessUnitData'];
     }
 }

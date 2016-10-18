@@ -1,15 +1,15 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiContactEmailTypes;
 use DotMailer\Api\DataTypes\ApiContactStatuses;
 use DotMailer\Api\DataTypes\ApiContactSuppressionList;
 
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
-use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
 
 /**
  * @dbIsolation
@@ -22,8 +22,8 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
 
         $this->loadFixtures(
             [
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData',
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData'
+                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData',
+                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData'
             ]
         );
     }
@@ -53,7 +53,7 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
         $this->resource->expects($this->any())
             ->method('GetContactsSuppressedSinceDate')
             ->will($this->returnValue(new ApiContactSuppressionList()));
-        $channel = $this->getReference('orocrm_dotmailer.channel.third');
+        $channel = $this->getReference('oro_dotmailer.channel.third');
 
         $result = $this->runImportExportConnectorsJob(
             self::SYNC_PROCESSOR,
@@ -65,7 +65,7 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-        $contactRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:Contact');
+        $contactRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:Contact');
         $statusRepository = $this->managerRegistry->getRepository(
             ExtendHelper::buildEnumValueClassName('dm_cnt_status')
         );
@@ -120,14 +120,14 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
                 'expected'                  => [
                     [
                         'originId'               => 42,
-                        'channel'                => 'orocrm_dotmailer.channel.third',
+                        'channel'                => 'oro_dotmailer.channel.third',
                         'status'                 => ApiContactStatuses::SUBSCRIBED,
                         'subscribedAddressBooks' => [
-                            'orocrm_dotmailer.address_book.fourth',
-                            'orocrm_dotmailer.address_book.six'
+                            'oro_dotmailer.address_book.fourth',
+                            'oro_dotmailer.address_book.six'
                         ],
                         'unsubscribedDate'       => [
-                            'orocrm_dotmailer.address_book.third' => new \DateTime(
+                            'oro_dotmailer.address_book.third' => new \DateTime(
                                 '2015-10-10',
                                 new \DateTimeZone('UTC')
                             )

@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
 class ActivityContactDataConverter extends AbstractDataConverter
 {

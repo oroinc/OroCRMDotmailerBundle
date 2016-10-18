@@ -2,23 +2,23 @@ placeholders:
     placeholders:
         view_navButtons_before:
             items:
-                orocrm_dotmailer_marketing_list_buttons: ~
+                oro_dotmailer_marketing_list_buttons: ~
         view_content_data_email_campaign_status:
             items:
-                orocrm_dotmailer_emailcampaign_stats: ~
+                oro_dotmailer_emailcampaign_stats: ~
         marketing_list_sync_info:
             items:
-                orocrm_dotmailer_marketing_list_sync_data: ~
+                oro_dotmailer_marketing_list_sync_data: ~
 
     items:
-        orocrm_dotmailer_marketing_list_buttons:
-            action: OroCRMDotmailerBundle:AddressBook:connectionButtons
-            applicable: "@orocrm_dotmailer.placeholder.filter.buttons_filter->isApplicable($entity$)"
+        oro_dotmailer_marketing_list_buttons:
+            action: OroDotmailerBundle:AddressBook:connectionButtons
+            applicable: "@oro_dotmailer.placeholder.filter.buttons_filter->isApplicable($entity$)"
 
-        orocrm_dotmailer_emailcampaign_stats:
-            action: OroCRMDotmailerBundle:Dotmailer:emailCampaignStats
-            applicable: "@orocrm_dotmailer.placeholder.filter.email_campaign->isApplicableOnEmailCampaign($entity$)"
+        oro_dotmailer_emailcampaign_stats:
+            action: OroDotmailerBundle:Dotmailer:emailCampaignStats
+            applicable: "@oro_dotmailer.placeholder.filter.email_campaign->isApplicableOnEmailCampaign($entity$)"
 
-        orocrm_dotmailer_marketing_list_sync_data:
-            action: OroCRMDotmailerBundle:Dotmailer:marketingListSyncStatus
-            applicable: "@orocrm_dotmailer.placeholder.filter.sync_status->isApplicableOnMarketingList($marketingList$)"
+        oro_dotmailer_marketing_list_sync_data:
+            action: OroDotmailerBundle:Dotmailer:marketingListSyncStatus
+            applicable: "@oro_dotmailer.placeholder.filter.sync_status->isApplicableOnMarketingList($marketingList$)"

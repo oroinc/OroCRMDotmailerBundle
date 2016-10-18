@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Entity;
+namespace Oro\Bundle\DotmailerBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,12 +10,11 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
-
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
-use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBook;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+use Oro\Bundle\DotmailerBundle\Model\ExtendAddressBook;
 
 /**
- * @ORM\Entity(repositoryClass="OroCRM\Bundle\DotmailerBundle\Entity\Repository\AddressBookRepository")
+ * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookRepository")
  * @ORM\Table(
  *      name="orocrm_dm_address_book",
  *      uniqueConstraints={
@@ -87,7 +86,7 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
     /**
      * @var Collection
      *
-     * @ORM\ManyToMany(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\Campaign", mappedBy="addressBooks")
+     * @ORM\ManyToMany(targetEntity="Oro\Bundle\DotmailerBundle\Entity\Campaign", mappedBy="addressBooks")
      * @ConfigField(
      *      defaultValues={
      *          "importexport"={
@@ -115,7 +114,7 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
     /**
      * @var MarketingList
      *
-     * @ORM\OneToOne(targetEntity="OroCRM\Bundle\MarketingListBundle\Entity\MarketingList")
+     * @ORM\OneToOne(targetEntity="Oro\Bundle\MarketingListBundle\Entity\MarketingList")
      * @ORM\JoinColumn(name="marketing_list_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $marketingList;

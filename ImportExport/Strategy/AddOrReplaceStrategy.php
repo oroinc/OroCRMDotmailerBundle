@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
 use Psr\Log\LoggerInterface;
 
@@ -9,11 +9,10 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\ImportExportBundle\Strategy\Import\ConfigurableAddOrReplaceStrategy;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
-
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Entity\ChannelAwareInterface;
-use OroCRM\Bundle\DotmailerBundle\Entity\OriginAwareInterface;
-use OroCRM\Bundle\DotmailerBundle\Provider\CacheProvider;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\ChannelAwareInterface;
+use Oro\Bundle\DotmailerBundle\Entity\OriginAwareInterface;
+use Oro\Bundle\DotmailerBundle\Provider\CacheProvider;
 
 class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
 {
@@ -225,7 +224,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
     {
         $addressBook = $this->cacheProvider->getCachedItem(self::CACHED_ADDRESS_BOOK, $addressBookOriginId);
         if (!$addressBook) {
-            $addressBook = $this->getRepository('OroCRMDotmailerBundle:AddressBook')
+            $addressBook = $this->getRepository('OroDotmailerBundle:AddressBook')
                 ->findOneBy(
                     [
                         'channel'  => $this->getChannel(),

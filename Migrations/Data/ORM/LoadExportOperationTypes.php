@@ -1,11 +1,11 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Migrations\Data\ORM;
+namespace Oro\Bundle\DotmailerBundle\Migrations\Data\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 
 class LoadExportOperationTypes extends AbstractEnumFixture
 {

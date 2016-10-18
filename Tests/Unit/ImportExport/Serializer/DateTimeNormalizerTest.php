@@ -1,9 +1,9 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\ImportExport\Serializer;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\ImportExport\Serializer;
 
-use OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer\DateTimeNormalizer;
-use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\DotmailerBundle\ImportExport\Serializer\DateTimeNormalizer;
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 
 class DateTimeNormalizerTest extends \PHPUnit_Framework_TestCase
 {

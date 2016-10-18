@@ -1,15 +1,15 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Reader;
 
 use Doctrine\ORM\EntityRepository;
 
 use Oro\Bundle\IntegrationBundle\Entity\Status;
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
 class UnsubscribedFromAccountContactReader extends AbstractReader
 {

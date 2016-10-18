@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Step;
+namespace Oro\Bundle\DotmailerBundle\Step;
 
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 
@@ -31,7 +31,7 @@ class ImportExportErrorReportsStep extends ItemStep
 
         $channel = $this->getChannel($stepExecution);
         $this->registry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+            ->getRepository('OroDotmailerBundle:AddressBookContactsExport')
             ->setNotRejectedExportFaultsProcessed($channel);
     }
 

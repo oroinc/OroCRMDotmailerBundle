@@ -1,14 +1,13 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiContactList;
 
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
-
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
 
 /**
  * @dbIsolation
@@ -24,8 +23,8 @@ class ContactUpdateTest extends AbstractImportExportTestCase
 
         $this->loadFixtures(
             [
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData',
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData'
+                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData',
+                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData'
             ]
         );
     }
@@ -41,7 +40,7 @@ class ContactUpdateTest extends AbstractImportExportTestCase
         $this->preparePreconditions();
 
         /** @var AddressBook $expectedAddressBook */
-        $expectedAddressBook = $this->getReference('orocrm_dotmailer.address_book.fourth');
+        $expectedAddressBook = $this->getReference('oro_dotmailer.address_book.fourth');
 
         $entity = new ApiContactList();
         foreach ($contactList as $listItem) {
@@ -59,7 +58,7 @@ class ContactUpdateTest extends AbstractImportExportTestCase
             )
             ->willReturn($entity);
 
-        $channel = $this->getReference('orocrm_dotmailer.channel.third');
+        $channel = $this->getReference('oro_dotmailer.channel.third');
 
         $result = $this->runImportExportConnectorsJob(
             self::SYNC_PROCESSOR,
@@ -71,7 +70,7 @@ class ContactUpdateTest extends AbstractImportExportTestCase
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-        $contactRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:Contact');
+        $contactRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:Contact');
         $optInTypeRepository = $this->managerRegistry->getRepository(
             ExtendHelper::buildEnumValueClassName('dm_cnt_opt_in_type')
         );
@@ -163,14 +162,14 @@ class ContactUpdateTest extends AbstractImportExportTestCase
                 ],
                 'contactList' => [
                     [
-                        'id'        => 142, //orocrm_dotmailer.contact.update_1
+                        'id'        => 142, //oro_dotmailer.contact.update_1
                         'email'     => 'test1@example.com',
                         'optInType' => 'VerifiedDouble',
                         'emailType' => 'Html',
                         'status'    => 'Unsubscribed',
                     ],
                     [
-                        'id'        => 143, //orocrm_dotmailer.contact.update_2
+                        'id'        => 143, //oro_dotmailer.contact.update_2
                         'email'     => 'test2@ex.com',
                         'optInType' => 'Double',
                         'emailType' => 'Html',
@@ -210,7 +209,7 @@ class ContactUpdateTest extends AbstractImportExportTestCase
     private function preparePreconditions()
     {
         /** @var AddressBook $addressBook */
-        $addressBook = $this->getReference('orocrm_dotmailer.address_book.fourth');
+        $addressBook = $this->getReference('oro_dotmailer.address_book.fourth');
         $addressBook->setLastImportedAt(new \DateTime());
 
         $this->managerRegistry->getManager()->flush();

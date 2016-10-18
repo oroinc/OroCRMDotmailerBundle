@@ -1,17 +1,17 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiContactImport;
 
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use OroCRM\Bundle\ContactBundle\Entity\Contact;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
+use Oro\Bundle\ContactBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 
 /**
  * @dbIsolation
@@ -23,27 +23,27 @@ class ExportContactsTest extends AbstractImportExportTestCase
         parent::setUp();
         $this->loadFixtures(
             [
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData'
+                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData'
             ]
         );
     }
 
     public function testSync()
     {
-        $channel = $this->getReference('orocrm_dotmailer.channel.fourth');
+        $channel = $this->getReference('oro_dotmailer.channel.fourth');
 
         $previousNotExportedContact = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:Contact')
+            ->getRepository('OroDotmailerBundle:Contact')
             ->findOneBy(['email' => 'test2@ex.com']);
         $this->assertNotNull($previousNotExportedContact);
 
-        $firstAddressBook = $this->getReference('orocrm_dotmailer.address_book.fifth');
+        $firstAddressBook = $this->getReference('oro_dotmailer.address_book.fifth');
         $firstAddressBookImportStatus = $this->getImportStatus(
             $firstAddressBookId = '391da8d7-70f0-405b-98d4-02faa41d499d',
             AddressBookContactsExport::STATUS_NOT_FINISHED
         );
 
-        $secondAddressBook = $this->getReference('orocrm_dotmailer.address_book.six');
+        $secondAddressBook = $this->getReference('oro_dotmailer.address_book.six');
         $secondAddressBookImportStatus = $this->getImportStatus(
             $secondAddressBookId = '451da8d7-70f0-405b-98d4-02faa41d499d',
             AddressBookContactsExport::STATUS_FINISH
@@ -77,13 +77,13 @@ class ExportContactsTest extends AbstractImportExportTestCase
         $firstAddressBook = $this->refreshAddressBook($firstAddressBook);
         $secondAddressBook = $this->refreshAddressBook($secondAddressBook);
         $upToDateAddressBook = $this->refreshAddressBook(
-            $this->getReference('orocrm_dotmailer.address_book.up_to_date')
+            $this->getReference('oro_dotmailer.address_book.up_to_date')
         );
 
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-        $expectedContact = $this->getReference('orocrm_dotmailer.orocrm_contact.jack.case');
+        $expectedContact = $this->getReference('oro_dotmailer.orocrm_contact.jack.case');
 
         /**
          * Check new contact exported correctly
@@ -98,13 +98,13 @@ class ExportContactsTest extends AbstractImportExportTestCase
         /**
          * Check existing contact exported correctly
          */
-        $expectedContact = $this->getReference('orocrm_dotmailer.orocrm_contact.alex.case');
+        $expectedContact = $this->getReference('oro_dotmailer.orocrm_contact.alex.case');
         $this->assertContactUpdated($channel, 'alex.case@example.com', $expectedContact, $firstAddressBook);
 
         /**
          * Check existing contact exported correctly
          */
-        $expectedContact = $this->getReference('orocrm_dotmailer.orocrm_contact.allen.case');
+        $expectedContact = $this->getReference('oro_dotmailer.orocrm_contact.allen.case');
         $this->assertContactUpdated($channel, 'allen.case@example.com', $expectedContact, $firstAddressBook);
 
         $statusClass = ExtendHelper::buildEnumValueClassName('dm_import_status');
@@ -120,7 +120,7 @@ class ExportContactsTest extends AbstractImportExportTestCase
          * Check previous not exported contact was removed before new export start
          */
         $previousNotExportedContact = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:Contact')
+            ->getRepository('OroDotmailerBundle:Contact')
             ->findOneBy(['email' => 'test2@ex.com']);
         $this->assertNull($previousNotExportedContact);
     }
@@ -155,7 +155,7 @@ class ExportContactsTest extends AbstractImportExportTestCase
         $isNew = false
     ) {
         $actual = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:Contact')
+            ->getRepository('OroDotmailerBundle:Contact')
             ->findOneBy(['channel' => $channel, 'email' => $email]);
         $this->assertNotNull($actual, 'Updated contact not synced');
 
@@ -197,7 +197,7 @@ class ExportContactsTest extends AbstractImportExportTestCase
     protected function assertAddressBookExportStatus(AddressBook $addressBook, $importId, AbstractEnumValue $status)
     {
         $export = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+            ->getRepository('OroDotmailerBundle:AddressBookContactsExport')
             ->findBy(
                 [
                     'addressBook' => $addressBook,
@@ -215,7 +215,7 @@ class ExportContactsTest extends AbstractImportExportTestCase
     {
         return $this->getContainer()
             ->get('doctrine')
-            ->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->getRepository('OroDotmailerBundle:AddressBook')
             ->find($addressBook->getId());
     }
 }

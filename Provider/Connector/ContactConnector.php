@@ -1,8 +1,8 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider\Connector;
+namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 
 class ContactConnector extends AbstractDotmailerConnector
 {
@@ -16,7 +16,7 @@ class ContactConnector extends AbstractDotmailerConnector
     protected function getConnectorSource()
     {
         $addressBooksToSynchronize = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->getRepository('OroDotmailerBundle:AddressBook')
             ->getAddressBooksToSync($this->getChannel());
 
         $this->getContext()
@@ -32,7 +32,7 @@ class ContactConnector extends AbstractDotmailerConnector
      */
     public function getLabel()
     {
-        return 'orocrm.dotmailer.connector.contact.label';
+        return 'oro.dotmailer.connector.contact.label';
     }
 
     /**

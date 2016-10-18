@@ -1,9 +1,9 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider;
+namespace Oro\Bundle\DotmailerBundle\Provider;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 
 class ContactExportQBAdapterRegistry
 {
@@ -104,7 +104,7 @@ class ContactExportQBAdapterRegistry
                 throw new RuntimeException(
                     sprintf(
                         'Instance of %s required. Instance of %s given.',
-                        'OroCRM\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterInterface',
+                        'Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterInterface',
                         is_object($adapter) ? get_class($adapter) : gettype($adapter)
                     )
                 );

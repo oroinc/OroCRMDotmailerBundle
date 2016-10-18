@@ -1,10 +1,10 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\EventListener;
+namespace Oro\Bundle\DotmailerBundle\EventListener;
 
 use Doctrine\Common\EventSubscriber;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\CacheProvider;
+use Oro\Bundle\DotmailerBundle\Provider\CacheProvider;
 
 class CacheClearListener implements EventSubscriber
 {

@@ -1,18 +1,19 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Model;
+namespace Oro\Bundle\DotmailerBundle\Model;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
+
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\ImportExportBundle\Job\JobResult;
 use Oro\Bundle\ImportExportBundle\Processor\ProcessorRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\ImportExport\Job\Executor;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
-use OroCRM\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactsExportRepository;
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactsExportRepository;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
 class ExportManager
 {
@@ -129,7 +130,7 @@ class ExportManager
         $exportRepository = $this->getAddressBookContactsExportRepostiry();
 
         $addressBooks = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->getRepository('OroDotmailerBundle:AddressBook')
             ->findBy(['channel' => $channel]);
 
         $lastFinishedStatus = null;
