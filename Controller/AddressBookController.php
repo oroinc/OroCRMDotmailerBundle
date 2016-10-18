@@ -3,22 +3,18 @@
 namespace Oro\Bundle\DotmailerBundle\Controller;
 
 use FOS\RestBundle\Util\Codes;
-
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
+use Oro\Bundle\IntegrationBundle\Manager\GenuineSyncScheduler;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+use Oro\Bundle\SecurityBundle\Annotation\Acl;
+use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
-use Oro\Bundle\IntegrationBundle\Manager\GenuineSyncScheduler;
-use Oro\Bundle\SecurityBundle\Annotation\Acl;
-use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
-use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
-use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
-use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
-
 
 /**
  * @Route("/address-book")
