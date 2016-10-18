@@ -45,14 +45,9 @@ class AddressBookController extends Controller
             ]);
 
             $status = Codes::HTTP_OK;
-            $response = [ 'message' => '' ];
-
-            // TODO CRM-5838 job_view_link is not available any more
-            $response['message'] = str_replace(
-                '{{ job_view_link }}',
-                '#',
-                $this->get('translator')->trans('orocrm.dotmailer.addressbook.sync')
-            );
+            $response = [
+                'message' => $this->get('translator')->trans('oro.integration.progress')
+            ];
         } catch (\Exception $e) {
             $status = Codes::HTTP_BAD_REQUEST;
             $response['message'] = sprintf(
