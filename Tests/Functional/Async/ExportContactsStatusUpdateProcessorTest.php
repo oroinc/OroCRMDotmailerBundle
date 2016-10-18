@@ -18,7 +18,7 @@ class ExportContactsStatusUpdateProcessorTest extends WebTestCase
 
     public function testCouldBeGetFromContainerAsService()
     {
-        $processor = self::getContainer()->get('orocrm_dotmailer.async.export_contacts_status_update_processor');
+        $processor = self::getContainer()->get('oro_dotmailer.async.export_contacts_status_update_processor');
 
         self::assertInstanceOf(ExportContactsStatusUpdateProcessor::class, $processor);
     }

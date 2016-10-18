@@ -27,10 +27,10 @@ class AddressBookTest extends WebTestCase
     public function testShouldScheduleSyncWhenMarketingListIsChanged()
     {
         /** @var AddressBook $addressBook */
-        $addressBook = $this->getReference('orocrm_dotmailer.address_book.first');
+        $addressBook = $this->getReference('oro_dotmailer.address_book.first');
 
         /** @var MarketingList $marketingList */
-        $marketingList = $this->getReference('orocrm_dotmailer.marketing_list.first');
+        $marketingList = $this->getReference('oro_dotmailer.marketing_list.first');
 
         //guard
         self::assertNotSame($addressBook->getMarketingList(), $marketingList);
