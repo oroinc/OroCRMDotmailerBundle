@@ -1,9 +1,9 @@
 <?php
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Command;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Command;
 
 use Oro\Bundle\CronBundle\Command\CronCommandInterface;
+use Oro\Bundle\DotmailerBundle\Command\ContactsExportStatusUpdateCommand;
 use Oro\Component\Testing\ClassExtensionTrait;
-use OroCRM\Bundle\DotmailerBundle\Command\ContactsExportStatusUpdateCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;

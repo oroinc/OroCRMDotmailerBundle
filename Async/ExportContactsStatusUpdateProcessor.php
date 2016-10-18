@@ -1,7 +1,8 @@
 <?php
-namespace OroCRM\Bundle\DotmailerBundle\Async;
+namespace Oro\Bundle\DotmailerBundle\Async;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Oro\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Component\MessageQueue\Client\TopicSubscriberInterface;
@@ -10,7 +11,6 @@ use Oro\Component\MessageQueue\Job\JobRunner;
 use Oro\Component\MessageQueue\Transport\MessageInterface;
 use Oro\Component\MessageQueue\Transport\SessionInterface;
 use Oro\Component\MessageQueue\Util\JSON;
-use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
 
 class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, TopicSubscriberInterface
 {

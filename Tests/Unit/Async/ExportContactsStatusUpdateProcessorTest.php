@@ -1,9 +1,12 @@
 <?php
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Async;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Async;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
+use Oro\Bundle\DotmailerBundle\Async\ExportContactsStatusUpdateProcessor;
+use Oro\Bundle\DotmailerBundle\Async\Topics;
+use Oro\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Component\MessageQueue\Client\TopicSubscriberInterface;
@@ -13,9 +16,6 @@ use Oro\Component\MessageQueue\Transport\Null\NullMessage;
 use Oro\Component\MessageQueue\Transport\Null\NullSession;
 use Oro\Component\MessageQueue\Util\JSON;
 use Oro\Component\Testing\ClassExtensionTrait;
-use OroCRM\Bundle\DotmailerBundle\Async\ExportContactsStatusUpdateProcessor;
-use OroCRM\Bundle\DotmailerBundle\Async\Topics;
-use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
 
 class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCase
 {

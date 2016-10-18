@@ -1,13 +1,13 @@
 <?php
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData;
 use Oro\Bundle\IntegrationBundle\Async\Topics;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MessageQueueBundle\Test\Functional\MessageQueueExtension;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData;
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
 
 /**
  * @dbIsolationPerTest

@@ -1,8 +1,8 @@
 <?php
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Async;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Async;
 
+use Oro\Bundle\DotmailerBundle\Async\ExportContactsStatusUpdateProcessor;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-use OroCRM\Bundle\DotmailerBundle\Async\ExportContactsStatusUpdateProcessor;
 
 /**
  * @dbIsolationPerTest
