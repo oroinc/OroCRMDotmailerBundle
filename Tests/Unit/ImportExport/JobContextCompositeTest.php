@@ -1,8 +1,8 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\ImportExport;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\ImportExport;
 
-use OroCRM\Bundle\DotmailerBundle\ImportExport\JobContextComposite;
+use Oro\Bundle\DotmailerBundle\ImportExport\JobContextComposite;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyMethods)

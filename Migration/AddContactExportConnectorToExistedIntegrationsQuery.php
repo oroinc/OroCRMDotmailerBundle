@@ -1,14 +1,14 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Migration;
+namespace Oro\Bundle\DotmailerBundle\Migration;
 
 use Psr\Log\LoggerInterface;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Connection;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 use Oro\Bundle\MigrationBundle\Migration\ConnectionAwareInterface;
 use Oro\Bundle\MigrationBundle\Migration\MigrationQuery;
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
+namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 
 class RemoveAddressBookIterator extends AbstractIterator
 {
@@ -42,7 +42,7 @@ class RemoveAddressBookIterator extends AbstractIterator
     protected function getItems($take, $skip)
     {
         $addressBookForRemoveQB = $this->registry
-            ->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->getRepository('OroDotmailerBundle:AddressBook')
             ->getAddressBooksForRemoveQB($this->channel, $this->keepAddressBooks)
             ->setFirstResult($skip)
             ->setMaxResults($take);

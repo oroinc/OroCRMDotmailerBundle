@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Exception;
+namespace Oro\Bundle\DotmailerBundle\Exception;
 
 use RestClient\Exception;
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiContactImport;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 
 /**
  * @dbIsolation
@@ -18,38 +18,38 @@ class ExportSyncsUnsubscribedDMContactsWithMarketingListItemsTest extends Abstra
         parent::setUp();
         $this->loadFixtures(
             [
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData'
+                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData'
             ]
         );
     }
 
     public function testSync()
     {
-        $channel = $this->getReference('orocrm_dotmailer.channel.fourth');
+        $channel = $this->getReference('oro_dotmailer.channel.fourth');
 
         $unsubscribedItem = $this->managerRegistry
-            ->getRepository('OroCRMMarketingListBundle:MarketingListUnsubscribedItem')
+            ->getRepository('OroMarketingListBundle:MarketingListUnsubscribedItem')
             ->findOneBy(
                 [
-                    'marketingList' => $this->getReference('orocrm_dotmailer.marketing_list.fifth')->getId(),
-                    'entityId' => $this->getReference('orocrm_dotmailer.orocrm_contact.daniel.case')->getId()
+                    'marketingList' => $this->getReference('oro_dotmailer.marketing_list.fifth')->getId(),
+                    'entityId' => $this->getReference('oro_dotmailer.orocrm_contact.daniel.case')->getId()
                 ]
             );
         $this->managerRegistry->getManager()->remove($unsubscribedItem);
         $this->managerRegistry->getManager()->flush();
 
         $previousNotExportedContact = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:Contact')
+            ->getRepository('OroDotmailerBundle:Contact')
             ->findOneBy(['email' => 'test2@ex.com']);
         $this->assertNotNull($previousNotExportedContact);
 
-        $firstAddressBook = $this->getReference('orocrm_dotmailer.address_book.fifth');
+        $firstAddressBook = $this->getReference('oro_dotmailer.address_book.fifth');
         $firstAddressBookImportStatus = $this->getImportStatus(
             $firstAddressBookId = '391da8d7-70f0-405b-98d4-02faa41d499d',
             AddressBookContactsExport::STATUS_NOT_FINISHED
         );
 
-        $secondAddressBook = $this->getReference('orocrm_dotmailer.address_book.six');
+        $secondAddressBook = $this->getReference('oro_dotmailer.address_book.six');
         $secondAddressBookImportStatus = $this->getImportStatus(
             $secondAddressBookId = '451da8d7-70f0-405b-98d4-02faa41d499d',
             AddressBookContactsExport::STATUS_FINISH
@@ -84,11 +84,11 @@ class ExportSyncsUnsubscribedDMContactsWithMarketingListItemsTest extends Abstra
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $unsubscribedItem = $this->managerRegistry
-            ->getRepository('OroCRMMarketingListBundle:MarketingListUnsubscribedItem')
+            ->getRepository('OroMarketingListBundle:MarketingListUnsubscribedItem')
             ->findOneBy(
                 [
-                    'marketingList' => $this->getReference('orocrm_dotmailer.marketing_list.fifth')->getId(),
-                    'entityId' => $this->getReference('orocrm_dotmailer.orocrm_contact.daniel.case')->getId()
+                    'marketingList' => $this->getReference('oro_dotmailer.marketing_list.fifth')->getId(),
+                    'entityId' => $this->getReference('oro_dotmailer.orocrm_contact.daniel.case')->getId()
                 ]
             );
 
@@ -114,7 +114,7 @@ class ExportSyncsUnsubscribedDMContactsWithMarketingListItemsTest extends Abstra
     {
         return $this->getContainer()
             ->get('doctrine')
-            ->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->getRepository('OroDotmailerBundle:AddressBook')
             ->find($addressBook->getId());
     }
 }

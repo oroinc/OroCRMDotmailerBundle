@@ -1,13 +1,13 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\DependencyInjection;
+namespace Oro\Bundle\DotmailerBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
-class OroCRMDotmailerExtension extends Extension
+class OroDotmailerExtension extends Extension
 {
     /**
      * {@inheritDoc}

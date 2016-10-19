@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider;
+namespace Oro\Bundle\DotmailerBundle\Provider;
 
 class CsvStringReader
 {

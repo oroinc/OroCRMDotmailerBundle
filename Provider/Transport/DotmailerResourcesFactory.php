@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
+namespace Oro\Bundle\DotmailerBundle\Provider\Transport;
 
 use Psr\Log\LoggerInterface;
 
@@ -8,7 +8,7 @@ use DotMailer\Api\Resources\IResources;
 use DotMailer\Api\Resources\Resources;
 use DotMailer\Api\DataTypes\ApiAccount;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Rest\Client;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\Client;
 
 class DotmailerResourcesFactory
 {

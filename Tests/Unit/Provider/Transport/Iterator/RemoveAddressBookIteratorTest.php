@@ -1,8 +1,8 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemoveAddressBookIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemoveAddressBookIterator;
 
 class RemoveAddressBookIteratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -43,7 +43,7 @@ class RemoveAddressBookIteratorTest extends \PHPUnit_Framework_TestCase
         $query->expects($this->at(1))
             ->method('execute')
             ->will($this->returnValue([$thirdItem]));
-        $repository = $this->getMockBuilder('OroCRM\Bundle\DotmailerBundle\Entity\Repository\AddressBookRepository')
+        $repository = $this->getMockBuilder('Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookRepository')
             ->disableOriginalConstructor()
             ->getMock();
         $repository->expects($this->exactly(2))

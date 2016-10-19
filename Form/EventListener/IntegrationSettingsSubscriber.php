@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Form\EventListener;
+namespace Oro\Bundle\DotmailerBundle\Form\EventListener;
 
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -55,8 +55,8 @@ class IntegrationSettingsSubscriber implements EventSubscriberInterface
                 $form,
                 'password',
                 [
-                    'label' => 'orocrm.dotmailer.integration_transport.password.label',
-                    'tooltip' => 'orocrm.dotmailer.form.password.tooltip',
+                    'label' => 'oro.dotmailer.integration_transport.password.label',
+                    'tooltip' => 'oro.dotmailer.form.password.tooltip',
                     'required' => false,
                 ],
                 ['constraints']

@@ -1,12 +1,11 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Serializer;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\ConfigurableEntityNormalizer as BaseNormalizer;
-
-use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 
 class ConfigurableEntityNormalizer extends BaseNormalizer
 {

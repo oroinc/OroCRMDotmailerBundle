@@ -1,0 +1,4 @@
+assets:
+    css:
+      'orodotmailer':
+          - 'bundles/orodotmailer/css/styles.css'

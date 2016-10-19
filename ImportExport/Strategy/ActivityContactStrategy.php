@@ -1,14 +1,13 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
-
-use OroCRM\Bundle\DotmailerBundle\Entity\Activity;
-use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
-use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
+use Oro\Bundle\DotmailerBundle\Entity\Activity;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Entity\Campaign;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
 
 class ActivityContactStrategy extends AddOrReplaceStrategy
 {
@@ -78,7 +77,7 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
 
         $campaign = $this->cacheProvider->getCachedItem(self::CACHED_CAMPAIGN_ENTITIES, $campaignOriginId);
         if (!$campaign) {
-            $campaign = $this->getRepository('OroCRMDotmailerBundle:Campaign')
+            $campaign = $this->getRepository('OroDotmailerBundle:Campaign')
                 ->createQueryBuilder('dmCampaign')
                 ->addSelect('addressBooks')
                 ->addSelect('emailCampaign')
@@ -110,8 +109,8 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
     protected function findExistingContact(Contact $contact)
     {
         $existing = $this->strategyHelper
-            ->getEntityManager('OroCRMDotmailerBundle:Contact')
-            ->getRepository('OroCRMDotmailerBundle:Contact')
+            ->getEntityManager('OroDotmailerBundle:Contact')
+            ->getRepository('OroDotmailerBundle:Contact')
             ->findOneBy(
                 [
                     'channel'  => $contact->getChannel(),

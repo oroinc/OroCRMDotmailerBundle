@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Form\Type;
+namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class MarketingListConnectionType extends AbstractType
 {
-    const NAME = 'orocrm_dotmailer_marketing_list_connection';
+    const NAME = 'oro_dotmailer_marketing_list_connection';
 
     /**
      * {@inheritdoc}
@@ -23,17 +23,17 @@ class MarketingListConnectionType extends AbstractType
         $builder
             ->add(
                 'channel',
-                'orocrm_dotmailer_integration_select',
+                'oro_dotmailer_integration_select',
                 [
-                    'label'    => 'orocrm.dotmailer.integration.label',
+                    'label'    => 'oro.dotmailer.integration.label',
                     'required' => true
                 ]
             )
             ->add(
                 'addressBook',
-                'orocrm_dotmailer_address_book_list_select',
+                'oro_dotmailer_address_book_list_select',
                 [
-                    'label'         => 'orocrm.dotmailer.addressbook.entity_label',
+                    'label'         => 'oro.dotmailer.addressbook.entity_label',
                     'required'      => true,
                     'channel_field' => 'channel',
                     'marketing_list_id' => $marketingList->getId(),

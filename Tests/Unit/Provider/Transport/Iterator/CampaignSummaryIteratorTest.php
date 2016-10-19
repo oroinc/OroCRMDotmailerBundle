@@ -1,10 +1,10 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
 use DotMailer\Api\DataTypes\ApiCampaignSummary;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterator;
 
 class CampaignSummaryIteratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -12,7 +12,7 @@ class CampaignSummaryIteratorTest extends \PHPUnit_Framework_TestCase
     public function testIterator()
     {
         $resource = $this->getMock('DotMailer\Api\Resources\IResources');
-        $firstCampaign = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\Campaign');
+        $firstCampaign = $this->getMock('Oro\Bundle\DotmailerBundle\Entity\Campaign');
         $firstCampaign->expects($this->once())
             ->method('getOriginId')
             ->will($this->returnValue($firstCampaignOriginId = 42));
@@ -20,7 +20,7 @@ class CampaignSummaryIteratorTest extends \PHPUnit_Framework_TestCase
             ->method('getId')
             ->will($this->returnValue($firstCampaignId = 1));
 
-        $secondCampaign = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\Campaign');
+        $secondCampaign = $this->getMock('Oro\Bundle\DotmailerBundle\Entity\Campaign');
         $secondCampaign->expects($this->once())
             ->method('getOriginId')
             ->will($this->returnValue($secondCampaignOriginId = 28));

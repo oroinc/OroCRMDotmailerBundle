@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
+namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -41,7 +41,7 @@ class RemoveCampaignIterator extends AbstractIterator
     protected function getItems($take, $skip)
     {
         $campaignsForRemoveQB = $this->registry
-            ->getRepository('OroCRMDotmailerBundle:Campaign')
+            ->getRepository('OroDotmailerBundle:Campaign')
             ->getCampaignsForRemoveQB($this->channel, $this->keepCampaigns)
             ->setFirstResult($skip)
             ->setMaxResults($take);

@@ -1,16 +1,16 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Form\Type;
+namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use OroCRM\Bundle\ChannelBundle\Form\Type\CreateOrSelectInlineChannelAwareType;
+use Oro\Bundle\ChannelBundle\Form\Type\CreateOrSelectInlineChannelAwareType;
 
 class AddressBookSelectType extends CreateOrSelectInlineChannelAwareType
 {
-    const NAME = 'orocrm_dotmailer_address_book_list_select';
+    const NAME = 'oro_dotmailer_address_book_list_select';
 
     /**
      * {@inheritdoc}
@@ -21,9 +21,9 @@ class AddressBookSelectType extends CreateOrSelectInlineChannelAwareType
         $resolver->setDefaults(
             [
                 'autocomplete_alias' => 'dotmailer_address_books',
-                'grid_name'          => 'orocrm_dotmailer_address_books_grid',
+                'grid_name'          => 'oro_dotmailer_address_books_grid',
                 'configs'            => [
-                    'placeholder'  => 'orocrm.dotmailer.addressbook.select.placeholder',
+                    'placeholder'  => 'oro.dotmailer.addressbook.select.placeholder',
                 ]
             ]
         );

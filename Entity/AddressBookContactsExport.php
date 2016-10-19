@@ -1,15 +1,15 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Entity;
+namespace Oro\Bundle\DotmailerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use OroCRM\Bundle\DotmailerBundle\Model\ExtendAddressBookContactsExport;
+use Oro\Bundle\DotmailerBundle\Model\ExtendAddressBookContactsExport;
 
 /**
- * @ORM\Entity(repositoryClass="OroCRM\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactsExportRepository")
+ * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactsExportRepository")
  * @ORM\Table(
  *      name="orocrm_dm_ab_cnt_export",
  *     indexes={

@@ -1,16 +1,16 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider\Connector;
+namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
 use Guzzle\Iterator\AppendIterator;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Provider\AllowedConnectorInterface;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
-use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
-use OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\MarketingListItemIterator;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
+use Oro\Bundle\DotmailerBundle\Model\ExportManager;
+use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\MarketingListItemIterator;
 
 class ExportContactConnector extends AbstractDotmailerConnector implements AllowedConnectorInterface
 {
@@ -57,7 +57,7 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
         $addressBookId = $this->getContext()->getOption(AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION);
 
         return $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->getRepository('OroDotmailerBundle:AddressBook')
             ->getAddressBooksToSync($this->getChannel(), $addressBookId);
     }
 
@@ -66,7 +66,7 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
      */
     public function getLabel()
     {
-        return 'orocrm.dotmailer.connector.contact_export.label';
+        return 'oro.dotmailer.connector.contact_export.label';
     }
 
     /**

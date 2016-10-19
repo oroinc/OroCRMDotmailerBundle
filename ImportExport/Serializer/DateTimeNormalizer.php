@@ -1,13 +1,12 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Serializer;
 
 use Symfony\Component\Serializer\Exception\RuntimeException;
 
 use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\DenormalizerInterface;
 use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\NormalizerInterface;
-
-use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 
 class DateTimeNormalizer implements NormalizerInterface, DenormalizerInterface
 {

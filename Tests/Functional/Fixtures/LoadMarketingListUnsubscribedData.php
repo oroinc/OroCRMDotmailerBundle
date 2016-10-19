@@ -1,11 +1,11 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem;
 
 class LoadMarketingListUnsubscribedData extends AbstractFixture implements DependentFixtureInterface
 {
@@ -14,8 +14,8 @@ class LoadMarketingListUnsubscribedData extends AbstractFixture implements Depen
      */
     protected $data = [
         [
-            'marketingListItem' => 'orocrm_dotmailer.orocrm_contact.nick.case',
-            'marketingList' => 'orocrm_dotmailer.marketing_list.fifth'
+            'marketingListItem' => 'oro_dotmailer.orocrm_contact.nick.case',
+            'marketingList' => 'oro_dotmailer.marketing_list.fifth'
         ]
     ];
 
@@ -44,7 +44,7 @@ class LoadMarketingListUnsubscribedData extends AbstractFixture implements Depen
     public function getDependencies()
     {
         return [
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData'
+            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData'
         ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Entity;
+namespace Oro\Bundle\DotmailerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,7 +10,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 /**
- * @ORM\Entity(repositoryClass="OroCRM\Bundle\DotmailerBundle\Entity\Repository\ActivityRepository")
+ * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\ActivityRepository")
  * @ORM\Table(
  *      name="orocrm_dm_activity",
  *      uniqueConstraints={
@@ -183,7 +183,7 @@ class Activity implements ChannelAwareInterface
     /**
      * @var Campaign
      *
-     * @ORM\ManyToOne(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\Campaign", inversedBy="activities")
+     * @ORM\ManyToOne(targetEntity="Oro\Bundle\DotmailerBundle\Entity\Campaign", inversedBy="activities")
      * @ORM\JoinColumn(name="campaign_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      * @ConfigField(
      *      defaultValues={
@@ -198,7 +198,7 @@ class Activity implements ChannelAwareInterface
     /**
      * @var Contact
      *
-     * @ORM\ManyToOne(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\Contact", inversedBy="activities")
+     * @ORM\ManyToOne(targetEntity="Oro\Bundle\DotmailerBundle\Entity\Contact", inversedBy="activities")
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      * @ConfigField(
      *      defaultValues={

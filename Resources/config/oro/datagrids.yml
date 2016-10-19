@@ -1,6 +1,6 @@
 datagrids:
-    orocrm_dotmailer_address_books_grid:
-        extended_entity_name: %orocrm_dotmailer.entity.address_book.class%
+    oro_dotmailer_address_books_grid:
+        extended_entity_name: %oro_dotmailer.entity.address_book.class%
         channel_limitation:
             channel_relation_path: .channel
         options:
@@ -13,7 +13,7 @@ datagrids:
                     - addressBook.name
                     - addressBook.contactCount
                 from:
-                    - { table: %orocrm_dotmailer.entity.address_book.class%, alias: addressBook }
+                    - { table: %oro_dotmailer.entity.address_book.class%, alias: addressBook }
                 join:
                     left:
                         - { join: addressBook.visibility, alias: address_book_visibility }
@@ -23,9 +23,9 @@ datagrids:
                         - addressBook.owner = @oro_security.security_facade->getOrganizationId
         columns:
             name:
-                label: orocrm.dotmailer.addressbook.name.label
+                label: oro.dotmailer.addressbook.name.label
             contactCount:
-                label: orocrm.dotmailer.addressbook.contact_count.label
+                label: oro.dotmailer.addressbook.contact_count.label
         sorters:
             columns:
                 name:

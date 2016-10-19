@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Form\Type;
+namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -8,12 +8,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use Oro\Bundle\SecurityBundle\ORM\Walker\AclHelper;
-
-use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 
 class IntegrationSelectType extends AbstractType
 {
-    const NAME = 'orocrm_dotmailer_integration_select';
+    const NAME = 'oro_dotmailer_integration_select';
     const ENTITY = 'Oro\Bundle\IntegrationBundle\Entity\Channel';
 
     /**
@@ -49,7 +48,7 @@ class IntegrationSelectType extends AbstractType
         ];
 
         if (count($integrations) != 1) {
-            $options['empty_value'] = 'orocrm.dotmailer.integration.select.placeholder';
+            $options['empty_value'] = 'oro.dotmailer.integration.select.placeholder';
         }
 
         $resolver->setDefaults($options);

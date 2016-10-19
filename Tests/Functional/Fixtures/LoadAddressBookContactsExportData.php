@@ -1,12 +1,12 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
-use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
 
 class LoadAddressBookContactsExportData extends AbstractFixture implements DependentFixtureInterface
 {
@@ -16,39 +16,39 @@ class LoadAddressBookContactsExportData extends AbstractFixture implements Depen
     protected $data = [
         [
             'status'      => AddressBookContactsExport::STATUS_NOT_FINISHED,
-            'addressBook' => 'orocrm_dotmailer.address_book.fifth',
-            'channel'     => 'orocrm_dotmailer.channel.fourth',
+            'addressBook' => 'oro_dotmailer.address_book.fifth',
+            'channel'     => 'oro_dotmailer.channel.fourth',
             'importId'    => '1fb9cba7-e588-445a-8731-4796c86b1097',
-            'contacts'    => ['orocrm_dotmailer.contact.update_1'],
-            'reference'   => 'orocrm_dotmailer.address_book_contacts_export.first'
+            'contacts'    => ['oro_dotmailer.contact.update_1'],
+            'reference'   => 'oro_dotmailer.address_book_contacts_export.first'
         ],
         [
             'status'      => AddressBookContactsExport::STATUS_FINISH,
-            'addressBook' => 'orocrm_dotmailer.address_book.six',
-            'channel'     => 'orocrm_dotmailer.channel.fourth',
+            'addressBook' => 'oro_dotmailer.address_book.six',
+            'channel'     => 'oro_dotmailer.channel.fourth',
             'importId'    => '6fb9cba7-e588-445a-8731-4796c86b1097',
-            'contacts'    => ['orocrm_dotmailer.contact.allen_case'],
-            'reference'   => 'orocrm_dotmailer.address_book_contacts_export.add_to_address_book'
+            'contacts'    => ['oro_dotmailer.contact.allen_case'],
+            'reference'   => 'oro_dotmailer.address_book_contacts_export.add_to_address_book'
         ],
         [
             'status'      => AddressBookContactsExport::STATUS_REJECTED_BY_WATCHDOG,
-            'addressBook' => 'orocrm_dotmailer.address_book.six',
-            'channel'     => 'orocrm_dotmailer.channel.fourth',
+            'addressBook' => 'oro_dotmailer.address_book.six',
+            'channel'     => 'oro_dotmailer.channel.fourth',
             'importId'    => '5fb9cba7-e588-445a-8731-4796c86b1097',
             'contacts'    => [
-                'orocrm_dotmailer.contact.add_contact_rejected',
-                'orocrm_dotmailer.contact.update_contact_rejected',
-                'orocrm_dotmailer.contact.update_2'
+                'oro_dotmailer.contact.add_contact_rejected',
+                'oro_dotmailer.contact.update_contact_rejected',
+                'oro_dotmailer.contact.update_2'
             ],
-            'reference'   => 'orocrm_dotmailer.address_book_contacts_export.rejected'
+            'reference'   => 'oro_dotmailer.address_book_contacts_export.rejected'
         ],
         [
             'status'      => AddressBookContactsExport::STATUS_NOT_FINISHED,
-            'addressBook' => 'orocrm_dotmailer.address_book.fourth',
-            'channel'     => 'orocrm_dotmailer.channel.third',
+            'addressBook' => 'oro_dotmailer.address_book.fourth',
+            'channel'     => 'oro_dotmailer.channel.third',
             'importId'    => '2fb9cba7-e588-445a-8731-4796c86b1097',
             'contacts'    => [],
-            'reference'   => 'orocrm_dotmailer.address_book_contacts_export.second'
+            'reference'   => 'oro_dotmailer.address_book_contacts_export.second'
         ],
     ];
 
@@ -93,8 +93,8 @@ class LoadAddressBookContactsExportData extends AbstractFixture implements Depen
     public function getDependencies()
     {
         return [
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData',
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData'
+            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData',
+            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData'
         ];
     }
 }

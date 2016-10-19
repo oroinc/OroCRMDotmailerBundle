@@ -1,12 +1,12 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider;
+namespace Oro\Bundle\DotmailerBundle\Provider;
 
 use Doctrine\ORM\QueryBuilder;
 
 use Oro\Bundle\LocaleBundle\DQL\DQLNameFormatter;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactSyncDataConverter;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactSyncDataConverter;
 
 class ContactExportQBAdapter implements ContactExportQBAdapterInterface
 {
