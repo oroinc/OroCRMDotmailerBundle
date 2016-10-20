@@ -74,3 +74,26 @@ OroCRM\Bundle\DotmailerBundle\Entity\CampaignSummary:
             - NotBlank: ~
         owner:
             - NotBlank: ~
+
+OroCRM\Bundle\DotmailerBundle\Entity\DataField:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [channel, name]
+            errorPath: name
+            message: 'Field with such name already exists in this Dotmailer account'
+    properties:
+        channel:
+            - NotBlank: ~
+        owner:
+            - NotBlank: ~
+        name:
+            - NotBlank: ~
+            - Length:
+                max: 20
+            - Regex:
+                pattern: "/^[a-z_\-0-9]+$/i"
+                message: "Must consist of alphnumeric characters only, with hyphens and underscores if required"
+        type:
+            - NotBlank: ~
+        visibility:
+            - NotBlank: ~
