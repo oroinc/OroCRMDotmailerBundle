@@ -1,11 +1,11 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Migrations\Data\ORM;
+namespace Oro\Bundle\DotmailerBundle\Migrations\Data\ORM;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\DataField;
+use Oro\Bundle\DotmailerBundle\Entity\DataField;
 
 class LoadDataFieldEnumValues extends AbstractEnumFixture
 {

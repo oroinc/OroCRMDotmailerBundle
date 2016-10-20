@@ -1,11 +1,11 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\DataField;
+use Oro\Bundle\DotmailerBundle\Entity\DataField;
 
 class LoadDataFieldData extends AbstractFixture implements DependentFixtureInterface
 {
@@ -18,16 +18,16 @@ class LoadDataFieldData extends AbstractFixture implements DependentFixtureInter
             'type'          => 'String',
             'visibility'    => 'Private',
             'defaultValue'  => 'test first',
-            'channel'       => 'orocrm_dotmailer.channel.first',
-            'reference'     => 'orocrm_dotmailer.datafield.first'
+            'channel'       => 'oro_dotmailer.channel.first',
+            'reference'     => 'oro_dotmailer.datafield.first'
         ],
         [
             'name'          => 'LASTNAME',
             'type'          => 'String',
             'visibility'    => 'Private',
             'defaultValue'  => 'test last',
-            'channel'       => 'orocrm_dotmailer.channel.first',
-            'reference'     => 'orocrm_dotmailer.datafield.second'
+            'channel'       => 'oro_dotmailer.channel.first',
+            'reference'     => 'oro_dotmailer.datafield.second'
         ]
     ];
 
@@ -57,8 +57,8 @@ class LoadDataFieldData extends AbstractFixture implements DependentFixtureInter
     public function getDependencies()
     {
         return [
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData',
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadOrganizationData'
+            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData',
+            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadOrganizationData'
         ];
     }
 }

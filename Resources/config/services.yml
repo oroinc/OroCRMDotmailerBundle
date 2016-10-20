@@ -7,7 +7,7 @@ parameters:
     oro_dotmailer.entity.contact.class:                            Oro\Bundle\DotmailerBundle\Entity\Contact
     oro_dotmailer.entity.activity.class:                           Oro\Bundle\DotmailerBundle\Entity\Activity
     oro_dotmailer.entity.campaign_summary.class:                   Oro\Bundle\DotmailerBundle\Entity\CampaignSummary
-    oro_dotmailer.entity.datafield.class:                       Oro\Bundle\DotmailerBundle\Entity\DataField
+    oro_dotmailer.entity.datafield.class:                          Oro\Bundle\DotmailerBundle\Entity\DataField
 
     # Integration related services
     oro_dotmailer.provider.channel_type.class:                           Oro\Bundle\DotmailerBundle\Provider\ChannelType
@@ -30,7 +30,7 @@ parameters:
     oro_dotmailer.form.type.address_book_select.class:             Oro\Bundle\DotmailerBundle\Form\Type\AddressBookSelectType
     oro_dotmailer.form.type.transport_check.class:                 Oro\Bundle\DotmailerBundle\Form\Type\DotmailerTransportCheckButtonType
     oro_dotmailer.form.extension.channel_connectors.class:         Oro\Bundle\DotmailerBundle\Form\Extension\ChannelConnectorsExtension
-    oro_dotmailer.form.type.datafield.class:                    Oro\Bundle\DotmailerBundle\Form\Type\DataFieldType
+    oro_dotmailer.form.type.datafield.class:                       Oro\Bundle\DotmailerBundle\Form\Type\DataFieldType
 
     #Form handlers
     oro_dotmailer.form.handler.connection_update.class:            Oro\Bundle\DotmailerBundle\Form\Handler\ConnectionUpdateFormHandler
@@ -191,18 +191,18 @@ services:
         tags:
             - { name: form.type, alias: oro_dotmailer_transport_check_button }
 
-    orocrm_dotmailer.form.type.datafield:
-        class: %orocrm_dotmailer.form.type.datafield.class%
+    oro_dotmailer.form.type.datafield:
+        class: %oro_dotmailer.form.type.datafield.class%
         arguments:
-            - "%orocrm_dotmailer.entity.datafield.class%"
+            - "%oro_dotmailer.entity.datafield.class%"
         tags:
-            - { name: form.type, alias: "orocrm_dotmailer_data_field" }
+            - { name: form.type, alias: "oro_dotmailer_data_field" }
 
-    orocrm_dotmailer.datafield.manager.api:
+    oro_dotmailer.datafield.manager.api:
         class: 'Oro\Bundle\SoapBundle\Entity\Manager\ApiEntityManager'
         parent: oro_soap.manager.entity_manager.abstract
         arguments:
-            - "%orocrm_dotmailer.entity.datafield.class%"
+            - "%oro_dotmailer.entity.datafield.class%"
             - "@doctrine.orm.entity_manager"
 
     #Form handlers

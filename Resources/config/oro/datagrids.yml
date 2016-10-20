@@ -45,8 +45,8 @@ datagrids:
         properties:
             id: ~
 
-    orocrm_dotmailer_datafield_grid:
-        extended_entity_name: %orocrm_dotmailer.entity.datafield.class%
+    oro_dotmailer_datafield_grid:
+        extended_entity_name: %oro_dotmailer.entity.datafield.class%
         options:
             entityHint: Data fields list
         source:
@@ -57,15 +57,15 @@ datagrids:
                     - field.name
                     - channel.name as channelName
                 from:
-                    - { table: %orocrm_dotmailer.entity.datafield.class%, alias: field }
+                    - { table: %oro_dotmailer.entity.datafield.class%, alias: field }
                 join:
                     left:
                         - { join: field.channel, alias: channel }
         columns:
             channelName:
-                label: orocrm.dotmailer.datafield.channel.label
+                label: oro.dotmailer.datafield.channel.label
             name:
-                label: orocrm.dotmailer.datafield.name.label
+                label: oro.dotmailer.datafield.name.label
         sorters:
             columns:
                 name:
@@ -91,7 +91,7 @@ datagrids:
             id: ~
             view_link:
                 type:       url
-                route:      orocrm_dotmailer_datafield_view
+                route:      oro_dotmailer_datafield_view
                 params:     [ id ]
             delete_link:
                 type:       url
@@ -100,14 +100,14 @@ datagrids:
         actions:
             view:
                 type:          navigate
-                acl_resource:  orocrm_dotmailer_datafield_view
+                acl_resource:  oro_dotmailer_datafield_view
                 label:         oro.grid.action.view
                 icon:          eye-open
                 link:          view_link
                 rowAction:     true
             delete:
                 type:          delete
-                acl_resource:  orocrm_dotmailer_datafield_delete
+                acl_resource:  oro_dotmailer_datafield_delete
                 label:         oro.grid.action.delete
                 icon:          trash
                 link:          delete_link

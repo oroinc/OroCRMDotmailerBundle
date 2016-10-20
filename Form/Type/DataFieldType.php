@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Form\Type;
+namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class DataFieldType extends AbstractType
 {
-    const NAME = 'orocrm_dotmailer_data_field';
+    const NAME = 'oro_dotmailer_data_field';
 
     /**
      * @var string
@@ -31,9 +31,9 @@ class DataFieldType extends AbstractType
         $builder
             ->add(
                 'channel',
-                'orocrm_dotmailer_integration_select',
+                'oro_dotmailer_integration_select',
                 [
-                    'label'    => 'orocrm.dotmailer.integration.label',
+                    'label'    => 'oro.dotmailer.integration.label',
                     'required' => true
                 ]
             )
@@ -41,7 +41,7 @@ class DataFieldType extends AbstractType
                 'name',
                 'text',
                 [
-                    'label' => 'orocrm.dotmailer.datafield.name.label',
+                    'label' => 'oro.dotmailer.datafield.name.label',
                     'required' => true
                 ]
             )
@@ -49,7 +49,7 @@ class DataFieldType extends AbstractType
                 'type',
                 'oro_enum_select',
                 [
-                    'label' => 'orocrm.dotmailer.datafield.type.label',
+                    'label' => 'oro.dotmailer.datafield.type.label',
                     'enum_code' => 'dm_df_type',
                     'required' => true,
                 ]
@@ -58,7 +58,7 @@ class DataFieldType extends AbstractType
                 'visibility',
                 'oro_enum_select',
                 [
-                    'label' => 'orocrm.dotmailer.datafield.visibility.label',
+                    'label' => 'oro.dotmailer.datafield.visibility.label',
                     'enum_code' => 'dm_df_visibility',
                     'required' => true,
                 ]
@@ -67,7 +67,7 @@ class DataFieldType extends AbstractType
                 'defaultValue',
                 'text',
                 [
-                    'label' => 'orocrm.dotmailer.datafield.default_value.label',
+                    'label' => 'oro.dotmailer.datafield.default_value.label',
                     'required' => false
                 ]
             )
@@ -75,7 +75,7 @@ class DataFieldType extends AbstractType
                 'notes',
                 'oro_resizeable_rich_text',
                 [
-                    'label' => 'orocrm.dotmailer.datafield.notes.label',
+                    'label' => 'oro.dotmailer.datafield.notes.label',
                     'required' => false
                 ]
             );

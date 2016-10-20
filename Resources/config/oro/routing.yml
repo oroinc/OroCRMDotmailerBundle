@@ -3,8 +3,8 @@ oro_dotmailer_bundle:
     type:         annotation
     prefix:       /dotmailer
 
-orocrm_dotmailer_bundle_api:
-    resource: "@OroCRMDotmailerBundle/Resources/config/oro/routing_api.yml"
+oro_dotmailer_bundle_api:
+    resource: "@OroDotmailerBundle/Resources/config/oro/routing_api.yml"
     type: rest
     prefix: api/rest/{version}
     requirements:

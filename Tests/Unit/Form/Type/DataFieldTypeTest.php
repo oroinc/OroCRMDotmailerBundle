@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Form\Type;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Type;
 
 use Symfony\Component\Form\PreloadedExtension;
 
@@ -9,10 +9,10 @@ use Oro\Component\Testing\Unit\FormIntegrationTestCase;
 use Oro\Component\Testing\Unit\Form\Type\Stub\EntityType;
 use Oro\Component\Testing\Unit\Form\Type\Stub\FormStub;
 
-use OroCRM\Bundle\DotmailerBundle\Form\Type\DataFieldType;
-use OroCRM\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType;
-use OroCRM\Bundle\DotmailerBundle\Entity\DataField;
-use OroCRM\Bundle\DotmailerBundle\Tests\Unit\Form\Type\Stub\EnumSelectType;
+use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldType;
+use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType;
+use Oro\Bundle\DotmailerBundle\Entity\DataField;
+use Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Type\Stub\EnumSelectType;
 
 class DataFieldTypeTest extends FormIntegrationTestCase
 {
@@ -27,7 +27,7 @@ class DataFieldTypeTest extends FormIntegrationTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->formType = new DataFieldType('OroCRM\Bundle\DotmailerBundle\Tests\Unit\Stub\DataFieldStub');
+        $this->formType = new DataFieldType('Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\DataFieldStub');
     }
 
     /**
@@ -53,7 +53,7 @@ class DataFieldTypeTest extends FormIntegrationTestCase
     public function submitProvider()
     {
         $expectedEntity = $this->getEntity(
-            'OroCRM\Bundle\DotmailerBundle\Tests\Unit\Stub\DataFieldStub',
+            'Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\DataFieldStub',
             [
                 'channel' => $this->getEntity('Oro\Bundle\IntegrationBundle\Entity\Channel', ['id' => 1]),
                 'name' => 'Test Field',
@@ -94,11 +94,11 @@ class DataFieldTypeTest extends FormIntegrationTestCase
         return [
             new PreloadedExtension(
                 [
-                    'orocrm_dotmailer_integration_select' => new EntityType(
+                    'oro_dotmailer_integration_select' => new EntityType(
                         [
                             '1' => $this->getEntity('Oro\Bundle\IntegrationBundle\Entity\Channel', ['id' => 1])
                         ],
-                        'orocrm_dotmailer_integration_select'
+                        'oro_dotmailer_integration_select'
                     ),
                     'oro_enum_select' => new EnumSelectType(),
                     'oro_resizeable_rich_text' => new FormStub('oro_resizeable_rich_text')

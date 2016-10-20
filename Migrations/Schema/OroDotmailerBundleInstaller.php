@@ -10,6 +10,7 @@ use Oro\Bundle\MigrationBundle\Migration\Installation;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 use Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_0;
 use Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_2;
+use Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_3;
 
 class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareInterface
 {
@@ -23,7 +24,7 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
      */
     public function getMigrationVersion()
     {
-        return 'v1_2';
+        return 'v1_3';
     }
 
     /**
@@ -48,6 +49,13 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
 
         $addSyncDateColumns = new v1_2\AddSyncDateColumns();
         $addSyncDateColumns->addLastImportedAt($schema);
+
+        $migration = new v1_3\AddDotmailerDataField();
+        $migration->up($schema, $queries);
+
+        $addEnumFieldsMigration = new v1_3\AddDataFieldEnumFields();
+        $addEnumFieldsMigration->setExtendExtension($this->extendExtension);
+        $addEnumFieldsMigration->up($schema, $queries);
 
         $this->renameLastSyncedColumn($schema);
     }

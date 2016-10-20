@@ -8,7 +8,7 @@ use Symfony\Component\DomCrawler\Field\InputFormField;
 
 use Oro\Bundle\DataGridBundle\Tests\Functional\AbstractDatagridTestCase;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\DataField;
+use Oro\Bundle\DotmailerBundle\Entity\DataField;
 
 /**
  * @outputBuffering enabled
@@ -28,14 +28,14 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
         $this->client->useHashNavigation(true);
         $this->loadFixtures(
             [
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDataFieldData',
+                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDataFieldData',
             ]
         );
     }
 
     public function testIndex()
     {
-        $this->client->request('GET', $this->getUrl('orocrm_dotmailer_datafield_index'));
+        $this->client->request('GET', $this->getUrl('oro_dotmailer_datafield_index'));
         $result = $this->client->getResponse();
         $this->assertHtmlResponseStatusCodeEquals($result, 200);
     }
@@ -45,15 +45,15 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
      */
     public function testCreate()
     {
-        $crawler = $this->client->request('GET', $this->getUrl('orocrm_dotmailer_datafield_create'));
+        $crawler = $this->client->request('GET', $this->getUrl('oro_dotmailer_datafield_create'));
         /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();
         $name = 'name' . $this->generateRandomString();
-        $form['orocrm_dotmailer_data_field[name]'] = $name;
-        $form['orocrm_dotmailer_data_field[type]'] = DataField::FIELD_TYPE_STRING;
-        $form['orocrm_dotmailer_data_field[visibility]'] = DataField::VISIBILITY_PRIVATE;
-        $form['orocrm_dotmailer_data_field[defaultValue]'] = 'test value';
-        $form['orocrm_dotmailer_data_field[channel]'] = $this->getReference('orocrm_dotmailer.channel.first')->getId();
+        $form['oro_dotmailer_data_field[name]'] = $name;
+        $form['oro_dotmailer_data_field[type]'] = DataField::FIELD_TYPE_STRING;
+        $form['oro_dotmailer_data_field[visibility]'] = DataField::VISIBILITY_PRIVATE;
+        $form['oro_dotmailer_data_field[defaultValue]'] = 'test value';
+        $form['oro_dotmailer_data_field[channel]'] = $this->getReference('oro_dotmailer.channel.first')->getId();
 
 
         $this->client->followRedirects(true);
@@ -75,8 +75,8 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
     public function testView($name)
     {
         $response = $this->client->requestGrid(
-            'orocrm_dotmailer_datafield_grid',
-            ['orocrm_dotmailer_datafield_grid[_filter][name][value]' => $name]
+            'oro_dotmailer_datafield_grid',
+            ['oro_dotmailer_datafield_grid[_filter][name][value]' => $name]
         );
 
         $result = $this->getJsonResponseContent($response, 200);
@@ -84,7 +84,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
         $returnValue = $result;
         $crawler = $this->client->request(
             'GET',
-            $this->getUrl('orocrm_dotmailer_datafield_view', ['id' => $returnValue['id']])
+            $this->getUrl('oro_dotmailer_datafield_view', ['id' => $returnValue['id']])
         );
 
         $result = $this->client->getResponse();
@@ -105,7 +105,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
         $crawler = $this->client->request(
             'GET',
             $this->getUrl(
-                'orocrm_dotmailer_datafield_info',
+                'oro_dotmailer_datafield_info',
                 ['id' => $returnValue['id'], '_widgetContainer' => 'block']
             )
         );
@@ -131,7 +131,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
 
         $this->client->request(
             'GET',
-            $this->getUrl('orocrm_dotmailer_datafield_view', ['id' => $returnValue['id']])
+            $this->getUrl('oro_dotmailer_datafield_view', ['id' => $returnValue['id']])
         );
 
         $result = $this->client->getResponse();
@@ -147,10 +147,10 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
             'Data Fields grid'                => [
                 [
                     'gridParameters'      => [
-                        'gridName' => 'orocrm_dotmailer_datafield_grid'
+                        'gridName' => 'oro_dotmailer_datafield_grid'
                     ],
                     'gridFilters'         => [
-                        'orocrm_dotmailer_datafield_grid[_sort_by][name][value]' => 'ASC',
+                        'oro_dotmailer_datafield_grid[_sort_by][name][value]' => 'ASC',
                     ],
                     'assert'              => [
                         'channelName' => 'first channel',
@@ -162,10 +162,10 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
             'Data Fields grid with filters'   => [
                 [
                     'gridParameters'      => [
-                        'gridName' => 'orocrm_dotmailer_datafield_grid'
+                        'gridName' => 'oro_dotmailer_datafield_grid'
                     ],
                     'gridFilters'         => [
-                        'orocrm_dotmailer_datafield_grid[_filter][name][value]' => 'FIRSTNAME',
+                        'oro_dotmailer_datafield_grid[_filter][name][value]' => 'FIRSTNAME',
                     ],
                     'assert'              => [
                         'channelName' => 'first channel',
@@ -177,10 +177,10 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
             'Data Fields grid without result' => [
                 [
                     'gridParameters'      => [
-                        'gridName' => 'orocrm_dotmailer_datafield_grid'
+                        'gridName' => 'oro_dotmailer_datafield_grid'
                     ],
                     'gridFilters'         => [
-                        'orocrm_dotmailer_datafield_grid[_filter][name][value]' => 'non existing name',
+                        'oro_dotmailer_datafield_grid[_filter][name][value]' => 'non existing name',
                     ],
                     'assert'              => [],
                     'expectedResultCount' => 0

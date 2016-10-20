@@ -6,33 +6,33 @@
 }) %}
 {% set entityId = entity.id %}
 
-{% set formAction = path('orocrm_dotmailer_datafield_create') %}
+{% set formAction = path('oro_dotmailer_datafield_create') %}
 
 {% block navButtons %}
     {% set html = UI.saveAndCloseButton({
-        'route': 'orocrm_dotmailer_datafield_view',
+        'route': 'oro_dotmailer_datafield_view',
         'params': {'id': '$id'}
     }) %}
-    {% if resource_granted('orocrm_dotmailer_datafield_create') %}
+    {% if resource_granted('oro_dotmailer_datafield_create') %}
         {% set html = html ~ UI.saveAndNewButton({
-            'route': 'orocrm_dotmailer_datafield_create'
+            'route': 'oro_dotmailer_datafield_create'
         }) %}
     {% endif %}
     {{ UI.dropdownSaveButton({'html': html}) }}
-    {{ UI.cancelButton(path('orocrm_dotmailer_datafield_index')) }}
+    {{ UI.cancelButton(path('oro_dotmailer_datafield_index')) }}
 {% endblock navButtons %}
 
 {% block pageHeader %}
     {% if entityId %}
         {% set breadcrumbs = {
             'entity': entity,
-            'indexPath': path('orocrm_dotmailer_datafield_index'),
-            'indexLabel': 'orocrm.dotmailer.datafield.entity_plural_label'|trans,
+            'indexPath': path('oro_dotmailer_datafield_index'),
+            'indexLabel': 'oro.dotmailer.datafield.entity_plural_label'|trans,
             'entityTitle': entity.name
         } %}
         {{ parent() }}
     {% else %}
-        {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'orocrm.dotmailer.datafield.entity_label'|trans}) %}
+        {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'oro.dotmailer.datafield.entity_label'|trans}) %}
         {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
     {% endif %}
 {% endblock pageHeader %}
@@ -41,7 +41,7 @@
     {% set id = 'dotmailer-datafield-form' %}
 
     {% set dataBlocks = [{
-        'title': 'orocrm.dotmailer.block.general'|trans,
+        'title': 'oro.dotmailer.block.general'|trans,
         'class': 'active',
         'subblocks': [{
             'title': '',
@@ -63,7 +63,7 @@
     {% endfor %}
     {% if additionalData is not empty %}
         {% set dataBlocks = dataBlocks|merge([{
-            'title':     'orocrm.dotmailer.block.additional'|trans,
+            'title':     'oro.dotmailer.block.additional'|trans,
             'subblocks': [{ 'title': '', 'useSpan': false, 'data' : additionalData }]
         }] ) %}
     {% endif %}

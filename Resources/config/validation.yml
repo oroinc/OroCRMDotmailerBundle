@@ -75,7 +75,7 @@ Oro\Bundle\DotmailerBundle\Entity\CampaignSummary:
         owner:
             - NotBlank: ~
 
-OroCRM\Bundle\DotmailerBundle\Entity\DataField:
+Oro\Bundle\DotmailerBundle\Entity\DataField:
     constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
             fields: [channel, name]

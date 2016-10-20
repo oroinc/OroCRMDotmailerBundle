@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Controller\Api\Rest;
+namespace Oro\Bundle\DotmailerBundle\Controller\Api\Rest;
 
 use Symfony\Component\HttpFoundation\Response;
 
@@ -25,9 +25,9 @@ class DataFieldController extends RestController implements ClassResourceInterfa
      *      resource=true
      * )
      * @Acl(
-     *      id="orocrm_dotmailer_datafield_delete",
+     *      id="oro_dotmailer_datafield_delete",
      *      type="entity",
-     *      class="OroCRMDotmailerBundle:DataField",
+     *      class="OroDotmailerBundle:DataField",
      *      permission="DELETE"
      * )
      *
@@ -44,7 +44,7 @@ class DataFieldController extends RestController implements ClassResourceInterfa
      */
     public function getManager()
     {
-        return $this->get('orocrm_dotmailer.datafield.manager.api');
+        return $this->get('oro_dotmailer.datafield.manager.api');
     }
 
     /**

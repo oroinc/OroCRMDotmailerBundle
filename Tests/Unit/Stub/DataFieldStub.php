@@ -1,8 +1,8 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Stub;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Stub;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\DataField;
+use Oro\Bundle\DotmailerBundle\Entity\DataField;
 
 class DataFieldStub extends DataField
 {
