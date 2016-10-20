@@ -114,7 +114,7 @@ class MarketingListItemGridListener
     }
 
     /**
-     * Accept orocrm_marketing_list_items_grid_* grids only in case when they has mixin to apply.
+     * Accept oro_marketing_list_items_grid_* grids only in case when they has mixin to apply.
      *
      * @param string       $gridName
      * @param ParameterBag $parameters
