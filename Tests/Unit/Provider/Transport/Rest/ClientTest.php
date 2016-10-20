@@ -1,8 +1,8 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Placeholder;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Placeholder;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Rest\Client;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\Client;
 
 class ClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -122,7 +122,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testExecuteAttemptsFailed($responseBody, $responseCode, $expectedMessage)
     {
         $exceptionMessage = 'Dotmailer REST client exception:' . PHP_EOL .
-            '[exception type] OroCRM\Bundle\DotmailerBundle\Exception\RestClientAttemptException' . PHP_EOL .
+            '[exception type] Oro\Bundle\DotmailerBundle\Exception\RestClientAttemptException' . PHP_EOL .
             '[exception message] ' . $expectedMessage . PHP_EOL .
             '[request url] testCall' . PHP_EOL .
             '[request method] ' . PHP_EOL .
@@ -130,7 +130,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             '[response code] ' . $responseCode . PHP_EOL .
             '[response body] ' . $responseBody;
 
-        $this->setExpectedException('OroCRM\Bundle\DotmailerBundle\Exception\RestClientException', $exceptionMessage);
+        $this->setExpectedException('Oro\Bundle\DotmailerBundle\Exception\RestClientException', $exceptionMessage);
 
         $restClient = $this->getMock('RestClient\Client');
 

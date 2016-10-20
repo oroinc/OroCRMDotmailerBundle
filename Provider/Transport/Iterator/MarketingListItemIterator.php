@@ -1,9 +1,9 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
+namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\ContactSyncProcessor;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\ImportExport\Processor\ContactSyncProcessor;
 
 class MarketingListItemIterator extends AbstractMarketingListItemIterator
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\DependencyInjection\CompilerPass;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\DependencyInjection\CompilerPass;
 
 use Symfony\Component\DependencyInjection\Reference;
 
-use OroCRM\Bundle\DotmailerBundle\DependencyInjection\CompilerPass\ContactExportQueryBuilderAdapterCompilerPath;
+use Oro\Bundle\DotmailerBundle\DependencyInjection\CompilerPass\ContactExportQueryBuilderAdapterCompilerPath;
 
 class ContactExportQueryBuilderAdapterCompilerPathTest extends \PHPUnit_Framework_TestCase
 {

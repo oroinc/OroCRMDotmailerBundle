@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider\Connector;
+namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
 class CampaignConnector extends AbstractDotmailerConnector
 {
@@ -14,7 +14,7 @@ class CampaignConnector extends AbstractDotmailerConnector
     {
         $this->logger->info('Importing Campaigns.');
         $aBooksToSynchronize = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->getRepository('OroDotmailerBundle:AddressBook')
             ->getSyncedAddressBooksToSyncOriginIds($this->getChannel());
 
         return $this->transport->getCampaigns($aBooksToSynchronize);
@@ -25,7 +25,7 @@ class CampaignConnector extends AbstractDotmailerConnector
      */
     public function getLabel()
     {
-        return 'orocrm.dotmailer.connector.campaign.label';
+        return 'oro.dotmailer.connector.campaign.label';
     }
 
     /**

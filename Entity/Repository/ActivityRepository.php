@@ -1,10 +1,10 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Entity\Repository;
+namespace Oro\Bundle\DotmailerBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
+use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 
 class ActivityRepository extends EntityRepository
 {

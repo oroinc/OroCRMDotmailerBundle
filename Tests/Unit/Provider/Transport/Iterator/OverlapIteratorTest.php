@@ -1,8 +1,8 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
-use OroCRM\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator\Stub\StubOverlapIterator;
+use Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator\Stub\StubOverlapIterator;
 
 class OverlapIteratorTest extends \PHPUnit_Framework_TestCase
 {

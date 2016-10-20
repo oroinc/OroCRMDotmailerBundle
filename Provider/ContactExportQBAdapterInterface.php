@@ -1,10 +1,10 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider;
+namespace Oro\Bundle\DotmailerBundle\Provider;
 
 use Doctrine\ORM\QueryBuilder;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 
 interface ContactExportQBAdapterInterface
 {

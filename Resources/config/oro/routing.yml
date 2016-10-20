@@ -1,5 +1,5 @@
-orocrm_dotmailer_bundle:
-    resource:     "@OroCRMDotmailerBundle/Controller"
+oro_dotmailer_bundle:
+    resource:     "@OroDotmailerBundle/Controller"
     type:         annotation
     prefix:       /dotmailer
 

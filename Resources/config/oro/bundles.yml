@@ -1,2 +1,2 @@
 bundles:
-    - { name: OroCRM\Bundle\DotmailerBundle\OroCRMDotmailerBundle, priority: 110 }
+    - { name: Oro\Bundle\DotmailerBundle\OroDotmailerBundle, priority: 110 }

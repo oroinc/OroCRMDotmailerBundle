@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider\Connector;
+namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
 class UnsubscribedContactConnector extends AbstractDotmailerConnector
 {
@@ -13,7 +13,7 @@ class UnsubscribedContactConnector extends AbstractDotmailerConnector
     protected function getConnectorSource()
     {
         $this->logger->info('Importing Unsubscribed from Address Book Contacts.');
-        $addressBooks = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBook')
+        $addressBooks = $this->managerRegistry->getRepository('OroDotmailerBundle:AddressBook')
             ->getAddressBooksToSync($this->getChannel());
 
         return $this->transport->getUnsubscribedContacts($addressBooks);
@@ -24,7 +24,7 @@ class UnsubscribedContactConnector extends AbstractDotmailerConnector
      */
     public function getLabel()
     {
-        return 'orocrm.dotmailer.connector.unsubscribed_contact.label';
+        return 'oro.dotmailer.connector.unsubscribed_contact.label';
     }
 
     /**

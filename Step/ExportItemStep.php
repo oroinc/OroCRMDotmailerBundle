@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Step;
+namespace Oro\Bundle\DotmailerBundle\Step;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityRepository;
@@ -34,7 +34,7 @@ class ExportItemStep extends ItemStep
          * Clear old Address Book Export records
          */
         $this->registry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+            ->getRepository('OroDotmailerBundle:AddressBookContactsExport')
             ->createQueryBuilder('abContactsExport')
             ->delete()
             ->where('abContactsExport.channel =:channel')
@@ -47,7 +47,7 @@ class ExportItemStep extends ItemStep
          * @var EntityRepository $addressBookContactRepository
          */
         $addressBookContactRepository = $this->registry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContact');
+            ->getRepository('OroDotmailerBundle:AddressBookContact');
 
         $addressBookContactRepository->createQueryBuilder('addressBookContact')
             ->update()

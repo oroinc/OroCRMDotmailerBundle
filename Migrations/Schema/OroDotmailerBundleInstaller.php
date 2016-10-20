@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Migrations\Schema;
+namespace Oro\Bundle\DotmailerBundle\Migrations\Schema;
 
 use Doctrine\DBAL\Schema\Schema;
 
@@ -8,12 +8,10 @@ use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtension;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareInterface;
 use Oro\Bundle\MigrationBundle\Migration\Installation;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
+use Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_0;
+use Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_2;
 
-use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0;
-use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_2;
-use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_3;
-
-class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwareInterface
+class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareInterface
 {
     /**
      * @var ExtendExtension
@@ -34,7 +32,7 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
      */
     public function up(Schema $schema, QueryBag $queries)
     {
-        $migration = new v1_0\OroCRMDotmailerBundle();
+        $migration = new v1_0\OroDotmailerBundle();
         $migration->up($schema, $queries);
 
         $addEnumFieldsMigration = new v1_0\AddEnumFields();
@@ -44,19 +42,12 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
         $migration = new v1_2\AddActivityIndexes();
         $migration->up($schema, $queries);
 
-        $migration = new v1_2\OroCRMDotmailerBundle();
+        $migration = new v1_2\OroDotmailerBundle();
         $migration->setExtendExtension($this->extendExtension);
         $migration->up($schema, $queries);
 
         $addSyncDateColumns = new v1_2\AddSyncDateColumns();
         $addSyncDateColumns->addLastImportedAt($schema);
-
-        $migration = new v1_3\AddDotmailerDataField();
-        $migration->up($schema, $queries);
-
-        $addEnumFieldsMigration = new v1_3\AddDataFieldEnumFields();
-        $addEnumFieldsMigration->setExtendExtension($this->extendExtension);
-        $addEnumFieldsMigration->up($schema, $queries);
 
         $this->renameLastSyncedColumn($schema);
     }

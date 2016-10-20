@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\DependencyInjection\CompilerPass;
+namespace Oro\Bundle\DotmailerBundle\DependencyInjection\CompilerPass;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -8,8 +8,8 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class ContactExportQueryBuilderAdapterCompilerPath implements CompilerPassInterface
 {
-    const ADAPTERS_TAG = 'orocrm_dotmailer.contact.export.query_builder_adapter';
-    const REGISTRY = 'orocrm_dotmailer.contact.export.query_builder_adapter.registry';
+    const ADAPTERS_TAG = 'oro_dotmailer.contact.export.query_builder_adapter';
+    const REGISTRY = 'oro_dotmailer.contact.export.query_builder_adapter.registry';
     const ADD_ADAPTER_METHOD = 'addAdapter';
 
     /**

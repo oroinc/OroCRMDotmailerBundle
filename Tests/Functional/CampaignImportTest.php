@@ -1,13 +1,12 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiCampaignList;
 
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
-
-use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
+use Oro\Bundle\DotmailerBundle\Entity\Campaign;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 
 /**
  * @dbIsolation
@@ -19,7 +18,7 @@ class CampaignImportTest extends AbstractImportExportTestCase
         parent::setUp();
         $this->loadFixtures(
             [
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData',
+                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData',
             ]
         );
     }
@@ -40,7 +39,7 @@ class CampaignImportTest extends AbstractImportExportTestCase
         $this->resource->expects($this->any())
             ->method('GetAddressBookCampaigns')
             ->will($this->returnValue($entity));
-        $channel = $this->getReference('orocrm_dotmailer.channel.first');
+        $channel = $this->getReference('oro_dotmailer.channel.first');
 
         $result = $this->runImportExportConnectorsJob(
             self::SYNC_PROCESSOR,
@@ -52,7 +51,7 @@ class CampaignImportTest extends AbstractImportExportTestCase
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-        $campaignRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:Campaign');
+        $campaignRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:Campaign');
         $replyActionRepository = $this->managerRegistry->getRepository(
             ExtendHelper::buildEnumValueClassName('dm_cmp_reply_action')
         );
@@ -102,7 +101,7 @@ class CampaignImportTest extends AbstractImportExportTestCase
                         'reply_action' => 'Webmail',
                         'isSplitTest' => false,
                         'status' => 'Unsent',
-                        'addressBooks' => ['orocrm_dotmailer.address_book.second']
+                        'addressBooks' => ['oro_dotmailer.address_book.second']
                     ],
                 ],
                 'campaignList' => [

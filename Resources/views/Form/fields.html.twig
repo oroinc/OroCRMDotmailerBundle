@@ -1,8 +1,8 @@
-{% block orocrm_dotmailer_transport_check_button_widget %}
+{% block oro_dotmailer_transport_check_button_widget %}
     {% set options = {
-        'pingUrl': path('orocrm_dotmailer_ping')
+        'pingUrl': path('oro_dotmailer_ping')
     } %}
-    <div data-page-component-module="orocrmdotmailer/js/app/components/dm-resource-component"
+    <div data-page-component-module="orodotmailer/js/app/components/dm-resource-component"
          data-page-component-options="{{ options|json_encode }}">
         <div class="control-group">
             <div class="controls">
@@ -15,6 +15,6 @@
     </div>
 {% endblock %}
 
-{% block orocrm_dotmailer_transport_check_button_row %}
+{% block oro_dotmailer_transport_check_button_row %}
     {{ block('button_row') }}
 {% endblock %}

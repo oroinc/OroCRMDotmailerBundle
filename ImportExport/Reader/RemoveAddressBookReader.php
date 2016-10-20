@@ -1,9 +1,9 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Reader;
 
-use OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy\AddressBookStrategy;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemoveAddressBookIterator;
+use Oro\Bundle\DotmailerBundle\ImportExport\Strategy\AddressBookStrategy;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemoveAddressBookIterator;
 
 class RemoveAddressBookReader extends AbstractReader
 {

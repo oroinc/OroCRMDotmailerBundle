@@ -1,11 +1,11 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiAddressBookList;
 
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
 
 /**
  * @dbIsolation
@@ -17,7 +17,7 @@ class AddressBookImportTest extends AbstractImportExportTestCase
         parent::setUp();
         $this->loadFixtures(
             [
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData'
+                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData'
             ]
         );
     }
@@ -38,7 +38,7 @@ class AddressBookImportTest extends AbstractImportExportTestCase
         $this->resource->expects($this->any())
             ->method('GetAddressBooks')
             ->will($this->returnValue($entity));
-        $channel = $this->getReference('orocrm_dotmailer.channel.first');
+        $channel = $this->getReference('oro_dotmailer.channel.first');
 
         $result = $this->runImportExportConnectorsJob(
             self::SYNC_PROCESSOR,
@@ -50,7 +50,7 @@ class AddressBookImportTest extends AbstractImportExportTestCase
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-        $addressBookRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBook');
+        $addressBookRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:AddressBook');
         $visibilityRepository = $this->managerRegistry->getRepository(
             ExtendHelper::buildEnumValueClassName('dm_ab_visibility')
         );

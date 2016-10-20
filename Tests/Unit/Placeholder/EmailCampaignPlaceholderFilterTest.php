@@ -1,9 +1,9 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Placeholder;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Placeholder;
 
-use OroCRM\Bundle\DotmailerBundle\Placeholders\EmailCampaignPlaceholderFilter;
-use OroCRM\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport;
+use Oro\Bundle\DotmailerBundle\Placeholders\EmailCampaignPlaceholderFilter;
+use Oro\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport;
 
 class EmailCampaignPlaceholderFilterTest extends \PHPUnit_Framework_TestCase
 {
@@ -40,14 +40,14 @@ class EmailCampaignPlaceholderFilterTest extends \PHPUnit_Framework_TestCase
         $actual = $this->target->isApplicableOnEmailCampaign(new \StdClass());
         $this->assertFalse($actual);
 
-        $entity = $this->getMock('OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign');
+        $entity = $this->getMock('Oro\Bundle\CampaignBundle\Entity\EmailCampaign');
         $entity->expects($this->once())
             ->method('getTransport')
             ->will($this->returnValue('OtherTransport'));
         $actual = $this->target->isApplicableOnEmailCampaign($entity);
         $this->assertFalse($actual);
 
-        $entity = $this->getMock('OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign');
+        $entity = $this->getMock('Oro\Bundle\CampaignBundle\Entity\EmailCampaign');
         $entity->expects($this->any())
             ->method('getTransport')
             ->will($this->returnValue(DotmailerEmailCampaignTransport::NAME));

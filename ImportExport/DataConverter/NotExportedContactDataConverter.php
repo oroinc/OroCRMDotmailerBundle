@@ -1,9 +1,9 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
 use Oro\Bundle\ImportExportBundle\Converter\AbstractTableDataConverter;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReportIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReportIterator;
 
 class NotExportedContactDataConverter extends AbstractTableDataConverter
 {

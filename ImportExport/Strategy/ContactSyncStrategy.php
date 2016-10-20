@@ -1,13 +1,13 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
-use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
-use OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\MarketingListItemIterator;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\MarketingListItemIterator;
 
 class ContactSyncStrategy extends AddOrReplaceStrategy
 {
@@ -54,7 +54,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
                 $status = $this->getEnumValue('dm_cnt_status', Contact::STATUS_SUBSCRIBED);
                 $addressBookContact->setStatus($status);
                 $this->strategyHelper
-                    ->getEntityManager('OroCRMDotmailerBundle:AddressBookContact')
+                    ->getEntityManager('OroDotmailerBundle:AddressBookContact')
                     ->persist($addressBookContact);
 
                 $entity->addAddressBookContact($addressBookContact);
@@ -114,7 +114,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
     protected function findProcessedEntity($entity, array $searchContext = [])
     {
         if (!$entity instanceof Contact) {
-            throw new RuntimeException('Entity of `\OroCRM\Bundle\DotmailerBundle\Entity\Contact`expected.');
+            throw new RuntimeException('Entity of `\Oro\Bundle\DotmailerBundle\Entity\Contact`expected.');
         }
 
         if (!$entity->getEmail() || !$entity->getChannel()) {
@@ -125,7 +125,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
          * Fix case if this contact already imported on this batch  but for different address book
          */
         if (!$contact = $this->cacheProvider->getCachedItem(self::BATCH_ITEMS, $entity->getEmail())) {
-            $contact = $this->getRepository('OroCRMDotmailerBundle:Contact')
+            $contact = $this->getRepository('OroDotmailerBundle:Contact')
                 ->createQueryBuilder('contact')
                 ->addSelect('addressBookContacts')
                 ->addSelect('addressBook')

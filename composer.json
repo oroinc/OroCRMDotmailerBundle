@@ -1,6 +1,6 @@
 {
     "name": "oro/crm-dotmailer",
-    "description": "OroCRM Dotmailer integration",
+    "description": "Oro Dotmailer integration",
     "homepage": "https://github.com/orocrm/OroCRMDotmailerBundle.git",
     "license": "OSL-3.0",
     "authors": [
@@ -11,10 +11,10 @@
     ],
     "autoload": {
         "psr-0": {
-            "OroCRM\\Bundle\\DotmailerBundle": "src/"
+            "Oro\\Bundle\\DotmailerBundle": "src/"
         }
     },
-    "target-dir": "src/OroCRM/Bundle/DotmailerBundle",
+    "target-dir": "src/Oro/Bundle/DotmailerBundle",
     "require": {
         "php": ">=5.5.9",
         "oro/crm": "1.x-dev",

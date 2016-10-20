@@ -1,11 +1,11 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Transport;
+namespace Oro\Bundle\DotmailerBundle\Transport;
 
-use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign;
-use OroCRM\Bundle\CampaignBundle\Transport\TransportInterface;
-use OroCRM\Bundle\CampaignBundle\Transport\VisibilityTransportInterface;
-use OroCRM\Bundle\DotmailerBundle\Form\Type\DotmailerTransportSettingsType;
+use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
+use Oro\Bundle\CampaignBundle\Transport\TransportInterface;
+use Oro\Bundle\CampaignBundle\Transport\VisibilityTransportInterface;
+use Oro\Bundle\DotmailerBundle\Form\Type\DotmailerTransportSettingsType;
 
 class DotmailerEmailCampaignTransport implements TransportInterface, VisibilityTransportInterface
 {
@@ -32,7 +32,7 @@ class DotmailerEmailCampaignTransport implements TransportInterface, VisibilityT
      */
     public function getLabel()
     {
-        return 'orocrm.dotmailer.emailcampaign.transport.' . self::NAME;
+        return 'oro.dotmailer.emailcampaign.transport.' . self::NAME;
     }
 
     /**
@@ -48,7 +48,7 @@ class DotmailerEmailCampaignTransport implements TransportInterface, VisibilityT
      */
     public function getSettingsEntityFQCN()
     {
-        return 'OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransportSettings';
+        return 'Oro\Bundle\DotmailerBundle\Entity\DotmailerTransportSettings';
     }
 
     /**

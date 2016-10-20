@@ -1,12 +1,12 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Model;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Model;
 
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
 use Oro\Bundle\EntityBundle\Provider\VirtualFieldProviderInterface;
-use OroCRM\Bundle\DotmailerBundle\Model\FieldHelper;
+use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
 
 class FieldHelperTest extends \PHPUnit_Framework_TestCase
 {

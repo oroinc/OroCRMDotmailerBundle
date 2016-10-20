@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
+namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 abstract class OverlapIterator extends AbstractIterator
 {

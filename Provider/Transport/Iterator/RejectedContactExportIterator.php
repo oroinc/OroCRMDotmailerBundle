@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
+namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -32,7 +32,7 @@ class RejectedContactExportIterator extends AbstractIterator
     protected function getItems($take, $skip)
     {
         $items = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContact')
+            ->getRepository('OroDotmailerBundle:AddressBookContact')
             ->getAddressBookContactsByExportId($this->exportId, $take, $skip);
 
         return $items;

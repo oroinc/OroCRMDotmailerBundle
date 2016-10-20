@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Entity;
+namespace Oro\Bundle\DotmailerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,12 +10,11 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
-
-use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign;
-use OroCRM\Bundle\DotmailerBundle\Model\ExtendCampaign;
+use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
+use Oro\Bundle\DotmailerBundle\Model\ExtendCampaign;
 
 /**
- * @ORM\Entity(repositoryClass="OroCRM\Bundle\DotmailerBundle\Entity\Repository\CampaignRepository")
+ * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\CampaignRepository")
  * @ORM\Table(
  *      name="orocrm_dm_campaign",
  *      uniqueConstraints={
@@ -239,7 +238,7 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
     /**
      * @var EmailCampaign
      *
-     * @ORM\OneToOne(targetEntity="OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign")
+     * @ORM\OneToOne(targetEntity="Oro\Bundle\CampaignBundle\Entity\EmailCampaign")
      * @ORM\JoinColumn(name="email_campaign_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $emailCampaign;
@@ -248,7 +247,7 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
      * @var CampaignSummary
      *
      * @ORM\OneToOne(
-     *     targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\CampaignSummary",
+     *     targetEntity="Oro\Bundle\DotmailerBundle\Entity\CampaignSummary",
      *     cascade={"persist"}, mappedBy="campaign"
      * )
      * @ORM\JoinColumn(name="campaign_summary_id", referencedColumnName="id", onDelete="SET NULL", nullable=true)

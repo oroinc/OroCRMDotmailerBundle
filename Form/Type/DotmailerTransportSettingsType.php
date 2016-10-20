@@ -1,15 +1,15 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Form\Type;
+namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-use OroCRM\Bundle\CampaignBundle\Form\Type\AbstractTransportSettingsType;
+use Oro\Bundle\CampaignBundle\Form\Type\AbstractTransportSettingsType;
 
 class DotmailerTransportSettingsType extends AbstractTransportSettingsType
 {
-    const NAME = 'orocrm_dotmailer_email_transport_settings';
+    const NAME = 'oro_dotmailer_email_transport_settings';
 
     /**
      * {@inheritdoc}
@@ -19,9 +19,9 @@ class DotmailerTransportSettingsType extends AbstractTransportSettingsType
         $builder
             ->add(
                 'channel',
-                'orocrm_dotmailer_integration_select',
+                'oro_dotmailer_integration_select',
                 [
-                    'label' => 'orocrm.dotmailer.emailcampaign.integration.label',
+                    'label' => 'oro.dotmailer.emailcampaign.integration.label',
                     'required' => true
                 ]
             );
@@ -36,7 +36,7 @@ class DotmailerTransportSettingsType extends AbstractTransportSettingsType
     {
         $resolver->setDefaults(
             [
-                'data_class' => 'OroCRM\Bundle\DotmailerBundle\Entity\DotmailerTransportSettings'
+                'data_class' => 'Oro\Bundle\DotmailerBundle\Entity\DotmailerTransportSettings'
             ]
         );
     }

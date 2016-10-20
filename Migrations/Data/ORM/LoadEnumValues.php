@@ -1,14 +1,14 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Migrations\Data\ORM;
+namespace Oro\Bundle\DotmailerBundle\Migrations\Data\ORM;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
-use OroCRM\Bundle\DotmailerBundle\Entity\Campaign;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
+use Oro\Bundle\DotmailerBundle\Entity\Campaign;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
 
 class LoadEnumValues extends AbstractEnumFixture
 {

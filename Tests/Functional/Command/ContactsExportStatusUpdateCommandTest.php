@@ -1,11 +1,10 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Command;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Command;
 
-use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
+use Oro\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-
-use OroCRM\Bundle\DotmailerBundle\Command\ContactsExportStatusUpdateCommand;
+use Oro\Bundle\DotmailerBundle\Command\ContactsExportStatusUpdateCommand;
 
 /**
  * @dbIsolation
@@ -27,13 +26,13 @@ class ContactsExportStatusUpdateCommandTest extends WebTestCase
         $this->initClient();
         $this->loadFixtures(
             [
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData',
+                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData',
             ]
         );
 
         $this->exportManager = $this->getContainer()
             ->get(ContactsExportStatusUpdateCommand::EXPORT_MANAGER);
-        $this->exportManagerMock = $this->getMockBuilder('OroCRM\Bundle\DotmailerBundle\Model\ExportManager')
+        $this->exportManagerMock = $this->getMockBuilder('Oro\Bundle\DotmailerBundle\Model\ExportManager')
             ->disableOriginalConstructor()
             ->getMock();
         $this->getContainer()
@@ -57,11 +56,11 @@ class ContactsExportStatusUpdateCommandTest extends WebTestCase
 
     public function testExecute()
     {
-        $notExportedChannel = $this->getReference('orocrm_dotmailer.channel.third');
-        $secondNotExportedChannel = $this->getReference('orocrm_dotmailer.channel.fourth');
+        $notExportedChannel = $this->getReference('oro_dotmailer.channel.third');
+        $secondNotExportedChannel = $this->getReference('oro_dotmailer.channel.fourth');
 
-        $exportedChannel = $this->getReference('orocrm_dotmailer.channel.first');
-        $secondExportedChannel = $this->getReference('orocrm_dotmailer.channel.second');
+        $exportedChannel = $this->getReference('oro_dotmailer.channel.first');
+        $secondExportedChannel = $this->getReference('oro_dotmailer.channel.second');
 
         $this->exportManagerMock
             ->expects($this->any())

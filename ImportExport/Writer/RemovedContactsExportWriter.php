@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Writer;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Writer;
 
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 use Akeneo\Bundle\BatchBundle\Item\ItemWriterInterface;
@@ -17,11 +17,10 @@ use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-
-use OroCRM\Bundle\DotmailerBundle\ImportExport\Processor\RemovedExportProcessor;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemovedContactsExportIterator;
-use OroCRM\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
+use Oro\Bundle\DotmailerBundle\ImportExport\Processor\RemovedExportProcessor;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemovedContactsExportIterator;
+use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 
 class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionAwareInterface
 {
@@ -91,7 +90,7 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
          */
         $this->context->setValue(RemovedExportProcessor::CURRENT_BATCH_READ_ITEMS, []);
 
-        $repository = $this->registry->getRepository('OroCRMDotmailerBundle:AddressBookContact');
+        $repository = $this->registry->getRepository('OroDotmailerBundle:AddressBookContact');
 
         $addressBookItems = [];
         foreach ($items as $item) {

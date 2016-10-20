@@ -1,13 +1,13 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Form\Handler;
+namespace Oro\Bundle\DotmailerBundle\Form\Handler;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 
 class ConnectionUpdateFormHandler
 {

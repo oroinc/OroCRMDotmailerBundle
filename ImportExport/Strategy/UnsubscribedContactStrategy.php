@@ -1,13 +1,13 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
-use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIterator;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIterator;
 
 class UnsubscribedContactStrategy extends AbstractImportStrategy
 {
@@ -22,7 +22,7 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
             throw new \RuntimeException(
                 sprintf(
                     'Argument must be an instance of "%s", but "%s" is given',
-                    'OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact',
+                    'Oro\Bundle\DotmailerBundle\Entity\AddressBookContact',
                     is_object($entity) ? get_class($entity) : gettype($entity)
                 )
             );
@@ -85,7 +85,7 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
     protected function getExistingAddressBookContact(AddressBook $addressBook, Contact $contact)
     {
         $addressBookContact = $this->registry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContact')
+            ->getRepository('OroDotmailerBundle:AddressBookContact')
             ->findOneBy(['addressBook' => $addressBook, 'contact' => $contact]);
 
         return $addressBookContact;
@@ -146,7 +146,7 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
              * Two separated query used because of performance issue
              */
             $contact = $this->registry
-                ->getRepository('OroCRMDotmailerBundle:Contact')
+                ->getRepository('OroDotmailerBundle:Contact')
                 ->createQueryBuilder('contact')
                 ->addSelect('addressBookContacts')
                 ->where('contact.channel = :channel')
@@ -159,7 +159,7 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
 
             if (!$contact) {
                 $contact = $this->registry
-                    ->getRepository('OroCRMDotmailerBundle:Contact')
+                    ->getRepository('OroDotmailerBundle:Contact')
                     ->createQueryBuilder('contact')
                     ->addSelect('addressBookContacts')
                     ->where('contact.channel = :channel')
@@ -188,7 +188,7 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
         $addressBookOriginId = $originalValue[UnsubscribedContactIterator::ADDRESS_BOOK_KEY];
         $addressBook = $this->cacheProvider->getCachedItem(self::CACHED_ADDRESS_BOOK, $addressBookOriginId);
         if (!$addressBook) {
-            $addressBook = $this->registry->getRepository('OroCRMDotmailerBundle:AddressBook')
+            $addressBook = $this->registry->getRepository('OroDotmailerBundle:AddressBook')
                 ->findOneBy(
                     [
                         'channel'  => $this->getChannel(),

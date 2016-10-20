@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -10,15 +10,14 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
-use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector;
 
 class LoadChannelData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
@@ -42,8 +41,8 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
                 ContactConnector::TYPE,
                 ExportContactConnector::TYPE
             ],
-            'transport' => 'orocrm_dotmailer.transport.first',
-            'reference' => 'orocrm_dotmailer.channel.first'
+            'transport' => 'oro_dotmailer.transport.first',
+            'reference' => 'oro_dotmailer.channel.first'
         ],
         [
             'name' => 'second channel',
@@ -56,8 +55,8 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
                 ContactConnector::TYPE,
                 ExportContactConnector::TYPE
             ],
-            'transport' => 'orocrm_dotmailer.transport.second',
-            'reference' => 'orocrm_dotmailer.channel.second'
+            'transport' => 'oro_dotmailer.transport.second',
+            'reference' => 'oro_dotmailer.channel.second'
         ],
         [
             'name' => 'third channel',
@@ -70,8 +69,8 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
                 ContactConnector::TYPE,
                 ExportContactConnector::TYPE
             ],
-            'transport' => 'orocrm_dotmailer.transport.third',
-            'reference' => 'orocrm_dotmailer.channel.third'
+            'transport' => 'oro_dotmailer.transport.third',
+            'reference' => 'oro_dotmailer.channel.third'
         ],
         [
             'name' => 'fourth channel',
@@ -84,8 +83,8 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
                 ContactConnector::TYPE,
                 ExportContactConnector::TYPE
             ],
-            'transport' => 'orocrm_dotmailer.transport.fourth',
-            'reference' => 'orocrm_dotmailer.channel.fourth'
+            'transport' => 'oro_dotmailer.transport.fourth',
+            'reference' => 'oro_dotmailer.channel.fourth'
         ]
     ];
 
@@ -128,7 +127,7 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
     public function getDependencies()
     {
         return [
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadTransportData'
+            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadTransportData'
         ];
     }
 }

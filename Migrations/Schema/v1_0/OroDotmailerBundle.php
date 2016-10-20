@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0;
+namespace Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_0;
 
 use Doctrine\DBAL\Schema\Schema;
 
@@ -11,7 +11,7 @@ use Oro\Bundle\MigrationBundle\Migration\OrderedMigrationInterface;
 /**
  * @SuppressWarnings(PHPMD.TooManyMethods)
  */
-class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
+class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 {
     /**
      * {@inheritdoc}
@@ -29,24 +29,24 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
     {
         /** Tables generation **/
         $this->updateOroIntegrationTransportTable($schema);
-        $this->updateOroCRMCmpgnTransportStngsTable($schema);
-        $this->createOroCRMDotmailerCampaignTable($schema);
-        $this->createOroCRMDotmailerAddressBookTable($schema);
-        $this->createOroCRMDotmailerContactTable($schema);
-        $this->createOroCRMDotmailerActivityTable($schema);
-        $this->createOroCRMDotmailerCampaignSummaryTable($schema);
-        $this->createOroCRMDotmailerCampaignToABTable($schema);
+        $this->updateOroCmpgnTransportStngsTable($schema);
+        $this->createOroDotmailerCampaignTable($schema);
+        $this->createOroDotmailerAddressBookTable($schema);
+        $this->createOroDotmailerContactTable($schema);
+        $this->createOroDotmailerActivityTable($schema);
+        $this->createOroDotmailerCampaignSummaryTable($schema);
+        $this->createOroDotmailerCampaignToABTable($schema);
         $this->createOrocrmDmAbContactTable($schema);
         $this->createOrocrmDmAbCntExportTable($schema);
 
         /** Add Foreign Keys */
-        $this->addOroCRMCmpgnTransportStngsForeignKeys($schema);
-        $this->addOroCRMDotmailerCampaignForeignKeys($schema);
-        $this->addOroCRMDotmailerAddressBookForeignKeys($schema);
-        $this->addOroCRMDotmailerContactForeignKeys($schema);
-        $this->addOroCRMDotmailerActivityForeignKeys($schema);
-        $this->addOroCRMDotmailerCampaignSummaryForeignKeys($schema);
-        $this->addOroCRMDotmailerCampaignToABForeignKeys($schema);
+        $this->addOroCmpgnTransportStngsForeignKeys($schema);
+        $this->addOroDotmailerCampaignForeignKeys($schema);
+        $this->addOroDotmailerAddressBookForeignKeys($schema);
+        $this->addOroDotmailerContactForeignKeys($schema);
+        $this->addOroDotmailerActivityForeignKeys($schema);
+        $this->addOroDotmailerCampaignSummaryForeignKeys($schema);
+        $this->addOroDotmailerCampaignToABForeignKeys($schema);
         $this->addOrocrmDmAbCntExportForeignKeys($schema);
         $this->addOrocrmDmAbContactForeignKeys($schema);
     }
@@ -68,7 +68,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
      *
      * @param Schema $schema
      */
-    protected function createOroCRMDotmailerCampaignTable(Schema $schema)
+    protected function createOroDotmailerCampaignTable(Schema $schema)
     {
         $table = $schema->createTable('orocrm_dm_campaign');
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
@@ -101,7 +101,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
      *
      * @param Schema $schema
      */
-    protected function createOroCRMDotmailerAddressBookTable(Schema $schema)
+    protected function createOroDotmailerAddressBookTable(Schema $schema)
     {
         $table = $schema->createTable('orocrm_dm_address_book');
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
@@ -126,7 +126,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
      *
      * @param Schema $schema
      */
-    protected function createOroCRMDotmailerContactTable(Schema $schema)
+    protected function createOroDotmailerContactTable(Schema $schema)
     {
         $table = $schema->createTable('orocrm_dm_contact');
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
@@ -156,7 +156,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
      *
      * @param Schema $schema
      */
-    protected function createOroCRMDotmailerActivityTable(Schema $schema)
+    protected function createOroDotmailerActivityTable(Schema $schema)
     {
         $table = $schema->createTable('orocrm_dm_activity');
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
@@ -193,7 +193,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
      *
      * @param Schema $schema
      */
-    protected function updateOroCRMCmpgnTransportStngsTable(Schema $schema)
+    protected function updateOroCmpgnTransportStngsTable(Schema $schema)
     {
         $table = $schema->getTable('orocrm_cmpgn_transport_stngs');
         $table->addColumn('dotmailer_channel_id', 'integer', ['notnull' => false]);
@@ -204,7 +204,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
      *
      * @param Schema $schema
      */
-    protected function createOroCRMDotmailerCampaignSummaryTable(Schema $schema)
+    protected function createOroDotmailerCampaignSummaryTable(Schema $schema)
     {
         $table = $schema->createTable('orocrm_dm_campaign_summary');
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
@@ -279,7 +279,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
      *
      * @param Schema $schema
      */
-    protected function createOroCRMDotmailerCampaignToABTable(Schema $schema)
+    protected function createOroDotmailerCampaignToABTable(Schema $schema)
     {
         $table = $schema->createTable('orocrm_dm_campaign_to_ab');
         $table->addColumn('campaign_id', 'integer', []);
@@ -337,7 +337,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
      *
      * @param Schema $schema
      */
-    protected function addOroCRMDotmailerCampaignForeignKeys(Schema $schema)
+    protected function addOroDotmailerCampaignForeignKeys(Schema $schema)
     {
         $table = $schema->getTable('orocrm_dm_campaign');
         $table->addForeignKeyConstraint(
@@ -371,7 +371,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
      *
      * @param Schema $schema
      */
-    protected function addOroCRMDotmailerAddressBookForeignKeys(Schema $schema)
+    protected function addOroDotmailerAddressBookForeignKeys(Schema $schema)
     {
         $table = $schema->getTable('orocrm_dm_address_book');
         $table->addForeignKeyConstraint(
@@ -399,7 +399,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
      *
      * @param Schema $schema
      */
-    protected function addOroCRMDotmailerContactForeignKeys(Schema $schema)
+    protected function addOroDotmailerContactForeignKeys(Schema $schema)
     {
         $table = $schema->getTable('orocrm_dm_contact');
         $table->addForeignKeyConstraint(
@@ -421,7 +421,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
      *
      * @param Schema $schema
      */
-    protected function addOroCRMDotmailerActivityForeignKeys(Schema $schema)
+    protected function addOroDotmailerActivityForeignKeys(Schema $schema)
     {
         $table = $schema->getTable('orocrm_dm_activity');
         $table->addForeignKeyConstraint(
@@ -455,7 +455,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
      *
      * @param Schema $schema
      */
-    protected function addOroCRMCmpgnTransportStngsForeignKeys(Schema $schema)
+    protected function addOroCmpgnTransportStngsForeignKeys(Schema $schema)
     {
         $table = $schema->getTable('orocrm_cmpgn_transport_stngs');
         $table->addForeignKeyConstraint(
@@ -471,7 +471,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
      *
      * @param Schema $schema
      */
-    protected function addOroCRMDotmailerCampaignSummaryForeignKeys(Schema $schema)
+    protected function addOroDotmailerCampaignSummaryForeignKeys(Schema $schema)
     {
         $table = $schema->getTable('orocrm_dm_campaign_summary');
         $table->addForeignKeyConstraint(
@@ -499,7 +499,7 @@ class OroCRMDotmailerBundle implements Migration, OrderedMigrationInterface
      *
      * @param Schema $schema
      */
-    protected function addOroCRMDotmailerCampaignToABForeignKeys(Schema $schema)
+    protected function addOroDotmailerCampaignToABForeignKeys(Schema $schema)
     {
         $table = $schema->getTable('orocrm_dm_campaign_to_ab');
         $table->addForeignKeyConstraint(

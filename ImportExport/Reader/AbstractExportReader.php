@@ -1,10 +1,10 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Reader;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Reader;
 
 use Oro\Bundle\ImportExportBundle\Exception\LogicException;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 
 abstract class AbstractExportReader extends AbstractReader
 {
@@ -41,7 +41,7 @@ abstract class AbstractExportReader extends AbstractReader
         $addressBookId = $this->context->getOption(self::ADDRESS_BOOK_RESTRICTION_OPTION);
 
         return $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->getRepository('OroDotmailerBundle:AddressBook')
             ->getAddressBooksToSync($this->getChannel(), $addressBookId);
     }
 

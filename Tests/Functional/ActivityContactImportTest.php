@@ -1,10 +1,10 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiCampaignContactSummaryList;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
 
 /**
  * @dbIsolation
@@ -16,8 +16,8 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
         parent::setUp();
         $this->loadFixtures(
             [
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadActivityData',
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData',
+                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadActivityData',
+                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData',
             ]
         );
     }
@@ -46,7 +46,7 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
             ->method('GetCampaignActivities')
             ->with($secondCampaignId)
             ->will($this->returnValue($entity));
-        $channel = $this->getReference('orocrm_dotmailer.channel.second');
+        $channel = $this->getReference('oro_dotmailer.channel.second');
 
         $result = $this->runImportExportConnectorsJob(
             self::SYNC_PROCESSOR,
@@ -58,7 +58,7 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-        $activityContactRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:Activity');
+        $activityContactRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:Activity');
 
         foreach ($expected as $activityExpected) {
             $searchCriteria = [
@@ -113,7 +113,7 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
                         'unsubscribed'         => false,
                         'softBounced'          => false,
                         'hardBounced'          => false,
-                        'contactid'            => 'orocrm_dotmailer.contact.alex_case.second_channel',
+                        'contactid'            => 'oro_dotmailer.contact.alex_case.second_channel',
                     ],
                     [
                         'email'                => 'first@mail.com',
@@ -130,7 +130,7 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
                         'unsubscribed'         => false,
                         'softBounced'          => false,
                         'hardBounced'          => false,
-                        'contactid'            => 'orocrm_dotmailer.contact.first',
+                        'contactid'            => 'oro_dotmailer.contact.first',
                     ],
                 ],
                 'activityList' => [
