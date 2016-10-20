@@ -1,0 +1,4 @@
+orocrm_dotmailer_datafield_api:
+    resource: "@OroCRMDotmailerBundle/Controller/Api/Rest/DataFieldController.php"
+    type:     rest
+

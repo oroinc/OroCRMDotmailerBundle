@@ -11,6 +11,7 @@ use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 
 use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_0;
 use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_2;
+use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_3;
 
 class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwareInterface
 {
@@ -49,6 +50,13 @@ class OroCRMDotmailerBundleInstaller implements Installation, ExtendExtensionAwa
 
         $addSyncDateColumns = new v1_2\AddSyncDateColumns();
         $addSyncDateColumns->addLastImportedAt($schema);
+
+        $migration = new v1_3\AddDotmailerDataField();
+        $migration->up($schema, $queries);
+
+        $addEnumFieldsMigration = new v1_3\AddDataFieldEnumFields();
+        $addEnumFieldsMigration->setExtendExtension($this->extendExtension);
+        $addEnumFieldsMigration->up($schema, $queries);
 
         $this->renameLastSyncedColumn($schema);
     }

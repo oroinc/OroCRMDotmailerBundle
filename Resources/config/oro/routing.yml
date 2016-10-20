@@ -2,3 +2,12 @@ orocrm_dotmailer_bundle:
     resource:     "@OroCRMDotmailerBundle/Controller"
     type:         annotation
     prefix:       /dotmailer
+
+orocrm_dotmailer_bundle_api:
+    resource: "@OroCRMDotmailerBundle/Resources/config/oro/routing_api.yml"
+    type: rest
+    prefix: api/rest/{version}
+    requirements:
+        version:  latest|v1
+    defaults:
+        version:  latest

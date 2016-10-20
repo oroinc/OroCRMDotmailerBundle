@@ -44,3 +44,70 @@ datagrids:
                     data_name: addressBook.contactCount
         properties:
             id: ~
+
+    orocrm_dotmailer_datafield_grid:
+        extended_entity_name: %orocrm_dotmailer.entity.datafield.class%
+        options:
+            entityHint: Data fields list
+        source:
+            type: orm
+            query:
+                select:
+                    - field.id
+                    - field.name
+                    - channel.name as channelName
+                from:
+                    - { table: %orocrm_dotmailer.entity.datafield.class%, alias: field }
+                join:
+                    left:
+                        - { join: field.channel, alias: channel }
+        columns:
+            channelName:
+                label: orocrm.dotmailer.datafield.channel.label
+            name:
+                label: orocrm.dotmailer.datafield.name.label
+        sorters:
+            columns:
+                name:
+                    data_name: field.name
+                channelName:
+                    data_name: field_visibility.id
+            default:
+                name: ASC
+        filters:
+            columns:
+                channelName:
+                    type: entity
+                    data_name: channel.id
+                    options:
+                        field_options:
+                            class: "OroIntegrationBundle:Channel"
+                            property: name
+                            translatable_options: false
+                name:
+                    type: string
+                    data_name: field.name
+        properties:
+            id: ~
+            view_link:
+                type:       url
+                route:      orocrm_dotmailer_datafield_view
+                params:     [ id ]
+            delete_link:
+                type:       url
+                route:      oro_api_delete_dotmailer_datafield
+                params:     [ id ]
+        actions:
+            view:
+                type:          navigate
+                acl_resource:  orocrm_dotmailer_datafield_view
+                label:         oro.grid.action.view
+                icon:          eye-open
+                link:          view_link
+                rowAction:     true
+            delete:
+                type:          delete
+                acl_resource:  orocrm_dotmailer_datafield_delete
+                label:         oro.grid.action.delete
+                icon:          trash
+                link:          delete_link

@@ -1,0 +1,15 @@
+{% extends 'OroUIBundle:actions:index.html.twig' %}
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+{% set gridName = 'orocrm_dotmailer_datafield_grid' %}
+{% set pageTitle = 'orocrm.dotmailer.datafield.entity_plural_label'|trans %}
+
+{% block navButtons %}
+    {% if resource_granted('orocrm_dotmailer_datafield_create') %}
+        <div class="btn-group">
+            {{ UI.addButton({
+                'path' : path('orocrm_dotmailer_datafield_create'),
+                'entity_label': 'orocrm.dotmailer.datafield.entity_label'|trans
+            }) }}
+        </div>
+    {% endif %}
+{% endblock %}

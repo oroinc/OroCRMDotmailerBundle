@@ -7,6 +7,7 @@ parameters:
     orocrm_dotmailer.entity.contact.class:                            OroCRM\Bundle\DotmailerBundle\Entity\Contact
     orocrm_dotmailer.entity.activity.class:                           OroCRM\Bundle\DotmailerBundle\Entity\Activity
     orocrm_dotmailer.entity.campaign_summary.class:                   OroCRM\Bundle\DotmailerBundle\Entity\CampaignSummary
+    orocrm_dotmailer.entity.datafield.class:                          OroCRM\Bundle\DotmailerBundle\Entity\DataField
 
     # Integration related services
     orocrm_dotmailer.provider.channel_type.class:                           OroCRM\Bundle\DotmailerBundle\Provider\ChannelType
@@ -29,6 +30,7 @@ parameters:
     orocrm_dotmailer.form.type.address_book_select.class:             OroCRM\Bundle\DotmailerBundle\Form\Type\AddressBookSelectType
     orocrm_dotmailer.form.type.transport_check.class:                 OroCRM\Bundle\DotmailerBundle\Form\Type\DotmailerTransportCheckButtonType
     orocrm_dotmailer.form.extension.channel_connectors.class:         OroCRM\Bundle\DotmailerBundle\Form\Extension\ChannelConnectorsExtension
+    orocrm_dotmailer.form.type.datafield.class:                       OroCRM\Bundle\DotmailerBundle\Form\Type\DataFieldType
 
     #Form handlers
     orocrm_dotmailer.form.handler.connection_update.class:            OroCRM\Bundle\DotmailerBundle\Form\Handler\ConnectionUpdateFormHandler
@@ -188,6 +190,20 @@ services:
         class: %orocrm_dotmailer.form.type.transport_check.class%
         tags:
             - { name: form.type, alias: orocrm_dotmailer_transport_check_button }
+
+    orocrm_dotmailer.form.type.datafield:
+        class: %orocrm_dotmailer.form.type.datafield.class%
+        arguments:
+            - "%orocrm_dotmailer.entity.datafield.class%"
+        tags:
+            - { name: form.type, alias: "orocrm_dotmailer_data_field" }
+
+    orocrm_dotmailer.datafield.manager.api:
+        class: 'Oro\Bundle\SoapBundle\Entity\Manager\ApiEntityManager'
+        parent: oro_soap.manager.entity_manager.abstract
+        arguments:
+            - "%orocrm_dotmailer.entity.datafield.class%"
+            - "@doctrine.orm.entity_manager"
 
     #Form handlers
     orocrm_dotmailer.form.handler.connection_update:

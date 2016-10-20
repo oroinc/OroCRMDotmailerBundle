@@ -194,6 +194,20 @@ orocrm:
             channel.label:                    Integration
             faults_processed.label:           Faults Processed
 
+        datafield:
+            select.placeholder:               Select Data Field
+            entity_label:                     Data Field
+            entity_plural_label:              Data Fields
+            channel.label:                    Channel
+            id.label:                         Id
+            name.label:                       Name
+            owner.label:                      Owner
+            visibility.label:                 Visibility
+            type.label:                       Type
+            default_value.label:              Default Value
+            notes.label:                      Notes
+            synced.label:                     Is Synchronized
+
         connector:
             campaign:
                 label:  Campaign Connector
@@ -326,3 +340,10 @@ orocrm:
                 tooltip: API User.
             password:
                 tooltip: API User Password.
+
+        controller:
+            datafield.saved.message: Data Field Saved
+
+        block:
+            general: General
+            additional: Additional
