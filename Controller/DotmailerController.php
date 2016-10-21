@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Controller;
+namespace Oro\Bundle\DotmailerBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -10,10 +10,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
-
-use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign;
-use OroCRM\Bundle\DotmailerBundle\Exception\RestClientException;
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
+use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
+use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 
 /**
  * @Route("/dotmailer")
@@ -22,12 +21,12 @@ class DotmailerController extends Controller
 {
     /**
      * @Route("/email-campaign-status/{entity}",
-     *      name="orocrm_dotmailer_email_campaign_status",
+     *      name="oro_dotmailer_email_campaign_status",
      *      requirements={"entity"="\d+"})
      * @ParamConverter("emailCampaign",
-     *      class="OroCRMCampaignBundle:EmailCampaign",
+     *      class="OroCampaignBundle:EmailCampaign",
      *      options={"id" = "entity"})
-     * @AclAncestor("orocrm_dotmailer")
+     * @AclAncestor("oro_dotmailer")
      *
      * @Template
      *
@@ -37,19 +36,19 @@ class DotmailerController extends Controller
     public function emailCampaignStatsAction(EmailCampaign $emailCampaign)
     {
         $campaign = $this->getDoctrine()
-            ->getRepository('OroCRMDotmailerBundle:CampaignSummary')
+            ->getRepository('OroDotmailerBundle:CampaignSummary')
             ->getSummaryByEmailCampaign($emailCampaign);
         return ['campaignStats' => $campaign];
     }
 
     /**
      * @Route("/sync-status/{marketingList}",
-     *      name="orocrm_dotmailer_sync_status",
+     *      name="oro_dotmailer_sync_status",
      *      requirements={"marketingList"="\d+"})
      * @ParamConverter("marketingList",
-     *      class="OroCRMMarketingListBundle:MarketingList",
+     *      class="OroMarketingListBundle:MarketingList",
      *      options={"id" = "marketingList"})
-     * @AclAncestor("orocrm_dotmailer")
+     * @AclAncestor("oro_dotmailer")
      *
      * @Template
      *
@@ -58,26 +57,26 @@ class DotmailerController extends Controller
      */
     public function marketingListSyncStatusAction(MarketingList $marketingList)
     {
-        $addressBook = $this->getDoctrine()->getRepository('OroCRMDotmailerBundle:AddressBook')
+        $addressBook = $this->getDoctrine()->getRepository('OroDotmailerBundle:AddressBook')
             ->findOneBy(['marketingList' => $marketingList]);
 
         return ['address_book' => $addressBook];
     }
 
     /**
-     * @Route("/ping", name="orocrm_dotmailer_ping")
-     * @AclAncestor("orocrm_dotmailer")
+     * @Route("/ping", name="oro_dotmailer_ping")
+     * @AclAncestor("oro_dotmailer")
      */
     public function pingAction()
     {
         $username = $this->getRequest()->get('username');
         $password = $this->getRequest()->get('password');
 
-        $dotmailerResourceFactory = $this->get('orocrm_dotmailer.transport.resources_factory');
+        $dotmailerResourceFactory = $this->get('oro_dotmailer.transport.resources_factory');
         try {
             $dotmailerResourceFactory->createResources($username, $password);
             $result = [
-                'msg' => $this->get('translator')->trans('orocrm.dotmailer.integration.connection_successful.label')
+                'msg' => $this->get('translator')->trans('oro.dotmailer.integration.connection_successful.label')
             ];
         } catch (\Exception $exception) {
             $message = $exception->getMessage();

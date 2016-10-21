@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\CampaignSummary;
+use Oro\Bundle\DotmailerBundle\Entity\CampaignSummary;
 
 class LoadCampaignSummaryData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
@@ -31,10 +31,10 @@ class LoadCampaignSummaryData extends AbstractFixture implements ContainerAwareI
             'numClicks' => 5,
             'numTextClicks' => 5,
             'numTotalClicks' => 5,
-            'owner'         => 'orocrm_dotmailer.organization.foo',
-            'channel'       => 'orocrm_dotmailer.channel.second',
-            'campaign'     => 'orocrm_dotmailer.campaign.first',
-            'reference'     => 'orocrm_dotmailer.campaign_summary.first',
+            'owner'         => 'oro_dotmailer.organization.foo',
+            'channel'       => 'oro_dotmailer.channel.second',
+            'campaign'     => 'oro_dotmailer.campaign.first',
+            'reference'     => 'oro_dotmailer.campaign_summary.first',
         ],
     ];
 
@@ -63,7 +63,7 @@ class LoadCampaignSummaryData extends AbstractFixture implements ContainerAwareI
     public function getDependencies()
     {
         return [
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadCampaignData',
+            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadCampaignData',
         ];
     }
 }

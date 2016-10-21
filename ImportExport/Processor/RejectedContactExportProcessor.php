@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Processor;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Processor;
 
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 
@@ -11,8 +11,8 @@ use Psr\Log\LoggerInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\ImportExportBundle\Processor\StepExecutionAwareProcessor;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 
 class RejectedContactExportProcessor implements StepExecutionAwareProcessor
 {
@@ -62,7 +62,7 @@ class RejectedContactExportProcessor implements StepExecutionAwareProcessor
             throw new RuntimeException(
                 sprintf(
                     '"%s" expected, "%s" given',
-                    'OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact',
+                    'Oro\Bundle\DotmailerBundle\Entity\AddressBookContact',
                     is_object($item) ? get_class($item) : gettype($item)
                 )
             );

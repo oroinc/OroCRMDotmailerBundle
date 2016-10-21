@@ -1,12 +1,12 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use OroCRM\Bundle\ContactBundle\Entity\Contact;
-use OroCRM\Bundle\ContactBundle\Entity\ContactEmail;
+use Oro\Bundle\ContactBundle\Entity\Contact;
+use Oro\Bundle\ContactBundle\Entity\ContactEmail;
 
 class LoadContactData extends AbstractFixture implements DependentFixtureInterface
 {
@@ -15,72 +15,72 @@ class LoadContactData extends AbstractFixture implements DependentFixtureInterfa
             'firstName'    => 'Daniel',
             'lastName'     => 'Case',
             'email'        => 'daniel.case@example.com',
-            'organization' => 'orocrm_dotmailer.organization.foo',
-            'owner'        => 'orocrm_dotmailer.user.john.doe',
-            'reference'    => 'orocrm_dotmailer.orocrm_contact.daniel.case',
+            'organization' => 'oro_dotmailer.organization.foo',
+            'owner'        => 'oro_dotmailer.user.john.doe',
+            'reference'    => 'oro_dotmailer.orocrm_contact.daniel.case',
         ],
         [
             'firstName'    => 'John',
             'lastName'     => 'Case',
             'email'        => 'john.case@example.com',
-            'organization' => 'orocrm_dotmailer.organization.foo',
-            'owner'        => 'orocrm_dotmailer.user.john.doe',
-            'reference'    => 'orocrm_dotmailer.orocrm_contact.john.case',
+            'organization' => 'oro_dotmailer.organization.foo',
+            'owner'        => 'oro_dotmailer.user.john.doe',
+            'reference'    => 'oro_dotmailer.orocrm_contact.john.case',
         ],
         [
             'firstName'    => 'Jack',
             'lastName'     => 'Case',
             'email'        => 'jack.case@example.com',
-            'organization' => 'orocrm_dotmailer.organization.foo',
-            'owner'        => 'orocrm_dotmailer.user.john.doe',
-            'reference'    => 'orocrm_dotmailer.orocrm_contact.jack.case',
+            'organization' => 'oro_dotmailer.organization.foo',
+            'owner'        => 'oro_dotmailer.user.john.doe',
+            'reference'    => 'oro_dotmailer.orocrm_contact.jack.case',
         ],
         [
             'firstName'    => 'Alex',
             'lastName'     => 'Case',
             'email'        => 'alex.case@example.com',
-            'organization' => 'orocrm_dotmailer.organization.foo',
-            'owner'        => 'orocrm_dotmailer.user.john.doe',
-            'reference'    => 'orocrm_dotmailer.orocrm_contact.alex.case',
+            'organization' => 'oro_dotmailer.organization.foo',
+            'owner'        => 'oro_dotmailer.user.john.doe',
+            'reference'    => 'oro_dotmailer.orocrm_contact.alex.case',
         ],
         [
             'firstName'    => 'Allen',
             'lastName'     => 'Case',
             'email'        => 'allen.case@example.com',
-            'organization' => 'orocrm_dotmailer.organization.foo',
-            'owner'        => 'orocrm_dotmailer.user.john.doe',
-            'reference'    => 'orocrm_dotmailer.orocrm_contact.allen.case',
+            'organization' => 'oro_dotmailer.organization.foo',
+            'owner'        => 'oro_dotmailer.user.john.doe',
+            'reference'    => 'oro_dotmailer.orocrm_contact.allen.case',
         ],
         [
             'firstName'    => 'Without email',
             'lastName'     => 'Case',
-            'organization' => 'orocrm_dotmailer.organization.foo',
-            'owner'        => 'orocrm_dotmailer.user.john.doe',
-            'reference'    => 'orocrm_dotmailer.orocrm_contact.without_email.case',
+            'organization' => 'oro_dotmailer.organization.foo',
+            'owner'        => 'oro_dotmailer.user.john.doe',
+            'reference'    => 'oro_dotmailer.orocrm_contact.without_email.case',
         ],
         [
             'firstName'    => 'John',
             'lastName'     => 'Smith',
             'email'        => 'john.smith@example.com',
-            'organization' => 'orocrm_dotmailer.organization.foo',
-            'owner'        => 'orocrm_dotmailer.user.john.doe',
-            'reference'    => 'orocrm_dotmailer.orocrm_contact.john.smith',
+            'organization' => 'oro_dotmailer.organization.foo',
+            'owner'        => 'oro_dotmailer.user.john.doe',
+            'reference'    => 'oro_dotmailer.orocrm_contact.john.smith',
         ],
         [
             'firstName'    => 'Nick',
             'lastName'     => 'Case',
             'email'        => 'nick.case@example.com',
-            'organization' => 'orocrm_dotmailer.organization.foo',
-            'owner'        => 'orocrm_dotmailer.user.john.doe',
-            'reference'    => 'orocrm_dotmailer.orocrm_contact.nick.case',
+            'organization' => 'oro_dotmailer.organization.foo',
+            'owner'        => 'oro_dotmailer.user.john.doe',
+            'reference'    => 'oro_dotmailer.orocrm_contact.nick.case',
         ],
         [
             'firstName'    => 'Mike',
             'lastName'     => 'Case',
             'email'        => 'mike.case@example.com',
-            'organization' => 'orocrm_dotmailer.organization.foo',
-            'owner'        => 'orocrm_dotmailer.user.john.doe',
-            'reference'    => 'orocrm_dotmailer.orocrm_contact.mike.case',
+            'organization' => 'oro_dotmailer.organization.foo',
+            'owner'        => 'oro_dotmailer.user.john.doe',
+            'reference'    => 'oro_dotmailer.orocrm_contact.mike.case',
         ]
     ];
 
@@ -115,7 +115,7 @@ class LoadContactData extends AbstractFixture implements DependentFixtureInterfa
     public function getDependencies()
     {
         return [
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadUserData',
+            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadUserData',
         ];
     }
 }

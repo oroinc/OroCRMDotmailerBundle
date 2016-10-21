@@ -1,8 +1,8 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Placeholder;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Placeholder;
 
-use OroCRM\Bundle\DotmailerBundle\Placeholders\MarketingListPlaceholderFilter;
+use Oro\Bundle\DotmailerBundle\Placeholders\MarketingListPlaceholderFilter;
 
 class MarketingListPlaceholderFilterTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,7 +39,7 @@ class MarketingListPlaceholderFilterTest extends \PHPUnit_Framework_TestCase
         $actual = $this->target->isApplicableOnMarketingList(new \StdClass());
         $this->assertFalse($actual);
 
-        $entity = $this->getMock('OroCRM\Bundle\MarketingListBundle\Entity\MarketingList');
+        $entity = $this->getMock('Oro\Bundle\MarketingListBundle\Entity\MarketingList');
         $this->repository
             ->expects($this->at(0))
             ->method('findOneBy')

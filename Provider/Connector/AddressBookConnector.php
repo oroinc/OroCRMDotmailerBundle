@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider\Connector;
+namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
 class AddressBookConnector extends AbstractDotmailerConnector
 {
@@ -22,7 +22,7 @@ class AddressBookConnector extends AbstractDotmailerConnector
      */
     public function getLabel()
     {
-        return 'orocrm.dotmailer.connector.address_book.label';
+        return 'oro.dotmailer.connector.address_book.label';
     }
 
     /**

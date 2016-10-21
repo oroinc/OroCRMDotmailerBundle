@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider\Connector;
+namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
 class ActivityContactConnector extends AbstractDotmailerConnector
 {
@@ -14,10 +14,10 @@ class ActivityContactConnector extends AbstractDotmailerConnector
     {
         // Synchronize only campaign activities that are connected to marketing list.
         $campaigns = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:Campaign')
+            ->getRepository('OroDotmailerBundle:Campaign')
             ->findBy(['channel' => $this->getChannel(), 'deleted' => false]);
 
-        $activityRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:Activity');
+        $activityRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:Activity');
         $campaignsToSynchronize = [];
 
         foreach ($campaigns as $campaign) {
@@ -35,7 +35,7 @@ class ActivityContactConnector extends AbstractDotmailerConnector
      */
     public function getLabel()
     {
-        return 'orocrm.dotmailer.connector.activity_contact.label';
+        return 'oro.dotmailer.connector.activity_contact.label';
     }
 
     /**

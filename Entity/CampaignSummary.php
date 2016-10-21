@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Entity;
+namespace Oro\Bundle\DotmailerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,7 +10,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 /**
- * @ORM\Entity(repositoryClass="OroCRM\Bundle\DotmailerBundle\Entity\Repository\CampaignSummaryRepository")
+ * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\CampaignSummaryRepository")
  * @ORM\Table(
  *     name="orocrm_dm_campaign_summary",
  *     indexes={
@@ -69,7 +69,7 @@ class CampaignSummary implements ChannelAwareInterface
     /**
      * @var Campaign
      *
-     * @ORM\OneToOne(targetEntity="OroCRM\Bundle\DotmailerBundle\Entity\Campaign", inversedBy="campaignSummary")
+     * @ORM\OneToOne(targetEntity="Oro\Bundle\DotmailerBundle\Entity\Campaign", inversedBy="campaignSummary")
      * @ORM\JoinColumn(name="campaign_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      * @ConfigField(
      *      defaultValues={

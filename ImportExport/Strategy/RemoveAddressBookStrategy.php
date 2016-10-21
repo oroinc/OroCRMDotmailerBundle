@@ -1,9 +1,9 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 
 class RemoveAddressBookStrategy extends AbstractImportStrategy
 {
@@ -19,7 +19,7 @@ class RemoveAddressBookStrategy extends AbstractImportStrategy
 
             $existingEntity = $this->registry
                 ->getManager()
-                ->find('OroCRMDotmailerBundle:AddressBook', $entity->getId());
+                ->find('OroDotmailerBundle:AddressBook', $entity->getId());
 
             if (!$existingEntity) {
                 return null;

@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_1;
+namespace Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_1;
 
 use Doctrine\DBAL\Platforms\PostgreSQL92Platform;
 

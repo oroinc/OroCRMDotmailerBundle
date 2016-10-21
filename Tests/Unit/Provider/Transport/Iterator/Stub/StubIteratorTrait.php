@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator\Stub;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator\Stub;
 
 trait StubIteratorTrait
 {

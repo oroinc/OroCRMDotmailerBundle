@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Model;
+namespace Oro\Bundle\DotmailerBundle\Model;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -9,10 +9,10 @@ use Oro\Bundle\ImportExportBundle\Job\JobResult;
 use Oro\Bundle\ImportExportBundle\Processor\ProcessorRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\ImportExport\Job\Executor;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
 class ExportManager
 {
@@ -62,7 +62,7 @@ class ExportManager
     public function isExportFinished(Channel $channel)
     {
         return $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+            ->getRepository('OroDotmailerBundle:AddressBookContactsExport')
             ->isExportFinished($channel);
     }
 
@@ -74,7 +74,7 @@ class ExportManager
     public function isExportFaultsProcessed(Channel $channel)
     {
         return $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+            ->getRepository('OroDotmailerBundle:AddressBookContactsExport')
             ->isExportFaultsProcessed($channel);
     }
 
@@ -86,7 +86,7 @@ class ExportManager
     public function updateExportResults(Channel $channel)
     {
         $exportRepository = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport');
+            ->getRepository('OroDotmailerBundle:AddressBookContactsExport');
 
         $this->dotmailerTransport->init($channel->getTransport());
 
@@ -132,10 +132,10 @@ class ExportManager
     public function updateAddressBooksSyncStatus(Channel $channel)
     {
         $exportRepository = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport');
+            ->getRepository('OroDotmailerBundle:AddressBookContactsExport');
 
         $addressBooks = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBook')
+            ->getRepository('OroDotmailerBundle:AddressBook')
             ->findBy(['channel' => $channel]);
 
         $lastFinishedStatus = null;

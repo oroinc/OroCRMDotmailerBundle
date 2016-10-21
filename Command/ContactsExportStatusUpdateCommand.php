@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Command;
+namespace Oro\Bundle\DotmailerBundle\Command;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -13,14 +13,13 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Command\AbstractSyncCronCommand;
 use Oro\Bundle\IntegrationBundle\Provider\ReverseSyncProcessor;
 use Oro\Component\Log\OutputLogger;
-
-use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
-use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\DotmailerBundle\Model\ExportManager;
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 
 class ContactsExportStatusUpdateCommand extends AbstractSyncCronCommand
 {
     const NAME = 'oro:cron:dotmailer:export-status:update';
-    const EXPORT_MANAGER = 'orocrm_dotmailer.export_manager';
+    const EXPORT_MANAGER = 'oro_dotmailer.export_manager';
 
     /**
      * @var ManagerRegistry

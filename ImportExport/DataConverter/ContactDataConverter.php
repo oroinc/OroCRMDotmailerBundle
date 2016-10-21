@@ -1,8 +1,8 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\DataConverter;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExportContactIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExportContactIterator;
 
 class ContactDataConverter extends AbstractDataConverter
 {

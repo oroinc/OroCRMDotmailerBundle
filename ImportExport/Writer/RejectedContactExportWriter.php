@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Writer;
+namespace Oro\Bundle\DotmailerBundle\ImportExport\Writer;
 
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 use Akeneo\Bundle\BatchBundle\Item\ItemWriterInterface;
@@ -13,7 +13,7 @@ use Psr\Log\LoggerInterface;
 
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
-use OroCRM\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
+use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 
 class RejectedContactExportWriter implements ItemWriterInterface, StepExecutionAwareInterface
 {

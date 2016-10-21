@@ -1,12 +1,12 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\ImportExport\Reader;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\ImportExport\Reader;
 
 use Oro\Bundle\IntegrationBundle\Entity\Status;
-use OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\UnsubscribedFromAccountContactReader;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
+use Oro\Bundle\DotmailerBundle\ImportExport\Reader\UnsubscribedFromAccountContactReader;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
 
 class UnsubscribedFromAccountContactReaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -66,7 +66,7 @@ class UnsubscribedFromAccountContactReaderTest extends \PHPUnit_Framework_TestCa
 
         $iterator = $this->getMock('\Iterator');
 
-        $transport = $this->getMockBuilder('OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport')
+        $transport = $this->getMockBuilder('Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport')
             ->disableOriginalConstructor()
             ->getMock();
         $transport->expects($this->once())

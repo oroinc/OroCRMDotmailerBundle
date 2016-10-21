@@ -1,11 +1,11 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use OroCRM\Bundle\CampaignBundle\Entity\EmailCampaign;
+use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 
 class LoadEmailCampaignData extends AbstractFixture implements DependentFixtureInterface
 {
@@ -14,17 +14,17 @@ class LoadEmailCampaignData extends AbstractFixture implements DependentFixtureI
             'name'          => 'Test',
             'schedule'      => 'manual',
             'transport'     => 'Test',
-            'marketingList' => 'orocrm_dotmailer.marketing_list.second',
-            'owner'         => 'orocrm_dotmailer.user.john.doe',
-            'reference'     => 'orocrm_dotmailer.email_campaign.first',
+            'marketingList' => 'oro_dotmailer.marketing_list.second',
+            'owner'         => 'oro_dotmailer.user.john.doe',
+            'reference'     => 'oro_dotmailer.email_campaign.first',
         ],
         [
             'name'          => 'Test 2',
             'schedule'      => 'manual',
             'transport'     => 'Test 2',
-            'marketingList' => 'orocrm_dotmailer.marketing_list.third',
-            'owner'         => 'orocrm_dotmailer.user.john.doe',
-            'reference'     => 'orocrm_dotmailer.email_campaign.second',
+            'marketingList' => 'oro_dotmailer.marketing_list.third',
+            'owner'         => 'oro_dotmailer.user.john.doe',
+            'reference'     => 'oro_dotmailer.email_campaign.second',
         ],
     ];
 
@@ -56,8 +56,8 @@ class LoadEmailCampaignData extends AbstractFixture implements DependentFixtureI
     public function getDependencies()
     {
         return [
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadUserData',
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadMarketingListData',
+            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadUserData',
+            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadMarketingListData',
         ];
     }
 }

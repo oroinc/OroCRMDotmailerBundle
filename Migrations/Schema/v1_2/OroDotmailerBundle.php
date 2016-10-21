@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_2;
+namespace Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_2;
 
 use Doctrine\DBAL\Schema\Schema;
 
@@ -10,9 +10,9 @@ use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareInterf
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\MigrationBundle\Migration\Migration;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
-use OroCRM\Bundle\DotmailerBundle\Migration\AddContactExportConnectorToExistedIntegrationsQuery;
+use Oro\Bundle\DotmailerBundle\Migration\AddContactExportConnectorToExistedIntegrationsQuery;
 
-class OroCRMDotmailerBundle implements Migration, ExtendExtensionAwareInterface
+class OroDotmailerBundle implements Migration, ExtendExtensionAwareInterface
 {
     /** @var ExtendExtension */
     protected $extendExtension;

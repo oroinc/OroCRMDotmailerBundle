@@ -1,17 +1,17 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Model;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Model;
 
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\ApiContactImportStatuses;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
-use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
-use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
-use OroCRM\Bundle\DotmailerBundle\Tests\Functional\AbstractImportExportTestCase;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Model\ExportManager;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\AbstractImportExportTestCase;
 
 /**
  * @dbIsolation
@@ -28,21 +28,21 @@ class ExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCas
         parent::setUp();
         $this->loadFixtures(
             [
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookContactsExportData',
+                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookContactsExportData',
             ]
         );
-        $this->target = $this->getContainer()->get('orocrm_dotmailer.export_manager');
+        $this->target = $this->getContainer()->get('oro_dotmailer.export_manager');
     }
 
     public function testUpdateExportResultsRevertRejectedExports()
     {
         /** @var Channel $channel */
-        $channel = $this->getReference('orocrm_dotmailer.channel.fourth');
+        $channel = $this->getReference('oro_dotmailer.channel.fourth');
 
-        $rejectedByWatchDogImportId = $this->getReference('orocrm_dotmailer.address_book_contacts_export.rejected')
+        $rejectedByWatchDogImportId = $this->getReference('oro_dotmailer.address_book_contacts_export.rejected')
             ->getImportId();
 
-        $scheduledForExport = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBookContact')
+        $scheduledForExport = $this->managerRegistry->getRepository('OroDotmailerBundle:AddressBookContact')
             ->findBy(['scheduledForExport' => true]);
         $this->assertCount(2, $scheduledForExport);
 
@@ -51,7 +51,7 @@ class ExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCas
         $this->target->updateExportResults($channel);
 
         /** @var AddressBook $expectedAddressBook */
-        $expectedAddressBook = $this->getReference('orocrm_dotmailer.address_book.six');
+        $expectedAddressBook = $this->getReference('oro_dotmailer.address_book.six');
         $this->assertExportStatusUpdated($channel, $rejectedByWatchDogImportId, $expectedAddressBook);
         $this->assertAddressBookContactsHandled($channel, $expectedAddressBook);
     }
@@ -68,7 +68,7 @@ class ExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCas
          */
         $this->assertAddressBookContactNotExist(
             $channel,
-            $this->getReference('orocrm_dotmailer.contact.add_contact_rejected'),
+            $this->getReference('oro_dotmailer.contact.add_contact_rejected'),
             $expectedAddressBook
         );
 
@@ -78,7 +78,7 @@ class ExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCas
          */
         $this->assertAddressBookContactNotExist(
             $channel,
-            $this->getReference('orocrm_dotmailer.contact.update_2'),
+            $this->getReference('oro_dotmailer.contact.update_2'),
             $expectedAddressBook
         );
 
@@ -88,7 +88,7 @@ class ExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCas
          */
         $this->assertAddressBookContact(
             $channel,
-            $this->getReference('orocrm_dotmailer.contact.update_contact_rejected'),
+            $this->getReference('oro_dotmailer.contact.update_contact_rejected'),
             $expectedAddressBook,
             Contact::STATUS_SUBSCRIBED
         );
@@ -96,7 +96,7 @@ class ExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCas
         /**
          * Check other Address Book AddressBookContact not removed
          */
-        $contact = $this->getReference('orocrm_dotmailer.contact.allen_case');
+        $contact = $this->getReference('oro_dotmailer.contact.allen_case');
         $this->assertAddressBookContact($channel, $contact, $expectedAddressBook, Contact::STATUS_SUBSCRIBED);
     }
 
@@ -109,7 +109,7 @@ class ExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCas
     protected function assertAddressBookContact(Channel $channel, Contact $contact, AddressBook $addressBook, $status)
     {
         $addressBookContact = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContact')
+            ->getRepository('OroDotmailerBundle:AddressBookContact')
             ->findBy(['contact' => $contact, 'channel' => $channel, 'addressBook' => $addressBook]);
 
         $this->assertCount(1, $addressBookContact);
@@ -129,7 +129,7 @@ class ExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCas
         AddressBook $expectedAddressBook
     ) {
         $addressBookContact = $this->managerRegistry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContact')
+            ->getRepository('OroDotmailerBundle:AddressBookContact')
             ->findOneBy(['contact' => $contact, 'channel' => $channel, 'addressBook' => $expectedAddressBook]);
         $this->assertNull($addressBookContact);
     }
@@ -144,7 +144,7 @@ class ExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCas
     protected function assertExportStatusUpdated(Channel $channel, $importId, AddressBook $expectedAddressBook)
     {
         $status = AddressBookContactsExport::STATUS_REJECTED_BY_WATCHDOG;
-        $exportEntities = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+        $exportEntities = $this->managerRegistry->getRepository('OroDotmailerBundle:AddressBookContactsExport')
             ->findBy(['channel' => $channel, 'importId' => $importId]);
         $this->assertCount(1, $exportEntities);
 
@@ -156,7 +156,6 @@ class ExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCas
 
         $addressBookStatus = $expectedAddressBook->getSyncStatus();
         $this->assertEquals($status, $addressBookStatus->getId());
-
     }
 
     protected function stubResource()

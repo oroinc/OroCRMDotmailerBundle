@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Form\Extension;
+namespace Oro\Bundle\DotmailerBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -10,8 +10,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 
 use Oro\Bundle\FormBundle\Utils\FormUtils;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-
-use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 
 class ChannelConnectorsExtension extends AbstractTypeExtension
 {
@@ -89,7 +88,7 @@ class ChannelConnectorsExtension extends AbstractTypeExtension
             return;
         }
         $options = $event->getForm()['connectors']->getConfig()->getOptions();
-        $connectors = array_keys($options['choices']);
+        $connectors = array_values($options['choices']);
         $data->setConnectors($connectors);
     }
 

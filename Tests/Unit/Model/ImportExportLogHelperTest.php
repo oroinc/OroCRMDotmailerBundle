@@ -1,8 +1,8 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Model;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Model;
 
-use OroCRM\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
+use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 
 class ImportExportLogHelperTest extends \PHPUnit_Framework_TestCase
 {

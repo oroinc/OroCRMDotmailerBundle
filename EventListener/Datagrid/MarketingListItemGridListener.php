@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\EventListener\Datagrid;
+namespace Oro\Bundle\DotmailerBundle\EventListener\Datagrid;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr\Join;
@@ -17,13 +17,12 @@ use Oro\Bundle\DataGridBundle\EventListener\MixinListener;
 use Oro\Bundle\DataGridBundle\Extension\Action\ActionExtension;
 use Oro\Bundle\DataGridBundle\Extension\Formatter\Configuration;
 use Oro\Bundle\DataGridBundle\Extension\Formatter\Property\PropertyInterface;
-
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
-use OroCRM\Bundle\DotmailerBundle\Model\FieldHelper;
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
-use OroCRM\Bundle\MarketingListBundle\Model\MarketingListHelper;
-use OroCRM\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+use Oro\Bundle\MarketingListBundle\Model\MarketingListHelper;
+use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 
 class MarketingListItemGridListener
 {
@@ -81,7 +80,7 @@ class MarketingListItemGridListener
 
         if (empty($this->addressBookByML[$marketingList->getId()])) {
             $this->addressBookByML[$marketingList->getId()] = $this->registry->getManager()
-                ->getRepository('OroCRMDotmailerBundle:AddressBook')
+                ->getRepository('OroDotmailerBundle:AddressBook')
                 ->findOneBy(['marketingList' => $marketingList]);
         }
 
@@ -115,7 +114,7 @@ class MarketingListItemGridListener
     }
 
     /**
-     * Accept orocrm_marketing_list_items_grid_* grids only in case when they has mixin to apply.
+     * Accept oro_marketing_list_items_grid_* grids only in case when they has mixin to apply.
      *
      * @param string       $gridName
      * @param ParameterBag $parameters
@@ -165,7 +164,7 @@ class MarketingListItemGridListener
         $joinContactsExpr->add('dm_contact_subscriber.channel =:channel');
 
         $queryBuilder->leftJoin(
-            'OroCRM\Bundle\DotmailerBundle\Entity\Contact',
+            'Oro\Bundle\DotmailerBundle\Entity\Contact',
             'dm_contact_subscriber',
             Join::WITH,
             $joinContactsExpr
@@ -173,7 +172,7 @@ class MarketingListItemGridListener
         /** @var AddressBook $addressBook */
         $addressBook = $this->addressBookByML[$marketingList->getId()];
         $queryBuilder->leftJoin(
-            'OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact',
+            'Oro\Bundle\DotmailerBundle\Entity\AddressBookContact',
             'dm_ab_contact',
             Join::WITH,
             'IDENTITY(dm_ab_contact.contact) = dm_contact_subscriber.id AND dm_ab_contact.addressBook = :aBookFilter'

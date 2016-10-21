@@ -1,10 +1,10 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
 use DotMailer\Api\DataTypes\ApiCampaignContactSummaryList;
 use DotMailer\Api\DataTypes\ApiCampaignContactSummary;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
 
 class ActivityContactIteratorTest extends \PHPUnit_Framework_TestCase
 {

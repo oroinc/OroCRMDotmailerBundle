@@ -1,10 +1,10 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiCampaignSummary;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector;
 
 /**
  * @dbIsolation
@@ -16,7 +16,7 @@ class CampaignSummaryImportTest extends AbstractImportExportTestCase
         parent::setUp();
         $this->loadFixtures(
             [
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadCampaignData',
+                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadCampaignData',
             ]
         );
     }
@@ -46,7 +46,7 @@ class CampaignSummaryImportTest extends AbstractImportExportTestCase
                     ]
                 )
             );
-        $channel = $this->getReference('orocrm_dotmailer.channel.second');
+        $channel = $this->getReference('oro_dotmailer.channel.second');
 
         $result = $this->runImportExportConnectorsJob(
             self::SYNC_PROCESSOR,
@@ -58,7 +58,7 @@ class CampaignSummaryImportTest extends AbstractImportExportTestCase
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-        $campaignSummaryRepository = $this->managerRegistry->getRepository('OroCRMDotmailerBundle:CampaignSummary');
+        $campaignSummaryRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:CampaignSummary');
 
         $searchCriteria = [
             'numUniqueOpens'      => $expected['numUniqueOpens'],

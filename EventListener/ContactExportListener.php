@@ -1,18 +1,17 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\EventListener;
+namespace Oro\Bundle\DotmailerBundle\EventListener;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
-use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
-use OroCRM\Bundle\DotmailerBundle\Model\ExportManager;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
-use OroCRM\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
-
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Model\ExportManager;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
+use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Event\SyncEvent;
@@ -66,12 +65,12 @@ class ContactExportListener implements EventSubscriberInterface
         /**
          * Remove contact drafts which was not fully exported to Dotmailer
          */
-        $this->registry->getRepository('OroCRMDotmailerBundle:Contact')
+        $this->registry->getRepository('OroDotmailerBundle:Contact')
             ->bulkRemoveNotExportedContacts($channel);
 
         /** @var AbstractEnumValue $inProgressStatus */
         $inProgressStatus = $this->registry
-            ->getRepository('OroCRMDotmailerBundle:AddressBookContactsExport')
+            ->getRepository('OroDotmailerBundle:AddressBookContactsExport')
             ->getNotFinishedStatus();
         $addressBooks = $this->getAddressBooksToSync($channel, $configuration);
         foreach ($addressBooks as $addressBook) {
@@ -113,7 +112,7 @@ class ContactExportListener implements EventSubscriberInterface
     protected function getAddressBooksToSync(Channel $channel, array $configuration)
     {
         $repository = $this->registry
-            ->getRepository('OroCRMDotmailerBundle:AddressBook');
+            ->getRepository('OroDotmailerBundle:AddressBook');
 
         if (!empty($configuration['import'][AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION])) {
             $addressBook = $repository->find($configuration['import']['address-book']);

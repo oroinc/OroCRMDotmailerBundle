@@ -1,10 +1,10 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use OroCRM\Bundle\MarketingListBundle\Entity\MarketingListRemovedItem;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingListRemovedItem;
 
 class LoadMarketingListRemovedData extends AbstractFixture implements DependentFixtureInterface
 {
@@ -13,8 +13,8 @@ class LoadMarketingListRemovedData extends AbstractFixture implements DependentF
      */
     protected $data = [
         [
-            'marketingListItem' => 'orocrm_dotmailer.orocrm_contact.mike.case',
-            'marketingList' => 'orocrm_dotmailer.marketing_list.fifth'
+            'marketingListItem' => 'oro_dotmailer.orocrm_contact.mike.case',
+            'marketingList' => 'oro_dotmailer.marketing_list.fifth'
         ]
     ];
 
@@ -43,7 +43,7 @@ class LoadMarketingListRemovedData extends AbstractFixture implements DependentF
     public function getDependencies()
     {
         return [
-            'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData'
+            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData'
         ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Model;
+namespace Oro\Bundle\DotmailerBundle\Model;
 
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 

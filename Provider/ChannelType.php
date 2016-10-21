@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider;
+namespace Oro\Bundle\DotmailerBundle\Provider;
 
 use Oro\Bundle\IntegrationBundle\Provider\ChannelInterface;
 use Oro\Bundle\IntegrationBundle\Provider\IconAwareIntegrationInterface;
@@ -14,7 +14,7 @@ class ChannelType implements ChannelInterface, IconAwareIntegrationInterface
      */
     public function getLabel()
     {
-        return 'orocrm.dotmailer.channel_type.label';
+        return 'oro.dotmailer.channel_type.label';
     }
 
     /**
@@ -22,6 +22,6 @@ class ChannelType implements ChannelInterface, IconAwareIntegrationInterface
      */
     public function getIcon()
     {
-        return 'bundles/orocrmdotmailer/img/dotmailer.ico';
+        return 'bundles/orodotmailer/img/dotmailer.ico';
     }
 }

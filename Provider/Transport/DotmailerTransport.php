@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport;
+namespace Oro\Bundle\DotmailerBundle\Provider\Transport;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -24,18 +24,17 @@ use Psr\Log\LoggerAwareInterface;
 use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
 use Oro\Bundle\SecurityBundle\Encoder\Mcrypt;
-
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
-use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
-use OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterator;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReportIterator;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIterator;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactIterator;
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Exception\RequiredOptionException;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReportIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
 
 class DotmailerTransport implements TransportInterface, LoggerAwareInterface
 {
@@ -379,7 +378,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
      */
     public function getLabel()
     {
-        return 'orocrm.dotmailer.integration_transport.label';
+        return 'oro.dotmailer.integration_transport.label';
     }
 
     /**
@@ -387,7 +386,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
      */
     public function getSettingsFormType()
     {
-        return 'orocrm_dotmailer_transport_setting_type';
+        return 'oro_dotmailer_transport_setting_type';
     }
 
     /**
@@ -395,6 +394,6 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
      */
     public function getSettingsEntityFQCN()
     {
-        return 'OroCRM\\Bundle\\DotmailerBundle\\Entity\\DotmailerTransport';
+        return 'Oro\\Bundle\\DotmailerBundle\\Entity\\DotmailerTransport';
     }
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Functional\Provider\Connector;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Provider\Connector;
 
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
-use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 
 /**
  * @dbIsolation
@@ -29,14 +29,14 @@ class AbstractDotmailerConnectorTest extends WebTestCase
         $this->initClient();
         $this->loadFixtures(
             [
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData'
+                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData'
             ]
         );
     }
 
     public function testGetLastSyncDate()
     {
-        $connector = $this->getConnector('orocrm_dotmailer.channel.second');
+        $connector = $this->getConnector('oro_dotmailer.channel.second');
         $date = $connector->getLastSyncDate();
         $this->assertInstanceOf('\DateTime', $date);
 
@@ -46,7 +46,7 @@ class AbstractDotmailerConnectorTest extends WebTestCase
 
     public function testGetLastSyncDateReturnNullForFirstSync()
     {
-        $connector = $this->getConnector('orocrm_dotmailer.channel.first');
+        $connector = $this->getConnector('oro_dotmailer.channel.first');
         $date = $connector->getLastSyncDate();
         $this->assertNull($date);
     }

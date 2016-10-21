@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport;
 
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\ApiContactResubscription;
@@ -8,7 +8,7 @@ use DotMailer\Api\DataTypes\ApiFileMedia;
 use DotMailer\Api\DataTypes\ApiResubscribeResult;
 use DotMailer\Api\DataTypes\Int32List;
 
-use OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
 /**
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
@@ -38,7 +38,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->factory = $this->getMock(
-            'OroCRM\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory'
+            'Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory'
         );
 
         $this->logger = $this->getMock('Psr\Log\LoggerInterface');
@@ -90,7 +90,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException
+     * @expectedException \Oro\Bundle\DotmailerBundle\Exception\RequiredOptionException
      * @expectedExceptionMessage Option "password" is required
      */
     public function testInitThrowAnExceptionIfUsernameOptionsEmpty()
@@ -117,7 +117,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException
+     * @expectedException \Oro\Bundle\DotmailerBundle\Exception\RequiredOptionException
      * @expectedExceptionMessage Option "username" is required
      */
     public function testInitThrowAnExceptionIfPasswordOptionsEmpty()
@@ -169,7 +169,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
         $resource = $this->initTransportStub();
 
         $expectedAddressBookOriginId = 15645;
-        $expectedAddressBook = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\AddressBook');
+        $expectedAddressBook = $this->getMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
         $expectedAddressBook->expects($this->any())
             ->method('getOriginId')
             ->willReturn($expectedAddressBookOriginId);
@@ -210,7 +210,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
 
         $expectedAddressBookOriginId = 15645;
         $expectedDate = new \DateTime();
-        $expectedAddressBook = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\AddressBook');
+        $expectedAddressBook = $this->getMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
         $expectedAddressBook->expects($this->any())
             ->method('getOriginId')
             ->willReturn($expectedAddressBookOriginId);
@@ -291,7 +291,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->with($expectedAddressBookOriginId, true, 1000, 0)
             ->will($this->returnValue($contactsList));
 
-        $expectedAddressBook = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\AddressBook');
+        $expectedAddressBook = $this->getMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
         $expectedAddressBook->expects($this->any())
             ->method('getOriginId')
             ->willReturn($expectedAddressBookOriginId);
@@ -320,7 +320,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->with($expectedAddressBookOriginId, $dateSince->format(\DateTime::ISO8601), true, 1000, 0)
             ->will($this->returnValue($contactsList));
 
-        $expectedAddressBook = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\AddressBook');
+        $expectedAddressBook = $this->getMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
         $expectedAddressBook->expects($this->any())
             ->method('getOriginId')
             ->willReturn($expectedAddressBookOriginId);
@@ -335,8 +335,8 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
     public function testResubscribeAddressBookContact()
     {
         $resource = $this->initTransportStub();
-        $contact = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\Contact');
-        $addressBook = $this->getMock('OroCRM\Bundle\DotmailerBundle\Entity\AddressBook');
+        $contact = $this->getMock('Oro\Bundle\DotmailerBundle\Entity\Contact');
+        $addressBook = $this->getMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
         $expected = new ApiResubscribeResult();
         $addressBookId = 42;
         $addressBook->expects($this->once())
@@ -414,7 +414,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
-     * @throws \OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException
+     * @throws \Oro\Bundle\DotmailerBundle\Exception\RequiredOptionException
      */
     protected function initTransportStub()
     {
