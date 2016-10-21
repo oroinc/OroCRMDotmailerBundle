@@ -5,12 +5,13 @@ namespace Oro\Bundle\DotmailerBundle\Model\Action;
 use Doctrine\ORM\QueryBuilder;
 
 use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIterator;
-use Oro\Bundle\WorkflowBundle\Model\Action\AbstractAction;
-use Oro\Bundle\WorkflowBundle\Model\ContextAccessor;
 use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
+
+use Oro\Component\Action\Action\AbstractAction;
+use Oro\Component\Action\Model\ContextAccessor;
 
 abstract class AbstractMarketingListEntitiesAction extends AbstractAction
 {
