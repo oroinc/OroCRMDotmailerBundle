@@ -45,6 +45,7 @@ parameters:
     oro_dotmailer.importexport.data_converter.activity_contact.class:                  Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\ActivityContactDataConverter
     oro_dotmailer.importexport.data_converter.campaign_summary.class:                  Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\CampaignSummaryDataConverter
     oro_dotmailer.importexport.data_converter.contact_sync.class:                      Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactSyncDataConverter
+    oro_dotmailer.importexport.data_converter.datafield.class:                         Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\DataFieldDataConverter
 
     #reader
     oro_dotmailer.importexport.reader.abstract.class:                            Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractReader
@@ -67,6 +68,7 @@ parameters:
     oro_dotmailer.connector.activity_contact.class:                    Oro\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector
     oro_dotmailer.connector.campaign_summary.class:                    Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector
     oro_dotmailer.connector.export_contacts.class:                     Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector
+    oro_dotmailer.connector.datafield.class:                           Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector
 
     #strategy
     oro_dotmailer.importexport.strategy.add_or_replace.class:                      Oro\Bundle\DotmailerBundle\ImportExport\Strategy\AddOrReplaceStrategy
@@ -81,6 +83,7 @@ parameters:
     oro_dotmailer.importexport.strategy.activity_contact.class:                    Oro\Bundle\DotmailerBundle\ImportExport\Strategy\ActivityContactStrategy
     oro_dotmailer.importexport.strategy.contact.class:                             Oro\Bundle\DotmailerBundle\ImportExport\Strategy\ContactStrategy
     oro_dotmailer.importexport.strategy.contact_sync.class:                        Oro\Bundle\DotmailerBundle\ImportExport\Strategy\ContactSyncStrategy
+    oro_dotmailer.importexport.strategy.datafield.class:                           Oro\Bundle\DotmailerBundle\ImportExport\Strategy\DataFieldStrategy
 
     #processor
     oro_dotmailer.importexport.processor.import_abstract.class:            Oro\Bundle\DotmailerBundle\ImportExport\Processor\ImportProcessor
@@ -398,6 +401,14 @@ services:
         tags:
             - { name: oro_integration.connector, type: contact_export, channel_type: dotmailer }
 
+    oro_dotmailer.connector.datafield:
+        class: %oro_dotmailer.connector.datafield.class%
+        parent: oro_dotmailer.connector.abstract
+        calls:
+            - [setEntityName, [%oro_dotmailer.entity.datafield.class%]]
+        tags:
+            - { name: oro_integration.connector, type: datafield, channel_type: dotmailer }
+
     #data converter
     oro_dotmailer.importexport.data_converter.not_exported_contact:
         class: %oro_dotmailer.importexport.data_converter.not_exported_contact.class%
@@ -425,6 +436,9 @@ services:
 
     oro_dotmailer.importexport.data_converter.contact_sync:
         class: %oro_dotmailer.importexport.data_converter.contact_sync.class%
+
+    oro_dotmailer.importexport.data_converter.datafield:
+        class: %oro_dotmailer.importexport.data_converter.datafield.class%
 
     #strategy
     oro_dotmailer.importexport.strategy.add_or_replace:
@@ -481,6 +495,10 @@ services:
 
     oro_dotmailer.importexport.strategy.contact_sync:
         class: %oro_dotmailer.importexport.strategy.contact_sync.class%
+        parent: oro_dotmailer.importexport.strategy.add_or_replace
+
+    oro_dotmailer.importexport.strategy.datafield:
+        class: %oro_dotmailer.importexport.strategy.datafield.class%
         parent: oro_dotmailer.importexport.strategy.add_or_replace
 
     #processor
@@ -592,6 +610,13 @@ services:
             - "@oro_importexport.context_registry"
             - "@oro_integration.logger.strategy"
             - "@doctrine"
+
+    oro_dotmailer.importexport.processor.datafield:
+        parent: oro_dotmailer.importexport.processor.import_abstract
+        calls:
+            - [setDataConverter, ["@oro_dotmailer.importexport.data_converter.datafield"]]
+            - [setStrategy, ["@oro_dotmailer.importexport.strategy.datafield"]]
+            - [setEntityName, [%oro_dotmailer.entity.datafield.class%]]
 
     #serializer
     oro_dotmailer.importexport.normalizer.enum:

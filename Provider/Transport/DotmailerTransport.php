@@ -31,6 +31,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterat
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\DataFieldIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReportIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactIterator;
@@ -225,6 +226,14 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     public function getCampaignSummary(array $campaignsToSynchronize = [])
     {
         return new CampaignSummaryIterator($this->dotmailerResources, $campaignsToSynchronize);
+    }
+
+    /**
+     * @return \Iterator
+     */
+    public function getDataFields()
+    {
+        return new DataFieldIterator($this->dotmailerResources);
     }
 
     /**

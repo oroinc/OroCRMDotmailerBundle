@@ -185,3 +185,17 @@ connector:
                         registry:         doctrine
                     parameters:
                         batch_size: 10000
+
+        dotmailer_datafield_import:
+            title: oro.dotmailer.connector.datafield.job
+            type: import
+            steps:
+                importDataFields:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    oro_dotmailer.connector.datafield
+                        processor: oro_dotmailer.importexport.processor.datafield
+                        writer:    oro_dotmailer.importexport.writer.import
+                    parameters:
+                        batch_size: 1000

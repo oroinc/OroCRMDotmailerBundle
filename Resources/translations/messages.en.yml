@@ -233,6 +233,9 @@ oro:
             contact_export:
                 label: Export Contact Connector
                 job: Export Contacts to Dotmailer
+            data_field:
+                label:  Data Field Connector
+                job:    Import Data Fields from Dotmailer
 
         import_not_exported_contact:
             job: Import Export faults from Dotmailer

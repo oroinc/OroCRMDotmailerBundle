@@ -162,7 +162,7 @@ class DataField extends ExtendDataField
     /**
      * @param Channel $channel
      *
-     * @return AddressBook
+     * @return DataField
      */
     public function setChannel(Channel $channel)
     {
@@ -182,7 +182,7 @@ class DataField extends ExtendDataField
     /**
      * @param \DateTime $createdAt
      *
-     * @return AddressBook
+     * @return DataField
      */
     public function setCreatedAt($createdAt)
     {
@@ -202,7 +202,7 @@ class DataField extends ExtendDataField
     /**
      * @param string $name
      *
-     * @return AddressBook
+     * @return DataField
      */
     public function setName($name)
     {
@@ -279,7 +279,7 @@ class DataField extends ExtendDataField
     /**
      * @param Organization $owner
      *
-     * @return AddressBook
+     * @return DataField
      */
     public function setOwner($owner)
     {
