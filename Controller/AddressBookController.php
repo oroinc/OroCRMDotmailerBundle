@@ -92,7 +92,7 @@ class AddressBookController extends Controller
      *      name="oro_dotmailer_marketing_list_connect",
      *      requirements={"id"="\d+"}
      * )
-     * @AclAncestor("orocrm_marketing_list_update")
+     * @AclAncestor("oro_marketing_list_update")
      *
      * @Template("OroDotmailerBundle:AddressBook/widget:addressBookConnectionUpdate.html.twig")
      * @param MarketingList $marketingList
@@ -129,7 +129,7 @@ class AddressBookController extends Controller
      *      class="OroMarketingListBundle:MarketingList",
      *      options={"id" = "entity"}
      * )
-     * @AclAncestor("orocrm_marketing_list_update")
+     * @AclAncestor("oro_marketing_list_update")
      * @Template()
      *
      * @param MarketingList $marketingList

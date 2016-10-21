@@ -177,7 +177,7 @@ services:
             - [initDoctrinePropertiesByManagerRegistry, ["@doctrine"]]
             - [setAclHelper,["@oro_security.acl_helper"]]
         tags:
-            - { name: oro_form.autocomplete.search_handler, alias: "dotmailer_address_books", acl_resource: "orocrm_email_campaign_view" }
+            - { name: oro_form.autocomplete.search_handler, alias: "dotmailer_address_books", acl_resource: "oro_email_campaign_view" }
 
     oro_dotmailer.form.extension.channel_connectors:
         class: %oro_dotmailer.form.extension.channel_connectors.class%
