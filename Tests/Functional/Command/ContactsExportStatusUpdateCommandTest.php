@@ -4,7 +4,6 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Command;
 
 use Oro\Bundle\MessageQueueBundle\Test\Functional\MessageQueueExtension;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-use Oro\Component\MessageQueue\Client\TraceableMessageProducer;
 use Oro\Bundle\DotmailerBundle\Async\Topics;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData;
 
@@ -38,16 +37,6 @@ class ContactsExportStatusUpdateCommandTest extends WebTestCase
         $this->assertContains('Send export contacts status update for channel:', $result);
         $this->assertContains('Completed', $result);
 
-        $traces = $this->getMessageProducer()->getTopicSentMessages(Topics::EXPORT_CONTACTS_STATUS_UPDATE);
-
-        $this->assertCount(4, $traces);
-    }
-
-    /**
-     * @return TraceableMessageProducer
-     */
-    private function getMessageProducer()
-    {
-        return $this->getContainer()->get('oro_message_queue.message_producer');
+        self::assertMessagesCount(Topics::EXPORT_CONTACTS_STATUS_UPDATE, 4);
     }
 }

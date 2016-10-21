@@ -59,13 +59,13 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
 
             $output->writeln(sprintf('Channel "%s"', $channel->getId()));
 
-            $message = new Message();
-            $message->setPriority(MessagePriority::VERY_LOW);
-            $message->setBody([
-                'integrationId' => $channel->getId(),
-            ]);
-
-            $this->getMessageProducer()->send(Topics::EXPORT_CONTACTS_STATUS_UPDATE, $message);
+            $this->getMessageProducer()->send(
+                Topics::EXPORT_CONTACTS_STATUS_UPDATE,
+                new Message(
+                    ['integrationId' => $channel->getId()],
+                    MessagePriority::VERY_LOW
+                )
+            );
         }
 
         $output->writeln('Completed');
