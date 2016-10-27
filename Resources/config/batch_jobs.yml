@@ -20,7 +20,7 @@ connector:
                     services:
                         reader:    oro_dotmailer.importexport.reader.address_book.remove
                         processor: oro_dotmailer.importexport.processor.address_book.remove
-                        writer:    oro_dotmailer.importexport.writer.import.removed_address_book
+                        writer:    oro_dotmailer.importexport.writer.import.remove
 
         dotmailer_campaign_import:
             title: oro.dotmailer.connector.campaign.job
@@ -199,3 +199,10 @@ connector:
                         writer:    oro_dotmailer.importexport.writer.import
                     parameters:
                         batch_size: 1000
+                removeNotExistingDataFields:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    oro_dotmailer.importexport.reader.datafield.remove
+                        processor: oro_dotmailer.importexport.processor.datafield.remove
+                        writer:    oro_dotmailer.importexport.writer.import.remove

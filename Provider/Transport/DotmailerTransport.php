@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use DotMailer\Api\DataTypes\ApiCampaign;
 use DotMailer\Api\DataTypes\ApiCampaignSend;
 use DotMailer\Api\DataTypes\ApiContactImport;
+use DotMailer\Api\DataTypes\ApiDataField;
+use DotMailer\Api\DataTypes\ApiDependencyResult;
 use DotMailer\Api\DataTypes\ApiFileMedia;
 use DotMailer\Api\DataTypes\ApiResubscribeResult;
 use DotMailer\Api\DataTypes\ApiTransactionalDataImport;
@@ -26,6 +28,7 @@ use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
 use Oro\Bundle\SecurityBundle\Encoder\Mcrypt;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Exception\RequiredOptionException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
@@ -234,6 +237,23 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     public function getDataFields()
     {
         return new DataFieldIterator($this->dotmailerResources);
+    }
+
+    /**
+     * @param string $name
+     * @return array
+     */
+    public function removeDataField($name)
+    {
+        return $this->dotmailerResources->DeleteDataField($name)->toArray();
+    }
+
+    /**
+     * @param ApiDataField $data
+     */
+    public function createDataField(ApiDataField $data)
+    {
+        $this->dotmailerResources->PostDataFields($data);
     }
 
     /**

@@ -21,10 +21,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
 
     protected function setUp()
     {
-        $this->initClient(
-            [],
-            array_merge($this->generateBasicAuthHeader(), ['HTTP_X-CSRF-Header' => 1])
-        );
+        parent::setUp();
         $this->client->useHashNavigation(true);
         $this->loadFixtures(
             [
@@ -43,37 +40,9 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
     /**
      * @return string
      */
-    public function testCreate()
+    public function testView()
     {
-        $crawler = $this->client->request('GET', $this->getUrl('oro_dotmailer_datafield_create'));
-        /** @var Form $form */
-        $form = $crawler->selectButton('Save and Close')->form();
-        $name = 'name' . $this->generateRandomString();
-        $form['oro_dotmailer_data_field[name]'] = $name;
-        $form['oro_dotmailer_data_field[type]'] = DataField::FIELD_TYPE_STRING;
-        $form['oro_dotmailer_data_field[visibility]'] = DataField::VISIBILITY_PRIVATE;
-        $form['oro_dotmailer_data_field[defaultValue]'] = 'test value';
-        $form['oro_dotmailer_data_field[channel]'] = $this->getReference('oro_dotmailer.channel.first')->getId();
-
-
-        $this->client->followRedirects(true);
-        $crawler = $this->client->submit($form);
-
-        $result = $this->client->getResponse();
-        $this->assertHtmlResponseStatusCodeEquals($result, 200);
-        $this->assertContains("Data Field Saved", $crawler->html());
-
-        return $name;
-    }
-
-    /**
-     * @param string $name
-     * @depends testCreate
-     *
-     * @return string
-     */
-    public function testView($name)
-    {
+        $name = $this->getReference('oro_dotmailer.datafield.first')->getName();
         $response = $this->client->requestGrid(
             'oro_dotmailer_datafield_grid',
             ['oro_dotmailer_datafield_grid[_filter][name][value]' => $name]
@@ -113,29 +82,6 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
         $result = $this->client->getResponse();
         $this->assertHtmlResponseStatusCodeEquals($result, 200);
         $this->assertContains($returnValue['name'], $crawler->html());
-    }
-
-    /**
-     * @param array $returnValue
-     * @depends testView
-     */
-    public function testDelete($returnValue)
-    {
-        $this->client->request(
-            'DELETE',
-            $this->getUrl('oro_api_delete_dotmailer_datafield', ['id' => $returnValue['id']])
-        );
-
-        $result = $this->client->getResponse();
-        $this->assertEmptyResponseStatusCodeEquals($result, 204);
-
-        $this->client->request(
-            'GET',
-            $this->getUrl('oro_dotmailer_datafield_view', ['id' => $returnValue['id']])
-        );
-
-        $result = $this->client->getResponse();
-        $this->assertHtmlResponseStatusCodeEquals($result, 404);
     }
 
     /**

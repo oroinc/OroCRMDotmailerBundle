@@ -2,13 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
+use Oro\Component\Testing\Unit\EntityTestCase;
 
-class DataFieldTest extends \PHPUnit_Framework_TestCase
+class DataFieldTest extends EntityTestCase
 {
     /**
      * @var DataField
@@ -23,34 +21,23 @@ class DataFieldTest extends \PHPUnit_Framework_TestCase
         $this->entity = new DataField();
     }
 
-    /**
-     * @dataProvider flatPropertiesDataProvider
-     */
-    public function testGetSet($property, $value, $expected)
-    {
-        call_user_func_array(array($this->entity, 'set' . ucfirst($property)), array($value));
-        $this->assertEquals($expected, call_user_func_array(array($this->entity, 'get' . ucfirst($property)), array()));
-    }
-
-    public function flatPropertiesDataProvider()
+    public function testProperties()
     {
         $now = new \DateTime('now');
         $channel = new Channel();
         $organization = $this->getMock('Oro\Bundle\OrganizationBundle\Entity\Organization');
+        $properties = [
+            ['id', 1],
+            ['channel', $channel],
+            ['name', 'testName'],
+            ['defaultValue', 'testValue'],
+            ['notes', 'testNotes'],
+            ['createdAt', $now],
+            ['owner', $organization],
+            ['forceRemove', 1],
+        ];
 
-        return array(
-            'channel' => array('channel', $channel, $channel),
-            'name' => array('name', 'testName', 'testName'),
-            'defaultValue' => array('defaultValue', 'testValue', 'testValue'),
-            'notes' => array('notes', 'testNotes', 'testNotes'),
-            'createdAt' => array('createdAt', $now, $now),
-            'owner' => array('owner', $organization, $organization),
-        );
-    }
-
-    public function testIdWorks()
-    {
-        $this->assertEmpty($this->entity->getId());
+        $this->assertPropertyAccessors($this->entity, $properties);
     }
 
     public function testPrePersist()

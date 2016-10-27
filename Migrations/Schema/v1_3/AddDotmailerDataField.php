@@ -38,7 +38,6 @@ class AddDotmailerDataField implements Migration, OrderedMigrationInterface
         $table->addColumn('owner_id', 'integer', ['notnull' => false]);
         $table->addColumn('channel_id', 'integer', ['notnull' => false]);
         $table->addColumn('name', 'string', ['length' => 255]);
-        $table->addColumn('is_synced', 'boolean', ['notnull' => false]);
         $table->addColumn('default_value', 'string', ['length' => 255, 'notnull' => false]);
         $table->addColumn('notes', 'text', ['notnull' => false]);
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
@@ -57,7 +56,7 @@ class AddDotmailerDataField implements Migration, OrderedMigrationInterface
             $schema->getTable('oro_integration_channel'),
             ['channel_id'],
             ['id'],
-            ['onUpdate' => null, 'onDelete' => 'SET NULL']
+            ['onUpdate' => null, 'onDelete' => 'CASCADE']
         );
     }
 }

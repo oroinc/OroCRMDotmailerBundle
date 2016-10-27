@@ -21,13 +21,24 @@ class DataFieldTypeTest extends FormIntegrationTestCase
     /** @var  DataFieldType $type */
     protected $formType;
 
+    /** @var  \PHPUnit_Framework_MockObject_MockObject */
+    protected $subscriber;
+
     /**
      * {@inheritdoc}
      */
     protected function setUp()
     {
         parent::setUp();
-        $this->formType = new DataFieldType('Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\DataFieldStub');
+        $this->subscriber = $this->getMock(
+            'Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldFormSubscriber',
+            ['preSet', 'preSubmit']
+        );
+
+        $this->formType = new DataFieldType(
+            'Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\DataFieldStub',
+            $this->subscriber
+        );
     }
 
     /**
@@ -101,7 +112,6 @@ class DataFieldTypeTest extends FormIntegrationTestCase
                         'oro_dotmailer_integration_select'
                     ),
                     'oro_enum_select' => new EnumSelectType(),
-                    'oro_resizeable_rich_text' => new FormStub('oro_resizeable_rich_text')
                 ],
                 []
             )

@@ -2,18 +2,26 @@
 
 namespace Oro\Bundle\DotmailerBundle\Controller;
 
+use FOS\RestBundle\Util\Codes;
+
+use JMS\JobQueueBundle\Entity\Job;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+use Oro\Bundle\IntegrationBundle\Command\SyncCommand;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldType;
+use Oro\Bundle\DotmailerBundle\Form\Handler\DataFieldFormHandler;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
 
 /**
  * @Route("/data-field")
@@ -63,12 +71,28 @@ class DataFieldController extends Controller
     public function createAction()
     {
         $field = new DataField();
-        $form = $this->createForm(DataFieldType::NAME);
-        return $this->get('oro_form.model.update_handler')->update(
-            $field,
-            $form,
-            $this->get('translator')->trans('oro.dotmailer.controller.datafield.saved.message')
-        );
+        if ($this->get('oro_dotmailer.form.handler.datafield_update')->process($field)) {
+            $this->get('session')->getFlashBag()->add(
+                'success',
+                $this->get('translator')->trans('oro.dotmailer.controller.datafield.saved.message')
+            );
+
+            return $this->get('oro_ui.router')->redirect($field);
+        }
+
+        $isTypeUpdate = $this->get('request')->get(DataFieldFormHandler::UPDATE_MARKER, false);
+
+        $form = $this->get('oro_dotmailer.datafield.form');
+        if ($isTypeUpdate) {
+            //take different form not to show JS validation on after typ update only
+            $form = $this->get('form.factory')
+                ->createNamed('oro_dotmailer_data_field_form', 'oro_dotmailer_data_field', $form->getData());
+        }
+
+        return [
+            'entity' => $field,
+            'form'   => $form->createView()
+        ];
     }
 
     /**
@@ -86,5 +110,60 @@ class DataFieldController extends Controller
         return [
             'entity_class' => $this->container->getParameter('oro_dotmailer.entity.datafield.class')
         ];
+    }
+
+    /**
+     * Run datafield force synchronization
+     *
+     * @Route(
+     *      "/synchronize",
+     *      name="oro_dotmailer_datafield_synchronize"
+     * )
+     * @AclAncestor("oro_dotmailer_datafield_create")
+     *
+     * @return JsonResponse
+     */
+    public function synchronize()
+    {
+        try {
+            $job = new Job(
+                SyncCommand::COMMAND_NAME,
+                [
+                    sprintf(
+                        '%s=%s',
+                        DataFieldConnector::FORCE_SYNC_FLAG,
+                        1
+                    ),
+                    '-v'
+                ]
+            );
+
+            $status = Codes::HTTP_OK;
+            $response = [ 'message' => '' ];
+
+            $em = $this->get('doctrine')->getManager();
+            $em->persist($job);
+            $em->flush();
+
+            $jobViewLink = sprintf(
+                '<a href="%s" class="job-view-link">%s</a>',
+                $this->get('router')->generate('oro_cron_job_view', ['id' => $job->getId()]),
+                $this->get('translator')->trans('oro.integration.progress')
+            );
+
+            $response['message'] = str_replace(
+                '{{ job_view_link }}',
+                $jobViewLink,
+                $this->get('translator')->trans('oro.dotmailer.datafield.sync')
+            );
+        } catch (\Exception $e) {
+            $status = Codes::HTTP_BAD_REQUEST;
+            $response['message'] = sprintf(
+                $this->get('translator')->trans('oro.integration.sync_error'),
+                $e->getMessage()
+            );
+        }
+
+        return new JsonResponse($response, $status);
     }
 }

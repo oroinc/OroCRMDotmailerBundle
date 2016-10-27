@@ -25,7 +25,6 @@ class DataFieldIterator extends AbstractIterator
     protected function getItems($take, $skip)
     {
         $apiDataFieldsList = $this->resources->GetDataFields()->toArray();
-        var_dump($apiDataFieldsList);
 
         return $apiDataFieldsList;
     }

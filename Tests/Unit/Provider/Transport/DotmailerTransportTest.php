@@ -4,6 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport;
 
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\ApiContactResubscription;
+use DotMailer\Api\DataTypes\ApiDataField;
 use DotMailer\Api\DataTypes\ApiFileMedia;
 use DotMailer\Api\DataTypes\ApiResubscribeResult;
 use DotMailer\Api\DataTypes\Int32List;
@@ -410,6 +411,40 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
 
         $actual = $this->target->getImportStatus($importId);
         $this->assertSame($expected, $actual);
+    }
+
+    public function testGetDataFields()
+    {
+        $resource = $this->initTransportStub();
+        $actual = $this->target->getDataFields();
+        $this->assertInstanceOf('Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\DataFieldIterator', $actual);
+    }
+
+    public function testRemoveDataField()
+    {
+        $fieldName = 'test_name';
+        $resource = $this->initTransportStub();
+        $result = $this->getMock('\StdClass', ['toArray']);
+        $result->expects($this->once())
+            ->method('toArray')
+            ->will($this->returnValue([]));
+        $resource->expects($this->once())
+            ->method('DeleteDataField')
+            ->with($fieldName)
+            ->will($this->returnValue($result));
+
+        $this->assertSame([], $this->target->removeDataField($fieldName));
+    }
+
+    public function testCreateDataField()
+    {
+        $data = new ApiDataField();
+        $resource = $this->initTransportStub();
+        $resource->expects($this->once())
+            ->method('PostDataFields')
+            ->with($data);
+
+        $this->target->createDataField($data);
     }
 
     /**

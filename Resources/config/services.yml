@@ -19,6 +19,7 @@ parameters:
     oro_dotmailer.contact.export.query_builder_adapter.class:            Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapter
     oro_dotmailer.contact.export.query_builder_adapter.registry:         Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterRegistry
     oro_dotmailer.export_manager.class:                                  Oro\Bundle\DotmailerBundle\Model\ExportManager
+    oro_dotmailer.datafield_manager.class:                               Oro\Bundle\DotmailerBundle\Model\DataFieldManager
     oro_dotmailer.log_helper.class:                                      Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper
 
     # Forms and Extensions
@@ -31,9 +32,11 @@ parameters:
     oro_dotmailer.form.type.transport_check.class:                 Oro\Bundle\DotmailerBundle\Form\Type\DotmailerTransportCheckButtonType
     oro_dotmailer.form.extension.channel_connectors.class:         Oro\Bundle\DotmailerBundle\Form\Extension\ChannelConnectorsExtension
     oro_dotmailer.form.type.datafield.class:                       Oro\Bundle\DotmailerBundle\Form\Type\DataFieldType
+    oro_dotmailer.form.event_listener.datafield.class:             Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldFormSubscriber
 
     #Form handlers
     oro_dotmailer.form.handler.connection_update.class:            Oro\Bundle\DotmailerBundle\Form\Handler\ConnectionUpdateFormHandler
+    oro_dotmailer.form.handler.datafield_update.class:             Oro\Bundle\DotmailerBundle\Form\Handler\DataFieldFormHandler
 
     #data converters
     oro_dotmailer.importexport.data_converter.not_exported_contact.class:              Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\NotExportedContactDataConverter
@@ -58,6 +61,7 @@ parameters:
     oro_dotmailer.importexport.reader.address_book.remove.class:                 Oro\Bundle\DotmailerBundle\ImportExport\Reader\RemoveAddressBookReader
     oro_dotmailer.importexport.reader.campaign.remove.class:                     Oro\Bundle\DotmailerBundle\ImportExport\Reader\RemoveCampaignReader
     oro_dotmailer.importexport.reader.export.rejected_contact.class:             Oro\Bundle\DotmailerBundle\ImportExport\Reader\RejectedContactExportReader
+    oro_dotmailer.importexport.reader.datafield.remove.class:                    Oro\Bundle\DotmailerBundle\ImportExport\Reader\RemoveDataFieldReader
 
     #connectors
     oro_dotmailer.connector.abstract.class:                            Oro\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector
@@ -84,6 +88,7 @@ parameters:
     oro_dotmailer.importexport.strategy.contact.class:                             Oro\Bundle\DotmailerBundle\ImportExport\Strategy\ContactStrategy
     oro_dotmailer.importexport.strategy.contact_sync.class:                        Oro\Bundle\DotmailerBundle\ImportExport\Strategy\ContactSyncStrategy
     oro_dotmailer.importexport.strategy.datafield.class:                           Oro\Bundle\DotmailerBundle\ImportExport\Strategy\DataFieldStrategy
+    oro_dotmailer.importexport.strategy.remove_datafield.class:                    Oro\Bundle\DotmailerBundle\ImportExport\Strategy\RemoveDataFieldStrategy
 
     #processor
     oro_dotmailer.importexport.processor.import_abstract.class:            Oro\Bundle\DotmailerBundle\ImportExport\Processor\ImportProcessor
@@ -97,7 +102,7 @@ parameters:
     oro_dotmailer.importexport.writer.import.class:                      Oro\Bundle\DotmailerBundle\ImportExport\Writer\ImportWriter
     oro_dotmailer.importexport.writer.contact_sync.class:                Oro\Bundle\DotmailerBundle\ImportExport\Writer\ContactSyncWriter
     oro_dotmailer.importexport.writer.unsubscribed_contact_sync.class:   Oro\Bundle\DotmailerBundle\ImportExport\Writer\UnsubscribedContactSyncWriter
-    oro_dotmailer.importexport.writer.import.removed_address_book.class: Oro\Bundle\DotmailerBundle\ImportExport\Writer\RemoveAddressBookWriter
+    oro_dotmailer.importexport.writer.import.remove.class:               Oro\Bundle\DotmailerBundle\ImportExport\Writer\RemoveWriter
     oro_dotmailer.importexport.writer.import.removed_contact.class:      Oro\Bundle\DotmailerBundle\ImportExport\Writer\RemoveCampaignWriter
     oro_dotmailer.importexport.writer.export.contacts.class:             Oro\Bundle\DotmailerBundle\ImportExport\Writer\ContactsExportWriter
     oro_dotmailer.importexport.writer.export.removed_contacts.class:     Oro\Bundle\DotmailerBundle\ImportExport\Writer\RemovedContactsExportWriter
@@ -134,6 +139,7 @@ parameters:
     oro_dotmailer.listener.cache_clear.class:                      Oro\Bundle\DotmailerBundle\EventListener\CacheClearListener
     oro_dotmailer.listener.contact_export.class:                   Oro\Bundle\DotmailerBundle\EventListener\ContactExportListener
     oro_dotmailer.listener.update_address_book_last_imported_date.class: Oro\Bundle\DotmailerBundle\EventListener\UpdateAddressBookLastImportDateListener
+    oro_dotmailer.listener.datafield_remove.class:                       Oro\Bundle\DotmailerBundle\EventListener\DataFieldRemoveListener
 
     oro_dotmailer.transport.dotmailer.class: Oro\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport
 services:
@@ -194,10 +200,14 @@ services:
         tags:
             - { name: form.type, alias: oro_dotmailer_transport_check_button }
 
+    oro_dotmailer.form.event_listener.datafield:
+        class: %oro_dotmailer.form.event_listener.datafield.class%
+
     oro_dotmailer.form.type.datafield:
         class: %oro_dotmailer.form.type.datafield.class%
         arguments:
             - "%oro_dotmailer.entity.datafield.class%"
+            - "@oro_dotmailer.form.event_listener.datafield"
         tags:
             - { name: form.type, alias: "oro_dotmailer_data_field" }
 
@@ -208,12 +218,31 @@ services:
             - "%oro_dotmailer.entity.datafield.class%"
             - "@doctrine.orm.entity_manager"
 
+    oro_dotmailer.datafield.form:
+        class: Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments:
+            - "oro_dotmailer_data_field_form"
+            - "oro_dotmailer_data_field"
+
     #Form handlers
     oro_dotmailer.form.handler.connection_update:
         class: %oro_dotmailer.form.handler.connection_update.class%
         arguments:
             - "@doctrine"
             - "@request"
+        scope: request
+
+    oro_dotmailer.form.handler.datafield_update:
+        class: %oro_dotmailer.form.handler.datafield_update.class%
+        arguments:
+            - "@oro_dotmailer.datafield.form"
+            - "@doctrine"
+            - "@request"
+            - "@logger"
+            - "@translator"
+            - "@oro_dotmailer.datafield_manager"
         scope: request
 
     # Integration related services
@@ -242,6 +271,11 @@ services:
             - "@oro_dotmailer.transport.integration_transport"
             - "@oro_integration.job_executor"
             - %oro_dotmailer.entity.address_book_contact.class%
+
+    oro_dotmailer.datafield_manager:
+        class: %oro_dotmailer.datafield_manager.class%
+        arguments:
+            - "@oro_dotmailer.transport.integration_transport"
 
     oro_dotmailer.provider.marketing_list_items.query_builder:
         class: %oro_dotmailer.provider.marketing_list_items.query_builder.class%
@@ -331,6 +365,10 @@ services:
         class: %oro_dotmailer.importexport.reader.scheduled_for_export.class%
         parent: oro_dotmailer.importexport.reader.export.abstract
 
+    oro_dotmailer.importexport.reader.datafield.remove:
+        parent: oro_dotmailer.importexport.reader.abstract
+        class: %oro_dotmailer.importexport.reader.datafield.remove.class%
+
     #connectors
     oro_dotmailer.connector.abstract:
         abstract: true
@@ -406,6 +444,7 @@ services:
         parent: oro_dotmailer.connector.abstract
         calls:
             - [setEntityName, [%oro_dotmailer.entity.datafield.class%]]
+            - [setConfigManager, ["@oro_config.user"]]
         tags:
             - { name: oro_integration.connector, type: datafield, channel_type: dotmailer }
 
@@ -501,6 +540,10 @@ services:
         class: %oro_dotmailer.importexport.strategy.datafield.class%
         parent: oro_dotmailer.importexport.strategy.add_or_replace
 
+    oro_dotmailer.importexport.strategy.remove_datafield:
+        class: %oro_dotmailer.importexport.strategy.remove_datafield.class%
+        parent: oro_dotmailer.importexport.strategy.import.abstract
+
     #processor
     oro_dotmailer.importexport.processor.import_abstract:
         class: %oro_dotmailer.importexport.processor.import_abstract.class%
@@ -542,6 +585,12 @@ services:
         calls:
             - [setStrategy, ["@oro_dotmailer.importexport.strategy.remove_address_book"]]
             - [setEntityName, [%oro_dotmailer.entity.address_book.class%]]
+
+    oro_dotmailer.importexport.processor.datafield.remove:
+        parent: oro_dotmailer.importexport.processor.import_abstract
+        calls:
+            - [setStrategy, ["@oro_dotmailer.importexport.strategy.remove_datafield"]]
+            - [setEntityName, [%oro_dotmailer.entity.datafield.class%]]
 
     oro_dotmailer.importexport.processor.remove_campaign:
         parent: oro_dotmailer.importexport.processor.import_abstract
@@ -728,8 +777,8 @@ services:
         parent: oro_dotmailer.importexport.writer.import
         class: %oro_dotmailer.importexport.writer.unsubscribed_contact_sync.class%
 
-    oro_dotmailer.importexport.writer.import.removed_address_book:
-        class: %oro_dotmailer.importexport.writer.import.removed_address_book.class%
+    oro_dotmailer.importexport.writer.import.remove:
+        class: %oro_dotmailer.importexport.writer.import.remove.class%
         arguments:
             - "@doctrine"
             - "@oro_integration.logger.strategy"
@@ -824,3 +873,10 @@ services:
         class: %oro_dotmailer.transport.dotmailer.class%
         tags:
             - { name: oro_campaign.email_transport }
+
+    oro_dotmailer.listener.datafield_remove:
+        class: "%oro_dotmailer.listener.datafield_remove.class%"
+        arguments:
+            - "@oro_dotmailer.datafield_manager"
+        tags:
+            - { name: doctrine.event_listener, event: preRemove }

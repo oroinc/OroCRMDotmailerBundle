@@ -6,21 +6,26 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+use Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldFormSubscriber;
+
 class DataFieldType extends AbstractType
 {
     const NAME = 'oro_dotmailer_data_field';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $dataClass;
+
+    /** @var DataFieldFormSubscriber */
+    protected $subscriber;
 
     /**
      * @param string $dataClass
+     * @param DataFieldFormSubscriber $subscriber
      */
-    public function __construct($dataClass)
+    public function __construct($dataClass, DataFieldFormSubscriber $subscriber)
     {
         $this->dataClass = $dataClass;
+        $this->subscriber = $subscriber;
     }
 
     /**
@@ -28,6 +33,7 @@ class DataFieldType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->addEventSubscriber($this->subscriber);
         $builder
             ->add(
                 'channel',
@@ -68,12 +74,12 @@ class DataFieldType extends AbstractType
                 'text',
                 [
                     'label' => 'oro.dotmailer.datafield.default_value.label',
-                    'required' => false
+                    'required' => false,
                 ]
             )
             ->add(
                 'notes',
-                'oro_resizeable_rich_text',
+                'textarea',
                 [
                     'label' => 'oro.dotmailer.datafield.notes.label',
                     'required' => false
@@ -89,7 +95,7 @@ class DataFieldType extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class' => $this->dataClass,
-                'cascade_validation' => true,
+                'cascade_validation' => true
             ]
         );
     }

@@ -55,23 +55,31 @@ datagrids:
                 select:
                     - field.id
                     - field.name
+                    - field.notes
                     - channel.name as channelName
                 from:
                     - { table: %oro_dotmailer.entity.datafield.class%, alias: field }
                 join:
                     left:
                         - { join: field.channel, alias: channel }
+        inline_editing:
+            enable: true
+            behaviour: enable_selected
         columns:
             channelName:
                 label: oro.dotmailer.datafield.channel.label
             name:
                 label: oro.dotmailer.datafield.name.label
+            notes:
+                label: oro.dotmailer.datafield.notes.label
+                inline_editing:
+                    enable: true
         sorters:
             columns:
                 name:
                     data_name: field.name
                 channelName:
-                    data_name: field_visibility.id
+                    data_name: channel.name
             default:
                 name: ASC
         filters:

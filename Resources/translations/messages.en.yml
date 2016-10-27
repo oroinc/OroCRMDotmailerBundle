@@ -207,6 +207,9 @@ oro:
             default_value.label:              Default Value
             notes.label:                      Notes
             synced.label:                     Is Synchronized
+            synchronize:                      Synchronize
+            sync:                             Data fields synchronization started. {{ job_view_link }}
+            syncronize_scheduled:             Data fields scheduled to synchronize with Dotmailer
 
         connector:
             campaign:
@@ -344,8 +347,18 @@ oro:
             password:
                 tooltip: API User Password.
 
+        handler:
+            unable_to_create_field: Failed to create field in Dotmailer.
+            default_value_not_match: Default value doesn't match the field's type.
+
         controller:
             datafield.saved.message: Data Field Saved
+
+        configuration:
+            dotmailer_settings: Dotmailer settings
+            dotmailer_synchronization: Synchronization settings
+            datafields_sync_interval: Data Fields Sync Interval
+            datafields_sync_interval.tooltip: This interval will be used to update data fields from Dotmailer
 
         block:
             general: General

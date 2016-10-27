@@ -52,6 +52,10 @@ class DataField extends ExtendDataField
     const FIELD_TYPE_DATE                       = 'Date';
     const FIELD_TYPE_BOOLEAN                    = 'Boolean';
 
+    //default values for Boolean field type
+    const DEFAULT_BOOLEAN_YES = 'Yes';
+    const DEFAULT_BOOLEAN_NO = 'No';
+
     /**
      * @var int
      *
@@ -72,7 +76,7 @@ class DataField extends ExtendDataField
      * @var Channel
      *
      * @ORM\ManyToOne(targetEntity="Oro\Bundle\IntegrationBundle\Entity\Channel")
-     * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", onDelete="CASCADE")
      * @ConfigField(
      *      defaultValues={
      *          "importexport"={
@@ -105,11 +109,11 @@ class DataField extends ExtendDataField
     protected $notes;
 
     /**
-     * @var bool
+     * Flag used for force field remove when fields import from DM is running
      *
-     * @ORM\Column(name="is_synced", type="boolean", nullable=true)
+     * @var bool
      */
-    protected $synced;
+    protected $forceRemove;
 
     /**
      * @var Organization
@@ -252,18 +256,18 @@ class DataField extends ExtendDataField
     /**
      * @return boolean
      */
-    public function isSynced()
+    public function isForceRemove()
     {
-        return $this->synced;
+        return $this->forceRemove;
     }
 
     /**
-     * @param boolean $synced
+     * @param boolean $forceRemove
      * @return DataField
      */
-    public function setSynced($synced)
+    public function setForceRemove($forceRemove)
     {
-        $this->synced = $synced;
+        $this->forceRemove = $forceRemove;
 
         return $this;
     }

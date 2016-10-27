@@ -2,7 +2,7 @@
 
 {% oro_title_set({params : {
     '%entity.name%': entity.name,
-    '%entityName%': 'oro.tracking.trackingwebsite.entity_label'|trans }
+    '%entityName%': 'oro.dotmailer.datafield.entity_label'|trans }
 }) %}
 {% set entityId = entity.id %}
 
@@ -72,5 +72,35 @@
         'formErrors': form_errors(form)? form_errors(form) : null,
         'dataBlocks': dataBlocks,
     } %}
+    {# update default value input type based on type field #}
+    {% set fieldsToSendOnTypeChange = [
+        form.type.vars.full_name,
+        form.name.vars.full_name,
+        form.visibility.vars.full_name,
+        form.notes.vars.full_name
+    ] %}
+    {% if csrfTokenFieldFillName is defined %}
+        {% set fieldsToSendOnTypeChange = fieldsToSendOnTypeChange|merge([csrfTokenFieldFillName]) %}
+    {% elseif form._token is defined %}
+        {% set fieldsToSendOnTypeChange = fieldsToSendOnTypeChange|merge([form._token.vars.full_name]) %}
+    {% endif %}
+
+    <script type="text/javascript">
+        require(['orodotmailer/js/datafield-view'], function (DataFieldView) {
+            "use strict";
+
+            $(function () {
+                var options = {
+                    formSelector: '#{{ formSelector|default(form.vars.id) }}',
+                    typeSelector: '#{{ form.type.vars.id }}',
+                    fieldsSets: {
+                        type: {{ fieldsToSendOnTypeChange|json_encode|raw }},
+                    }
+                };
+
+                new DataFieldView(options);
+            });
+        });
+    </script>
     {{ parent() }}
 {% endblock content_data %}
