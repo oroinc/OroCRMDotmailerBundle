@@ -38,6 +38,9 @@ oro:
 
             sync: Marketing list synchronization started. {{ job_view_link }}
 
+            message:
+                saved: Address Book saved
+
         activity:
             entity_label:                 Dotmailer Activity
             entity_plural_label:          Dotmailer Activities

@@ -4,6 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Transport;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use DotMailer\Api\DataTypes\ApiAddressBook;
 use DotMailer\Api\DataTypes\ApiCampaign;
 use DotMailer\Api\DataTypes\ApiCampaignSend;
 use DotMailer\Api\DataTypes\ApiContactImport;
@@ -88,6 +89,19 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
         }
 
         $this->dotmailerResources = $this->dotMailerResFactory->createResources($username, $password, $this->logger);
+    }
+
+    /**
+     * @param string $name
+     * @param string $visibility
+     *
+     * @return ApiAddressBook
+     */
+    public function createAddressBook($name, $visibility)
+    {
+        $addressBook = new ApiAddressBook(['Name' => $name, 'Visibility' => $visibility]);
+
+        return $this->dotmailerResources->PostAddressBooks($addressBook);
     }
 
     /**

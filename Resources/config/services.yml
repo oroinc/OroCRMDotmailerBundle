@@ -29,9 +29,11 @@ parameters:
     oro_dotmailer.form.type.address_book_select.class:             Oro\Bundle\DotmailerBundle\Form\Type\AddressBookSelectType
     oro_dotmailer.form.type.transport_check.class:                 Oro\Bundle\DotmailerBundle\Form\Type\DotmailerTransportCheckButtonType
     oro_dotmailer.form.extension.channel_connectors.class:         Oro\Bundle\DotmailerBundle\Form\Extension\ChannelConnectorsExtension
+    oro_dotmailer.form.type.address_book.class:                    Oro\Bundle\DotmailerBundle\Form\Type\AddressBookType
 
     #Form handlers
     oro_dotmailer.form.handler.connection_update.class:            Oro\Bundle\DotmailerBundle\Form\Handler\ConnectionUpdateFormHandler
+    oro_dotmailer.form.handler.address_book_update.class:          Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler
 
     #data converters
     oro_dotmailer.importexport.data_converter.not_exported_contact.class:              Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\NotExportedContactDataConverter
@@ -189,12 +191,34 @@ services:
         tags:
             - { name: form.type, alias: oro_dotmailer_transport_check_button }
 
+    oro_dotmailer.form.type.address_book:
+        class: %oro_dotmailer.form.type.address_book.class%
+        tags:
+            - { name: form.type, alias: oro_dotmailer_address_book_form }
+
+    oro_dotmailer.form.address_book:
+        class: Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments:
+            - "oro_dotmailer_address_book_form"
+            - "oro_dotmailer_address_book_form"
+
     #Form handlers
     oro_dotmailer.form.handler.connection_update:
         class: %oro_dotmailer.form.handler.connection_update.class%
         arguments:
             - "@doctrine"
             - "@request"
+        scope: request
+
+    oro_dotmailer.form.handler.address_book_update:
+        class: %oro_dotmailer.form.handler.address_book_update.class%
+        arguments:
+            - "@oro_dotmailer.form.address_book"
+            - "@request"
+            - "@doctrine.orm.entity_manager"
+            - "@oro_dotmailer.transport.integration_transport"
         scope: request
 
     # Integration related services
