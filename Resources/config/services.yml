@@ -617,7 +617,7 @@ services:
         class: %oro_dotmailer.workflow.action.abstract_marketing_list_entities.class%
         astract: true
         arguments:
-            - "@oro_action.context_accessor"
+            - "@oro_action.expression.context_accessor"
             - "@oro_marketing_list.provider.contact_information_fields"
             - "@oro_dotmailer.provider.marketing_list_items.query_builder"
             - "@oro_dotmailer.model.field_helper"
