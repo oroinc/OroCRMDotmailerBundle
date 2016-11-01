@@ -11,6 +11,7 @@ use Oro\Component\MessageQueue\Job\JobRunner;
 use Oro\Component\MessageQueue\Transport\MessageInterface;
 use Oro\Component\MessageQueue\Transport\SessionInterface;
 use Oro\Component\MessageQueue\Util\JSON;
+use Psr\Log\LoggerInterface;
 
 class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, TopicSubscriberInterface
 {
@@ -30,18 +31,26 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
     private $jobRunner;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param DoctrineHelper $doctrineHelper
      * @param ExportManager $exportManager
      * @param JobRunner $jobRunner
+     * @param LoggerInterface $logger
      */
     public function __construct(
         DoctrineHelper $doctrineHelper,
         ExportManager $exportManager,
-        JobRunner $jobRunner
+        JobRunner $jobRunner,
+        LoggerInterface $logger
     ) {
         $this->doctrineHelper = $doctrineHelper;
         $this->exportManager = $exportManager;
         $this->jobRunner = $jobRunner;
+        $this->logger = $logger;
     }
 
     /**
@@ -52,25 +61,41 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
         $body = JSON::decode($message->getBody());
         $body = array_replace_recursive(['integrationId' => null], $body);
 
-        if (false == $body['integrationId']) {
-            throw new \LogicException('The message invalid. It must have integrationId set');
+        if (! $body['integrationId']) {
+            $this->logger->critical('The message invalid. It must have integrationId set', ['message' => $message]);
+
+            return self::REJECT;
+        }
+
+        /** @var EntityManagerInterface $em */
+        $em = $this->doctrineHelper->getEntityManagerForClass(Channel::class);
+
+        /** @var Channel $channel */
+        $channel = $em->find(Channel::class, $body['integrationId']);
+
+        if (! $channel) {
+            $this->logger->critical(
+                sprintf('The channel not found: %s', $body['integrationId']),
+                ['message' => $message]
+            );
+
+            return self::REJECT;
+        }
+        if (! $channel->isEnabled()) {
+            $this->logger->critical(
+                sprintf('The channel is not enabled: %s', $body['integrationId']),
+                ['message' => $message]
+            );
+
+            return self::REJECT;
         }
 
         $jobName = 'oro_dotmailer:export_contacts_status_update:'.$body['integrationId'];
         $ownerId = $message->getMessageId();
 
-        $result = $this->jobRunner->runUnique($ownerId, $jobName, function () use ($body) {
+        $result = $this->jobRunner->runUnique($ownerId, $jobName, function () use ($body, $channel) {
             /** @var EntityManagerInterface $em */
             $em = $this->doctrineHelper->getEntityManagerForClass(Channel::class);
-
-            /** @var Channel $channel */
-            $channel = $em->find(Channel::class, $body['integrationId']);
-            if (false == $channel) {
-                return false;
-            }
-            if (false == $channel->isEnabled()) {
-                return false;
-            }
 
             $em->getConnection()->getConfiguration()->setSQLLogger(null);
 

@@ -16,6 +16,7 @@ use Oro\Component\MessageQueue\Transport\Null\NullMessage;
 use Oro\Component\MessageQueue\Transport\Null\NullSession;
 use Oro\Component\MessageQueue\Util\JSON;
 use Oro\Component\Testing\ClassExtensionTrait;
+use Psr\Log\LoggerInterface;
 
 class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCase
 {
@@ -44,26 +45,33 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         new ExportContactsStatusUpdateProcessor(
             $this->createDoctrineHelperStub(),
             $this->createExportManagerMock(),
-            new JobRunner()
+            new JobRunner(),
+            $this->createLoggerMock()
         );
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage The message invalid. It must have integrationId set
-     */
-    public function testThrowIfMessageBodyMissIntegrationId()
+    public function testShouldLogAndRejectIfMessageBodyMissIntegrationId()
     {
-        $processor = new ExportContactsStatusUpdateProcessor(
-            $this->createDoctrineHelperStub(),
-            $this->createExportManagerMock(),
-            new JobRunner()
-        );
-
         $message = new NullMessage();
         $message->setBody('[]');
 
-        $processor->process($message, new NullSession());
+        $logger = $this->createLoggerMock();
+        $logger
+            ->expects($this->once())
+            ->method('critical')
+            ->with('The message invalid. It must have integrationId set', ['message' => $message])
+        ;
+
+        $processor = new ExportContactsStatusUpdateProcessor(
+            $this->createDoctrineHelperStub(),
+            $this->createExportManagerMock(),
+            new JobRunner(),
+            $logger
+        );
+
+        $status = $processor->process($message, new NullSession());
+
+        $this->assertEquals(MessageProcessorInterface::REJECT, $status);
     }
 
     /**
@@ -75,7 +83,8 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $this->createDoctrineHelperStub(),
             $this->createExportManagerMock(),
-            new JobRunner()
+            new JobRunner(),
+            $this->createLoggerMock()
         );
 
         $message = new NullMessage();
@@ -96,14 +105,23 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
 
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
 
+        $message = new NullMessage();
+        $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
+
+        $logger = $this->createLoggerMock();
+        $logger
+            ->expects($this->once())
+            ->method('critical')
+            ->with('The channel not found: theIntegrationId', ['message' => $message])
+        ;
+
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
             $this->createExportManagerMock(),
-            new JobRunner()
+            new JobRunner(),
+            $logger
         );
 
-        $message = new NullMessage();
-        $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
 
         $status = $processor->process($message, new NullSession());
 
@@ -123,16 +141,24 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
             ->willReturn($channel);
         ;
 
+        $message = new NullMessage();
+        $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
+
+        $logger = $this->createLoggerMock();
+        $logger
+            ->expects($this->once())
+            ->method('critical')
+            ->with('The channel is not enabled: theIntegrationId', ['message' => $message])
+        ;
+
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
 
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
             $this->createExportManagerMock(),
-            new JobRunner()
+            new JobRunner(),
+            $logger
         );
-
-        $message = new NullMessage();
-        $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
 
         $status = $processor->process($message, new NullSession());
 
@@ -177,7 +203,8 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
             $exportManagerMock,
-            new JobRunner()
+            new JobRunner(),
+            $this->createLoggerMock()
         );
 
         $message = new NullMessage();
@@ -226,7 +253,8 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
             $exportManagerMock,
-            new JobRunner()
+            new JobRunner(),
+            $this->createLoggerMock()
         );
 
         $message = new NullMessage();
@@ -275,7 +303,8 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
             $exportManagerMock,
-            new JobRunner()
+            new JobRunner(),
+            $this->createLoggerMock()
         );
 
         $message = new NullMessage();
@@ -306,7 +335,8 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
             $this->createExportManagerMock(),
-            $jobRunner
+            $jobRunner,
+            $this->createLoggerMock()
         );
 
         $message = new NullMessage();
@@ -366,5 +396,13 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
     private function createExportManagerMock()
     {
         return $this->getMock(ExportManager::class, [], [], '', false);
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|LoggerInterface
+     */
+    private function createLoggerMock()
+    {
+        return $this->getMock(LoggerInterface::class);
     }
 }
