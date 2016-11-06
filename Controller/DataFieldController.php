@@ -8,8 +8,6 @@ use JMS\JobQueueBundle\Entity\Job;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -19,8 +17,8 @@ use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
-use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldType;
 use Oro\Bundle\DotmailerBundle\Form\Handler\DataFieldFormHandler;
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
 
 /**
@@ -126,36 +124,37 @@ class DataFieldController extends Controller
     public function synchronize()
     {
         try {
-            $job = new Job(
-                SyncCommand::COMMAND_NAME,
-                [
-                    sprintf(
-                        '%s=%s',
-                        DataFieldConnector::FORCE_SYNC_FLAG,
-                        1
-                    ),
-                    '-v'
-                ]
-            );
+            $repository = $this->get('doctrine')->getRepository('OroIntegrationBundle:Channel');
+            $channels = $repository->getConfiguredChannelsForSync(ChannelType::TYPE, true);
+            foreach ($channels as $channel) {
+                $job = new Job(
+                    SyncCommand::COMMAND_NAME,
+                    [
+                        sprintf(
+                            '--%s=%s',
+                            SyncCommand::INTEGRATION_ID_OPTION,
+                            $channel->getId()
+                        ),
+                        sprintf(
+                            '--%s=%s',
+                            'connector',
+                            DataFieldConnector::TYPE
+                        ),
+                        sprintf(
+                            '%s=%s',
+                            DataFieldConnector::FORCE_SYNC_FLAG,
+                            1
+                        ),
+                        '-v'
+                    ]
+                );
 
+                $em = $this->get('doctrine')->getManager();
+                $em->persist($job);
+                $em->flush();
+            }
             $status = Codes::HTTP_OK;
-            $response = [ 'message' => '' ];
-
-            $em = $this->get('doctrine')->getManager();
-            $em->persist($job);
-            $em->flush();
-
-            $jobViewLink = sprintf(
-                '<a href="%s" class="job-view-link">%s</a>',
-                $this->get('router')->generate('oro_cron_job_view', ['id' => $job->getId()]),
-                $this->get('translator')->trans('oro.integration.progress')
-            );
-
-            $response['message'] = str_replace(
-                '{{ job_view_link }}',
-                $jobViewLink,
-                $this->get('translator')->trans('oro.dotmailer.datafield.sync')
-            );
+            $response = ['message' => $this->get('translator')->trans('oro.dotmailer.datafield.syncronize_scheduled')];
         } catch (\Exception $e) {
             $status = Codes::HTTP_BAD_REQUEST;
             $response['message'] = sprintf(

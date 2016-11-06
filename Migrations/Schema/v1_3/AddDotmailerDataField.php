@@ -36,14 +36,14 @@ class AddDotmailerDataField implements Migration, OrderedMigrationInterface
         $table = $schema->createTable('orocrm_dm_data_field');
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
         $table->addColumn('owner_id', 'integer', ['notnull' => false]);
-        $table->addColumn('channel_id', 'integer', ['notnull' => false]);
+        $table->addColumn('channel_id', 'integer');
         $table->addColumn('name', 'string', ['length' => 255]);
         $table->addColumn('default_value', 'string', ['length' => 255, 'notnull' => false]);
         $table->addColumn('notes', 'text', ['notnull' => false]);
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->setPrimaryKey(['id']);
-        $table->addIndex(['owner_id'], 'IDX_9A9DD33F7E3C61F9', []);
-        $table->addIndex(['channel_id'], 'IDX_9A9DD33F72F5A1AA', []);
+        $table->addIndex(['owner_id'], 'orocrm_dm_data_field_owner', []);
+        $table->addIndex(['channel_id'], 'orocrm_dm_data_field_channel', []);
         $table->addUniqueIndex(['name', 'channel_id'], 'orocrm_dm_data_field_unq');
 
         $table->addForeignKeyConstraint(

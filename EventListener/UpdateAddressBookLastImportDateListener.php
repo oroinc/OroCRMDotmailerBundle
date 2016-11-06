@@ -2,36 +2,19 @@
 
 namespace Oro\Bundle\DotmailerBundle\EventListener;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\IntegrationBundle\Event\SyncEvent;
 
-class UpdateAddressBookLastImportDateListener implements EventSubscriberInterface
+class UpdateAddressBookLastImportDateListener extends AbstractImportExportListener
 {
-    /**
-     * @var ManagerRegistry
-     */
-    protected $registry;
-
-    /**
-     * @param ManagerRegistry $registry
-     */
-    public function __construct(ManagerRegistry $registry)
-    {
-        $this->registry = $registry;
-    }
-
     /**
      * @param SyncEvent $syncEvent
      */
     public function afterSyncFinished(SyncEvent $syncEvent)
     {
-        if (!$this->isApplicable($syncEvent)) {
+        if (!$this->isApplicable($syncEvent, ContactConnector::IMPORT_JOB)) {
             return;
         }
 
@@ -52,17 +35,6 @@ class UpdateAddressBookLastImportDateListener implements EventSubscriberInterfac
         $this->registry
             ->getRepository('OroDotmailerBundle:AddressBook')
             ->bulkUpdateLastImportedAt($contactConnectorLastSyncDate, $addressBookIds);
-    }
-
-    /**
-     * @param SyncEvent $syncEvent
-     *
-     * @return bool
-     */
-    protected function isApplicable(SyncEvent $syncEvent)
-    {
-        return $syncEvent->getJobName() == ContactConnector::IMPORT_JOB
-            && $syncEvent->getJobResult()->isSuccessful();
     }
 
     /**

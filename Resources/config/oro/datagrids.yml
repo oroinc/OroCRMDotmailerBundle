@@ -47,6 +47,8 @@ datagrids:
 
     oro_dotmailer_datafield_grid:
         extended_entity_name: %oro_dotmailer.entity.datafield.class%
+        channel_limitation:
+            channel_relation_path: .channel
         options:
             entityHint: Data fields list
         source:
@@ -116,6 +118,83 @@ datagrids:
             delete:
                 type:          delete
                 acl_resource:  oro_dotmailer_datafield_delete
+                label:         oro.grid.action.delete
+                icon:          trash
+                link:          delete_link
+
+    oro_dotmailer_datafield_mapping_grid:
+        extended_entity_name: %oro_dotmailer.entity.datafield_mapping.class%
+        options:
+            entityHint: Data fields mapping list
+        source:
+            type: orm
+            query:
+                select:
+                    - mapping.id
+                    - mapping.entity
+                    - mapping.syncPriority
+                    - channel.name as channelName
+                from:
+                    - { table: %oro_dotmailer.entity.datafield_mapping.class%, alias: mapping }
+                join:
+                    left:
+                        - { join: mapping.channel, alias: channel }
+        columns:
+            channelName:
+                label: oro.dotmailer.datafield_mapping.channel.label
+            entity:
+                label: oro.dotmailer.datafield_mapping.entity.label
+                type: twig
+                template: 'OroEntityBundle:Datagrid:Property/entity.html.twig'
+                frontend_type: html
+                context:
+                    entity_provider: "@oro_dotmailer.entity_provider"
+            syncPriority:
+                label: oro.dotmailer.datafield_mapping.sync_priority.label
+        sorters:
+            columns:
+                entity:
+                    data_name: mapping.entity
+                channelName:
+                    data_name: channel.name
+                syncPriority:
+                    data_name: mapping.syncPriority
+            default:
+                entity: ASC
+        filters:
+            columns:
+                channelName:
+                    type: entity
+                    data_name: channel.id
+                    options:
+                        field_options:
+                            class: "OroIntegrationBundle:Channel"
+                            property: name
+                            translatable_options: false
+                entity:
+                    type: string
+                    data_name: mapping.entity
+        properties:
+            id: ~
+            update_link:
+                type:       url
+                route:      oro_dotmailer_datafield_mapping_update
+                params:     [ id ]
+            delete_link:
+                type:       url
+                route:      oro_api_delete_dotmailer_datafield_mapping
+                params:     [ id ]
+        actions:
+            update:
+                type:          navigate
+                acl_resource:  oro_dotmailer_datafield_mapping_update
+                label:         oro.grid.action.view
+                icon:          edit
+                link:          update_link
+                rowAction:     true
+            delete:
+                type:          delete
+                acl_resource:  oro_dotmailer_datafield_mapping_delete
                 label:         oro.grid.action.delete
                 icon:          trash
                 link:          delete_link

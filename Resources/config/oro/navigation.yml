@@ -11,6 +11,11 @@ navigation:
                 route: 'oro_dotmailer_datafield_index'
                 extras:
                     routes: ['oro_dotmailer_datafield_*']
+            oro_dotmailer_data_field_mapping_list:
+                label: 'oro.dotmailer.datafield_mapping.entity_plural_label'
+                route: 'oro_dotmailer_datafield_mapping_index'
+                extras:
+                    routes: ['oro_dotmailer_datafield_mapping_*']
 
         tree:
             application_menu:
@@ -20,8 +25,13 @@ navigation:
                           oro_dotmailer:
                               children:
                                   oro_dotmailer_data_field_list: ~
+                                  oro_dotmailer_data_field_mapping_list: ~
 
     titles:
         oro_dotmailer_datafield_index: ~
         oro_dotmailer_datafield_create: 'Add Dotmailer Data Field'
         oro_dotmailer_datafield_view: '%%datafield.name%%'
+
+        oro_dotmailer_datafield_mapping_index: ~
+        oro_dotmailer_datafield_mapping_create: 'Add Dotmailer Data Field Mapping'
+        oro_dotmailer_datafield_mapping_update: 'Update Dotmailer Data Field Mapping'

@@ -6,7 +6,6 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Psr\Log\LoggerInterface;
 
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,7 +63,7 @@ class DataFieldFormHandler
 
     /**
      * @param DataField $entity
-     * @return int|null Return true if form is valid and Data Field was created in DM
+     * @return bool Return true if form is valid and Data Field was created in DM
      * and false otherwise
      */
     public function process(DataField $entity)

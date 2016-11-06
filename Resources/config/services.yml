@@ -8,6 +8,8 @@ parameters:
     oro_dotmailer.entity.activity.class:                           Oro\Bundle\DotmailerBundle\Entity\Activity
     oro_dotmailer.entity.campaign_summary.class:                   Oro\Bundle\DotmailerBundle\Entity\CampaignSummary
     oro_dotmailer.entity.datafield.class:                          Oro\Bundle\DotmailerBundle\Entity\DataField
+    oro_dotmailer.entity.datafield_mapping.class:                  Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping
+    oro_dotmailer.entity.datafield_mapping_config.class:           Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig
 
     # Integration related services
     oro_dotmailer.provider.channel_type.class:                           Oro\Bundle\DotmailerBundle\Provider\ChannelType
@@ -24,15 +26,19 @@ parameters:
 
     # Forms and Extensions
     oro_dotmailer.form.event_listener.integration_transport_settings.class: Oro\Bundle\DotmailerBundle\Form\EventListener\IntegrationSettingsSubscriber
-    oro_dotmailer.form.type.integration_transport_settings.class:  Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSettingsType
-    oro_dotmailer.form.type.transport_settings.class:              Oro\Bundle\DotmailerBundle\Form\Type\DotmailerTransportSettingsType
-    oro_dotmailer.form.type.marketing_list_connection.class:       Oro\Bundle\DotmailerBundle\Form\Type\MarketingListConnectionType
-    oro_dotmailer.form.type.integration_select.class:              Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType
-    oro_dotmailer.form.type.address_book_select.class:             Oro\Bundle\DotmailerBundle\Form\Type\AddressBookSelectType
-    oro_dotmailer.form.type.transport_check.class:                 Oro\Bundle\DotmailerBundle\Form\Type\DotmailerTransportCheckButtonType
-    oro_dotmailer.form.extension.channel_connectors.class:         Oro\Bundle\DotmailerBundle\Form\Extension\ChannelConnectorsExtension
-    oro_dotmailer.form.type.datafield.class:                       Oro\Bundle\DotmailerBundle\Form\Type\DataFieldType
-    oro_dotmailer.form.event_listener.datafield.class:             Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldFormSubscriber
+    oro_dotmailer.form.type.integration_transport_settings.class:           Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSettingsType
+    oro_dotmailer.form.type.transport_settings.class:                       Oro\Bundle\DotmailerBundle\Form\Type\DotmailerTransportSettingsType
+    oro_dotmailer.form.type.marketing_list_connection.class:                Oro\Bundle\DotmailerBundle\Form\Type\MarketingListConnectionType
+    oro_dotmailer.form.type.integration_select.class:                       Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType
+    oro_dotmailer.form.type.address_book_select.class:                      Oro\Bundle\DotmailerBundle\Form\Type\AddressBookSelectType
+    oro_dotmailer.form.type.transport_check.class:                          Oro\Bundle\DotmailerBundle\Form\Type\DotmailerTransportCheckButtonType
+    oro_dotmailer.form.extension.channel_connectors.class:                  Oro\Bundle\DotmailerBundle\Form\Extension\ChannelConnectorsExtension
+    oro_dotmailer.form.type.datafield.class:                                Oro\Bundle\DotmailerBundle\Form\Type\DataFieldType
+    oro_dotmailer.form.type.datafield_select.class:                         Oro\Bundle\DotmailerBundle\Form\Type\DataFieldSelectType
+    oro_dotmailer.form.type.datafield_mapping.class:                        Oro\Bundle\DotmailerBundle\Form\Type\DataFieldMappingType
+    oro_dotmailer.form.type.datafield_mapping_config.class:                 Oro\Bundle\DotmailerBundle\Form\Type\DataFieldMappingConfigType
+    oro_dotmailer.form.event_listener.datafield.class:                      Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldFormSubscriber
+    oro_dotmailer.form.event_listener.datafield_mapping.class:              Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldMappingFormSubscriber
 
     #Form handlers
     oro_dotmailer.form.handler.connection_update.class:            Oro\Bundle\DotmailerBundle\Form\Handler\ConnectionUpdateFormHandler
@@ -119,7 +125,8 @@ parameters:
     oro_dotmailer.placeholder.filter.marketing_list.class:         Oro\Bundle\DotmailerBundle\Placeholders\MarketingListPlaceholderFilter
 
     #search handlers
-    oro_dotmailer.form.autocomplete.list.search_handler.class:     Oro\Bundle\DotmailerBundle\Autocomplete\AddressBooksSearchHandler
+    oro_dotmailer.form.autocomplete.list.search_handler.class:               Oro\Bundle\DotmailerBundle\Autocomplete\AddressBooksSearchHandler
+    oro_dotmailer.form.autocomplete.channel_aware.search_handler.class:      Oro\Bundle\DotmailerBundle\Autocomplete\ChannelAwareSearchHandler
 
     #workflow actions
     oro_dotmailer.workflow.action.update_email_campaign_statistics.class: Oro\Bundle\DotmailerBundle\Model\Action\UpdateEmailCampaignStatistics
@@ -140,9 +147,16 @@ parameters:
     oro_dotmailer.listener.contact_export.class:                   Oro\Bundle\DotmailerBundle\EventListener\ContactExportListener
     oro_dotmailer.listener.update_address_book_last_imported_date.class: Oro\Bundle\DotmailerBundle\EventListener\UpdateAddressBookLastImportDateListener
     oro_dotmailer.listener.datafield_remove.class:                       Oro\Bundle\DotmailerBundle\EventListener\DataFieldRemoveListener
+    oro_dotmailer.listener.add_default_mapping.class:                    Oro\Bundle\DotmailerBundle\EventListener\AddDefaultMappingListener
+    oro_dotmailer.listener.navigation.class:                             Oro\Bundle\DotmailerBundle\EventListener\NavigationListener
+
+    #validators
+    oro_dotmailer.validator.datafield_mapping_config.class:        Oro\Bundle\DotmailerBundle\Validator\DataFieldMappingConfigValidator
 
     oro_dotmailer.transport.dotmailer.class: Oro\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport
 services:
+    oro_dotmailer.entity_provider:
+        alias: oro_entity.entity_provider
     # Forms and Extensions
     oro_dotmailer.form.event_listener.integration_transport_settings:
         class: %oro_dotmailer.form.event_listener.integration_transport_settings.class%
@@ -179,16 +193,34 @@ services:
         tags:
             - { name: form.type, alias: "oro_dotmailer_address_book_list_select" }
 
-    oro_dotmailer.form.autocomplete.list.search_handler:
-        class: %oro_dotmailer.form.autocomplete.list.search_handler.class%
-        arguments:
-            - %oro_dotmailer.entity.address_book.class%
-            - ["name"]
+    oro_dotmailer.form.type.datafield_select:
+        class: %oro_dotmailer.form.type.datafield_select.class%
+        tags:
+            - { name: form.type, alias: "oro_dotmailer_datafield_select" }
+
+    oro_dotmailer.form.autocomplete.channel_aware.search_handler:
+        class: %oro_dotmailer.form.autocomplete.channel_aware.search_handler.class%
+        abstract:  true
         calls:
             - [initDoctrinePropertiesByManagerRegistry, ["@doctrine"]]
             - [setAclHelper,["@oro_security.acl_helper"]]
+
+    oro_dotmailer.form.autocomplete.list.search_handler:
+        class: %oro_dotmailer.form.autocomplete.list.search_handler.class%
+        parent: oro_dotmailer.form.autocomplete.channel_aware.search_handler
+        arguments:
+            - %oro_dotmailer.entity.address_book.class%
+            - ["name"]
         tags:
-            - { name: oro_form.autocomplete.search_handler, alias: "dotmailer_address_books", acl_resource: "oro_email_campaign_view" }
+            - { name: oro_form.autocomplete.search_handler, alias: "dotmailer_address_books" }
+
+    oro_dotmailer.form.autocomplete.datafield_list.search_handler:
+        parent: oro_dotmailer.form.autocomplete.channel_aware.search_handler
+        arguments:
+            - %oro_dotmailer.entity.datafield.class%
+            - ["name"]
+        tags:
+            - { name: oro_form.autocomplete.search_handler, alias: "dotmailer_data_fields" }
 
     oro_dotmailer.form.extension.channel_connectors:
         class: %oro_dotmailer.form.extension.channel_connectors.class%
@@ -203,6 +235,9 @@ services:
     oro_dotmailer.form.event_listener.datafield:
         class: %oro_dotmailer.form.event_listener.datafield.class%
 
+    oro_dotmailer.form.event_listener.datafield_mapping:
+        class: %oro_dotmailer.form.event_listener.datafield_mapping.class%
+
     oro_dotmailer.form.type.datafield:
         class: %oro_dotmailer.form.type.datafield.class%
         arguments:
@@ -211,11 +246,33 @@ services:
         tags:
             - { name: form.type, alias: "oro_dotmailer_data_field" }
 
+    oro_dotmailer.form.type.datafield_mapping:
+        class: %oro_dotmailer.form.type.datafield_mapping.class%
+        arguments:
+            - "%oro_dotmailer.entity.datafield_mapping.class%"
+            - "@oro_dotmailer.form.event_listener.datafield_mapping"
+        tags:
+            - { name: form.type, alias: "oro_dotmailer_datafield_mapping" }
+
+    oro_dotmailer.form.type.datafield_mapping_config:
+        class: %oro_dotmailer.form.type.datafield_mapping_config.class%
+        arguments:
+            - "%oro_dotmailer.entity.datafield_mapping_config.class%"
+        tags:
+            - { name: form.type, alias: "oro_dotmailer_datafield_mapping_config" }
+
     oro_dotmailer.datafield.manager.api:
         class: 'Oro\Bundle\SoapBundle\Entity\Manager\ApiEntityManager'
         parent: oro_soap.manager.entity_manager.abstract
         arguments:
             - "%oro_dotmailer.entity.datafield.class%"
+            - "@doctrine.orm.entity_manager"
+
+    oro_dotmailer.datafield_mapping.manager.api:
+        class: 'Oro\Bundle\SoapBundle\Entity\Manager\ApiEntityManager'
+        parent: oro_soap.manager.entity_manager.abstract
+        arguments:
+            - "%oro_dotmailer.entity.datafield_mapping.class%"
             - "@doctrine.orm.entity_manager"
 
     oro_dotmailer.datafield.form:
@@ -225,6 +282,14 @@ services:
         arguments:
             - "oro_dotmailer_data_field_form"
             - "oro_dotmailer_data_field"
+
+    oro_dotmailer.datafield_mapping.form:
+        class: Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments:
+            - "oro_dotmailer_datafield_mapping_form"
+            - "oro_dotmailer_datafield_mapping"
 
     #Form handlers
     oro_dotmailer.form.handler.connection_update:
@@ -880,3 +945,31 @@ services:
             - "@oro_dotmailer.datafield_manager"
         tags:
             - { name: doctrine.event_listener, event: preRemove }
+
+    oro_dotmailer.listener.add_default_mapping:
+        class: %oro_dotmailer.listener.add_default_mapping.class%
+        arguments:
+            - "@doctrine"
+            - "@oro_entity.doctrine_helper"
+            - "@oro_marketing_list.entity_provider.contact_information"
+            - "@oro_integration.helper.default_owner_helper"
+        tags:
+            - { name: kernel.event_subscriber }
+
+    oro_dotmailer.listener.navigation:
+        class: %oro_dotmailer.listener.navigation.class%
+        arguments:
+            - "@doctrine"
+        tags:
+            - { name: kernel.event_listener, event: oro_menu.configure.application_menu, method: onNavigationConfigure }
+            - { name: kernel.event_listener, event: oro_menu.configure.shortcuts, method: onNavigationConfigure }
+
+    #validators
+    oro_dotmailer.validator.datafield_mapping_config:
+        class: %oro_dotmailer.validator.datafield_mapping_config.class%
+        arguments:
+            - "@oro_entity.doctrine_helper"
+            - "@translator"
+        tags:
+            - { name: validator.constraint_validator, alias: oro_dotmailer.validator.datafield_mapping_config }
+

@@ -32,4 +32,30 @@ class DataFieldRepository extends EntityRepository
 
         return $qb;
     }
+
+    /**
+     * @param array $names
+     * @param Channel $channel
+     *
+     * @return array associative array with dotmailer field name as key and datafield object as a value
+     */
+    public function getChannelDataFieldByNames(array $names, Channel $channel)
+    {
+        $qb = $this->createQueryBuilder('dataField');
+
+        $result = $qb
+            ->select('dataField')
+            ->where($qb->expr()->in('dataField.name', ':names'))
+            ->andWhere('dataField.channel =:channel')
+            ->setParameters(['channel' => $channel, 'names' => $names])
+            ->getQuery()
+            ->getResult();
+        $map = [];
+        /** @var DataField $record */
+        foreach ($result as $record) {
+            $map[$record->getName()] = $record;
+        }
+
+        return $map;
+    }
 }

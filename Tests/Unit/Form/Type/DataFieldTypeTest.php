@@ -7,10 +7,8 @@ use Symfony\Component\Form\PreloadedExtension;
 use Oro\Component\Testing\Unit\EntityTrait;
 use Oro\Component\Testing\Unit\FormIntegrationTestCase;
 use Oro\Component\Testing\Unit\Form\Type\Stub\EntityType;
-use Oro\Component\Testing\Unit\Form\Type\Stub\FormStub;
 
 use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldType;
-use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Type\Stub\EnumSelectType;
 

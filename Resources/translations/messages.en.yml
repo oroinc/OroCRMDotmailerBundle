@@ -208,8 +208,37 @@ oro:
             notes.label:                      Notes
             synced.label:                     Is Synchronized
             synchronize:                      Synchronize
-            sync:                             Data fields synchronization started. {{ job_view_link }}
             syncronize_scheduled:             Data fields scheduled to synchronize with Dotmailer
+
+        datafield_mapping:
+            entity_label:                     Data Field Mapping
+            entity_plural_label:              Data Field Mappings
+            channel.label:                    Channel
+            id.label:                         Id
+            entity.label:                     Entity
+            sync_priority.label:              Sync Priority
+            sync_priority.tooltip:            If two or more entities are linked to 1 Dotmailer contact, sync priority will be used to identify master record
+            owner.label:                      Owner
+
+        datafield_mapping_config:
+            entity_label:                     Data Field Mapping Config
+            entity_plural_label:              Data Field Mapping Configs
+            mapping.label:                    Data Field Mapping
+            id.label:                         Id
+            entityField.label:                Fields
+            entityField.placeholder:          Select Field
+            is_twoway_sync.label:             Two Way Sync
+            is_twoway_sync.tooltip:           Perform data synchronization from Dotmailer. Can be applied to the signle main entity fields only
+            dataField.label:                  Data Field
+            update_mapping:                   Update mapping
+            delete_mapping:                   Delete mapping
+            delete_mapping_confirmation:      Are you sure you want to delete this mapping?
+            validation:
+                incompatible_types_numeric:    Mapping for field "%datafield%" must be of numeric type
+                incompatible_types_boolean:    Mapping for field "%datafield%" must be of boolean type
+                incompatible_types_date:       Mapping for field "%datafield%" must be of datetime type
+                incompatible_types_string:     Mapping for field "%datafield%" must be convertable to string
+                multiple:                      Several entity fields can be mapped only to the Data Field of type string
 
         connector:
             campaign:
@@ -353,6 +382,7 @@ oro:
 
         controller:
             datafield.saved.message: Data Field Saved
+            datafield_mapping.saved.message: Data Field Mapping Saved
 
         configuration:
             dotmailer_settings: Dotmailer settings
@@ -363,3 +393,4 @@ oro:
         block:
             general: General
             additional: Additional
+            mapping: Mapping Configuration

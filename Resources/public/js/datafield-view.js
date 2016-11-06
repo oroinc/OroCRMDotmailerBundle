@@ -50,8 +50,6 @@ define([
          * @param {$.Event} e
          */
         processChange: function(e) {
-            var $el = $(e.currentTarget);
-
             var $form = $(this.options.formSelector);
             var data = $form.serializeArray();
             var url = $form.attr('action');

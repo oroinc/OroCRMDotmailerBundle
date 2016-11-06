@@ -18,3 +18,31 @@
 {% block oro_dotmailer_transport_check_button_row %}
     {{ block('button_row') }}
 {% endblock %}
+{% block _oro_dotmailer_datafield_mapping_form_config_entityField_row %}
+    {% spaceless %}
+        <div class="control-group entity-field-control">
+            {% if label is not sameas(false) %}
+                <div class="control-label wrap">
+                    {{ form_label(form, '' , { label_attr: label_attr}) }}
+                </div>
+            {% endif %}
+            <div class="controls{% if errors|length > 0 %} validation-error{% endif %}">
+                {{ form_widget(form) }}
+                {{ form_errors(form) }}
+            </div>
+            <div class="control-group">
+                <div class="controls fields-container">
+                </div>
+                <a class="btn add-field" href="javascript: void(0);"><i class="icon-plus"></i>{{ 'Add'|trans }}</a>
+            </div>
+        </div>
+        <script type="text/html" id="field-row-template">
+            <div class="field-row">
+                <input type="hidden" data-purpose="entityfield-selector" />
+                <% if (withRemove) { %>
+                    <a class="btn btn-action btn-link remove-field" href="javascript: void(0);"><i class="icon-remove"></i></a>
+                <% } %>
+            </div>
+        </script>
+    {% endspaceless %}
+{% endblock %}
