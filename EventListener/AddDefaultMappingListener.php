@@ -189,7 +189,7 @@ class AddDefaultMappingListener extends AbstractImportExportListener
     protected function isFirstDataFieldSyncJob(Channel $channel)
     {
         $queryBuilder = $this->registry->getRepository('OroIntegrationBundle:Channel')
-            ->getConnectorStatusesQueryBuilder($channel, DataFieldConnector::IMPORT_JOB, Status::STATUS_COMPLETED);
+            ->getConnectorStatusesQueryBuilder($channel, DataFieldConnector::TYPE, Status::STATUS_COMPLETED);
         $queryBuilder->select('COUNT(status.id) as statusCount');
         $isFirst = $queryBuilder->getQuery()->getSingleScalarResult() == 0;
 

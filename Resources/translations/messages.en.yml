@@ -218,14 +218,14 @@ oro:
             entity.label:                     Entity
             sync_priority.label:              Sync Priority
             sync_priority.tooltip:            If two or more entities are linked to 1 Dotmailer contact, sync priority will be used to identify master record
-            owner.label:                      Owner
+        datafieldmapping.owner.label:         Owner
 
         datafield_mapping_config:
             entity_label:                     Data Field Mapping Config
             entity_plural_label:              Data Field Mapping Configs
             mapping.label:                    Data Field Mapping
             id.label:                         Id
-            entityField.label:                Fields
+            entityFields.label:               Fields
             entityField.placeholder:          Select Field
             is_twoway_sync.label:             Two Way Sync
             is_twoway_sync.tooltip:           Perform data synchronization from Dotmailer. Can be applied to the signle main entity fields only

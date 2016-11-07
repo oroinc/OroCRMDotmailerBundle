@@ -122,8 +122,8 @@
         'class': (attr.class|default('') ~ ' query-designer-form clearfix')|trim
     }) %}
     <div{{ UI.attributes(attr) }}>
-        {{ form_row(form.entityField, {
-            'label': 'oro.dotmailer.datafield_mapping_config.entityField.label',
+        {{ form_row(form.entityFields, {
+            'label': 'oro.dotmailer.datafield_mapping_config.entityFields.label',
             'attr': {
                 'data-purpose': 'multiple-entityfield-selector',
                 'data-validation': { NotBlank: null }|json_encode
@@ -168,13 +168,13 @@
         <table class="grid table-hover table table-bordered table-condensed" style="display: table;">
             <thead>
             <tr>
-                <th class="entityfield-column"><span>{{ 'oro.dotmailer.datafield_mapping_config.entityField.label'|trans }}</span></th>
+                <th class="entityfield-column"><span>{{ 'oro.dotmailer.datafield_mapping_config.entityFields.label'|trans }}</span></th>
                 <th class="datafield-column"><span>{{ 'oro.dotmailer.datafield_mapping_config.dataField.label'|trans }}</span></th>
                 <th class="twowaysync-column"><span>{{ 'oro.dotmailer.datafield_mapping_config.is_twoway_sync.label'|trans }}</span></th>
                 <th class="action-column"><span>{{ 'oro.query_designer.datagrid.column.actions'|trans }}</span></th>
             </tr>
             </thead>
-            <tbody class="item-container">
+            <tbody class="mapping-container">
             </tbody>
         </table>
     </div>
@@ -183,7 +183,7 @@
 {% macro mapping_template(id) %}
     <script type="text/html" id="{{ id }}">
         <tr data-cid="<%= cid %>">
-            <td class="field-cell<% if (obj.deleted) { %> deleted-field<% } %>"><%= entityField %></td>
+            <td class="field-cell<% if (obj.deleted) { %> deleted-field<% } %>"><%= entityFields %></td>
             <td class="datafield-cell"><%- dataField %></td>
             <td class="twowaysync-cell"><%= isTwoWaySync %></td>
             <td class="action-cell">
@@ -223,7 +223,7 @@
         mapping: {
             editor:        { namePattern: '^' ~ type ~ '_form\\[config\\]\\[([\\w\\W]*)\\]$' },
             form:          '#' ~ type ~ '-mapping-form',
-            itemContainer: '#' ~ type ~ '-mapping-list .item-container',
+            itemContainer: '#' ~ type ~ '-mapping-list .mapping-container',
             itemTemplate:  '#' ~ type ~ '-mapping-row'
         },
         channel: {

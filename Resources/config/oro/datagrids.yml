@@ -76,6 +76,8 @@ datagrids:
                 label: oro.dotmailer.datafield.notes.label
                 inline_editing:
                     enable: true
+                    editor:
+                        view: oroform/js/app/views/editor/text-editor-view
         sorters:
             columns:
                 name:

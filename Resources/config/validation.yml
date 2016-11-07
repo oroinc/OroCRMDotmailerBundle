@@ -119,7 +119,7 @@ Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig:
             message: "The same Data Field can be mapped only one time"
         - Oro\Bundle\DotmailerBundle\Validator\Constraints\DataFieldMappingConfigConstraint:
     properties:
-        entityField:
+        entityFields:
             - NotBlank: ~
         dataField:
             - NotBlank: ~

@@ -98,7 +98,7 @@ class AddDefaultMappingListenerTest extends \PHPUnit_Framework_TestCase
         $queryBuilder->expects($this->once())->method('getQuery')->will($this->returnValue($query));
         $channelRepository->expects($this->once())->method('getConnectorStatusesQueryBuilder')->with(
             $channel,
-            DataFieldConnector::IMPORT_JOB,
+            DataFieldConnector::TYPE,
             Status::STATUS_COMPLETED
         )->will($this->returnValue($queryBuilder));
 
@@ -220,7 +220,7 @@ class AddDefaultMappingListenerTest extends \PHPUnit_Framework_TestCase
         $queryBuilder->expects($this->once())->method('getQuery')->will($this->returnValue($query));
         $channelRepository->expects($this->once())->method('getConnectorStatusesQueryBuilder')->with(
             $channel,
-            DataFieldConnector::IMPORT_JOB,
+            DataFieldConnector::TYPE,
             Status::STATUS_COMPLETED
         )->will($this->returnValue($queryBuilder));
 

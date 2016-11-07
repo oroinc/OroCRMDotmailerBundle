@@ -31,7 +31,7 @@ class DataFieldMappingConfigType extends AbstractType
                 'entityFields',
                 'hidden',
                 [
-                    'label'    => 'oro.dotmailer.datafield_mapping_config.entityField.label',
+                    'label'    => 'oro.dotmailer.datafield_mapping_config.entityFields.label',
                     'required' => true,
                 ]
             )

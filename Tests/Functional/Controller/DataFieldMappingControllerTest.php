@@ -49,7 +49,7 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
         $mapping = json_encode([
             'mapping' => [
                 [
-                    'entityField' => 'firstName',
+                    'entityFields' => 'firstName',
                     'dataField' => [
                         'value' => $this->getReference('oro_dotmailer.datafield.first')->getId(),
                         'name' => 'dataFieldName'

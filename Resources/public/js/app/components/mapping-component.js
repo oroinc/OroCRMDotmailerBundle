@@ -322,13 +322,13 @@ define(function(require) {
                 itemRender: function(tmpl, data) {
                     try {
                         var fieldsRendered = [];
-                        var fields = data.entityField.split(',');
+                        var fields = data.entityFields.split(',');
                         _.each(fields, function(field) {
                             fieldsRendered.push(self.formatChoice(field, template));
                         });
-                        data.entityField = fieldsRendered.join(' + ');
+                        data.entityFields = fieldsRendered.join(' + ');
                     } catch (e) {
-                        data.entityField = __('oro.querydesigner.field_not_found');
+                        data.entityFields = __('oro.querydesigner.field_not_found');
                         data.deleted = true;
                     }
                     data.dataField = data.dataField.name;
@@ -356,8 +356,8 @@ define(function(require) {
             this.once('dispose:before', function() {
                 confirm.dispose();
                 collection.dispose();
-                // $editor.itemsManagerEditor('destroy');
-                // $table.itemsManagerTable('destroy');
+                $editor.itemsManagerEditor('destroy');
+                $table.itemsManagerTable('destroy');
             }, this);
         }
     }, {

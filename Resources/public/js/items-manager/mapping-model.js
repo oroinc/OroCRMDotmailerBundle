@@ -6,10 +6,10 @@ define(function(require) {
     var EntityFieldModel = require('oroquerydesigner/js/items-manager/entity-field-model');
 
     MappingModel = EntityFieldModel.extend({
-        fieldAttribute: 'entityField',
+        fieldAttribute: 'entityFields',
 
         defaults: {
-            entityField: null,
+            entityFields: null,
             dataField: null,
             isTwoWaySync: null
         },

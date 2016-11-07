@@ -40,7 +40,7 @@ class DataFieldMappingFormSubscriber implements EventSubscriberInterface
             $mappings = [];
             foreach ($configs as $config) {
                 $mapping = [];
-                $mapping['entityField'] = $config->getEntityFields();
+                $mapping['entityFields'] = $config->getEntityFields();
                 $mapping['dataField'] = [
                     'value' => $config->getDataField()->getId(),
                     'name' => $config->getDataField()->getName()
@@ -90,7 +90,7 @@ class DataFieldMappingFormSubscriber implements EventSubscriberInterface
         if (!isset($mappingConfiguration['isTwoWaySync']) || !$mappingConfiguration['isTwoWaySync']) {
             $unset = true;
         }
-        $entityFields = explode(',', $mappingConfiguration['entityField']);
+        $entityFields = explode(',', $mappingConfiguration['entityFields']);
         //Two way sync should be disabled if we have more than 1 field chosen
         if (count($entityFields) > 1) {
             $unset = true;

@@ -54,7 +54,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
         $expected = json_encode([
             'mapping' => [
                 [
-                    'entityField' => 'field',
+                    'entityFields' => 'field',
                     'dataField' => [
                         'value' => 1,
                         'name' => 'dataFieldName'
@@ -91,7 +91,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
         $data['config_source'] = json_encode([
             'mapping' => [
                 [
-                    'entityField' => 'field',
+                    'entityFields' => 'field',
                     'dataField' => [
                         'value' => 1,
                         'name' => 'dataFieldName'
@@ -99,7 +99,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
                     'isTwoWaySync' => 1
                 ],
                 [
-                    'entityField' => 'anotherField',
+                    'entityFields' => 'anotherField',
                     'dataField' => [
                         'value' => 1,
                         'name' => 'dataFieldName'
@@ -113,12 +113,12 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->subscriber->preSubmit($event);
         $expected = [
             [
-                'entityField' => 'field',
+                'entityFields' => 'field',
                 'dataField' => 1,
                 'isTwoWaySync' => 1
             ],
             [
-                'entityField' => 'anotherField',
+                'entityFields' => 'anotherField',
                 'dataField' => 1
             ]
         ];
@@ -134,7 +134,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
         $data['config_source'] =  json_encode([
             'mapping' => [
                 [
-                    'entityField' => 'field,anotherField',
+                    'entityFields' => 'field,anotherField',
                     'dataField' => [
                         'value' => 1,
                         'name' => 'dataFieldName'
@@ -148,7 +148,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->subscriber->preSubmit($event);
         $expected = [
             [
-                'entityField' => 'field,anotherField',
+                'entityFields' => 'field,anotherField',
                 'dataField' => 1
             ],
         ];
@@ -164,7 +164,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
         $data['config_source'] =  json_encode([
             'mapping' => [
                 [
-                    'entityField' => 'relation+relationField',
+                    'entityFields' => 'relation+relationField',
                     'dataField' => [
                         'value' => 1,
                         'name' => 'dataFieldName'
@@ -178,7 +178,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->subscriber->preSubmit($event);
         $expected = [
             [
-                'entityField' => 'relation+relationField',
+                'entityFields' => 'relation+relationField',
                 'dataField' => 1
             ],
         ];
