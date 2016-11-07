@@ -123,21 +123,21 @@
     }) %}
     <div{{ UI.attributes(attr) }}>
         {{ form_row(form.entityFields, {
-            'label': 'oro.dotmailer.datafieldmappingconfig.entityFields.label',
+            'label': 'oro.dotmailer.datafieldmappingconfig.entity_fields.label',
             'attr': {
                 'data-purpose': 'multiple-entityfield-selector',
                 'data-validation': { NotBlank: null }|json_encode
             }
         }) }}
         {{ form_row(form.dataField, {
-            'label': 'oro.dotmailer.datafieldmappingconfig.dataField.label',
+            'label': 'oro.dotmailer.datafieldmappingconfig.data_field.label',
             'attr': {
                 'data-purpose': 'datafield-selector',
                 'data-validation': { NotBlank: null }|json_encode
             }
         }) }}
         {{ form_row(form.isTwoWaySync, {
-            'label': 'oro.dotmailer.datafieldmappingconfig.is_twoway_sync.label',
+            'label': 'oro.dotmailer.datafieldmappingconfig.is_two_way_sync.label',
             'attr': {
                 'class': 'two-way-sync-selector',
                 'data-purpose': 'two-way-sync-selector'
@@ -168,9 +168,9 @@
         <table class="grid table-hover table table-bordered table-condensed" style="display: table;">
             <thead>
             <tr>
-                <th class="entityfield-column"><span>{{ 'oro.dotmailer.datafieldmappingconfig.entityFields.label'|trans }}</span></th>
-                <th class="datafield-column"><span>{{ 'oro.dotmailer.datafieldmappingconfig.dataField.label'|trans }}</span></th>
-                <th class="twowaysync-column"><span>{{ 'oro.dotmailer.datafieldmappingconfig.is_twoway_sync.label'|trans }}</span></th>
+                <th class="entityfield-column"><span>{{ 'oro.dotmailer.datafieldmappingconfig.entity_fields.label'|trans }}</span></th>
+                <th class="datafield-column"><span>{{ 'oro.dotmailer.datafieldmappingconfig.data_field.label'|trans }}</span></th>
+                <th class="twowaysync-column"><span>{{ 'oro.dotmailer.datafieldmappingconfig.is_two_way_sync.label'|trans }}</span></th>
                 <th class="action-column"><span>{{ 'oro.query_designer.datagrid.column.actions'|trans }}</span></th>
             </tr>
             </thead>
