@@ -37,7 +37,7 @@ class AddDotmailerDataFieldMapping implements Migration, OrderedMigrationInterfa
         $table = $schema->createTable('orocrm_dm_df_mapping');
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
         $table->addColumn('owner_id', 'integer', ['notnull' => false]);
-        $table->addColumn('channel_id', 'integer');
+        $table->addColumn('channel_id', 'integer', ['notnull' => false]);
         $table->addColumn('entity', 'string', ['length' => 255]);
         $table->addColumn('sync_priority', 'integer', ['notnull' => false]);
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
@@ -70,8 +70,8 @@ class AddDotmailerDataFieldMapping implements Migration, OrderedMigrationInterfa
     {
         $table = $schema->createTable('orocrm_dm_df_mapping_config');
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
-        $table->addColumn('mapping_id', 'integer');
-        $table->addColumn('datafield_id', 'integer');
+        $table->addColumn('mapping_id', 'integer', ['notnull' => false]);
+        $table->addColumn('datafield_id', 'integer', ['notnull' => false]);
         $table->addColumn('entity_field', 'text');
         $table->addColumn('is_two_way_sync', 'boolean', ['notnull' => false]);
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);

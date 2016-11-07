@@ -49,7 +49,7 @@ class DataFieldMappingType extends AbstractType
                 'entity',
                 'oro_marketing_list_contact_information_entity_choice',
                 [
-                    'label' => 'oro.dotmailer.datafield_mapping.entity.label',
+                    'label' => 'oro.dotmailer.datafieldmapping.entity.label',
                     'required' => true
                 ]
             )
@@ -57,8 +57,8 @@ class DataFieldMappingType extends AbstractType
                 'syncPriority',
                 'integer',
                 [
-                    'label' => 'oro.dotmailer.datafield_mapping.sync_priority.label',
-                    'tooltip' => 'oro.dotmailer.datafield_mapping.sync_priority.tooltip',
+                    'label' => 'oro.dotmailer.datafieldmapping.sync_priority.label',
+                    'tooltip' => 'oro.dotmailer.datafieldmapping.sync_priority.tooltip',
                     'required' => false,
                 ]
             )

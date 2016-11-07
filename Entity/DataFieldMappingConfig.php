@@ -64,7 +64,7 @@ class DataFieldMappingConfig
      *
      * @var bool
      *
-     * @ORM\Column(name="is_two_way_sync", type="boolean")
+     * @ORM\Column(name="is_two_way_sync", type="boolean", nullable=true)
      */
     protected $isTwoWaySync;
 

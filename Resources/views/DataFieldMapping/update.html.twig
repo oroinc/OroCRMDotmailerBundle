@@ -3,7 +3,7 @@
 
 {% oro_title_set({params : {
     '%entity.name%': entity.entity,
-    '%entityName%': 'oro.dotmailer.datafield_mapping.entity_label'|trans }
+    '%entityName%': 'oro.dotmailer.datafieldmapping.entity_label'|trans }
 }) %}
 {% set entityId = entity.id %}
 
@@ -16,7 +16,7 @@
             'dataRedirect': path('oro_dotmailer_datafield_mapping_index'),
             'aCss': 'no-hash remove-button',
             'dataId': form.vars.value.id,
-            'entity_label': 'oro.dotmailer.datafield_mapping.entity_label'|trans
+            'entity_label': 'oro.dotmailer.datafieldmapping.entity_label'|trans
         }) }}
 
         {{ UI.buttonSeparator() }}
@@ -42,12 +42,12 @@
         {% set breadcrumbs = {
             'entity': entity,
             'indexPath': path('oro_dotmailer_datafield_mapping_index'),
-            'indexLabel': 'oro.dotmailer.datafield_mapping.entity_plural_label'|trans,
-            'entityTitle': 'oro.dotmailer.datafield_mapping.entity_label'|trans
+            'indexLabel': 'oro.dotmailer.datafieldmapping.entity_plural_label'|trans,
+            'entityTitle': 'oro.dotmailer.datafieldmapping.entity_label'|trans
         } %}
         {{ parent() }}
     {% else %}
-        {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'oro.dotmailer.datafield_mapping.entity_label'|trans}) %}
+        {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'oro.dotmailer.datafieldmapping.entity_label'|trans}) %}
         {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
     {% endif %}
 {% endblock pageHeader %}
@@ -123,21 +123,21 @@
     }) %}
     <div{{ UI.attributes(attr) }}>
         {{ form_row(form.entityFields, {
-            'label': 'oro.dotmailer.datafield_mapping_config.entityFields.label',
+            'label': 'oro.dotmailer.datafieldmappingconfig.entityFields.label',
             'attr': {
                 'data-purpose': 'multiple-entityfield-selector',
                 'data-validation': { NotBlank: null }|json_encode
             }
         }) }}
         {{ form_row(form.dataField, {
-            'label': 'oro.dotmailer.datafield_mapping_config.dataField.label',
+            'label': 'oro.dotmailer.datafieldmappingconfig.dataField.label',
             'attr': {
                 'data-purpose': 'datafield-selector',
                 'data-validation': { NotBlank: null }|json_encode
             }
         }) }}
         {{ form_row(form.isTwoWaySync, {
-            'label': 'oro.dotmailer.datafield_mapping_config.is_twoway_sync.label',
+            'label': 'oro.dotmailer.datafieldmappingconfig.is_twoway_sync.label',
             'attr': {
                 'class': 'two-way-sync-selector',
                 'data-purpose': 'two-way-sync-selector'
@@ -168,9 +168,9 @@
         <table class="grid table-hover table table-bordered table-condensed" style="display: table;">
             <thead>
             <tr>
-                <th class="entityfield-column"><span>{{ 'oro.dotmailer.datafield_mapping_config.entityFields.label'|trans }}</span></th>
-                <th class="datafield-column"><span>{{ 'oro.dotmailer.datafield_mapping_config.dataField.label'|trans }}</span></th>
-                <th class="twowaysync-column"><span>{{ 'oro.dotmailer.datafield_mapping_config.is_twoway_sync.label'|trans }}</span></th>
+                <th class="entityfield-column"><span>{{ 'oro.dotmailer.datafieldmappingconfig.entityFields.label'|trans }}</span></th>
+                <th class="datafield-column"><span>{{ 'oro.dotmailer.datafieldmappingconfig.dataField.label'|trans }}</span></th>
+                <th class="twowaysync-column"><span>{{ 'oro.dotmailer.datafieldmappingconfig.is_twoway_sync.label'|trans }}</span></th>
                 <th class="action-column"><span>{{ 'oro.query_designer.datagrid.column.actions'|trans }}</span></th>
             </tr>
             </thead>
@@ -188,13 +188,13 @@
             <td class="twowaysync-cell"><%= isTwoWaySync %></td>
             <td class="action-cell">
                 <a href="javascript: void(0);" class="action no-hash edit-button"
-                        title="{{ 'oro.dotmailer.datafield_mapping_config.update_mapping'|trans }}"
+                        title="{{ 'oro.dotmailer.datafieldmappingconfig.update_mapping'|trans }}"
                         data-collection-action="edit">
                     <i class="icon-edit hide-text"></i></a>
                 <a href="javascript: void(0);" class="action no-hash delete-button"
-                        title="{{ 'oro.dotmailer.datafield_mapping_config.delete_mapping'|trans }}"
+                        title="{{ 'oro.dotmailer.datafieldmappingconfig.delete_mapping'|trans }}"
                         data-collection-action="delete"
-                        data-message="{{ 'oro.dotmailer.datafield_mapping_config.delete_mapping_confirmation'|trans }}">
+                        data-message="{{ 'oro.dotmailer.datafieldmappingconfig.delete_mapping_confirmation'|trans }}">
                     <i class="icon-trash hide-text"></i></a>
             </td>
         </tr>
@@ -218,7 +218,7 @@
             router:            'oro_api_querydesigner_fields_entity',
             routingParams:     {},
             fieldsData:        fieldsData,
-            confirmMessage:    'oro.dotmailer.datafield_mapping.change_entity_confirmation',
+            confirmMessage:    'oro.dotmailer.datafieldmapping.change_entity_confirmation',
         },
         mapping: {
             editor:        { namePattern: '^' ~ type ~ '_form\\[config\\]\\[([\\w\\W]*)\\]$' },
@@ -228,11 +228,11 @@
         },
         channel: {
             channelChoice: '[data-ftid=' ~ type ~ '_form_channel]',
-            changeChannelConfirmMessage: 'oro.dotmailer.datafield_mapping.change_channel_confirmation',
+            changeChannelConfirmMessage: 'oro.dotmailer.datafieldmapping.change_channel_confirmation',
         },
         columnFieldChoiceOptions:       {},
         select2FieldChoiceTemplate:     '#column-chain-template',
-        select2FieldChoicePlaceholoder: 'oro.dotmailer.datafield_mapping_config.entityField.placeholder'|trans,
+        select2FieldChoicePlaceholoder: 'oro.dotmailer.datafieldmappingconfig.entityField.placeholder'|trans,
         entities:                       entities
     } %}
 

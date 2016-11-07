@@ -97,14 +97,14 @@ class DataField extends ExtendDataField
     /**
      * @var string
      *
-     * @ORM\Column(name="default_value", type="string", length=255)
+     * @ORM\Column(name="default_value", type="string", length=255, nullable=true)
      */
     protected $defaultValue;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="notes", type="text")
+     * @ORM\Column(name="notes", type="text", nullable=true)
      */
     protected $notes;
 

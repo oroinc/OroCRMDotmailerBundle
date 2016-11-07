@@ -143,16 +143,16 @@ datagrids:
                         - { join: mapping.channel, alias: channel }
         columns:
             channelName:
-                label: oro.dotmailer.datafield_mapping.channel.label
+                label: oro.dotmailer.datafieldmapping.channel.label
             entity:
-                label: oro.dotmailer.datafield_mapping.entity.label
+                label: oro.dotmailer.datafieldmapping.entity.label
                 type: twig
                 template: 'OroEntityBundle:Datagrid:Property/entity.html.twig'
                 frontend_type: html
                 context:
                     entity_provider: "@oro_dotmailer.entity_provider"
             syncPriority:
-                label: oro.dotmailer.datafield_mapping.sync_priority.label
+                label: oro.dotmailer.datafieldmapping.sync_priority.label
         sorters:
             columns:
                 entity:

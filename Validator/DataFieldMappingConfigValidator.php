@@ -77,7 +77,7 @@ class DataFieldMappingConfigValidator extends ConstraintValidator
         $type = $entity->getDataField()->getType()->getId();
         if (count($fields) > 1 && $type !== DataField::FIELD_TYPE_STRING) {
             //multiple fields can be mapped to the string data field only
-            return $this->translator->trans('oro.dotmailer.datafield_mapping_config.validation.multiple');
+            return $this->translator->trans('oro.dotmailer.datafieldmappingconfig.validation.multiple');
         }
 
         $joinIdentifierHelper = new JoinIdentifierHelper($entity->getMapping()->getEntity());
@@ -107,7 +107,7 @@ class DataFieldMappingConfigValidator extends ConstraintValidator
         if (!$isCompatible) {
             $dataFieldName = $entity->getDataField()->getName();
             $message = $this->translator->trans(
-                'oro.dotmailer.datafield_mapping_config.validation.incompatible_types_' . strtolower($type),
+                'oro.dotmailer.datafieldmappingconfig.validation.incompatible_types_' . strtolower($type),
                 ['%datafield%' => $dataFieldName]
             );
         }

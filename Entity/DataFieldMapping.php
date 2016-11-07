@@ -72,7 +72,7 @@ class DataFieldMapping extends ExtendDataFieldMapping
     /**
      * @var int
      *
-     * @ORM\Column(name="sync_priority", type="integer")
+     * @ORM\Column(name="sync_priority", type="integer", nullable=true)
      */
     protected $syncPriority;
 

@@ -12,7 +12,7 @@ navigation:
                 extras:
                     routes: ['oro_dotmailer_datafield_*']
             oro_dotmailer_data_field_mapping_list:
-                label: 'oro.dotmailer.datafield_mapping.entity_plural_label'
+                label: 'oro.dotmailer.datafieldmapping.entity_plural_label'
                 route: 'oro_dotmailer_datafield_mapping_index'
                 extras:
                     routes: ['oro_dotmailer_datafield_mapping_*']

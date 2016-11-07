@@ -298,13 +298,13 @@ define(function(require) {
             this.on('validate-data', function(issues) {
                 if ($editor.itemsManagerEditor('hasChanges')) {
                     issues.push({
-                        component: __('oro.dotmailer.datafield_mapping.editor'),
+                        component: __('oro.dotmailer.datafieldmapping.editor'),
                         type: MappingComponent.UNSAVED_CHANGES_ISSUE
                     });
                 }
                 if (!collection.isValid()) {
                     issues.push({
-                        component: __('oro.dotmailer.datafield_mapping.editor'),
+                        component: __('oro.dotmailer.datafieldmapping.editor'),
                         type: MappingComponent.INVALID_DATA_ISSUE
                     });
                 }

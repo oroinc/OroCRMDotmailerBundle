@@ -35,10 +35,11 @@ class DataFieldManagerTest extends \PHPUnit_Framework_TestCase
         $transport = new DotmailerTransport();
         $channel->setTransport($transport);
         $field->setChannel($channel);
+        $field->setName('test');
         $field->setType(new EnumValueStub(DataFieldStub::FIELD_TYPE_NUMERIC));
         $field->setVisibility(new EnumValueStub(DataFieldStub::VISIBILITY_PRIVATE));
         $field->setDefaultValue('123');
-        
+
         $this->transport->expects($this->once())->method('createDataField')->with(
             $this->callback(
                 function ($apiDataField) {
@@ -58,6 +59,7 @@ class DataFieldManagerTest extends \PHPUnit_Framework_TestCase
         $transport = new DotmailerTransport();
         $channel->setTransport($transport);
         $field->setChannel($channel);
+        $field->setName('test');
         $field->setType(new EnumValueStub(DataFieldStub::FIELD_TYPE_NUMERIC));
         $field->setDefaultValue('String Value');
 
@@ -76,6 +78,7 @@ class DataFieldManagerTest extends \PHPUnit_Framework_TestCase
         $transport = new DotmailerTransport();
         $channel->setTransport($transport);
         $field->setChannel($channel);
+        $field->setName('test');
         $field->setType(new EnumValueStub(DataFieldStub::FIELD_TYPE_BOOLEAN));
         $field->setVisibility(new EnumValueStub(DataFieldStub::VISIBILITY_PRIVATE));
         $field->setDefaultValue(DataFieldStub::DEFAULT_BOOLEAN_YES);
@@ -99,6 +102,7 @@ class DataFieldManagerTest extends \PHPUnit_Framework_TestCase
         $transport = new DotmailerTransport();
         $channel->setTransport($transport);
         $field->setChannel($channel);
+        $field->setName('test');
         $field->setType(new EnumValueStub(DataFieldStub::FIELD_TYPE_DATE));
         $field->setVisibility(new EnumValueStub(DataFieldStub::VISIBILITY_PRIVATE));
         $now = new \DateTime();
@@ -123,6 +127,7 @@ class DataFieldManagerTest extends \PHPUnit_Framework_TestCase
         $transport = new DotmailerTransport();
         $channel->setTransport($transport);
         $field->setChannel($channel);
+        $field->setName('test');
         $field->setType(new EnumValueStub(DataFieldStub::FIELD_TYPE_DATE));
         $field->setVisibility(new EnumValueStub(DataFieldStub::VISIBILITY_PRIVATE));
         $field->setDefaultValue('2016-12-10');

@@ -31,7 +31,7 @@ class DataFieldMappingConfigType extends AbstractType
                 'entityFields',
                 'hidden',
                 [
-                    'label'    => 'oro.dotmailer.datafield_mapping_config.entityFields.label',
+                    'label'    => 'oro.dotmailer.datafieldmappingconfig.entityFields.label',
                     'required' => true,
                 ]
             )
@@ -48,8 +48,8 @@ class DataFieldMappingConfigType extends AbstractType
                 'isTwoWaySync',
                 'checkbox',
                 [
-                    'label' => 'oro.dotmailer.datafield_mapping_config.is_twoway_sync.label',
-                    'tooltip' => 'oro.dotmailer.datafield_mapping_config.is_twoway_sync.tooltip',
+                    'label' => 'oro.dotmailer.datafieldmappingconfig.is_twoway_sync.label',
+                    'tooltip' => 'oro.dotmailer.datafieldmappingconfig.is_twoway_sync.tooltip',
                     'required' => false,
                 ]
             );

@@ -191,6 +191,7 @@ class AddDefaultMappingListener extends AbstractImportExportListener
         $queryBuilder = $this->registry->getRepository('OroIntegrationBundle:Channel')
             ->getConnectorStatusesQueryBuilder($channel, DataFieldConnector::TYPE, Status::STATUS_COMPLETED);
         $queryBuilder->select('COUNT(status.id) as statusCount');
+        $queryBuilder->resetDQLPart('orderBy');
         $isFirst = $queryBuilder->getQuery()->getSingleScalarResult() == 0;
 
         return $isFirst;

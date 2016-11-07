@@ -154,6 +154,8 @@ class MarketingListItemsQueryBuilderProvider
                     ))
             );
 
+        echo $qb->getQuery()->getSQL();
+
         return $qb;
     }
 

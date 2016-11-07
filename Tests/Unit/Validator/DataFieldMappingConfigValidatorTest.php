@@ -57,7 +57,7 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
 
         $this->translator->expects($this->once())->method('trans')
             ->with(
-                'oro.dotmailer.datafield_mapping_config.validation.incompatible_types_numeric',
+                'oro.dotmailer.datafieldmappingconfig.validation.incompatible_types_numeric',
                 ['%datafield%' => 'dataFieldName']
             )
             ->will($this->returnValue('translated error message'));
@@ -88,7 +88,7 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
 
         $this->translator->expects($this->once())->method('trans')
             ->with(
-                'oro.dotmailer.datafield_mapping_config.validation.incompatible_types_boolean',
+                'oro.dotmailer.datafieldmappingconfig.validation.incompatible_types_boolean',
                 ['%datafield%' => 'dataFieldName']
             )
             ->will($this->returnValue('translated error message'));
@@ -119,7 +119,7 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
 
         $this->translator->expects($this->once())->method('trans')
             ->with(
-                'oro.dotmailer.datafield_mapping_config.validation.incompatible_types_date',
+                'oro.dotmailer.datafieldmappingconfig.validation.incompatible_types_date',
                 ['%datafield%' => 'dataFieldName']
             )
             ->will($this->returnValue('translated error message'));
@@ -141,7 +141,7 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
         $mappingConfig->setEntityFields('entityFieldName,anotherEntityFieldName');
 
         $this->translator->expects($this->once())->method('trans')
-            ->with('oro.dotmailer.datafield_mapping_config.validation.multiple')
+            ->with('oro.dotmailer.datafieldmappingconfig.validation.multiple')
             ->will($this->returnValue('translated error message'));
         $violation = $this->getMock('Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface');
         $this->context->expects($this->once())->method('buildViolation')->with('translated error message', [])

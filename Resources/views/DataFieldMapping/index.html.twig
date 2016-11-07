@@ -1,14 +1,14 @@
 {% extends 'OroUIBundle:actions:index.html.twig' %}
 {% import 'OroUIBundle::macros.html.twig' as UI %}
 {% set gridName = 'oro_dotmailer_datafield_mapping_grid' %}
-{% set pageTitle = 'oro.dotmailer.datafield_mapping.entity_plural_label'|trans %}
+{% set pageTitle = 'oro.dotmailer.datafieldmapping.entity_plural_label'|trans %}
 
 {% block navButtons %}
     {% if resource_granted('oro_dotmailer_datafield_mapping_create') %}
         <div class="btn-group">
             {{ UI.addButton({
                 'path' : path('oro_dotmailer_datafield_mapping_create'),
-                'entity_label': 'oro.dotmailer.datafield_mapping.entity_label'|trans
+                'entity_label': 'oro.dotmailer.datafieldmapping.entity_label'|trans
             }) }}
         </div>
     {% endif %}

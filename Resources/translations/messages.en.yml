@@ -210,17 +210,18 @@ oro:
             synchronize:                      Synchronize
             syncronize_scheduled:             Data fields scheduled to synchronize with Dotmailer
 
-        datafield_mapping:
+        datafieldmapping:
             entity_label:                     Data Field Mapping
             entity_plural_label:              Data Field Mappings
             channel.label:                    Channel
+            mapping.label:                    Mapping
             id.label:                         Id
             entity.label:                     Entity
             sync_priority.label:              Sync Priority
             sync_priority.tooltip:            If two or more entities are linked to 1 Dotmailer contact, sync priority will be used to identify master record
-        datafieldmapping.owner.label:         Owner
+            owner.label:                      Owner
 
-        datafield_mapping_config:
+        datafieldmappingconfig:
             entity_label:                     Data Field Mapping Config
             entity_plural_label:              Data Field Mapping Configs
             mapping.label:                    Data Field Mapping
