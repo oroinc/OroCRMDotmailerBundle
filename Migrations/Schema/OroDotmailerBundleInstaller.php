@@ -23,7 +23,7 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
      */
     public function getMigrationVersion()
     {
-        return 'v1_2';
+        return 'v1_3';
     }
 
     /**
@@ -48,6 +48,9 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
 
         $addSyncDateColumns = new v1_2\AddSyncDateColumns();
         $addSyncDateColumns->addLastImportedAt($schema);
+
+        $migration = new v1_3\OroDotmailerBundle();
+        $migration->up($schema, $queries);
 
         $this->renameLastSyncedColumn($schema);
     }

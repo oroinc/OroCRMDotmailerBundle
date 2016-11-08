@@ -1,0 +1,26 @@
+navigation:
+    menu_config:
+        items:
+            oro_dotmailer:
+                label: 'oro.dotmailer.channel_type.label'
+                uri: '#'
+                extras:
+                    position: 50
+            oro_dotmailer_integration_connection:
+                label: 'oro.dotmailer.integration.connection.label'
+                route: 'oro_dotmailer_integration_connection_index'
+                extras:
+                    routes: ['oro_dotmailer_integration_connection']
+                    position: 10
+        tree:
+            application_menu:
+                children:
+                    marketing_tab:
+                        children:
+                          oro_dotmailer:
+                              children:
+                                  oro_dotmailer_integration_connection: ~
+
+    titles:
+        oro_dotmailer_integration_connection_index: '%%title%%'
+        oro_dotmailer_integration_connection: '%%title%%'
