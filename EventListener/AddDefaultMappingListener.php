@@ -81,7 +81,7 @@ class AddDefaultMappingListener extends AbstractImportExportListener
             //save mapping in case we added at list one mapping configuration
             if ($mapping->getConfigs()->count()) {
                 $manager->persist($mapping);
-                $manager->flush($mapping);
+                $manager->flush();
             }
         }
     }
@@ -115,6 +115,8 @@ class AddDefaultMappingListener extends AbstractImportExportListener
         $mapping = new DataFieldMapping();
         $mapping->setChannel($channel);
         $mapping->setEntity($entity);
+        $priorityList = $this->getDefaultEntitiesPriorityList();
+        $mapping->setSyncPriority(!empty($priorityList[$entity]) ? $priorityList[$entity] : 0);
         $this->ownerHelper->populateChannelOwner($mapping, $channel);
 
         return $mapping;
@@ -163,6 +165,21 @@ class AddDefaultMappingListener extends AbstractImportExportListener
         ];
 
         return $mapping;
+    }
+
+    /**
+     * Set priority for Lead and Contact entities if they are available
+     *
+     * @return array
+     */
+    protected function getDefaultEntitiesPriorityList()
+    {
+        $priorityList = [
+            'Oro\Bundle\ContactBundle\Entity\Contact' => 20,
+            'Oro\Bundle\SalesBundle\Entity\Lead' => 10,
+        ];
+
+        return $priorityList;
     }
 
     /**

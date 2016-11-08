@@ -7,9 +7,11 @@ use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\Util\Codes;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SoapBundle\Controller\Api\Rest\RestController;
 
@@ -36,7 +38,23 @@ class DataFieldController extends RestController implements ClassResourceInterfa
      */
     public function deleteAction($id)
     {
-        return $this->handleDeleteRequest($id);
+        try {
+            $response = $this->handleDeleteRequest($id);
+        } catch (RuntimeException $e) {
+            //handle Dotmailer exception and show correct message to the user
+            $view = $this->view(
+                ['message' => $e->getMessage(), 'code' => Codes::HTTP_INTERNAL_SERVER_ERROR],
+                Codes::HTTP_INTERNAL_SERVER_ERROR
+            );
+            $response = $this->buildResponse(
+                $view,
+                self::ACTION_DELETE,
+                ['id' => $id, 'success' => false],
+                Codes::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return $response;
     }
 
     /**
