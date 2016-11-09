@@ -58,7 +58,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
 
         $result = $this->client->getResponse();
         $this->assertHtmlResponseStatusCodeEquals($result, 200);
-        $this->assertContains("{$returnValue['name']} - Data Fields - Dotmailer - Marketing", $crawler->html());
+        $this->assertContains("{$returnValue['name']} - Data Fields - dotmailer - Marketing", $crawler->html());
 
         return $returnValue;
     }
