@@ -14,6 +14,12 @@
             "Oro\\Bundle\\DotmailerBundle": "src/"
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/laboro/dotMailer-API-v2-PHP-client"
+        }
+    ],
     "target-dir": "src/Oro/Bundle/DotmailerBundle",
     "require": {
         "php": ">=5.5.9",
