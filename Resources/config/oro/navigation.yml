@@ -8,7 +8,7 @@ navigation:
                     position: 50
             oro_dotmailer_integration_connection:
                 label: 'oro.dotmailer.integration.connection.label'
-                route: 'oro_dotmailer_integration_connection_index'
+                route: 'oro_dotmailer_integration_connection'
                 extras:
                     routes: ['oro_dotmailer_integration_connection']
                     position: 10
@@ -22,5 +22,4 @@ navigation:
                                   oro_dotmailer_integration_connection: ~
 
     titles:
-        oro_dotmailer_integration_connection_index: '%%title%%'
         oro_dotmailer_integration_connection: '%%title%%'

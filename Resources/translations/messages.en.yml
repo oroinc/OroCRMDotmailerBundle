@@ -7,7 +7,7 @@ oro:
             label: Integration
             check_connection.label: Check Connection
             connection_successful.label: Connection successful!
-            connection.label: Automation Studio
+            connection.label: Email Studio
             connect.label: Connect
             disconnect.label: Disconnect
             messsage:

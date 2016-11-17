@@ -97,66 +97,53 @@ class DotmailerController extends Controller
     }
 
     /**
-     * @Route("/integration-connection",
-     *      name="oro_dotmailer_integration_connection_index")
+     * @Route("/integration-connection/{id}",
+     *      name="oro_dotmailer_integration_connection",
+     *      requirements={"id"="\d+"},
+     *      defaults={"id" = "0"}
+     * )
      * @AclAncestor("oro_dotmailer")
      *
      * @Template("OroDotmailerBundle:Dotmailer:integrationConnection.html.twig")
      *
      * @param Request $request
+     * @param Channel $channel
      * @return array
      */
-    public function integrationConnectionIndexAction(Request $request)
+    public function integrationConnectionAction(Request $request, Channel $channel = null)
     {
         $data = $request->get('oro_dotmailer_integration_connection');
         if (isset($data['channel'])) {
             $channel = $this->getDoctrine()
-                ->getManager()
                 ->getRepository('OroIntegrationBundle:Channel')
                 ->findOneById($data['channel']);
         }
-        if (!isset($channel)) {
-            $channel = new Channel();
-        }
 
-        return $this->integrationConnectionAction($channel);
-    }
-
-    /**
-     * @Route("/integration-connection/{id}",
-     *      name="oro_dotmailer_integration_connection")
-     * @AclAncestor("oro_dotmailer")
-     *
-     * @Template("OroDotmailerBundle:Dotmailer:integrationConnection.html.twig")
-     *
-     * @param Channel $channel
-     * @return array
-     */
-    public function integrationConnectionAction(Channel $channel)
-    {
-        $form = $this->createForm(
-            'oro_dotmailer_integration_connection',
-            null,
-            []
-        );
-        $formData = $channel->getId() ? ['channel' => $channel] : [];
+        $form = $this->createForm('oro_dotmailer_integration_connection');
+        $formData = $channel ? ['channel' => $channel] : [];
         $form->setData($formData);
 
-        $transport = $channel->getTransport();
-        if ($transport && $transport->getClientId() && $transport->getClientKey()) {
-            $oauthHelper = $this->get('oro_dotmailer.oauth_helper');
-            try {
-                $loginUserUrl = $oauthHelper->generateLoginUserUrl($transport);
-            } catch (\Exception $exception) {
-                $loginUserUrl = false;
-                $this->get('session')->getFlashBag()->add(
-                    'error',
-                    $exception->getMessage()
-                );
-            }
-            $connectUrl = $oauthHelper->generateAuthorizeUrl($transport, $channel->getId());
-        } else {
-            if ($transport) {
+        $loginUserUrl = false;
+        $connectUrl = false;
+        if ($channel) {
+            $transport = $channel->getTransport();
+            if ($transport->getClientId() && $transport->getClientKey()) {
+                $oauthHelper = $this->get('oro_dotmailer.oauth_manager');
+                $oauth = $this->getDoctrine()
+                    ->getRepository('OroDotmailerBundle::OAuth')
+                    ->findByChannelAndUser($channel, $this->getUser());
+                if ($oauth) {
+                    try {
+                        $loginUserUrl = $oauthHelper->generateLoginUserUrl($transport, $oauth->getRefreshToken());
+                    } catch (\Exception $exception) {
+                        $this->get('session')->getFlashBag()->add(
+                            'error',
+                            $exception->getMessage()
+                        );
+                    }
+                }
+                $connectUrl = $oauthHelper->generateAuthorizeUrl($transport, $channel->getId());
+            } else {
                 $this->get('session')->getFlashBag()->add(
                     'error',
                     $this->get('translator')->trans(
@@ -165,8 +152,6 @@ class DotmailerController extends Controller
                     )
                 );
             }
-            $loginUserUrl = false;
-            $connectUrl   = false;
         }
 
         return [

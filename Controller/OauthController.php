@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\DotmailerBundle\Entity\OAuth;
 
 /**
  * @Route("/oauth")
@@ -32,13 +33,12 @@ class OauthController extends Controller
         $state = $request->get('state');
 
         $channel = $this->getDoctrine()
-            ->getManager()
             ->getRepository('OroIntegrationBundle:Channel')
             ->findOneById($state);
         if ($channel) {
             $transport = $channel->getTransport();
             try {
-                $refreshToken = $this->get('oro_dotmailer.oauth_helper')->generateRefreshToken($transport, $code);
+                $refreshToken = $this->get('oro_dotmailer.oauth_manager')->generateRefreshToken($transport, $code);
             } catch (\Exception $exception) {
                 $refreshToken = false;
                 $this->get('session')->getFlashBag()->add(
@@ -47,16 +47,24 @@ class OauthController extends Controller
                 );
             }
             if ($refreshToken) {
-                $transport->setRefreshToken($refreshToken);
+                $oauth = $this->getDoctrine()
+                    ->getRepository('OroDotmailerBundle::OAuth')
+                    ->findByChannelAndUser($channel, $this->getUser());
+                if (!$oauth) {
+                    $oauth = new OAuth();
+                    $oauth->setChannel($channel)
+                        ->setUser($this->getUser());
+                }
+                $oauth->setRefreshToken($refreshToken);
 
                 $em = $this->get('doctrine')->getManager();
-                $em->persist($transport);
-                $em->flush($transport);
+                $em->persist($oauth);
+                $em->flush($oauth);
             }
 
             return $this->redirectToRoute('oro_dotmailer_integration_connection', ['id' => $channel->getId()]);
         } else {
-            return $this->redirectToRoute('oro_dotmailer_integration_connection_index');
+            return $this->redirectToRoute('oro_dotmailer_integration_connection');
         }
     }
 
@@ -73,12 +81,14 @@ class OauthController extends Controller
      */
     public function disconnectAction(Channel $channel)
     {
-        $transport = $channel->getTransport();
-        $transport->setRefreshToken(null);
-
-        $em = $this->get('doctrine')->getManager();
-        $em->persist($transport);
-        $em->flush($transport);
+        $oauth = $this->getDoctrine()
+            ->getRepository('OroDotmailerBundle::OAuth')
+            ->findByChannelAndUser($channel, $this->getUser());
+        if ($oauth) {
+            $em = $this->get('doctrine')->getManager();
+            $em->remove($oauth);
+            $em->flush();
+        }
 
         return $this->redirectToRoute('oro_dotmailer_integration_connection', ['id' => $channel->getId()]);
     }

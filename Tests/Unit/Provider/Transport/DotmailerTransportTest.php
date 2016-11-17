@@ -59,6 +59,9 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
         $username = 'John';
         $password = '42';
         $passwordEncoded = md5($password);
+        $clientId = uniqid();
+        $clientKey = uniqid();
+        $clientKeyEncoded = md5($clientKey);
         $transport = $this->getMock(
             'Oro\Bundle\IntegrationBundle\Entity\Transport'
         );
@@ -71,6 +74,8 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
                 [
                     ['username', null, false, $username],
                     ['password', null, false, $passwordEncoded],
+                    ['clientId', null, false, $clientId],
+                    ['clientKey', null, false, $clientKeyEncoded],
                 ]
             ));
         $transport->expects($this->once())
@@ -421,6 +426,9 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
         $username = 'John';
         $password = '42';
         $passwordEncoded = md5($password);
+        $clientId = uniqid();
+        $clientKey = uniqid();
+        $clientKeyEncoded = md5($clientKey);
         $transport = $this->getMock(
             'Oro\Bundle\IntegrationBundle\Entity\Transport'
         );
@@ -433,6 +441,8 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
                 [
                     ['username', null, false, $username],
                     ['password', null, false, $passwordEncoded],
+                    ['clientId', null, false, $clientId],
+                    ['clientKey', null, false, $clientKeyEncoded],
                 ]
             ));
 

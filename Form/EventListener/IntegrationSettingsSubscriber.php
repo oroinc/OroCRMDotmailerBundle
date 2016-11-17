@@ -66,7 +66,7 @@ class IntegrationSettingsSubscriber implements EventSubscriberInterface
 
     /**
      * Pre submit event listener
-     * Encrypt passwords and populate if empty
+     * Encrypt passwords/client key and populate if empty
      *
      * @param FormEvent $event
      */
@@ -81,6 +81,14 @@ class IntegrationSettingsSubscriber implements EventSubscriberInterface
             $data['password'] = $oldPassword;
         } elseif (isset($data['password'])) {
             $data['password'] = $this->encoder->encryptData($data['password']);
+        }
+
+        $oldClientKey = $form->get('clientKey')->getData();
+        if (empty($data['clientKey']) && $oldClientKey) {
+            // populate old client key
+            $data['clientKey'] = $oldClientKey;
+        } elseif (isset($data['clientKey'])) {
+            $data['clientKey'] = $this->encoder->encryptData($data['clientKey']);
         }
 
         $event->setData($data);

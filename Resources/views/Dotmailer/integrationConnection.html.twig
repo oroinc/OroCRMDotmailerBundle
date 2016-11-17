@@ -3,7 +3,7 @@
 
 {% oro_title_set({params : {'%title%': 'oro.dotmailer.integration.connection.label'|trans} }) %}
 
-{% set formAction = path('oro_dotmailer_integration_connection_index') %}
+{% set formAction = path('oro_dotmailer_integration_connection') %}
 
 {% block navButtons %}{% endblock navButtons %}
 
@@ -14,7 +14,7 @@
 
 {% block content_data %}
     {% set button %}
-        {% if entity.id and entity.transport.clientId and entity.transport.clientKey %}
+        {% if entity and entity.transport.clientId and entity.transport.clientKey %}
             {% if loginUserUrl %}
                 <div class="control-group">
                     <div class="controls">
@@ -56,19 +56,7 @@
 
     {% if loginUserUrl %}
         {% set dotmailerSection %}
-            <div id="embedded-form-container-dotmailer"></div>
-            <script type="text/javascript" src="{{ app.request.getSchemeAndHttpHost() ~ asset('bundles/oroembeddedform/js/embed.form.js') }}"></script>
-            <script type="text/javascript">
-                new ORO.EmbedForm({
-                    container: 'embedded-form-container-dotmailer',
-                    iframe: {
-                        src: "{{ loginUserUrl }}",
-                        width: '100%',
-                        height: 1650,
-                        frameBorder: 0
-                    }
-                });
-            </script>
+            <iframe src="{{ loginUserUrl }}" width="100%" height="1650" frameborder="0"></iframe>
         {% endset %}
 
         {% set dataBlocks = dataBlocks|merge([{
@@ -88,8 +76,27 @@
         'dataBlocks': dataBlocks
     } %}
 
-    {% import 'OroDotmailerBundle:Form:javascript.html.twig' as jsRenderer %}
-    {{ jsRenderer.renderIntegrationConnectionFormJS(form) }}
+    {% set fieldsToSendOnChannelChange = [form.channel.vars.full_name] %}
+    {% if form._token is defined %}
+        {% set fieldsToSendOnChannelChange = fieldsToSendOnChannelChange|merge([form._token.vars.full_name]) %}
+    {% endif %}
+    <script type="text/javascript">
+        require(['orodotmailer/js/integration-connection'], function (IntegrationConnection) {
+            "use strict";
+
+            $(function () {
+                var options = {
+                    formSelector: '#{{ form.vars.id }}',
+                    channelSelector: '#{{ form.channel.vars.id }}',
+                    fieldsSets: {
+                        channel: {{ fieldsToSendOnChannelChange|json_encode|raw }}
+                    }
+                };
+
+                new IntegrationConnection(options);
+            });
+        });
+    </script>
 
     {{ parent() }}
 {% endblock content_data %}

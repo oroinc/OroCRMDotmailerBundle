@@ -30,30 +30,23 @@ class DotmailerTransport extends Transport
     /**
      * @var string
      *
-     * @ORM\Column(name="orocrm_dm_api_client_id", type="string", length=255, nullable=false)
+     * @ORM\Column(name="orocrm_dm_api_client_id", type="string", length=255, nullable=true)
      */
     protected $clientId;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="orocrm_dm_api_client_key", type="string", length=255, nullable=false)
+     * @ORM\Column(name="orocrm_dm_api_client_key", type="string", length=255, nullable=true)
      */
     protected $clientKey;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="orocrm_dm_api_custom_domain", type="string", length=255, nullable=false)
+     * @ORM\Column(name="orocrm_dm_api_custom_domain", type="string", length=255, nullable=true)
      */
     protected $customDomain;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="orocrm_dm_api_refresh_token", type="string", length=255, nullable=false)
-     */
-    protected $refreshToken;
 
     /**
      * @var ParameterBag
@@ -69,7 +62,10 @@ class DotmailerTransport extends Transport
             $this->settingsBag = new ParameterBag(
                 [
                     'username' => $this->getUsername(),
-                    'password' => $this->getPassword()
+                    'password' => $this->getPassword(),
+                    'clientId' => $this->getClientId(),
+                    'clientKey' => $this->getClientKey(),
+                    'customDomain' => $this->getCustomDomain()
                 ]
             );
         }
@@ -173,26 +169,6 @@ class DotmailerTransport extends Transport
     public function setCustomDomain($customDomain)
     {
         $this->customDomain = $customDomain;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRefreshToken()
-    {
-        return $this->refreshToken;
-    }
-
-    /**
-     * @param string $refreshToken
-     *
-     * @return DotmailerTransport
-     */
-    public function setRefreshToken($refreshToken)
-    {
-        $this->refreshToken = $refreshToken;
 
         return $this;
     }

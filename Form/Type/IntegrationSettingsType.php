@@ -68,7 +68,7 @@ class IntegrationSettingsType extends AbstractType
                 ]
             )
             ->add(
-                'client_id',
+                'clientId',
                 'text',
                 [
                     'label'    => 'oro.dotmailer.integration_transport.client_id.label',
@@ -79,8 +79,8 @@ class IntegrationSettingsType extends AbstractType
                 ]
             )
             ->add(
-                'client_key',
-                'text',
+                'clientKey',
+                'password',
                 [
                     'label'    => 'oro.dotmailer.integration_transport.client_key.label',
                     'required' => false,
@@ -90,7 +90,7 @@ class IntegrationSettingsType extends AbstractType
                 ]
             )
             ->add(
-                'custom_domain',
+                'customDomain',
                 'text',
                 [
                     'label'    => 'oro.dotmailer.integration_transport.custom_domain.label',
