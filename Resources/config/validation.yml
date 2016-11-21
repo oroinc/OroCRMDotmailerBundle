@@ -13,6 +13,10 @@ Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport:
                 max: 255
 
 Oro\Bundle\DotmailerBundle\Entity\AddressBook:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [ channel, name ]
+            message: oro.dotmailer.validators.address_book.unique_entity.message
     properties:
         channel:
             - NotBlank: ~

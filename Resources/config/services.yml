@@ -219,6 +219,8 @@ services:
             - "@request"
             - "@doctrine.orm.entity_manager"
             - "@oro_dotmailer.transport.integration_transport"
+            - "@translator"
+            - "@oro_integration.logger.strategy"
         scope: request
 
     # Integration related services

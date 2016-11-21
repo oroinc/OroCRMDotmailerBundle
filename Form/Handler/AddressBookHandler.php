@@ -7,6 +7,9 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Translation\TranslatorInterface;
+use Psr\Log\LoggerInterface;
+
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
@@ -34,21 +37,38 @@ class AddressBookHandler
     protected $transport;
 
     /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      *
-     * @param FormInterface $form
-     * @param Request       $request
-     * @param ObjectManager $manager
+     * @param FormInterface       $form
+     * @param Request             $request
+     * @param ObjectManager       $manager
+     * @param DotmailerTransport  $transport
+     * @param TranslatorInterface $translator
+     * @param LoggerInterface     $logger
      */
     public function __construct(
         FormInterface $form,
         Request $request,
         ObjectManager $manager,
-        DotmailerTransport $transport
+        DotmailerTransport $transport,
+        TranslatorInterface $translator,
+        LoggerInterface $logger
     ) {
-        $this->form      = $form;
-        $this->request   = $request;
-        $this->manager   = $manager;
-        $this->transport = $transport;
+        $this->form       = $form;
+        $this->request    = $request;
+        $this->manager    = $manager;
+        $this->transport  = $transport;
+        $this->translator = $translator;
+        $this->logger     = $logger;
     }
 
     /**
@@ -66,23 +86,32 @@ class AddressBookHandler
             if ($this->form->isValid()) {
                 try {
                     $this->transport->init($entity->getChannel()->getTransport());
-                    $apiAddressBook = $this->transport
-                        ->createAddressBook($entity->getName(), $entity->getVisibility()->getName());
+                    $apiAddressBook = $this->transport->createAddressBook(
+                        $this->form->get('name')->getData(),
+                        $this->form->get('visibility')->getData()
+                    );
 
                     $entity->setOriginId($apiAddressBook->offsetGet('id'));
                     $this->manager->persist($entity);
                     $this->manager->flush();
 
                     return true;
-                } catch (\Exception $exception) {
-                    $message = $exception->getMessage();
-                    if ($exception instanceof RestClientException &&
-                        $exception->getPrevious() &&
-                        $exception->getPrevious()->getMessage()
-                    ) {
-                        $message = $exception->getPrevious()->getMessage();
+                } catch (RestClientException $e) {
+                    if ($e->getPrevious() && $e->getPrevious()->getMessage()) {
+                        $message = $e->getPrevious()->getMessage();
+                    } else {
+                        $message = $e->getMessage();
                     }
                     $this->form->addError(new FormError($message));
+                } catch (\Exception $e) {
+                    $this->logger->error(
+                        'Unexpected exception occurred during creating Address Book',
+                        ['exception' => $e]
+                    );
+
+                    $this->form->addError(
+                        new FormError($this->translator->trans('oro.dotmailer.addressbook.message.failed'))
+                    );
                 }
             }
         }
