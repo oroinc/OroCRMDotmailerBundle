@@ -58,7 +58,6 @@ class Client implements IClient, LoggerAwareInterface
                 ],
             ]
         );
-
     }
 
     /**
@@ -115,7 +114,6 @@ class Client implements IClient, LoggerAwareInterface
                     $message = $this->getExceptionMessage($responseBody, $responseCode);
                     throw new RestClientAttemptException($message);
             }
-
         } catch (\Exception $exception) {
             $errorMessage = implode(
                 PHP_EOL,
