@@ -16,8 +16,8 @@
     },
     "repositories": [
         {
-            "type": "vcs",
-            "url": "https://github.com/laboro/dotMailer-API-v2-PHP-client"
+            "type": "composer",
+            "url": "https://packagist.orocrm.com"
         }
     ],
     "target-dir": "src/Oro/Bundle/DotmailerBundle",
