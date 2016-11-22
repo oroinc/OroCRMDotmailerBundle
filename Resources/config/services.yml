@@ -41,10 +41,12 @@ parameters:
     oro_dotmailer.form.event_listener.datafield.class:                      Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldFormSubscriber
     oro_dotmailer.form.event_listener.datafield_mapping.class:              Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldMappingFormSubscriber
     oro_dotmailer.form.type.integration_connection.class:                   Oro\Bundle\DotmailerBundle\Form\Type\IntegrationConnectionType
+    oro_dotmailer.form.type.address_book.class:                             Oro\Bundle\DotmailerBundle\Form\Type\AddressBookType
 
     #Form handlers
     oro_dotmailer.form.handler.connection_update.class:            Oro\Bundle\DotmailerBundle\Form\Handler\ConnectionUpdateFormHandler
     oro_dotmailer.form.handler.datafield_update.class:             Oro\Bundle\DotmailerBundle\Form\Handler\DataFieldFormHandler
+    oro_dotmailer.form.handler.address_book_update.class:          Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler
 
     #data converters
     oro_dotmailer.importexport.data_converter.not_exported_contact.class:              Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\NotExportedContactDataConverter
@@ -293,6 +295,19 @@ services:
             - "oro_dotmailer_datafield_mapping_form"
             - "oro_dotmailer_datafield_mapping"
 
+    oro_dotmailer.form.type.address_book:
+        class: %oro_dotmailer.form.type.address_book.class%
+        tags:
+            - { name: form.type, alias: oro_dotmailer_address_book_form }
+
+    oro_dotmailer.form.address_book:
+        class: Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments:
+            - "oro_dotmailer_address_book_form"
+            - "oro_dotmailer_address_book_form"
+
     oro_dotmailer.form.type.integration_connection:
         class: %oro_dotmailer.form.type.integration_connection.class%
         tags:
@@ -304,6 +319,17 @@ services:
         arguments:
             - "@doctrine"
             - "@request"
+        scope: request
+
+    oro_dotmailer.form.handler.address_book_update:
+        class: %oro_dotmailer.form.handler.address_book_update.class%
+        arguments:
+            - "@oro_dotmailer.form.address_book"
+            - "@request"
+            - "@doctrine.orm.entity_manager"
+            - "@oro_dotmailer.transport.integration_transport"
+            - "@translator"
+            - "@oro_integration.logger.strategy"
         scope: request
 
     oro_dotmailer.form.handler.datafield_update:

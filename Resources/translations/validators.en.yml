@@ -1,0 +1,5 @@
+oro:
+    dotmailer:
+        validators:
+            address_book:
+                unique_entity.message: 'Integration has duplication of address books. Field "Name" should be unique.'

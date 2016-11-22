@@ -49,6 +49,10 @@ oro:
 
             sync: Marketing list synchronization started. {{ job_view_link }}
 
+            message:
+                saved: Address Book saved
+                failed: Could not create Address Book
+
         activity:
             entity_label:                 dotmailer Activity
             entity_plural_label:          dotmailer Activities
