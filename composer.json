@@ -14,12 +14,6 @@
             "Oro\\Bundle\\DotmailerBundle": "src/"
         }
     },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://packagist.orocrm.com"
-        }
-    ],
     "target-dir": "src/Oro/Bundle/DotmailerBundle",
     "require": {
         "php": ">=5.5.9",
