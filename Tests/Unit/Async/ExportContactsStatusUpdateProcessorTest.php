@@ -8,7 +8,7 @@ use Oro\Bundle\DotmailerBundle\Async\ExportContactsStatusUpdateProcessor;
 use Oro\Bundle\DotmailerBundle\Async\Topics;
 use Oro\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
 use Oro\Component\MessageQueue\Client\TopicSubscriberInterface;
 use Oro\Component\MessageQueue\Consumption\MessageProcessorInterface;
 use Oro\Component\MessageQueue\Test\JobRunner;
@@ -99,8 +99,8 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $entityManagerMock
             ->expects($this->once())
             ->method('find')
-            ->with(Channel::class, 'theIntegrationId')
-            ->willReturn(null);
+            ->with(Integration::class, 'theIntegrationId')
+            ->willReturn(null)
         ;
 
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
@@ -111,8 +111,8 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $logger = $this->createLoggerMock();
         $logger
             ->expects($this->once())
-            ->method('critical')
-            ->with('The channel not found: theIntegrationId', ['message' => $message])
+            ->method('error')
+            ->with('The integration not found: theIntegrationId', ['message' => $message])
         ;
 
         $processor = new ExportContactsStatusUpdateProcessor(
@@ -130,15 +130,15 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
 
     public function testShouldRejectMessageIfIntegrationIsNotEnabled()
     {
-        $channel = new Channel();
-        $channel->setEnabled(false);
+        $integration = new Integration();
+        $integration->setEnabled(false);
 
         $entityManagerMock = $this->createEntityManagerStub();
         $entityManagerMock
             ->expects($this->once())
             ->method('find')
-            ->with(Channel::class, 'theIntegrationId')
-            ->willReturn($channel);
+            ->with(Integration::class, 'theIntegrationId')
+            ->willReturn($integration)
         ;
 
         $message = new NullMessage();
@@ -147,8 +147,8 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $logger = $this->createLoggerMock();
         $logger
             ->expects($this->once())
-            ->method('critical')
-            ->with('The channel is not enabled: theIntegrationId', ['message' => $message])
+            ->method('error')
+            ->with('The integration is not enabled: theIntegrationId', ['message' => $message])
         ;
 
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
@@ -167,15 +167,15 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
 
     public function testShouldDoNothingIfExportFinishedAndErrorsProcessed()
     {
-        $channel = new Channel();
-        $channel->setEnabled(true);
+        $integration = new Integration();
+        $integration->setEnabled(true);
 
         $entityManagerMock = $this->createEntityManagerStub();
         $entityManagerMock
             ->expects($this->once())
             ->method('find')
-            ->with(Channel::class, 'theIntegrationId')
-            ->willReturn($channel);
+            ->with(Integration::class, 'theIntegrationId')
+            ->willReturn($integration)
         ;
 
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
@@ -215,17 +215,17 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $this->assertEquals(MessageProcessorInterface::ACK, $status);
     }
 
-    public function testShouldUpdateExportResultsIfIfExportNotFinished()
+    public function testShouldUpdateExportResultsIfExportIsNotFinished()
     {
-        $channel = new Channel();
-        $channel->setEnabled(true);
+        $integration = new Integration();
+        $integration->setEnabled(true);
 
         $entityManagerMock = $this->createEntityManagerStub();
         $entityManagerMock
             ->expects($this->once())
             ->method('find')
-            ->with(Channel::class, 'theIntegrationId')
-            ->willReturn($channel);
+            ->with(Integration::class, 'theIntegrationId')
+            ->willReturn($integration)
         ;
 
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
@@ -243,7 +243,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $exportManagerMock
             ->expects(self::once())
             ->method('updateExportResults')
-            ->with(self::identicalTo($channel))
+            ->with(self::identicalTo($integration))
         ;
         $exportManagerMock
             ->expects(self::never())
@@ -265,17 +265,17 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $this->assertEquals(MessageProcessorInterface::ACK, $status);
     }
 
-    public function testShouldProcessExportFaultsIfIfExportFinished()
+    public function testShouldProcessExportFaultsIfExportFinished()
     {
-        $channel = new Channel();
-        $channel->setEnabled(true);
+        $integration = new Integration();
+        $integration->setEnabled(true);
 
         $entityManagerMock = $this->createEntityManagerStub();
         $entityManagerMock
             ->expects($this->once())
             ->method('find')
-            ->with(Channel::class, 'theIntegrationId')
-            ->willReturn($channel);
+            ->with(Integration::class, 'theIntegrationId')
+            ->willReturn($integration)
         ;
 
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
@@ -317,15 +317,15 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
 
     public function testShouldRunExportAsUniqueJob()
     {
-        $channel = new Channel();
-        $channel->setEnabled(true);
+        $integration = new Integration();
+        $integration->setEnabled(true);
 
         $entityManagerMock = $this->createEntityManagerStub();
         $entityManagerMock
             ->expects($this->once())
             ->method('find')
-            ->with(Channel::class, 'theIntegrationId')
-            ->willReturn($channel);
+            ->with(Integration::class, 'theIntegrationId')
+            ->willReturn($integration)
         ;
 
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);

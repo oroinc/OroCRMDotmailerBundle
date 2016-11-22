@@ -2,10 +2,10 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Command;
 
-use Oro\Bundle\MessageQueueBundle\Test\Functional\MessageQueueExtension;
-use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Oro\Bundle\DotmailerBundle\Async\Topics;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData;
+use Oro\Bundle\MessageQueueBundle\Test\Functional\MessageQueueExtension;
+use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 
 /**
  * @dbIsolationPerTest
@@ -34,7 +34,7 @@ class ContactsExportStatusUpdateCommandTest extends WebTestCase
     {
         $result = $this->runCommand('oro:cron:dotmailer:export-status:update');
 
-        $this->assertContains('Send export contacts status update for channel:', $result);
+        $this->assertContains('Send export contacts status update for integration:', $result);
         $this->assertContains('Completed', $result);
 
         self::assertMessagesCount(Topics::EXPORT_CONTACTS_STATUS_UPDATE, 4);

@@ -4,20 +4,20 @@ namespace Oro\Bundle\DotmailerBundle\Command;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 
+use Oro\Bundle\CronBundle\Command\CronCommandInterface;
+use Oro\Bundle\DotmailerBundle\Async\Topics;
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
+use Oro\Component\MessageQueue\Client\Message;
+use Oro\Component\MessageQueue\Client\MessagePriority;
+
+use Oro\Component\MessageQueue\Client\MessageProducerInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
-
-use Oro\Bundle\CronBundle\Command\CronCommandInterface;
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Oro\Component\MessageQueue\Client\Message;
-use Oro\Component\MessageQueue\Client\MessagePriority;
-use Oro\Component\MessageQueue\Client\MessageProducerInterface;
-use Oro\Bundle\DotmailerBundle\Async\Topics;
-use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 
 class ContactsExportStatusUpdateCommand extends Command implements CronCommandInterface, ContainerAwareInterface
 {
@@ -51,18 +51,18 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
             $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
         }
 
-        $output->writeln('Send export contacts status update for channel:');
+        $output->writeln('Send export contacts status update for integration:');
 
-        $channels = $this->getChannelRepository()->findBy(['type' => ChannelType::TYPE, 'enabled' => true]);
-        foreach ($channels as $channel) {
-            /** @var Channel $channel */
+        $integrations = $this->getIntegrationRepository()->findBy(['type' => ChannelType::TYPE, 'enabled' => true]);
+        foreach ($integrations as $integration) {
+            /** @var Integration $integration */
 
-            $output->writeln(sprintf('Channel "%s"', $channel->getId()));
+            $output->writeln(sprintf('Integration "%s"', $integration->getId()));
 
             $this->getMessageProducer()->send(
                 Topics::EXPORT_CONTACTS_STATUS_UPDATE,
                 new Message(
-                    ['integrationId' => $channel->getId()],
+                    ['integrationId' => $integration->getId()],
                     MessagePriority::VERY_LOW
                 )
             );
@@ -74,12 +74,12 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
     /**
      * @return ObjectRepository
      */
-    protected function getChannelRepository()
+    protected function getIntegrationRepository()
     {
         /** @var RegistryInterface $doctrine */
         $doctrine = $this->container->get('doctrine');
 
-        return $doctrine->getRepository(Channel::class);
+        return $doctrine->getRepository(Integration::class);
     }
 
     /**

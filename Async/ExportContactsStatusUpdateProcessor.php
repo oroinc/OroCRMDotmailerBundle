@@ -4,7 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Async;
 use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
 use Oro\Component\MessageQueue\Client\TopicSubscriberInterface;
 use Oro\Component\MessageQueue\Consumption\MessageProcessorInterface;
 use Oro\Component\MessageQueue\Job\JobRunner;
@@ -68,22 +68,22 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
         }
 
         /** @var EntityManagerInterface $em */
-        $em = $this->doctrineHelper->getEntityManagerForClass(Channel::class);
+        $em = $this->doctrineHelper->getEntityManagerForClass(Integration::class);
 
-        /** @var Channel $channel */
-        $channel = $em->find(Channel::class, $body['integrationId']);
+        /** @var Integration $integration */
+        $integration = $em->find(Integration::class, $body['integrationId']);
 
-        if (! $channel) {
-            $this->logger->critical(
-                sprintf('The channel not found: %s', $body['integrationId']),
+        if (! $integration) {
+            $this->logger->error(
+                sprintf('The integration not found: %s', $body['integrationId']),
                 ['message' => $message]
             );
 
             return self::REJECT;
         }
-        if (! $channel->isEnabled()) {
-            $this->logger->critical(
-                sprintf('The channel is not enabled: %s', $body['integrationId']),
+        if (! $integration->isEnabled()) {
+            $this->logger->error(
+                sprintf('The integration is not enabled: %s', $body['integrationId']),
                 ['message' => $message]
             );
 
@@ -93,9 +93,9 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
         $jobName = 'oro_dotmailer:export_contacts_status_update:'.$body['integrationId'];
         $ownerId = $message->getMessageId();
 
-        $result = $this->jobRunner->runUnique($ownerId, $jobName, function () use ($body, $channel) {
+        $result = $this->jobRunner->runUnique($ownerId, $jobName, function () use ($body, $integration) {
             /** @var EntityManagerInterface $em */
-            $em = $this->doctrineHelper->getEntityManagerForClass(Channel::class);
+            $em = $this->doctrineHelper->getEntityManagerForClass(Integration::class);
 
             $em->getConnection()->getConfiguration()->setSQLLogger(null);
 
@@ -103,10 +103,10 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
              * If previous export was not finished we need to update export results from Dotmailer.
              * If finished we need to process export faults reports
              */
-            if (!$this->exportManager->isExportFinished($channel)) {
-                $this->exportManager->updateExportResults($channel);
-            } elseif (!$this->exportManager->isExportFaultsProcessed($channel)) {
-                $this->exportManager->processExportFaults($channel);
+            if (!$this->exportManager->isExportFinished($integration)) {
+                $this->exportManager->updateExportResults($integration);
+            } elseif (!$this->exportManager->isExportFaultsProcessed($integration)) {
+                $this->exportManager->processExportFaults($integration);
             }
 
             return true;
