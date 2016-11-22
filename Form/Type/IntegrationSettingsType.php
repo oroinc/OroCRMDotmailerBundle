@@ -59,11 +59,46 @@ class IntegrationSettingsType extends AbstractType
                         'class' => 'dm-password',
                     ],
                 ]
-            )->add(
+            )
+            ->add(
                 'check',
                 'oro_dotmailer_transport_check_button',
                 [
                     'label' => 'oro.dotmailer.integration.check_connection.label'
+                ]
+            )
+            ->add(
+                'clientId',
+                'text',
+                [
+                    'label'    => 'oro.dotmailer.integration_transport.client_id.label',
+                    'required' => false,
+                    'attr'     => [
+                        'class' => 'dm-client-id',
+                    ],
+                ]
+            )
+            ->add(
+                'clientKey',
+                'password',
+                [
+                    'label'    => 'oro.dotmailer.integration_transport.client_key.label',
+                    'required' => false,
+                    'attr'     => [
+                        'class' => 'dm-client-key',
+                    ],
+                ]
+            )
+            ->add(
+                'customDomain',
+                'text',
+                [
+                    'label'    => 'oro.dotmailer.integration_transport.custom_domain.label',
+                    'tooltip'  => 'oro.dotmailer.form.custom_domain.tooltip',
+                    'required' => false,
+                    'attr'     => [
+                        'class' => 'dm-custom-domain',
+                    ],
                 ]
             );
     }

@@ -3,6 +3,11 @@ oro_dotmailer_bundle:
     type:         annotation
     prefix:       /dotmailer
 
+oro_dotmailer_oauth_callback:
+    path:         /dotmailer/oauth/callback
+    defaults:     { _controller: OroDotmailerBundle:Oauth:callback }
+    schemes:      [https]
+
 oro_dotmailer_bundle_api:
     resource: "@OroDotmailerBundle/Resources/config/oro/routing_api.yml"
     type: rest

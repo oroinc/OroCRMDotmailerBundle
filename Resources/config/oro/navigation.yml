@@ -16,6 +16,12 @@ navigation:
                 route: 'oro_dotmailer_datafield_mapping_index'
                 extras:
                     routes: ['oro_dotmailer_datafield_mapping_*']
+            oro_dotmailer_integration_connection:
+                label: 'oro.dotmailer.integration.connection.label'
+                route: 'oro_dotmailer_integration_connection'
+                extras:
+                    routes: ['oro_dotmailer_integration_connection']
+                    position: 10
 
         tree:
             application_menu:
@@ -24,6 +30,7 @@ navigation:
                         children:
                           oro_dotmailer:
                               children:
+                                  oro_dotmailer_integration_connection: ~
                                   oro_dotmailer_data_field_list: ~
                                   oro_dotmailer_data_field_mapping_list: ~
 

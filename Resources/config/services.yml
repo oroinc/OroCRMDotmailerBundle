@@ -23,6 +23,7 @@ parameters:
     oro_dotmailer.export_manager.class:                                  Oro\Bundle\DotmailerBundle\Model\ExportManager
     oro_dotmailer.datafield_manager.class:                               Oro\Bundle\DotmailerBundle\Model\DataFieldManager
     oro_dotmailer.log_helper.class:                                      Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper
+    oro_dotmailer.oauth_manager.class:                                   Oro\Bundle\DotmailerBundle\Model\OAuthManager
 
     # Forms and Extensions
     oro_dotmailer.form.event_listener.integration_transport_settings.class: Oro\Bundle\DotmailerBundle\Form\EventListener\IntegrationSettingsSubscriber
@@ -39,6 +40,7 @@ parameters:
     oro_dotmailer.form.type.datafield_mapping_config.class:                 Oro\Bundle\DotmailerBundle\Form\Type\DataFieldMappingConfigType
     oro_dotmailer.form.event_listener.datafield.class:                      Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldFormSubscriber
     oro_dotmailer.form.event_listener.datafield_mapping.class:              Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldMappingFormSubscriber
+    oro_dotmailer.form.type.integration_connection.class:                   Oro\Bundle\DotmailerBundle\Form\Type\IntegrationConnectionType
 
     #Form handlers
     oro_dotmailer.form.handler.connection_update.class:            Oro\Bundle\DotmailerBundle\Form\Handler\ConnectionUpdateFormHandler
@@ -291,6 +293,11 @@ services:
             - "oro_dotmailer_datafield_mapping_form"
             - "oro_dotmailer_datafield_mapping"
 
+    oro_dotmailer.form.type.integration_connection:
+        class: %oro_dotmailer.form.type.integration_connection.class%
+        tags:
+            - { name: form.type, alias: "oro_dotmailer_integration_connection" }
+
     #Form handlers
     oro_dotmailer.form.handler.connection_update:
         class: %oro_dotmailer.form.handler.connection_update.class%
@@ -380,6 +387,13 @@ services:
 
     oro_dotmailer.log_helper:
         class: %oro_dotmailer.log_helper.class%
+
+    oro_dotmailer.oauth_manager:
+        class: %oro_dotmailer.oauth_manager.class%
+        arguments:
+            - "@router"
+            - "@oro_security.encoder.mcrypt"
+            - "@hwi_oauth.http_client"
 
     #readers
     oro_dotmailer.importexport.reader.abstract:

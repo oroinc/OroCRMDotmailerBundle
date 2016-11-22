@@ -7,6 +7,11 @@ oro:
             label: Integration
             check_connection.label: Check Connection
             connection_successful.label: Connection successful!
+            connection.label: Email Studio
+            connect.label: Connect
+            disconnect.label: Disconnect
+            messsage:
+                enter_client_id_client_key: Please enter Client ID and Client Key for your <a href="%update_url%">integration</a>
 
         integration_transport:
             label: dotmailer
@@ -14,6 +19,12 @@ oro:
                 label: Username
             password:
                 label: Password
+            client_id:
+                label: Client ID
+            client_key:
+                label: Client Secret Key
+            custom_domain:
+                label: Custom OAuth domain
 
         addressbook:
             select.placeholder:                   Select Address Book
@@ -377,6 +388,8 @@ oro:
                 tooltip: API User.
             password:
                 tooltip: API User Password.
+            custom_domain:
+                tooltip: If empty will be used<br>https://r1-app.dotmailer.com/
 
         handler:
             unable_to_create_field: Failed to create field in dotmailer.
