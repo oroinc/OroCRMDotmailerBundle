@@ -42,3 +42,5 @@ navigation:
         oro_dotmailer_datafield_mapping_index: ~
         oro_dotmailer_datafield_mapping_create: 'Add Dotmailer Data Field Mapping'
         oro_dotmailer_datafield_mapping_update: 'Update Dotmailer Data Field Mapping'
+
+        oro_dotmailer_integration_connection: '%%title%%'
