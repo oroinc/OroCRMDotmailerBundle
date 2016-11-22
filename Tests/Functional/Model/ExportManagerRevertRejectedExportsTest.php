@@ -156,7 +156,6 @@ class ExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCas
 
         $addressBookStatus = $expectedAddressBook->getSyncStatus();
         $this->assertEquals($status, $addressBookStatus->getId());
-
     }
 
     protected function stubResource()
