@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Entity\OAuth;
 
 /**
@@ -22,7 +23,6 @@ class OauthController extends Controller
      *      "/callback",
      *      name="oro_dotmailer_oauth_callback"
      * )
-     * @AclAncestor("oro_dotmailer")
      *
      * @param Request $request
      * @return RedirectResponse
@@ -34,16 +34,21 @@ class OauthController extends Controller
 
         $channel = $this->getDoctrine()
             ->getRepository('OroIntegrationBundle:Channel')
-            ->findOneById($state);
+            ->getOrLoadById($state);
         if ($channel) {
             $transport = $channel->getTransport();
+            $refreshToken = false;
             try {
                 $refreshToken = $this->get('oro_dotmailer.oauth_manager')->generateRefreshToken($transport, $code);
-            } catch (\Exception $exception) {
-                $refreshToken = false;
+            } catch (RuntimeException $e) {
                 $this->get('session')->getFlashBag()->add(
                     'error',
-                    $exception->getMessage()
+                    $e->getMessage()
+                );
+            } catch (\Exception $e) {
+                $this->get('session')->getFlashBag()->add(
+                    'error',
+                    $this->get('translator')->trans('oro.dotmailer.integration.messsage.unable_to_connect')
                 );
             }
             if ($refreshToken) {
@@ -59,11 +64,16 @@ class OauthController extends Controller
 
                 $em = $this->get('doctrine')->getManager();
                 $em->persist($oauth);
-                $em->flush($oauth);
+                $em->flush();
             }
 
             return $this->redirectToRoute('oro_dotmailer_integration_connection', ['id' => $channel->getId()]);
         } else {
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                $this->get('translator')->trans('oro.dotmailer.integration.messsage.incorrect_callback_url')
+            );
+
             return $this->redirectToRoute('oro_dotmailer_integration_connection');
         }
     }
@@ -74,7 +84,6 @@ class OauthController extends Controller
      *      name="oro_dotmailer_oauth_disconnect",
      *      requirements={"id"="\d+"}
      * )
-     * @AclAncestor("oro_dotmailer")
      *
      * @param Channel $channel
      * @return RedirectResponse

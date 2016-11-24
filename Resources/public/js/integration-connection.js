@@ -45,8 +45,6 @@ define([
          * @param {$.Event} e
          */
         changeHandler: function(e) {
-            //$('#flash-messages .flash-messages-holder').find('.top-messages').remove();
-
             var $form = $(this.options.formSelector);
             var data = $form.serializeArray();
             var url = $form.attr('action');

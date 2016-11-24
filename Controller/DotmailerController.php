@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
@@ -102,7 +103,6 @@ class DotmailerController extends Controller
      *      requirements={"id"="\d+"},
      *      defaults={"id" = "0"}
      * )
-     * @AclAncestor("oro_dotmailer")
      *
      * @Template("OroDotmailerBundle:Dotmailer:integrationConnection.html.twig")
      *
@@ -116,7 +116,7 @@ class DotmailerController extends Controller
         if (isset($data['channel'])) {
             $channel = $this->getDoctrine()
                 ->getRepository('OroIntegrationBundle:Channel')
-                ->findOneById($data['channel']);
+                ->getOrLoadById($data['channel']);
         }
 
         $form = $this->createForm('oro_dotmailer_integration_connection');
@@ -135,10 +135,15 @@ class DotmailerController extends Controller
                 if ($oauth) {
                     try {
                         $loginUserUrl = $oauthHelper->generateLoginUserUrl($transport, $oauth->getRefreshToken());
-                    } catch (\Exception $exception) {
+                    } catch (RuntimeException $e) {
                         $this->get('session')->getFlashBag()->add(
                             'error',
-                            $exception->getMessage()
+                            $e->getMessage()
+                        );
+                    } catch (\Exception $e) {
+                        $this->get('session')->getFlashBag()->add(
+                            'error',
+                            $this->get('translator')->trans('oro.dotmailer.integration.messsage.unable_to_connect')
                         );
                     }
                 }
