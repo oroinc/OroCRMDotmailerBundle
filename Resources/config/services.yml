@@ -129,6 +129,7 @@ parameters:
     orocrm_dotmailer.listener.cache_clear.class:                      OroCRM\Bundle\DotmailerBundle\EventListener\CacheClearListener
     orocrm_dotmailer.listener.contact_export.class:                   OroCRM\Bundle\DotmailerBundle\EventListener\ContactExportListener
     orocrm_dotmailer.listener.update_address_book_last_imported_date.class: OroCRM\Bundle\DotmailerBundle\EventListener\UpdateAddressBookLastImportDateListener
+    orocrm_dotmailer.listener.contact_sync.class:                     OroCRM\Bundle\DotmailerBundle\EventListener\ContactSyncListener
 
     orocrm_dotmailer.transport.dotmailer.class: OroCRM\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport
 services:
@@ -783,3 +784,8 @@ services:
         class: %orocrm_dotmailer.transport.dotmailer.class%
         tags:
             - { name: orocrm_campaign.email_transport }
+
+    orocrm_dotmailer.listener.contact_sync.after_execution_completed:
+        class: %orocrm_dotmailer.listener.contact_sync.class%
+        tags:
+            - { name: kernel.event_listener, event: akeneo_batch.step_execution_completed, method: afterExecutionCompleted }
