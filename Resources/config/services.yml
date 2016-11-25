@@ -129,6 +129,7 @@ parameters:
     oro_dotmailer.listener.cache_clear.class:                      Oro\Bundle\DotmailerBundle\EventListener\CacheClearListener
     oro_dotmailer.listener.contact_export.class:                   Oro\Bundle\DotmailerBundle\EventListener\ContactExportListener
     oro_dotmailer.listener.update_address_book_last_imported_date.class: Oro\Bundle\DotmailerBundle\EventListener\UpdateAddressBookLastImportDateListener
+    oro_dotmailer.listener.contact_sync.class:                     Oro\Bundle\DotmailerBundle\EventListener\ContactSyncListener
 
     oro_dotmailer.transport.dotmailer.class: Oro\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport
 services:
@@ -783,3 +784,8 @@ services:
         class: %oro_dotmailer.transport.dotmailer.class%
         tags:
             - { name: oro_campaign.email_transport }
+
+    oro_dotmailer.listener.contact_sync.after_execution_completed:
+        class: %oro_dotmailer.listener.contact_sync.class%
+        tags:
+            - { name: kernel.event_listener, event: akeneo_batch.step_execution_completed, method: afterExecutionCompleted }
