@@ -3,23 +3,18 @@
 namespace Oro\Bundle\DotmailerBundle\Controller;
 
 use FOS\RestBundle\Util\Codes;
-
-use JMS\JobQueueBundle\Entity\Job;
-
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
+use Oro\Bundle\IntegrationBundle\Manager\GenuineSyncScheduler;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+use Oro\Bundle\SecurityBundle\Annotation\Acl;
+use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
-use Oro\Bundle\SecurityBundle\Annotation\Acl;
-use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
-use Oro\Bundle\IntegrationBundle\Command\SyncCommand;
-use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
-use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
-use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 
 /**
  * @Route("/address-book")
@@ -45,41 +40,14 @@ class AddressBookController extends Controller
     public function synchronizeAddressBook(AddressBook $addressBook)
     {
         try {
-            $job = new Job(
-                SyncCommand::COMMAND_NAME,
-                [
-                    sprintf(
-                        '%s=%s',
-                        AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION,
-                        $addressBook->getId()
-                    ),
-                    sprintf(
-                        '--%s=%s',
-                        SyncCommand::INTEGRATION_ID_OPTION,
-                        $addressBook->getChannel()->getId()
-                    ),
-                    '-v'
-                ]
-            );
+            $this->getSyncScheduler()->schedule($addressBook->getChannel()->getId(), null, [
+                AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION => $addressBook->getId(),
+            ]);
 
             $status = Codes::HTTP_OK;
-            $response = [ 'message' => '' ];
-
-            $em = $this->get('doctrine')->getManager();
-            $em->persist($job);
-            $em->flush();
-
-            $jobViewLink = sprintf(
-                '<a href="%s" class="job-view-link">%s</a>',
-                $this->get('router')->generate('oro_cron_job_view', ['id' => $job->getId()]),
-                $this->get('translator')->trans('oro.integration.progress')
-            );
-
-            $response['message'] = str_replace(
-                '{{ job_view_link }}',
-                $jobViewLink,
-                $this->get('translator')->trans('oro.dotmailer.addressbook.sync')
-            );
+            $response = [
+                'message' => $this->get('translator')->trans('oro.integration.progress')
+            ];
         } catch (\Exception $e) {
             $status = Codes::HTTP_BAD_REQUEST;
             $response['message'] = sprintf(
@@ -190,5 +158,13 @@ class AddressBookController extends Controller
             ->findOneBy(['marketingList' => $marketingList]);
 
         return $addressBook;
+    }
+
+    /**
+     * @return GenuineSyncScheduler
+     */
+    private function getSyncScheduler()
+    {
+        return $this->container->get('oro_integration.genuine_sync_scheduler');
     }
 }

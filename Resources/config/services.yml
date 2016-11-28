@@ -939,6 +939,16 @@ services:
         tags:
             - { name: oro_campaign.email_transport }
 
+    oro_dotmailer.async.export_contacts_status_update_processor:
+        class: 'Oro\Bundle\DotmailerBundle\Async\ExportContactsStatusUpdateProcessor'
+        arguments:
+            - '@oro_entity.doctrine_helper'
+            - '@oro_dotmailer.export_manager'
+            - '@oro_message_queue.job.runner'
+            - '@logger'
+        tags:
+            - { name: 'oro_message_queue.client.message_processor' }
+
     oro_dotmailer.listener.datafield_remove:
         class: "%oro_dotmailer.listener.datafield_remove.class%"
         arguments:

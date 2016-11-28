@@ -2,39 +2,26 @@
 
 namespace Oro\Bundle\DotmailerBundle\Command;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Common\Persistence\ObjectRepository;
 
-use Psr\Log\LoggerInterface;
+use Oro\Bundle\CronBundle\Command\CronCommandInterface;
+use Oro\Bundle\DotmailerBundle\Async\Topics;
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
+use Oro\Component\MessageQueue\Client\Message;
+use Oro\Component\MessageQueue\Client\MessagePriority;
 
+use Oro\Component\MessageQueue\Client\MessageProducerInterface;
+use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Oro\Bundle\IntegrationBundle\Command\AbstractSyncCronCommand;
-use Oro\Bundle\IntegrationBundle\Provider\ReverseSyncProcessor;
-use Oro\Component\Log\OutputLogger;
-use Oro\Bundle\DotmailerBundle\Model\ExportManager;
-use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
-
-class ContactsExportStatusUpdateCommand extends AbstractSyncCronCommand
+class ContactsExportStatusUpdateCommand extends Command implements CronCommandInterface, ContainerAwareInterface
 {
-    const NAME = 'oro:cron:dotmailer:export-status:update';
-    const EXPORT_MANAGER = 'oro_dotmailer.export_manager';
-
-    /**
-     * @var ManagerRegistry
-     */
-    protected $registry;
-
-    /**
-     * @var ReverseSyncProcessor
-     */
-    protected $reverseSyncProcessor;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
+    use ContainerAwareTrait;
 
     /**
      * {@inheritdoc}
@@ -50,8 +37,9 @@ class ContactsExportStatusUpdateCommand extends AbstractSyncCronCommand
     protected function configure()
     {
         $this
-            ->setName(self::NAME)
-            ->setDescription('Updates status of Dotmailer\'s contacts export operations.');
+            ->setName('oro:cron:dotmailer:export-status:update')
+            ->setDescription('Updates status of Dotmailer\'s contacts export operations.')
+        ;
     }
 
     /**
@@ -63,47 +51,42 @@ class ContactsExportStatusUpdateCommand extends AbstractSyncCronCommand
             $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
         }
 
-        $this->registry = $this->getService('doctrine');
-        $this->logger = new OutputLogger($output);
-        $this->getContainer()
-            ->get('oro_integration.logger.strategy')
-            ->setLogger($this->logger);
+        $output->writeln('Send export contacts status update for integration:');
 
-        if ($this->isJobRunning(null)) {
-            $this->logger->warning('Job already running. Terminating....');
+        $integrations = $this->getIntegrationRepository()->findBy(['type' => ChannelType::TYPE, 'enabled' => true]);
+        foreach ($integrations as $integration) {
+            /** @var Integration $integration */
 
-            return;
+            $output->writeln(sprintf('Integration "%s"', $integration->getId()));
+
+            $this->getMessageProducer()->send(
+                Topics::EXPORT_CONTACTS_STATUS_UPDATE,
+                new Message(
+                    ['integrationId' => $integration->getId()],
+                    MessagePriority::VERY_LOW
+                )
+            );
         }
 
-        /** @var ExportManager $exportManager */
-        $exportManager = $this->getService(self::EXPORT_MANAGER);
-        foreach ($this->getChannels() as $channel) {
-            if (!$channel->isEnabled()) {
-                $this->logger->info(sprintf('Integration "%s" disabled an will be skipped', $channel->getName()));
-
-                continue;
-            }
-
-            /**
-             * If previous export was not finished we need to update export results from Dotmailer.
-             * If finished we need to process export faults reports
-             */
-            if (!$exportManager->isExportFinished($channel)) {
-                $exportManager->updateExportResults($channel);
-            } elseif (!$exportManager->isExportFaultsProcessed($channel)) {
-                $exportManager->processExportFaults($channel);
-            }
-        }
+        $output->writeln('Completed');
     }
 
     /**
-     * @return Channel[]
+     * @return ObjectRepository
      */
-    protected function getChannels()
+    protected function getIntegrationRepository()
     {
-        $channels = $this->registry
-            ->getRepository('OroIntegrationBundle:Channel')
-            ->findBy(['type' => ChannelType::TYPE, 'enabled' => true]);
-        return $channels;
+        /** @var RegistryInterface $doctrine */
+        $doctrine = $this->container->get('doctrine');
+
+        return $doctrine->getRepository(Integration::class);
+    }
+
+    /**
+     * @return MessageProducerInterface
+     */
+    private function getMessageProducer()
+    {
+        return $this->container->get('oro_message_queue.message_producer');
     }
 }
