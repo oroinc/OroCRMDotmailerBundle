@@ -169,10 +169,9 @@ connector:
                     title: import
                     class: OroCRM\Bundle\DotmailerBundle\Step\ContactSyncStep
                     services:
-                        reader:          orocrm_dotmailer.connector.export_contacts
-                        processor:       orocrm_dotmailer.importexport.processor.contact_sync
-                        writer:          orocrm_dotmailer.importexport.writer.contact_sync
-                        contextRegistry: oro_importexport.context_registry
+                        reader:    orocrm_dotmailer.connector.export_contacts
+                        processor: orocrm_dotmailer.importexport.processor.contact_sync
+                        writer:    orocrm_dotmailer.importexport.writer.contact_sync
                     parameters:
                         batch_size: 1000
                 exportContacts:
