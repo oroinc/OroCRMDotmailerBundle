@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Oro\Bundle\IntegrationBundle\Command\SyncCommand;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 
@@ -126,32 +126,16 @@ class DataFieldController extends Controller
         try {
             $repository = $this->get('doctrine')->getRepository('OroIntegrationBundle:Channel');
             $channels = $repository->getConfiguredChannelsForSync(ChannelType::TYPE, true);
+            /** @var Channel $channel */
             foreach ($channels as $channel) {
-                $job = new Job(
-                    SyncCommand::COMMAND_NAME,
-                    [
-                        sprintf(
-                            '--%s=%s',
-                            SyncCommand::INTEGRATION_ID_OPTION,
-                            $channel->getId()
-                        ),
-                        sprintf(
-                            '--%s=%s',
-                            'connector',
-                            DataFieldConnector::TYPE
-                        ),
-                        sprintf(
-                            '%s=%s',
-                            DataFieldConnector::FORCE_SYNC_FLAG,
-                            1
-                        ),
-                        '-v'
-                    ]
-                );
-
-                $em = $this->get('doctrine')->getManager();
-                $em->persist($job);
-                $em->flush();
+                $this->container->get('oro_integration.genuine_sync_scheduler')
+                    ->schedule(
+                        $channel->getId(),
+                        DataFieldConnector::TYPE,
+                        [
+                            DataFieldConnector::FORCE_SYNC_FLAG => 1,
+                        ]
+                    );
             }
             $status = Codes::HTTP_OK;
             $response = ['message' => $this->get('translator')->trans('oro.dotmailer.datafield.syncronize_scheduled')];
