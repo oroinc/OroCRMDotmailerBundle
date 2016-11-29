@@ -2,53 +2,57 @@
 
 namespace Oro\Bundle\MarketingListBundle\Tests\Unit\Form\Handler;
 
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
-use Doctrine\Common\Persistence\ObjectManager;
-use Psr\Log\LoggerInterface;
-use DotMailer\Api\DataTypes\ApiAddressBook;
 
+use Doctrine\Common\Persistence\ObjectManager;
+
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler;
-use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport as Transport;
+use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
+
+use DotMailer\Api\DataTypes\JsonObject;
+use Psr\Log\LoggerInterface;
 
 class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|Form
+     * @var FormInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $form;
 
     /**
-     * @var Request
+     * @var Request|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $request;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|ObjectManager
+     * @var ObjectManager|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $manager;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|DotmailerTransport
+     * @var DotmailerTransport|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $transport;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|TranslatorInterface
+     * @var TranslatorInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $translator;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|LoggerInterface
+     * @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $logger;
 
     /**
-     * @var AddressBook
+     * @var AddressBook|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $entity;
 
@@ -59,20 +63,17 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->form = $this->getMockBuilder('Symfony\Component\Form\Form')
+        $this->form = $this->getMockBuilder(FormInterface::class)->getMock();
+        $this->request = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->request = new Request();
-        $this->manager = $this->getMockBuilder('Doctrine\Common\Persistence\ObjectManager')
+        $this->manager = $this->getMockBuilder(ObjectManager::class)->getMock();
+        $this->transport = $this->getMockBuilder(DotmailerTransport::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->transport = $this->getMockBuilder('Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->translator = $this->getMockBuilder('Symfony\Component\Translation\TranslatorInterface')->getMock();
-        $this->logger = $this->getMockBuilder('Psr\Log\LoggerInterface')->getMock();
-
-        $this->entity = new AddressBook();
+        $this->translator = $this->getMockBuilder(TranslatorInterface::class)->getMock();
+        $this->logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
+        $this->entity = $this->getMockBuilder(AddressBook::class)->getMock();
         $this->handler = new AddressBookHandler(
             $this->form,
             $this->request,
@@ -119,7 +120,9 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('setData')
             ->with($this->entity);
 
-        $this->request->setMethod($method);
+        $this->request->expects($this->once())
+            ->method('getMethod')
+            ->will($this->returnValue($method));
 
         $this->form->expects($this->once())
             ->method('submit')
@@ -138,15 +141,12 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessValidData()
     {
-        $channel = new Channel();
-        $channel->setTransport(new Transport());
-        $this->entity->setChannel($channel);
-
-        $this->request->setMethod('POST');
-
         $this->form->expects($this->once())
             ->method('setData')
             ->with($this->entity);
+        $this->request->expects($this->once())
+            ->method('getMethod')
+            ->will($this->returnValue('POST'));
         $this->form->expects($this->once())
             ->method('submit')
             ->with($this->request);
@@ -154,36 +154,46 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('isValid')
             ->will($this->returnValue(true));
 
+        /** @var Channel|\PHPUnit_Framework_MockObject_MockObject $channel **/
+        $channel = $this->getMockBuilder(Channel::class)->getMock();
+        /** @var Transport|\PHPUnit_Framework_MockObject_MockObject $transport **/
+        $transport = $this->getMockBuilder(Transport::class)->getMock();
+        $this->entity->expects($this->once())
+            ->method('getChannel')
+            ->will($this->returnValue($channel));
+        $channel->expects($this->once())
+            ->method('getTransport')
+            ->will($this->returnValue($transport));
         $this->transport->expects($this->once())
             ->method('init')
-            ->with($this->entity->getChannel()->getTransport());
+            ->with($transport);
 
-        $nameForm = $this->getMockBuilder('Symfony\Component\Form\Form')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $nameForm->expects($this->once())
-            ->method('getData')
-            ->will($this->returnValue('Test'));
-        $this->form->expects($this->at(3))
-            ->method('get')
-            ->with('name')
-            ->will($this->returnValue($nameForm));
-        $visibilityForm = $this->getMockBuilder('Symfony\Component\Form\Form')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->entity->expects($this->once())
+            ->method('getName')
+            ->will($this->returnValue('Test address book'));
+        $visibilityForm = $this->getMockBuilder(FormInterface::class)->getMock();
         $visibilityForm->expects($this->once())
             ->method('getData')
-            ->will($this->returnValue('Private'));
-        $this->form->expects($this->at(4))
+            ->will($this->returnValue('Public'));
+        $this->form->expects($this->at(3))
             ->method('get')
             ->with('visibility')
             ->will($this->returnValue($visibilityForm));
-        $apiAddressBook = new ApiAddressBook();
-        $apiAddressBook->offsetSet('id', 1);
+        /** @var JsonObject|\PHPUnit_Framework_MockObject_MockObject $apiAddressBook **/
+        $apiAddressBook = $this->getMockBuilder(JsonObject::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->transport->expects($this->once())
             ->method('createAddressBook')
             ->will($this->returnValue($apiAddressBook));
 
+        $apiAddressBook->expects($this->once())
+            ->method('offsetGet')
+            ->with('id')
+            ->will($this->returnValue(1));
+        $this->entity->expects($this->once())
+            ->method('setOriginId')
+            ->will($this->returnValue(1));
         $this->manager->expects($this->once())
             ->method('persist')
             ->with($this->entity);
@@ -191,5 +201,97 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('flush');
 
         $this->assertTrue($this->handler->process($this->entity));
+    }
+
+    public function testProcessRestClientException()
+    {
+        $this->form->expects($this->once())
+            ->method('setData')
+            ->with($this->entity);
+        $this->request->expects($this->once())
+            ->method('getMethod')
+            ->will($this->returnValue('POST'));
+        $this->form->expects($this->once())
+            ->method('submit')
+            ->with($this->request);
+        $this->form->expects($this->once())
+            ->method('isValid')
+            ->will($this->returnValue(true));
+
+        /** @var Channel|\PHPUnit_Framework_MockObject_MockObject $channel **/
+        $channel = $this->getMockBuilder(Channel::class)->getMock();
+        /** @var Transport|\PHPUnit_Framework_MockObject_MockObject $transport **/
+        $transport = $this->getMockBuilder(Transport::class)->getMock();
+        $this->entity->expects($this->once())
+            ->method('getChannel')
+            ->will($this->returnValue($channel));
+        $channel->expects($this->once())
+            ->method('getTransport')
+            ->will($this->returnValue($transport));
+        $this->transport->expects($this->once())
+            ->method('init')
+            ->with($transport);
+
+        $this->entity->expects($this->once())
+            ->method('getName')
+            ->will($this->returnValue('Test address book'));
+        $visibilityForm = $this->getMockBuilder(FormInterface::class)->getMock();
+        $visibilityForm->expects($this->once())
+            ->method('getData')
+            ->will($this->returnValue('Public'));
+        $this->form->expects($this->at(3))
+            ->method('get')
+            ->with('visibility')
+            ->will($this->returnValue($visibilityForm));
+        $this->transport->expects($this->once())
+            ->method('createAddressBook')
+            ->willThrowException(new RestClientException('Test rest client exception'));
+
+        $this->form->expects($this->once())
+            ->method('addError')
+            ->with($this->isInstanceOf(FormError::class));
+
+        $this->assertFalse($this->handler->process($this->entity));
+    }
+
+    public function testProcessException()
+    {
+        $this->form->expects($this->once())
+            ->method('setData')
+            ->with($this->entity);
+        $this->request->expects($this->once())
+            ->method('getMethod')
+            ->will($this->returnValue('POST'));
+        $this->form->expects($this->once())
+            ->method('submit')
+            ->with($this->request);
+        $this->form->expects($this->once())
+            ->method('isValid')
+            ->will($this->returnValue(true));
+
+        /** @var Channel|\PHPUnit_Framework_MockObject_MockObject $channel **/
+        $channel = $this->getMockBuilder(Channel::class)->getMock();
+        /** @var Transport|\PHPUnit_Framework_MockObject_MockObject $transport **/
+        $transport = $this->getMockBuilder(Transport::class)->getMock();
+        $this->entity->expects($this->once())
+            ->method('getChannel')
+            ->will($this->returnValue($channel));
+        $channel->expects($this->once())
+            ->method('getTransport')
+            ->will($this->returnValue($transport));
+        /** @var \Exception $e **/
+        $e = new \Exception('Test exception');
+        $this->transport->expects($this->once())
+            ->method('init')
+            ->willThrowException($e);
+
+        $this->logger->expects($this->once())
+            ->method('error')
+            ->with('Unexpected exception occurred during creating Address Book', ['exception' => $e]);
+        $this->form->expects($this->once())
+            ->method('addError')
+            ->with($this->isInstanceOf(FormError::class));
+
+        $this->assertFalse($this->handler->process($this->entity));
     }
 }
