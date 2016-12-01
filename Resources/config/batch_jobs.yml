@@ -167,7 +167,7 @@ connector:
                         batch_size: 1000
                 syncMarketingListItemsWithContacts:
                     title: import
-                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    class: OroCRM\Bundle\DotmailerBundle\Step\ContactSyncStep
                     services:
                         reader:    orocrm_dotmailer.connector.export_contacts
                         processor: orocrm_dotmailer.importexport.processor.contact_sync
