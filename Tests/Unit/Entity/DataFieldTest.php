@@ -4,10 +4,12 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Entity;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
-use Oro\Component\Testing\Unit\EntityTestCase;
+use Oro\Component\Testing\Unit\EntityTestCaseTrait;
 
-class DataFieldTest extends EntityTestCase
+class DataFieldTest
 {
+    use EntityTestCaseTrait;
+
     /**
      * @var DataField
      */

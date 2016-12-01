@@ -11,6 +11,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\ImportExport\Job\Executor;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactsExportRepository;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
@@ -61,9 +62,7 @@ class ExportManager
      */
     public function isExportFinished(Channel $channel)
     {
-        return $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:AddressBookContactsExport')
-            ->isExportFinished($channel);
+        return $this->getAddressBookContactsExportRepostiry()->isExportFinished($channel);
     }
 
     /**
@@ -73,9 +72,7 @@ class ExportManager
      */
     public function isExportFaultsProcessed(Channel $channel)
     {
-        return $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:AddressBookContactsExport')
-            ->isExportFaultsProcessed($channel);
+        return $this->getAddressBookContactsExportRepostiry()->isExportFaultsProcessed($channel);
     }
 
     /**
@@ -85,8 +82,7 @@ class ExportManager
      */
     public function updateExportResults(Channel $channel)
     {
-        $exportRepository = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:AddressBookContactsExport');
+        $exportRepository = $this->getAddressBookContactsExportRepostiry();
 
         $this->dotmailerTransport->init($channel->getTransport());
 
@@ -131,8 +127,7 @@ class ExportManager
      */
     public function updateAddressBooksSyncStatus(Channel $channel)
     {
-        $exportRepository = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:AddressBookContactsExport');
+        $exportRepository = $this->getAddressBookContactsExportRepostiry();
 
         $addressBooks = $this->managerRegistry
             ->getRepository('OroDotmailerBundle:AddressBook')
@@ -200,5 +195,13 @@ class ExportManager
             'dotmailer_import_not_exported_contact',
             $configuration
         );
+    }
+
+    /**
+     * @return AddressBookContactsExportRepository
+     */
+    private function getAddressBookContactsExportRepostiry()
+    {
+        return $this->managerRegistry->getRepository(AddressBookContactsExport::class);
     }
 }

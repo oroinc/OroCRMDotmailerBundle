@@ -19,26 +19,8 @@ class DataFieldStrategy extends AddOrReplaceStrategy
             $existingDataFieldsNames = $this->context->getValue(self::EXISTING_DATAFIELDS_NAMES) ?: [];
             $existingDataFieldsNames[] = $entity->getName();
             $this->context->setValue(self::EXISTING_DATAFIELDS_NAMES, $existingDataFieldsNames);
-            
-            //find existing datafield by name and integration channel
-            return $this->databaseHelper->findOneBy(
-                $this->entityName,
-                ['name' => $entity->getName(), 'channel' => $entity->getChannel()]
-            );
-        } else {
-            return parent::findExistingEntity($entity, $searchContext);
-        }
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
-    protected function combineIdentityValues($entity, $entityClass, array $searchContext)
-    {
-        if ($entity instanceof $this->entityName) {
-            $searchContext = ['name' => $entity->getName(), 'channel' => $entity->getChannel()];
         }
 
-        return parent::combineIdentityValues($entity, $entityClass, $searchContext);
+        return parent::findExistingEntity($entity, $searchContext);
     }
 }
