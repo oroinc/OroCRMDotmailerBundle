@@ -7,7 +7,7 @@ use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
 use Oro\Component\Testing\Unit\EntityTestCaseTrait;
 
-class DataFieldMappingTest
+class DataFieldMappingTest extends \PHPUnit_Framework_TestCase
 {
     use EntityTestCaseTrait;
 
