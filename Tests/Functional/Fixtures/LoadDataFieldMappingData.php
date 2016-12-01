@@ -6,6 +6,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
+use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
 
 class LoadDataFieldMappingData extends AbstractFixture implements DependentFixtureInterface
 {
@@ -14,10 +15,22 @@ class LoadDataFieldMappingData extends AbstractFixture implements DependentFixtu
      */
     protected $data = [
         [
-            'entity'        => 'Oro\Bundle\SalesBundle\Entity\Lead',
+            'entity'        => 'Oro\Bundle\ContactBundle\Entity\Contact',
             'syncPriority'  => 100,
             'channel'       => 'oro_dotmailer.channel.first',
-            'reference'     => 'oro_dotmailer.datafield_mapping.first'
+            'reference'     => 'oro_dotmailer.datafield_mapping.first',
+            'configs'        => [
+                [
+                    'dataField' => 'oro_dotmailer.datafield.first',
+                    'entityField' => 'firstName',
+                    'isTwoWaySync' => false
+                ],
+                [
+                    'dataField' => 'oro_dotmailer.datafield.second',
+                    'entityField' => 'lastName',
+                    'isTwoWaySync' => true
+                ],
+            ]
         ],
     ];
 
@@ -31,7 +44,16 @@ class LoadDataFieldMappingData extends AbstractFixture implements DependentFixtu
             $entity = new DataFieldMapping();
             $entity->setOwner($organization);
             $this->resolveReferenceIfExist($data, 'channel');
-            $this->setEntityPropertyValues($entity, $data, ['reference']);
+            $this->setEntityPropertyValues($entity, $data, ['reference', 'configs']);
+            if (!empty($data['configs'])) {
+                foreach ($data['configs'] as $config) {
+                    $mappingConfig = new DataFieldMappingConfig();
+                    $mappingConfig->setDataField($this->getReference($config['dataField']));
+                    $mappingConfig->setEntityFields($config['entityField']);
+                    $mappingConfig->setIsTwoWaySync($config['isTwoWaySync']);
+                    $entity->addConfig($mappingConfig);
+                }
+            }
             $this->addReference($data['reference'], $entity);
             $manager->persist($entity);
         }

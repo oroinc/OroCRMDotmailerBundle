@@ -7,10 +7,14 @@ use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 class ContactStrategy extends AddOrReplaceStrategy
 {
     const CACHED_ADDRESS_BOOK_ENTITIES = 'cachedAddressBookEntities';
+
+    /** @var array  */
+    protected $entitiesQualifiedForTwoWaySync = [];
 
     /**
      * {@inheritdoc}
@@ -39,6 +43,7 @@ class ContactStrategy extends AddOrReplaceStrategy
                 if (is_null($addressBookContact)) {
                     $addressBookContact = new AddressBookContact();
                     $addressBookContact->setAddressBook($addressBook);
+                    $addressBookContact->setMarketingListItemClass($addressBook->getMarketingList()->getEntity());
                     $addressBookContact->setChannel($addressBook->getChannel());
                     $this->strategyHelper
                         ->getEntityManager('OroDotmailerBundle:AddressBookContact')
@@ -56,6 +61,31 @@ class ContactStrategy extends AddOrReplaceStrategy
         }
 
         return parent::afterProcessEntity($entity);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function importExistingEntity(
+        $entity,
+        $existingEntity,
+        $itemData = null,
+        array $excludedFields = []
+    ) {
+        //if data fields changed, schedule fields sync with entities
+        /** @var  Contact $existingEntity */
+        if ($existingEntity->getDataFields() &&
+            array_diff($entity->getDataFields(), $existingEntity->getDataFields())) {
+            $contactEntities = $this->getRepository('OroDotmailerBundle:AddressBookContact')
+                ->getContactMarketingListItemClasses($existingEntity);
+            $entitiesWithTwoWaySync = $this->getEntitiesQualifiedForTwoWaySync($existingEntity->getChannel());
+            //if contact exists in any marketing list with two way sync qualified entity class
+            if (array_intersect($contactEntities, $entitiesWithTwoWaySync)) {
+                $existingEntity->setScheduledForFieldsUpdate(true);
+            }
+        }
+
+        parent::importExistingEntity($entity, $existingEntity, $itemData, $excludedFields);
     }
 
     /**
@@ -146,5 +176,20 @@ class ContactStrategy extends AddOrReplaceStrategy
         $addressBookOriginId = $originalValue[ContactIterator::ADDRESS_BOOK_KEY];
 
         return $this->getAddressBookByOriginId($addressBookOriginId);
+    }
+
+    /**
+     * @param Channel $channel
+     * @return array
+     */
+    protected function getEntitiesQualifiedForTwoWaySync(Channel $channel)
+    {
+        if (!isset($this->entitiesQualifiedForTwoWaySync[$channel->getId()])) {
+            $this->entitiesQualifiedForTwoWaySync[$channel->getId()] = $this
+                ->getRepository('OroDotmailerBundle:DataFieldMapping')
+                ->getEntitiesQualifiedForTwoWaySync($channel);
+        }
+
+        return $this->entitiesQualifiedForTwoWaySync[$channel->getId()];
     }
 }

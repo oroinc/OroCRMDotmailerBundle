@@ -24,6 +24,7 @@ class ContactDataConverter extends AbstractDataConverter
             'FULLNAME'       => 'fullName',
             'POSTCODE'       => 'postcode',
             'LASTSUBSCRIBED' => 'lastSubscribedDate',
+            'datafields'     => 'dataFields'
         ];
     }
 
@@ -52,14 +53,18 @@ class ContactDataConverter extends AbstractDataConverter
      */
     public function convertToImportFormat(array $importedRecord, $skipNullValues = true)
     {
-        $header = array_keys($this->getHeaderConversionRules());
-
         if (!empty($importedRecord['datafields'])) {
+            $dataFields = [];
             foreach ((array)$importedRecord['datafields'] as $data) {
-                if (in_array($data['key'], $header)) {
-                    $importedRecord[$data['key']] = is_array($data['value']) ? $data['value'][0] : null;
-                }
+                $dataFields[$data['key']] = is_array($data['value']) ? $data['value'][0] : null;
             }
+            $importedRecord['datafields'] = $dataFields;
+            if (isset($dataFields['LASTSUBSCRIBED'])) {
+                //stored separately as flat field
+                $importedRecord['LASTSUBSCRIBED'] = $dataFields['LASTSUBSCRIBED'];
+            }
+        } else {
+            $importedRecord['datafields'] = [];
         }
 
         return parent::convertToImportFormat($importedRecord, $skipNullValues);

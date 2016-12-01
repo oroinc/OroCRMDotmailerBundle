@@ -72,13 +72,24 @@ connector:
             title: oro.dotmailer.connector.contact.job
             type:  import
             steps:
-                -
+                importNewContacts:
                     title: import
                     class: Oro\Bundle\BatchBundle\Step\ItemStep
                     services:
                         reader:    oro_dotmailer.connector.contact
                         processor: oro_dotmailer.importexport.processor.contact
                         writer:    oro_dotmailer.importexport.writer.import
+                    parameters:
+                        batch_size: 1000
+                updateEntityFields:
+                    title: import
+                    class: Oro\Bundle\DotmailerBundle\Step\UpdateEntityFieldsStep
+                    services:
+                        reader:          oro_dotmailer.importexport.reader.update_entity_field_from_contacts
+                        processor:       oro_dotmailer.importexport.processor.update_entity_field_from_contacts
+                        writer:          oro_dotmailer.importexport.writer.import
+                        contextRegistry: oro_importexport.context_registry
+                        registry:        doctrine
                     parameters:
                         batch_size: 1000
 

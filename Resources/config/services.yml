@@ -55,6 +55,7 @@ parameters:
     oro_dotmailer.importexport.data_converter.campaign_summary.class:                  Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\CampaignSummaryDataConverter
     oro_dotmailer.importexport.data_converter.contact_sync.class:                      Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactSyncDataConverter
     oro_dotmailer.importexport.data_converter.datafield.class:                         Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\DataFieldDataConverter
+    oro_dotmailer.importexport.data_converter.update_entity_field_from_contacts.class: Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\UpdateEntityFieldsFromContactDataConverter
 
     #reader
     oro_dotmailer.importexport.reader.abstract.class:                            Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractReader
@@ -68,6 +69,7 @@ parameters:
     oro_dotmailer.importexport.reader.campaign.remove.class:                     Oro\Bundle\DotmailerBundle\ImportExport\Reader\RemoveCampaignReader
     oro_dotmailer.importexport.reader.export.rejected_contact.class:             Oro\Bundle\DotmailerBundle\ImportExport\Reader\RejectedContactExportReader
     oro_dotmailer.importexport.reader.datafield.remove.class:                    Oro\Bundle\DotmailerBundle\ImportExport\Reader\RemoveDataFieldReader
+    oro_dotmailer.importexport.reader.update_entity_field_from_contacts.class:   Oro\Bundle\DotmailerBundle\ImportExport\Reader\UpdateEntityFieldsFromContactReader
 
     #connectors
     oro_dotmailer.connector.abstract.class:                            Oro\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector
@@ -95,6 +97,7 @@ parameters:
     oro_dotmailer.importexport.strategy.contact_sync.class:                        Oro\Bundle\DotmailerBundle\ImportExport\Strategy\ContactSyncStrategy
     oro_dotmailer.importexport.strategy.datafield.class:                           Oro\Bundle\DotmailerBundle\ImportExport\Strategy\DataFieldStrategy
     oro_dotmailer.importexport.strategy.remove_datafield.class:                    Oro\Bundle\DotmailerBundle\ImportExport\Strategy\RemoveDataFieldStrategy
+    oro_dotmailer.importexport.strategy.update_entity_field_from_contacts.class:   Oro\Bundle\DotmailerBundle\ImportExport\Strategy\UpdateEntityFieldsFromContactStrategy
 
     #processor
     oro_dotmailer.importexport.processor.import_abstract.class:            Oro\Bundle\DotmailerBundle\ImportExport\Processor\ImportProcessor
@@ -103,6 +106,7 @@ parameters:
     oro_dotmailer.importexport.processor.export_removed.class:             Oro\Bundle\DotmailerBundle\ImportExport\Processor\RemovedExportProcessor
     oro_dotmailer.importexport.processor.export_contact.class:             Oro\Bundle\DotmailerBundle\ImportExport\Processor\ExportContactProcessor
     oro_dotmailer.importexport.processor.export.rejected_contact.class:    Oro\Bundle\DotmailerBundle\ImportExport\Processor\RejectedContactExportProcessor
+    oro_dotmailer.importexport.processor.import.update_entity_field_from_contacts.class: Oro\Bundle\DotmailerBundle\ImportExport\Processor\UpdateEntityFieldsFromContactProcessor
 
     #writers
     oro_dotmailer.importexport.writer.import.class:                      Oro\Bundle\DotmailerBundle\ImportExport\Writer\ImportWriter
@@ -381,6 +385,11 @@ services:
     oro_dotmailer.log_helper:
         class: %oro_dotmailer.log_helper.class%
 
+    oro_dotmailer.provider.mapping:
+        class: 'Oro\Bundle\DotmailerBundle\Provider\MappingProvider'
+        arguments:
+            - "@oro_entity.doctrine_helper"
+
     #readers
     oro_dotmailer.importexport.reader.abstract:
         class: %oro_dotmailer.importexport.reader.abstract.class%
@@ -433,6 +442,10 @@ services:
     oro_dotmailer.importexport.reader.datafield.remove:
         parent: oro_dotmailer.importexport.reader.abstract
         class: %oro_dotmailer.importexport.reader.datafield.remove.class%
+
+    oro_dotmailer.importexport.reader.update_entity_field_from_contacts:
+        parent: oro_dotmailer.importexport.reader.abstract
+        class: %oro_dotmailer.importexport.reader.update_entity_field_from_contacts.class%
 
     #connectors
     oro_dotmailer.connector.abstract:
@@ -544,6 +557,11 @@ services:
     oro_dotmailer.importexport.data_converter.datafield:
         class: %oro_dotmailer.importexport.data_converter.datafield.class%
 
+    oro_dotmailer.importexport.data_converter.update_entity_field_from_contacts:
+        class: %oro_dotmailer.importexport.data_converter.update_entity_field_from_contacts.class%
+        calls:
+            - [setMappingProvider, ["@oro_dotmailer.provider.mapping"]]
+
     #strategy
     oro_dotmailer.importexport.strategy.add_or_replace:
         class: %oro_dotmailer.importexport.strategy.add_or_replace.class%
@@ -608,6 +626,18 @@ services:
     oro_dotmailer.importexport.strategy.remove_datafield:
         class: %oro_dotmailer.importexport.strategy.remove_datafield.class%
         parent: oro_dotmailer.importexport.strategy.import.abstract
+
+    oro_dotmailer.importexport.strategy.update_entity_field_from_contacts.add_or_replace:
+        class: %oro_dotmailer.importexport.strategy.update_entity_field_from_contacts.class%
+        parent: oro_importexport.strategy.configurable_add_or_replace
+        calls:
+            - [setStategyHelper, ["@oro_dotmailer.importexport.strategy.helper"]]
+
+    oro_dotmailer.importexport.strategy.helper:
+        class: 'Oro\Bundle\DotmailerBundle\ImportExport\Strategy\ImportStrategyHelperWithLog'
+        parent: oro_importexport.strategy.import.helper
+        calls:
+            - [setLogger, ["@oro_integration.logger.strategy"]]
 
     #processor
     oro_dotmailer.importexport.processor.import_abstract:
@@ -731,6 +761,13 @@ services:
             - [setDataConverter, ["@oro_dotmailer.importexport.data_converter.datafield"]]
             - [setStrategy, ["@oro_dotmailer.importexport.strategy.datafield"]]
             - [setEntityName, [%oro_dotmailer.entity.datafield.class%]]
+
+    oro_dotmailer.importexport.processor.update_entity_field_from_contacts:
+        class: %oro_dotmailer.importexport.processor.import.update_entity_field_from_contacts.class%
+        parent: oro_dotmailer.importexport.processor.import_abstract
+        calls:
+            - [setDataConverter, ["@oro_dotmailer.importexport.data_converter.update_entity_field_from_contacts"]]
+            - [setStrategy, ["@oro_dotmailer.importexport.strategy.update_entity_field_from_contacts.add_or_replace"]]
 
     #serializer
     oro_dotmailer.importexport.normalizer.enum:

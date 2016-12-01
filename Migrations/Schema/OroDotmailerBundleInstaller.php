@@ -60,6 +60,9 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
         $migration = new v1_3\AddDotmailerDataFieldMapping();
         $migration->up($schema, $queries);
 
+        $migration = new v1_3\AddDataFieldsToContact();
+        $migration->up($schema, $queries);
+
         $this->renameLastSyncedColumn($schema);
     }
 

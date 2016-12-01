@@ -81,6 +81,14 @@ class LoadContactData extends AbstractFixture implements DependentFixtureInterfa
             'organization' => 'oro_dotmailer.organization.foo',
             'owner'        => 'oro_dotmailer.user.john.doe',
             'reference'    => 'oro_dotmailer.orocrm_contact.mike.case',
+        ],
+        [
+            'firstName'    => 'John',
+            'lastName'     => 'Doe',
+            'email'        => 'john.doe@example.com',
+            'organization' => 'oro_dotmailer.organization.foo',
+            'owner'        => 'oro_dotmailer.user.john.doe',
+            'reference'    => 'oro_dotmailer.orocrm_contact.john.doe',
         ]
     ];
 

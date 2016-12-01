@@ -41,7 +41,7 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
         $crawler = $this->client->request('GET', $this->getUrl('oro_dotmailer_datafield_mapping_create'));
         /** @var Form $form */
         $form = $crawler->selectButton('Save')->form();
-        $entityClass = 'Oro\Bundle\ContactBundle\Entity\Contact';
+        $entityClass = 'Oro\Bundle\SalesBundle\Entity\Lead';
         $form['oro_dotmailer_datafield_mapping_form[entity]'] = $entityClass;
         $form['oro_dotmailer_datafield_mapping_form[syncPriority]'] = 100;
         $form['oro_dotmailer_datafield_mapping_form[channel]'] =
@@ -77,7 +77,7 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
         $response = $this->client->requestGrid(
             'oro_dotmailer_datafield_mapping_grid',
             [
-                'oro_dotmailer_datafield_mapping_grid[_filter][entity][value]' => 'Contact',
+                'oro_dotmailer_datafield_mapping_grid[_filter][entity][value]' => 'Lead',
                 'oro_dotmailer_datafield_mapping_grid[_filter][entity][type]' => 1
             ]
         );
@@ -153,7 +153,7 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
                         'gridName' => 'oro_dotmailer_datafield_mapping_grid'
                     ],
                     'gridFilters'         => [
-                        'oro_dotmailer_datafield_mapping_grid[_filter][entity][value]' => 'Lead',
+                        'oro_dotmailer_datafield_mapping_grid[_filter][entity][value]' => 'Contact',
                         'oro_dotmailer_datafield_mapping_grid[_filter][entity][type]' => 1,
                     ],
                     'assert'              => [

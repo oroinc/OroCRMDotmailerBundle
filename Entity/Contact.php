@@ -163,6 +163,20 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     protected $addressBookContacts;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(name="data_fields", type="json_array", nullable=true)
+     */
+    protected $dataFields;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="scheduled_for_fields_update", type="boolean")
+     */
+    protected $scheduledForFieldsUpdate = false;
+
+    /**
      * @var Collection
      *
      * @ORM\OneToMany(targetEntity="Activity", mappedBy="contact", cascade={"all"})
@@ -521,6 +535,44 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
         if ($this->addressBookContacts->contains($addressBookContact)) {
             $this->addressBookContacts->removeElement($addressBookContact);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDataFields()
+    {
+        return $this->dataFields;
+    }
+
+    /**
+     * @param array $dataFields
+     * @return Contact
+     */
+    public function setDataFields($dataFields)
+    {
+        $this->dataFields = $dataFields;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isScheduledForFieldsUpdate()
+    {
+        return $this->scheduledForFieldsUpdate;
+    }
+
+    /**
+     * @param boolean $scheduledForFieldsUpdate
+     * @return Contact
+     */
+    public function setScheduledForFieldsUpdate($scheduledForFieldsUpdate)
+    {
+        $this->scheduledForFieldsUpdate = $scheduledForFieldsUpdate;
 
         return $this;
     }

@@ -121,4 +121,47 @@ class ContactRepository extends EntityRepository
             ->getQuery()
             ->execute(['channel' => $channel]);
     }
+
+    /**
+     * Get contacts with data fields updates, which should be synced into entities
+     *
+     * @param Channel $channel
+     * @return QueryBuilder
+     */
+    public function getScheduledForEntityFieldsUpdateQB(Channel $channel)
+    {
+        $qb = $this->createQueryBuilder('contact');
+
+        return $qb
+            ->select(
+                [
+                    'contact.id as contactId',
+                    'contact.originId',
+                    'contact.email',
+                    'contact.dataFields',
+                    'addressBookContact.marketingListItemClass as entityClass',
+                    'addressBookContact.marketingListItemId as entityId',
+                ]
+            )
+            ->innerJoin('contact.addressBookContacts', 'addressBookContact')
+            ->where('addressBookContact.marketingListItemId is NOT NULL')
+            ->andWhere('addressBookContact.marketingListItemClass is NOT NULL')
+            ->andWhere('contact.scheduledForFieldsUpdate = :isScheduled')
+            ->setParameter('isScheduled', true)
+            ->andWhere('contact.channel = :channel')
+            ->setParameter('channel', $channel);
+    }
+
+    /**
+     * @param array $contactIds
+     */
+    public function resetScheduledForEntityFieldUpdateFlag($contactIds)
+    {
+        $qb = $this->createQueryBuilder('contact');
+        $qb->update()
+           ->where($qb->expr()->in('contact.id', ':contactIds'))
+           ->set('contact.scheduledForFieldsUpdate', ':scheduledForFieldsUpdate')
+           ->getQuery()
+           ->execute(['contactIds' => $contactIds, 'scheduledForFieldsUpdate' => false]);
+    }
 }

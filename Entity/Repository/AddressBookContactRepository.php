@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Entity\Repository;
 use Doctrine\ORM\EntityRepository;
 
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
 
 class AddressBookContactRepository extends EntityRepository
 {
@@ -46,5 +47,28 @@ class AddressBookContactRepository extends EntityRepository
             ->setParameter('exportId', $exportId)
             ->getQuery()
             ->execute();
+    }
+
+    /**
+     * Get entities classes of marketing lists where contact is present
+     *
+     * @param Contact $contact
+     * @return array
+     */
+    public function getContactMarketingListItemClasses(Contact $contact)
+    {
+        $qb = $this->createQueryBuilder('address_book_contact');
+        $qb
+            ->select('address_book_contact.marketingListItemClass as entityClass')
+            ->distinct()
+            ->where('address_book_contact.contact = :contact')
+            ->setParameter('contact', $contact);
+        
+        $result = $qb->getQuery()->getArrayResult();
+        if ($result) {
+            $result = array_column($result, 'entityClass');
+        }
+
+        return $result;
     }
 }
