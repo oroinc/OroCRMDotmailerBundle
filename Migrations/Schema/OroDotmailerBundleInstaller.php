@@ -23,7 +23,7 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
      */
     public function getMigrationVersion()
     {
-        return 'v1_2';
+        return 'v2_0';
     }
 
     /**
