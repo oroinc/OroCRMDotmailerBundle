@@ -25,7 +25,7 @@ use Oro\Bundle\DotmailerBundle\Model\ExtendCampaign;
  * @Config(
  *  defaultValues={
  *      "entity"={
- *          "icon"="icon-envelope"
+ *          "icon"="fa-envelope"
  *      },
  *      "ownership"={
  *          "owner_type"="ORGANIZATION",
