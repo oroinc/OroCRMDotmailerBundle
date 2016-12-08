@@ -35,6 +35,8 @@ oro:
             last_imported_at.label:               Last Imported At
             last_exported_at.label:               Last Exported At
             sync_status.label:                    Sync Status
+            is_create_entities.label:             Create New Entities
+            is_create_entities.tooltip:           Create new records if no match found
 
             sync: Marketing list synchronization started. {{ job_view_link }}
 

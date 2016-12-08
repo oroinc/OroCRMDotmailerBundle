@@ -144,7 +144,9 @@ class ContactRepository extends EntityRepository
                 ]
             )
             ->innerJoin('contact.addressBookContacts', 'addressBookContact')
-            ->where('addressBookContact.marketingListItemId is NOT NULL')
+            ->innerJoin('addressBookContact.addressBook', 'addressBook')
+            ->where('addressBookContact.marketingListItemId is NOT NULL OR addressBook.isCreateEntities = :isCreateEntities')
+            ->setParameter('isCreateEntities', true)
             ->andWhere('addressBookContact.marketingListItemClass is NOT NULL')
             ->andWhere('contact.scheduledForFieldsUpdate = :isScheduled')
             ->setParameter('isScheduled', true)

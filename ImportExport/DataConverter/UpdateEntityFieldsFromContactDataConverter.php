@@ -83,6 +83,12 @@ class UpdateEntityFieldsFromContactDataConverter extends AbstractDataConverter i
             $importedRecord = array_merge($importedRecord, $dataFields);
         }
 
+        if (!empty($importedRecord['email'])) {
+            $importedRecord['emails'] = [
+                ['email' => $importedRecord['email']]
+            ];
+        }
+
         return parent::convertToImportFormat($importedRecord, $skipNullValues);
     }
 
