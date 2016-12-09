@@ -40,6 +40,7 @@ class DataFieldMappingFormSubscriber implements EventSubscriberInterface
             $mappings = [];
             foreach ($configs as $config) {
                 $mapping = [];
+                $mapping['id'] = $config->getId();
                 $mapping['entityFields'] = $config->getEntityFields();
                 $mapping['dataField'] = [
                     'value' => $config->getDataField()->getId(),
@@ -63,14 +64,41 @@ class DataFieldMappingFormSubscriber implements EventSubscriberInterface
         $form = $event->getForm();
         $data = $event->getData();
         if (!empty($data['config_source'])) {
+            /** @var DataFieldMapping $mapping */
+            $mapping = $event->getForm()->getData();
+            $previousConfigIds = [];
+            $previousConfigDatafieldIds = [];
+            if ($mapping) {
+                $previousConfigs = $mapping->getConfigs();
+                foreach ($previousConfigs as $index => $config) {
+                    $previousConfigIds[] = $config->getId();
+                    $previousConfigDatafieldIds[] = $config->getDataField()->getId();
+                }
+            }
             $mappingConfigurations = json_decode($data['config_source'], true);
             if ($mappingConfigurations) {
+                $index = -1;
                 foreach ($mappingConfigurations['mapping'] as $mappingConfiguration) {
                     if (isset($mappingConfiguration['dataField']['value'])) {
-                        $mappingConfiguration['dataField'] = $mappingConfiguration['dataField']['value'];
+                        $mappingConfiguration['dataField'] = (int) $mappingConfiguration['dataField']['value'];
                     }
                     $mappingConfiguration = $this->processTwoWaySync($mappingConfiguration);
-                    $data['configs'][] = $mappingConfiguration;
+
+                    if ($previousConfigIds && isset($mappingConfiguration['id'])) {
+                        //first look up for position by existing mapping id
+                        $index = array_search($mappingConfiguration['id'], $previousConfigIds, true);
+                    } elseif ($previousConfigDatafieldIds && $mappingConfiguration['dataField']) {
+                        /**
+                         * look up for position by datafield id, in case row with datafield was removed and another row
+                         * with the same datafield was added, to avoid unique constraint error
+                         */
+                        $index = array_search($mappingConfiguration['dataField'], $previousConfigDatafieldIds, true) ?:
+                            $index + 1;
+                    } else {
+                        $index++;
+                    }
+                    unset($mappingConfiguration['id']);
+                    $data['configs'][$index] = $mappingConfiguration;
                 }
                 $event->setData($data);
             }

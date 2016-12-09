@@ -13,6 +13,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Exception\InvalidDefaultValueException;
+use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 use Oro\Bundle\DotmailerBundle\Model\DataFieldManager;
 
 class DataFieldFormHandler
@@ -101,11 +102,22 @@ class DataFieldFormHandler
                     )
                 )
             );
+        } catch (RestClientException $e) {
+            if ($e->getPrevious()) {
+                $this->form->addError(
+                    new FormError(
+                        sprintf(
+                            "%s %s",
+                            $this->translator->trans('oro.dotmailer.handler.unable_to_create_field'),
+                            $e->getPrevious()->getMessage()
+                        )
+                    )
+                );
+            } else {
+                $this->handleGeneralException($e);
+            }
         } catch (\Exception $e) {
-            $this->form->addError(
-                new FormError($this->translator->trans('oro.dotmailer.handler.unable_to_create_field'))
-            );
-            $this->logger->error('Failed to create field in Dotmailer', ['exception' => $e]);
+            $this->handleGeneralException($e);
         }
         if ($originWasCreated) {
             $manager = $this->managerRegistry->getManager();
@@ -114,5 +126,16 @@ class DataFieldFormHandler
         }
 
         return $originWasCreated;
+    }
+
+    /**
+     * @param \Exception $e
+     */
+    protected function handleGeneralException(\Exception $e)
+    {
+        $this->form->addError(
+            new FormError($this->translator->trans('oro.dotmailer.handler.unable_to_create_field'))
+        );
+        $this->logger->error('Failed to create field in Dotmailer', ['exception' => $e]);
     }
 }

@@ -6,9 +6,9 @@ use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 
 /**
  * @method AbstractEnumValue getType()
- * @method ExtendContact     setType(AbstractEnumValue $enumValue)
+ * @method ExtendDataField   setType(AbstractEnumValue $enumValue)
  * @method AbstractEnumValue getVisibility()
- * @method ExtendContact     setVisibility(AbstractEnumValue $enumValue)
+ * @method ExtendDataField   setVisibility(AbstractEnumValue $enumValue)
  */
 class ExtendDataField
 {
