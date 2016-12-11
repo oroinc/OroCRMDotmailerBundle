@@ -56,6 +56,9 @@ class ContactStrategy extends AddOrReplaceStrategy
                     $addressBookContact->setAddressBook($addressBook);
                     $addressBookContact->setMarketingListItemClass($addressBook->getMarketingList()->getEntity());
                     $addressBookContact->setChannel($addressBook->getChannel());
+                    if ($addressBook->getIsCreateEntities()) {
+                        $entity->setScheduledForFieldsUpdate(true);
+                    }
                     $this->strategyHelper
                         ->getEntityManager('OroDotmailerBundle:AddressBookContact')
                         ->persist($addressBookContact);

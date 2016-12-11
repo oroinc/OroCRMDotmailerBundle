@@ -48,6 +48,7 @@ class AddressBookTest extends \PHPUnit_Framework_TestCase
             'createdAt' => array('createdAt', $now, $now),
             'updatedAt' => array('updatedAt', $now, $now),
             'owner' => array('owner', $organization, $organization),
+            'isCreateEntities' => array('isCreateEntities', true, true),
         );
     }
 
