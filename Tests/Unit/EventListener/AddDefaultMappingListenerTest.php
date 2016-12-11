@@ -33,6 +33,11 @@ class AddDefaultMappingListenerTest extends \PHPUnit_Framework_TestCase
      */
     protected $registry;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $mappingListener;
+
     /** @var AddDefaultMappingListener */
     protected $listener;
 
@@ -47,12 +52,15 @@ class AddDefaultMappingListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->registry = $this->getMockBuilder('Doctrine\Common\Persistence\ManagerRegistry')
             ->disableOriginalConstructor()->getMock();
+        $this->mappingListener = $this->getMockBuilder('Oro\Bundle\DotmailerBundle\EventListener\MappingUpdateListener')
+            ->disableOriginalConstructor()->getMock();
 
         $this->listener = new AddDefaultMappingListener(
             $this->registry,
             $this->doctrineHelper,
             $this->entityProvider,
-            $this->ownerHelper
+            $this->ownerHelper,
+            $this->mappingListener
         );
     }
 
@@ -167,6 +175,8 @@ class AddDefaultMappingListenerTest extends \PHPUnit_Framework_TestCase
             })
         );
         $manager->expects($this->once())->method('flush');
+        $this->mappingListener->expects($this->at(0))->method('setEnabled')->with(false);
+        $this->mappingListener->expects($this->at(1))->method('setEnabled')->with(true);
 
         $this->listener->afterSyncFinished($syncEvent);
     }

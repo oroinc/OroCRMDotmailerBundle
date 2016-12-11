@@ -90,6 +90,7 @@ connector:
                         writer:          oro_dotmailer.importexport.writer.import
                         contextRegistry: oro_importexport.context_registry
                         registry:        doctrine
+                        entityListener:  oro_dotmailer.listener.entity_update
                     parameters:
                         batch_size: 1000
 

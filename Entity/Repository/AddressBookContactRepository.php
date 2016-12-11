@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 class AddressBookContactRepository extends EntityRepository
 {
@@ -50,6 +51,44 @@ class AddressBookContactRepository extends EntityRepository
     }
 
     /**
+     * @param string $entityClass
+     * @param Channel $channel
+     */
+    public function bulkUpdateEntityUpdatedFlag($entityClass, Channel $channel)
+    {
+        $this->bulkUpdateFlagByEntity($entityClass, $channel, 'entityUpdated');
+    }
+
+    /**
+     * @param string $entityClass
+     * @param Channel $channel
+     */
+    public function bulkUpdateScheduledForEntityFieldUpdateFlag($entityClass, Channel $channel)
+    {
+        $this->bulkUpdateFlagByEntity($entityClass, $channel, 'scheduledForFieldsUpdate');
+    }
+
+    /**
+     * @param string $entityClass
+     * @param Channel $channel
+     * @param string $flagColumn
+     * @param bool $value
+     */
+    public function bulkUpdateFlagByEntity($entityClass, Channel $channel, $flagColumn, $value = true)
+    {
+        $qb = $this->createQueryBuilder('address_book_contact');
+        $qb->update()
+            ->where('address_book_contact.marketingListItemClass = :entityClass')
+            ->setParameter('entityClass', $entityClass)
+            ->andWhere('address_book_contact.channel = :channel')
+            ->setParameter('channel', $channel)
+            ->set('address_book_contact.' . $flagColumn, ':value')
+            ->setParameter('value', $value)
+            ->getQuery()
+            ->execute();
+    }
+
+    /**
      * Get entities classes of marketing lists where contact is present
      *
      * @param Contact $contact
@@ -70,5 +109,18 @@ class AddressBookContactRepository extends EntityRepository
         }
 
         return $result;
+    }
+
+    /**
+     * @param array $contactIds
+     */
+    public function resetScheduledForEntityFieldUpdateFlag($contactIds)
+    {
+        $qb = $this->createQueryBuilder('address_book_contact');
+        $qb->update()
+           ->where($qb->expr()->in('address_book_contact.contact', ':contactIds'))
+           ->set('address_book_contact.scheduledForFieldsUpdate', ':scheduledForFieldsUpdate')
+           ->getQuery()
+           ->execute(['contactIds' => $contactIds, 'scheduledForFieldsUpdate' => false]);
     }
 }

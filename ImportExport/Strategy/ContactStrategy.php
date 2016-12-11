@@ -3,18 +3,29 @@
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
-use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 class ContactStrategy extends AddOrReplaceStrategy
 {
     const CACHED_ADDRESS_BOOK_ENTITIES = 'cachedAddressBookEntities';
 
+    /** @var MappingProvider */
+    protected $mappingProvider;
+
     /** @var array  */
     protected $entitiesQualifiedForTwoWaySync = [];
+
+    /**
+     * @param MappingProvider $mappingProvider
+     */
+    public function setMappingProvider(MappingProvider $mappingProvider)
+    {
+        $this->mappingProvider = $mappingProvider;
+    }
 
     /**
      * {@inheritdoc}
@@ -72,16 +83,20 @@ class ContactStrategy extends AddOrReplaceStrategy
         $itemData = null,
         array $excludedFields = []
     ) {
-        //if data fields changed, schedule fields sync with entities
+        //if data fields changed in Dotmailer, schedule fields sync with entities
         /** @var  Contact $existingEntity */
         if ($existingEntity->getDataFields() &&
-            array_diff($entity->getDataFields(), $existingEntity->getDataFields())) {
-            $contactEntities = $this->getRepository('OroDotmailerBundle:AddressBookContact')
-                ->getContactMarketingListItemClasses($existingEntity);
-            $entitiesWithTwoWaySync = $this->getEntitiesQualifiedForTwoWaySync($existingEntity->getChannel());
-            //if contact exists in any marketing list with two way sync qualified entity class
-            if (array_intersect($contactEntities, $entitiesWithTwoWaySync)) {
-                $existingEntity->setScheduledForFieldsUpdate(true);
+            array_diff_assoc((array) $entity->getDataFields(), (array) $existingEntity->getDataFields())) {
+            $entitiesWithTwoWaySync = $this->mappingProvider
+                ->getEntitiesQualifiedForTwoWaySync($existingEntity->getChannel());
+            $scheduled = [];
+            foreach ($existingEntity->getAddressBookContacts() as $abContact) {
+                $entityClass = $abContact->getMarketingListItemClass();
+                //it's enough to schedule update for one address book contact per entity class
+                if (in_array($entityClass, $entitiesWithTwoWaySync) && empty($scheduled[$entityClass])) {
+                    $abContact->setScheduledForFieldsUpdate(true);
+                    $scheduled[$entityClass] = true;
+                }
             }
         }
 
@@ -179,17 +194,14 @@ class ContactStrategy extends AddOrReplaceStrategy
     }
 
     /**
-     * @param Channel $channel
-     * @return array
+     * {@inheritdoc}
      */
-    protected function getEntitiesQualifiedForTwoWaySync(Channel $channel)
+    protected function assertEnvironment($entity)
     {
-        if (!isset($this->entitiesQualifiedForTwoWaySync[$channel->getId()])) {
-            $this->entitiesQualifiedForTwoWaySync[$channel->getId()] = $this
-                ->getRepository('OroDotmailerBundle:DataFieldMapping')
-                ->getEntitiesQualifiedForTwoWaySync($channel);
+        if (!$this->mappingProvider) {
+            throw new RuntimeException('Mapping provider must be set');
         }
 
-        return $this->entitiesQualifiedForTwoWaySync[$channel->getId()];
+        parent::assertEnvironment($entity);
     }
 }

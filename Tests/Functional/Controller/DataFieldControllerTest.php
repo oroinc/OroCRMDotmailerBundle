@@ -8,8 +8,6 @@ use Symfony\Component\DomCrawler\Field\InputFormField;
 
 use Oro\Bundle\DataGridBundle\Tests\Functional\AbstractDatagridTestCase;
 
-use Oro\Bundle\DotmailerBundle\Entity\DataField;
-
 /**
  * @outputBuffering enabled
  * @dbIsolation
@@ -102,7 +100,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
                         'channelName' => 'first channel',
                         'name'        => 'FIRSTNAME',
                     ],
-                    'expectedResultCount' => 2
+                    'expectedResultCount' => 4
                 ],
             ],
             'Data Fields grid with filters'   => [
@@ -117,7 +115,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
                         'channelName' => 'first channel',
                         'name'        => 'FIRSTNAME',
                     ],
-                    'expectedResultCount' => 1
+                    'expectedResultCount' => 2
                 ],
             ],
             'Data Fields grid without result' => [

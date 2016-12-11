@@ -375,7 +375,8 @@ services:
     oro_dotmailer.contact.export.query_builder_adapter:
         class: %oro_dotmailer.contact.export.query_builder_adapter.class%
         arguments:
-            - "@oro_locale.dql.formatter.name"
+            - "@oro_dotmailer.provider.mapping"
+            - "@oro_dotmailer.query_designer.mapping_query_converter"
         tags:
             - { name: oro_dotmailer.contact.export.query_builder_adapter, priority: -10 }
 
@@ -385,10 +386,36 @@ services:
     oro_dotmailer.log_helper:
         class: %oro_dotmailer.log_helper.class%
 
+    oro_dotmailer.cache:
+        public: false
+        parent: oro.cache.abstract
+        calls:
+            - [setNamespace, [ 'oro_dotmailer' ] ]
+
     oro_dotmailer.provider.mapping:
         class: 'Oro\Bundle\DotmailerBundle\Provider\MappingProvider'
         arguments:
             - "@oro_entity.doctrine_helper"
+            - "@oro_dotmailer.cache"
+
+    oro_dotmailer.query_designer.mapping_query_converter:
+        class: 'Oro\Bundle\DotmailerBundle\QueryDesigner\MappingQueryConverter'
+        arguments:
+            - "@oro_query_designer.query_designer.manager"
+            - "@oro_entity.virtual_field_provider.chain"
+            - "@doctrine"
+        calls:
+            - [setVirtualRelationProvider, ["@oro_entity.virtual_relation_provider.chain"]]
+
+    oro_dotmailer.query_designer.parent_entity_query_converter:
+        class: 'Oro\Bundle\DotmailerBundle\QueryDesigner\ParentEntityFindQueryConverter'
+        arguments:
+            - "@oro_query_designer.query_designer.manager"
+            - "@oro_entity.virtual_field_provider.chain"
+            - "@doctrine"
+        calls:
+            - [setVirtualRelationProvider, ["@oro_entity.virtual_relation_provider.chain"]]
+            - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
 
     #readers
     oro_dotmailer.importexport.reader.abstract:
@@ -544,6 +571,8 @@ services:
 
     oro_dotmailer.importexport.data_converter.contact:
         class: %oro_dotmailer.importexport.data_converter.contact.class%
+        calls:
+            - [setMappingProvider, ["@oro_dotmailer.provider.mapping"]]
 
     oro_dotmailer.importexport.data_converter.activity_contact:
         class: %oro_dotmailer.importexport.data_converter.activity_contact.class%
@@ -553,6 +582,9 @@ services:
 
     oro_dotmailer.importexport.data_converter.contact_sync:
         class: %oro_dotmailer.importexport.data_converter.contact_sync.class%
+        calls:
+            - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
+            - [setCacheProvider, ["@oro_dotmailer.provider.cache"]]
 
     oro_dotmailer.importexport.data_converter.datafield:
         class: %oro_dotmailer.importexport.data_converter.datafield.class%
@@ -614,10 +646,14 @@ services:
     oro_dotmailer.importexport.strategy.contact:
         class: %oro_dotmailer.importexport.strategy.contact.class%
         parent: oro_dotmailer.importexport.strategy.add_or_replace
+        calls:
+            - [setMappingProvider, ["@oro_dotmailer.provider.mapping"]]
 
     oro_dotmailer.importexport.strategy.contact_sync:
         class: %oro_dotmailer.importexport.strategy.contact_sync.class%
         parent: oro_dotmailer.importexport.strategy.add_or_replace
+        calls:
+            - [setMappingProvider, ["@oro_dotmailer.provider.mapping"]]
 
     oro_dotmailer.importexport.strategy.datafield:
         class: %oro_dotmailer.importexport.strategy.datafield.class%
@@ -1000,6 +1036,7 @@ services:
             - "@oro_entity.doctrine_helper"
             - "@oro_marketing_list.entity_provider.contact_information"
             - "@oro_integration.helper.default_owner_helper"
+            - "@oro_dotmailer.listener.mapping_update"
         tags:
             - { name: kernel.event_subscriber }
 
@@ -1010,6 +1047,31 @@ services:
         tags:
             - { name: kernel.event_listener, event: oro_menu.configure.application_menu, method: onNavigationConfigure }
             - { name: kernel.event_listener, event: oro_menu.configure.shortcuts, method: onNavigationConfigure }
+
+    oro_dotmailer.listener.mapping_update:
+        class: 'Oro\Bundle\DotmailerBundle\EventListener\MappingUpdateListener'
+        arguments:
+            - "@oro_entity.doctrine_helper"
+            - "@oro_dotmailer.provider.mapping"
+        tags:
+            - { name: doctrine.event_listener, event: onFlush, method: onFlush }
+            - { name: doctrine.event_listener, event: postFlush, method: postFlush }
+
+    oro_dotmailer.listener.entity_update:
+        class: 'Oro\Bundle\DotmailerBundle\EventListener\EntityUpdateListener'
+        arguments:
+            - "@oro_entity.doctrine_helper"
+            - "@oro_dotmailer.provider.mapping"
+        tags:
+            - { name: doctrine.event_listener, event: onFlush, method: onFlush }
+
+    oro_dotmailer.processor.mapped_fields_change:
+        class: 'Oro\Bundle\DotmailerBundle\Processor\MappedFieldsChangeProcessor'
+        arguments:
+            - "@oro_entity.doctrine_helper"
+            - "@oro_dotmailer.query_designer.parent_entity_query_converter"
+        calls:
+            - [setLogger, ["@logger"]]
 
     #validators
     oro_dotmailer.validator.datafield_mapping_config:

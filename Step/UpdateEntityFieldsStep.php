@@ -8,8 +8,9 @@ use Doctrine\ORM\EntityRepository;
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 
 use Oro\Bundle\BatchBundle\Step\ItemStep;
-use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
+use Oro\Bundle\DotmailerBundle\EventListener\EntityUpdateListener;
 use Oro\Bundle\DotmailerBundle\ImportExport\Processor\UpdateEntityFieldsFromContactProcessor;
+use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 
 class UpdateEntityFieldsStep extends ItemStep
 {
@@ -24,17 +25,33 @@ class UpdateEntityFieldsStep extends ItemStep
     protected $contextRegistry;
 
     /**
+     * @var EntityUpdateListener
+     */
+    protected $entityListener;
+
+    /**
      * {@inheritdoc}
      */
     public function doExecute(StepExecution $stepExecution)
     {
+        if ($this->entityListener) {
+            /**
+             * disable entity update listener during entities update from contacts
+             * to avoid re-exporting the same changes back to dotmailer
+             */
+            $this->entityListener->setEnabled(false);
+        }
+
         parent::doExecute($stepExecution);
 
+        if ($this->entityListener) {
+            $this->entityListener->setEnabled(true);
+        }
         /**
          * @var EntityRepository contactRepository
          */
         $contactRepository = $this->registry
-            ->getRepository('OroDotmailerBundle:Contact');
+            ->getRepository('OroDotmailerBundle:AddressBookContact');
         $context = $this->contextRegistry->getByStepExecution($stepExecution);
         $contactRepository->resetScheduledForEntityFieldUpdateFlag(
             $context->getValue(UpdateEntityFieldsFromContactProcessor::PROCESSED_CONTACT_IDS)
@@ -61,6 +78,17 @@ class UpdateEntityFieldsStep extends ItemStep
     public function setContextRegistry(ContextRegistry $contextRegistry = null)
     {
         $this->contextRegistry = $contextRegistry;
+
+        return $this;
+    }
+
+    /**
+     * @param EntityUpdateListener $listener
+     * @return UpdateEntityFieldsStep
+     */
+    public function setEntityListener(EntityUpdateListener $listener = null)
+    {
+        $this->entityListener = $listener;
 
         return $this;
     }

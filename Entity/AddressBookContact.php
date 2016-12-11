@@ -79,6 +79,20 @@ class AddressBookContact extends ExtendAddressBookContact implements ChannelAwar
      * @ORM\Column(name="scheduled_for_export", type="boolean")
      */
     protected $scheduledForExport = false;
+    
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="scheduled_for_fields_update", type="boolean")
+     */
+    protected $scheduledForFieldsUpdate = false;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="entity_updated", type="boolean")
+     */
+    protected $entityUpdated = false;
 
     /**
      * @var Channel
@@ -219,6 +233,45 @@ class AddressBookContact extends ExtendAddressBookContact implements ChannelAwar
     public function setScheduledForExport($scheduledForExport)
     {
         $this->scheduledForExport = $scheduledForExport;
+
+        return $this;
+    }
+    
+    /**
+     * @return boolean
+     */
+    public function isScheduledForFieldsUpdate()
+    {
+        return $this->scheduledForFieldsUpdate;
+    }
+
+    /**
+     * @param boolean $scheduledForFieldsUpdate
+     * @return AddressBookContact
+     */
+    public function setScheduledForFieldsUpdate($scheduledForFieldsUpdate)
+    {
+        $this->scheduledForFieldsUpdate = $scheduledForFieldsUpdate;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isEntityUpdated()
+    {
+        return $this->entityUpdated;
+    }
+
+    /**
+     * @param boolean $entityUpdated
+     *
+     * @return AddressBookContact
+     */
+    public function setEntityUpdated($entityUpdated)
+    {
+        $this->entityUpdated = $entityUpdated;
 
         return $this;
     }

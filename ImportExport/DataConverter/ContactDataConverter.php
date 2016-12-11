@@ -2,11 +2,37 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExportContactIterator;
+use Oro\Bundle\ImportExportBundle\Context\ContextAwareInterface;
+use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 
-class ContactDataConverter extends AbstractDataConverter
+class ContactDataConverter extends AbstractDataConverter implements ContextAwareInterface
 {
     const ADDRESS_BOOK_CONTACT_ID = 'addressBookContactId';
+
+    /** @var MappingProvider */
+    protected $mappingProvider;
+
+    /** @var ContextInterface */
+    protected $context;
+
+    /**
+     * @param MappingProvider $mappingProvider
+     */
+    public function setMappingProvider(MappingProvider $mappingProvider)
+    {
+        $this->mappingProvider = $mappingProvider;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function setImportExportContext(ContextInterface $context)
+    {
+        $this->context = $context;
+    }
 
     /**
      * {@inheritdoc}
@@ -18,11 +44,6 @@ class ContactDataConverter extends AbstractDataConverter
             'status'         => 'status:id',
             'optintype'      => 'opt_in_type:id',
             'emailtype'      => 'email_type:id',
-            'FIRSTNAME'      => 'firstName',
-            'LASTNAME'       => 'lastName',
-            'GENDER'         => 'gender',
-            'FULLNAME'       => 'fullName',
-            'POSTCODE'       => 'postcode',
             'LASTSUBSCRIBED' => 'lastSubscribedDate',
             'datafields'     => 'dataFields'
         ];
@@ -33,19 +54,16 @@ class ContactDataConverter extends AbstractDataConverter
      */
     protected function getBackendHeader()
     {
-        return [
+        $backendHeader = [
             static::ADDRESS_BOOK_CONTACT_ID,
             'email',
             'originId',
             'optInType',
             'emailType',
-            'firstName',
-            'lastName',
-            'gender',
-            'fullName',
-            'postcode',
             ScheduledForExportContactIterator::ADDRESS_BOOK_KEY
         ];
+
+        return $backendHeader;
     }
 
     /**
@@ -68,5 +86,65 @@ class ContactDataConverter extends AbstractDataConverter
         }
 
         return parent::convertToImportFormat($importedRecord, $skipNullValues);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function convertToExportFormat(array $exportedRecord, $skipNullValues = true)
+    {
+        $entityClass = !empty($exportedRecord['entityClass']) ? $exportedRecord['entityClass'] : false;
+        $this->initEntityBackendHeader($entityClass);
+        $dataFields = $this->getMappedDataFields($entityClass);
+        if (isset($exportedRecord['dataFields'])) {
+            $contactDataFields = $exportedRecord['dataFields'];
+            foreach ($dataFields as $dataField) {
+                $exportedRecord[$dataField] = isset($contactDataFields[$dataField]) ?
+                    $contactDataFields[$dataField] : null;
+            }
+        }
+        unset($exportedRecord['dataFields']);
+        unset($exportedRecord['entityClass']);
+
+        return parent::convertToExportFormat($exportedRecord, $skipNullValues);
+    }
+
+    /**
+     * Dynamically update backend header based on entity class and it's mapping
+     *
+     * @param string $entityClass
+     */
+    protected function initEntityBackendHeader($entityClass)
+    {
+        $backendHeader = $this->getBackendHeader();
+        if ($entityClass) {
+            $dataFields = $this->getMappedDataFields($entityClass);
+            $backendHeader = array_merge($backendHeader, $dataFields);
+        }
+
+        $this->backendHeader = $backendHeader;
+    }
+
+    /**
+     * @param string $entityClass
+     * @return array
+     */
+    protected function getMappedDataFields($entityClass)
+    {
+        if (!$this->mappingProvider) {
+            throw new RuntimeException('Mapping provider must be set import data fiels values');
+        }
+
+        if ($this->context && $this->context->hasOption('channel')) {
+            $channelId = $this->context->getOption('channel');
+        }
+
+        if (!isset($channelId)) {
+            throw new RuntimeException('Channel and entity name must be set');
+        }
+        $mapping = $this->mappingProvider->getExportMappingConfigForEntity($entityClass, $channelId);
+        $dataFields = array_keys($mapping);
+
+        return $dataFields;
     }
 }

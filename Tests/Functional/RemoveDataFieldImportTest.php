@@ -45,14 +45,24 @@ class RemoveDataFieldImportTest extends AbstractImportExportTestCase
 
         $dataField = $this->managerRegistry
             ->getRepository('OroDotmailerBundle:DataField')
-            ->findBy(['name' => $expectedPresentedName]);
+            ->findBy(
+                [
+                    'name' => $expectedPresentedName,
+                    'channel' => $channel
+                ]
+            );
 
         $this->assertCount(1, $dataField, 'Data field must exist');
 
-        $addressBook = $this->managerRegistry
+        $dataField = $this->managerRegistry
             ->getRepository('OroDotmailerBundle:DataField')
-            ->findBy(['name' => $expectedRemovedName]);
+            ->findBy(
+                [
+                    'name' => $expectedRemovedName,
+                    'channel' => $channel
+                ]
+            );
 
-        $this->assertCount(0, $addressBook, 'Data field must be removed');
+        $this->assertCount(0, $dataField, 'Data field must be removed');
     }
 }

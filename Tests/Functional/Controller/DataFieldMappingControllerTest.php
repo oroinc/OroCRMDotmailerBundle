@@ -144,7 +144,7 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
                     'assert'              => [
                         'channelName' => 'first channel',
                     ],
-                    'expectedResultCount' => 1
+                    'expectedResultCount' => 2
                 ],
             ],
             'Data Fields Mapping grid with filters' => [
@@ -159,7 +159,7 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
                     'assert'              => [
                         'channelName' => 'first channel',
                     ],
-                    'expectedResultCount' => 1
+                    'expectedResultCount' => 2
                 ],
             ],
             'Data Fields Mapping grid without result' => [

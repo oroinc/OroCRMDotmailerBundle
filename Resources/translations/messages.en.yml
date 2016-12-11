@@ -74,6 +74,7 @@ oro:
             gender.label:                 Gender
             id.label:                     Id
             last_name.label:              Last Name
+            data_fields.label:              Data Fields
             merge_var_values.label:       Merge Variable Values
             opt_in_type.label:            Opt In Type
             origin_id.label:              Origin Id
@@ -168,19 +169,21 @@ oro:
             percentage_users_clicked.label:     Percentage User Clicked
 
         addressbookcontact:
-            entity_label:                     Address Book Contact
-            entity_plural_label:              Address Book Contacts
-            address_book.label:               Address Book
-            contact.label:                    Contact
-            id.label:                         Id
-            status.label:                     Status
-            unsubscribed_date.label:          Unsubscribed Date
-            channel.label:                    Integration
-            marketing_list_item_class.label:  Marketing List Item Class Name
-            marketing_list_item_id.label:     Marketing List Item Id
-            scheduled_for_export.label:       Scheduled for Export
-            export_id.label:                  dotmailer Export Id
-            export_operation_type.label:      Export Operation Type
+            entity_label:                      Address Book Contact
+            entity_plural_label:               Address Book Contacts
+            address_book.label:                Address Book
+            contact.label:                     Contact
+            id.label:                          Id
+            status.label:                      Status
+            unsubscribed_date.label:           Unsubscribed Date
+            channel.label:                     Integration
+            marketing_list_item_class.label:   Marketing List Item Class Name
+            marketing_list_item_id.label:      Marketing List Item Id
+            scheduled_for_export.label:        Scheduled for Export
+            export_id.label:                   dotmailer Export Id
+            export_operation_type.label:       Export Operation Type
+            entity_updated.label:              Related Entity Updated Flag
+            scheduled_for_fields_update.label: Scheduled for Entities Field Updates
 
         addressbookcontactsexport:
             entity_label:                     Address Book Contact Export
@@ -241,6 +244,15 @@ oro:
                 incompatible_types_date:       Mapping for field "%datafield%" must be of datetime type
                 incompatible_types_string:     Mapping for field "%datafield%" must be convertable to string
                 multiple:                      Several entity fields can be mapped only to the Data Field of type string
+
+        changedfieldlog:
+            entity_label:                     Entity Change Mapped Fields Log
+            entity_plural_label:              Entity Change Mapped Fields Logs
+            channel_id.label:                 Channel id
+            id.label:                         Id
+            parent_entity.label:              Parent Entity
+            related_field_path.label:         Related Field Path
+            related_id.label:                 Related Entity Id
 
         connector:
             campaign:

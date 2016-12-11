@@ -28,6 +28,22 @@ class LoadDataFieldData extends AbstractFixture implements DependentFixtureInter
             'defaultValue'  => 'test last',
             'channel'       => 'oro_dotmailer.channel.first',
             'reference'     => 'oro_dotmailer.datafield.second'
+        ],
+        [
+            'name'          => 'FIRSTNAME',
+            'type'          => 'String',
+            'visibility'    => 'Private',
+            'defaultValue'  => 'test first',
+            'channel'       => 'oro_dotmailer.channel.fourth',
+            'reference'     => 'oro_dotmailer.datafield.third'
+        ],
+        [
+            'name'          => 'LASTNAME',
+            'type'          => 'String',
+            'visibility'    => 'Private',
+            'defaultValue'  => 'test last',
+            'channel'       => 'oro_dotmailer.channel.fourth',
+            'reference'     => 'oro_dotmailer.datafield.fourth'
         ]
     ];
 

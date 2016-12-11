@@ -10,8 +10,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 class DataFieldMappingRepository extends EntityRepository
 {
     /**
-     * Returns mapping array for entity configured with two way sync flag
-     * [['dataFieldName' => 'datafield'], 'entityFieldName' => 'entityfield']]
+     * Returns mapping array for entity configured with two way sync flag, [datafieldName => entityFields]
      *
      * @param string $entityClass
      * @param int $channelId
@@ -19,18 +18,43 @@ class DataFieldMappingRepository extends EntityRepository
      */
     public function getTwoWaySyncFieldsForEntity($entityClass, $channelId)
     {
-        $qb = $this->createQueryBuilder('mapping')
-            ->innerJoin('mapping.configs', 'config', Expr\Join::WITH, 'config.isTwoWaySync = :twoWay')
-            ->addSelect('config.entityFields as entityFieldName')
+        return $this->getMappingConfigForEntity($entityClass, $channelId, true);
+    }
+
+    /**
+     * Returns mapping array for entity, [datafieldName => entityFields]
+     *
+     * @param string $entityClass
+     * @param int $channelId
+     * @param bool $twoWayOnly
+     * @return array
+     */
+    public function getMappingConfigForEntity($entityClass, $channelId, $twoWayOnly = false)
+    {
+        $qb = $this->createQueryBuilder('mapping');
+        if ($twoWayOnly) {
+            $qb
+                ->innerJoin('mapping.configs', 'config', Expr\Join::WITH, 'config.isTwoWaySync = :twoWay')
+                ->setParameter('twoWay', true);
+        } else {
+            $qb->innerJoin('mapping.configs', 'config');
+        }
+        $qb
+            ->select('config.entityFields as entityFieldName')
             ->innerJoin('config.dataField', 'dataField')
             ->addSelect('dataField.name as dataFieldName')
             ->where('mapping.channel = :channel')
             ->andWhere('mapping.entity = :entityClass')
-            ->setParameter('twoWay', true)
             ->setParameter('channel', $channelId)
             ->setParameter('entityClass', $entityClass);
 
-        return $qb->getQuery()->getArrayResult();
+        $result = $qb->getQuery()->getArrayResult();
+
+        if ($result) {
+            $result = array_column($result, 'entityFieldName', 'dataFieldName');
+        }
+
+        return $result;
     }
 
     /**
@@ -53,6 +77,27 @@ class DataFieldMappingRepository extends EntityRepository
         if ($result) {
             $result = array_column($result, 'entity');
         }
+
+        return $result;
+    }
+
+    /**
+     * @param Channel $channel
+     * @return array
+     */
+    public function getMappingBySyncPriority($channel)
+    {
+        $qb = $this->createQueryBuilder('mapping');
+        $qb->innerJoin('mapping.configs', 'config');
+        $qb
+            ->innerJoin('config.dataField', 'dataField')
+            ->addSelect('dataField.name as dataFieldName')
+            ->addSelect('mapping.entity')
+            ->addSelect('mapping.syncPriority')
+            ->where('mapping.channel = :channel')
+            ->setParameter('channel', $channel);
+
+        $result = $qb->getQuery()->getArrayResult();
 
         return $result;
     }

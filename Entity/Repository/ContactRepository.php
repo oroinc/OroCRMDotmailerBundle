@@ -30,13 +30,10 @@ class ContactRepository extends EntityRepository
             ->select(
                 [
                     'addressBookContacts.id as addressBookContactId',
+                    'addressBookContacts.marketingListItemClass as entityClass',
                     'contact.email',
                     'contact.originId',
-                    'contact.firstName',
-                    'contact.lastName',
-                    'contact.gender',
-                    'contact.fullName',
-                    'contact.postcode',
+                    'contact.dataFields',
                     'opt_in_type.id as optInType',
                     'email_type.id as emailType',
                 ]
@@ -146,22 +143,9 @@ class ContactRepository extends EntityRepository
             ->innerJoin('contact.addressBookContacts', 'addressBookContact')
             ->where('addressBookContact.marketingListItemId is NOT NULL')
             ->andWhere('addressBookContact.marketingListItemClass is NOT NULL')
-            ->andWhere('contact.scheduledForFieldsUpdate = :isScheduled')
+            ->andWhere('addressBookContact.scheduledForFieldsUpdate = :isScheduled')
             ->setParameter('isScheduled', true)
             ->andWhere('contact.channel = :channel')
             ->setParameter('channel', $channel);
-    }
-
-    /**
-     * @param array $contactIds
-     */
-    public function resetScheduledForEntityFieldUpdateFlag($contactIds)
-    {
-        $qb = $this->createQueryBuilder('contact');
-        $qb->update()
-           ->where($qb->expr()->in('contact.id', ':contactIds'))
-           ->set('contact.scheduledForFieldsUpdate', ':scheduledForFieldsUpdate')
-           ->getQuery()
-           ->execute(['contactIds' => $contactIds, 'scheduledForFieldsUpdate' => false]);
     }
 }

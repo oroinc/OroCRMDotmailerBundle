@@ -32,20 +32,28 @@ class AddDefaultMappingListener extends AbstractImportExportListener
     protected $ownerHelper;
 
     /**
+     * @var MappingUpdateListener
+     */
+    protected $mappingListener;
+
+    /**
      * @param ManagerRegistry $registry
      * @param DoctrineHelper $doctrineHelper
      * @param EntityProvider $entityProvider
      * @param DefaultOwnerHelper $ownerHelper
+     * @param MappingUpdateListener $mappingListener
      */
     public function __construct(
         ManagerRegistry $registry,
         DoctrineHelper $doctrineHelper,
         EntityProvider $entityProvider,
-        DefaultOwnerHelper $ownerHelper
+        DefaultOwnerHelper $ownerHelper,
+        MappingUpdateListener $mappingListener
     ) {
         $this->doctrineHelper = $doctrineHelper;
         $this->entityProvider = $entityProvider;
         $this->ownerHelper = $ownerHelper;
+        $this->mappingListener = $mappingListener;
         parent::__construct($registry);
     }
 
@@ -80,8 +88,16 @@ class AddDefaultMappingListener extends AbstractImportExportListener
             }
             //save mapping in case we added at list one mapping configuration
             if ($mapping->getConfigs()->count()) {
+                /*
+                 * disable mapping listener while default mappings are created to avoid re-export of all existing
+                 * connected entities
+                 */
+                $this->mappingListener->setEnabled(false);
+
                 $manager->persist($mapping);
                 $manager->flush();
+
+                $this->mappingListener->setEnabled(true);
             }
         }
     }

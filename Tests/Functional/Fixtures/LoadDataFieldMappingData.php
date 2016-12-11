@@ -32,6 +32,24 @@ class LoadDataFieldMappingData extends AbstractFixture implements DependentFixtu
                 ],
             ]
         ],
+        [
+            'entity'        => 'Oro\Bundle\ContactBundle\Entity\Contact',
+            'syncPriority'  => 100,
+            'channel'       => 'oro_dotmailer.channel.fourth',
+            'reference'     => 'oro_dotmailer.datafield_mapping.second',
+            'configs'        => [
+                [
+                    'dataField' => 'oro_dotmailer.datafield.third',
+                    'entityField' => 'firstName',
+                    'isTwoWaySync' => false
+                ],
+                [
+                    'dataField' => 'oro_dotmailer.datafield.fourth',
+                    'entityField' => 'lastName',
+                    'isTwoWaySync' => false
+                ],
+            ]
+        ],
     ];
 
     /**

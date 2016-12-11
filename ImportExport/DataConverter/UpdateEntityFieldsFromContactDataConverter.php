@@ -73,8 +73,8 @@ class UpdateEntityFieldsFromContactDataConverter extends AbstractDataConverter i
         $header = array_keys($this->getHeaderConversionRules());
         if (!empty($importedRecord['dataFields'])) {
             $dataFields = [];
-            //use only datafields qualified for two way sync
             foreach ($importedRecord['dataFields'] as $key => $value) {
+                //use only datafields qualified for two way sync
                 if (in_array($key, $header)) {
                     $dataFields[$key] = $value;
                 }
