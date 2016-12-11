@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Oro\Bundle\DotmailerBundle\Form\Handler\DataFieldFormHandler;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Exception\InvalidDefaultValueException;
+use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 
 class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
 {
@@ -105,6 +106,33 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
 
         $this->form->expects($this->once())->method('addError')
             ->with($this->attributeEqualTo('message', 'Translated Default Value Error. Invalid Default Value'));
+
+        $this->managerRegistry->expects($this->never())->method('getManager');
+
+        $this->assertFalse($this->handler->process($this->entity));
+    }
+
+    public function testProcessFormWithRestClientException()
+    {
+        $this->request->setMethod('POST');
+
+        $this->form->expects($this->once())->method('setData')->with($this->entity);
+        $this->form->expects($this->once()) ->method('submit') ->with($this->request);
+        $this->form->expects($this->once()) ->method('isValid')
+            ->will($this->returnValue(true));
+
+        $this->dataFieldManager->expects($this->once())->method('createOriginDataField')->with($this->entity)
+            ->will($this->throwException(new RestClientException(
+                '',
+                0,
+                new \Exception('Dotmailer Exception Message')
+            )));
+        $this->translator->expects($this->once())->method('trans')
+            ->with('oro.dotmailer.handler.unable_to_create_field')
+            ->will($this->returnValue('Translated Default Value Error.'));
+
+        $this->form->expects($this->once())->method('addError')
+            ->with($this->attributeEqualTo('message', 'Translated Default Value Error. Dotmailer Exception Message'));
 
         $this->managerRegistry->expects($this->never())->method('getManager');
 

@@ -53,7 +53,6 @@ class DataFieldManager
 
     /**
      * @param DataField $field
-     * @throws RequiredOptionException
      */
     protected function initTransport(DataField $field)
     {

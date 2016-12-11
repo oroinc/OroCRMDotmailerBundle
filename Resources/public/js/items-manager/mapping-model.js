@@ -9,6 +9,7 @@ define(function(require) {
         fieldAttribute: 'entityFields',
 
         defaults: {
+            id: null,
             entityFields: null,
             dataField: null,
             isTwoWaySync: null
