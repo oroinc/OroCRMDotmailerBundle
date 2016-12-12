@@ -41,11 +41,11 @@ class MarketingListConnectionType extends AbstractType
                 ]
             )
             ->add(
-                'isCreateEntities',
+                'createEntities',
                 'checkbox',
                 [
-                    'label'    => 'oro.dotmailer.addressbook.is_create_entities.label',
-                    'tooltip'  => 'oro.dotmailer.addressbook.is_create_entities.tooltip',
+                    'label'    => 'oro.dotmailer.addressbook.create_entities.label',
+                    'tooltip'  => 'oro.dotmailer.addressbook.create_entities.tooltip',
                     'required' => false
                 ]
             );

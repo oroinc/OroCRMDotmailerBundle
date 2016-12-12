@@ -4,9 +4,9 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 
-class UpdateEntityFieldsFromContactIterator extends AbstractIterator
+class UpdateEntityFieldsFromContactIterator extends AbstractMarketingListItemIterator
 {
     /**
      * @var ManagerRegistry
@@ -14,33 +14,36 @@ class UpdateEntityFieldsFromContactIterator extends AbstractIterator
     protected $registry;
 
     /**
-     * @var Channel
-     */
-    protected $channel;
-
-    /**
      * @param ManagerRegistry $registry
-     * @param Channel $channel
      */
-    public function __construct(ManagerRegistry $registry, Channel $channel)
+    public function setRegistry($registry)
     {
         $this->registry = $registry;
-        $this->channel = $channel;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function getItems($take, $skip)
+    protected function getIteratorQueryBuilder(AddressBook $addressBook)
     {
         $contactsToUpdateFromQB = $this->registry
             ->getRepository('OroDotmailerBundle:Contact')
-            ->getScheduledForEntityFieldsUpdateQB($this->channel)
-            ->setFirstResult($skip)
-            ->setMaxResults($take);
+            ->getScheduledForEntityFieldsUpdateQB($addressBook);
+        if ($addressBook->isCreateEntities()) {
+            //if new entities can be added, add subquery to check that no entity with email alreay exists
+            $qb = $this->marketingListItemsQueryBuilderProvider->getFindEntityEmailsQB($addressBook);
+            $contactsToUpdateFromQB->orWhere(
+                $qb->expr()->andX()
+                    ->add($qb->expr()->isNull('addressBookContacts.marketingListItemId'))
+                    ->add('addressBookContacts.newEntity = :newEntity')
+                    ->add($qb->expr()->notIn('contact.email', $qb->getDQL()))
+            );
+            $contactsToUpdateFromQB->setParameter('newEntity', true);
+            if ($parameter = $qb->getParameter('organization')) {
+                $contactsToUpdateFromQB->setParameter($parameter->getName(), $parameter->getValue());
+            }
+        }
 
-        return $contactsToUpdateFromQB
-            ->getQuery()
-            ->execute();
+        return $contactsToUpdateFromQB;
     }
 }

@@ -17,6 +17,10 @@ use Oro\Bundle\DotmailerBundle\Model\ExtendAddressBookContact;
  *     },
  *     indexes={
  *          @ORM\Index(name="orocrm_dm_ab_cnt_export_id_idx", columns={"export_id"}),
+ *          @ORM\Index(
+ *                  name="IDX_MARKETING_LIST_ITEM_CLASS_ID",
+ *                  columns={"marketing_list_item_class", "marketing_list_item_id"}
+ *          ),
  *     }
  * )
  * @Config()
@@ -86,6 +90,13 @@ class AddressBookContact extends ExtendAddressBookContact implements ChannelAwar
      * @ORM\Column(name="scheduled_for_fields_update", type="boolean")
      */
     protected $scheduledForFieldsUpdate = false;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="new_entity", type="boolean", nullable=true)
+     */
+    protected $newEntity = false;
 
     /**
      * @var bool
@@ -252,6 +263,25 @@ class AddressBookContact extends ExtendAddressBookContact implements ChannelAwar
     public function setScheduledForFieldsUpdate($scheduledForFieldsUpdate)
     {
         $this->scheduledForFieldsUpdate = $scheduledForFieldsUpdate;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isNewEntity()
+    {
+        return $this->newEntity;
+    }
+
+    /**
+     * @param boolean $newEntity
+     * @return AddressBookContact
+     */
+    public function setNewEntity($newEntity)
+    {
+        $this->newEntity = $newEntity;
 
         return $this;
     }

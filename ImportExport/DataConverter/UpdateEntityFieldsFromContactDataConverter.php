@@ -3,6 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Provider\EmailProvider;
 use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\ImportExportBundle\Processor\EntityNameAwareInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextAwareInterface;
@@ -14,6 +15,9 @@ class UpdateEntityFieldsFromContactDataConverter extends AbstractDataConverter i
 {
     /** @var MappingProvider */
     protected $mappingProvider;
+
+    /** @var EmailProvider */
+    protected $emailProvider;
 
     /** @var string */
     protected $entityName;
@@ -46,6 +50,14 @@ class UpdateEntityFieldsFromContactDataConverter extends AbstractDataConverter i
     }
 
     /**
+     * @param EmailProvider $emailProvider
+     */
+    public function setEmailProvider(EmailProvider $emailProvider)
+    {
+        $this->emailProvider = $emailProvider;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getHeaderConversionRules()
@@ -61,8 +73,9 @@ class UpdateEntityFieldsFromContactDataConverter extends AbstractDataConverter i
         if (!$this->entityName || !isset($channelId)) {
             throw new RuntimeException('Channel and entity name must be set');
         }
+        $mapping = $this->mappingProvider->getTwoWaySyncFieldsForEntity($this->entityName, $channelId);
 
-        return $this->mappingProvider->getTwoWaySyncFieldsForEntity($this->entityName, $channelId);
+        return $mapping;
     }
 
     /**
@@ -83,10 +96,18 @@ class UpdateEntityFieldsFromContactDataConverter extends AbstractDataConverter i
             $importedRecord = array_merge($importedRecord, $dataFields);
         }
 
-        if (!empty($importedRecord['email'])) {
-            $importedRecord['emails'] = [
-                ['email' => $importedRecord['email']]
-            ];
+        //adding email only for non existing entities
+        if (empty($importedRecord['entityId'])) {
+            $emailField = $this->emailProvider->getEntityEmailField($this->entityName);
+            if (is_array($emailField)) {
+                $importedRecord[$emailField['entityEmailField']] = [
+                    [$emailField['emailField'] => $importedRecord['email']]
+                ];
+            } elseif ($emailField) {
+                $importedRecord[$emailField] = $importedRecord['email'];
+            }
+        } else {
+            unset($importedRecord['email']);
         }
 
         return parent::convertToImportFormat($importedRecord, $skipNullValues);

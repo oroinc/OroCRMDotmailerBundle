@@ -355,6 +355,7 @@ services:
             - "@doctrine"
             - "@oro_dotmailer.model.field_helper"
             - "@oro_dotmailer.contact.export.query_builder_adapter.registry"
+            - "@oro_dotmailer.provider.email"
         calls:
             - [setRemovedItemClassName, [%oro_marketing_list.removed_item.class%]]
             - [setUnsubscribedItemClassName, [%oro_marketing_list.unsubscribed_item.class%]]
@@ -391,6 +392,12 @@ services:
         parent: oro.cache.abstract
         calls:
             - [setNamespace, [ 'oro_dotmailer' ] ]
+
+    oro_dotmailer.provider.email:
+        class: 'Oro\Bundle\DotmailerBundle\Provider\EmailProvider'
+        arguments:
+            - "@oro_marketing_list.contact_information_field_helper"
+            - "@oro_entity.virtual_field_provider"
 
     oro_dotmailer.provider.mapping:
         class: 'Oro\Bundle\DotmailerBundle\Provider\MappingProvider'
@@ -471,7 +478,7 @@ services:
         class: %oro_dotmailer.importexport.reader.datafield.remove.class%
 
     oro_dotmailer.importexport.reader.update_entity_field_from_contacts:
-        parent: oro_dotmailer.importexport.reader.abstract
+        parent: oro_dotmailer.importexport.reader.export.abstract
         class: %oro_dotmailer.importexport.reader.update_entity_field_from_contacts.class%
 
     #connectors
@@ -593,6 +600,7 @@ services:
         class: %oro_dotmailer.importexport.data_converter.update_entity_field_from_contacts.class%
         calls:
             - [setMappingProvider, ["@oro_dotmailer.provider.mapping"]]
+            - [setEmailProvider, ["@oro_dotmailer.provider.email"]]
 
     #strategy
     oro_dotmailer.importexport.strategy.add_or_replace:
@@ -665,7 +673,7 @@ services:
 
     oro_dotmailer.importexport.strategy.update_entity_field_from_contacts.add_or_replace:
         class: %oro_dotmailer.importexport.strategy.update_entity_field_from_contacts.class%
-        parent: oro_importexport.strategy.configurable_add_or_replace
+        parent: oro_dotmailer.importexport.strategy.add_or_replace
         calls:
             - [setStategyHelper, ["@oro_dotmailer.importexport.strategy.helper"]]
 

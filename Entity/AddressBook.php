@@ -230,9 +230,9 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
      *
      * @var boolean
      *
-     * @ORM\Column(name="is_create_entities", type="boolean", nullable=true)
+     * @ORM\Column(name="create_entities", type="boolean", nullable=true)
      */
-    protected $isCreateEntities = false;
+    protected $createEntities = false;
 
     /**
      * Initialize collections
@@ -602,19 +602,19 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
     /**
      * @return boolean
      */
-    public function getIsCreateEntities()
+    public function isCreateEntities()
     {
-        return $this->isCreateEntities;
+        return $this->createEntities;
     }
 
     /**
-     * @param boolean $isCreateEntities
+     * @param boolean $createEntities
      *
      * @return AddressBook
      */
-    public function setIsCreateEntities($isCreateEntities)
+    public function setCreateEntities($createEntities)
     {
-        $this->isCreateEntities = $isCreateEntities;
+        $this->createEntities = $createEntities;
 
         return $this;
     }

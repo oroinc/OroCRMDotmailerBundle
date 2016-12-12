@@ -1,13 +1,13 @@
 <?php
 
-namespace Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_4;
+namespace Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_3;
 
 use Doctrine\DBAL\Schema\Schema;
 
 use Oro\Bundle\MigrationBundle\Migration\Migration;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 
-class OroDotmailerBundle implements Migration
+class AddCreateEntitiesFlag implements Migration
 {
     /**
      * {@inheritdoc}
@@ -15,6 +15,7 @@ class OroDotmailerBundle implements Migration
     public function up(Schema $schema, QueryBag $queries)
     {
         $this->updateOroDotmailerAddressBookTable($schema);
+        $this->updateOroDotmailerAddressBookContactTable($schema);
     }
 
     /**
@@ -25,6 +26,12 @@ class OroDotmailerBundle implements Migration
     protected function updateOroDotmailerAddressBookTable(Schema $schema)
     {
         $table = $schema->getTable('orocrm_dm_address_book');
-        $table->addColumn('is_create_entities', 'boolean', ['notnull' => false]);
+        $table->addColumn('create_entities', 'boolean', ['notnull' => false]);
+    }
+
+    protected function updateOroDotmailerAddressBookContactTable(Schema $schema)
+    {
+        $table = $schema->getTable('orocrm_dm_ab_contact');
+        $table->addColumn('new_entity', 'boolean', ['notnull' => false]);
     }
 }

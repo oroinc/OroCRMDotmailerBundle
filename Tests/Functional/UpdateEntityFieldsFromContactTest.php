@@ -29,6 +29,7 @@ class UpdateEntityFieldsFromContactTest extends AbstractImportExportTestCase
     public function testImport()
     {
         $entity = new ApiContactList();
+        //update contact
         $entity[] = [
                 'id' => 200,
                 'email' => 'john.doe@example.com',
@@ -40,6 +41,33 @@ class UpdateEntityFieldsFromContactTest extends AbstractImportExportTestCase
                     [
                         'key'   => 'LASTNAME',
                         'value' => ['Doe Changed']
+                    ],
+                    [
+                        'key'   => 'FULLNAME',
+                        'value' => null
+                    ],
+                    [
+                        'key'   => 'GENDER',
+                        'value' => ['male']
+                    ],
+                    [
+                        'key'   => 'LASTSUBSCRIBED',
+                        'value' => ['2015-01-01T00:00:00z']
+                    ],
+                ]
+            ];
+        //create contact
+        $entity[] = [
+                'id' => 400,
+                'email' => 'new.doe@example.com',
+                'datafields' => [
+                    [
+                        'key'   => 'FIRSTNAME',
+                        'value' => ['New John']
+                    ],
+                    [
+                        'key'   => 'LASTNAME',
+                        'value' => ['New Doe']
                     ],
                     [
                         'key'   => 'FULLNAME',
@@ -71,12 +99,18 @@ class UpdateEntityFieldsFromContactTest extends AbstractImportExportTestCase
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
+        $repository = $this->managerRegistry->getRepository('Oro\Bundle\ContactBundle\Entity\Contact');
         $contact = $this->getReference('oro_dotmailer.orocrm_contact.john.doe');
-        $updatedContact = $this->managerRegistry->getRepository('Oro\Bundle\ContactBundle\Entity\Contact')
-            ->find($contact->getId());
+        $updatedContact = $repository->find($contact->getId());
         //firstname left unchanged
         $this->assertEquals('John', $updatedContact->getFirstName());
         //lastname was changed based on mapping
         $this->assertEquals('Doe Changed', $updatedContact->getLastName());
+
+        $createdContacts = $repository->findBy(['lastName' => 'New Doe']);
+        $this->assertCount(1, $createdContacts);
+        $createdContact = reset($createdContacts);
+        //firstname left unchanged
+        $this->assertEquals('new.doe@example.com', $createdContact->getPrimaryEmail());
     }
 }

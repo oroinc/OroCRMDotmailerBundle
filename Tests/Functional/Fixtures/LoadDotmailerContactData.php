@@ -33,7 +33,7 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             ],
             'addressBooks' => [
                 [
-                    'addressBook'         => 'oro_dotmailer.address_book.first',
+                    'addressBook'         => 'oro_dotmailer.address_book.second',
                     'status'              => Contact::STATUS_SUBSCRIBED,
                     'marketing_list_item' => 'oro_dotmailer.orocrm_contact.john.doe'
                 ]

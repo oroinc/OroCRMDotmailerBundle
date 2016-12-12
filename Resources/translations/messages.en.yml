@@ -35,8 +35,8 @@ oro:
             last_imported_at.label:               Last Imported At
             last_exported_at.label:               Last Exported At
             sync_status.label:                    Sync Status
-            is_create_entities.label:             Create New Entities
-            is_create_entities.tooltip:           Create new records if no match found
+            create_entities.label:                Create New Entities
+            create_entities.tooltip:              Create new records if no match by email is found
 
             sync: Marketing list synchronization started. {{ job_view_link }}
 
@@ -186,6 +186,7 @@ oro:
             export_operation_type.label:       Export Operation Type
             entity_updated.label:              Related Entity Updated Flag
             scheduled_for_fields_update.label: Scheduled for Entities Field Updates
+            new_entity.label:                  Is New Entity
 
         addressbookcontactsexport:
             entity_label:                     Address Book Contact Export

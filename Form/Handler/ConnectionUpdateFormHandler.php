@@ -64,7 +64,7 @@ class ConnectionUpdateFormHandler
         $data = $form->getData();
         /** @var AddressBook $addressBook */
         $addressBook = $data['addressBook'];
-        $addressBook->setIsCreateEntities($data['isCreateEntities']);
+        $addressBook->setCreateEntities($data['createEntities']);
         $manager->persist($addressBook);
         $manager->flush();
 

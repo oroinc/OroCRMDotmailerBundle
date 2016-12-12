@@ -24,15 +24,16 @@ class LoadAddressBookData extends AbstractFixture implements DependentFixtureInt
             'reference'     => 'oro_dotmailer.address_book.first'
         ],
         [
-            'originId'      => 12,
-            'name'          => 'test2',
-            'contactCount'  => 2,
-            'visibility'    => 'Private',
-            'channel'       => 'oro_dotmailer.channel.first',
-            'marketingList' => 'oro_dotmailer.marketing_list.second',
-            'campaign'      => 'oro_dotmailer.campaign.first',
-            'owner'         => 'oro_dotmailer.organization.foo',
-            'reference'     => 'oro_dotmailer.address_book.second'
+            'originId'       => 12,
+            'name'           => 'test2',
+            'contactCount'   => 2,
+            'visibility'     => 'Private',
+            'channel'        => 'oro_dotmailer.channel.first',
+            'marketingList'  => 'oro_dotmailer.marketing_list.second',
+            'campaign'       => 'oro_dotmailer.campaign.first',
+            'createEntities' => true,
+            'owner'          => 'oro_dotmailer.organization.foo',
+            'reference'      => 'oro_dotmailer.address_book.second'
         ],
         [
             'originId'      => 25,

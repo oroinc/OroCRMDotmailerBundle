@@ -112,7 +112,7 @@ class AddressBookController extends Controller
             ? [
                 'addressBook'      => $addressBook,
                 'channel'          => $addressBook->getChannel(),
-                'isCreateEntities' => $addressBook->getIsCreateEntities()
+                'createEntities'   => $addressBook->isCreateEntities()
             ]
             : [];
         $savedId = $this->get('oro_dotmailer.form.handler.connection_update')->handle($form, $formData);

@@ -4,8 +4,31 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
 use Oro\Bundle\ImportExportBundle\Strategy\Import\ConfigurableAddOrReplaceStrategy;
 
-class UpdateEntityFieldsFromContactStrategy extends ConfigurableAddOrReplaceStrategy
+class UpdateEntityFieldsFromContactStrategy extends AddOrReplaceStrategy
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected function beforeProcessEntity($entity)
+    {
+        //update owner for new entities
+        $itemData = $this->context->getValue('itemData');
+        if ($itemData && empty($itemData['entityId'])) {
+            $channel = $this->getChannel();
+            $this->ownerHelper->populateChannelOwner($entity, $channel);
+        }
+
+        return ConfigurableAddOrReplaceStrategy::beforeProcessEntity($entity);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function assertEnvironment($entity)
+    {
+        ConfigurableAddOrReplaceStrategy::assertEnvironment($entity);
+    }
+    
     /**
      * @inheritdoc
      */
