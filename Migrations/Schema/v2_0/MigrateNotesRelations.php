@@ -9,12 +9,10 @@ use Oro\Bundle\NoteBundle\Migration\UpdateNoteAssociationKindForRenamedEntitiesM
 class MigrateNotesRelations extends UpdateNoteAssociationKindForRenamedEntitiesMigration
 {
     protected $entitiesNames = [
-        'Activity',
         'AddressBook',
         'AddressBookContact',
         'AddressBookContactsExport',
         'Campaign',
-        'CampaignSummary',
         'Contact',
     ];
 
