@@ -167,6 +167,41 @@ class AddressBookController extends Controller
     }
 
     /**
+     * @Route(
+     *      "/create",
+     *      name="oro_dotmailer_address_book_create"
+     * )
+     * @Acl(
+     *      id="oro_address_book_create",
+     *      type="entity",
+     *      permission="CREATE",
+     *      class="OroDotmailerBundle:AddressBook"
+     * )
+     * @Template("OroDotmailerBundle:AddressBook:update.html.twig")
+     *
+     * @return array
+     */
+    public function createAction()
+    {
+        return $this->update(new AddressBook());
+    }
+
+    /**
+     * @param AddressBook $addressBook
+     *
+     * @return array
+     */
+    protected function update(AddressBook $addressBook)
+    {
+        return $this->get('oro_form.model.update_handler')->update(
+            $addressBook,
+            $this->get('oro_dotmailer.form.address_book'),
+            $this->get('translator')->trans('oro.dotmailer.addressbook.message.saved'),
+            $this->get('oro_dotmailer.form.handler.address_book_update')
+        );
+    }
+
+    /**
      * @return GenuineSyncScheduler
      */
     private function getSyncScheduler()

@@ -21,6 +21,7 @@ class AddressBookSelectType extends CreateOrSelectInlineChannelAwareType
         $resolver->setDefaults(
             [
                 'autocomplete_alias' => 'dotmailer_address_books',
+                'create_form_route'  => 'oro_dotmailer_address_book_create',
                 'grid_name'          => 'oro_dotmailer_address_books_grid',
                 'configs'            => [
                     'placeholder'  => 'oro.dotmailer.addressbook.select.placeholder',

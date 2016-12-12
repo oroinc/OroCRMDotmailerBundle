@@ -8,11 +8,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 /**
  * @Route("/dotmailer")
@@ -92,5 +94,71 @@ class DotmailerController extends Controller
         }
 
         return new JsonResponse($result);
+    }
+
+    /**
+     * @Route("/integration-connection/{id}",
+     *      name="oro_dotmailer_integration_connection",
+     *      requirements={"id"="\d+"},
+     *      defaults={"id" = "0"}
+     * )
+     * @AclAncestor("oro_dotmailer")
+     *
+     * @Template("OroDotmailerBundle:Dotmailer:integrationConnection.html.twig")
+     *
+     * @param Request $request
+     * @param Channel $channel
+     * @return array
+     */
+    public function integrationConnectionAction(Request $request, Channel $channel = null)
+    {
+        $data = $request->get('oro_dotmailer_integration_connection');
+        if (isset($data['channel'])) {
+            $channel = $this->getDoctrine()
+                ->getRepository('OroIntegrationBundle:Channel')
+                ->findOneById($data['channel']);
+        }
+
+        $form = $this->createForm('oro_dotmailer_integration_connection');
+        $formData = $channel ? ['channel' => $channel] : [];
+        $form->setData($formData);
+
+        $loginUserUrl = false;
+        $connectUrl = false;
+        if ($channel) {
+            $transport = $channel->getTransport();
+            if ($transport->getClientId() && $transport->getClientKey()) {
+                $oauthHelper = $this->get('oro_dotmailer.oauth_manager');
+                $oauth = $this->getDoctrine()
+                    ->getRepository('OroDotmailerBundle::OAuth')
+                    ->findByChannelAndUser($channel, $this->getUser());
+                if ($oauth) {
+                    try {
+                        $loginUserUrl = $oauthHelper->generateLoginUserUrl($transport, $oauth->getRefreshToken());
+                    } catch (\Exception $exception) {
+                        $this->get('session')->getFlashBag()->add(
+                            'error',
+                            $exception->getMessage()
+                        );
+                    }
+                }
+                $connectUrl = $oauthHelper->generateAuthorizeUrl($transport, $channel->getId());
+            } else {
+                $this->get('session')->getFlashBag()->add(
+                    'error',
+                    $this->get('translator')->trans(
+                        'oro.dotmailer.integration.messsage.enter_client_id_client_key',
+                        ['%update_url%' => $this->generateUrl('oro_integration_update', ['id' => $channel->getId()])]
+                    )
+                );
+            }
+        }
+
+        return [
+            'form'         => $form->createView(),
+            'entity'       => $channel,
+            'loginUserUrl' => $loginUserUrl,
+            'connectUrl'   => $connectUrl,
+        ];
     }
 }

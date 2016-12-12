@@ -75,6 +75,9 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
         $migration = new v1_3\AddIndexToAbContact();
         $migration->up($schema, $queries);
 
+        $migration = new v1_3\OroDotmailerBundle();
+        $migration->up($schema, $queries);
+
         $this->renameLastSyncedColumn($schema);
     }
 
