@@ -87,11 +87,11 @@ class AddressBookHandler
                 try {
                     $this->transport->init($entity->getChannel()->getTransport());
                     $apiAddressBook = $this->transport->createAddressBook(
-                        $this->form->get('name')->getData(),
+                        $entity->getName(),
                         $this->form->get('visibility')->getData()
                     );
 
-                    $entity->setOriginId($apiAddressBook->offsetGet('id'));
+                    $entity->setOriginId((string)$apiAddressBook->offsetGet('id'));
                     $this->manager->persist($entity);
                     $this->manager->flush();
 

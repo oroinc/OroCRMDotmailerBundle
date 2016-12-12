@@ -2,9 +2,12 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Type;
 
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
-use Oro\Bundle\DotmailerBundle\Form\Type\AddressBookType;
+
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Form\Type\AddressBookType;
 
 class AddressBookTypeTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,9 +23,8 @@ class AddressBookTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testBuildForm()
     {
-        $builder = $this->getMockBuilder('Symfony\Component\Form\FormBuilder')
-            ->disableOriginalConstructor()
-            ->getMock();
+        /** @var FormBuilderInterface|\PHPUnit_Framework_MockObject_MockObject $builder **/
+        $builder = $this->getMockBuilder(FormBuilderInterface::class)->getMock();
 
         $builder->expects($this->at(0))
             ->method('add')
@@ -54,7 +56,7 @@ class AddressBookTypeTest extends \PHPUnit_Framework_TestCase
                 'visibility',
                 'oro_enum_select',
                 [
-                    'label'           => 'oro.dotmailer.addressbook.name.label',
+                    'label'           => 'oro.dotmailer.addressbook.visibility.label',
                     'enum_code'       => 'dm_ab_visibility',
                     'excluded_values' => [AddressBook::VISIBILITY_NOTAVAILABLEINTHISVERSION],
                     'required'        => true,
@@ -68,7 +70,8 @@ class AddressBookTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testConfigureOptions()
     {
-        $resolver = $this->getMockBuilder('Symfony\Component\OptionsResolver\OptionsResolver')->getMock();
+        /** @var OptionsResolver|\PHPUnit_Framework_MockObject_MockObject $resolver **/
+        $resolver = $this->getMockBuilder(OptionsResolver::class)->getMock();
         $resolver->expects($this->once())
             ->method('setDefaults')
             ->with([
@@ -81,5 +84,10 @@ class AddressBookTypeTest extends \PHPUnit_Framework_TestCase
     public function testGetName()
     {
         $this->assertEquals('oro_dotmailer_address_book_form', $this->type->getName());
+    }
+
+    public function testGetBlockPrefix()
+    {
+        $this->assertEquals('oro_dotmailer_address_book_form', $this->type->getBlockPrefix());
     }
 }

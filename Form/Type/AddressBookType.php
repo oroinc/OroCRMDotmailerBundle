@@ -27,7 +27,7 @@ class AddressBookType extends AbstractType
                 'required' => true
             ])
             ->add('visibility', 'oro_enum_select', [
-                'label'           => 'oro.dotmailer.addressbook.name.label',
+                'label'           => 'oro.dotmailer.addressbook.visibility.label',
                 'enum_code'       => 'dm_ab_visibility',
                 'excluded_values' => [AddressBook::VISIBILITY_NOTAVAILABLEINTHISVERSION],
                 'required'        => true,
