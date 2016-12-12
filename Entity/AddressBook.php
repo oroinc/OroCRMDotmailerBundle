@@ -28,7 +28,7 @@ use Oro\Bundle\DotmailerBundle\Model\ExtendAddressBook;
  * @Config(
  *  defaultValues={
  *      "entity"={
- *          "icon"="icon-group"
+ *          "icon"="fa-users"
  *      },
  *      "ownership"={
  *          "owner_type"="ORGANIZATION",

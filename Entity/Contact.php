@@ -27,7 +27,7 @@ use Oro\Bundle\DotmailerBundle\Model\ExtendContact;
  * @Config(
  *  defaultValues={
  *      "entity"={
- *          "icon"="icon-user"
+ *          "icon"="fa-user"
  *      },
  *      "ownership"={
  *          "owner_type"="ORGANIZATION",
