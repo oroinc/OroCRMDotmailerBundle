@@ -11,6 +11,8 @@ oro:
             connect.label: Connect
             disconnect.label: Disconnect
             messsage:
+                unable_to_connect: Unable to connect to dotmailer
+                incorrect_callback_url: Incorrect callback URL
                 enter_client_id_client_key: Please enter Client ID and Client Key for your <a href="%update_url%">integration</a>
 
         integration_transport:

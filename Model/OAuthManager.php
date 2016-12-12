@@ -40,6 +40,7 @@ class OAuthManager
     /**
      * @param RouterInterface $router
      * @param Mcrypt $encryptor
+     * @param ClientInterface $curlClient
      */
     public function __construct(
         RouterInterface $router,
@@ -59,7 +60,7 @@ class OAuthManager
      */
     public function getApiEndpoint(DotmailerTransport $transport)
     {
-        return $transport->getCustomDomain() ? $transport->getCustomDomain() : self::API_ENDPOINT;
+        return $transport->getCustomDomain() ?: self::API_ENDPOINT;
     }
 
     /**
@@ -252,6 +253,7 @@ class OAuthManager
         if (!$content) {
             return [];
         }
+
         return json_decode($content, true);
     }
 }

@@ -15,17 +15,10 @@ class IntegrationConnectionType extends AbstractType
     {
         $builder
             ->add('channel', 'oro_dotmailer_integration_select', [
-                'label'    => 'oro.dotmailer.integration.label',
-                'required' => false
+                'label'       => 'oro.dotmailer.integration.label',
+                'empty_value' => 'oro.dotmailer.integration.select.placeholder',
+                'required'    => false
             ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
     }
 
     /**
