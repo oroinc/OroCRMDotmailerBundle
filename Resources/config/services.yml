@@ -1085,6 +1085,7 @@ services:
             - "@oro_marketing_list.entity_provider.contact_information"
             - "@oro_integration.helper.default_owner_helper"
             - "@oro_dotmailer.listener.mapping_update"
+            - "@oro_dotmailer.provider.mapping"
         tags:
             - { name: kernel.event_subscriber }
 

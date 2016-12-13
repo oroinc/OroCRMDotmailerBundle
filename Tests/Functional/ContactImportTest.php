@@ -152,9 +152,9 @@ class ContactImportTest extends AbstractImportExportTestCase
                         'dataFields' => [
                             'FIRSTNAME' => 'Alex',
                             'LASTNAME'  => 'Test',
-                            'FULLNAME'  => null,
+                            'FULLNAME'  => 'fullname',
                             'GENDER'    => 'male',
-                            'POSTCODE'  => null,
+                            'POSTCODE'  => 'postcode',
                             'LASTSUBSCRIBED' => '2015-01-01T00:00:00z',
                         ],
                         'lastSubscribedDate' => new \DateTime('2015-01-01', new \DateTimeZone('UTC'))
@@ -191,11 +191,11 @@ class ContactImportTest extends AbstractImportExportTestCase
                             ],
                             [
                                 'key'   => 'FULLNAME',
-                                'value' => null
+                                'value' => ['fullname']
                             ],
                             [
                                 'key'   => 'POSTCODE',
-                                'value' => null
+                                'value' => ['postcode']
                             ],
                             [
                                 'key'   => 'GENDER',

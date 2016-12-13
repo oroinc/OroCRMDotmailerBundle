@@ -14,6 +14,9 @@ Go to the "System -> Integrations" and click "Create Integration" button. Define
  - *Name*: meaningful integration name
  - *Username*: an API user name from your Dotmailer "Manage users" page
  - *Password*: fill in the password of the API user defined at the Username field (more than 8 characters).
+ - *Client Id*: the client id to use for single sign-on. https://developer.dotmailer.com/docs/using-oauth-20-with-dotmailer
+ - *Client Secret Key*: the client secret key to use for single sign-on. https://developer.dotmailer.com/docs/using-oauth-20-with-dotmailer
+ - *Custom OAuth Domain*: fill in custom domain if it's is used in dotmailer. By default https://r1-app.dotmailer.com/ is used
  - *Default Owner*: Select the owner of the integration. The selected user will be defined as the owner for all the records imported within the integration.
 
 After the Username and Password have been filled in, the *Check Connection* button appears. Click the button to check the credentials validity before saving the Integration.
@@ -31,6 +34,7 @@ When "Connect to Dotmailer" button is clicked, the form with two selectors will 
 
  - *Integration*: the selector contains all the Dotmailer integrations available in the Oro instance. Select the integration with the Dotmailer instance, for which the connection must be performed. 
  - *Address Book*: the selector contains all the Dotmailer Address Book records [created](https://support.dotmailer.com/entries/20663833-Creating-an-address-book) in Dotmailer User Interface and available for connection. The selector does not contain the "All Contacts" and "Test" Address Books (automatically generated in Dotmailer), nor the Address Books that have already been connected to another Marketing List in Oro.
+ - *Create New Entities*: checkbox to control if new entities can be created. If a contact is found in address book and there is no entity in the application with such contact's email address, new entity will be created in the application based on the mapping setup. New entity will be created only in case there is a "two way sync" mapping configured for each entity's required fields.
 
 After the connection has been saved, the Marketing list contacts will be automatically exported from Oro to Dotmailer.
 Since then, data synchronization (import and export) between Oro and Dotmailer will be automatically performed once in every 4 minutes.
@@ -43,6 +47,20 @@ After the connection has been saved, the "Connect to Dotmailer" button will disa
 - "Disconnect": disconnect the Marketing List from the Address Book
 - "Synchronize": manually start the synchronization between the Marketing List and the Address Book.
 
+## Managing Dotmailer Data fields and mappings
+
+### Data fields
+If at least one dotmailer integration is created, a new Dotmailer menu group is availabe under Marketing.
+Under Marketing->Dotmailer->Data Fields you can view, remove or create new dotmailer datafields.
+By default, data fields are synchronized with dotmailer once a day. This interval can be changed under System->Configuration->Integrations->Dotmailer Settings
+Synchronization can be also trigged manually with "Synchronize" button from data fields grid.
+Existing data fields cannot be updated because API does not allow it.
+### Data fields mapping
+In order to export/import specific data fields from/to dotmailer, you can build mapping between Oro entities fields and dotmailer datafields.
+When new integration is created, default mappings for common data fields (FIRSTNAME, LASTNAME and FULLNAME) are added automatically for crm entities (Contact, Lead etc.)
+Existing mapping can be updated and new mappings can be added using mapping form and mapping configuration widget.
+You can map several entity fields to one dotmailer string data field. In this case entity's fields values will be concated with a blank, e.g. "Firstname Lastname".
+"Two Way Sync" checkbox should be checked if you want to update application entities with data from dotmailer.
 
 ## Dotmailer Campaign Creation
 
@@ -78,3 +96,10 @@ Export is performed in 4 steps, as follows:
  - **Exporting Contacts**: A csv file with contacts to be exported is sent to Dotmailer
 
 After export is finished, command check export status on Dotmailer side. If export is finished on Dotmailer side command import Dotmailer contacts to get origin Id from Dotmailer. Otherwise next export command will do it.
+
+## Dotmailer Single Sign-on
+To be able to enter dotmailer account straight from the application, dotmailer provides single sign-on feature https://developer.dotmailer.com/docs/using-oauth-20-with-dotmailer.
+To use signel sign-on, you need to obtain api key and secret from your dotmailer manager and put them during integration configuration.
+After this, navigate to Marketing->Dotmailer->Email Studio and choose the integration you'd like to connect with your dotmailer account.
+Click connect button to perform the OAuth authorization. After successful login to your dotmailer account, you should be redirected back to the application and see your dotmailer account dashboard in the iframe.
+After this you will not need to login into dotmailer account each time and can access it from the application.

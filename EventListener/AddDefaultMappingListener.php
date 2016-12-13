@@ -9,6 +9,7 @@ use Oro\Bundle\EntityBundle\Provider\EntityProvider;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
+use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Entity\Status;
 use Oro\Bundle\IntegrationBundle\Event\SyncEvent;
@@ -36,24 +37,30 @@ class AddDefaultMappingListener extends AbstractImportExportListener
      */
     protected $mappingListener;
 
+    /** @var MappingProvider */
+    protected $mappingProvider;
+
     /**
      * @param ManagerRegistry $registry
      * @param DoctrineHelper $doctrineHelper
      * @param EntityProvider $entityProvider
      * @param DefaultOwnerHelper $ownerHelper
      * @param MappingUpdateListener $mappingListener
+     * @param MappingProvider $mappingProvider
      */
     public function __construct(
         ManagerRegistry $registry,
         DoctrineHelper $doctrineHelper,
         EntityProvider $entityProvider,
         DefaultOwnerHelper $ownerHelper,
-        MappingUpdateListener $mappingListener
+        MappingUpdateListener $mappingListener,
+        MappingProvider $mappingProvider
     ) {
         $this->doctrineHelper = $doctrineHelper;
         $this->entityProvider = $entityProvider;
         $this->ownerHelper = $ownerHelper;
         $this->mappingListener = $mappingListener;
+        $this->mappingProvider = $mappingProvider;
         parent::__construct($registry);
     }
 
@@ -72,6 +79,11 @@ class AddDefaultMappingListener extends AbstractImportExportListener
         $mappingConfiguration = $this->getDefaultMappingConfiguration();
         $entities = $this->entityProvider->getEntities();
         $dataFields = $this->getMappingDataFields($channel);
+        /*
+         * disable mapping listener while default mappings are created to avoid re-export of all existing
+         * connected entities
+         */
+        $this->mappingListener->setEnabled(false);
         foreach ($entities as $entity) {
             $entity = $entity['name'];
             if ($this->mappingExists($channel, $entity)) {
@@ -88,18 +100,12 @@ class AddDefaultMappingListener extends AbstractImportExportListener
             }
             //save mapping in case we added at list one mapping configuration
             if ($mapping->getConfigs()->count()) {
-                /*
-                 * disable mapping listener while default mappings are created to avoid re-export of all existing
-                 * connected entities
-                 */
-                $this->mappingListener->setEnabled(false);
-
                 $manager->persist($mapping);
                 $manager->flush();
-
-                $this->mappingListener->setEnabled(true);
             }
         }
+        $this->mappingProvider->clearCachedValues();
+        $this->mappingListener->setEnabled(true);
     }
 
     /**

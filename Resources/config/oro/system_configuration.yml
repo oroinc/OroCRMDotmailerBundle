@@ -2,7 +2,7 @@ system_configuration:
     groups:
         dotmailer_settings:
             title: oro.dotmailer.configuration.dotmailer_settings
-            icon:  icon-envelope-alt
+            icon:  fa-envelope-o
 
         synchronization_dotmailer_settings:
             title: oro.dotmailer.configuration.dotmailer_synchronization

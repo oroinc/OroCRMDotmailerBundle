@@ -26,7 +26,7 @@ class DataFieldMappingTest extends \PHPUnit_Framework_TestCase
 
     public function testProperties()
     {
-        $now = new \DateTime('now');
+        $now = new \DateTime();
         $channel = new Channel();
         $organization = $this->getMock('Oro\Bundle\OrganizationBundle\Entity\Organization');
         $properties = [

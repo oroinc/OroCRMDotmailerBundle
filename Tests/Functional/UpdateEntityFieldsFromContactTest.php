@@ -44,7 +44,7 @@ class UpdateEntityFieldsFromContactTest extends AbstractImportExportTestCase
                     ],
                     [
                         'key'   => 'FULLNAME',
-                        'value' => null
+                        'value' => ['fullname']
                     ],
                     [
                         'key'   => 'GENDER',
@@ -71,7 +71,7 @@ class UpdateEntityFieldsFromContactTest extends AbstractImportExportTestCase
                     ],
                     [
                         'key'   => 'FULLNAME',
-                        'value' => null
+                        'value' => ['fullname']
                     ],
                     [
                         'key'   => 'GENDER',

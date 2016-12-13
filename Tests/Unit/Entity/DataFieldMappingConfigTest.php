@@ -26,7 +26,7 @@ class DataFieldMappingConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testProperties()
     {
-        $now = new \DateTime('now');
+        $now = new \DateTime();
         $dataField = new DataField();
         $mapping = new DataFieldMapping();
 
