@@ -19,7 +19,7 @@ use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 class OAuthManager
 {
     const API_ENDPOINT   = 'https://r1-app.dotmailer.com/';
-    const AUTHORISE_URL  = 'OAuth2/authorise.aspx?';
+    const AUTHORISE_URL  = 'https://login.dotmailer.com/OAuth2/authorise.aspx?';
     const TOKEN_URL      = 'OAuth2/Tokens.ashx';
     const LOGIN_USER_URL = '?oauthtoken=';
 
@@ -71,7 +71,7 @@ class OAuthManager
      */
     public function getAuthorizeUrl(DotmailerTransport $transport)
     {
-        return $this->getApiEndpoint($transport) . self::AUTHORISE_URL;
+        return self::AUTHORISE_URL;
     }
 
     /**

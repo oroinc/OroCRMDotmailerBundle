@@ -61,7 +61,7 @@ class OAuthManagerTest extends \PHPUnit_Framework_TestCase
         /** @var DotmailerTransport|\PHPUnit_Framework_MockObject_MockObject $transport **/
         $transport = $this->getMock(DotmailerTransport::class);
 
-        $expected = $this->oAuthManager->getApiEndpoint($transport) . 'OAuth2/authorise.aspx?';
+        $expected = OAuthManager::AUTHORISE_URL;
         $actual = $this->oAuthManager->getAuthorizeUrl($transport);
         $this->assertEquals($expected, $actual);
     }

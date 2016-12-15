@@ -81,6 +81,33 @@ class UpdateEntityFieldsFromContactDataConverter extends AbstractDataConverter i
     /**
      * {@inheritdoc}
      */
+    protected function receiveBackendToFrontendHeader()
+    {
+        /**
+         * Do not cache header because it's generated dynamically based on the mapping
+         */
+        $header = $this->receiveBackendHeader();
+        $this->backendToFrontendHeader = $this->convertHeaderToFrontend($header);
+
+        return $this->backendToFrontendHeader;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function receiveHeaderConversionRules()
+    {
+        /**
+         * Do not cache header because it's generated dynamically based on the mapping
+         */
+        $this->headerConversionRules = $this->getHeaderConversionRules();
+
+        return $this->headerConversionRules;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function convertToImportFormat(array $importedRecord, $skipNullValues = true)
     {
         $header = array_keys($this->getHeaderConversionRules());
