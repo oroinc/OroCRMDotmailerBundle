@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\SalesBundle\Tests\Functional\Controller;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Controller;
 
 use Symfony\Component\DomCrawler\Form;
 
@@ -41,11 +41,11 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
         $crawler = $this->client->request('GET', $this->getUrl('oro_dotmailer_datafield_mapping_create'));
         /** @var Form $form */
         $form = $crawler->selectButton('Save')->form();
-        $entityClass = 'Oro\Bundle\SalesBundle\Entity\Lead';
+        $entityClass = 'Oro\Bundle\ContactBundle\Entity\Contact';
         $form['oro_dotmailer_datafield_mapping_form[entity]'] = $entityClass;
         $form['oro_dotmailer_datafield_mapping_form[syncPriority]'] = 100;
         $form['oro_dotmailer_datafield_mapping_form[channel]'] =
-            $this->getReference('oro_dotmailer.channel.first')->getId();
+            $this->getReference('oro_dotmailer.channel.third')->getId();
         $mapping = json_encode([
             'mapping' => [
                 [
@@ -77,7 +77,7 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
         $response = $this->client->requestGrid(
             'oro_dotmailer_datafield_mapping_grid',
             [
-                'oro_dotmailer_datafield_mapping_grid[_filter][entity][value]' => 'Lead',
+                'oro_dotmailer_datafield_mapping_grid[_filter][entity][value]' => 'Contact',
                 'oro_dotmailer_datafield_mapping_grid[_filter][entity][type]' => 1
             ]
         );
@@ -142,7 +142,6 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
                         'oro_dotmailer_datafield_mapping_grid[_sort_by][entity][value]' => 'ASC',
                     ],
                     'assert'              => [
-                        'channelName' => 'first channel',
                     ],
                     'expectedResultCount' => 2
                 ],
@@ -157,7 +156,6 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
                         'oro_dotmailer_datafield_mapping_grid[_filter][entity][type]' => 1,
                     ],
                     'assert'              => [
-                        'channelName' => 'first channel',
                     ],
                     'expectedResultCount' => 2
                 ],

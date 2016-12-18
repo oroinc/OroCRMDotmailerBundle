@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\SalesBundle\Tests\Functional\Controller;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Controller;
 
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;

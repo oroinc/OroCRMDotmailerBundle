@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\MarketingListBundle\Tests\Unit\Form\Handler;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Handler;
 
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormError;
