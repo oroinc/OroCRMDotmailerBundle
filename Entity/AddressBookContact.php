@@ -87,7 +87,7 @@ class AddressBookContact extends ExtendAddressBookContact implements ChannelAwar
     /**
      * @var bool
      *
-     * @ORM\Column(name="scheduled_for_fields_update", type="boolean")
+     * @ORM\Column(name="scheduled_for_fields_update", type="boolean", nullable=true)
      */
     protected $scheduledForFieldsUpdate = false;
 
@@ -101,7 +101,7 @@ class AddressBookContact extends ExtendAddressBookContact implements ChannelAwar
     /**
      * @var bool
      *
-     * @ORM\Column(name="entity_updated", type="boolean")
+     * @ORM\Column(name="entity_updated", type="boolean", nullable=true)
      */
     protected $entityUpdated = false;
 
