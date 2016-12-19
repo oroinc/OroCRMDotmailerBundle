@@ -11,7 +11,6 @@ use OroCRM\Bundle\DotmailerBundle\Entity\Repository\DataFieldRepository;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
 use OroCRM\Bundle\DotmailerBundle\Provider\CacheProvider;
 
-
 class ContactSyncDataConverter extends AbstractDataConverter implements ContextAwareInterface
 {
     const EMAIL_FIELD = 'email';
