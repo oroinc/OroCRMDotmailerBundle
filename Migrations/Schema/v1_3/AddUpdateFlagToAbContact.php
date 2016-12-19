@@ -23,7 +23,7 @@ class AddUpdateFlagToAbContact implements Migration
     protected function addUpdateFlagToAbContact(Schema $schema)
     {
         $table = $schema->getTable('orocrm_dm_ab_contact');
-        $table->addColumn('entity_updated', 'boolean', []);
-        $table->addColumn('scheduled_for_fields_update', 'boolean', []);
+        $table->addColumn('entity_updated', 'boolean', ['notnull' => false]);
+        $table->addColumn('scheduled_for_fields_update', 'boolean', ['notnull' => false]);
     }
 }
