@@ -227,6 +227,15 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
     protected $addressBookContactsExports;
 
     /**
+     * Controls whether we need to create new entities when importing contacts from dotmailer
+     *
+     * @var boolean
+     *
+     * @ORM\Column(name="create_entities", type="boolean", nullable=true)
+     */
+    protected $createEntities = false;
+
+    /**
      * Initialize collections
      */
     public function __construct()
@@ -587,6 +596,26 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
         if ($this->addressBookContactsExports->contains($addressBookContactsExport)) {
             $this->addressBookContactsExports->removeElement($addressBookContactsExport);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isCreateEntities()
+    {
+        return $this->createEntities;
+    }
+
+    /**
+     * @param boolean $createEntities
+     *
+     * @return AddressBook
+     */
+    public function setCreateEntities($createEntities)
+    {
+        $this->createEntities = $createEntities;
 
         return $this;
     }

@@ -65,6 +65,40 @@ class IntegrationSettingsType extends AbstractType
                 [
                     'label' => 'orocrm.dotmailer.integration.check_connection.label'
                 ]
+            )
+            ->add(
+                'clientId',
+                'text',
+                [
+                    'label'    => 'orocrm.dotmailer.integration_transport.client_id.label',
+                    'required' => false,
+                    'attr'     => [
+                        'class' => 'dm-client-id',
+                    ],
+                ]
+            )
+            ->add(
+                'clientKey',
+                'password',
+                [
+                    'label'    => 'orocrm.dotmailer.integration_transport.client_key.label',
+                    'required' => false,
+                    'attr'     => [
+                        'class' => 'dm-client-key',
+                    ],
+                ]
+            )
+            ->add(
+                'customDomain',
+                'text',
+                [
+                    'label'    => 'orocrm.dotmailer.integration_transport.custom_domain.label',
+                    'tooltip'  => 'orocrm.dotmailer.form.custom_domain.tooltip',
+                    'required' => false,
+                    'attr'     => [
+                        'class' => 'dm-custom-domain',
+                    ],
+                ]
             );
     }
 

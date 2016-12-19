@@ -20,6 +20,26 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
      */
     protected $data = [
         [
+            'originId'     => 200,
+            'email'        => 'john.doe@example.com',
+            'channel'      => 'orocrm_dotmailer.channel.first',
+            'reference'    => 'orocrm_dotmailer.contact.updated',
+            'status'       => ApiContactStatuses::SUBSCRIBED,
+            'dataFields'   => [
+                'FIRSTNAME' => 'John',
+                'LASTNAME'  => 'Doe',
+                'FULLNAME'  => null,
+                'GENDER'    => 'male',
+            ],
+            'addressBooks' => [
+                [
+                    'addressBook'         => 'orocrm_dotmailer.address_book.second',
+                    'status'              => Contact::STATUS_SUBSCRIBED,
+                    'marketing_list_item' => 'orocrm_dotmailer.orocrm_contact.john.doe'
+                ]
+            ],
+        ],
+        [
             'originId'     => 42,
             'channel'      => 'orocrm_dotmailer.channel.second',
             'email'        => 'first@mail.com',

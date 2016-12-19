@@ -105,6 +105,7 @@ class Client implements IClient, LoggerAwareInterface
                 case 200:
                 case 201:
                 case 202:
+                case 409:
                     $result = $responseBody;
                     break;
                 case 204:
@@ -144,16 +145,21 @@ class Client implements IClient, LoggerAwareInterface
         return $result;
     }
 
+    /**
+     * @param string $responseBodyString
+     * @param string|null $returnCode
+     * @return string
+     */
     protected function getExceptionMessage($responseBodyString, $returnCode = null)
     {
+        $decoded = json_decode($responseBodyString, true);
+        if (is_array($decoded) && isset($decoded['message'])) {
+            return $decoded['message'];
+        }
         switch ((int)$returnCode) {
             case 404:
                 return 'NOT FOUND';
             default:
-                $decoded = json_decode($responseBodyString, true);
-                if (is_array($decoded) && isset($decoded['message'])) {
-                    return $decoded['message'];
-                }
                 return 'Unexpected response';
         }
     }
@@ -165,7 +171,7 @@ class Client implements IClient, LoggerAwareInterface
     protected function isAttemptNecessary($responseCode)
     {
         return
-            401 !== $responseCode &&
+            !in_array($responseCode, [401, 404]) &&
             $this->multipleAttemptsEnabled &&
             ($this->attempted <= count($this->sleepBetweenAttempt) - 1);
     }

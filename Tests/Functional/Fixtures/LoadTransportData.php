@@ -20,21 +20,29 @@ class LoadTransportData extends BaseAbstractFixture implements ContainerAwareInt
         [
             'username' => 'John',
             'password' => 'Johns password',
+            'clientId' => 'Johns client id',
+            'clientKey' => 'Johns client key',
             'reference' => 'orocrm_dotmailer.transport.first'
         ],
         [
             'username' => 'John',
             'password' => 'Johns password',
+            'clientId' => 'Johns client id',
+            'clientKey' => 'Johns client key',
             'reference' => 'orocrm_dotmailer.transport.second'
         ],
         [
             'username' => 'John',
             'password' => 'Johns password',
+            'clientId' => 'Johns client id',
+            'clientKey' => 'Johns client key',
             'reference' => 'orocrm_dotmailer.transport.third'
         ],
         [
             'username' => 'John',
             'password' => 'Johns password',
+            'clientId' => 'Johns client id',
+            'clientKey' => 'Johns client key',
             'reference' => 'orocrm_dotmailer.transport.fourth'
         ]
     ];

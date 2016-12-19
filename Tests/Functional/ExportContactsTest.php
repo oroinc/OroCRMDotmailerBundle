@@ -23,7 +23,8 @@ class ExportContactsTest extends AbstractImportExportTestCase
         parent::setUp();
         $this->loadFixtures(
             [
-                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData'
+                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData',
+                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDataFieldMappingData'
             ]
         );
     }
@@ -177,16 +178,13 @@ class ExportContactsTest extends AbstractImportExportTestCase
          */
         $this->assertFalse($addressBookContact->isScheduledForExport());
 
-        if (!$isNew) {
-            /**
-             * This is necessary to not update information fields for existing contacts
-             */
-            $this->assertNotEquals($expected->getFirstName(), $actual->getFirstName());
-            $this->assertNotEquals($expected->getLastName(), $actual->getLastName());
-        } else {
-            $this->assertEquals($expected->getFirstName(), $actual->getFirstName());
-            $this->assertEquals($expected->getLastName(), $actual->getLastName());
-        }
+        $this->assertArraySubset(
+            [
+                'FIRSTNAME' => $expected->getFirstName(),
+                'LASTNAME'  => $expected->getLastName()
+            ],
+            $actual->getDataFields()
+        );
     }
 
     /**

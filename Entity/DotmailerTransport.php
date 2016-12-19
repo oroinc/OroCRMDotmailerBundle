@@ -28,6 +28,27 @@ class DotmailerTransport extends Transport
     protected $password;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="orocrm_dm_api_client_id", type="string", length=255, nullable=true)
+     */
+    protected $clientId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="orocrm_dm_api_client_key", type="string", length=255, nullable=true)
+     */
+    protected $clientKey;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="orocrm_dm_api_custom_domain", type="string", length=255, nullable=true)
+     */
+    protected $customDomain;
+
+    /**
      * @var ParameterBag
      */
     protected $settingsBag;
@@ -41,7 +62,10 @@ class DotmailerTransport extends Transport
             $this->settingsBag = new ParameterBag(
                 [
                     'username' => $this->getUsername(),
-                    'password' => $this->getPassword()
+                    'password' => $this->getPassword(),
+                    'clientId' => $this->getClientId(),
+                    'clientKey' => $this->getClientKey(),
+                    'customDomain' => $this->getCustomDomain()
                 ]
             );
         }
@@ -85,6 +109,66 @@ class DotmailerTransport extends Transport
     public function setPassword($password)
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClientId()
+    {
+        return $this->clientId;
+    }
+
+    /**
+     * @param string $clientId
+     *
+     * @return DotmailerTransport
+     */
+    public function setClientId($clientId)
+    {
+        $this->clientId = $clientId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClientKey()
+    {
+        return $this->clientKey;
+    }
+
+    /**
+     * @param string $clientKey
+     *
+     * @return DotmailerTransport
+     */
+    public function setClientKey($clientKey)
+    {
+        $this->clientKey = $clientKey;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomDomain()
+    {
+        return $this->customDomain;
+    }
+
+    /**
+     * @param string $customDomain
+     *
+     * @return DotmailerTransport
+     */
+    public function setCustomDomain($customDomain)
+    {
+        $this->customDomain = $customDomain;
 
         return $this;
     }

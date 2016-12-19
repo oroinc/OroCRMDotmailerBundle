@@ -1,0 +1,59 @@
+<?php
+
+namespace OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator;
+
+use Doctrine\Common\Persistence\ManagerRegistry;
+
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use OroCRM\Bundle\DotmailerBundle\Entity\DataField;
+
+class RemoveDataFieldIterator extends AbstractIterator
+{
+    /**
+     * @var ManagerRegistry
+     */
+    protected $registry;
+
+    /**
+     * @var array Array of data fields names from origin
+     */
+    protected $keepDataFieldsNames;
+
+    /**
+     * @var Channel
+     */
+    protected $channel;
+
+    /**
+     * @param ManagerRegistry $registry
+     * @param Channel         $channel
+     * @param array           $keepDataFieldsNames
+     */
+    public function __construct(ManagerRegistry $registry, Channel $channel, array $keepDataFieldsNames)
+    {
+        $this->registry = $registry;
+        $this->channel = $channel;
+        $this->keepDataFieldsNames = $keepDataFieldsNames;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getItems($take, $skip)
+    {
+        if (!$this->keepDataFieldsNames) {
+            //don't remove any data fields if no data came from DM
+            return [];
+        }
+
+        $dataFieldsForRemoveQB = $this->registry
+            ->getRepository('OroCRMDotmailerBundle:DataField')
+            ->getDataFieldsForRemoveQB($this->channel, $this->keepDataFieldsNames)
+            ->setFirstResult($skip)
+            ->setMaxResults($take);
+
+        return $dataFieldsForRemoveQB
+            ->getQuery()
+            ->execute();
+    }
+}

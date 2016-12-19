@@ -141,7 +141,13 @@ class AddressBookController extends Controller
         );
 
         $addressBook = $this->getAddressBook($marketingList);
-        $formData = $addressBook ? ['addressBook' => $addressBook, 'channel' => $addressBook->getChannel()] : [];
+        $formData = $addressBook
+            ? [
+                'addressBook'      => $addressBook,
+                'channel'          => $addressBook->getChannel(),
+                'createEntities'   => $addressBook->isCreateEntities()
+            ]
+            : [];
         $savedId = $this->get('orocrm_dotmailer.form.handler.connection_update')->handle($form, $formData);
 
         return [
@@ -191,5 +197,40 @@ class AddressBookController extends Controller
             ->findOneBy(['marketingList' => $marketingList]);
 
         return $addressBook;
+    }
+
+    /**
+     * @Route(
+     *      "/create",
+     *      name="orocrm_dotmailer_address_book_create"
+     * )
+     * @Acl(
+     *      id="orocrm_dotmailer_address_book_create",
+     *      type="entity",
+     *      permission="CREATE",
+     *      class="OroCRMDotmailerBundle:AddressBook"
+     * )
+     * @Template("OroCRMDotmailerBundle:AddressBook:update.html.twig")
+     *
+     * @return array
+     */
+    public function createAction()
+    {
+        return $this->update(new AddressBook());
+    }
+
+    /**
+     * @param AddressBook $addressBook
+     *
+     * @return array
+     */
+    protected function update(AddressBook $addressBook)
+    {
+        return $this->get('oro_form.model.update_handler')->update(
+            $addressBook,
+            $this->get('orocrm_dotmailer.form.address_book'),
+            $this->get('translator')->trans('orocrm.dotmailer.addressbook.message.saved'),
+            $this->get('orocrm_dotmailer.form.handler.address_book_update')
+        );
     }
 }
