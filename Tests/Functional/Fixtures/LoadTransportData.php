@@ -20,21 +20,29 @@ class LoadTransportData extends BaseAbstractFixture implements ContainerAwareInt
         [
             'username' => 'John',
             'password' => 'Johns password',
+            'clientId' => 'Johns client id',
+            'clientKey' => 'Johns client key',
             'reference' => 'oro_dotmailer.transport.first'
         ],
         [
             'username' => 'John',
             'password' => 'Johns password',
+            'clientId' => 'Johns client id',
+            'clientKey' => 'Johns client key',
             'reference' => 'oro_dotmailer.transport.second'
         ],
         [
             'username' => 'John',
             'password' => 'Johns password',
+            'clientId' => 'Johns client id',
+            'clientKey' => 'Johns client key',
             'reference' => 'oro_dotmailer.transport.third'
         ],
         [
             'username' => 'John',
             'password' => 'Johns password',
+            'clientId' => 'Johns client id',
+            'clientKey' => 'Johns client key',
             'reference' => 'oro_dotmailer.transport.fourth'
         ]
     ];
@@ -53,6 +61,8 @@ class LoadTransportData extends BaseAbstractFixture implements ContainerAwareInt
             $transport = new DotmailerTransport();
             $transport->setUsername($item['username']);
             $transport->setPassword($this->encoder->encryptData($item['password']));
+            $transport->setClientId($item['clientId']);
+            $transport->setClientKey($this->encoder->encryptData($item['clientKey']));
 
             $manager->persist($transport);
             $this->setReference($item['reference'], $transport);

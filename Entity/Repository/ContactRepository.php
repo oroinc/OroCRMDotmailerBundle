@@ -30,13 +30,10 @@ class ContactRepository extends EntityRepository
             ->select(
                 [
                     'addressBookContacts.id as addressBookContactId',
+                    'addressBookContacts.marketingListItemClass as entityClass',
                     'contact.email',
                     'contact.originId',
-                    'contact.firstName',
-                    'contact.lastName',
-                    'contact.gender',
-                    'contact.fullName',
-                    'contact.postcode',
+                    'contact.dataFields',
                     'opt_in_type.id as optInType',
                     'email_type.id as emailType',
                 ]
@@ -120,5 +117,48 @@ class ContactRepository extends EntityRepository
             ->andWhere('contact.originId IS NULL')
             ->getQuery()
             ->execute(['channel' => $channel]);
+    }
+
+    /**
+     * Get contacts with data fields updates, which should be synced into entities
+     *
+     * @param AddressBook $addressBook
+     * @return QueryBuilder
+     */
+    public function getScheduledForEntityFieldsUpdateQB(AddressBook $addressBook)
+    {
+        $qb = $this->createQueryBuilder('contact');
+        $expr = $qb->expr();
+        $joinCondition = $expr->andX()
+            ->add('addressBookContacts.addressBook =:addressBook')
+            ->add($expr->isNotNull('addressBookContacts.marketingListItemClass'));
+
+        $qb
+            ->select(
+                [
+                    'contact.id as contactId',
+                    'contact.originId',
+                    'contact.email',
+                    'contact.dataFields',
+                    'addressBookContacts.marketingListItemClass as entityClass',
+                    'addressBookContacts.marketingListItemId as entityId',
+                ]
+            )
+            ->innerJoin(
+                'contact.addressBookContacts',
+                'addressBookContacts',
+                Join::WITH,
+                $joinCondition
+            )
+            ->andWhere(
+                $expr->andX()
+                   ->add('addressBookContacts.scheduledForFieldsUpdate = :isScheduled')
+                   ->add($expr->isNotNull('addressBookContacts.marketingListItemId'))
+            )
+            ->setParameter('isScheduled', true)
+            ->setParameter('addressBook', $addressBook);
+        
+
+        return $qb;
     }
 }

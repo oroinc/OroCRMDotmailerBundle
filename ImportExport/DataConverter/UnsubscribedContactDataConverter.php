@@ -17,11 +17,6 @@ class UnsubscribedContactDataConverter implements DataConverterInterface
         $contactFields = [
             'originId'           => 'id',
             'email'              => 'email',
-            'firstName'          => 'FIRSTNAME',
-            'lastName'           => 'LASTNAME',
-            'gender'             => 'GENDER',
-            'fullName'           => 'FULLNAME',
-            'postcode'           => 'POSTCODE',
             'lastSubscribedDate' => 'LASTSUBSCRIBED',
         ];
 

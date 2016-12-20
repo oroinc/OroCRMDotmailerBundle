@@ -1,0 +1,31 @@
+{% extends 'OroUIBundle:actions:index.html.twig' %}
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+{% set gridName = 'oro_dotmailer_datafield_grid' %}
+{% set pageTitle = 'oro.dotmailer.datafield.entity_plural_label'|trans %}
+
+{% block navButtons %}
+    {% if resource_granted('oro_dotmailer_datafield_create') %}
+        <div class="btn-group">
+            {{ UI.addButton({
+                'path' : path('oro_dotmailer_datafield_create'),
+                'entity_label': 'oro.dotmailer.datafield.entity_label'|trans
+            }) }}
+        </div>
+        {{ UI.clientButton({
+            'dataUrl' : path('oro_dotmailer_datafield_synchronize'),
+            'successMessage': 'oro.dotmailer.datafield.syncronize_scheduled'|trans,
+            'dataAttributes': {
+                'action': 'sync-with-dotmailer'
+            },
+            'iCss' : 'icon-refresh',
+            'aCss' : 'no-hash dotmailer-sync-btn',
+            'title': 'oro.dotmailer.datafield.synchronize'|trans,
+            'label': 'oro.dotmailer.datafield.synchronize'|trans
+        }) }}
+        <script type="text/javascript">
+            require(['orodotmailer/js/sync-buttons-handler'], function(Handler){
+                new Handler('.dotmailer-sync-btn');
+            });
+        </script>
+    {% endif %}
+{% endblock %}

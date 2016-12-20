@@ -6,22 +6,44 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\MarketingListItemIterator;
 
 class ContactSyncStrategy extends AddOrReplaceStrategy
 {
     /**
-     * Fields allowed for update
+     * Custom fields allowed for update
      *
      * @var array
      */
     protected $allowedFields = [];
 
     /**
+     * Internal fields which are always allowed
+     *
+     * @var array
+     */
+    protected $alwaysAllowedFields = ['dataFields'];
+
+    /**
      * @var AddressBook
      */
     protected $addressBook;
+
+    /** @var MappingProvider */
+    protected $mappingProvider;
+
+    /** @var bool  */
+    protected $scheduleForExport = true;
+
+    /**
+     * @param MappingProvider $mappingProvider
+     */
+    public function setMappingProvider(MappingProvider $mappingProvider)
+    {
+        $this->mappingProvider = $mappingProvider;
+    }
 
     /**
      * {@inheritdoc}
@@ -76,10 +98,79 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
             $addressBookContact->setMarketingListItemClass(
                 $addressBook->getMarketingList()->getEntity()
             );
-            $addressBookContact->setScheduledForExport(true);
+            $this->processAbContactStateFlags($addressBookContact);
         }
 
         return parent::afterProcessEntity($entity);
+    }
+
+    /**
+     * @param AddressBookContact $addressBookContact
+     */
+    protected function processAbContactStateFlags(AddressBookContact $addressBookContact)
+    {
+        if ($this->scheduleForExport ||
+            $addressBookContact->getExportOperationType() !== AddressBookContact::EXPORT_UPDATE_CONTACT) {
+            $addressBookContact->setScheduledForExport(true);
+        }
+        //reset export flag
+        $this->scheduleForExport = true;
+        //reset entity update flag
+        $addressBookContact->setEntityUpdated(false);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function importExistingEntity(
+        $entity,
+        $existingEntity,
+        $itemData = null,
+        array $excludedFields = []
+    ) {
+        /** @var Contact $existingEntity */
+        /** @var Contact $entity */
+        $diff = array_diff_assoc((array) $entity->getDataFields(), (array) $existingEntity->getDataFields());
+        if ($diff) {
+            $diff = $this->handleFieldsSyncPriority($existingEntity, $diff);
+            //update modified datafield values
+            $dataFields = array_merge($existingEntity->getDataFields(), $diff);
+            $entity->setDataFields($dataFields);
+        }
+        //if no datafields were changed, no need to export contact
+        $this->scheduleForExport = $diff ? true : false;
+
+        parent::importExistingEntity($entity, $existingEntity, $itemData, $excludedFields);
+    }
+
+    /**
+     * Look through other address book contacts and, if there is a marketing list item
+     * with a higher priority set for marketing list class, remove the field from the update list,
+     * because we need to keep values from entities with the highest sync priority
+     *
+     * @param Contact $existingEntity
+     * @param array $changedFields
+     * @return array
+     */
+    protected function handleFieldsSyncPriority($existingEntity, $changedFields)
+    {
+        if (!$this->mappingProvider) {
+            throw new RuntimeException('Mapping provider must be set');
+        }
+        $priorities = $this->mappingProvider->getDataFieldMappingBySyncPriority($this->getChannel());
+        foreach ($changedFields as $name => $value) {
+            $currentPriority = isset($priorities[$name][$this->getMarketingListEntityName()]) ?
+                $priorities[$name][$this->getMarketingListEntityName()] : 0;
+            foreach ($existingEntity->getAddressBookContacts() as $abContact) {
+                $class = $abContact->getMarketingListItemClass();
+                if (isset($priorities[$name][$class]) && $priorities[$name][$class] > $currentPriority) {
+                    unset($changedFields[$name]);
+                    break;
+                }
+            }
+        }
+
+        return $changedFields;
     }
 
     /**
@@ -162,15 +253,24 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
      */
     protected function isFieldExcluded($entityName, $fieldName, $itemData = null)
     {
-        $marketingListEntityName = $this->getAddressBook()
-            ->getMarketingList()
-            ->getEntity();
+        if (in_array($fieldName, $this->alwaysAllowedFields, true)) {
+            return false;
+        }
+        $marketingListEntityName = $this->getMarketingListEntityName();
 
         if (empty($this->allowedFields[$marketingListEntityName])) {
             return true;
         }
 
         return !in_array($fieldName, $this->allowedFields[$marketingListEntityName]);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getMarketingListEntityName()
+    {
+        return $this->getAddressBook()->getMarketingList()->getEntity();
     }
 
     /**
@@ -181,5 +281,17 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
     {
         $operationType = $this->getEnumValue('dm_ab_cnt_exp_type', $operationTypeId);
         $addressBookContact->setExportOperationType($operationType);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function assertEnvironment($entity)
+    {
+        if (!$this->mappingProvider) {
+            throw new RuntimeException('Mapping provider must be set');
+        }
+
+        parent::assertEnvironment($entity);
     }
 }

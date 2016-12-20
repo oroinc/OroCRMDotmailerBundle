@@ -1,0 +1,26 @@
+{% extends 'OroUIBundle:actions:update.html.twig' %}
+{% form_theme form with ['OroFormBundle:Form:fields.html.twig'] %}
+
+{% set formAction = path('oro_dotmailer_address_book_create') %}
+
+{% block content_data %}
+    {% set id = 'oro_dotmailer_address_book_form' %}
+    {% set dataBlocks = [{
+        'title': 'General'|trans,
+        'class': 'active',
+        'subblocks': [{
+            'title': '',
+            'data': [
+                form_row(form.channel),
+                form_row(form.name),
+                form_row(form.visibility)
+            ]
+        }]
+    }] %}
+
+    {% set data = {
+        'formErrors': form_errors(form) ? form_errors(form) : null,
+        'dataBlocks': dataBlocks
+    } %}
+    {{ parent() }}
+{% endblock content_data %}

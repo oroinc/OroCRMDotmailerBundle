@@ -4,23 +4,25 @@ namespace Oro\Bundle\DotmailerBundle\Provider;
 
 use Doctrine\ORM\QueryBuilder;
 
-use Oro\Bundle\LocaleBundle\DQL\DQLNameFormatter;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
-use Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactSyncDataConverter;
+use Oro\Bundle\DotmailerBundle\QueryDesigner\MappingQueryConverter;
 
 class ContactExportQBAdapter implements ContactExportQBAdapterInterface
 {
-    /**
-     * @var DQLNameFormatter
-     */
-    protected $formatter;
+    /** @var MappingProvider */
+    protected $mappingProvider;
+
+    /** @var MappingQueryConverter */
+    protected $mappingQueryConverter;
 
     /**
-     * @param DQLNameFormatter $formatter
+     * @param MappingProvider $mappingProvider
+     * @param MappingQueryConverter $mappingQueryConverter
      */
-    public function __construct(DQLNameFormatter $formatter)
+    public function __construct(MappingProvider $mappingProvider, MappingQueryConverter $mappingQueryConverter)
     {
-        $this->formatter = $formatter;
+        $this->mappingProvider = $mappingProvider;
+        $this->mappingQueryConverter = $mappingQueryConverter;
     }
 
     /**
@@ -28,7 +30,7 @@ class ContactExportQBAdapter implements ContactExportQBAdapterInterface
      */
     public function prepareQueryBuilder(QueryBuilder $qb, AddressBook $addressBook)
     {
-        $this->addContactInformationFields($qb, $addressBook);
+        $this->addMappedFields($qb, $addressBook);
         $this->applyRestrictions($qb, $addressBook);
 
         return $qb;
@@ -38,34 +40,30 @@ class ContactExportQBAdapter implements ContactExportQBAdapterInterface
      * @param QueryBuilder $qb
      * @param AddressBook  $addressBook
      */
-    protected function addContactInformationFields(QueryBuilder $qb, AddressBook $addressBook)
+    protected function addMappedFields(QueryBuilder $qb, AddressBook $addressBook)
     {
-        $rootAliases = $qb->getRootAliases();
-        $entityAlias = reset($rootAliases);
+        $entity = $addressBook->getMarketingList()->getEntity();
+        $mapping = $this->mappingProvider->getExportMappingConfigForEntity(
+            $entity,
+            $addressBook->getChannel()->getId()
+        );
 
-        $parts = $this->formatter
-            ->extractNamePartsPaths(
-                $addressBook->getMarketingList()->getEntity(),
-                $entityAlias
-            );
-
-        if (isset($parts['first_name'])) {
-            $qb->addSelect(
-                sprintf(
-                    '%s AS %s',
-                    $parts['first_name'],
-                    ContactSyncDataConverter::FIRST_NAME_FIELD
-                )
-            );
-        }
-        if (isset($parts['last_name'])) {
-            $qb->addSelect(
-                sprintf(
-                    '%s AS %s',
-                    $parts['last_name'],
-                    ContactSyncDataConverter::LAST_NAME_FIELD
-                )
-            );
+        if ($mapping) {
+            $columns = [];
+            $compositeColumns = [];
+            foreach ($mapping as $dataField => $entityFields) {
+                $entityFields = explode(',', $entityFields);
+                $compositeColumn = [
+                    'columns' => [],
+                    'alias' => $dataField
+                ];
+                foreach ($entityFields as $entityField) {
+                    $columns[] = ['name' => $entityField];
+                    $compositeColumn['columns'][] = $entityField;
+                }
+                $compositeColumns[] = $compositeColumn;
+            }
+            $this->mappingQueryConverter->addMappingColumns($qb, $entity, $columns, $compositeColumns);
         }
     }
 
@@ -105,6 +103,10 @@ class ContactExportQBAdapter implements ContactExportQBAdapterInterface
         );
         $qb->andWhere($syncItemsRestrictions)
             ->setParameter('entityClass', $addressBook->getMarketingList()->getEntity());
+        //include contacts which have recently updated related entities
+        $entityUpdateFieldExpression = MarketingListItemsQueryBuilderProvider::ADDRESS_BOOK_CONTACT_ALIAS
+            . '.entityUpdated';
+        $qb->orWhere($expr->eq($entityUpdateFieldExpression, ':isUpdated'))->setParameter('isUpdated', true);
     }
 
     /**

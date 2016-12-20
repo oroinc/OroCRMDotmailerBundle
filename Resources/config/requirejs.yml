@@ -1,5 +1,9 @@
 config:
     paths:
         'orodotmailer/js/sync-buttons-handler': 'bundles/orodotmailer/js/sync-buttons-handler.js'
+        'orodotmailer/js/integration-connection': 'bundles/orodotmailer/js/integration-connection.js'
         'orodotmailer/js/app/components/dm-resource-component': 'bundles/orodotmailer/js/app/components/dm-resource-component.js'
         'oro/select2-autocomplete-channel-aware-address-book-component': 'bundles/orodotmailer/js/app/components/select2-autocomplete-channel-aware-address-book-component.js'
+        'orodotmailer/js/app/components/mapping-component': 'bundles/orodotmailer/js/app/components/mapping-component.js'
+        'orodotmailer/js/items-manager/mapping-model': 'bundles/orodotmailer/js/items-manager/mapping-model.js'
+        'orodotmailer/js/datafield-view': 'bundles/orodotmailer/js/datafield-view.js'
