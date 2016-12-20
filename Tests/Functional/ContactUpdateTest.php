@@ -91,11 +91,7 @@ class ContactUpdateTest extends AbstractImportExportTestCase
             $contactEntity = $contactRepository->findOneBy($searchCriteria);
             $this->assertNotNull($contactEntity, 'Failed asserting that contact updated.'. $log);
 
-            $this->assertEquals($contact['firstName'], $contactEntity->getFirstName());
-            $this->assertEquals($contact['lastName'], $contactEntity->getLastName());
-            $this->assertEquals($contact['fullName'], $contactEntity->getFullName());
-            $this->assertEquals($contact['gender'], $contactEntity->getGender());
-            $this->assertEquals($contact['postcode'], $contactEntity->getPostcode());
+            $this->assertEquals($contact['dataFields'], $contactEntity->getDataFields());
 
             if (!empty($contact['lastSubscribedDate'])) {
                 $this->assertEquals($contact['lastSubscribedDate'], $contactEntity->getLastSubscribedDate());
@@ -140,11 +136,7 @@ class ContactUpdateTest extends AbstractImportExportTestCase
                         'optInType' => 'VerifiedDouble',
                         'emailType' => 'Html',
                         'status'    => 'Unsubscribed',
-                        'firstName' => null,
-                        'lastName'  => null,
-                        'fullName'  => null,
-                        'gender'    => null,
-                        'postcode'  => null,
+                        'dataFields' => []
                     ],
                     [
                         'originId'  => 143,
@@ -152,11 +144,14 @@ class ContactUpdateTest extends AbstractImportExportTestCase
                         'optInType' => 'Double',
                         'emailType' => 'Html',
                         'status'    => 'Suppressed',
-                        'lastName'  => 'Test',
-                        'fullName'  => null,
-                        'gender'    => 'male',
-                        'firstName' => 'Test2',
-                        'postcode'  => null,
+                        'dataFields' => [
+                            'FIRSTNAME' => 'Test2',
+                            'LASTNAME'  => 'Test',
+                            'FULLNAME'  => 'fullname',
+                            'GENDER'    => 'male',
+                            'POSTCODE'  => 'postcode',
+                            'LASTSUBSCRIBED' => '2015-01-01T00:00:00z',
+                        ],
                         'lastSubscribedDate' => new \DateTime('2015-01-01', new \DateTimeZone('UTC'))
                     ],
                 ],
@@ -185,11 +180,11 @@ class ContactUpdateTest extends AbstractImportExportTestCase
                             ],
                             [
                                 'key'   => 'FULLNAME',
-                                'value' => 'null'
+                                'value' => ['fullname']
                             ],
                             [
                                 'key'   => 'POSTCODE',
-                                'value' => 'null'
+                                'value' => ['postcode']
                             ],
                             [
                                 'key'   => 'GENDER',

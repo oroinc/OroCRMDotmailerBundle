@@ -71,18 +71,22 @@ class MarketingListItemsQueryBuilderProvider
      */
     protected $exportQBAdapterRegistry;
 
+    /** @var EmailProvider */
+    protected $emailProvider;
+
     /**
      * @var QueryBuilder[]
      */
     protected $cachedQueryBuilders = [];
 
     /**
-     * @param MarketingListProvider            $marketingListProvider
+     * @param MarketingListProvider $marketingListProvider
      * @param ContactInformationFieldsProvider $contactInformationFieldsProvider
-     * @param OwnershipMetadataProvider        $ownershipMetadataProvider
-     * @param ManagerRegistry                  $registry
-     * @param FieldHelper                      $fieldHelper
-     * @param ContactExportQBAdapterRegistry   $exportQBAdapterRegistry
+     * @param OwnershipMetadataProvider $ownershipMetadataProvider
+     * @param ManagerRegistry $registry
+     * @param FieldHelper $fieldHelper
+     * @param ContactExportQBAdapterRegistry $exportQBAdapterRegistry
+     * @param EmailProvider $emailProvider
      */
     public function __construct(
         MarketingListProvider $marketingListProvider,
@@ -90,7 +94,8 @@ class MarketingListItemsQueryBuilderProvider
         OwnershipMetadataProvider $ownershipMetadataProvider,
         ManagerRegistry $registry,
         FieldHelper $fieldHelper,
-        ContactExportQBAdapterRegistry $exportQBAdapterRegistry
+        ContactExportQBAdapterRegistry $exportQBAdapterRegistry,
+        EmailProvider $emailProvider
     ) {
         $this->marketingListProvider = $marketingListProvider;
         $this->contactInformationFieldsProvider = $contactInformationFieldsProvider;
@@ -98,6 +103,7 @@ class MarketingListItemsQueryBuilderProvider
         $this->registry = $registry;
         $this->fieldHelper = $fieldHelper;
         $this->exportQBAdapterRegistry = $exportQBAdapterRegistry;
+        $this->emailProvider = $emailProvider;
     }
 
     /**
@@ -216,6 +222,12 @@ class MarketingListItemsQueryBuilderProvider
             )->andWhere(
                 $removedItemsQueryBuilder->expr()->isNotNull('addressBookContact.marketingListItemId')
             );
+        if ($addressBook->isCreateEntities()) {
+            //if address book allows to create new entities, take only contacts not makred as new entity
+            $removedItemsQueryBuilder->andWhere(
+                $removedItemsQueryBuilder->expr()->eq('addressBookContact.marketingListItemId', ':newEntity')
+            )->setParameter('newEntity', false);
+        }
 
         if (count($excludedItems) > 0) {
             $excludedItems = array_map(function ($item) {
@@ -271,6 +283,41 @@ class MarketingListItemsQueryBuilderProvider
         }
 
         $qb->select("$entityAlias.id as " . self::MARKETING_LIST_ITEM_ID);
+
+        return $qb;
+    }
+
+    /**
+     * @param AddressBook $addressBook
+     * @return QueryBuilder
+     */
+    public function getFindEntityEmailsQB(AddressBook $addressBook)
+    {
+        $marketingList = $addressBook->getMarketingList();
+        $emailField = $this->emailProvider->getEntityEmailField($marketingList->getEntity());
+        if (!$emailField) {
+            throw new RuntimeException('Email field cannot be identified');
+        }
+
+        $qb = $this->marketingListProvider->getMarketingListEntitiesQueryBuilder(
+            $marketingList,
+            MarketingListProvider::FULL_ENTITIES_MIXIN
+        );
+        $from = $qb->getDQLPart('from');
+        $rootAliases = $qb->getRootAliases();
+        $entityAlias = reset($rootAliases);
+        $qb->resetDQLParts();
+        $qb->add('from', $from);
+        if (is_array($emailField)) {
+            $qb->leftJoin(sprintf('%s.%s', $entityAlias, $emailField['entityEmailField']), 'entityEmail');
+            $fieldExp = sprintf('entityEmail.%s', $emailField['emailField']);
+            $qb->addSelect($fieldExp);
+        } else {
+            $fieldExp = sprintf('%s.%s', $entityAlias, $emailField);
+            $qb->addSelect($fieldExp);
+        }
+        $qb->andWhere($qb->expr()->isNotNull($fieldExp));
+        $this->applyOrganizationRestrictions($addressBook, $qb);
 
         return $qb;
     }

@@ -1,0 +1,8 @@
+oro:
+    dotmailer:
+        datafieldmapping:
+            change_entity_confirmation:  Changing the entity will erase all mapping configuration. Do you want to continue?
+            change_channel_confirmation:  Changing the integration will erase all mapping configuration. Do you want to continue?
+            editor: the Mapping Editor
+
+"Change Integration Confirmation": "Change Integration Confirmation"

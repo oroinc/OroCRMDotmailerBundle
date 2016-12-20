@@ -20,7 +20,7 @@ connector:
                     services:
                         reader:    oro_dotmailer.importexport.reader.address_book.remove
                         processor: oro_dotmailer.importexport.processor.address_book.remove
-                        writer:    oro_dotmailer.importexport.writer.import.removed_address_book
+                        writer:    oro_dotmailer.importexport.writer.import.remove
 
         dotmailer_campaign_import:
             title: oro.dotmailer.connector.campaign.job
@@ -72,13 +72,25 @@ connector:
             title: oro.dotmailer.connector.contact.job
             type:  import
             steps:
-                -
+                importNewContacts:
                     title: import
                     class: Oro\Bundle\BatchBundle\Step\ItemStep
                     services:
                         reader:    oro_dotmailer.connector.contact
                         processor: oro_dotmailer.importexport.processor.contact
                         writer:    oro_dotmailer.importexport.writer.import
+                    parameters:
+                        batch_size: 1000
+                updateEntityFields:
+                    title: import
+                    class: Oro\Bundle\DotmailerBundle\Step\UpdateEntityFieldsStep
+                    services:
+                        reader:          oro_dotmailer.importexport.reader.update_entity_field_from_contacts
+                        processor:       oro_dotmailer.importexport.processor.update_entity_field_from_contacts
+                        writer:          oro_dotmailer.importexport.writer.import
+                        contextRegistry: oro_importexport.context_registry
+                        registry:        doctrine
+                        entityListener:  oro_dotmailer.listener.entity_update
                     parameters:
                         batch_size: 1000
 
@@ -185,3 +197,24 @@ connector:
                         registry:         doctrine
                     parameters:
                         batch_size: 10000
+
+        dotmailer_datafield_import:
+            title: oro.dotmailer.connector.datafield.job
+            type: import
+            steps:
+                importDataFields:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    oro_dotmailer.connector.datafield
+                        processor: oro_dotmailer.importexport.processor.datafield
+                        writer:    oro_dotmailer.importexport.writer.import
+                    parameters:
+                        batch_size: 1000
+                removeNotExistingDataFields:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    oro_dotmailer.importexport.reader.datafield.remove
+                        processor: oro_dotmailer.importexport.processor.datafield.remove
+                        writer:    oro_dotmailer.importexport.writer.import.remove

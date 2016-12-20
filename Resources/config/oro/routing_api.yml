@@ -1,0 +1,7 @@
+oro_dotmailer_datafield_api:
+    resource: "@OroDotmailerBundle/Controller/Api/Rest/DataFieldController.php"
+    type:     rest
+oro_dotmailer_datafield_mapping_api:
+    resource: "@OroDotmailerBundle/Controller/Api/Rest/DataFieldMappingController.php"
+    type:     rest
+

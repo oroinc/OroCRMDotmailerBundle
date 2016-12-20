@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Placeholder;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Rest;
 
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\Client;
 
@@ -83,6 +83,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             [200],
             [201],
             [202],
+            [409]
         ];
     }
 
@@ -217,12 +218,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
                 'response_body' => '{"error":"Some error"}',
                 'response_code' => 500,
                 'expected_message' => 'Unexpected response'
-            ],
-            [
-                'response_body' => '{"error":"Some error"}',
-                'response_code' => 404,
-                'expected_message' => 'NOT FOUND'
-            ],
+            ]
         ];
     }
 
