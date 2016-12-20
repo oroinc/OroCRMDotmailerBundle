@@ -35,6 +35,7 @@ abstract class AbstractImportExportTestCase extends WebTestCase
     protected function setUp()
     {
         $this->initClient();
+
         $this->stubResources();
         $this->managerRegistry = $this->getContainer()
             ->get('doctrine');
