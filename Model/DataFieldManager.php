@@ -67,25 +67,27 @@ class DataFieldManager
     protected function prepareDataField(DataField $field)
     {
         $defaultValue = $field->getDefaultValue();
-        switch ($field->getType()->getId()) {
-            case DataField::FIELD_TYPE_NUMERIC:
-                if (!is_numeric($defaultValue)) {
-                    throw new InvalidDefaultValueException('Default value must be numeric.');
-                }
-                $defaultValue = (int) $defaultValue;
-                break;
-            case DataField::FIELD_TYPE_BOOLEAN:
-                $defaultValue = ($defaultValue === DataField::DEFAULT_BOOLEAN_YES) ? true :
-                    (($defaultValue === DataField::DEFAULT_BOOLEAN_NO) ? false : null);
-                break;
-            case DataField::FIELD_TYPE_DATE:
-                if (!$defaultValue instanceof \DateTime) {
-                    throw new InvalidDefaultValueException('Default value must be valid date.');
-                }
-                //convert to format required by API
-                $defaultValue = $defaultValue->format('Y-m-d\TH:i:s');
-                $field->setDefaultValue($defaultValue);
-                break;
+        if ($defaultValue) {
+            switch ($field->getType()->getId()) {
+                case DataField::FIELD_TYPE_NUMERIC:
+                    if (!is_numeric($defaultValue)) {
+                        throw new InvalidDefaultValueException('Default value must be numeric.');
+                    }
+                    $defaultValue = (int)$defaultValue;
+                    break;
+                case DataField::FIELD_TYPE_BOOLEAN:
+                    $defaultValue = ($defaultValue === DataField::DEFAULT_BOOLEAN_YES) ? true :
+                        (($defaultValue === DataField::DEFAULT_BOOLEAN_NO) ? false : null);
+                    break;
+                case DataField::FIELD_TYPE_DATE:
+                    if (!$defaultValue instanceof \DateTime) {
+                        throw new InvalidDefaultValueException('Default value must be valid date.');
+                    }
+                    //convert to format required by API
+                    $defaultValue = $defaultValue->format('Y-m-d\TH:i:s');
+                    $field->setDefaultValue($defaultValue);
+                    break;
+            }
         }
 
         $result = new ApiDataField(
