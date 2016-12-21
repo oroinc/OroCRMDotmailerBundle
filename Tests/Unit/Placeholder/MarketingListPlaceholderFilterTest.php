@@ -23,8 +23,8 @@ class MarketingListPlaceholderFilterTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->registry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
-        $this->repository = $this->getMock('Doctrine\Common\Persistence\ObjectRepository');
+        $this->registry = $this->createMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $this->repository = $this->createMock('Doctrine\Common\Persistence\ObjectRepository');
 
         $this->registry
             ->expects($this->any())
@@ -39,7 +39,7 @@ class MarketingListPlaceholderFilterTest extends \PHPUnit_Framework_TestCase
         $actual = $this->target->isApplicableOnMarketingList(new \StdClass());
         $this->assertFalse($actual);
 
-        $entity = $this->getMock('Oro\Bundle\MarketingListBundle\Entity\MarketingList');
+        $entity = $this->createMock('Oro\Bundle\MarketingListBundle\Entity\MarketingList');
         $this->repository
             ->expects($this->at(0))
             ->method('findOneBy')

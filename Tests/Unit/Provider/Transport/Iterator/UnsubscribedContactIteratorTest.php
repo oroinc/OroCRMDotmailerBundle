@@ -10,7 +10,7 @@ class UnsubscribedContactIteratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testIterator()
     {
-        $resource = $this->getMock('DotMailer\Api\Resources\IResources');
+        $resource = $this->createMock('DotMailer\Api\Resources\IResources');
         $expectedAddressBookOriginId = 42;
         $expectedDate = new \DateTime();
         $iterator = new UnsubscribedContactIterator($resource, $expectedAddressBookOriginId, $expectedDate);
@@ -49,7 +49,7 @@ class UnsubscribedContactIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testIteratorOverlap()
     {
-        $resource = $this->getMock('DotMailer\Api\Resources\IResources');
+        $resource = $this->createMock('DotMailer\Api\Resources\IResources');
         $expectedAddressBookOriginId = 42;
         $expectedDate = new \DateTime();
         $iterator = new UnsubscribedContactIterator($resource, $expectedAddressBookOriginId, $expectedDate);

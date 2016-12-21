@@ -11,8 +11,8 @@ class CampaignSummaryIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testIterator()
     {
-        $resource = $this->getMock('DotMailer\Api\Resources\IResources');
-        $firstCampaign = $this->getMock('Oro\Bundle\DotmailerBundle\Entity\Campaign');
+        $resource = $this->createMock('DotMailer\Api\Resources\IResources');
+        $firstCampaign = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\Campaign');
         $firstCampaign->expects($this->once())
             ->method('getOriginId')
             ->will($this->returnValue($firstCampaignOriginId = 42));
@@ -20,7 +20,7 @@ class CampaignSummaryIteratorTest extends \PHPUnit_Framework_TestCase
             ->method('getId')
             ->will($this->returnValue($firstCampaignId = 1));
 
-        $secondCampaign = $this->getMock('Oro\Bundle\DotmailerBundle\Entity\Campaign');
+        $secondCampaign = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\Campaign');
         $secondCampaign->expects($this->once())
             ->method('getOriginId')
             ->will($this->returnValue($secondCampaignOriginId = 28));

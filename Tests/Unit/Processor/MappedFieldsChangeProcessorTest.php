@@ -131,7 +131,7 @@ class MappedFieldsChangeProcessorTest extends \PHPUnit_Framework_TestCase
         $this->queryConverter->expects($this->once())->method('convert')
             ->will($this->throwException(new \Exception('something went wrong')));
 
-        $logger = $this->getMock('Psr\Log\LoggerInterface');
+        $logger = $this->createMock('Psr\Log\LoggerInterface');
         $this->processor->setLogger($logger);
         $logger->expects($this->once())->method('warning')->with(
             sprintf(

@@ -35,18 +35,18 @@ class OAuthManagerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->router = $this->getMock(RouterInterface::class);
+        $this->router = $this->createMock(RouterInterface::class);
         $this->encryptor = $this->getMockBuilder(Mcrypt::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->curlClient = $this->getMock(ClientInterface::class);
+        $this->curlClient = $this->createMock(ClientInterface::class);
         $this->oAuthManager = new OAuthManager($this->router, $this->encryptor, $this->curlClient);
     }
 
     public function testGetApiEndpoint()
     {
         /** @var DotmailerTransport|\PHPUnit_Framework_MockObject_MockObject $transport **/
-        $transport = $this->getMock(DotmailerTransport::class);
+        $transport = $this->createMock(DotmailerTransport::class);
         $transport->expects($this->once())
             ->method('getCustomDomain')
             ->will($this->returnValue(null));
@@ -59,7 +59,7 @@ class OAuthManagerTest extends \PHPUnit_Framework_TestCase
     public function testGetAuthorizeUrl()
     {
         /** @var DotmailerTransport|\PHPUnit_Framework_MockObject_MockObject $transport **/
-        $transport = $this->getMock(DotmailerTransport::class);
+        $transport = $this->createMock(DotmailerTransport::class);
 
         $expected = OAuthManager::AUTHORISE_URL;
         $actual = $this->oAuthManager->getAuthorizeUrl($transport);
@@ -69,7 +69,7 @@ class OAuthManagerTest extends \PHPUnit_Framework_TestCase
     public function testGetTokenUrl()
     {
         /** @var DotmailerTransport|\PHPUnit_Framework_MockObject_MockObject $transport **/
-        $transport = $this->getMock(DotmailerTransport::class);
+        $transport = $this->createMock(DotmailerTransport::class);
 
         $expected = $this->oAuthManager->getApiEndpoint($transport) . 'OAuth2/Tokens.ashx';
         $actual = $this->oAuthManager->getTokenUrl($transport);
@@ -79,7 +79,7 @@ class OAuthManagerTest extends \PHPUnit_Framework_TestCase
     public function testGetLoginUserUrl()
     {
         /** @var DotmailerTransport|\PHPUnit_Framework_MockObject_MockObject $transport **/
-        $transport = $this->getMock(DotmailerTransport::class);
+        $transport = $this->createMock(DotmailerTransport::class);
 
         $expected = $this->oAuthManager->getApiEndpoint($transport) . '?oauthtoken=';
         $actual = $this->oAuthManager->getLoginUserUrl($transport);
@@ -106,7 +106,7 @@ class OAuthManagerTest extends \PHPUnit_Framework_TestCase
     public function testGenerateAuthorizeUrl()
     {
         /** @var DotmailerTransport|\PHPUnit_Framework_MockObject_MockObject $transport **/
-        $transport = $this->getMock(DotmailerTransport::class);
+        $transport = $this->createMock(DotmailerTransport::class);
         $state = 'some string';
 
         $params = array(
@@ -126,7 +126,7 @@ class OAuthManagerTest extends \PHPUnit_Framework_TestCase
     public function testGenerateRefreshToken()
     {
         /** @var DotmailerTransport|\PHPUnit_Framework_MockObject_MockObject $transport **/
-        $transport = $this->getMock(DotmailerTransport::class);
+        $transport = $this->createMock(DotmailerTransport::class);
         $code = 'some string';
 
         $actual = $this->oAuthManager->generateRefreshToken($transport, $code);
@@ -136,7 +136,7 @@ class OAuthManagerTest extends \PHPUnit_Framework_TestCase
     public function testGenerateLoginUserUrl()
     {
         /** @var DotmailerTransport|\PHPUnit_Framework_MockObject_MockObject $transport **/
-        $transport = $this->getMock(DotmailerTransport::class);
+        $transport = $this->createMock(DotmailerTransport::class);
         $refreshToken = 'some string';
 
         $actual = $this->oAuthManager->generateLoginUserUrl($transport, $refreshToken);
@@ -146,7 +146,7 @@ class OAuthManagerTest extends \PHPUnit_Framework_TestCase
     public function testGenerateAccessToken()
     {
         /** @var DotmailerTransport|\PHPUnit_Framework_MockObject_MockObject $transport **/
-        $transport = $this->getMock(DotmailerTransport::class);
+        $transport = $this->createMock(DotmailerTransport::class);
         $refreshToken = 'some string';
 
         $actual = $this->oAuthManager->generateAccessToken($transport, $refreshToken);

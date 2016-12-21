@@ -29,7 +29,7 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
     protected function setUp()
     {
         parent::setUp();
-        $subscriber = $this->getMock(
+        $subscriber = $this->createPartialMock(
             'Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldMappingFormSubscriber',
             ['postSet', 'preSubmit']
         );
@@ -170,7 +170,7 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
         $mappingConfigsView = new FormView();
         $formView->children['configs'] = $mappingConfigsView;
 
-        $form = $this->getMock('Symfony\Component\Form\FormInterface');
+        $form = $this->createMock('Symfony\Component\Form\FormInterface');
 
         $this->formType->finishView($formView, $form, []);
 

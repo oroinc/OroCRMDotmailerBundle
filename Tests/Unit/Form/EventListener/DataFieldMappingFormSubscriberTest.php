@@ -29,7 +29,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
         $events = $this->subscriber->getSubscribedEvents();
         $this->assertArrayHasKey(FormEvents::POST_SET_DATA, $events);
         $this->assertEquals($events[FormEvents::POST_SET_DATA], 'postSet');
-        $form = $this->getMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
         $form->expects($this->never())->method('get');
         $event = new FormEvent($form, null);
 
@@ -38,7 +38,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testPostSetWithMappingData()
     {
-        $form = $this->getMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
         $mapping = new DataFieldMapping();
         $config = $this->getMappingConfigEntityMock(
             [
@@ -63,7 +63,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ]);
-        $configSourceForm = $this->getMock('Symfony\Component\Form\Test\FormInterface');
+        $configSourceForm = $this->createMock('Symfony\Component\Form\Test\FormInterface');
         $configSourceForm->expects($this->once())->method('setData')->with($expected);
         $form->expects($this->once())->method('get')->with('config_source')
             ->will($this->returnValue($configSourceForm));
@@ -77,7 +77,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
         $events = $this->subscriber->getSubscribedEvents();
         $this->assertArrayHasKey(FormEvents::PRE_SUBMIT, $events);
         $this->assertEquals($events[FormEvents::PRE_SUBMIT], 'preSubmit');
-        $form = $this->getMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
         $event = new FormEvent($form, null);
 
         $this->subscriber->preSubmit($event);
@@ -86,7 +86,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testPreSubmitForExistingMapping()
     {
-        $form = $this->getMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
         $data = [];
         $data['config_source'] = json_encode([
             'mapping' => [
@@ -143,7 +143,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testPreSubmitForExistingMappingWithConfigRemoved()
     {
-        $form = $this->getMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
         $data = [];
         $data['config_source'] = json_encode([
             'mapping' => [
@@ -205,7 +205,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testPreSubmitForExistingMappingWithTheSameDataFieldRemovedAndAdded()
     {
-        $form = $this->getMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
         $data = [];
         $data['config_source'] = json_encode([
             'mapping' => [
@@ -267,7 +267,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testPreSubmitTwoWaySyncUnsetWithSeveralEntityFields()
     {
-        $form = $this->getMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
         $data = [];
         $data['config_source'] =  json_encode([
             'mapping' => [
@@ -298,7 +298,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testPreSubmitTwoWaySyncUnsetWithRelationEntityFields()
     {
-        $form = $this->getMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
         $data = [];
         $data['config_source'] =  json_encode([
             'mapping' => [

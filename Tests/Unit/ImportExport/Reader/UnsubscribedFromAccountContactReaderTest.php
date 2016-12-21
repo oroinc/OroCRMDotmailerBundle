@@ -43,8 +43,8 @@ class UnsubscribedFromAccountContactReaderTest extends \PHPUnit_Framework_TestCa
         $this->contextMediator = $this->getMockBuilder('Oro\Bundle\IntegrationBundle\Provider\ConnectorContextMediator')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->managerRegistry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
-        $this->logger = $this->getMock('\Psr\Log\LoggerInterface');
+        $this->managerRegistry = $this->createMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $this->logger = $this->createMock('\Psr\Log\LoggerInterface');
 
         $this->reader = new UnsubscribedFromAccountContactReader(
             $this->contextRegistry,
@@ -62,9 +62,9 @@ class UnsubscribedFromAccountContactReaderTest extends \PHPUnit_Framework_TestCa
      */
     public function testReader(array $data, $expectedDate)
     {
-        $channel = $this->getMock('Oro\Bundle\IntegrationBundle\Entity\Channel');
+        $channel = $this->createMock('Oro\Bundle\IntegrationBundle\Entity\Channel');
 
-        $iterator = $this->getMock('\Iterator');
+        $iterator = $this->createMock('\Iterator');
 
         $transport = $this->getMockBuilder('Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport')
             ->disableOriginalConstructor()
@@ -148,7 +148,7 @@ class UnsubscribedFromAccountContactReaderTest extends \PHPUnit_Framework_TestCa
             ->disableOriginalConstructor()
             ->getMock();
         if (!empty($data['unsubscribedContactConnectorStatus'])) {
-            $status = $this->getMock('Oro\Bundle\IntegrationBundle\Entity\Status');
+            $status = $this->createMock('Oro\Bundle\IntegrationBundle\Entity\Status');
 
             $status->expects($this->any())
                 ->method('getData')
@@ -166,7 +166,7 @@ class UnsubscribedFromAccountContactReaderTest extends \PHPUnit_Framework_TestCa
             ];
         }
         if (!empty($data['contactConnectorStatus'])) {
-            $status = $this->getMock('Oro\Bundle\IntegrationBundle\Entity\Status');
+            $status = $this->createMock('Oro\Bundle\IntegrationBundle\Entity\Status');
 
             $status->expects($this->any())
                 ->method('getData')
@@ -215,7 +215,7 @@ class UnsubscribedFromAccountContactReaderTest extends \PHPUnit_Framework_TestCa
         $stepExecution->expects($this->any())
             ->method('getJobExecution')
             ->willReturn($jobExecution);
-        $context = $this->getMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $context = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
         $this->contextRegistry->expects($this->any())
             ->method('getByStepExecution')
             ->willReturn($context);

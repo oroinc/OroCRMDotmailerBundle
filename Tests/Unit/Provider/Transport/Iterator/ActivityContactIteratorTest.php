@@ -10,7 +10,7 @@ class ActivityContactIteratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testIteratorInitTrue()
     {
-        $resource = $this->getMock('DotMailer\Api\Resources\IResources');
+        $resource = $this->createMock('DotMailer\Api\Resources\IResources');
         $expectedCampaignOriginId = 15662;
         $expectedDate = new \DateTime();
         $iterator = new ActivityContactIterator($resource, $expectedCampaignOriginId, true, $expectedDate);
@@ -49,7 +49,7 @@ class ActivityContactIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testIteratorInitFalse()
     {
-        $resource = $this->getMock('DotMailer\Api\Resources\IResources');
+        $resource = $this->createMock('DotMailer\Api\Resources\IResources');
         $expectedCampaignOriginId = 15662;
         $expectedDate = new \DateTime();
         $iterator = new ActivityContactIterator($resource, $expectedCampaignOriginId, false, $expectedDate);
