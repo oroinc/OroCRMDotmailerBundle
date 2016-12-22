@@ -17,8 +17,8 @@ class UpdateEntityFieldsFromContactIteratorTest extends \PHPUnit_Framework_TestC
         )
             ->disableOriginalConstructor()
             ->getMock();
-        $context = $this->getMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
-        $addressBook = $this->getMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
+        $context = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $addressBook = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
         $addressBook->expects($this->any())
             ->method('getOriginId')
             ->will($this->returnValue($addressBookOriginId = 42));
@@ -45,7 +45,7 @@ class UpdateEntityFieldsFromContactIteratorTest extends \PHPUnit_Framework_TestC
         $repository->expects($this->any())->method('getScheduledForEntityFieldsUpdateQB')
             ->with($addressBook)
             ->will($this->returnValue($contactsToUpdateFromQB));
-        $registry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $registry = $this->createMock('Doctrine\Common\Persistence\ManagerRegistry');
         $registry->expects($this->any())->method('getRepository')->with('OroDotmailerBundle:Contact')
             ->will($this->returnValue($repository));
 
@@ -99,8 +99,8 @@ class UpdateEntityFieldsFromContactIteratorTest extends \PHPUnit_Framework_TestC
         )
             ->disableOriginalConstructor()
             ->getMock();
-        $context = $this->getMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
-        $addressBook = $this->getMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
+        $context = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $addressBook = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
         $addressBook->expects($this->any())
             ->method('getOriginId')
             ->will($this->returnValue($addressBookOriginId = 42));
@@ -128,7 +128,7 @@ class UpdateEntityFieldsFromContactIteratorTest extends \PHPUnit_Framework_TestC
         $repository->expects($this->any())->method('getScheduledForEntityFieldsUpdateQB')
             ->with($addressBook)
             ->will($this->returnValue($contactsToUpdateFromQB));
-        $registry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $registry = $this->createMock('Doctrine\Common\Persistence\ManagerRegistry');
         $registry->expects($this->any())->method('getRepository')->with('OroDotmailerBundle:Contact')
             ->will($this->returnValue($repository));
         $iterator->setRegistry($registry);

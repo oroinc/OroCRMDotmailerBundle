@@ -157,8 +157,8 @@ class AddDefaultMappingListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->ownerHelper->expects($this->exactly(2))->method('populateChannelOwner');
 
-        $contactMetadata = $this->getMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
-        $customerMetadata = $this->getMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
+        $contactMetadata = $this->createMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
+        $customerMetadata = $this->createMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
         $this->doctrineHelper->expects($this->any())->method('getEntityMetadata')->will($this->returnValueMap(
             [
                 ['ContactClass', true, $contactMetadata],

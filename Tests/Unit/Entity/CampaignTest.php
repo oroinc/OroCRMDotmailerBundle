@@ -42,7 +42,7 @@ class CampaignTest extends \PHPUnit_Framework_TestCase
         $now = new \DateTime('now');
         $channel = new Channel();
         $summary = new CampaignSummary();
-        $organization = $this->getMock('Oro\Bundle\OrganizationBundle\Entity\Organization');
+        $organization = $this->createMock('Oro\Bundle\OrganizationBundle\Entity\Organization');
 
         return array(
             'channel' => array('channel', $channel, $channel),

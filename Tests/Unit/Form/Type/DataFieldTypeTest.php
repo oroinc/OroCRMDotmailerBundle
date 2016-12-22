@@ -28,7 +28,7 @@ class DataFieldTypeTest extends FormIntegrationTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->subscriber = $this->getMock(
+        $this->subscriber = $this->createPartialMock(
             'Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldFormSubscriber',
             ['preSet', 'preSubmit']
         );

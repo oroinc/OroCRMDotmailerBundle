@@ -10,7 +10,7 @@ class CampaignIteratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testIterator()
     {
-        $resource = $this->getMock('DotMailer\Api\Resources\IResources');
+        $resource = $this->createMock('DotMailer\Api\Resources\IResources');
         $expectedAddressBookOriginId = 42;
         $iterator = new CampaignIterator($resource, $expectedAddressBookOriginId);
         $iterator->setBatchSize(1);

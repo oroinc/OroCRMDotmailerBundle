@@ -49,7 +49,7 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
         $mappingConfig->setMapping($mapping);
-        $classMetadata = $this->getMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
+        $classMetadata = $this->createMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
         $this->doctrineHelper->expects($this->once())->method('getEntityMetadata')->with('entityClass')
             ->will($this->returnValue($classMetadata));
         $classMetadata->expects($this->once())->method('getTypeOfField')->with('entityFieldName')
@@ -61,7 +61,7 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
                 ['%datafield%' => 'dataFieldName']
             )
             ->will($this->returnValue('translated error message'));
-        $violation = $this->getMock('Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface');
+        $violation = $this->createMock('Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface');
         $this->context->expects($this->once())->method('buildViolation')->with('translated error message', [])
             ->will($this->returnValue($violation));
 
@@ -80,7 +80,7 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
         $mappingConfig->setMapping($mapping);
-        $classMetadata = $this->getMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
+        $classMetadata = $this->createMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
         $this->doctrineHelper->expects($this->once())->method('getEntityMetadata')->with('entityClass')
             ->will($this->returnValue($classMetadata));
         $classMetadata->expects($this->once())->method('getTypeOfField')->with('entityFieldName')
@@ -92,7 +92,7 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
                 ['%datafield%' => 'dataFieldName']
             )
             ->will($this->returnValue('translated error message'));
-        $violation = $this->getMock('Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface');
+        $violation = $this->createMock('Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface');
         $this->context->expects($this->once())->method('buildViolation')->with('translated error message', [])
             ->will($this->returnValue($violation));
 
@@ -111,7 +111,7 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
         $mappingConfig->setMapping($mapping);
-        $classMetadata = $this->getMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
+        $classMetadata = $this->createMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
         $this->doctrineHelper->expects($this->once())->method('getEntityMetadata')->with('entityClass')
             ->will($this->returnValue($classMetadata));
         $classMetadata->expects($this->once())->method('getTypeOfField')->with('entityFieldName')
@@ -123,7 +123,7 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
                 ['%datafield%' => 'dataFieldName']
             )
             ->will($this->returnValue('translated error message'));
-        $violation = $this->getMock('Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface');
+        $violation = $this->createMock('Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface');
         $this->context->expects($this->once())->method('buildViolation')->with('translated error message', [])
             ->will($this->returnValue($violation));
 
@@ -143,7 +143,7 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
         $this->translator->expects($this->once())->method('trans')
             ->with('oro.dotmailer.datafieldmappingconfig.validation.multiple')
             ->will($this->returnValue('translated error message'));
-        $violation = $this->getMock('Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface');
+        $violation = $this->createMock('Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface');
         $this->context->expects($this->once())->method('buildViolation')->with('translated error message', [])
             ->will($this->returnValue($violation));
 
@@ -162,7 +162,7 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
         $mappingConfig->setMapping($mapping);
-        $classMetadata = $this->getMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
+        $classMetadata = $this->createMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
         $this->doctrineHelper->expects($this->once())->method('getEntityMetadata')->with('entityClass')
             ->will($this->returnValue($classMetadata));
         $classMetadata->expects($this->once())->method('getTypeOfField')->with('entityFieldName')

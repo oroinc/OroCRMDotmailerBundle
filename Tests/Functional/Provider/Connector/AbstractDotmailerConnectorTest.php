@@ -65,7 +65,7 @@ class AbstractDotmailerConnectorTest extends WebTestCase
         $transport = $this->getMockBuilder('Oro\Bundle\IntegrationBundle\Provider\TransportInterface')
             ->setMethods(['init', 'getLabel', 'getSettingsFormType', 'getSettingsEntityFQCN', 'getCampaigns'])
             ->getMock();
-        $iterator = $this->getMock('\Iterator');
+        $iterator = $this->createMock('\Iterator');
         $transport->expects($this->any())
             ->method('getCampaigns')
             ->will($this->returnValue($iterator));
@@ -92,7 +92,7 @@ class AbstractDotmailerConnectorTest extends WebTestCase
         );
         $connector->setManagerRegistry($this->getContainer()
             ->get('doctrine'));
-        $this->context = $this->getMock('Akeneo\Bundle\BatchBundle\Item\ExecutionContext');
+        $this->context = $this->createMock('Akeneo\Bundle\BatchBundle\Item\ExecutionContext');
         $stepExecution->expects($this->any())
             ->method('getExecutionContext')
             ->will($this->returnValue($this->context));

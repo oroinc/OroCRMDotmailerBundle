@@ -33,7 +33,7 @@ class ButtonFilterTest extends \PHPUnit_Framework_TestCase
         $actual = $this->target->isApplicable(new \StdClass());
         $this->assertFalse($actual);
 
-        $entity = $this->getMock('Oro\Bundle\MarketingListBundle\Entity\MarketingList');
+        $entity = $this->createMock('Oro\Bundle\MarketingListBundle\Entity\MarketingList');
 
         $actual = $this->target->isApplicable($entity);
         $this->assertFalse($actual);

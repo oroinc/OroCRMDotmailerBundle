@@ -28,7 +28,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->logger = $this->getMock('Psr\Log\LoggerInterface');
+        $this->logger = $this->createMock('Psr\Log\LoggerInterface');
         $this->client = new Client('username', 'password');
         $this->client->setLogger($this->logger);
         $this->response = $this->getMockBuilder('\RestClient\Response')->disableOriginalConstructor()->getMock();
@@ -37,14 +37,14 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     protected function initClient()
     {
-        $restClient = $this->getMock('\RestClient\Client');
+        $restClient = $this->createMock('\RestClient\Client');
 
         $class = new \ReflectionClass($this->client);
         $prop  = $class->getProperty('restClient');
         $prop->setAccessible(true);
         $prop->setValue($this->client, $restClient);
 
-        $request = $this->getMock('\RestClient\Request');
+        $request = $this->createMock('\RestClient\Request');
 
         $restClient->expects($this->once())
             ->method('newRequest')
@@ -131,9 +131,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             '[response code] ' . $responseCode . PHP_EOL .
             '[response body] ' . $responseBody;
 
-        $this->setExpectedException('Oro\Bundle\DotmailerBundle\Exception\RestClientException', $exceptionMessage);
+        $this->expectException('Oro\Bundle\DotmailerBundle\Exception\RestClientException');
+        $this->expectExceptionMessage($exceptionMessage);
 
-        $restClient = $this->getMock('RestClient\Client');
+        $restClient = $this->createMock('RestClient\Client');
 
         $class = new \ReflectionClass($this->client);
         $prop  = $class->getProperty('restClient');
@@ -143,7 +144,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $prop->setAccessible(true);
         $prop->setValue($this->client, [0.1, 0.2, 0.3, 0.4]);
 
-        $request = $this->getMock('RestClient\Request');
+        $request = $this->createMock('RestClient\Request');
 
         $restClient->expects($this->exactly(5))
             ->method('newRequest')
@@ -224,7 +225,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testExecuteAttemptsPassed()
     {
-        $restClient = $this->getMock('RestClient\Client');
+        $restClient = $this->createMock('RestClient\Client');
 
         $class = new \ReflectionClass($this->client);
         $prop  = $class->getProperty('restClient');
@@ -234,7 +235,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $prop->setAccessible(true);
         $prop->setValue($this->client, [0.1, 0.2, 0.3, 0.4]);
 
-        $request = $this->getMock('RestClient\Request');
+        $request = $this->createMock('RestClient\Request');
 
         $restClient->expects($this->at(0))
             ->method('newRequest')

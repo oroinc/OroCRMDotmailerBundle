@@ -20,7 +20,7 @@ class ContactExportQueryBuilderAdapterCompilerPathTest extends \PHPUnit_Framewor
 
     public function testProcessDoNothingIfServicesNotFound()
     {
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
+        $container = $this->createMock('Symfony\Component\DependencyInjection\ContainerBuilder');
         $container->expects($this->once())
             ->method('findTaggedServiceIds')
             ->with(ContactExportQueryBuilderAdapterCompilerPath::ADAPTERS_TAG)
@@ -42,12 +42,12 @@ class ContactExportQueryBuilderAdapterCompilerPathTest extends \PHPUnit_Framewor
             $secondAdapterId => [['priority' => $secondAdapterPriority]],
         ];
 
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
+        $container = $this->createMock('Symfony\Component\DependencyInjection\ContainerBuilder');
         $container->expects($this->once())
             ->method('findTaggedServiceIds')
             ->with(ContactExportQueryBuilderAdapterCompilerPath::ADAPTERS_TAG)
             ->will($this->returnValue($services));
-        $definition = $this->getMock('Symfony\Component\DependencyInjection\Definition');
+        $definition = $this->createMock('Symfony\Component\DependencyInjection\Definition');
         $container->expects($this->once())
             ->method('getDefinition')
             ->with(ContactExportQueryBuilderAdapterCompilerPath::REGISTRY)
