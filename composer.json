@@ -21,8 +21,6 @@
         "romanpitak/dotmailer-api-v2-client": "1.0.11",
         "oro/marketing" : "1.x-dev"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "extra": {
         "branch-alias": {
             "dev-master": "1.x-dev"

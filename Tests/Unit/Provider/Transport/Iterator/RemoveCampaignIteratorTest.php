@@ -8,8 +8,8 @@ class RemoveCampaignIteratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testIterator()
     {
-        $registry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
-        $channel = $this->getMock('Oro\Bundle\IntegrationBundle\Entity\Channel');
+        $registry = $this->createMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $channel = $this->createMock('Oro\Bundle\IntegrationBundle\Entity\Channel');
         $keepCampaigns = [
             42,
             53

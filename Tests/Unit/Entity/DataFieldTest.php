@@ -27,7 +27,7 @@ class DataFieldTest extends \PHPUnit_Framework_TestCase
     {
         $now = new \DateTime();
         $channel = new Channel();
-        $organization = $this->getMock('Oro\Bundle\OrganizationBundle\Entity\Organization');
+        $organization = $this->createMock('Oro\Bundle\OrganizationBundle\Entity\Organization');
         $properties = [
             ['id', 1],
             ['channel', $channel],

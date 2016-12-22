@@ -358,14 +358,14 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
     {
         $configuration = new Configuration();
 
-        $connectionMock = $this->getMock(Connection::class, [], [], '', false);
+        $connectionMock = $this->createMock(Connection::class);
         $connectionMock
             ->expects($this->any())
             ->method('getConfiguration')
             ->willReturn($configuration)
         ;
 
-        $entityManagerMock = $this->getMock(EntityManagerInterface::class);
+        $entityManagerMock = $this->createMock(EntityManagerInterface::class);
         $entityManagerMock
             ->expects($this->any())
             ->method('getConnection')
@@ -380,7 +380,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
      */
     private function createDoctrineHelperStub($entityManager = null)
     {
-        $helperMock = $this->getMock(DoctrineHelper::class, [], [], '', false);
+        $helperMock = $this->createMock(DoctrineHelper::class);
         $helperMock
             ->expects($this->any())
             ->method('getEntityManagerForClass')
@@ -395,7 +395,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
      */
     private function createExportManagerMock()
     {
-        return $this->getMock(ExportManager::class, [], [], '', false);
+        return $this->createMock(ExportManager::class);
     }
 
     /**
@@ -403,6 +403,6 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
      */
     private function createLoggerMock()
     {
-        return $this->getMock(LoggerInterface::class);
+        return $this->createMock(LoggerInterface::class);
     }
 }

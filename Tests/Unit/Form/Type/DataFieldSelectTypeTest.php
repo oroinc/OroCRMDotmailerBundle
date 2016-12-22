@@ -73,7 +73,7 @@ class DataFieldSelectTypeTest extends FormIntegrationTestCase
         $fieldNameView->vars['full_name'] = 'full_channel_field_name';
         $formView->parent->parent->children['channel_field_name'] = $fieldNameView;
 
-        $form = $this->getMock('Symfony\Component\Form\FormInterface');
+        $form = $this->createMock('Symfony\Component\Form\FormInterface');
 
         $this->formType->buildView(
             $formView,

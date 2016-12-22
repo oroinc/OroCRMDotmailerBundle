@@ -24,8 +24,8 @@ class EmailCampaignPlaceholderFilterTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->registry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
-        $this->repository = $this->getMock('Doctrine\Common\Persistence\ObjectRepository');
+        $this->registry = $this->createMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $this->repository = $this->createMock('Doctrine\Common\Persistence\ObjectRepository');
 
         $this->registry
             ->expects($this->any())
@@ -40,14 +40,14 @@ class EmailCampaignPlaceholderFilterTest extends \PHPUnit_Framework_TestCase
         $actual = $this->target->isApplicableOnEmailCampaign(new \StdClass());
         $this->assertFalse($actual);
 
-        $entity = $this->getMock('Oro\Bundle\CampaignBundle\Entity\EmailCampaign');
+        $entity = $this->createMock('Oro\Bundle\CampaignBundle\Entity\EmailCampaign');
         $entity->expects($this->once())
             ->method('getTransport')
             ->will($this->returnValue('OtherTransport'));
         $actual = $this->target->isApplicableOnEmailCampaign($entity);
         $this->assertFalse($actual);
 
-        $entity = $this->getMock('Oro\Bundle\CampaignBundle\Entity\EmailCampaign');
+        $entity = $this->createMock('Oro\Bundle\CampaignBundle\Entity\EmailCampaign');
         $entity->expects($this->any())
             ->method('getTransport')
             ->will($this->returnValue(DotmailerEmailCampaignTransport::NAME));

@@ -10,7 +10,7 @@ class UnsubscribedFromAccountContactIteratorTest extends \PHPUnit_Framework_Test
 {
     public function testIterator()
     {
-        $resource = $this->getMock('DotMailer\Api\Resources\IResources');
+        $resource = $this->createMock('DotMailer\Api\Resources\IResources');
         $expectedDate = new \DateTime();
         $iterator = new UnsubscribedFromAccountContactIterator($resource, $expectedDate);
         $iterator->setBatchSize(1);

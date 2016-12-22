@@ -108,8 +108,8 @@ abstract class AbstractImportExportTestCase extends WebTestCase
 
     protected function stubResources()
     {
-        $this->resource = $this->getMock('DotMailer\Api\Resources\IResources');
-        $resourceFactory = $this->getMock('Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory');
+        $this->resource = $this->createMock('DotMailer\Api\Resources\IResources');
+        $resourceFactory = $this->createMock('Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory');
         $resourceFactory->expects($this->any())
             ->method('createResources')
             ->will($this->returnValue($this->resource));

@@ -26,7 +26,7 @@ class DataFieldFormSubscriberTest extends \PHPUnit_Framework_TestCase
         $events = $this->subscriber->getSubscribedEvents();
         $this->assertArrayHasKey(FormEvents::PRE_SET_DATA, $events);
         $this->assertEquals($events[FormEvents::PRE_SET_DATA], 'preSet');
-        $form = $this->getMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
         $form->expects($this->never())->method('add');
         $form->expects($this->never())->method('remove');
 
@@ -36,7 +36,7 @@ class DataFieldFormSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testPreSetWithDateFieldType()
     {
-        $form = $this->getMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
         $this->addAssertForDateType($form);
         $field = new DataFieldStub();
         $field->setType(new EnumValueStub(DataFieldStub::FIELD_TYPE_DATE));
@@ -46,7 +46,7 @@ class DataFieldFormSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testPreSetWithBooleanFieldType()
     {
-        $form = $this->getMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
         $this->addAssertForBooleanType($form);
         $field = new DataFieldStub();
         $field->setType(new EnumValueStub(DataFieldStub::FIELD_TYPE_BOOLEAN));
@@ -59,7 +59,7 @@ class DataFieldFormSubscriberTest extends \PHPUnit_Framework_TestCase
         $events = $this->subscriber->getSubscribedEvents();
         $this->assertArrayHasKey(FormEvents::PRE_SUBMIT, $events);
         $this->assertEquals($events[FormEvents::PRE_SUBMIT], 'preSubmit');
-        $form = $this->getMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
         $form->expects($this->never())->method('add');
         $form->expects($this->never())->method('remove');
 
@@ -69,7 +69,7 @@ class DataFieldFormSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testPreSubmitWithDateFieldType()
     {
-        $form = $this->getMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
         $this->addAssertForDateType($form);
         $data = [];
         $data['type'] = DataFieldStub::FIELD_TYPE_DATE;
@@ -79,7 +79,7 @@ class DataFieldFormSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testPreSubmitWithBooleanFieldType()
     {
-        $form = $this->getMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
         $this->addAssertForBooleanType($form);
         $data = [];
         $data['type'] = DataFieldStub::FIELD_TYPE_BOOLEAN;

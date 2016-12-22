@@ -63,10 +63,8 @@ class DataFieldManagerTest extends \PHPUnit_Framework_TestCase
         $field->setType(new EnumValueStub(DataFieldStub::FIELD_TYPE_NUMERIC));
         $field->setDefaultValue('String Value');
 
-        $this->setExpectedException(
-            'Oro\Bundle\DotmailerBundle\Exception\InvalidDefaultValueException',
-            'Default value must be numeric.'
-        );
+        $this->expectException('Oro\Bundle\DotmailerBundle\Exception\InvalidDefaultValueException');
+        $this->expectExceptionMessage('Default value must be numeric.');
 
         $this->manager->createOriginDataField($field);
     }
@@ -132,10 +130,8 @@ class DataFieldManagerTest extends \PHPUnit_Framework_TestCase
         $field->setVisibility(new EnumValueStub(DataFieldStub::VISIBILITY_PRIVATE));
         $field->setDefaultValue('2016-12-10');
 
-        $this->setExpectedException(
-            'Oro\Bundle\DotmailerBundle\Exception\InvalidDefaultValueException',
-            'Default value must be valid date.'
-        );
+        $this->expectException('Oro\Bundle\DotmailerBundle\Exception\InvalidDefaultValueException');
+        $this->expectExceptionMessage('Default value must be valid date.');
 
         $this->manager->createOriginDataField($field);
     }

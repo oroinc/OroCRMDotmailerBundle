@@ -36,7 +36,7 @@ class ContactTest extends \PHPUnit_Framework_TestCase
     {
         $now = new \DateTime('now');
         $channel = new Channel();
-        $organization = $this->getMock('Oro\Bundle\OrganizationBundle\Entity\Organization');
+        $organization = $this->createMock('Oro\Bundle\OrganizationBundle\Entity\Organization');
         $dataFields = array('test_field' => 'test');
 
         return array(
