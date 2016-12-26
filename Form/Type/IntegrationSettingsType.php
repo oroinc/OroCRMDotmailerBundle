@@ -72,6 +72,7 @@ class IntegrationSettingsType extends AbstractType
                 'text',
                 [
                     'label'    => 'oro.dotmailer.integration_transport.client_id.label',
+                    'tooltip'  => 'oro.dotmailer.form.client_id.tooltip',
                     'required' => false,
                     'attr'     => [
                         'class' => 'dm-client-id',

@@ -38,7 +38,7 @@ use Oro\Bundle\DotmailerBundle\Model\ExtendAddressBook;
  *      "security"={
  *          "type"="ACL",
  *          "group_name"="",
- *          "category"="account_management"
+ *          "category"="marketing"
  *      }
  *  }
  * )

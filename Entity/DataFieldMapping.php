@@ -36,7 +36,7 @@ use Oro\Bundle\DotmailerBundle\Model\ExtendDataFieldMapping;
  *      "security"={
  *          "type"="ACL",
  *          "group_name"="",
- *          "category"="account_management"
+ *          "category"="marketing"
  *      }
  *  }
  * )
