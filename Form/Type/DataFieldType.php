@@ -56,6 +56,7 @@ class DataFieldType extends AbstractType
                 'oro_enum_select',
                 [
                     'label' => 'orocrm.dotmailer.datafield.type.label',
+                    'tooltip' => 'orocrm.dotmailer.datafield.type.tooltip',
                     'enum_code' => 'dm_df_type',
                     'required' => true,
                 ]
@@ -65,6 +66,7 @@ class DataFieldType extends AbstractType
                 'oro_enum_select',
                 [
                     'label' => 'orocrm.dotmailer.datafield.visibility.label',
+                    'tooltip' => 'orocrm.dotmailer.datafield.visibility.tooltip',
                     'enum_code' => 'dm_df_visibility',
                     'required' => true,
                 ]
@@ -74,6 +76,7 @@ class DataFieldType extends AbstractType
                 'text',
                 [
                     'label' => 'orocrm.dotmailer.datafield.default_value.label',
+                    'tooltip' => 'orocrm.dotmailer.datafield.default_value.tooltip',
                     'required' => false,
                 ]
             )

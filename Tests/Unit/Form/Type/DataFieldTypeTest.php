@@ -4,6 +4,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Form\Type;
 
 use Symfony\Component\Form\PreloadedExtension;
 
+use Oro\Bundle\FormBundle\Form\Extension\TooltipFormExtension;
 use Oro\Component\Testing\Unit\EntityTrait;
 use Oro\Component\Testing\Unit\FormIntegrationTestCase;
 use Oro\Component\Testing\Unit\Form\Type\Stub\EntityType;
@@ -100,6 +101,15 @@ class DataFieldTypeTest extends FormIntegrationTestCase
      */
     protected function getExtensions()
     {
+        /** @var \PHPUnit_Framework_MockObject_MockObject $configProvider */
+        $configProvider = $this->getMockBuilder('Oro\Bundle\EntityConfigBundle\Provider\ConfigProvider')
+            ->disableOriginalConstructor()
+            ->getMock();
+        /** @var \PHPUnit_Framework_MockObject_MockObject $translator */
+        $translator = $this->getMockBuilder('Oro\Bundle\TranslationBundle\Translation\Translator')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         return [
             new PreloadedExtension(
                 [
@@ -111,7 +121,11 @@ class DataFieldTypeTest extends FormIntegrationTestCase
                     ),
                     'oro_enum_select' => new EnumSelectType(),
                 ],
-                []
+                [
+                    'form' => [
+                        new TooltipFormExtension($configProvider, $translator),
+                    ]
+                ]
             )
         ];
     }
