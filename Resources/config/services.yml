@@ -165,6 +165,16 @@ parameters:
 services:
     oro_dotmailer.entity_provider:
         alias: oro_entity.entity_provider
+
+    oro_dotmailer.entity_field_provider:
+        class: 'Oro\Bundle\DotmailerBundle\Provider\FieldProvider'
+        parent: oro_query_designer.entity_field_provider
+
+    oro_dotmailer.entity_field_list_provider:
+        parent: oro_query_designer.entity_field_list_provider
+        arguments:
+            index_0: '@oro_dotmailer.entity_field_provider'
+
     # Forms and Extensions
     oro_dotmailer.form.event_listener.integration_transport_settings:
         class: %oro_dotmailer.form.event_listener.integration_transport_settings.class%

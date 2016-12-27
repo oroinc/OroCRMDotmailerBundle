@@ -207,7 +207,7 @@
         {% set encodedEntityName = form.entity.vars.value|replace({'\\': '_'}) %}
         {% set routeParams       = {'entityName': encodedEntityName} %}
 
-        {% set fieldsData = render(path('oro_api_querydesigner_fields_entity', routeParams)) %}
+        {% set fieldsData = render(path('oro_api_fields_dotmailer_datafield_mapping')) %}
     {% endif %}
 
     {% set widgetOptions = {
@@ -215,7 +215,7 @@
         fieldsLoader: {
             entityChoice:      '[data-ftid=' ~ type ~ '_form_entity]',
             loadingMaskParent: '#' ~ form.vars.id,
-            router:            'oro_api_querydesigner_fields_entity',
+            router:            'oro_api_fields_dotmailer_datafield_mapping',
             routingParams:     {},
             fieldsData:        fieldsData,
             confirmMessage:    'oro.dotmailer.datafieldmapping.change_entity_confirmation',
