@@ -64,6 +64,7 @@ class DataFieldMappingController extends RestController implements ClassResource
             $statusCode = Codes::HTTP_NOT_FOUND;
             $result = ['message' => $ex->getMessage()];
         }
+
         return $this->handleView($this->view($result, $statusCode));
     }
 
