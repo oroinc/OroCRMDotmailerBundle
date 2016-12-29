@@ -7,6 +7,7 @@ oro:
             label: Integration
             check_connection.label: Check Connection
             connection_successful.label: Connection successful!
+            choose_connection.label: Connection
             connection.label: Email Studio
             connect.label: Connect
             disconnect.label: Disconnect
@@ -30,8 +31,8 @@ oro:
 
         addressbook:
             select.placeholder:                   Select Address Book
-            entity_label:                         Address Book
-            entity_plural_label:                  Address Books
+            entity_label:                         dotmailer Address Book
+            entity_plural_label:                  dotmailer Address Books
             campaigns.label:                      Campaign
             channel.label:                        Channel
             contact_count.label:                  Contacts count
@@ -219,22 +220,25 @@ oro:
 
         datafield:
             select.placeholder:               Select Data Field
-            entity_label:                     Data Field
+            entity_label:                     dotmailer Data Field
             entity_plural_label:              Data Fields
             channel.label:                    Channel
             id.label:                         Id
             name.label:                       Name
             owner.label:                      Owner
             visibility.label:                 Visibility
+            visibility.tooltip:               Make the field public if you want to allow your contacts to view and amend the data you hold on them in this field.
             type.label:                       Type
+            type.tooltip:                     Select the correct data type so your information renders correctly.
             default_value.label:              Default Value
+            default_value.tooltip:            When sending a campaign that uses template personalisation, a default value ensures that a value is always displayed even if a data field is blank.
             notes.label:                      Notes
             synced.label:                     Is Synchronized
             synchronize:                      Synchronize
             syncronize_scheduled:             Data fields scheduled to synchronize with dotmailer
 
         datafieldmapping:
-            entity_label:                     Data Field Mapping
+            entity_label:                     dotmailer Data Field Mapping
             entity_plural_label:              Data Field Mappings
             channel.label:                    Channel
             mapping.label:                    Mapping
@@ -409,8 +413,10 @@ oro:
                 tooltip: API User.
             password:
                 tooltip: API User Password.
+            client_id:
+                tooltip: To register to use OAuth you will need to be on an dotmailer Enterprise licence and to contact your dotmailer account manager.
             custom_domain:
-                tooltip: If empty will be used<br>https://r1-app.dotmailer.com/
+                tooltip: https://r1-app.dotmailer.com/ is used by default
 
         handler:
             unable_to_create_field: Failed to create field in dotmailer.

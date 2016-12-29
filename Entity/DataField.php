@@ -35,7 +35,7 @@ use Oro\Bundle\DotmailerBundle\Model\ExtendDataField;
  *      "security"={
  *          "type"="ACL",
  *          "group_name"="",
- *          "category"="account_management"
+ *          "category"="marketing"
  *      }
  *  }
  * )

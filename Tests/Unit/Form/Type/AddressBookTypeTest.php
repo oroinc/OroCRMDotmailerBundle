@@ -57,6 +57,7 @@ class AddressBookTypeTest extends \PHPUnit_Framework_TestCase
                 'oro_enum_select',
                 [
                     'label'           => 'oro.dotmailer.addressbook.visibility.label',
+                    'tooltip'         => 'oro.dotmailer.addressbook.visibility.tooltip',
                     'enum_code'       => 'dm_ab_visibility',
                     'excluded_values' => [AddressBook::VISIBILITY_NOTAVAILABLEINTHISVERSION],
                     'required'        => true,

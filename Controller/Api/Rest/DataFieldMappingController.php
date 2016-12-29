@@ -7,9 +7,12 @@ use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\Util\Codes;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
+use Oro\Bundle\EntityBundle\Provider\EntityWithFieldsProvider;
+use Oro\Bundle\EntityBundle\Exception\InvalidEntityException;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SoapBundle\Controller\Api\Rest\RestController;
 
@@ -37,6 +40,32 @@ class DataFieldMappingController extends RestController implements ClassResource
     public function deleteAction($id)
     {
         return $this->handleDeleteRequest($id);
+    }
+
+    /**
+     * Get entities with fields
+     *
+     *
+     * @ApiDoc(
+     *      description="Get entities with fields",
+     *      resource=true
+     * )
+     *
+     * @return Response
+     */
+    public function fieldsAction()
+    {
+        /** @var EntityWithFieldsProvider $provider */
+        $provider = $this->get('oro_dotmailer.entity_field_list_provider');
+        $statusCode = Codes::HTTP_OK;
+        try {
+            $result = $provider->getFields(true, true);
+        } catch (InvalidEntityException $ex) {
+            $statusCode = Codes::HTTP_NOT_FOUND;
+            $result = ['message' => $ex->getMessage()];
+        }
+
+        return $this->handleView($this->view($result, $statusCode));
     }
 
     /**
