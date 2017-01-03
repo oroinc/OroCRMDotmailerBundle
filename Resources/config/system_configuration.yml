@@ -1,0 +1,32 @@
+oro_system_configuration:
+    groups:
+        dotmailer_settings:
+            title: orocrm.dotmailer.configuration.dotmailer_settings
+            icon:  icon-envelope-alt
+
+        synchronization_dotmailer_settings:
+            title: orocrm.dotmailer.configuration.dotmailer_synchronization
+
+    fields:
+        oro_crm_dotmailer.datafields_sync_interval:
+            data_type: string
+            type: text
+            priority: 10
+            options:
+                label:          orocrm.dotmailer.configuration.datafields_sync_interval
+                tooltip:        orocrm.dotmailer.configuration.datafields_sync_interval.tooltip
+                required: false
+
+    tree:
+        system_configuration:
+            platform:
+                children:
+                    integrations:
+                        children:
+                            dotmailer_settings:
+                                priority: -20
+                                children:
+                                    synchronization_dotmailer_settings:
+                                        priority: 10
+                                        children:
+                                            - oro_crm_dotmailer.datafields_sync_interval

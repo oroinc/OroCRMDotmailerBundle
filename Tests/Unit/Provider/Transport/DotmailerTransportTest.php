@@ -4,6 +4,7 @@ namespace OroCRM\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport;
 
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\ApiContactResubscription;
+use DotMailer\Api\DataTypes\ApiDataField;
 use DotMailer\Api\DataTypes\ApiFileMedia;
 use DotMailer\Api\DataTypes\ApiResubscribeResult;
 use DotMailer\Api\DataTypes\Int32List;
@@ -59,6 +60,9 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
         $username = 'John';
         $password = '42';
         $passwordEncoded = md5($password);
+        $clientId = uniqid();
+        $clientKey = uniqid();
+        $clientKeyEncoded = md5($clientKey);
         $transport = $this->getMock(
             'Oro\Bundle\IntegrationBundle\Entity\Transport'
         );
@@ -71,6 +75,8 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
                 [
                     ['username', null, false, $username],
                     ['password', null, false, $passwordEncoded],
+                    ['clientId', null, false, $clientId],
+                    ['clientKey', null, false, $clientKeyEncoded],
                 ]
             ));
         $transport->expects($this->once())
@@ -412,6 +418,40 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $actual);
     }
 
+    public function testGetDataFields()
+    {
+        $resource = $this->initTransportStub();
+        $actual = $this->target->getDataFields();
+        $this->assertInstanceOf('OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\DataFieldIterator', $actual);
+    }
+
+    public function testRemoveDataField()
+    {
+        $fieldName = 'test_name';
+        $resource = $this->initTransportStub();
+        $result = $this->getMock('\StdClass', ['toArray']);
+        $result->expects($this->once())
+            ->method('toArray')
+            ->will($this->returnValue([]));
+        $resource->expects($this->once())
+            ->method('DeleteDataField')
+            ->with($fieldName)
+            ->will($this->returnValue($result));
+
+        $this->assertSame([], $this->target->removeDataField($fieldName));
+    }
+
+    public function testCreateDataField()
+    {
+        $data = new ApiDataField();
+        $resource = $this->initTransportStub();
+        $resource->expects($this->once())
+            ->method('PostDataFields')
+            ->with($data);
+
+        $this->target->createDataField($data);
+    }
+
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      * @throws \OroCRM\Bundle\DotmailerBundle\Exception\RequiredOptionException
@@ -421,6 +461,9 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
         $username = 'John';
         $password = '42';
         $passwordEncoded = md5($password);
+        $clientId = uniqid();
+        $clientKey = uniqid();
+        $clientKeyEncoded = md5($clientKey);
         $transport = $this->getMock(
             'Oro\Bundle\IntegrationBundle\Entity\Transport'
         );
@@ -433,6 +476,8 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
                 [
                     ['username', null, false, $username],
                     ['password', null, false, $passwordEncoded],
+                    ['clientId', null, false, $clientId],
+                    ['clientKey', null, false, $clientKeyEncoded],
                 ]
             ));
 

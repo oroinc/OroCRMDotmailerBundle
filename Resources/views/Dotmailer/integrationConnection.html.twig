@@ -1,0 +1,102 @@
+{% extends 'OroUIBundle:actions:update.html.twig' %}
+{% form_theme form with ['OroFormBundle:Form:fields.html.twig'] %}
+
+{% oro_title_set({params : {'%title%': 'orocrm.dotmailer.integration.connection.label'|trans} }) %}
+
+{% set formAction = path('orocrm_dotmailer_integration_connection') %}
+
+{% block navButtons %}{% endblock navButtons %}
+
+{% block pageHeader %}
+    {% set title = 'orocrm.dotmailer.integration.connection.label'|trans %}
+    {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
+{% endblock pageHeader %}
+
+{% block content_data %}
+    {% set button %}
+        {% if entity and entity.transport.clientId and entity.transport.clientKey %}
+            {% if loginUserUrl %}
+                <div class="control-group">
+                    <div class="controls">
+                        {{ UI.button({
+                            'path':  path('orocrm_dotmailer_oauth_disconnect', {'id': entity.id}),
+                            'aCss':  'btn btn-primary',
+                            'label': 'orocrm.dotmailer.integration.disconnect.label'|trans,
+                            'title': 'orocrm.dotmailer.integration.disconnect.label'|trans,
+                        }) }}
+                    </div>
+                </div>
+            {% else %}
+                <div class="control-group">
+                    <div class="controls">
+                        {{ UI.button({
+                            'path':  connectUrl,
+                            'aCss':  'btn btn-primary',
+                            'label': 'orocrm.dotmailer.integration.connect.label'|trans,
+                            'title': 'orocrm.dotmailer.integration.connect.label'|trans,
+                        }) }}
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+    {% endset %}
+
+    {% set id = 'orocrm_dotmailer_integration_connection' %}
+    {% set dataBlocks = [{
+        'title': 'orocrm.dotmailer.integration.choose_connection.label'|trans,
+        'class': 'active',
+        'subblocks': [{
+            'title': '',
+            'data': [
+                form_row(form.channel),
+                button
+            ]
+        }]
+    }] %}
+
+    {% if loginUserUrl %}
+        {% set dotmailerSection %}
+            <iframe src="{{ loginUserUrl }}" width="100%" height="1000" frameborder="0"></iframe>
+        {% endset %}
+
+        {% set dataBlocks = dataBlocks|merge([{
+            'title': 'orocrm.dotmailer.channel_type.label'|trans,
+            'class': 'active',
+            'subblocks': [{
+                'title': '',
+                'data': [
+                    dotmailerSection
+                ]
+            }]
+        }] ) %}
+    {% endif %}
+
+    {% set data = {
+        'formErrors': form_errors(form) ? form_errors(form) : null,
+        'dataBlocks': dataBlocks
+    } %}
+
+    {% set fieldsToSendOnChannelChange = [form.channel.vars.full_name] %}
+    {% if form._token is defined %}
+        {% set fieldsToSendOnChannelChange = fieldsToSendOnChannelChange|merge([form._token.vars.full_name]) %}
+    {% endif %}
+    <script type="text/javascript">
+        require(['orocrmdotmailer/js/integration-connection'], function (IntegrationConnection) {
+            "use strict";
+
+            $(function () {
+                var options = {
+                    formSelector: '#{{ form.vars.id }}',
+                    channelSelector: '#{{ form.channel.vars.id }}',
+                    fieldsSets: {
+                        channel: {{ fieldsToSendOnChannelChange|json_encode|raw }}
+                    }
+                };
+
+                new IntegrationConnection(options);
+            });
+        });
+    </script>
+
+    {{ parent() }}
+{% endblock content_data %}

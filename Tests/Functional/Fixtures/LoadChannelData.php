@@ -19,6 +19,7 @@ use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
 use OroCRM\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector;
+use OroCRM\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
 
 class LoadChannelData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
@@ -40,7 +41,8 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
                 ActivityContactConnector::TYPE,
                 CampaignSummaryConnector::TYPE,
                 ContactConnector::TYPE,
-                ExportContactConnector::TYPE
+                ExportContactConnector::TYPE,
+                DataFieldConnector::TYPE
             ],
             'transport' => 'orocrm_dotmailer.transport.first',
             'reference' => 'orocrm_dotmailer.channel.first'

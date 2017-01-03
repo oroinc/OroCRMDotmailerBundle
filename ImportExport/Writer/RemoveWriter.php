@@ -12,7 +12,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 
 use OroCRM\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 
-class RemoveAddressBookWriter implements ItemWriterInterface, StepExecutionAwareInterface
+class RemoveWriter implements ItemWriterInterface, StepExecutionAwareInterface
 {
     /**
      * @var ManagerRegistry
@@ -65,12 +65,12 @@ class RemoveAddressBookWriter implements ItemWriterInterface, StepExecutionAware
             $memoryUsed = $this->logHelper->getMemoryConsumption();
             $stepExecutionTime = $this->logHelper->getFormattedTimeOfStepExecution($this->stepExecution);
 
-            $message = "$itemsCount Address Books removed";
+            $message = "$itemsCount items removed";
             $message .= " Elapsed Time: {$stepExecutionTime}. Memory used: $memoryUsed MB.";
 
             $this->logger->info($message);
         } catch (\Exception $e) {
-            $this->logger->error("Removing $itemsCount Address Books failed");
+            $this->logger->error("Removing $itemsCount items failed");
         }
     }
 

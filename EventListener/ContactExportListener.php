@@ -17,13 +17,8 @@ use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Event\SyncEvent;
 
-class ContactExportListener implements EventSubscriberInterface
+class ContactExportListener extends AbstractImportExportListener
 {
-    /**
-     * @var ManagerRegistry
-     */
-    protected $registry;
-
     /**
      * @var ExportManager
      */
@@ -35,8 +30,8 @@ class ContactExportListener implements EventSubscriberInterface
      */
     public function __construct(ManagerRegistry $registry, ExportManager $exportManager)
     {
-        $this->registry = $registry;
         $this->exportManager = $exportManager;
+        parent::__construct($registry);
     }
 
     /**
@@ -55,7 +50,7 @@ class ContactExportListener implements EventSubscriberInterface
      */
     public function beforeSyncStarted(SyncEvent $syncEvent)
     {
-        if (!$this->isApplicable($syncEvent)) {
+        if (!$this->isApplicable($syncEvent, ExportContactConnector::EXPORT_JOB)) {
             return;
         }
 
@@ -84,7 +79,7 @@ class ContactExportListener implements EventSubscriberInterface
      */
     public function afterSyncFinished(SyncEvent $syncEvent)
     {
-        if (!$this->isApplicable($syncEvent)) {
+        if (!$this->isApplicable($syncEvent, ExportContactConnector::EXPORT_JOB)) {
             return;
         }
 
@@ -94,13 +89,11 @@ class ContactExportListener implements EventSubscriberInterface
     }
 
     /**
-     * @param SyncEvent $syncEvent
-     *
-     * @return bool
+     * @inheritdoc
      */
-    protected function isApplicable(SyncEvent $syncEvent)
+    protected function isApplicable(SyncEvent $syncEvent, $job)
     {
-        return $syncEvent->getJobName() == ExportContactConnector::EXPORT_JOB;
+        return $syncEvent->getJobName() == $job;
     }
 
     /**
@@ -128,25 +121,5 @@ class ContactExportListener implements EventSubscriberInterface
         }
 
         return $repository->getAddressBooksToSync($channel);
-    }
-
-    /**
-     * @param array $configuration
-     *
-     * @return Channel
-     */
-    protected function getChannel(array $configuration)
-    {
-        if (empty($configuration['import']['channel'])) {
-            throw new RuntimeException('Integration channel Id required');
-        }
-        $channel = $this->registry
-            ->getRepository('OroIntegrationBundle:Channel')
-            ->getOrLoadById($configuration['import']['channel']);
-        if (!$channel) {
-            throw new RuntimeException('Integration channel is not exist');
-        }
-
-        return $channel;
     }
 }

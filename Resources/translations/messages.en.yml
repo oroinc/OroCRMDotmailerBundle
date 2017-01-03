@@ -1,24 +1,38 @@
 orocrm:
     dotmailer:
-        channel_type.label: Dotmailer
+        channel_type.label: dotmailer
 
         integration:
-            select.placeholder: Choose Dotmailer integration
+            select.placeholder: Choose dotmailer integration
             label: Integration
             check_connection.label: Check Connection
             connection_successful.label: Connection successful!
+            choose_connection.label: Connection
+            connection.label: Email Studio
+            connect.label: Connect
+            disconnect.label: Disconnect
+            messsage:
+                unable_to_connect: Unable to connect to dotmailer
+                incorrect_callback_url: Incorrect callback URL
+                enter_client_id_client_key: Please enter Client ID and Client Key for your <a href="%update_url%">integration</a>
 
         integration_transport:
-            label: Dotmailer
+            label: dotmailer
             username:
                 label: Username
             password:
                 label: Password
+            client_id:
+                label: Client ID
+            client_key:
+                label: Client Secret Key
+            custom_domain:
+                label: Custom OAuth domain
 
         addressbook:
             select.placeholder:                   Select Address Book
-            entity_label:                         Address Book
-            entity_plural_label:                  Address Books
+            entity_label:                         dotmailer Address Book
+            entity_plural_label:                  dotmailer Address Books
             campaigns.label:                      Campaign
             channel.label:                        Channel
             contact_count.label:                  Contacts count
@@ -29,18 +43,25 @@ orocrm:
             origin_id.label:                      Origin Id
             owner.label:                          Owner
             visibility.label:                     Visibility
+            visibility.tooltip:                   If you make an address book public, you can avoid "mass unsubscribing", by enabling your contacts to choose which of your campaigns and communications they wish to unsubscribe from. On your preference centre page they will see all public address books, noting which they belong to, so take care when naming public address books.
             status.label:                         Status
             address_book_contacts.label:          Address Book Contacts
             address_book_contacts_exports.label:  Address Book Contacts Export
             last_imported_at.label:               Last Imported At
             last_exported_at.label:               Last Exported At
             sync_status.label:                    Sync Status
+            create_entities.label:                Create New Entities
+            create_entities.tooltip:              Create new records if no match by email is found
 
             sync: Marketing list synchronization started. {{ job_view_link }}
 
+            message:
+                saved: Address Book saved
+                failed: Could not create Address Book
+
         activity:
-            entity_label:                 Dotmailer Activity
-            entity_plural_label:          Dotmailer Activities
+            entity_label:                 dotmailer Activity
+            entity_plural_label:          dotmailer Activities
             campaign.label:               Campaign
             channel.label:                Channel
             contact.label:                Contact
@@ -62,8 +83,8 @@ orocrm:
             unsubscribed.label:           Unsubscribed
 
         contact:
-            entity_label:                 Dotmailer Contact
-            entity_plural_label:          Dotmailer Contacts
+            entity_label:                 dotmailer Contact
+            entity_plural_label:          dotmailer Contacts
             activities.label:             Activities
             address_books.label:          Address Books
             channel.label:                Channel
@@ -74,6 +95,7 @@ orocrm:
             gender.label:                 Gender
             id.label:                     Id
             last_name.label:              Last Name
+            data_fields.label:              Data Fields
             merge_var_values.label:       Merge Variable Values
             opt_in_type.label:            Opt In Type
             origin_id.label:              Origin Id
@@ -85,8 +107,8 @@ orocrm:
             unsubscribed_date.label:      Unsubscribed Date
 
         campaign:
-            entity_label:             Dotmailer Campaign
-            entity_plural_label:      Dotmailer Campaigns
+            entity_label:             dotmailer Campaign
+            entity_plural_label:      dotmailer Campaigns
             activities.label:         Activities
             address_books.label:      Address Books
             channel.label:            Channel
@@ -168,19 +190,22 @@ orocrm:
             percentage_users_clicked.label:     Percentage User Clicked
 
         addressbookcontact:
-            entity_label:                     Address Book Contact
-            entity_plural_label:              Address Book Contacts
-            address_book.label:               Address Book
-            contact.label:                    Contact
-            id.label:                         Id
-            status.label:                     Status
-            unsubscribed_date.label:          Unsubscribed Date
-            channel.label:                    Integration
-            marketing_list_item_class.label:  Marketing List Item Class Name
-            marketing_list_item_id.label:     Marketing List Item Id
-            scheduled_for_export.label:       Scheduled for Export
-            export_id.label:                  Dotmailer Export Id
-            export_operation_type.label:      Export Operation Type
+            entity_label:                      Address Book Contact
+            entity_plural_label:               Address Book Contacts
+            address_book.label:                Address Book
+            contact.label:                     Contact
+            id.label:                          Id
+            status.label:                      Status
+            unsubscribed_date.label:           Unsubscribed Date
+            channel.label:                     Integration
+            marketing_list_item_class.label:   Marketing List Item Class Name
+            marketing_list_item_id.label:      Marketing List Item Id
+            scheduled_for_export.label:        Scheduled for Export
+            export_id.label:                   dotmailer Export Id
+            export_operation_type.label:       Export Operation Type
+            entity_updated.label:              Related Entity Updated Flag
+            scheduled_for_fields_update.label: Scheduled for Entities Field Updates
+            new_entity.label:                  Is New Entity
 
         addressbookcontactsexport:
             entity_label:                     Address Book Contact Export
@@ -194,13 +219,73 @@ orocrm:
             channel.label:                    Integration
             faults_processed.label:           Faults Processed
 
+        datafield:
+            select.placeholder:               Select Data Field
+            entity_label:                     dotmailer Data Field
+            entity_plural_label:              Data Fields
+            channel.label:                    Channel
+            id.label:                         Id
+            name.label:                       Name
+            owner.label:                      Owner
+            visibility.label:                 Visibility
+            visibility.tooltip:               Make the field public if you want to allow your contacts to view and amend the data you hold on them in this field.
+            type.label:                       Type
+            type.tooltip:                     Select the correct data type so your information renders correctly.
+            default_value.label:              Default Value
+            default_value.tooltip:            When sending a campaign that uses template personalisation, a default value ensures that a value is always displayed even if a data field is blank.
+            notes.label:                      Notes
+            synced.label:                     Is Synchronized
+            synchronize:                      Synchronize
+            syncronize_scheduled:             Data fields scheduled to synchronize with dotmailer
+
+        datafieldmapping:
+            entity_label:                     dotmailer Data Field Mapping
+            entity_plural_label:              Data Field Mappings
+            channel.label:                    Channel
+            mapping.label:                    Mapping
+            configs.label:                    Mapping Configuration
+            id.label:                         Id
+            entity.label:                     Entity
+            sync_priority.label:              Sync Priority
+            sync_priority.tooltip:            If two or more entities are linked to 1 dotmailer contact, sync priority will be used to identify master record
+            owner.label:                      Owner
+
+        datafieldmappingconfig:
+            entity_label:                     Data Field Mapping Config
+            entity_plural_label:              Data Field Mapping Configs
+            mapping.label:                    Data Field Mapping
+            id.label:                         Id
+            entity_fields.label:              Fields
+            entityField.placeholder:          Select Field
+            is_two_way_sync.label:            Two Way Sync
+            is_two_way_sync.tooltip:          Perform data synchronization from dotmailer. Can be applied to the signle main entity fields only
+            data_field.label:                 Data Field
+            update_mapping:                   Update mapping
+            delete_mapping:                   Delete mapping
+            delete_mapping_confirmation:      Are you sure you want to delete this mapping?
+            validation:
+                incompatible_types_numeric:    Mapping for field "%datafield%" must be of numeric type
+                incompatible_types_boolean:    Mapping for field "%datafield%" must be of boolean type
+                incompatible_types_date:       Mapping for field "%datafield%" must be of datetime type
+                incompatible_types_string:     Mapping for field "%datafield%" must be convertable to string
+                multiple:                      Several entity fields can be mapped only to the Data Field of type string
+
+        changedfieldlog:
+            entity_label:                     Entity Change Mapped Fields Log
+            entity_plural_label:              Entity Change Mapped Fields Logs
+            channel_id.label:                 Channel id
+            id.label:                         Id
+            parent_entity.label:              Parent Entity
+            related_field_path.label:         Related Field Path
+            related_id.label:                 Related Entity Id
+
         connector:
             campaign:
                 label:  Campaign Connector
-                job:    Import campaigns from Dotmailer
+                job:    Import campaigns from dotmailer
             address_book:
                 label:  Address book Connector
-                job:    Import Address books from Dotmailer
+                job:    Import Address books from dotmailer
             unsubscribed_contact:
                 label:  Contacts unsubscribed from Address book Connector
                 job:    Contacts unsubscribed from Address book
@@ -209,25 +294,28 @@ orocrm:
                 job: Import Contacts unsubscribed from Account
             contact:
                 label:  Contact Connector
-                job:    Import new Contacts from Dotmailer
+                job:    Import new Contacts from dotmailer
             activity_contact:
                 label: Contact Activities Connector
-                job: Import contact activities from Dotmailer
+                job: Import contact activities from dotmailer
             campaign_summary:
                 label: Campaign Summary Connector
-                job: Import campaigns summary from Dotmailer
+                job: Import campaigns summary from dotmailer
             contact_export:
                 label: Export Contact Connector
-                job: Export Contacts to Dotmailer
+                job: Export Contacts to dotmailer
+            data_field:
+                label:  Data Field Connector
+                job:    Import Data Fields from dotmailer
 
         import_not_exported_contact:
-            job: Import Export faults from Dotmailer
+            job: Import Export faults from dotmailer
 
         emailcampaign:
-            transport.dotmailer: Dotmailer
+            transport.dotmailer: dotmailer
             integration:
-                label: Dotmailer Integration
-            statistics.label: Dotmailer Statistics
+                label: dotmailer Integration
+            statistics.label: dotmailer Statistics
             positive.label: Positive
             negative.label: Negative
             emailsSent.label: Emails Sent
@@ -281,48 +369,71 @@ orocrm:
             isp_complaints.tooltip: "ISP complaints."
 
         connection:
-            name: Dotmailer Connection
-            sync_message: Marketing List scheduled for sync with Dotmailer AddressBook "%address_book%"
+            name: dotmailer Connection
+            sync_message: Marketing List scheduled for sync with dotmailer AddressBook "%address_book%"
             message:
-                update:                     Dotmailer connection updated
-                connect:                    Connected to Dotmailer
-                disconnect:                 Marketing List disconnected from Dotmailer
-                syncronize_scheduled:       Marketing List scheduled to synchronize with Dotmailer
-                syncronize_schedule_failed: Marketing List synchronization with Dotmailer schedule failed
+                update:                     dotmailer connection updated
+                connect:                    Connected to dotmailer
+                disconnect:                 Marketing List disconnected from dotmailer
+                syncronize_scheduled:       Marketing List scheduled to synchronize with dotmailer
+                syncronize_schedule_failed: Marketing List synchronization with dotmailer schedule failed
             dialog:
                 button:
                     update: Update
                     connect: Connect
                     cancel: Cancel
                 title:
-                    connect: Connect to Dotmailer
-                    update: Dotmailer Connection Settings
+                    connect: Connect to dotmailer
+                    update: dotmailer Connection Settings
             button:
-                group_name:         Dotmailer
-                connect:            Connect to Dotmailer
+                group_name:         dotmailer
+                connect:            Connect to dotmailer
                 manage_connection:  Connection Settings
                 synchronize:        Synchronize
                 disconnect:         Disconnect
             confirmation:
-                disconnect:         Are you sure you want to unlink this Marketing List from Dotmailer
+                disconnect:         Are you sure you want to unlink this Marketing List from dotmailer
 
         syncstatus:
             Finished: Up to date
             RejectedByWatchdog: Sync Rejected
             InvalidFileFormat: Not Synced
             Failed: Sync failed
-            ExceedsAllowedContactLimit: Dotmailer Contacts Limit Exceeds
+            ExceedsAllowedContactLimit: dotmailer Contacts Limit Exceeds
             NotAvailableInThisVersion: Not Synced
             NotFinished: In Progress
-            list_is_connected.label: 'This list is linked to "%address_book%" Dotmailer address book. Last synchronization date: %synced%. Synchronization status: %status%.'
+            list_is_connected.label: 'This list is linked to "%address_book%" dotmailer address book. Last synchronization date: %synced%. Synchronization status: %status%.'
 
         acl:
             action:
                 general:
                     label: Access dotmailer statistics
-                    description: See statistics collected from Dotmailer for a campaign
+                    description: See statistics collected from dotmailer for a campaign
         form:
             username:
                 tooltip: API User.
             password:
                 tooltip: API User Password.
+            client_id:
+                tooltip: To register to use OAuth you will need to be on an dotmailer Enterprise licence and to contact your dotmailer account manager.
+            custom_domain:
+                tooltip: https://r1-app.dotmailer.com/ is used by default
+
+        handler:
+            unable_to_create_field: Failed to create field in dotmailer.
+            default_value_not_match: Default value doesn't match the field's type.
+
+        controller:
+            datafield.saved.message: Data Field Saved
+            datafield_mapping.saved.message: Data Field Mapping Saved
+
+        configuration:
+            dotmailer_settings: dotmailer settings
+            dotmailer_synchronization: Synchronization settings
+            datafields_sync_interval: Data Fields Sync Interval
+            datafields_sync_interval.tooltip: This interval will be used to update data fields from dotmailer
+
+        block:
+            general: General
+            additional: Additional
+            mapping: Mapping Configuration

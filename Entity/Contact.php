@@ -115,6 +115,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     protected $email;
 
     /**
+     * @deprecated since 1.10. Use $dataFields data to get necessary data field
      * @var string
      *
      * @ORM\Column(name="first_name", type="string", length=50, nullable=true)
@@ -122,6 +123,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     protected $firstName;
 
     /**
+     * @deprecated since 1.10. Use $dataFields data to get necessary data field
      * @var string
      *
      * @ORM\Column(name="last_name", type="string", length=50, nullable=true)
@@ -129,6 +131,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     protected $lastName;
 
     /**
+     * @deprecated since 1.10. Use $dataFields data to get necessary data field
      * @var string
      *
      * @ORM\Column(name="full_name", type="string", length=255, nullable=true)
@@ -136,6 +139,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     protected $fullName;
 
     /**
+     * @deprecated since 1.10. Use $dataFields data to get necessary data field
      * @var string
      *
      * @ORM\Column(name="gender", type="string", length=6, nullable=true)
@@ -143,6 +147,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     protected $gender;
 
     /**
+     * @deprecated since 1.10. Use $dataFields data to get necessary data field
      * @var string
      *
      * @ORM\Column(name="postcode", type="string", length=12, nullable=true)
@@ -150,6 +155,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     protected $postcode;
 
     /**
+     * @deprecated since 1.10.
      * @var array
      *
      * @ORM\Column(name="merge_var_values", type="json_array", nullable=true)
@@ -169,6 +175,13 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
      * )
      **/
     protected $addressBookContacts;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="data_fields", type="json_array", nullable=true)
+     */
+    protected $dataFields;
 
     /**
      * @var Collection
@@ -306,6 +319,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     }
 
     /**
+     * @deprecated since 1.10. Use getDataFields() data to get necessary data field
      * @return string
      */
     public function getFirstName()
@@ -314,6 +328,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     }
 
     /**
+     * @deprecated since 1.10. update $dataFields array to update data field
      * @param string $firstName
      *
      * @return Contact
@@ -326,6 +341,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     }
 
     /**
+     * @deprecated since 1.10. Use getDataFields() data to get necessary data field
      * @return string
      */
     public function getLastName()
@@ -334,6 +350,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     }
 
     /**
+     * @deprecated since 1.10. update $dataFields array to update data field
      * @param string $lastName
      *
      * @return Contact
@@ -346,6 +363,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     }
 
     /**
+     * @deprecated since 1.10. Use getDataFields() data to get necessary data field
      * @return string
      */
     public function getFullName()
@@ -354,6 +372,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     }
 
     /**
+     * @deprecated since 1.10. update $dataFields array to update data field
      * @param string $fullName
      *
      * @return Contact
@@ -366,6 +385,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     }
 
     /**
+     * @deprecated since 1.10. Use getDataFields() data to get necessary data field
      * @return string
      */
     public function getGender()
@@ -374,6 +394,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     }
 
     /**
+     * @deprecated since 1.10. update $dataFields array to update data field
      * @param string $gender
      *
      * @return Contact
@@ -386,6 +407,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     }
 
     /**
+     * @deprecated since 1.10. Use getDataFields() data to get necessary data field
      * @return string
      */
     public function getPostcode()
@@ -394,6 +416,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     }
 
     /**
+     * @deprecated since 1.10. update $dataFields array to update data field
      * @param string $postcode
      *
      * @return Contact
@@ -406,6 +429,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     }
 
     /**
+     * @deprecated since 1.10.
      * @return array
      */
     public function getMergeVarValues()
@@ -413,6 +437,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
         return $this->mergeVarValues;
     }
     /**
+     * @deprecated since 1.10.
      * @param array|null $data
      *
      * @return Contact
@@ -529,6 +554,25 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
         if ($this->addressBookContacts->contains($addressBookContact)) {
             $this->addressBookContacts->removeElement($addressBookContact);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDataFields()
+    {
+        return $this->dataFields;
+    }
+
+    /**
+     * @param array $dataFields
+     * @return Contact
+     */
+    public function setDataFields($dataFields)
+    {
+        $this->dataFields = $dataFields;
 
         return $this;
     }

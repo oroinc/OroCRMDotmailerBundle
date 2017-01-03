@@ -51,6 +51,7 @@ class ContactTest extends \PHPUnit_Framework_TestCase
             'mergeVarValues' => array('mergeVarValues', $dataFields, $dataFields),
             'createdAt' => array('createdAt', $now, $now),
             'updatedAt' => array('updatedAt', $now, $now),
+            'dataFields' => array('dataFields', $dataFields, $dataFields),
             'owner' => array('owner', $organization, $organization),
         );
     }

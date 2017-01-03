@@ -4,6 +4,7 @@ namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Serializer;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendDbIdentifierNameGenerator;
 use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\ConfigurableEntityNormalizer as BaseNormalizer;
 
 use OroCRM\Bundle\DotmailerBundle\Provider\ChannelType;
@@ -34,9 +35,10 @@ class ConfigurableEntityNormalizer extends BaseNormalizer
         $object = parent::denormalize($data, $class, $format, $context);
 
         $fields = $this->fieldHelper->getFields($class, true);
-
+        $allFields = [];
         foreach ($fields as $field) {
             $fieldName = $field['name'];
+            $allFields[] = $field['name'];
             $hasConfig = $this->fieldHelper->hasConfig($class, $fieldName);
 
             // denormalize boolean fields
@@ -49,6 +51,14 @@ class ConfigurableEntityNormalizer extends BaseNormalizer
                     $this->fieldHelper->setObjectValue($object, $fieldName, (bool)$data[$fieldName]);
                 }
             }
+        }
+        /**
+         * Processing id field for custom entities created from UI separately
+         * because it's not added to fields config
+         */
+        $customEntityIdField = ExtendDbIdentifierNameGenerator::CUSTOM_TABLE_PRIMARY_KEY_COLUMN;
+        if (!in_array($customEntityIdField, $allFields, true) && isset($data[$customEntityIdField])) {
+            $this->fieldHelper->setObjectValue($object, $customEntityIdField, $data[$customEntityIdField]);
         }
 
         return $object;

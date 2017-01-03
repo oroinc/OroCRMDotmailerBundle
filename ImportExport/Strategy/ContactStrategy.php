@@ -3,14 +3,29 @@
 namespace OroCRM\Bundle\DotmailerBundle\ImportExport\Strategy;
 
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 use OroCRM\Bundle\DotmailerBundle\Exception\RuntimeException;
-use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
+use OroCRM\Bundle\DotmailerBundle\Provider\MappingProvider;
 use OroCRM\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
 
 class ContactStrategy extends AddOrReplaceStrategy
 {
     const CACHED_ADDRESS_BOOK_ENTITIES = 'cachedAddressBookEntities';
+
+    /** @var MappingProvider */
+    protected $mappingProvider;
+
+    /** @var array  */
+    protected $entitiesQualifiedForTwoWaySync = [];
+
+    /**
+     * @param MappingProvider $mappingProvider
+     */
+    public function setMappingProvider(MappingProvider $mappingProvider)
+    {
+        $this->mappingProvider = $mappingProvider;
+    }
 
     /**
      * {@inheritdoc}
@@ -39,7 +54,11 @@ class ContactStrategy extends AddOrReplaceStrategy
                 if (is_null($addressBookContact)) {
                     $addressBookContact = new AddressBookContact();
                     $addressBookContact->setAddressBook($addressBook);
+                    $addressBookContact->setMarketingListItemClass($addressBook->getMarketingList()->getEntity());
                     $addressBookContact->setChannel($addressBook->getChannel());
+                    if ($addressBook->isCreateEntities()) {
+                        $addressBookContact->setNewEntity(true);
+                    }
                     $this->strategyHelper
                         ->getEntityManager('OroCRMDotmailerBundle:AddressBookContact')
                         ->persist($addressBookContact);
@@ -56,6 +75,35 @@ class ContactStrategy extends AddOrReplaceStrategy
         }
 
         return parent::afterProcessEntity($entity);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function importExistingEntity(
+        $entity,
+        $existingEntity,
+        $itemData = null,
+        array $excludedFields = []
+    ) {
+        //if data fields changed in Dotmailer, schedule fields sync with entities
+        /** @var  Contact $existingEntity */
+        if ($existingEntity->getDataFields() &&
+            array_diff_assoc((array) $entity->getDataFields(), (array) $existingEntity->getDataFields())) {
+            $entitiesWithTwoWaySync = $this->mappingProvider
+                ->getEntitiesQualifiedForTwoWaySync($existingEntity->getChannel());
+            $scheduled = [];
+            foreach ($existingEntity->getAddressBookContacts() as $abContact) {
+                $entityClass = $abContact->getMarketingListItemClass();
+                //it's enough to schedule update for one address book contact per entity class
+                if (in_array($entityClass, $entitiesWithTwoWaySync) && empty($scheduled[$entityClass])) {
+                    $abContact->setScheduledForFieldsUpdate(true);
+                    $scheduled[$entityClass] = true;
+                }
+            }
+        }
+
+        parent::importExistingEntity($entity, $existingEntity, $itemData, $excludedFields);
     }
 
     /**
@@ -146,5 +194,17 @@ class ContactStrategy extends AddOrReplaceStrategy
         $addressBookOriginId = $originalValue[ContactIterator::ADDRESS_BOOK_KEY];
 
         return $this->getAddressBookByOriginId($addressBookOriginId);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function assertEnvironment($entity)
+    {
+        if (!$this->mappingProvider) {
+            throw new RuntimeException('Mapping provider must be set');
+        }
+
+        parent::assertEnvironment($entity);
     }
 }

@@ -1,0 +1,238 @@
+{% extends 'OroUIBundle:actions:update.html.twig' %}
+{% import 'OroQueryDesignerBundle::macros.html.twig' as QD %}
+
+{% oro_title_set({params : {
+    '%entity.name%': entity.entity,
+    '%entityName%': 'orocrm.dotmailer.datafieldmapping.entity_label'|trans }
+}) %}
+{% set entityId = entity.id %}
+
+{% set formAction = form.vars.value.id ? path('orocrm_dotmailer_datafield_mapping_update', { 'id': form.vars.value.id }) : path('orocrm_dotmailer_datafield_mapping_create')  %}
+
+{% block navButtons %}
+    {% if form.vars.value.id and resource_granted('DELETE', form.vars.value) %}
+        {{ UI.deleteButton({
+            'dataUrl': path('oro_api_delete_dotmailer_datafield_mapping', {'id': form.vars.value.id}),
+            'dataRedirect': path('orocrm_dotmailer_datafield_mapping_index'),
+            'aCss': 'no-hash remove-button',
+            'dataId': form.vars.value.id,
+            'entity_label': 'orocrm.dotmailer.datafieldmapping.entity_label'|trans
+        }) }}
+
+        {{ UI.buttonSeparator() }}
+    {% endif %}
+    {{ UI.cancelButton(path('orocrm_dotmailer_datafield_mapping_index')) }}
+    {% set html = '' %}
+    {% if resource_granted('orocrm_dotmailer_datafield_mapping_create') %}
+        {% set html = html ~ UI.saveAndNewButton({
+            'route': 'orocrm_dotmailer_datafield_mapping_create'
+        }) %}
+    {% endif %}
+    {% if form.vars.value.id or resource_granted('orocrm_dotmailer_datafield_mapping_update') %}
+        {% set html = html ~ UI.saveAndStayButton({
+            'route': 'orocrm_dotmailer_datafield_mapping_update',
+            'params': {'id': '$id'}
+        }) %}
+    {% endif %}
+    {{ UI.dropdownSaveButton({'html': html}) }}
+{% endblock navButtons %}
+
+{% block pageHeader %}
+    {% if entityId %}
+        {% set breadcrumbs = {
+            'entity': entity,
+            'indexPath': path('orocrm_dotmailer_datafield_mapping_index'),
+            'indexLabel': 'orocrm.dotmailer.datafieldmapping.entity_plural_label'|trans,
+            'entityTitle': 'orocrm.dotmailer.datafieldmapping.entity_label'|trans
+        } %}
+        {{ parent() }}
+    {% else %}
+        {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'orocrm.dotmailer.datafieldmapping.entity_label'|trans}) %}
+        {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
+    {% endif %}
+{% endblock pageHeader %}
+
+{% block content_data %}
+    {% set id = 'dotmailer-datafield-mapping-form' %}
+    {% set type = 'orocrm_dotmailer_datafield_mapping' %}
+    {% set dataBlocks = [{
+        'title': 'orocrm.dotmailer.block.general'|trans,
+        'class': 'active',
+        'subblocks': [{
+            'title': '',
+            'data': [
+                form_row(form.channel),
+                form_row(form.entity),
+                form_row(form.syncPriority)
+            ]
+        }]
+    }] %}
+    {% set dataBlocks =  dataBlocks|merge( [{
+        'title': 'orocrm.dotmailer.block.mapping'|trans,
+        'subblocks': [{
+            'title': '',
+            'data': [
+                form_row(form.config_source),
+                UI.scrollSubblock(
+                    '',
+                    [
+                        _self.mapping_form(
+                            form.config,
+                            {'id': type ~ '-mapping-form'}
+                        ),
+                        _self.mapping_list(
+                            {
+                                'id': type ~ '-mapping-list',
+                                'rowId': type ~ '-mapping-row'
+                            }
+                        ),
+                    ],
+                    '',
+                    '',
+                    type ~ '-mappings'
+                ),
+            ]
+        }]
+    }] ) %}
+
+    {% set additionalData = [] %}
+    {% for child in form.children if child.vars.extra_field is defined and child.vars.extra_field %}
+        {% set additionalData = additionalData|merge([form_row(child)]) %}
+    {% endfor %}
+    {% if additionalData is not empty %}
+        {% set dataBlocks = dataBlocks|merge([{
+            'title':     'orocrm.dotmailer.block.additional'|trans,
+            'subblocks': [{ 'title': '', 'useSpan': false, 'data' : additionalData }]
+        }] ) %}
+    {% endif %}
+
+    {% set data = {
+        'formErrors': form_errors(form)? form_errors(form) : null,
+        'dataBlocks': dataBlocks,
+    } %}
+
+    {{ QD.query_designer_column_chain_template('column-chain-template') }}
+    {{ _self.initJsWidgets(type, form, entities) }}
+
+    {{ parent() }}
+{% endblock content_data %}
+{% macro mapping_form(form, attr, params) %}
+    {% import 'OroUIBundle::macros.html.twig' as UI %}
+    {% set attr = attr|default({})|merge({
+        'class': (attr.class|default('') ~ ' query-designer-form clearfix')|trim
+    }) %}
+    <div{{ UI.attributes(attr) }}>
+        {{ form_row(form.entityFields, {
+            'label': 'orocrm.dotmailer.datafieldmappingconfig.entity_fields.label',
+            'attr': {
+                'data-purpose': 'multiple-entityfield-selector',
+                'data-validation': { NotBlank: null }|json_encode
+            }
+        }) }}
+        {{ form_row(form.dataField, {
+            'label': 'orocrm.dotmailer.datafieldmappingconfig.data_field.label',
+            'attr': {
+                'data-purpose': 'datafield-selector',
+                'data-validation': { NotBlank: null }|json_encode
+            }
+        }) }}
+        {{ form_row(form.isTwoWaySync, {
+            'label': 'orocrm.dotmailer.datafieldmappingconfig.is_two_way_sync.label',
+            'attr': {
+                'class': 'two-way-sync-selector',
+                'data-purpose': 'two-way-sync-selector'
+            }
+        }) }}
+        <div class="pull-right">
+            {{ UI.clientButton({
+                'aCss': 'no-hash cancel-button column-form-button',
+                'label' : 'oro.query_designer.form.action.cancel'|trans
+            }) }}
+            {{ UI.clientButton({
+                'visible': false,
+                'aCss': 'no-hash btn-success save-button column-form-button',
+                'label' : 'oro.query_designer.form.action.save'|trans
+            }) }}
+            {{ UI.clientButton({
+                'visible': false,
+                'aCss': 'no-hash btn-primary add-button column-form-button',
+                'label' : 'oro.query_designer.form.action.add'|trans
+            }) }}
+        </div>
+    </div>
+{% endmacro %}
+{% macro mapping_list(attr) %}
+    {% import 'OroUIBundle::macros.html.twig' as UI %}
+    {% set attr = attr|default({})|merge({'class': (attr.class|default('') ~ ' grid-container query-designer-grid-container query-designer-columns-grid-container')|trim}) %}
+    <div{{ UI.attributes(attr) }}>
+        <table class="grid table-hover table table-bordered table-condensed" style="display: table;">
+            <thead>
+            <tr>
+                <th class="entityfield-column"><span>{{ 'orocrm.dotmailer.datafieldmappingconfig.entity_fields.label'|trans }}</span></th>
+                <th class="datafield-column"><span>{{ 'orocrm.dotmailer.datafieldmappingconfig.data_field.label'|trans }}</span></th>
+                <th class="twowaysync-column"><span>{{ 'orocrm.dotmailer.datafieldmappingconfig.is_two_way_sync.label'|trans }}</span></th>
+                <th class="action-column"><span>{{ 'oro.query_designer.datagrid.column.actions'|trans }}</span></th>
+            </tr>
+            </thead>
+            <tbody class="mapping-container">
+            </tbody>
+        </table>
+    </div>
+    {{ _self.mapping_template(attr.rowId) }}
+{% endmacro %}
+{% macro mapping_template(id) %}
+    <script type="text/html" id="{{ id }}">
+        <tr data-cid="<%= cid %>">
+            <td class="field-cell<% if (obj.deleted) { %> deleted-field<% } %>"><%= entityFields %></td>
+            <td class="datafield-cell"><%- dataField %></td>
+            <td class="twowaysync-cell"><%= isTwoWaySync %></td>
+            <td class="action-cell">
+                <a href="javascript: void(0);" class="action no-hash edit-button"
+                        title="{{ 'orocrm.dotmailer.datafieldmappingconfig.update_mapping'|trans }}"
+                        data-collection-action="edit">
+                    <i class="icon-edit hide-text"></i></a>
+                <a href="javascript: void(0);" class="action no-hash delete-button"
+                        title="{{ 'orocrm.dotmailer.datafieldmappingconfig.delete_mapping'|trans }}"
+                        data-collection-action="delete"
+                        data-message="{{ 'orocrm.dotmailer.datafieldmappingconfig.delete_mapping_confirmation'|trans }}">
+                    <i class="icon-trash hide-text"></i></a>
+            </td>
+        </tr>
+    </script>
+{% endmacro %}
+{% macro initJsWidgets(type, form, entities) %}
+    {# Rertrieving fields data(actually this code works for already saved entities that's going to edit)#}
+    {% set fieldsData = {} %}
+    {% if not form.entity.vars.value is empty %}
+        {% set fieldsData = render(path('oro_api_fields_dotmailer_datafield_mapping')) %}
+    {% endif %}
+
+    {% set widgetOptions = {
+        valueSource: '[data-ftid=' ~ type ~ '_form_config_source]',
+        fieldsLoader: {
+            entityChoice:      '[data-ftid=' ~ type ~ '_form_entity]',
+            loadingMaskParent: '#' ~ form.vars.id,
+            router:            'oro_api_fields_dotmailer_datafield_mapping',
+            routingParams:     {},
+            fieldsData:        fieldsData,
+            confirmMessage:    'orocrm.dotmailer.datafieldmapping.change_entity_confirmation',
+        },
+        mapping: {
+            editor:        { namePattern: '^' ~ type ~ '_form\\[config\\]\\[([\\w\\W]*)\\]$' },
+            form:          '#' ~ type ~ '-mapping-form',
+            itemContainer: '#' ~ type ~ '-mapping-list .mapping-container',
+            itemTemplate:  '#' ~ type ~ '-mapping-row'
+        },
+        channel: {
+            channelChoice: '[data-ftid=' ~ type ~ '_form_channel]',
+            changeChannelConfirmMessage: 'orocrm.dotmailer.datafieldmapping.change_channel_confirmation',
+        },
+        columnFieldChoiceOptions:       {},
+        select2FieldChoiceTemplate:     '#column-chain-template',
+        select2FieldChoicePlaceholoder: 'orocrm.dotmailer.datafieldmappingconfig.entityField.placeholder'|trans,
+        entities:                       entities
+    } %}
+
+    <div data-page-component-module="orocrmdotmailer/js/app/components/mapping-component"
+         data-page-component-options="{{ widgetOptions|json_encode }}"></div>
+{% endmacro %}

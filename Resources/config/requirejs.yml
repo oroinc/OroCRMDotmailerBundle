@@ -1,5 +1,9 @@
 config:
     paths:
         'orocrmdotmailer/js/sync-buttons-handler': 'bundles/orocrmdotmailer/js/sync-buttons-handler.js'
+        'orocrmdotmailer/js/integration-connection': 'bundles/orocrmdotmailer/js/integration-connection.js'
         'orocrmdotmailer/js/app/components/dm-resource-component': 'bundles/orocrmdotmailer/js/app/components/dm-resource-component.js'
         'oro/select2-autocomplete-channel-aware-address-book-component': 'bundles/orocrmdotmailer/js/app/components/select2-autocomplete-channel-aware-address-book-component.js'
+        'orocrmdotmailer/js/app/components/mapping-component': 'bundles/orocrmdotmailer/js/app/components/mapping-component.js'
+        'orocrmdotmailer/js/items-manager/mapping-model': 'bundles/orocrmdotmailer/js/items-manager/mapping-model.js'
+        'orocrmdotmailer/js/datafield-view': 'bundles/orocrmdotmailer/js/datafield-view.js'
