@@ -371,7 +371,7 @@ oro:
             name: dotmailer Connection
             sync_message: Marketing List scheduled for sync with dotmailer AddressBook "%address_book%"
             message:
-                update:                     dotmailer connection updated
+                update:                     Updated dotmailer connection settings
                 connect:                    Connected to dotmailer
                 disconnect:                 Marketing List disconnected from dotmailer
                 syncronize_scheduled:       Marketing List scheduled to synchronize with dotmailer
