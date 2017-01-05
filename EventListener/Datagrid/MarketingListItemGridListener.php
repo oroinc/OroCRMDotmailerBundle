@@ -90,7 +90,7 @@ class MarketingListItemGridListener
             $this->removeColumn($config, 'contactedTimes');
 
             $mixin = $datagrid->getParameters()->get(MixinListener::GRID_MIXIN);
-            if ($mixin === 'orocrm-marketing-list-items-mixin') {
+            if ($mixin === 'oro-marketing-list-items-mixin') {
                 $this->joinSubscriberStatus($marketingList, $datasource->getQueryBuilder());
                 $this->rewriteActionConfiguration($datagrid);
             }
