@@ -2,9 +2,12 @@
 
 namespace Oro\Bundle\DotmailerBundle\Command;
 
+use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\CronBundle\Command\CronCommandInterface;
+use Oro\Bundle\DotmailerBundle\Entity\ChangedFieldLog;
 use Oro\Bundle\DotmailerBundle\Processor\MappedFieldsChangeProcessor;
 
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,6 +24,20 @@ class ProcessMappedFieldsUpdatesCommand extends Command implements CronCommandIn
     public function getDefaultDefinition()
     {
         return '*/5 * * * *';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        $count = $this->getChangedFieldsLogRepository()
+            ->createQueryBuilder('cl')
+            ->select('COUNT(cl.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return ($count > 0);
     }
 
     /**
@@ -55,5 +72,15 @@ class ProcessMappedFieldsUpdatesCommand extends Command implements CronCommandIn
     private function getProcessor()
     {
         return $this->container->get('oro_dotmailer.processor.mapped_fields_change');
+    }
+
+    /**
+     * @return EntityRepository
+     */
+    private function getChangedFieldsLogRepository()
+    {
+        /** @var RegistryInterface $doctrine */
+        $doctrine = $this->container->get('doctrine');
+        return $doctrine->getRepository(ChangedFieldLog::class);
     }
 }
