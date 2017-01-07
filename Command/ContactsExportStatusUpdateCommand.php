@@ -2,12 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\Command;
 
-use Doctrine\Common\Persistence\ObjectRepository;
-
 use Oro\Bundle\CronBundle\Command\CronCommandInterface;
 use Oro\Bundle\DotmailerBundle\Async\Topics;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
+use Oro\Bundle\IntegrationBundle\Entity\Repository\ChannelRepository;
 use Oro\Component\MessageQueue\Client\Message;
 use Oro\Component\MessageQueue\Client\MessagePriority;
 
@@ -29,6 +28,16 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
     public function getDefaultDefinition()
     {
         return '*/5 * * * *';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        $count = $this->getIntegrationRepository()->countActiveIntegrations(ChannelType::TYPE);
+
+        return ($count > 0);
     }
 
     /**
@@ -72,7 +81,7 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
     }
 
     /**
-     * @return ObjectRepository
+     * @return ChannelRepository
      */
     protected function getIntegrationRepository()
     {
