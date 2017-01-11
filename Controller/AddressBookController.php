@@ -46,7 +46,11 @@ class AddressBookController extends Controller
 
             $status = Codes::HTTP_OK;
             $response = [
-                'message' => $this->get('translator')->trans('oro.integration.progress')
+                'message' => str_replace(
+                    '{{ job_view_link }}',
+                    '',
+                    $this->get('translator')->trans('oro.dotmailer.addressbook.sync')
+                )
             ];
         } catch (\Exception $e) {
             $status = Codes::HTTP_BAD_REQUEST;

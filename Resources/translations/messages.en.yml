@@ -52,7 +52,7 @@ oro:
             create_entities.label:                Create New Entities
             create_entities.tooltip:              Create new records if no match by email is found
 
-            sync: Marketing list synchronization started. {{ job_view_link }}
+            sync: Marketing list synchronization has been scheduled. {{ job_view_link }}
 
             message:
                 saved: Address Book saved
@@ -257,7 +257,7 @@ oro:
             entity_fields.label:              Fields
             entityField.placeholder:          Select Field
             is_two_way_sync.label:            Two Way Sync
-            is_two_way_sync.tooltip:          Perform data synchronization from dotmailer. Can be applied to the signle main entity fields only
+            is_two_way_sync.tooltip:          Perform data synchronization from dotmailer. Can be applied to the single main entity fields only
             data_field.label:                 Data Field
             update_mapping:                   Update mapping
             delete_mapping:                   Delete mapping
