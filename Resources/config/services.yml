@@ -430,6 +430,9 @@ services:
     oro_dotmailer.log_helper:
         class: %oro_dotmailer.log_helper.class%
 
+    oro_dotmailer.campaign_helper:
+        class: 'Oro\Bundle\DotmailerBundle\Model\CampaignHelper'
+
     oro_dotmailer.cache:
         public: false
         parent: oro.cache.abstract
@@ -610,6 +613,22 @@ services:
         tags:
             - { name: oro_integration.connector, type: datafield, channel_type: dotmailer }
 
+    oro_dotmailer.connector.campaign_click:
+        class: 'Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignClickConnector'
+        parent: oro_dotmailer.connector.abstract
+        calls:
+            - [setEntityName, [%oro_marketing_activity.entity.class%]]
+        tags:
+            - { name: oro_integration.connector, type: campaign_click, channel_type: dotmailer }
+
+    oro_dotmailer.connector.campaign_open:
+        class: 'Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignOpenConnector'
+        parent: oro_dotmailer.connector.abstract
+        calls:
+            - [setEntityName, [%oro_marketing_activity.entity.class%]]
+        tags:
+            - { name: oro_integration.connector, type: campaign_open, channel_type: dotmailer }
+
     #data converter
     oro_dotmailer.importexport.data_converter.not_exported_contact:
         class: %oro_dotmailer.importexport.data_converter.not_exported_contact.class%
@@ -651,6 +670,12 @@ services:
         calls:
             - [setMappingProvider, ["@oro_dotmailer.provider.mapping"]]
             - [setEmailProvider, ["@oro_dotmailer.provider.email"]]
+
+    oro_dotmailer.importexport.data_converter.campaign_click:
+        class: 'Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\CampaignClickDataConverter'
+
+    oro_dotmailer.importexport.data_converter.campaign_open:
+        class: 'Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\CampaignOpenDataConverter'
 
     #strategy
     oro_dotmailer.importexport.strategy.add_or_replace:
@@ -732,6 +757,12 @@ services:
         parent: oro_importexport.strategy.import.helper
         calls:
             - [setLogger, ["@oro_integration.logger.strategy"]]
+
+    oro_dotmailer.importexport.strategy.marketing_activity:
+        class: 'Oro\Bundle\DotmailerBundle\ImportExport\Strategy\MarketingActivityStrategy'
+        parent: oro_dotmailer.importexport.strategy.add_or_replace
+        calls:
+            - [setRelatedCampaignClassName, [%oro_campaign.email_campaign.entity.class%]]
 
     #processor
     oro_dotmailer.importexport.processor.import_abstract:
@@ -862,6 +893,24 @@ services:
         calls:
             - [setDataConverter, ["@oro_dotmailer.importexport.data_converter.update_entity_field_from_contacts"]]
             - [setStrategy, ["@oro_dotmailer.importexport.strategy.update_entity_field_from_contacts.add_or_replace"]]
+
+    oro_dotmailer.importexport.processor.campaign_activity:
+        class: 'Oro\Bundle\DotmailerBundle\ImportExport\Processor\CampaignActivityProcessor'
+        parent: oro_dotmailer.importexport.processor.import_abstract
+        abstract: true
+        calls:
+            - [setStrategy, ["@oro_dotmailer.importexport.strategy.marketing_activity"]]
+            - [setEntityName, [%oro_marketing_activity.entity.class%]]
+
+    oro_dotmailer.importexport.processor.campaign_click:
+        parent: oro_dotmailer.importexport.processor.campaign_activity
+        calls:
+            - [setDataConverter, ["@oro_dotmailer.importexport.data_converter.campaign_click"]]
+
+    oro_dotmailer.importexport.processor.campaign_open:
+        parent: oro_dotmailer.importexport.processor.campaign_activity
+        calls:
+            - [setDataConverter, ["@oro_dotmailer.importexport.data_converter.campaign_open"]]
 
     #serializer
     oro_dotmailer.importexport.normalizer.enum:

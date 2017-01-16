@@ -10,6 +10,8 @@ use Oro\Bundle\IntegrationBundle\Entity\Status;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignClickConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignOpenConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
 
@@ -59,6 +61,18 @@ class LoadStatusData extends BaseAbstractFixture implements DependentFixtureInte
             'channel' => 'oro_dotmailer.channel.second',
             'code' => Status::STATUS_COMPLETED,
             'connector' => ActivityContactConnector::TYPE,
+            'date' => '2015-01-01'
+        ],
+        [
+            'channel' => 'oro_dotmailer.channel.second',
+            'code' => Status::STATUS_COMPLETED,
+            'connector' => CampaignClickConnector::TYPE,
+            'date' => '2015-01-01'
+        ],
+        [
+            'channel' => 'oro_dotmailer.channel.second',
+            'code' => Status::STATUS_COMPLETED,
+            'connector' => CampaignOpenConnector::TYPE,
             'date' => '2015-01-01'
         ],
         [

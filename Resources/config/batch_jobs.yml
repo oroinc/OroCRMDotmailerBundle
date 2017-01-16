@@ -108,6 +108,34 @@ connector:
                     parameters:
                         batch_size: 1000
 
+        dotmailer_campaign_click_import:
+            title: oro.dotmailer.connector.campaign_click.job
+            type: import
+            steps:
+                import:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    oro_dotmailer.connector.campaign_click
+                        processor: oro_dotmailer.importexport.processor.campaign_click
+                        writer:    oro_dotmailer.importexport.writer.import
+                    parameters:
+                        batch_size: 1000
+
+        dotmailer_campaign_open_import:
+            title: oro.dotmailer.connector.campaign_open.job
+            type: import
+            steps:
+                import:
+                    title: import
+                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    services:
+                        reader:    oro_dotmailer.connector.campaign_open
+                        processor: oro_dotmailer.importexport.processor.campaign_open
+                        writer:    oro_dotmailer.importexport.writer.import
+                    parameters:
+                        batch_size: 1000
+
         dotmailer_campaign_summary_import:
             title: oro.dotmailer.connector.campaign_summary.job
             type: import

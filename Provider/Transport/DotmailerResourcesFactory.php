@@ -9,6 +9,7 @@ use DotMailer\Api\Resources\Resources;
 use DotMailer\Api\DataTypes\ApiAccount;
 
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\Client;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
 
 class DotmailerResourcesFactory
 {
@@ -21,21 +22,62 @@ class DotmailerResourcesFactory
      */
     public function createResources($username, $password, LoggerInterface $logger = null)
     {
+        $restClient = $this->initClient($username, $password, $logger);
+
+        $resources = new Resources($restClient);
+
+        $account = $resources->GetAccountInfo();
+        $this->updateEndpoint($account, $restClient);
+
+        return $resources;
+    }
+
+    /**
+     * @param string               $username
+     * @param string               $password
+     * @param LoggerInterface|null $logger
+     *
+     * @return AdditionalResource
+     */
+    public function createAdditionalResource($username, $password, LoggerInterface $logger = null)
+    {
+        $restClient = $this->initClient($username, $password, $logger);
+
+        $resources = new AdditionalResource($restClient);
+
+        $account = $resources->getAccountInfo();
+        $this->updateEndpoint($account, $restClient);
+
+        return $resources;
+    }
+
+    /**
+     * @param $username
+     * @param $password
+     * @param LoggerInterface|null $logger
+     * @return Client
+     */
+    protected function initClient($username, $password, LoggerInterface $logger = null)
+    {
         $restClient = new Client($username, $password);
 
         if ($logger) {
             $restClient->setLogger($logger);
         }
 
-        $resources = new Resources($restClient);
+        return $restClient;
+    }
 
-        $account = $resources->GetAccountInfo();
-        $url     = $this->getApiEndpoint($account);
+    /**
+     * @param ApiAccount $account
+     * @param Client $restClient
+     */
+    protected function updateEndpoint(ApiAccount $account, Client $restClient)
+    {
+        $url = $this->getApiEndpoint($account);
         if ($url) {
             $restClient->setBaseUrl($url);
         }
-
-        return $resources;
     }
 
     /**

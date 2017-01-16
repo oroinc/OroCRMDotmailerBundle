@@ -28,6 +28,11 @@ abstract class AbstractImportExportTestCase extends WebTestCase
     protected $resource;
 
     /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $resourceFactory;
+
+    /**
      * @var ManagerRegistry
      */
     protected $managerRegistry;
@@ -109,14 +114,16 @@ abstract class AbstractImportExportTestCase extends WebTestCase
     protected function stubResources()
     {
         $this->resource = $this->createMock('DotMailer\Api\Resources\IResources');
-        $resourceFactory = $this->createMock('Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory');
-        $resourceFactory->expects($this->any())
+        $this->resourceFactory = $this->createMock(
+            'Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory'
+        );
+        $this->resourceFactory->expects($this->any())
             ->method('createResources')
             ->will($this->returnValue($this->resource));
 
         $this->oldResourceFactory = $this->getContainer()
             ->get(self::RESOURCES_FACTORY_ID);
         $this->getContainer()
-            ->set(self::RESOURCES_FACTORY_ID, $resourceFactory);
+            ->set(self::RESOURCES_FACTORY_ID, $this->resourceFactory);
     }
 }

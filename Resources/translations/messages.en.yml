@@ -306,6 +306,12 @@ oro:
             data_field:
                 label:  Data Field Connector
                 job:    Import Data Fields from dotmailer
+            campaign_click:
+                label: Campaign Clicks Connector
+                job:   Import campaign clicks from dotmailer
+            campaign_open:
+                label: Campaign Open Connector
+                job:   Import campaign opens from dotmailer
 
         import_not_exported_contact:
             job: Import Export faults from dotmailer

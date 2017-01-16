@@ -161,4 +161,29 @@ class ContactRepository extends EntityRepository
 
         return $qb;
     }
+
+    /**
+     * @param array $originIds
+     *
+     * @return array
+     */
+    public function getEntitiesDataByOriginIds(array $originIds = [])
+    {
+        $qb = $this->createQueryBuilder('contact');
+
+        return $qb
+            ->select(
+                [
+                    'contact.originId',
+                    'addressBookContacts.marketingListItemClass as entityClass',
+                    'addressBookContacts.marketingListItemId as entityId',
+                ]
+            )
+            ->innerJoin('contact.addressBookContacts', 'addressBookContacts')
+            ->where($qb->expr()->in('contact.originId', ':originIds'))
+            ->andWhere($qb->expr()->isNotNull('addressBookContacts.marketingListItemId'))
+            ->setParameter('originIds', $originIds)
+            ->getQuery()
+            ->getArrayResult();
+    }
 }
