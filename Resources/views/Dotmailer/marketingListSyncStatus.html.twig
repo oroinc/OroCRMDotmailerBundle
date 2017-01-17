@@ -13,7 +13,7 @@
                 {{ 'oro.dotmailer.syncstatus.list_is_connected.label'|trans({
                     '%address_book%': '<strong>' ~ address_book.name ~ '</strong>',
                     '%synced%': '<strong>'
-                        ~ address_book.lastExportedAt|oro_format_date|default('oro.ui.empty'|trans)
+                        ~ address_book.lastExportedAt|oro_format_datetime|default('oro.ui.empty'|trans)
                         ~ '</strong>',
                     '%status%': '<strong>'
                         ~ status
