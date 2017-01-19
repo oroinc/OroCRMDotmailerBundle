@@ -105,9 +105,12 @@ class ParentEntityFindQueryConverter extends AbstractOrmQueryConverter
             $columnName = $column['name'];
             $value = $column['value'];
             $relatedEntity = $this->getEntityClassName($columnName);
-            $fieldName = $this->doctrineHelper->getSingleEntityIdentifierFieldName($relatedEntity);
+            $relatedFieldName = $this->getFieldName($columnName);
+            $idFieldName = $this->doctrineHelper->getSingleEntityIdentifierFieldName($relatedEntity);
             $tableAlias = $this->getTableAliasForColumn($columnName);
-            $columnExpression = sprintf('%s.%s', $tableAlias, $fieldName);
+            $columnExpression = $this->buildColumnExpression($columnName, $tableAlias, $idFieldName);
+            //in case of virtual relations, field name still should be replaced with id field name
+            $columnExpression = str_replace($relatedFieldName, $idFieldName, $columnExpression);
             $this->qb->andWhere(sprintf("%s = :value", $columnExpression))->setParameter('value', $value);
         }
     }
