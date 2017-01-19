@@ -24,10 +24,26 @@ class ProcessMappedFieldsUpdatesCommandTest extends WebTestCase
         self::assertContains('oro:cron:dotmailer:mapped-fields-updates:process', $result);
     }
 
-    public function testShouldSendExportContactStatusUpdatesToMessageQueue()
+    public function testRunCommand()
     {
+        $this->loadFixtures(
+            [
+                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadUpdatesLogData',
+            ]
+        );
         $result = $this->runCommand('oro:cron:dotmailer:mapped-fields-updates:process');
 
+        //check that entity update flag was properly set for ab contact after job run
+        $managerRegistry = $this->getContainer()->get('doctrine');
+        $entityUpdated = $managerRegistry->getRepository('OroDotmailerBundle:AddressBookContact')
+            ->findBy(
+                [
+                    'marketingListItemId' => $this->getReference('oro_dotmailer.orocrm_contact.john.doe')->getId(),
+                    'entityUpdated' => true
+                ]
+            );
+        $this->assertCount(1, $entityUpdated);
+     
         $this->assertContains('Start queue processing', $result);
         $this->assertContains('Completed', $result);
     }
