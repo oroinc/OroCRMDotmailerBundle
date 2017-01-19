@@ -1137,7 +1137,7 @@ services:
     oro_dotmailer.validator.datafield_mapping_config:
         class: %oro_dotmailer.validator.datafield_mapping_config.class%
         arguments:
-            - "@oro_entity.doctrine_helper"
+            - '@oro_entity.entity_field_provider'
             - "@translator"
         tags:
             - { name: validator.constraint_validator, alias: oro_dotmailer.validator.datafield_mapping_config }
