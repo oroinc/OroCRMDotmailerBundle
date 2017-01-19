@@ -9,7 +9,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
+use Oro\Bundle\EntityBundle\Provider\EntityFieldProvider;
 use Oro\Bundle\QueryDesignerBundle\QueryDesigner\JoinIdentifierHelper;
 
 use OroCRM\Bundle\DotmailerBundle\Entity\DataField;
@@ -24,9 +24,9 @@ class DataFieldMappingConfigValidator extends ConstraintValidator
     const ALIAS = 'orocrm_dotmailer.validator.datafield_mapping_config';
 
     /**
-     * @var DoctrineHelper
+     * @var EntityFieldProvider
      */
-    protected $doctrineHelper;
+    protected $entityFieldProvider;
 
     /**
      * @var TranslatorInterface
@@ -34,14 +34,19 @@ class DataFieldMappingConfigValidator extends ConstraintValidator
     protected $translator;
 
     /**
-     * @param DoctrineHelper $doctrineHelper
+     * @var array
+     */
+    protected $fieldTypes = [];
+
+    /**
+     * @param EntityFieldProvider $entityFieldProvider
      * @param TranslatorInterface $translator
      */
     public function __construct(
-        DoctrineHelper $doctrineHelper,
+        EntityFieldProvider $entityFieldProvider,
         TranslatorInterface $translator
     ) {
-        $this->doctrineHelper = $doctrineHelper;
+        $this->entityFieldProvider = $entityFieldProvider;
         $this->translator = $translator;
     }
 
@@ -85,20 +90,21 @@ class DataFieldMappingConfigValidator extends ConstraintValidator
         $field = $entity->getEntityFields();
         $class = $joinIdentifierHelper->getEntityClassName($field);
         $fieldName = $joinIdentifierHelper->getFieldName($field);
-        $fieldType = $this->doctrineHelper->getEntityMetadata($class)->getTypeOfField($fieldName);
+        $fieldTypes = $this->getFieldTypes($class);
+        $fieldType = isset($fieldTypes[$fieldName]) ? $fieldTypes[$fieldName] : '';
         $isCompatible = false;
         switch ($type) {
             case DataField::FIELD_TYPE_NUMERIC:
-                $numericeTypes = [Type::BIGINT, Type::SMALLINT, Type::INTEGER, Type::DECIMAL, Type::FLOAT];
-                $isCompatible = in_array($fieldType, $numericeTypes);
+                $numericTypes = [Type::BIGINT, Type::SMALLINT, Type::INTEGER, Type::DECIMAL, Type::FLOAT];
+                $isCompatible = in_array($fieldType, $numericTypes);
                 break;
             case DataField::FIELD_TYPE_DATE:
                 $dateTypes = [Type::DATETIME, Type::DATETIMETZ, Type::DATE];
                 $isCompatible = in_array($fieldType, $dateTypes);
                 break;
             case DataField::FIELD_TYPE_BOOLEAN:
-                $bolleanTypes = [Type::BOOLEAN];
-                $isCompatible = in_array($fieldType, $bolleanTypes);
+                $booleanTypes = [Type::BOOLEAN];
+                $isCompatible = in_array($fieldType, $booleanTypes);
                 break;
             default:
                 $complexDataTypes = [Type::BINARY, Type::BLOB, Type::OBJECT];
@@ -114,5 +120,19 @@ class DataFieldMappingConfigValidator extends ConstraintValidator
         }
 
         return $message;
+    }
+
+    /**
+     * @param string $class
+     * @return array
+     */
+    protected function getFieldTypes($class)
+    {
+        if (!isset($this->fieldTypes[$class])) {
+            $fields = $this->entityFieldProvider->getFields($class, false, true, false, false, false, false);
+            $this->fieldTypes[$class] = array_column($fields, 'type', 'name');
+        }
+
+        return $this->fieldTypes[$class];
     }
 }

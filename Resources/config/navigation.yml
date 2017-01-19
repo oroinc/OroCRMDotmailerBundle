@@ -9,7 +9,7 @@ oro_menu_config:
             label: 'orocrm.dotmailer.datafield.entity_plural_label'
             route: 'orocrm_dotmailer_datafield_index'
             extras:
-                routes: ['orocrm_dotmailer_datafield_*']
+                routes: ['/^orocrm_dotmailer_datafield_(?!mapping\w+)\w+$/']
         orocrm_dotmailer_data_field_mapping_list:
             label: 'orocrm.dotmailer.datafieldmapping.entity_plural_label'
             route: 'orocrm_dotmailer_datafield_mapping_index'

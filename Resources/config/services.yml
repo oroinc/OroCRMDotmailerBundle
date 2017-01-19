@@ -1114,6 +1114,7 @@ services:
             - "@orocrm_dotmailer.provider.mapping"
         tags:
             - { name: doctrine.event_listener, event: onFlush, method: onFlush }
+            - { name: doctrine.event_listener, event: postFlush, method: postFlush }
 
     orocrm_dotmailer.processor.mapped_fields_change:
         class: 'OroCRM\Bundle\DotmailerBundle\Processor\MappedFieldsChangeProcessor'
@@ -1127,7 +1128,7 @@ services:
     orocrm_dotmailer.validator.datafield_mapping_config:
         class: %orocrm_dotmailer.validator.datafield_mapping_config.class%
         arguments:
-            - "@oro_entity.doctrine_helper"
+            - '@oro_entity.entity_field_provider'
             - "@translator"
         tags:
             - { name: validator.constraint_validator, alias: orocrm_dotmailer.validator.datafield_mapping_config }
