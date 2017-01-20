@@ -23,6 +23,8 @@ use OroCRM\Bundle\MarketingListBundle\Entity\MarketingList;
  */
 class DotmailerController extends Controller
 {
+    const CHANNEL_SESSION_KEY = 'selected-integration-channel';
+
     /**
      * @Route("/email-campaign-status/{entity}",
      *      name="orocrm_dotmailer_email_campaign_status",
@@ -113,11 +115,8 @@ class DotmailerController extends Controller
      */
     public function integrationConnectionAction(Request $request, Channel $channel = null)
     {
-        $data = $request->get('orocrm_dotmailer_integration_connection');
-        if (isset($data['channel'])) {
-            $channel = $this->getDoctrine()
-                ->getRepository('OroIntegrationBundle:Channel')
-                ->getOrLoadById($data['channel']);
+        if (!$channel) {
+            $channel = $this->getCurrentChannel($request);
         }
 
         $form = $this->createForm('orocrm_dotmailer_integration_connection');
@@ -136,6 +135,7 @@ class DotmailerController extends Controller
                 if ($oauth) {
                     try {
                         $loginUserUrl = $oauthHelper->generateLoginUserUrl($transport, $oauth->getRefreshToken());
+                        $this->get('session')->set(self::CHANNEL_SESSION_KEY, $channel->getId());
                     } catch (RuntimeException $e) {
                         $this->get('session')->getFlashBag()->add(
                             'error',
@@ -166,5 +166,24 @@ class DotmailerController extends Controller
             'loginUserUrl' => $loginUserUrl,
             'connectUrl'   => $connectUrl,
         ];
+    }
+
+    /**
+     * @param Request $request
+     * @return Channel|null
+     */
+    protected function getCurrentChannel(Request $request)
+    {
+        $session = $this->get('session');
+        $data = $request->get('orocrm_dotmailer_integration_connection');
+        $channelId = isset($data['channel']) ? $data['channel'] : $session->get(self::CHANNEL_SESSION_KEY);
+        $channel = null;
+        if ($channelId) {
+            $channel = $this->getDoctrine()
+                ->getRepository(Channel::class)
+                ->getOrLoadById($channelId);
+        }
+
+        return $channel;
     }
 }
