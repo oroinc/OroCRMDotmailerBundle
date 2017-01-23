@@ -28,7 +28,7 @@ class ProcessMappedFieldsUpdatesCommandTest extends WebTestCase
     {
         $this->loadFixtures(
             [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadUpdatesLogData',
+                'OroCRM\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadUpdatesLogData',
             ]
         );
         $result = $this->runCommand('oro:cron:dotmailer:mapped-fields-updates:process');
