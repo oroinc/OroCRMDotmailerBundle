@@ -4,6 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
@@ -56,6 +57,19 @@ class AddressBookRepository extends EntityRepository
                 )
             );
         }
+
+        return $result;
+    }
+
+    /**
+     * @return AddressBook[]
+     */
+    public function getAddressBooksWithML()
+    {
+        $qb = $this->createQueryBuilder('addressBook')
+            ->innerJoin('addressBook.marketingList', 'marketingList');
+
+        $result = $qb->getQuery()->getResult();
 
         return $result;
     }

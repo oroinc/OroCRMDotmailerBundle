@@ -46,6 +46,7 @@ After the connection has been saved, the "Connect to Dotmailer" button will disa
 - "Connection Settings": edit the connection settings
 - "Disconnect": disconnect the Marketing List from the Address Book
 - "Synchronize": manually start the synchronization between the Marketing List and the Address Book.
+- "Refresh Data Fields": manually mark all Marketing List records as updated to make sure data fields data is up to date in dotmailer after next syncrhonization. 
 
 ## Managing Dotmailer Data fields and mappings
 
@@ -61,6 +62,17 @@ When new integration is created, default mappings for common data fields (FIRSTN
 Existing mapping can be updated and new mappings can be added using mapping form and mapping configuration widget.
 You can map several entity fields to one dotmailer string data field. In this case entity's fields values will be concated with a blank, e.g. "Firstname Lastname".
 "Two Way Sync" checkbox should be checked if you want to update application entities with data from dotmailer.
+### Data fields values synchronization
+After mapping is configured, tracking of changes done on mapped real fields is performed automatically and processed every 5 minutes.
+Changes done on virtual fields used in the mappings are not tracked. `oro_dotmailer.on_build_mapping_tracked_fields`
+event can be used to customize the list of fields to track. 
+
+You can trigger re-sync of data fields manually on required marketing list from marketing list view dotmailer settings. Alternativly, 
+system configuration setting can be set under System->Configuration->Integrations->Dotmailer, to perform daily force update of data fields.
+Possible options:
+- *None*: No force sync is performed
+- *For mappings with virtual fields only* (default): Perform force fields update only if a mapping has at least one virtual field used. 
+- *For all mappings*: Perform force fields update for all marketing lists.
 
 ## Dotmailer Campaign Creation
 
@@ -100,6 +112,7 @@ After export is finished, command check export status on Dotmailer side. If expo
 ## Dotmailer Single Sign-on
 To be able to enter dotmailer account straight from the application, dotmailer provides single sign-on feature https://developer.dotmailer.com/docs/using-oauth-20-with-dotmailer.
 To use signel sign-on, you need to obtain api key and secret from your dotmailer manager and put them during integration configuration.
+The requested callback url to provide is https://{your domain}/dotmailer/oauth/callback. 
 After this, navigate to Marketing->Dotmailer->Email Studio and choose the integration you'd like to connect with your dotmailer account.
 Click connect button to perform the OAuth authorization. After successful login to your dotmailer account, you should be redirected back to the application and see your dotmailer account dashboard in the iframe.
 After this you will not need to login into dotmailer account each time and can access it from the application.
