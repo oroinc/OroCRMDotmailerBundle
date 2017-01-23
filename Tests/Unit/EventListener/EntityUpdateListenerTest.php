@@ -3,8 +3,10 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\EventListener;
 
 use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\ORM\Event\PostFlushEventArgs;
 
 use Oro\Bundle\DotmailerBundle\Entity\ChangedFieldLog;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\ChangedFieldLogRepository;
 use Oro\Bundle\DotmailerBundle\EventListener\EntityUpdateListener;
 
 class EntityUpdateListenerTest extends \PHPUnit_Framework_TestCase
@@ -52,7 +54,9 @@ class EntityUpdateListenerTest extends \PHPUnit_Framework_TestCase
                 'entityClassWithTrackedFields',
                 'entityClassWithoutTrackedFields',
             ]));
-        
+        $unitOfWork->expects($this->once())->method('getScheduledEntityInsertions')
+            ->will($this->returnValue([]));
+
         $onFlushEvent = new OnFlushEventArgs($em);
 
         $this->mappingProvider->expects($this->once())->method('getTrackedFieldsConfig')->will($this->returnValue(
@@ -119,5 +123,80 @@ class EntityUpdateListenerTest extends \PHPUnit_Framework_TestCase
         $onFlushEvent = new OnFlushEventArgs($em);
         $this->listener->setEnabled(false);
         $this->listener->onFlush($onFlushEvent);
+    }
+
+    public function testPostFlush()
+    {
+        $em = $this
+            ->getMockBuilder('Doctrine\ORM\EntityManagerInterface')
+            ->getMock();
+        $unitOfWork = $this
+            ->getMockBuilder('Doctrine\ORM\UnitOfWork')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $em->expects($this->any())
+            ->method('getUnitOfWork')
+            ->willReturn($unitOfWork);
+        $unitOfWork->expects($this->once())->method('getScheduledEntityUpdates')
+            ->will($this->returnValue([]));
+        $unitOfWork->expects($this->once())->method('getScheduledEntityInsertions')
+            ->will($this->returnValue([
+                'insertedEntityClass',
+            ]));
+        $unitOfWork->expects($this->once())->method('isScheduledForInsert')->with('insertedEntityClass')
+            ->will($this->returnValue(true));
+
+        $onFlushEvent = new OnFlushEventArgs($em);
+
+        $this->mappingProvider->expects($this->once())->method('getTrackedFieldsConfig')->will($this->returnValue(
+            [
+                'insertedEntityClass' => [
+                    'trackedField' => [
+                        [
+                            'channel_id' => 1,
+                            'parent_entity' => 'parentEntityClass',
+                            'field_path' => 'trackedFieldPath'
+                        ]
+                    ],
+                ]
+            ]
+        ));
+        
+        $this->doctrineHelper->expects($this->any())->method('getEntityClass')->will($this->returnArgument(0));
+
+        $unitOfWork->expects($this->once())->method('getEntityChangeSet')->with('insertedEntityClass')
+            ->will($this->returnValue([
+                'trackedField' => []
+            ]));
+        
+        $metaData = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')->disableOriginalConstructor()
+            ->getMock();
+        $this->doctrineHelper->expects($this->once())->method('getEntityMetadataForClass')
+            ->with(ChangedFieldLog::class)
+            ->will($this->returnValue($metaData));
+
+        $this->listener->onFlush($onFlushEvent);
+        $onPostFlushEvent = new PostFlushEventArgs($em);
+        $repository = $this
+            ->getMockBuilder(ChangedFieldLogRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $em->expects($this->once())->method('getRepository')->with(ChangedFieldLog::class)
+            ->will($this->returnValue($repository));
+        $this->doctrineHelper->expects($this->once())->method('getSingleEntityIdentifier')
+            ->with('insertedEntityClass', false)->will($this->returnValue(42));
+        $repository->expects($this->once())->method('addEntityIdToLog')->with(42, null);
+        $this->listener->postFlush($onPostFlushEvent);
+    }
+
+    public function testPostFlushNotExecutedWhenDisabled()
+    {
+        $em = $this
+            ->getMockBuilder('Doctrine\ORM\EntityManagerInterface')
+            ->getMock();
+        $em->expects($this->never())->method('getRepository');
+        $onFlushEvent = new PostFlushEventArgs($em);
+        $this->listener->setEnabled(false);
+        $this->listener->postFlush($onFlushEvent);
     }
 }
