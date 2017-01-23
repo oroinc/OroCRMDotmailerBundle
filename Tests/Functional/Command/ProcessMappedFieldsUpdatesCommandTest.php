@@ -38,7 +38,7 @@ class ProcessMappedFieldsUpdatesCommandTest extends WebTestCase
         $entityUpdated = $managerRegistry->getRepository('OroCRMDotmailerBundle:AddressBookContact')
             ->findBy(
                 [
-                    'marketingListItemId' => $this->getReference('oro_dotmailer.orocrm_contact.john.doe')->getId(),
+                    'marketingListItemId' => $this->getReference('orocrm_dotmailer.orocrm_contact.john.doe')->getId(),
                     'entityUpdated' => true
                 ]
             );
