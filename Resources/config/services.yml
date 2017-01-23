@@ -447,6 +447,9 @@ services:
         arguments:
             - "@oro_entity.doctrine_helper"
             - "@oro_dotmailer.cache"
+            - '@oro_entity.virtual_field_provider.chain'
+        calls:
+            - [setDispatcher, ['@event_dispatcher']]
 
     oro_dotmailer.query_designer.mapping_query_converter:
         class: 'Oro\Bundle\DotmailerBundle\QueryDesigner\MappingQueryConverter'
@@ -473,6 +476,13 @@ services:
             - "@router"
             - "@oro_security.encoder.mcrypt"
             - "@hwi_oauth.http_client"
+
+    oro_dotmailer.manager.sync_manager:
+        class: 'Oro\Bundle\DotmailerBundle\Model\SyncManager'
+        arguments:
+            - "@oro_entity.doctrine_helper"
+            - "@oro_dotmailer.provider.mapping"
+            - "@oro_config.user"
 
     #readers
     oro_dotmailer.importexport.reader.abstract:
