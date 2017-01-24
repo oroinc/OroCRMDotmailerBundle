@@ -59,7 +59,7 @@ class FieldsForceSyncCommand extends Command implements CronCommandInterface, Co
             $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
         }
 
-        $output->writeln('Start queue processing');
+        $output->writeln('Start update of address book contacts');
         $this->getManager()->forceMarkEntityUpdate();
         $output->writeln('Completed');
     }
