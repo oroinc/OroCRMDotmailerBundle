@@ -17,6 +17,18 @@ oro_system_configuration:
                 tooltip:        orocrm.dotmailer.configuration.datafields_sync_interval.tooltip
                 required: false
 
+        oro_crm_dotmailer.force_sync_for_virtual_fields:
+            data_type: string
+            type: choice
+            priority: 20
+            options:
+                label: orocrm.dotmailer.configuration.force_sync_for_virtual_fields.label
+                tooltip: orocrm.dotmailer.configuration.force_sync_for_virtual_fields.tooltip
+                choices:
+                    None:  orocrm.dotmailer.configuration.force_sync_for_virtual_fields.choices.none
+                    VirtualOnly: orocrm.dotmailer.configuration.force_sync_for_virtual_fields.choices.virtual_only
+                    Always: orocrm.dotmailer.configuration.force_sync_for_virtual_fields.choices.always
+
     tree:
         system_configuration:
             platform:
@@ -30,3 +42,4 @@ oro_system_configuration:
                                         priority: 10
                                         children:
                                             - oro_crm_dotmailer.datafields_sync_interval
+                                            - oro_crm_dotmailer.force_sync_for_virtual_fields

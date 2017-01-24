@@ -4,7 +4,10 @@ namespace OroCRM\Bundle\DotmailerBundle\Provider;
 
 use Doctrine\Common\Cache\CacheProvider as DoctrineCacheProvider;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
+use Oro\Bundle\EntityBundle\Provider\ChainVirtualFieldProvider;
 use OroCRM\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use OroCRM\Bundle\DotmailerBundle\Entity\Repository\DataFieldMappingRepository;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
@@ -18,14 +21,33 @@ class MappingProvider
     /** @var DoctrineCacheProvider */
     protected $cache;
 
+    /** @var ChainVirtualFieldProvider */
+    protected $virtualFieldsProvider;
+
+    /** @var EventDispatcherInterface */
+    protected $dispatcher;
+
     /**
      * @param DoctrineHelper $doctrineHelper
      * @param DoctrineCacheProvider $cache
+     * @param ChainVirtualFieldProvider $virtualFieldsProvider
      */
-    public function __construct(DoctrineHelper $doctrineHelper, DoctrineCacheProvider $cache)
-    {
+    public function __construct(
+        DoctrineHelper $doctrineHelper,
+        DoctrineCacheProvider $cache,
+        ChainVirtualFieldProvider $virtualFieldsProvider
+    ) {
         $this->doctrineHelper = $doctrineHelper;
         $this->cache = $cache;
+        $this->virtualFieldsProvider = $virtualFieldsProvider;
+    }
+
+    /**
+     * @param EventDispatcherInterface $dispatcher
+     */
+    public function setDispatcher(EventDispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -158,6 +180,9 @@ class MappingProvider
                 foreach ($fields as $field) {
                     $class = $joinIdentifierHelper->getEntityClassName($field);
                     $fieldName = $joinIdentifierHelper->getFieldName($field);
+                    if ($this->virtualFieldsProvider->isVirtualField($class, $fieldName)) {
+                        $trackedFields[$channelId][$parentEntity]['hasMappedVirtualFields'] = true;
+                    }
                     if (!isset($trackedFields[$class][$fieldName])) {
                         $trackedFields[$class][$fieldName] = [];
                     }
@@ -168,10 +193,27 @@ class MappingProvider
                     ];
                 }
             }
+            if ($this->dispatcher && $this->dispatcher->hasListeners(MappingTrackedFieldsEvent::NAME)) {
+                $event = new MappingTrackedFieldsEvent($trackedFields);
+                $this->dispatcher->dispatch(MappingTrackedFieldsEvent::NAME, $event);
+                $trackedFields = $event->getFields();
+            }
             $this->cache->save($cacheKey, $trackedFields);
         }
 
         return $trackedFields;
+    }
+
+    /**
+     * @param int $channelId
+     * @param string $entityClass
+     * @return bool
+     */
+    public function entityHasVirutalFieldsMapped($channelId, $entityClass)
+    {
+        $trackedFields = $this->getTrackedFieldsConfig();
+
+        return !empty($trackedFields[$channelId][$entityClass]['hasMappedVirtualFields']);
     }
 
     /**

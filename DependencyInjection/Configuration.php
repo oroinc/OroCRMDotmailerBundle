@@ -21,6 +21,7 @@ class Configuration implements ConfigurationInterface
             $rootNode,
             [
                 'datafields_sync_interval' => ['value' => '1 day'],
+                'force_sync_for_virtual_fields' => ['value' => SyncManager::FORCE_SYNC_VIRTUALS_ONLY],
             ]
         );
 

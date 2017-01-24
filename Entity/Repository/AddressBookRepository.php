@@ -61,6 +61,19 @@ class AddressBookRepository extends EntityRepository
     }
 
     /**
+     * @return AddressBook[]
+     */
+    public function getAddressBooksWithML()
+    {
+        $qb = $this->createQueryBuilder('addressBook')
+            ->innerJoin('addressBook.marketingList', 'marketingList');
+
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
+
+    /**
      * @param Channel $channel
      * @param array   $keepAddressBooks
      *

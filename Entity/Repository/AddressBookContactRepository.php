@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
+use OroCRM\Bundle\DotmailerBundle\Entity\AddressBook;
 use OroCRM\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use OroCRM\Bundle\DotmailerBundle\Entity\Contact;
 
@@ -52,39 +53,54 @@ class AddressBookContactRepository extends EntityRepository
     }
 
     /**
-     * @param string $entityClass
+     * @param string|array $entityClasses
      * @param Channel $channel
      */
-    public function bulkUpdateEntityUpdatedFlag($entityClass, Channel $channel)
+    public function bulkUpdateEntityUpdatedFlag($entityClasses, Channel $channel)
     {
-        $this->bulkUpdateFlagByEntity($entityClass, $channel, 'entityUpdated');
+        $this->bulkUpdateFlagByEntity($entityClasses, $channel, 'entityUpdated');
     }
 
     /**
-     * @param string $entityClass
+     * @param string|array $entityClasses
      * @param Channel $channel
      */
-    public function bulkUpdateScheduledForEntityFieldUpdateFlag($entityClass, Channel $channel)
+    public function bulkUpdateScheduledForEntityFieldUpdateFlag($entityClasses, Channel $channel)
     {
-        $this->bulkUpdateFlagByEntity($entityClass, $channel, 'scheduledForFieldsUpdate');
+        $this->bulkUpdateFlagByEntity($entityClasses, $channel, 'scheduledForFieldsUpdate');
     }
 
     /**
-     * @param string $entityClass
-     * @param Channel $channel
+     * @param string|array $entityClasses
      * @param string $flagColumn
+     * @param Channel $channel
      * @param bool $value
      */
-    public function bulkUpdateFlagByEntity($entityClass, Channel $channel, $flagColumn, $value = true)
+    public function bulkUpdateFlagByEntity($entityClasses, Channel $channel, $flagColumn, $value = true)
     {
+        $entityClasses = (array) $entityClasses;
         $qb = $this->createQueryBuilder('address_book_contact');
         $qb->update()
-            ->where('address_book_contact.marketingListItemClass = :entityClass')
-            ->setParameter('entityClass', $entityClass)
+            ->where($qb->expr()->in('address_book_contact.marketingListItemClass', $entityClasses))
             ->andWhere('address_book_contact.channel = :channel')
             ->setParameter('channel', $channel)
             ->set('address_book_contact.' . $flagColumn, ':value')
             ->setParameter('value', $value)
+            ->getQuery()
+            ->execute();
+    }
+
+    /**
+     * @param AddressBook $addressBook
+     */
+    public function bulkEntityUpdatedByAddressBook(AddressBook $addressBook)
+    {
+        $qb = $this->createQueryBuilder('address_book_contact');
+        $qb->update()
+            ->where('address_book_contact.addressBook = :addressBook')
+            ->setParameter('addressBook', $addressBook)
+            ->set('address_book_contact.entityUpdated', ':value')
+            ->setParameter('value', true)
             ->getQuery()
             ->execute();
     }

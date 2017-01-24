@@ -94,6 +94,43 @@ class AddressBookController extends Controller
 
     /**
      * @Route(
+     *      "/synchronize_datafields/{id}",
+     *      name="orocrm_dotmailer_synchronize_adddress_book_datafields",
+     *      requirements={"id"="\d+"}
+     * )
+     * @Acl(
+     *      id="orocrm_dotmailer_address_book_update",
+     *      type="entity",
+     *      permission="EDIT",
+     *      class="OroCRMDotmailerBundle:AddressBook"
+     * )
+     * @param AddressBook $addressBook
+     *
+     * @return JsonResponse
+     */
+    public function synchronizeAddressBookDataFields(AddressBook $addressBook)
+    {
+        try {
+            $this->getDoctrine()->getRepository('OroCRMDotmailerBundle:AddressBookContact')
+                ->bulkEntityUpdatedByAddressBook($addressBook);
+
+            $status = Codes::HTTP_OK;
+            $response = [
+                'message' => $this->get('translator')->trans('orocrm.dotmailer.addressbook.sync_datafields_success')
+            ];
+        } catch (\Exception $e) {
+            $status = Codes::HTTP_BAD_REQUEST;
+            $response['message'] = sprintf(
+                $this->get('translator')->trans('orocrm.dotmailer.addressbook.sync_datafields_failed'),
+                $e->getMessage()
+            );
+        }
+
+        return new JsonResponse($response, $status);
+    }
+
+    /**
+     * @Route(
      *      "/marketing-list/disconnect/{id}",
      *      name="orocrm_dotmailer_marketing_list_disconnect",
      *      requirements={"id"="\d+"}

@@ -19,6 +19,17 @@
         {{ UI.dropdownItem({
             'path': 'javascript:void(0);',
             'data': {
+                'url': path('orocrm_dotmailer_synchronize_adddress_book_datafields', {id: addressBook.id}),
+                'action': 'sync-with-dotmailer'
+            },
+            'label': 'orocrm.dotmailer.addressbook.sync_datafields'|trans,
+            'class': 'no-hash dotmailer-sync-btn',
+            'iCss': 'icon-refresh'
+        }) }}
+
+        {{ UI.dropdownItem({
+            'path': 'javascript:void(0);',
+            'data': {
                 'url': path('orocrm_dotmailer_marketing_list_connect', {id: marketingList.id}),
                 'action': 'connect-with-dotmailer-setting-update',
                 'message': 'orocrm.dotmailer.connection.message.update'|trans,
