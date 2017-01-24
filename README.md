@@ -67,10 +67,10 @@ After mapping is configured, tracking of changes done on mapped real fields is p
 Changes done on virtual fields used in the mappings are not tracked. `oro_dotmailer.on_build_mapping_tracked_fields`
 event can be used to customize the list of fields to track. 
 
-You can trigger re-sync of data fields manually on required marketing list from marketing list view dotmailer settings. Alternativly, 
+You can trigger re-sync of data fields manually on required marketing list from marketing list view dotmailer settings. Alternatively, 
 system configuration setting can be set under System->Configuration->Integrations->Dotmailer, to perform daily force update of data fields.
 Possible options:
-- *None*: No force sync is performed
+- *None*: No force sync is performed.
 - *For mappings with virtual fields only* (default): Perform force fields update only if a mapping has at least one virtual field used. 
 - *For all mappings*: Perform force fields update for all marketing lists.
 
