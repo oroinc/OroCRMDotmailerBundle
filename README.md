@@ -46,7 +46,7 @@ After the connection has been saved, the "Connect to Dotmailer" button will disa
 - "Connection Settings": edit the connection settings
 - "Disconnect": disconnect the Marketing List from the Address Book
 - "Synchronize": manually start the synchronization between the Marketing List and the Address Book.
-- "Refresh Data Fields": manually mark all Marketing List records as updated to make sure data fields data is up to date in dotmailer after next syncrhonization. 
+- "Refresh Data Fields": manually mark all Marketing List records as updated to make sure data fields data is up to date in dotmailer after next synchronization. 
 
 ## Managing Dotmailer Data fields and mappings
 
