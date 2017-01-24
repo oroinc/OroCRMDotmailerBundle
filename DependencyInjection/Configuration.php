@@ -6,6 +6,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 use Oro\Bundle\ConfigBundle\DependencyInjection\SettingsBuilder;
+use OroCRM\Bundle\DotmailerBundle\Model\SyncManager;
 
 class Configuration implements ConfigurationInterface
 {
