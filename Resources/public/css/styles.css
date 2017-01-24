@@ -37,3 +37,12 @@
 .entity-field-control .remove-field {
     text-decoration: none;
 }
+
+.dotmailer-page .breadcrumb li,
+.dotmailer-page .btn,
+.dotmailer-page .oro-subtitle,
+.nav .dotmailer .title,
+.dotmailer-sync-btn,
+.dotmailer-group a.btn {
+    text-transform: none !important;
+}

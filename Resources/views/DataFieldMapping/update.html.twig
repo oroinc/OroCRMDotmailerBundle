@@ -8,7 +8,7 @@
 {% set entityId = entity.id %}
 
 {% set formAction = form.vars.value.id ? path('orocrm_dotmailer_datafield_mapping_update', { 'id': form.vars.value.id }) : path('orocrm_dotmailer_datafield_mapping_create')  %}
-
+{% block bodyClass %}dotmailer-page{% endblock %}
 {% block navButtons %}
     {% if form.vars.value.id and resource_granted('DELETE', form.vars.value) %}
         {{ UI.deleteButton({

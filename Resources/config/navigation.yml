@@ -3,6 +3,8 @@ oro_menu_config:
         orocrm_dotmailer:
             label: 'orocrm.dotmailer.channel_type.label'
             uri: '#'
+            linkAttributes:
+                class: 'dotmailer'
             extras:
                 position: 50
         orocrm_dotmailer_data_field_list:

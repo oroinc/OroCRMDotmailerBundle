@@ -7,7 +7,7 @@
 {% set entityId = entity.id %}
 
 {% set formAction = path('orocrm_dotmailer_datafield_create') %}
-
+{% block bodyClass %}dotmailer-page{% endblock %}
 {% block navButtons %}
     {% set html = UI.saveAndCloseButton({
         'route': 'orocrm_dotmailer_datafield_view',
