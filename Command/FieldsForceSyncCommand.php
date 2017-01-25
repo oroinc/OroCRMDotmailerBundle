@@ -53,6 +53,6 @@ class FieldsForceSyncCommand extends Command implements CronCommandInterface, Co
      */
     private function getManager()
     {
-        return $this->container->get('oro_dotmailer.manager.sync_manager');
+        return $this->container->get('orocrm_dotmailer.manager.sync_manager');
     }
 }
