@@ -6,6 +6,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 use Oro\Bundle\ConfigBundle\DependencyInjection\SettingsBuilder;
+use Oro\Bundle\DotmailerBundle\Model\SyncManager;
 
 class Configuration implements ConfigurationInterface
 {
@@ -21,6 +22,7 @@ class Configuration implements ConfigurationInterface
             $rootNode,
             [
                 'datafields_sync_interval' => ['value' => '1 day'],
+                'force_sync_for_virtual_fields' => ['value' => SyncManager::FORCE_SYNC_VIRTUALS_ONLY],
             ]
         );
 

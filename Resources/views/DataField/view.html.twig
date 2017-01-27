@@ -2,7 +2,7 @@
 {% import 'OroUIBundle::macros.html.twig' as macros %}
 
 {% oro_title_set({params : {"%datafield.name%": entity.name} }) %}
-
+{% block bodyClass %}dotmailer-page{% endblock %}
 {% block navButtons %}
     {% if resource_granted('DELETE', entity) %}
         {{ UI.deleteButton({

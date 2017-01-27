@@ -75,7 +75,7 @@ class FieldHelper
                         $this->replaceAliases($conditions, $typedFieldConfigJoin['join']),
                         $typedFieldConfigJoin['alias'],
                         $typedFieldConfigJoin['conditionType'],
-                        $typedFieldConfigJoin['condition']
+                        $this->replaceAliases($conditions, $typedFieldConfigJoin['condition'])
                     );
 
                     $qb->add('join', [$rootAlias => $join], true);
