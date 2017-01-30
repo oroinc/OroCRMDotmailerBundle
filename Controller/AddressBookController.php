@@ -46,12 +46,53 @@ class AddressBookController extends Controller
 
             $status = Codes::HTTP_OK;
             $response = [
-                'message' => $this->get('translator')->trans('oro.integration.progress')
+                'message' => str_replace(
+                    '{{ job_view_link }}',
+                    '',
+                    $this->get('translator')->trans('oro.dotmailer.addressbook.sync')
+                )
             ];
         } catch (\Exception $e) {
             $status = Codes::HTTP_BAD_REQUEST;
             $response['message'] = sprintf(
                 $this->get('translator')->trans('oro.integration.sync_error'),
+                $e->getMessage()
+            );
+        }
+
+        return new JsonResponse($response, $status);
+    }
+
+    /**
+     * @Route(
+     *      "/synchronize_datafields/{id}",
+     *      name="oro_dotmailer_synchronize_adddress_book_datafields",
+     *      requirements={"id"="\d+"}
+     * )
+     * @Acl(
+     *      id="oro_dotmailer_address_book_update",
+     *      type="entity",
+     *      permission="EDIT",
+     *      class="OroDotmailerBundle:AddressBook"
+     * )
+     * @param AddressBook $addressBook
+     *
+     * @return JsonResponse
+     */
+    public function synchronizeAddressBookDataFields(AddressBook $addressBook)
+    {
+        try {
+            $this->getDoctrine()->getRepository('OroDotmailerBundle:AddressBookContact')
+                ->bulkEntityUpdatedByAddressBook($addressBook);
+
+            $status = Codes::HTTP_OK;
+            $response = [
+                'message' => $this->get('translator')->trans('oro.dotmailer.addressbook.sync_datafields_success')
+            ];
+        } catch (\Exception $e) {
+            $status = Codes::HTTP_BAD_REQUEST;
+            $response['message'] = sprintf(
+                $this->get('translator')->trans('oro.dotmailer.addressbook.sync_datafields_failed'),
                 $e->getMessage()
             );
         }

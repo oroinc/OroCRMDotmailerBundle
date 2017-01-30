@@ -24,7 +24,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
  *          }
  *      }
  * )
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\ChangedFieldLogRepository")
  */
 class ChangedFieldLog
 {
