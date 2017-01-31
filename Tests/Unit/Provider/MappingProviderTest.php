@@ -7,6 +7,7 @@ use Oro\Component\Testing\Unit\EntityTrait;
 use OroCRM\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use OroCRM\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
 use OroCRM\Bundle\DotmailerBundle\Provider\MappingProvider;
+use OroCRM\Bundle\DotmailerBundle\Provider\MappingTrackedFieldsEvent;
 
 class MappingProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,6 +24,11 @@ class MappingProviderTest extends \PHPUnit_Framework_TestCase
     protected $cache;
 
     /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $virtualFieldsProvider;
+
+    /**
      * @var MappingProvider
      */
     protected $mappingProvider;
@@ -33,10 +39,14 @@ class MappingProviderTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
         $this->cache = $this->getMockBuilder('Doctrine\Common\Cache\CacheProvider')
             ->disableOriginalConstructor()->getMock();
+        $this->virtualFieldsProvider = $this
+            ->getMockBuilder('Oro\Bundle\EntityBundle\Provider\ChainVirtualFieldProvider')
+            ->disableOriginalConstructor()->getMock();
 
         $this->mappingProvider = new MappingProvider(
             $this->doctrineHelper,
-            $this->cache
+            $this->cache,
+            $this->virtualFieldsProvider
         );
     }
 
@@ -286,6 +296,93 @@ class MappingProviderTest extends \PHPUnit_Framework_TestCase
         $result = $this->mappingProvider->getTrackedFieldsConfig();
 
         $this->assertEquals($expected, $result);
+    }
+
+    public function testGetTrackedFieldsConfigModifiedInEvent()
+    {
+        $cacheKey = 'tracked_fields';
+        $this->cache->expects($this->once())->method('fetch')->with($cacheKey)
+            ->will($this->returnValue([]));
+        $this->cache->expects($this->once())->method('contains')->with($cacheKey)
+            ->will($this->returnValue(false));
+        $repository = $this->getRepositoryMock();
+        $mappings = [];
+        $channel = $this->getEntity('Oro\Bundle\IntegrationBundle\Entity\Channel', ['id' => 1]);
+        $mapping = new DataFieldMapping();
+        $mapping->setEntity('MappingEntityClass');
+        $mapping->setChannel($channel);
+        $mappingConfig = new DataFieldMappingConfig();
+        $mappingConfig->setEntityFields('firstName');
+        $mapping->addConfig($mappingConfig);
+        $mappings[] = $mapping;
+        $repository->expects($this->once())->method('findAll')->will($this->returnValue($mappings));
+
+        $eventData = [
+            'MappingEntityClass' => [
+                'firstName' => [
+                    [
+                        'channel_id' => 1,
+                        'parent_entity' => 'MappingEntityClass',
+                        'field_path' => 'firstName'
+                    ]
+                ],
+                'twitter' => [
+                    [
+                        'channel_id' => 1,
+                        'parent_entity' => 'MappingEntityClass',
+                        'field_path' => 'twitter'
+                    ]
+                ],
+            ]
+        ];
+        $event = new MappingTrackedFieldsEvent([]);
+        $dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')
+            ->disableArgumentCloning()
+            ->getMock();
+        $dispatcher->expects($this->once())->method('hasListeners')->with(MappingTrackedFieldsEvent::NAME)
+            ->will($this->returnValue(true));
+        $dispatcher->expects($this->once())->method('dispatch')->with(
+            MappingTrackedFieldsEvent::NAME,
+            $this->isInstanceOf(MappingTrackedFieldsEvent::class)
+        )->will($this->returnCallback(function ($name, MappingTrackedFieldsEvent $event) use ($eventData) {
+            $event->setFields($eventData);
+        }));
+        $this->mappingProvider->setDispatcher($dispatcher);
+
+        $this->cache->expects($this->once())->method('save')->with(
+            $cacheKey,
+            $eventData
+        );
+
+        $result = $this->mappingProvider->getTrackedFieldsConfig();
+
+        $this->assertEquals($eventData, $result);
+    }
+
+    public function testEntityHasVirutalFieldsMapped()
+    {
+        $cacheKey = 'tracked_fields';
+        $this->cache->expects($this->once())->method('fetch')->with($cacheKey)
+            ->will($this->returnValue([]));
+        $this->cache->expects($this->once())->method('contains')->with($cacheKey)
+            ->will($this->returnValue(false));
+        $repository = $this->getRepositoryMock();
+        $mappings = [];
+        $channel = $this->getEntity('Oro\Bundle\IntegrationBundle\Entity\Channel', ['id' => 1]);
+        $mapping = new DataFieldMapping();
+        $mapping->setEntity('MappingEntityClass');
+        $mapping->setChannel($channel);
+        $mappingConfig = new DataFieldMappingConfig();
+        $mappingConfig->setEntityFields('primaryPhone');
+        $mapping->addConfig($mappingConfig);
+        $mappings[] = $mapping;
+        $repository->expects($this->once())->method('findAll')->will($this->returnValue($mappings));
+        $this->virtualFieldsProvider->expects($this->once())->method('isVirtualField')->with(
+            'MappingEntityClass',
+            'primaryPhone'
+        )->will($this->returnValue(true));
+
+        $this->assertTrue($this->mappingProvider->entityHasVirutalFieldsMapped(1, 'MappingEntityClass'));
     }
 
     public function testGetTrackedFieldsConfigCached()

@@ -1,6 +1,6 @@
 {% import 'OroUIBundle::macros.html.twig' as UI %}
 
-<div class="btn-group pull-left">
+<div class="btn-group pull-left dotmailer-group">
     {% if addressBook %}
         {% set html %}
         {{ UI.dropdownItem({
@@ -12,6 +12,17 @@
                 'action': 'sync-with-dotmailer'
             },
             'label': 'orocrm.dotmailer.connection.button.synchronize'|trans,
+            'class': 'no-hash dotmailer-sync-btn',
+            'iCss': 'icon-refresh'
+        }) }}
+
+        {{ UI.dropdownItem({
+            'path': 'javascript:void(0);',
+            'data': {
+                'url': path('orocrm_dotmailer_synchronize_adddress_book_datafields', {id: addressBook.id}),
+                'action': 'sync-with-dotmailer'
+            },
+            'label': 'orocrm.dotmailer.addressbook.sync_datafields'|trans,
             'class': 'no-hash dotmailer-sync-btn',
             'iCss': 'icon-refresh'
         }) }}

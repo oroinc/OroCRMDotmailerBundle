@@ -52,6 +52,9 @@ orocrm:
             sync_status.label:                    Sync Status
             create_entities.label:                Create New Entities
             create_entities.tooltip:              Create new records if no match by email is found
+            sync_datafields:                      Refresh Data Fields
+            sync_datafields_success:              Data Fields will be updated with the next synchronization
+            sync_datafields_failed:               Could not schedule data fields update
 
             sync: Marketing list synchronization has been scheduled. {{ job_view_link }}
 
@@ -432,6 +435,13 @@ orocrm:
             dotmailer_synchronization: Synchronization settings
             datafields_sync_interval: Data Fields Sync Interval
             datafields_sync_interval.tooltip: This interval will be used to update data fields from dotmailer
+            force_sync_for_virtual_fields:
+                label: Enable daily force synchronization of mapped data fields
+                tooltip: Once a day, trigger data fields check. All contacts from entity's marketing lists will be automatically checked for updated fields and scheduled for sync with dotmailer if needed.
+                choices:
+                    none: None
+                    virtual_only: For mappings with virtual fields only
+                    always: For all mappings
 
         block:
             general: General

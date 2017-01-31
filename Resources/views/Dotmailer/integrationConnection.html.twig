@@ -4,7 +4,7 @@
 {% oro_title_set({params : {'%title%': 'orocrm.dotmailer.integration.connection.label'|trans} }) %}
 
 {% set formAction = path('orocrm_dotmailer_integration_connection') %}
-
+{% block bodyClass %}dotmailer-page{% endblock %}
 {% block navButtons %}{% endblock navButtons %}
 
 {% block pageHeader %}
