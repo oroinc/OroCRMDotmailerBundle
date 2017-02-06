@@ -13,9 +13,6 @@ use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\AbstractImportExportTestCase;
 
-/**
- * @dbIsolation
- */
 class ExportManagerTest extends AbstractImportExportTestCase
 {
     /**

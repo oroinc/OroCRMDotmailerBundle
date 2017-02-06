@@ -7,9 +7,6 @@ use DotMailer\Api\DataTypes\ApiAddressBookList;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
 
-/**
- * @dbIsolation
- */
 class AddressBookImportTest extends AbstractImportExportTestCase
 {
     protected function setUp()
