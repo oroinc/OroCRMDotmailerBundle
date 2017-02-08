@@ -4,7 +4,8 @@ namespace Oro\Bundle\DotmailerBundle\Model\Action;
 
 use Doctrine\ORM\QueryBuilder;
 
-use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIterator;
+use Oro\Bundle\BatchBundle\ORM\Query\BufferedIdentityQueryResultIterator;
+use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIteratorInterface;
 use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
@@ -52,7 +53,7 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
     /**
      * @param MarketingList $marketingList
      * @param string $email
-     * @return BufferedQueryResultIterator
+     * @return BufferedQueryResultIteratorInterface
      */
     protected function getMarketingListEntitiesByEmail(MarketingList $marketingList, $email)
     {
@@ -64,7 +65,7 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
              */
             ->useQueryCache(false);
 
-        return new BufferedQueryResultIterator($query);
+        return new BufferedIdentityQueryResultIterator($query);
     }
 
     /**
