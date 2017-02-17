@@ -267,6 +267,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
                     $campaign['originId'],
                     $campaign['emailCampaignId'],
                     $campaign['campaignId'],
+                    $campaign['addressBooks'],
                     $campaign['isInit'],
                     $lastSyncDate,
                     $this->additionalResource
@@ -298,6 +299,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
                     $campaign['originId'],
                     $campaign['emailCampaignId'],
                     $campaign['campaignId'],
+                    $campaign['addressBooks'],
                     $campaign['isInit'],
                     $lastSyncDate,
                     $this->additionalResource

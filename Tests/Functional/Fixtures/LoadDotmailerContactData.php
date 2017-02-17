@@ -69,7 +69,11 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
                 [
                     'addressBook'         => 'oro_dotmailer.address_book.third',
                     'marketing_list_item' => 'oro_dotmailer.orocrm_contact.nick.case'
-                ]
+                ],
+                [
+                    'addressBook'         => 'oro_dotmailer.address_book.second',
+                    'marketing_list_item' => 'oro_dotmailer.orocrm_contact.nick.case'
+                ],
             ],
         ],
         [
@@ -82,7 +86,11 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
                 [
                     'addressBook'         => 'oro_dotmailer.address_book.third',
                     'marketing_list_item' => 'oro_dotmailer.orocrm_contact.mike.case'
-                ]
+                ],
+                [
+                    'addressBook'         => 'oro_dotmailer.address_book.second',
+                    'marketing_list_item' => 'oro_dotmailer.orocrm_contact.mike.case'
+                ],
             ],
         ],
         [

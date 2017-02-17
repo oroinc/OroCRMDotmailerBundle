@@ -2,6 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\Campaign;
+
 abstract class AbstractActivityConnector extends AbstractDotmailerConnector
 {
     /**
@@ -9,25 +12,28 @@ abstract class AbstractActivityConnector extends AbstractDotmailerConnector
      */
     protected function getCampaignToSyncrhonize()
     {
-        // Synchronize only campaign activities that are connected to marketing list.
         $campaigns = $this->managerRegistry
             ->getRepository('OroDotmailerBundle:Campaign')
-            ->findBy(['channel' => $this->getChannel(), 'deleted' => false]);
+            ->getCampaignsToSynchronize($this->getChannel());
 
         $activityRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:Activity');
         $campaignsToSynchronize = [];
 
+        /** @var Campaign $campaign */
         foreach ($campaigns as $campaign) {
             $marketingCampaign = $campaign->getEmailCampaign()->getCampaign();
-            //collect activities only if related marketing campaign exisits
-            if ($marketingCampaign) {
-                $campaignsToSynchronize[] = [
-                    'originId'        => $campaign->getOriginId(),
-                    'emailCampaignId' => $campaign->getEmailCampaign()->getId(),
-                    'campaignId'      => $marketingCampaign->getId(),
-                    'isInit'          => $activityRepository->isExistsActivityByCampaign($campaign),
-                ];
-            }
+            $addressBooks = $campaign->getAddressBooks()->map(
+                function (AddressBook $addressBook) {
+                    return $addressBook->getId();
+                }
+            )->toArray();
+            $campaignsToSynchronize[] = [
+                'originId'        => $campaign->getOriginId(),
+                'emailCampaignId' => $campaign->getEmailCampaign()->getId(),
+                'campaignId'      => $marketingCampaign->getId(),
+                'addressBooks'    => $addressBooks,
+                'isInit'          => $activityRepository->isExistsActivityByCampaign($campaign)
+            ];
         }
 
         return $campaignsToSynchronize;

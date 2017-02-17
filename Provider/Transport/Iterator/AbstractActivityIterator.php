@@ -54,6 +54,11 @@ abstract class AbstractActivityIterator extends AbstractIterator
     protected $campaignId;
 
     /**
+     * @var array
+     */
+    protected $addressBooks;
+
+    /**
      * @var bool
      */
     protected $isInit;
@@ -75,6 +80,7 @@ abstract class AbstractActivityIterator extends AbstractIterator
      * @param int $campaignOriginId
      * @param int $emailCampaignId
      * @param int $campaignId
+     * @param array $addressBooks
      * @param bool $isInit
      * @param \DateTime $lastSyncDate
      * @param AdditionalResource $additionalResource
@@ -85,6 +91,7 @@ abstract class AbstractActivityIterator extends AbstractIterator
         $campaignOriginId,
         $emailCampaignId,
         $campaignId,
+        $addressBooks,
         $isInit = false,
         \DateTime $lastSyncDate = null,
         AdditionalResource $additionalResource = null
@@ -94,6 +101,7 @@ abstract class AbstractActivityIterator extends AbstractIterator
         $this->campaignOriginId = $campaignOriginId;
         $this->emailCampaignId = $emailCampaignId;
         $this->campaignId = $campaignId;
+        $this->addressBooks = $addressBooks;
         $this->isInit = $isInit;
         $this->lastSyncDate = $lastSyncDate;
         $this->additionalResource = $additionalResource;
@@ -120,7 +128,8 @@ abstract class AbstractActivityIterator extends AbstractIterator
             $item[self::EMAIL_CAMPAIGN_KEY] = $this->emailCampaignId;
             $item[self::MARKETING_CAMPAIGN_KEY] = $this->campaignId;
         }
-        if ($this->includeEntityData) {
+
+        if ($this->includeEntityData && $items) {
             $items = $this->getItemsWithEntitiesData($items);
         }
 
@@ -139,7 +148,8 @@ abstract class AbstractActivityIterator extends AbstractIterator
          * Group activities data by contact origin id.
          * In some cases it's not possible to know which exact entity was used in the campaign
          * since we only have dotmailer contact id in the activity response.
-         * So we need to update all Oro entities related to the same contact id with the activity.
+         * So we need to assign activity to Oro entities from all campaign's address books,
+         * related to the same contact id.
          */
         $itemsByContactId = [];
         foreach ($items as $item) {
@@ -150,7 +160,7 @@ abstract class AbstractActivityIterator extends AbstractIterator
         }
         $contactOriginIds = array_keys($itemsByContactId);
         $entitiesData = $this->registry->getRepository('OroDotmailerBundle:Contact')
-            ->getEntitiesDataByOriginIds($contactOriginIds);
+            ->getEntitiesDataByOriginIds($contactOriginIds, $this->addressBooks);
         $allItems = [];
         foreach ($entitiesData as $entityData) {
             $contactId = $entityData['originId'];

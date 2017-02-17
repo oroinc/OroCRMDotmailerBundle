@@ -3,7 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
-use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivityType;
+use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 
 class CampaignOpenIterator extends AbstractActivityIterator
 {
@@ -40,6 +40,6 @@ class CampaignOpenIterator extends AbstractActivityIterator
      */
     protected function getMarketingActivityType()
     {
-        return MarketingActivityType::TYPE_OPEN;
+        return MarketingActivity::TYPE_OPEN;
     }
 }

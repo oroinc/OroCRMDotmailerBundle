@@ -5,7 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 use DotMailer\Api\DataTypes\ApiCampaignContactClickList;
 use DotMailer\Api\DataTypes\ApiCampaignContactClick;
 
-use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivityType;
+use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AbstractActivityIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignClickIterator;
@@ -22,6 +22,7 @@ class CampaignClickIteratorTest extends \PHPUnit_Framework_TestCase
         $expectedCampaignOriginId = 15662;
         $expectedEmailCampaignId = 12;
         $expectedMarketingCampaignId = 1;
+        $addressBooks = [1];
         $expectedDate = new \DateTime();
         $iterator = new CampaignClickIterator(
             $resource,
@@ -29,6 +30,7 @@ class CampaignClickIteratorTest extends \PHPUnit_Framework_TestCase
             $expectedCampaignOriginId,
             $expectedEmailCampaignId,
             $expectedMarketingCampaignId,
+            $addressBooks,
             true,
             $expectedDate,
             $additionalResource
@@ -64,7 +66,8 @@ class CampaignClickIteratorTest extends \PHPUnit_Framework_TestCase
         $expectedData = [
             'originId' => '123',
             'entityClass' => 'entityClassName',
-            'entityId' => 12
+            'entityId' => 12,
+            'addressBooks' => $addressBooks
         ];
         $this->prepareRepositoryMock($registry, $expectedData);
 
@@ -72,7 +75,7 @@ class CampaignClickIteratorTest extends \PHPUnit_Framework_TestCase
             $expectedActivityContactArray = $expectedActivity->toArray();
             $expectedActivityContactArray[AbstractActivityIterator::CAMPAIGN_KEY] = $expectedCampaignOriginId;
             $expectedActivityContactArray[AbstractActivityIterator::MARKETING_ACTIVITY_TYPE_KEY] =
-                MarketingActivityType::TYPE_CLICK;
+                MarketingActivity::TYPE_CLICK;
             $expectedActivityContactArray[AbstractActivityIterator::EMAIL_CAMPAIGN_KEY] = $expectedEmailCampaignId;
             $expectedActivityContactArray[AbstractActivityIterator::MARKETING_CAMPAIGN_KEY] =
                 $expectedMarketingCampaignId;
@@ -91,6 +94,7 @@ class CampaignClickIteratorTest extends \PHPUnit_Framework_TestCase
         $expectedCampaignOriginId = 15662;
         $expectedEmailCampaignId = 12;
         $expectedMarketingCampaignId = 1;
+        $addressBooks = [1];
         $expectedDate = new \DateTime();
         $iterator = new CampaignClickIterator(
             $resource,
@@ -98,6 +102,7 @@ class CampaignClickIteratorTest extends \PHPUnit_Framework_TestCase
             $expectedCampaignOriginId,
             $expectedEmailCampaignId,
             $expectedMarketingCampaignId,
+            $addressBooks,
             false,
             $expectedDate,
             $additionalResource
@@ -131,7 +136,8 @@ class CampaignClickIteratorTest extends \PHPUnit_Framework_TestCase
         $expectedData = [
             'originId' => '123',
             'entityClass' => 'entityClassName',
-            'entityId' => 12
+            'entityId' => 12,
+            'addressBooks' => $addressBooks
         ];
         $this->prepareRepositoryMock($registry, $expectedData);
 
@@ -139,7 +145,7 @@ class CampaignClickIteratorTest extends \PHPUnit_Framework_TestCase
             $expectedActivityContactArray = $expectedActivity->toArray();
             $expectedActivityContactArray[AbstractActivityIterator::CAMPAIGN_KEY] = $expectedCampaignOriginId;
             $expectedActivityContactArray[AbstractActivityIterator::MARKETING_ACTIVITY_TYPE_KEY] =
-                MarketingActivityType::TYPE_CLICK;
+                MarketingActivity::TYPE_CLICK;
             $expectedActivityContactArray[AbstractActivityIterator::EMAIL_CAMPAIGN_KEY] = $expectedEmailCampaignId;
             $expectedActivityContactArray[AbstractActivityIterator::MARKETING_CAMPAIGN_KEY] =
                 $expectedMarketingCampaignId;
@@ -160,7 +166,7 @@ class CampaignClickIteratorTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $repository->expects($this->at(0))
             ->method('getEntitiesDataByOriginIds')
-            ->with([$expectedData['originId']])
+            ->with([$expectedData['originId']], $expectedData['addressBooks'])
             ->will($this->returnValue(
                 [
                     [
@@ -170,9 +176,6 @@ class CampaignClickIteratorTest extends \PHPUnit_Framework_TestCase
                     ]
                 ]
             ));
-        $repository->expects($this->at(1))
-            ->method('getEntitiesDataByOriginIds')
-            ->will($this->returnValue([]));
 
         $registry->expects($this->any())
             ->method('getRepository')

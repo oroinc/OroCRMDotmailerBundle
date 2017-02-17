@@ -16,6 +16,7 @@ abstract class AbstractCampaignActivityDataConverter extends AbstractDataConvert
             AbstractActivityIterator::ENTITY_ID_KEY => 'entityId',
             AbstractActivityIterator::ENTITY_CLASS_KEY => 'entityClass',
             AbstractActivityIterator::EMAIL_CAMPAIGN_KEY => 'relatedCampaignId',
+            AbstractActivityIterator::MARKETING_ACTIVITY_TYPE_KEY => 'type:id',
         ];
 
         return array_merge($defaultMapping, $this->getSpecificHeaderConversionRules());

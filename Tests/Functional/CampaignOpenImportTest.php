@@ -6,7 +6,6 @@ use DotMailer\Api\DataTypes\ApiCampaignContactOpenList;
 
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignOpenConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
-use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivityType;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 
 /**
@@ -74,8 +73,8 @@ class CampaignOpenImportTest extends AbstractImportExportTestCase
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $marketingActivityRepository = $this->managerRegistry->getRepository(MarketingActivity::class);
-        $marketingActivityTypeRepository = $this->managerRegistry->getRepository(MarketingActivityType::class);
-        $openType = $marketingActivityTypeRepository->findBy(['name' => MarketingActivityType::TYPE_OPEN]);
+        $enumProvider = $this->getContainer()->get('oro_entity_extend.enum_value_provider');
+        $openType = $enumProvider->getEnumValueByCode(MarketingActivity::TYPE_ENUM_CODE, MarketingActivity::TYPE_OPEN);
 
         foreach ($expected as $activityExpected) {
             $searchCriteria = [
@@ -87,9 +86,9 @@ class CampaignOpenImportTest extends AbstractImportExportTestCase
                 'relatedCampaignId' => $this->getReference('oro_dotmailer.email_campaign.first')->getId()
             ];
 
-            $clickActivities = $marketingActivityRepository->findBy($searchCriteria);
+            $openActivities = $marketingActivityRepository->findBy($searchCriteria);
 
-            $this->assertCount(1, $clickActivities);
+            $this->assertCount(1, $openActivities);
         }
     }
 
@@ -119,7 +118,7 @@ class CampaignOpenImportTest extends AbstractImportExportTestCase
                     ],
                     [
                         "contactId" => 223, //oro_dotmailer.contact.mike_case.second_channel
-                        "email" => "first@mail.com",
+                        "email" => "mike.case@example.com",
                         "ipAddress" => "192.168.237.24",
                         "userAgent" => "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-GB; rv:1.8.1.12)",
                         "isHtml" => false,

@@ -93,6 +93,15 @@ processes:
             actions_configuration:
                 - '@update_email_campaign_dm_statistics': ~
 
+        dotmailer_collect_marketing_activities:
+            label:   'Add Marketing Activities Based on dotmailer Activities'
+            enabled: true
+            order:   20
+            entity:  Oro\Bundle\DotmailerBundle\Entity\Activity
+            actions_configuration:
+                - '@add_marketing_activities':
+                      changeSet: $.changeSet
+
         dotmailer_handle_contact_state:
             label:   Check MarketingListItem State for Dotmailer Contact
             enabled: true
@@ -159,6 +168,27 @@ processes:
                 queued:   false
             -
                 event:    update
+                queued:   false
+
+        dotmailer_collect_marketing_activities:
+            -
+                event:    create
+                queued:   false
+            -
+                event:    update
+                field:    dateSent
+                queued:   false
+            -
+                event:    update
+                field:    unsubscribed
+                queued:   false
+            -
+                event:    update
+                field:    softBounced
+                queued:   false
+            -
+                event:    update
+                field:    hardBounced
                 queued:   false
 
         dotmailer_handle_contact_state:

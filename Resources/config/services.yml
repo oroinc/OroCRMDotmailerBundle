@@ -1001,6 +1001,15 @@ services:
         tags:
             - { name: oro_action.action, alias: remove_marketing_list_removed_item }
 
+    oro_dotmailer.workflow.action.add_marketing_activities:
+        class: 'Oro\Bundle\DotmailerBundle\Model\Action\AddMarketingActivitesAction'
+        arguments:
+            - "@oro_action.expression.context_accessor"
+            - "@doctrine"
+            - "@oro_entity_extend.enum_value_provider"
+        tags:
+            - { name: oro_action.action, alias: add_marketing_activities }
+
     #helpers
     oro_dotmailer.model.field_helper:
         class: %oro_dotmailer.model.field_helper.class%

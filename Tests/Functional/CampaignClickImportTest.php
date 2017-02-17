@@ -6,7 +6,6 @@ use DotMailer\Api\DataTypes\ApiCampaignContactClickList;
 
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignClickConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
-use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivityType;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 
 /**
@@ -74,8 +73,11 @@ class CampaignClickImportTest extends AbstractImportExportTestCase
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $marketingActivityRepository = $this->managerRegistry->getRepository(MarketingActivity::class);
-        $marketingActivityTypeRepository = $this->managerRegistry->getRepository(MarketingActivityType::class);
-        $clickType = $marketingActivityTypeRepository->findBy(['name' => MarketingActivityType::TYPE_CLICK]);
+        $enumProvider = $this->getContainer()->get('oro_entity_extend.enum_value_provider');
+        $clickType = $enumProvider->getEnumValueByCode(
+            MarketingActivity::TYPE_ENUM_CODE,
+            MarketingActivity::TYPE_CLICK
+        );
 
         foreach ($expected as $activityExpected) {
             $searchCriteria = [
@@ -122,7 +124,7 @@ class CampaignClickImportTest extends AbstractImportExportTestCase
                     ],
                     [
                         "contactId" => 223, //oro_dotmailer.contact.mike_case.second_channel
-                        "email" => "first@mail.com",
+                        "email" => "mike.case@example.com",
                         "url" => "http://example.com/page2",
                         "ipAddress" => "192.168.237.24",
                         "userAgent" => "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-GB; rv:1.8.1.12)",
