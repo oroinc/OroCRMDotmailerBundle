@@ -16,7 +16,6 @@ abstract class AbstractActivityConnector extends AbstractDotmailerConnector
             ->getRepository('OroDotmailerBundle:Campaign')
             ->getCampaignsToSynchronize($this->getChannel());
 
-        $activityRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:Activity');
         $campaignsToSynchronize = [];
 
         /** @var Campaign $campaign */
@@ -27,12 +26,16 @@ abstract class AbstractActivityConnector extends AbstractDotmailerConnector
                     return $addressBook->getId();
                 }
             )->toArray();
+            /**
+             * full sync should be done for campaigns created after the last last sync
+             */
+            $isInit = $campaign->getCreatedAt() < $this->getLastSyncDate();
             $campaignsToSynchronize[] = [
                 'originId'        => $campaign->getOriginId(),
                 'emailCampaignId' => $campaign->getEmailCampaign()->getId(),
                 'campaignId'      => $marketingCampaign->getId(),
                 'addressBooks'    => $addressBooks,
-                'isInit'          => $activityRepository->isExistsActivityByCampaign($campaign)
+                'isInit'          => $isInit
             ];
         }
 

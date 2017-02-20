@@ -100,18 +100,10 @@ class AddMarketingActivitesAction extends AbstractAction
         $relatedEntities = $this->getEntitiesByOriginId($activity->getContact()->getOriginId(), $addressBooks);
 
         foreach ($relatedEntities as $relatedEntity) {
-            if (!$changeSet || isset($changeSet['dateSent'])) {
-                $this->addSendActivity($activity, $relatedEntity);
-            }
-            if ($activity->isUnsubscribed() && (!$changeSet || isset($changeSet['unsubscribed']))) {
-                $this->addUnsubscribeActivity($activity, $relatedEntity);
-            }
-            if ($activity->isSoftBounced() && (!$changeSet || isset($changeSet['softBounced']))) {
-                $this->addSoftBounceActivity($activity, $relatedEntity);
-            }
-            if ($activity->isHardBounced() && (!$changeSet || isset($changeSet['hardBounced']))) {
-                $this->addHardBounceActivity($activity, $relatedEntity);
-            }
+            $this->processSendActivity($activity, $relatedEntity, $changeSet);
+            $this->processUnsubscribeActivity($activity, $relatedEntity, $changeSet);
+            $this->processSoftBounceActivity($activity, $relatedEntity, $changeSet);
+            $this->processHardBounceActivity($activity, $relatedEntity, $changeSet);
         }
 
         $this->getEntityManager()->flush();
@@ -120,55 +112,56 @@ class AddMarketingActivitesAction extends AbstractAction
     /**
      * @param Activity $activity
      * @param array $relatedEntity
-     * @return MarketingActivity
+     * @param array|null $changeSet
      */
-    protected function addSendActivity(Activity $activity, $relatedEntity)
+    protected function processSendActivity(Activity $activity, $relatedEntity, $changeSet)
     {
-        $marketingActivity = $this->prepareMarketingActivity($activity, $relatedEntity);
-        //for send activity we know the exact date
-        $marketingActivity->setActionDate($activity->getDateSent());
-        $marketingActivity->setType($this->getActivityType(MarketingActivity::TYPE_SEND));
-
-        return $marketingActivity;
+        if (!$changeSet ||
+            (isset($changeSet['dateSent']) && ($changeSet['dateSent']['old'] != $changeSet['dateSent']['new']))) {
+            $marketingActivity = $this->prepareMarketingActivity($activity, $relatedEntity);
+            //for send activity we know the exact date
+            $marketingActivity->setActionDate($activity->getDateSent());
+            $marketingActivity->setType($this->getActivityType(MarketingActivity::TYPE_SEND));
+        }
     }
 
     /**
      * @param Activity $activity
      * @param array $relatedEntity
-     * @return MarketingActivity
+     * @param array|null $changeSet
      */
-    protected function addUnsubscribeActivity(Activity $activity, $relatedEntity)
+    protected function processUnsubscribeActivity(Activity $activity, $relatedEntity, $changeSet)
     {
-        $marketingActivity = $this->prepareMarketingActivity($activity, $relatedEntity);
-        $marketingActivity->setType($this->getActivityType(MarketingActivity::TYPE_UNSUBSCRIBE));
-
-        return $marketingActivity;
+        if ($activity->isUnsubscribed() && (!$changeSet || isset($changeSet['unsubscribed']))) {
+            $marketingActivity = $this->prepareMarketingActivity($activity, $relatedEntity);
+            $marketingActivity->setType($this->getActivityType(MarketingActivity::TYPE_UNSUBSCRIBE));
+        }
     }
 
     /**
      * @param Activity $activity
      * @param array $relatedEntity
-     * @return MarketingActivity
+     * @param array|null $changeSet
      */
-    protected function addSoftBounceActivity(Activity $activity, $relatedEntity)
+    protected function processSoftBounceActivity(Activity $activity, $relatedEntity, $changeSet)
     {
-        $marketingActivity = $this->prepareMarketingActivity($activity, $relatedEntity);
-        $marketingActivity->setType($this->getActivityType(MarketingActivity::TYPE_SOFT_BOUNCE));
-
-        return $marketingActivity;
+        if ($activity->isSoftBounced() && (!$changeSet || isset($changeSet['softBounced']))) {
+            $marketingActivity = $this->prepareMarketingActivity($activity, $relatedEntity);
+            $marketingActivity->setType($this->getActivityType(MarketingActivity::TYPE_SOFT_BOUNCE));
+        }
     }
 
     /**
      * @param Activity $activity
      * @param array $relatedEntity
-     * @return MarketingActivity
+     * @param array|null $changeSet
      */
-    protected function addHardBounceActivity(Activity $activity, $relatedEntity)
+    protected function processHardBounceActivity(Activity $activity, $relatedEntity, $changeSet)
     {
-        $marketingActivity = $this->prepareMarketingActivity($activity, $relatedEntity);
-        $marketingActivity->setType($this->getActivityType(MarketingActivity::TYPE_HARD_BOUNCE));
-
-        return $marketingActivity;
+        if ($activity->isHardBounced() && (!$changeSet || isset($changeSet['hardBounced']))) {
+            $marketingActivity = $this->prepareMarketingActivity($activity, $relatedEntity);
+            $marketingActivity->setType($this->getActivityType(MarketingActivity::TYPE_HARD_BOUNCE));
+        }
     }
 
     /**
@@ -189,6 +182,7 @@ class AddMarketingActivitesAction extends AbstractAction
         $marketingActivity->setRelatedCampaignClass(EmailCampaign::class);
         $marketingActivity->setActionDate($activity->getUpdatedAt());
         $marketingActivity->setOwner($activity->getOwner());
+
         $this->getEntityManager()->persist($marketingActivity);
 
         return $marketingActivity;
