@@ -100,11 +100,12 @@ connector:
             steps:
                 import:
                     title: import
-                    class: Oro\Bundle\BatchBundle\Step\ItemStep
+                    class: Oro\Bundle\DotmailerBundle\Step\ActivityStep
                     services:
-                        reader:    oro_dotmailer.connector.activity_contact
-                        processor: oro_dotmailer.importexport.processor.activity_contact
-                        writer:    oro_dotmailer.importexport.writer.import
+                        reader:        oro_dotmailer.connector.activity_contact
+                        processor:     oro_dotmailer.importexport.processor.activity_contact
+                        writer:        oro_dotmailer.importexport.writer.import
+                        processLogger: oro_workflow.process.logger
                     parameters:
                         batch_size: 1000
 

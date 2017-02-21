@@ -6,12 +6,10 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIterator;
-use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 use Oro\Bundle\DotmailerBundle\Entity\Activity;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
-use Oro\Bundle\EntityExtendBundle\Provider\EnumValueProvider;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
+use Oro\Bundle\MarketingActivityBundle\Model\ActivityFactory;
 use Oro\Bundle\WorkflowBundle\Model\EntityAwareInterface;
 
 use Oro\Component\Action\Action\AbstractAction;
@@ -32,19 +30,19 @@ class AddMarketingActivitesAction extends AbstractAction
     protected $options = [];
 
     /**
-     * @var EnumValueProvider
+     * @var ActivityFactory
      */
-    protected $enumProvider;
+    protected $activityFactory;
 
     public function __construct(
         ContextAccessor $contextAccessor,
         ManagerRegistry $registry,
-        EnumValueProvider $enumProvider
+        ActivityFactory $activityFactory
     ) {
         parent::__construct($contextAccessor);
 
         $this->registry = $registry;
-        $this->enumProvider = $enumProvider;
+        $this->activityFactory = $activityFactory;
     }
 
     /**
@@ -105,8 +103,6 @@ class AddMarketingActivitesAction extends AbstractAction
             $this->processSoftBounceActivity($activity, $relatedEntity, $changeSet);
             $this->processHardBounceActivity($activity, $relatedEntity, $changeSet);
         }
-
-        $this->getEntityManager()->flush();
     }
 
     /**
@@ -118,10 +114,13 @@ class AddMarketingActivitesAction extends AbstractAction
     {
         if (!$changeSet ||
             (isset($changeSet['dateSent']) && ($changeSet['dateSent']['old'] != $changeSet['dateSent']['new']))) {
-            $marketingActivity = $this->prepareMarketingActivity($activity, $relatedEntity);
+            $marketingActivity = $this->prepareMarketingActivity(
+                $activity,
+                MarketingActivity::TYPE_SEND,
+                $relatedEntity
+            );
             //for send activity we know the exact date
             $marketingActivity->setActionDate($activity->getDateSent());
-            $marketingActivity->setType($this->getActivityType(MarketingActivity::TYPE_SEND));
         }
     }
 
@@ -133,8 +132,11 @@ class AddMarketingActivitesAction extends AbstractAction
     protected function processUnsubscribeActivity(Activity $activity, $relatedEntity, $changeSet)
     {
         if ($activity->isUnsubscribed() && (!$changeSet || isset($changeSet['unsubscribed']))) {
-            $marketingActivity = $this->prepareMarketingActivity($activity, $relatedEntity);
-            $marketingActivity->setType($this->getActivityType(MarketingActivity::TYPE_UNSUBSCRIBE));
+            $this->prepareMarketingActivity(
+                $activity,
+                MarketingActivity::TYPE_UNSUBSCRIBE,
+                $relatedEntity
+            );
         }
     }
 
@@ -146,8 +148,11 @@ class AddMarketingActivitesAction extends AbstractAction
     protected function processSoftBounceActivity(Activity $activity, $relatedEntity, $changeSet)
     {
         if ($activity->isSoftBounced() && (!$changeSet || isset($changeSet['softBounced']))) {
-            $marketingActivity = $this->prepareMarketingActivity($activity, $relatedEntity);
-            $marketingActivity->setType($this->getActivityType(MarketingActivity::TYPE_SOFT_BOUNCE));
+            $this->prepareMarketingActivity(
+                $activity,
+                MarketingActivity::TYPE_SOFT_BOUNCE,
+                $relatedEntity
+            );
         }
     }
 
@@ -159,28 +164,33 @@ class AddMarketingActivitesAction extends AbstractAction
     protected function processHardBounceActivity(Activity $activity, $relatedEntity, $changeSet)
     {
         if ($activity->isHardBounced() && (!$changeSet || isset($changeSet['hardBounced']))) {
-            $marketingActivity = $this->prepareMarketingActivity($activity, $relatedEntity);
-            $marketingActivity->setType($this->getActivityType(MarketingActivity::TYPE_HARD_BOUNCE));
+            $this->prepareMarketingActivity(
+                $activity,
+                MarketingActivity::TYPE_HARD_BOUNCE,
+                $relatedEntity
+            );
         }
     }
 
     /**
      * @param Activity $activity
+     * @param string $type
      * @param array $relatedEntity
      * @return MarketingActivity
      */
-    protected function prepareMarketingActivity(Activity $activity, $relatedEntity)
+    protected function prepareMarketingActivity(Activity $activity, $type, $relatedEntity)
     {
         $dmCampaign = $activity->getCampaign();
         $emailCampaign = $dmCampaign->getEmailCampaign();
         $marketingCampaign = $emailCampaign->getCampaign();
-        $marketingActivity = new MarketingActivity();
-        $marketingActivity->setEntityClass($relatedEntity['entityClass']);
-        $marketingActivity->setEntityId($relatedEntity['entityId']);
-        $marketingActivity->setCampaign($marketingCampaign);
-        $marketingActivity->setRelatedCampaignId($emailCampaign->getId());
-        $marketingActivity->setRelatedCampaignClass(EmailCampaign::class);
-        $marketingActivity->setActionDate($activity->getUpdatedAt());
+        $marketingActivity = $this->activityFactory->create(
+            $marketingCampaign,
+            $relatedEntity['entityClass'],
+            $relatedEntity['entityId'],
+            $activity->getUpdatedAt(),
+            $type,
+            $emailCampaign->getId()
+        );
         $marketingActivity->setOwner($activity->getOwner());
 
         $this->getEntityManager()->persist($marketingActivity);
@@ -205,14 +215,5 @@ class AddMarketingActivitesAction extends AbstractAction
     {
         return $this->registry->getRepository('OroDotmailerBundle:Contact')
             ->getEntitiesDataByOriginIds([$originId], $addressBooks);
-    }
-
-    /**
-     * @param $id
-     * @return AbstractEnumValue
-     */
-    protected function getActivityType($id)
-    {
-        return $this->enumProvider->getEnumValueByCode(MarketingActivity::TYPE_ENUM_CODE, $id);
     }
 }
