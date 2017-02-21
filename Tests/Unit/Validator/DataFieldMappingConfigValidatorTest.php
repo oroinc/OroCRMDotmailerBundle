@@ -15,7 +15,7 @@ use Oro\Bundle\DotmailerBundle\Validator\Constraints\DataFieldMappingConfigConst
 class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
 {
     /** @var \PHPUnit_Framework_MockObject_MockObject */
-    protected $doctrineHelper;
+    protected $entityFieldProvider;
 
      /** @var \PHPUnit_Framework_MockObject_MockObject */
     protected $translator;
@@ -28,11 +28,11 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->doctrineHelper = $this->getMockBuilder('Oro\Bundle\EntityBundle\ORM\DoctrineHelper')
+        $this->entityFieldProvider = $this->getMockBuilder('Oro\Bundle\EntityBundle\Provider\EntityFieldProvider')
             ->disableOriginalConstructor()->getMock();
         $this->translator = $this->getMockBuilder('Symfony\Component\Translation\TranslatorInterface')
             ->disableOriginalConstructor()->getMock();
-        $this->validator = new DataFieldMappingConfigValidator($this->doctrineHelper, $this->translator);
+        $this->validator = new DataFieldMappingConfigValidator($this->entityFieldProvider, $this->translator);
         $this->context = $this->getMockBuilder('Symfony\Component\Validator\Context\ExecutionContextInterface')
             ->getMock();
         $this->validator->initialize($this->context);
@@ -49,11 +49,14 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
         $mappingConfig->setMapping($mapping);
-        $classMetadata = $this->createMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
-        $this->doctrineHelper->expects($this->once())->method('getEntityMetadata')->with('entityClass')
-            ->will($this->returnValue($classMetadata));
-        $classMetadata->expects($this->once())->method('getTypeOfField')->with('entityFieldName')
-            ->will($this->returnValue(Type::STRING));
+        $this->entityFieldProvider->expects($this->once())->method('getFields')
+            ->with('entityClass', false, true, false, false, false, false)
+            ->will($this->returnValue([
+                [
+                    'name' => 'entityFieldName',
+                    'type' => Type::STRING
+                ]
+            ]));
 
         $this->translator->expects($this->once())->method('trans')
             ->with(
@@ -80,11 +83,14 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
         $mappingConfig->setMapping($mapping);
-        $classMetadata = $this->createMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
-        $this->doctrineHelper->expects($this->once())->method('getEntityMetadata')->with('entityClass')
-            ->will($this->returnValue($classMetadata));
-        $classMetadata->expects($this->once())->method('getTypeOfField')->with('entityFieldName')
-            ->will($this->returnValue(Type::STRING));
+        $this->entityFieldProvider->expects($this->once())->method('getFields')
+            ->with('entityClass', false, true, false, false, false, false)
+            ->will($this->returnValue([
+                [
+                    'name' => 'entityFieldName',
+                    'type' => Type::STRING
+                ]
+            ]));
 
         $this->translator->expects($this->once())->method('trans')
             ->with(
@@ -111,11 +117,14 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
         $mappingConfig->setMapping($mapping);
-        $classMetadata = $this->createMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
-        $this->doctrineHelper->expects($this->once())->method('getEntityMetadata')->with('entityClass')
-            ->will($this->returnValue($classMetadata));
-        $classMetadata->expects($this->once())->method('getTypeOfField')->with('entityFieldName')
-            ->will($this->returnValue(Type::STRING));
+        $this->entityFieldProvider->expects($this->once())->method('getFields')
+            ->with('entityClass', false, true, false, false, false, false)
+            ->will($this->returnValue([
+                [
+                    'name' => 'entityFieldName',
+                    'type' => Type::STRING
+                ]
+            ]));
 
         $this->translator->expects($this->once())->method('trans')
             ->with(
@@ -162,11 +171,14 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
         $mappingConfig->setMapping($mapping);
-        $classMetadata = $this->createMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
-        $this->doctrineHelper->expects($this->once())->method('getEntityMetadata')->with('entityClass')
-            ->will($this->returnValue($classMetadata));
-        $classMetadata->expects($this->once())->method('getTypeOfField')->with('entityFieldName')
-            ->will($this->returnValue(Type::STRING));
+        $this->entityFieldProvider->expects($this->once())->method('getFields')
+            ->with('entityClass', false, true, false, false, false, false)
+            ->will($this->returnValue([
+                [
+                    'name' => 'entityFieldName',
+                    'type' => Type::STRING
+                ]
+            ]));
 
         $this->translator->expects($this->never())->method('trans');
         $this->context->expects($this->never())->method('buildViolation');

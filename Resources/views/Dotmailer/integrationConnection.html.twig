@@ -5,6 +5,7 @@
 
 {% set formAction = path('oro_dotmailer_integration_connection') %}
 
+{% block bodyClass %}dotmailer-page{% endblock %}
 {% block navButtons %}{% endblock navButtons %}
 
 {% block pageHeader %}
@@ -42,21 +43,11 @@
     {% endset %}
 
     {% set id = 'oro_dotmailer_integration_connection' %}
-    {% set dataBlocks = [{
-        'title': 'oro.dotmailer.integration.choose_connection.label'|trans,
-        'class': 'active',
-        'subblocks': [{
-            'title': '',
-            'data': [
-                form_row(form.channel),
-                button
-            ]
-        }]
-    }] %}
-
+    {% set dataBlocks = {} %}
     {% if loginUserUrl %}
         {% set dotmailerSection %}
-            <iframe src="{{ loginUserUrl }}" width="100%" height="1000" frameborder="0"></iframe>
+            <input type="hidden" data-focusable="true" /> {# fake input to make sure focus is not set on the bottom form dropdown#}
+            <iframe src="{{ loginUserUrl }}" width="100%" height="1650" frameborder="0"></iframe>
         {% endset %}
 
         {% set dataBlocks = dataBlocks|merge([{
@@ -70,6 +61,18 @@
             }]
         }] ) %}
     {% endif %}
+
+    {% set dataBlocks = dataBlocks|merge([{
+            'title': 'oro.dotmailer.integration.choose_connection.label'|trans,
+            'class': 'active',
+            'subblocks': [{
+                'title': '',
+                'data': [
+                    form_row(form.channel),
+                    button
+                ]
+            }]
+    }] ) %}
 
     {% set data = {
         'formErrors': form_errors(form) ? form_errors(form) : null,

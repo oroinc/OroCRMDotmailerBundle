@@ -4,6 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Processor;
 
 use Psr\Log\LoggerInterface;
 
+use Oro\Bundle\BatchBundle\ORM\Query\BufferedIdentityQueryResultIterator;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\ChangedFieldLog;
 use Oro\Bundle\DotmailerBundle\QueryDesigner\ParentEntityFindQueryConverter;
@@ -11,8 +12,6 @@ use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 
 class MappedFieldsChangeProcessor
 {
-    const DEFAULT_BATCH = 100;
-
     /** @var DoctrineHelper  */
     protected $doctrineHelper;
 
@@ -48,7 +47,7 @@ class MappedFieldsChangeProcessor
     {
         $repository = $this->doctrineHelper->getEntityRepositoryForClass(ChangedFieldLog::class);
         $em = $this->doctrineHelper->getEntityManager(ChangedFieldLog::class);
-        $logs = $repository->findBy([], null, self::DEFAULT_BATCH);
+        $logs = new BufferedIdentityQueryResultIterator($repository->getLogsForProcessingQB());
         $abContactRepository = $this->doctrineHelper->getEntityRepositoryForClass(AddressBookContact::class);
         /** @var ChangedFieldLog $log */
         foreach ($logs as $log) {

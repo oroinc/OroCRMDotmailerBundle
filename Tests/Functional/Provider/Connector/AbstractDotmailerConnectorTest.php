@@ -6,9 +6,6 @@ use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 
-/**
- * @dbIsolation
- */
 class AbstractDotmailerConnectorTest extends WebTestCase
 {
     /** @var  AbstractDotmailerConnector */

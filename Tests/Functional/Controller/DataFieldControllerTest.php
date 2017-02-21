@@ -2,16 +2,8 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Controller;
 
-use Symfony\Component\DomCrawler\Form;
-use Symfony\Component\DomCrawler\Field\ChoiceFormField;
-use Symfony\Component\DomCrawler\Field\InputFormField;
-
 use Oro\Bundle\DataGridBundle\Tests\Functional\AbstractDatagridTestCase;
 
-/**
- * @outputBuffering enabled
- * @dbIsolation
- */
 class DataFieldControllerTest extends AbstractDatagridTestCase
 {
     /** @var bool */

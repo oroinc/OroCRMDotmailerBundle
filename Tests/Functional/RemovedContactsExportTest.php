@@ -8,9 +8,6 @@ use DotMailer\Api\DataTypes\Int32List;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 
-/**
- * @dbIsolation
- */
 class RemovedContactsExportTest extends AbstractImportExportTestCase
 {
     protected function setUp()

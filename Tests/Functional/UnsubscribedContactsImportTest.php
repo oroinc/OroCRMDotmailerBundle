@@ -11,9 +11,6 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
 
-/**
- * @dbIsolation
- */
 class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
 {
     protected function setUp()

@@ -3,9 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Command;
 
 use Doctrine\ORM\EntityRepository;
-use Oro\Bundle\CronBundle\Command\CronCommandInterface;
-use Oro\Bundle\DotmailerBundle\Entity\ChangedFieldLog;
-use Oro\Bundle\DotmailerBundle\Processor\MappedFieldsChangeProcessor;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Console\Command\Command;
@@ -14,7 +11,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-class ProcessMappedFieldsUpdatesCommand extends Command implements CronCommandInterface, ContainerAwareInterface
+use Oro\Bundle\CronBundle\Command\CronCommandInterface;
+use Oro\Bundle\DotmailerBundle\Model\SyncManager;
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
+use Oro\Bundle\IntegrationBundle\Entity\Repository\ChannelRepository;
+
+class FieldsForceSyncCommand extends Command implements CronCommandInterface, ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
@@ -23,19 +26,15 @@ class ProcessMappedFieldsUpdatesCommand extends Command implements CronCommandIn
      */
     public function getDefaultDefinition()
     {
-        return '*/5 * * * *';
+        return '0 1 * * *';
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function isActive()
     {
-        $count = $this->getChangedFieldsLogRepository()
-            ->createQueryBuilder('cl')
-            ->select('COUNT(cl.id)')
-            ->getQuery()
-            ->getSingleScalarResult();
+        $count = $this->getIntegrationRepository()->countActiveIntegrations(ChannelType::TYPE);
 
         return ($count > 0);
     }
@@ -46,9 +45,9 @@ class ProcessMappedFieldsUpdatesCommand extends Command implements CronCommandIn
     protected function configure()
     {
         $this
-            ->setName('oro:cron:dotmailer:mapped-fields-updates:process')
-            ->setDescription('Process the queue of changed mapped entities fields ' .
-                'and mark corresponding contacts for export');
+            ->setName('oro:cron:dotmailer:force-fields-sync')
+            ->setDescription('If conditions are met, mark all address book contacts as updated '
+                . 'to make sure updated virtual field values are synced to dotmailer');
     }
 
     /**
@@ -60,27 +59,27 @@ class ProcessMappedFieldsUpdatesCommand extends Command implements CronCommandIn
             $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
         }
 
-        $output->writeln('Start queue processing');
-        $this->getProcessor()->processFieldChangesQueue();
-
+        $output->writeln('Start update of address book contacts');
+        $this->getManager()->forceMarkEntityUpdate();
         $output->writeln('Completed');
     }
 
     /**
-     * @return MappedFieldsChangeProcessor
+     * @return SyncManager
      */
-    private function getProcessor()
+    private function getManager()
     {
-        return $this->container->get('oro_dotmailer.processor.mapped_fields_change');
+        return $this->container->get('oro_dotmailer.manager.sync_manager');
     }
 
     /**
-     * @return EntityRepository
+     * @return ChannelRepository
      */
-    private function getChangedFieldsLogRepository()
+    protected function getIntegrationRepository()
     {
         /** @var RegistryInterface $doctrine */
         $doctrine = $this->container->get('doctrine');
-        return $doctrine->getRepository(ChangedFieldLog::class);
+
+        return $doctrine->getRepository(Integration::class);
     }
 }

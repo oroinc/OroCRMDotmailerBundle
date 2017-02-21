@@ -6,9 +6,6 @@ use DotMailer\Api\DataTypes\ApiContactList;
 
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 
-/**
- * @dbIsolation
- */
 class UpdateEntityFieldsFromContactTest extends AbstractImportExportTestCase
 {
     /**
