@@ -8,24 +8,11 @@ use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignClickConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 
-/**
- * @dbIsolation
- */
 class CampaignClickImportTest extends AbstractImportExportTestCase
 {
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $additionalResource;
-
     protected function setUp()
     {
         parent::setUp();
-        $this->additionalResource = $this->getMockBuilder(AdditionalResource::class)
-            ->disableOriginalConstructor()->getMock();
-        $this->resourceFactory->expects($this->any())
-            ->method('createAdditionalResource')
-            ->will($this->returnValue($this->additionalResource));
         $this->loadFixtures(
             [
                 'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadActivityData',
@@ -50,12 +37,12 @@ class CampaignClickImportTest extends AbstractImportExportTestCase
         $firstCampaignId = 15662;
         $secondCampaignId = 15666;
 
-        $this->additionalResource->expects($this->once())
-            ->method('getCampaignClicksSinceDateByDate')
+        $this->resource->expects($this->at(0))
+            ->method('GetCampaignClicks')
             ->with($firstCampaignId)
             ->will($this->returnValue(new ApiCampaignContactClickList()));
 
-        $this->resource->expects($this->once())
+        $this->resource->expects($this->at(1))
             ->method('GetCampaignClicks')
             ->with($secondCampaignId)
             ->will($this->returnValue($entity));

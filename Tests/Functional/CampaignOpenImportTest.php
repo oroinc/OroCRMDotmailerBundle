@@ -8,24 +8,11 @@ use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignOpenConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 
-/**
- * @dbIsolation
- */
 class CampaignOpenImportTest extends AbstractImportExportTestCase
 {
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $additionalResource;
-
     protected function setUp()
     {
         parent::setUp();
-        $this->additionalResource = $this->getMockBuilder(AdditionalResource::class)
-            ->disableOriginalConstructor()->getMock();
-        $this->resourceFactory->expects($this->any())
-            ->method('createAdditionalResource')
-            ->will($this->returnValue($this->additionalResource));
         $this->loadFixtures(
             [
                 'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadActivityData',
@@ -50,12 +37,12 @@ class CampaignOpenImportTest extends AbstractImportExportTestCase
         $firstCampaignId = 15662; //oro_dotmailer.campaign.first
         $secondCampaignId = 15666; //oro_dotmailer.campaign.fifth
 
-        $this->additionalResource->expects($this->once())
-            ->method('getCampaignOpensSinceDateByDate')
+        $this->resource->expects($this->at(0))
+            ->method('GetCampaignOpens')
             ->with($firstCampaignId)
             ->will($this->returnValue($entity));
 
-        $this->resource->expects($this->once())
+        $this->resource->expects($this->at(1))
             ->method('GetCampaignOpens')
             ->with($secondCampaignId)
             ->will($this->returnValue(new ApiCampaignContactOpenList()));
