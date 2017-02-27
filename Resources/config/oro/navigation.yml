@@ -38,10 +38,10 @@ navigation:
     titles:
         oro_dotmailer_datafield_index: ~
         oro_dotmailer_datafield_create: 'Add dotmailer Data Field'
-        oro_dotmailer_datafield_view: '%%datafield.name%%'
+        oro_dotmailer_datafield_view: '%datafield.name%'
 
         oro_dotmailer_datafield_mapping_index: ~
         oro_dotmailer_datafield_mapping_create: 'Add dotmailer Data Field Mapping'
         oro_dotmailer_datafield_mapping_update: 'Update dotmailer Data Field Mapping'
 
-        oro_dotmailer_integration_connection: '%%title%%'
+        oro_dotmailer_integration_connection: '%title%'
