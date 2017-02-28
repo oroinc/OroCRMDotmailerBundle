@@ -37,7 +37,7 @@ class AddressBookController extends Controller
      *
      * @return JsonResponse
      */
-    public function synchronizeAddressBook(AddressBook $addressBook)
+    public function synchronizeAddressBookAction(AddressBook $addressBook)
     {
         try {
             $this->getSyncScheduler()->schedule($addressBook->getChannel()->getId(), null, [
@@ -79,7 +79,7 @@ class AddressBookController extends Controller
      *
      * @return JsonResponse
      */
-    public function synchronizeAddressBookDataFields(AddressBook $addressBook)
+    public function synchronizeAddressBookDataFieldsAction(AddressBook $addressBook)
     {
         try {
             $this->getDoctrine()->getRepository('OroDotmailerBundle:AddressBookContact')
