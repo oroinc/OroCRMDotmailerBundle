@@ -183,6 +183,7 @@ class AddMarketingActivitesActionTest extends \PHPUnit_Framework_TestCase
             11,
             $activity->getUpdatedAt(),
             MarketingActivity::TYPE_SEND,
+            $organization,
             1
         )->will($this->returnValue($marketingActivity));
         $em->expects($this->at(0))->method('persist')->with($marketingActivity);
@@ -195,6 +196,7 @@ class AddMarketingActivitesActionTest extends \PHPUnit_Framework_TestCase
                 11,
                 $activity->getUpdatedAt(),
                 $expectedType,
+                $organization,
                 1
             )->will($this->returnValue($anotherMarketingActivity));
             $em->expects($this->at(1))->method('persist')->with($anotherMarketingActivity);
@@ -203,8 +205,6 @@ class AddMarketingActivitesActionTest extends \PHPUnit_Framework_TestCase
         $options = [AddMarketingActivitesAction::OPTION_KEY_CHANGESET => $changeSet];
         $this->action->initialize($options);
         $this->action->execute($context);
-
-        $this->assertSame($marketingActivity->getOwner(), $organization);
     }
 
     /**

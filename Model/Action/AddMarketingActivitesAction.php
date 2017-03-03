@@ -189,9 +189,9 @@ class AddMarketingActivitesAction extends AbstractAction
             $relatedEntity['entityId'],
             $activity->getUpdatedAt(),
             $type,
+            $activity->getOwner(),
             $emailCampaign->getId()
         );
-        $marketingActivity->setOwner($activity->getOwner());
 
         $this->getEntityManager()->persist($marketingActivity);
 
