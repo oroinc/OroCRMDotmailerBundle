@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Entity\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
+use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIterator;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 
@@ -52,5 +53,32 @@ class CampaignRepository extends EntityRepository
         }
 
         return $qb->setParameters(['channel' => $channel]);
+    }
+
+    /**
+     * Get campaigns to collect activities statistics (clicks, opens)
+     * They must have related email campaign
+     *
+     * @param Channel $channel
+     * @return BufferedQueryResultIterator
+     */
+    public function getCampaignsToSynchronize(Channel $channel)
+    {
+        $qb = $this->createQueryBuilder('campaign');
+        $qb->innerJoin('campaign.addressBooks', 'addressBooks')
+            ->innerJoin('campaign.emailCampaign', 'emailCampaign')
+            ->innerJoin('emailCampaign.campaign', 'marketingCampaign')
+            ->where('campaign.channel = :channel')
+            ->andWhere('campaign.deleted = :deleted')
+            ->setParameters(
+                [
+                    'channel' => $channel,
+                    'deleted' => false
+                ]
+            );
+
+        $query = $qb->getQuery();
+
+        return new BufferedQueryResultIterator($query);
     }
 }

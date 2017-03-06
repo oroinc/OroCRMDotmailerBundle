@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
+use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIterator;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
@@ -157,8 +158,35 @@ class ContactRepository extends EntityRepository
             )
             ->setParameter('isScheduled', true)
             ->setParameter('addressBook', $addressBook);
-        
 
         return $qb;
+    }
+
+    /**
+     * @param array $originIds
+     * @param array $addressBooks
+     * @return BufferedQueryResultIterator
+     */
+    public function getEntitiesDataByOriginIds(array $originIds, array $addressBooks = [])
+    {
+        $qb = $this->createQueryBuilder('contact');
+
+        $qb
+            ->select(
+                [
+                    'contact.originId',
+                    'addressBookContacts.marketingListItemClass as entityClass',
+                    'addressBookContacts.marketingListItemId as entityId',
+                ]
+            )
+            ->innerJoin('contact.addressBookContacts', 'addressBookContacts')
+            ->where($qb->expr()->in('contact.originId', $originIds))
+            ->andWhere($qb->expr()->isNotNull('addressBookContacts.marketingListItemId'));
+        if ($addressBooks) {
+            $qb->andWhere($qb->expr()->in('addressBookContacts.addressBook', $addressBooks));
+        };
+        $query = $qb->getQuery()->useQueryCache(false);
+
+        return new BufferedQueryResultIterator($query);
     }
 }

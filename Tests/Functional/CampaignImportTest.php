@@ -79,8 +79,17 @@ class CampaignImportTest extends AbstractImportExportTestCase
             foreach ($campaign['addressBooks'] as &$expectedAddressBook) {
                 $expectedAddressBook = $this->getReference($expectedAddressBook);
             }
-
             $this->assertEquals($campaign['addressBooks'], $actualAddressBooks);
+
+            $emailCampaign = $actualCampaign->getEmailCampaign();
+            $this->assertNotNull($emailCampaign, 'Email Campaign should be added automatically');
+            $this->assertEquals($emailCampaign->getName(), $campaign['name']);
+
+            $marketingCampaign = $emailCampaign->getCampaign();
+            $this->assertNotNull($marketingCampaign, 'Marketing Campaign should be added automatically');
+            $this->assertEquals($marketingCampaign->getName(), $campaign['name']);
+            $this->assertContains($campaign['name'], $marketingCampaign->getDescription());
+            $this->assertContains((string) $campaign['originId'], $marketingCampaign->getCode());
         }
     }
 
@@ -97,7 +106,7 @@ class CampaignImportTest extends AbstractImportExportTestCase
                         'fromAddress' => 'Arbitbet@dotmailer-email.com',
                         'reply_action' => 'Webmail',
                         'isSplitTest' => false,
-                        'status' => 'Unsent',
+                        'status' => 'Sent',
                         'addressBooks' => ['oro_dotmailer.address_book.second']
                     ],
                 ],
@@ -116,7 +125,7 @@ class CampaignImportTest extends AbstractImportExportTestCase
                         'replyaction' => 'Webmail',
                         'replytoaddress' => '',
                         'issplittest' => 'false',
-                        'status' => 'Unsent'
+                        'status' => 'Sent'
                     ],
                 ]
             ]

@@ -19,6 +19,8 @@ use Oro\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignClickConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignOpenConnector;
 
 class LoadChannelData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
@@ -41,7 +43,7 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
                 CampaignSummaryConnector::TYPE,
                 ContactConnector::TYPE,
                 ExportContactConnector::TYPE,
-                DataFieldConnector::TYPE
+                DataFieldConnector::TYPE,
             ],
             'transport' => 'oro_dotmailer.transport.first',
             'reference' => 'oro_dotmailer.channel.first'
@@ -55,7 +57,9 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
                 ActivityContactConnector::TYPE,
                 CampaignSummaryConnector::TYPE,
                 ContactConnector::TYPE,
-                ExportContactConnector::TYPE
+                ExportContactConnector::TYPE,
+                CampaignClickConnector::TYPE,
+                CampaignOpenConnector::TYPE
             ],
             'transport' => 'oro_dotmailer.transport.second',
             'reference' => 'oro_dotmailer.channel.second'
@@ -101,6 +105,7 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
         foreach ($this->data as $item) {
             $channel = new Channel();
             $channel->setOrganization($admin->getOrganization());
+            $channel->setDefaultUserOwner($admin);
             $channel->setType(ChannelType::TYPE);
             $channel->setName($item['name']);
             $channel->setConnectors($item['connectors']);

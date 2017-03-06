@@ -5,28 +5,22 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
+use Oro\Bundle\CampaignBundle\Entity\Campaign;
 
-class LoadEmailCampaignData extends AbstractFixture implements DependentFixtureInterface
+class LoadMarketingCampaignData extends AbstractFixture implements DependentFixtureInterface
 {
     protected $data = [
         [
             'name'          => 'Test',
-            'schedule'      => 'manual',
-            'transport'     => 'Test',
-            'marketingList' => 'oro_dotmailer.marketing_list.second',
+            'code'          => 'test',
             'owner'         => 'oro_dotmailer.user.john.doe',
-            'campaign'      => 'oro_dotmailer.marketing_campaign.first',
-            'reference'     => 'oro_dotmailer.email_campaign.first',
+            'reference'     => 'oro_dotmailer.marketing_campaign.first',
         ],
         [
             'name'          => 'Test 2',
-            'schedule'      => 'manual',
-            'transport'     => 'Test 2',
-            'marketingList' => 'oro_dotmailer.marketing_list.third',
+            'code'          => 'test2',
             'owner'         => 'oro_dotmailer.user.john.doe',
-            'campaign'      => 'oro_dotmailer.marketing_campaign.second',
-            'reference'     => 'oro_dotmailer.email_campaign.second',
+            'reference'     => 'oro_dotmailer.marketing_campaign.second',
         ],
     ];
 
@@ -36,11 +30,8 @@ class LoadEmailCampaignData extends AbstractFixture implements DependentFixtureI
     public function load(ObjectManager $manager)
     {
         foreach ($this->data as $data) {
-            $entity = new EmailCampaign();
-            $this->resolveReferenceIfExist($data, 'marketingList');
-            $this->resolveReferenceIfExist($data, 'channel');
+            $entity = new Campaign();
             $this->resolveReferenceIfExist($data, 'owner');
-            $this->resolveReferenceIfExist($data, 'campaign');
             $this->setEntityPropertyValues($entity, $data, ['reference']);
 
             $this->addReference($data['reference'], $entity);
@@ -60,8 +51,6 @@ class LoadEmailCampaignData extends AbstractFixture implements DependentFixtureI
     {
         return [
             'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadUserData',
-            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadMarketingListData',
-            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadMarketingCampaignData',
         ];
     }
 }
