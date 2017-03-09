@@ -1,8 +1,0 @@
-acls:
-    oro_dotmailer:
-        label:      oro.dotmailer.acl.action.general.label
-        description: oro.dotmailer.acl.action.general.description
-        type:       action
-        group_name: ""
-        bindings:   ~
-        category: "marketing"

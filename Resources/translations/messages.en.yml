@@ -411,6 +411,7 @@ oro:
                 general:
                     label: Access dotmailer statistics
                     description: See statistics collected from dotmailer for a campaign
+
         form:
             username:
                 tooltip: API User.
