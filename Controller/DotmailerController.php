@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
@@ -31,7 +32,7 @@ class DotmailerController extends Controller
      * @ParamConverter("emailCampaign",
      *      class="OroCampaignBundle:EmailCampaign",
      *      options={"id" = "entity"})
-     * @AclAncestor("oro_dotmailer")
+     * @AclAncestor("oro_email_campaign_view")
      *
      * @Template
      *
@@ -53,7 +54,7 @@ class DotmailerController extends Controller
      * @ParamConverter("marketingList",
      *      class="OroMarketingListBundle:MarketingList",
      *      options={"id" = "marketingList"})
-     * @AclAncestor("oro_dotmailer")
+     * @AclAncestor("oro_marketing_list_view")
      *
      * @Template
      *
@@ -70,10 +71,13 @@ class DotmailerController extends Controller
 
     /**
      * @Route("/ping", name="oro_dotmailer_ping")
-     * @AclAncestor("oro_dotmailer")
      */
     public function pingAction()
     {
+        if (!$this->isGranted('oro_integration_create') && !$this->isGranted('oro_integration_update')) {
+            throw new AccessDeniedException();
+        }
+
         $username = $this->getRequest()->get('username');
         $password = $this->getRequest()->get('password');
 
