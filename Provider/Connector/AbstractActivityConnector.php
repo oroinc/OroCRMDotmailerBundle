@@ -4,9 +4,13 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Campaign;
+use Oro\Bundle\FeatureToggleBundle\Checker\FeatureCheckerHolderTrait;
+use Oro\Bundle\FeatureToggleBundle\Checker\FeatureToggleableInterface;
 
-abstract class AbstractActivityConnector extends AbstractDotmailerConnector
+abstract class AbstractActivityConnector extends AbstractDotmailerConnector implements FeatureToggleableInterface
 {
+    use FeatureCheckerHolderTrait;
+
     /**
      * @return array
      */

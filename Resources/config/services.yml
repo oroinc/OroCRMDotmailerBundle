@@ -630,6 +630,7 @@ services:
             - [setEntityName, [%oro_marketing_activity.entity.class%]]
         tags:
             - { name: oro_integration.connector, type: campaign_click, channel_type: dotmailer }
+            - { name: oro_featuretogle.feature, feature: 'marketingactivity' }
 
     oro_dotmailer.connector.campaign_open:
         class: 'Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignOpenConnector'
@@ -638,6 +639,7 @@ services:
             - [setEntityName, [%oro_marketing_activity.entity.class%]]
         tags:
             - { name: oro_integration.connector, type: campaign_open, channel_type: dotmailer }
+            - { name: oro_featuretogle.feature, feature: 'marketingactivity' }
 
     #data converter
     oro_dotmailer.importexport.data_converter.not_exported_contact:
@@ -1019,6 +1021,7 @@ services:
             - "@oro_marketing_activity.factory"
         tags:
             - { name: oro_action.action, alias: add_marketing_activities }
+            - { name: oro_featuretogle.feature, feature: 'marketingactivity' }
 
     #helpers
     oro_dotmailer.model.field_helper:

@@ -176,19 +176,6 @@ processes:
                 queued:   false
             -
                 event:    update
-                field:    dateSent
-                queued:   false
-            -
-                event:    update
-                field:    unsubscribed
-                queued:   false
-            -
-                event:    update
-                field:    softBounced
-                queued:   false
-            -
-                event:    update
-                field:    hardBounced
                 queued:   false
 
         dotmailer_handle_contact_state:

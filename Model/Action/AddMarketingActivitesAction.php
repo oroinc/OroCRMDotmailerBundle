@@ -8,6 +8,8 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIterator;
 use Oro\Bundle\DotmailerBundle\Entity\Activity;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\FeatureToggleBundle\Checker\FeatureCheckerHolderTrait;
+use Oro\Bundle\FeatureToggleBundle\Checker\FeatureToggleableInterface;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 use Oro\Bundle\MarketingActivityBundle\Model\ActivityFactory;
 use Oro\Bundle\WorkflowBundle\Model\EntityAwareInterface;
@@ -15,8 +17,10 @@ use Oro\Bundle\WorkflowBundle\Model\EntityAwareInterface;
 use Oro\Component\Action\Action\AbstractAction;
 use Oro\Component\ConfigExpression\ContextAccessor;
 
-class AddMarketingActivitesAction extends AbstractAction
+class AddMarketingActivitesAction extends AbstractAction implements FeatureToggleableInterface
 {
+    use FeatureCheckerHolderTrait;
+
     const OPTION_KEY_CHANGESET = 'changeSet';
 
     /**
@@ -50,7 +54,7 @@ class AddMarketingActivitesAction extends AbstractAction
      */
     protected function isAllowed($context)
     {
-        $isAllowed = false;
+        $isAllowed = $this->isFeaturesEnabled();
         if ($context instanceof EntityAwareInterface) {
             $entity = $context->getEntity();
             if ($entity instanceof Activity) {
@@ -112,8 +116,7 @@ class AddMarketingActivitesAction extends AbstractAction
      */
     protected function processSendActivity(Activity $activity, $relatedEntity, $changeSet)
     {
-        if (!$changeSet ||
-            (isset($changeSet['dateSent']) && ($changeSet['dateSent']['old'] != $changeSet['dateSent']['new']))) {
+        if (!$changeSet || (isset($changeSet['dateSent']) && !$this->datesEqual($changeSet['dateSent']))) {
             $marketingActivity = $this->prepareMarketingActivity(
                 $activity,
                 MarketingActivity::TYPE_SEND,
@@ -122,6 +125,22 @@ class AddMarketingActivitesAction extends AbstractAction
             //for send activity we know the exact date
             $marketingActivity->setActionDate($activity->getDateSent());
         }
+    }
+
+    /**
+     * Compare timestamps of old and new values
+     *
+     * @param array $dateChangeSet
+     * @return bool
+     */
+    protected function datesEqual($dateChangeSet)
+    {
+        /** @var \DateTime $oldDate */
+        $oldDate = $dateChangeSet['old'];
+        /** @var \DateTime $newDate */
+        $newDate = $dateChangeSet['new'];
+        //add new activity only in case timestamps differ
+        return $newDate->getTimestamp() == $oldDate->getTimestamp();
     }
 
     /**

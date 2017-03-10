@@ -12,6 +12,10 @@ class CampaignClickConnector extends AbstractActivityConnector
      */
     protected function getConnectorSource()
     {
+        if (!$this->isFeaturesEnabled()) {
+            return new \EmptyIterator();
+        }
+
         $campaignsToSynchronize = $this->getCampaignToSyncrhonize();
 
         return $this->transport->getCampaignClicks(
