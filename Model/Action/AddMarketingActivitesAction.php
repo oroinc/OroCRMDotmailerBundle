@@ -54,7 +54,10 @@ class AddMarketingActivitesAction extends AbstractAction implements FeatureToggl
      */
     protected function isAllowed($context)
     {
-        $isAllowed = $this->isFeaturesEnabled();
+        if (!$this->isFeaturesEnabled()) {
+            return false;
+        }
+        $isAllowed = false;
         if ($context instanceof EntityAwareInterface) {
             $entity = $context->getEntity();
             if ($entity instanceof Activity) {

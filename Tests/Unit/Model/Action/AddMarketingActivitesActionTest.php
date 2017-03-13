@@ -13,6 +13,7 @@ use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository;
 use Oro\Bundle\DotmailerBundle\Model\Action\AddMarketingActivitesAction;
+use Oro\Bundle\FeatureToggleBundle\Checker\FeatureChecker;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 use Oro\Bundle\MarketingActivityBundle\Model\ActivityFactory;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
@@ -114,6 +115,25 @@ class AddMarketingActivitesActionTest extends \PHPUnit_Framework_TestCase
         $activity->setCampaign($campaign);
         $context->expects($this->once())->method('getEntity')->will($this->returnValue($activity));
         $this->contextAccessor->expects($this->never())->method('getValue');
+
+        $this->action->execute($context);
+    }
+
+    public function testExecuteNotAllowedFeatureDisabled()
+    {
+        $featureChecker = $this->getMockBuilder(FeatureChecker::class)
+            ->setMethods(['isFeatureEnabled'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $featureChecker->expects($this->any())
+            ->method('isFeatureEnabled')
+            ->with('marketingactivity', null)
+            ->will($this->returnValue(false));
+        $context = $this->createMock(EntityAwareInterface::class);
+        $context->expects($this->never())->method('getEntity');
+        $this->contextAccessor->expects($this->never())->method('getValue');
+        $this->action->setFeatureChecker($featureChecker);
+        $this->action->addFeature('marketingactivity');
 
         $this->action->execute($context);
     }
