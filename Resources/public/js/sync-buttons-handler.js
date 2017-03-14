@@ -27,8 +27,6 @@ define([
             $.post(this.data('url')).done(function(data) {
                 mediator.execute('addMessage', 'success', data.message);
                 mediator.execute('refreshPage');
-            }).fail(function(data) {
-                mediator.execute('showFlashMessage', 'error', data.message);
             }).always(function() {
                 mediator.execute('hideLoading');
             });

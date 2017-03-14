@@ -6,9 +6,6 @@ use DotMailer\Api\DataTypes\ApiCampaignContactSummaryList;
 
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
 
-/**
- * @dbIsolation
- */
 class ActivityContactImportTest extends AbstractImportExportTestCase
 {
     protected function setUp()

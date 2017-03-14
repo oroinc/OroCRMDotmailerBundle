@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/address-book")
@@ -37,7 +38,7 @@ class AddressBookController extends Controller
      *
      * @return JsonResponse
      */
-    public function synchronizeAddressBook(AddressBook $addressBook)
+    public function synchronizeAddressBookAction(AddressBook $addressBook)
     {
         try {
             $this->getSyncScheduler()->schedule($addressBook->getChannel()->getId(), null, [
@@ -79,7 +80,7 @@ class AddressBookController extends Controller
      *
      * @return JsonResponse
      */
-    public function synchronizeAddressBookDataFields(AddressBook $addressBook)
+    public function synchronizeAddressBookDataFieldsAction(AddressBook $addressBook)
     {
         try {
             $this->getDoctrine()->getRepository('OroDotmailerBundle:AddressBookContact')
@@ -176,7 +177,6 @@ class AddressBookController extends Controller
      *      class="OroMarketingListBundle:MarketingList",
      *      options={"id" = "entity"}
      * )
-     * @AclAncestor("oro_marketing_list_update")
      * @Template()
      *
      * @param MarketingList $marketingList
@@ -185,6 +185,12 @@ class AddressBookController extends Controller
      */
     public function connectionButtonsAction(MarketingList $marketingList)
     {
+
+        if (!$this->isGranted('orocrm_marketing_list_update') ||
+            !$this->isGranted('orocrm_dotmailer_address_book_update')
+        ) {
+            throw new AccessDeniedException();
+        }
         $addressBook = $this->getAddressBook($marketingList);
 
         return [

@@ -121,7 +121,7 @@ class DataFieldController extends Controller
      *
      * @return JsonResponse
      */
-    public function synchronize()
+    public function synchronizeAction()
     {
         try {
             $repository = $this->get('doctrine')->getRepository('OroIntegrationBundle:Channel');

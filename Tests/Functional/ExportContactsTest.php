@@ -13,9 +13,6 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 
-/**
- * @dbIsolation
- */
 class ExportContactsTest extends AbstractImportExportTestCase
 {
     protected function setUp()

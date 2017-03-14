@@ -8,9 +8,6 @@ use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 
-/**
- * @dbIsolation
- */
 class ContactImportTest extends AbstractImportExportTestCase
 {
     /**

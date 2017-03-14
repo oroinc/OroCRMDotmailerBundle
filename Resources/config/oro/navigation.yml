@@ -6,8 +6,7 @@ navigation:
                 uri: '#'
                 linkAttributes:
                     class: 'dotmailer'
-                extras:
-                    position: 50
+                position: 50
             oro_dotmailer_data_field_list:
                 label: 'oro.dotmailer.datafield.entity_plural_label'
                 route: 'oro_dotmailer_datafield_index'
@@ -21,9 +20,9 @@ navigation:
             oro_dotmailer_integration_connection:
                 label: 'oro.dotmailer.integration.connection.label'
                 route: 'oro_dotmailer_integration_connection'
+                position: 10
                 extras:
                     routes: ['oro_dotmailer_integration_connection']
-                    position: 10
 
         tree:
             application_menu:
@@ -39,10 +38,10 @@ navigation:
     titles:
         oro_dotmailer_datafield_index: ~
         oro_dotmailer_datafield_create: 'Add dotmailer Data Field'
-        oro_dotmailer_datafield_view: '%%datafield.name%%'
+        oro_dotmailer_datafield_view: '%datafield.name%'
 
         oro_dotmailer_datafield_mapping_index: ~
         oro_dotmailer_datafield_mapping_create: 'Add dotmailer Data Field Mapping'
         oro_dotmailer_datafield_mapping_update: 'Update dotmailer Data Field Mapping'
 
-        oro_dotmailer_integration_connection: '%%title%%'
+        oro_dotmailer_integration_connection: '%title%'

@@ -12,13 +12,16 @@ placeholders:
 
     items:
         oro_dotmailer_marketing_list_buttons:
+            acl: [oro_marketing_list_update, oro_dotmailer_address_book_update]
             action: OroDotmailerBundle:AddressBook:connectionButtons
             applicable: "@oro_dotmailer.placeholder.filter.buttons_filter->isApplicable($entity$)"
 
         oro_dotmailer_emailcampaign_stats:
+            acl: oro_email_campaign_view
             action: OroDotmailerBundle:Dotmailer:emailCampaignStats
             applicable: "@oro_dotmailer.placeholder.filter.email_campaign->isApplicableOnEmailCampaign($entity$)"
 
         oro_dotmailer_marketing_list_sync_data:
+            acl: oro_marketing_list_view
             action: OroDotmailerBundle:Dotmailer:marketingListSyncStatus
             applicable: "@oro_dotmailer.placeholder.filter.sync_status->isApplicableOnMarketingList($marketingList$)"

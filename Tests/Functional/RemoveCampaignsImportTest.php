@@ -7,9 +7,6 @@ use DotMailer\Api\DataTypes\ApiCampaignList;
 
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 
-/**
- * @dbIsolation
- */
 class RemoveCampaignsImportTest extends AbstractImportExportTestCase
 {
     protected function setUp()
