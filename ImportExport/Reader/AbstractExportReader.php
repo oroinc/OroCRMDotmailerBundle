@@ -83,7 +83,7 @@ abstract class AbstractExportReader extends AbstractReader
     /**
      * {@inheritdoc}
      */
-    public function setSourceIterator(\Iterator $sourceIterator = null)
+    public function setSourceIterator(\Iterator $sourceIterator)
     {
         parent::setSourceIterator($sourceIterator);
         $this->rewound        = false;
