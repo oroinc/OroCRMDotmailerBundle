@@ -125,7 +125,6 @@ class AddMarketingActivitesAction extends AbstractMarketingListEntitiesAction im
         }
     }
 
-
     /**
      * @param Campaign $dmCampaign
      * @param string $email
