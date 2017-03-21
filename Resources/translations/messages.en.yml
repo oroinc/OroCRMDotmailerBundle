@@ -377,7 +377,7 @@ oro:
             replies_percentage.label: "Replies, %"
             replies_percentage.tooltip: "Replies, %"
             isp_complaints.label: "ISP Complaints"
-            isp_complaints.tooltip: "Number of contacts who've submitted spam complaints to us via their internet service provider."
+            isp_complaints.tooltip: "Number of contacts who've submitted spam complaints via their internet service provider."
 
         connection:
             name: dotmailer Connection
