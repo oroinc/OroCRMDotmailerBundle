@@ -130,6 +130,7 @@ oro:
             campaign_summary.label:   Campaign Summary
             email_campaign.label:     Email Campaign
             deleted.label:            Is Deleted
+            new_marketing_campaign:   'Campaign was added automatically for "campaign_name" dotmailer campaign'
 
         campaignsummary:
             entity_label:                       Campaign summary
