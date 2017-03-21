@@ -1015,10 +1015,10 @@ services:
 
     oro_dotmailer.workflow.action.add_marketing_activities:
         class: 'Oro\Bundle\DotmailerBundle\Model\Action\AddMarketingActivitesAction'
-        arguments:
-            - "@oro_action.expression.context_accessor"
-            - "@doctrine"
-            - "@oro_marketing_activity.factory"
+        parent: oro_dotmailer.workflow.action.abstract_marketing_list_entities
+        calls:
+            - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
+            - [setActivityFactory, ["@oro_marketing_activity.factory"]]
         tags:
             - { name: oro_action.action, alias: add_marketing_activities }
             - { name: oro_featuretogle.feature, feature: 'marketingactivity' }
