@@ -43,6 +43,7 @@ oro:
             origin_id.label:                      Origin Id
             owner.label:                          Owner
             visibility.label:                     Visibility
+            visibility.tooltip:                   If you make an address book public, you can avoid "mass unsubscribing", by enabling your contacts to choose which of your campaigns and communications they wish to unsubscribe from. On your preference centre page they will see all public address books, noting which they belong to, so take care when naming public address books.
             status.label:                         Status
             address_book_contacts.label:          Address Book Contacts
             address_book_contacts_exports.label:  Address Book Contacts Export
