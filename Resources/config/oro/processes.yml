@@ -69,10 +69,10 @@ processes:
                         - '@assign_constant_value':
                               attribute: $emailCampaign.campaign.reportPeriod
                               value: 'Oro\Bundle\CampaignBundle\Entity\Campaign::PERIOD_DAILY'
-                        - '@format_string':
+                        - '@translate':
                               attribute: $emailCampaign.campaign.description
-                              string: 'Campaign was added automatically for dotmailer campaign "%campaign_name%"'
-                              arguments:
+                              id: oro.dotmailer.campaign.new_marketing_campaign
+                              params:
                                   campaign_name: $name
                         - '@call_service_method':
                               attribute: $emailCampaign.campaign.code

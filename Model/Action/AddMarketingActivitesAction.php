@@ -3,30 +3,34 @@
 namespace Oro\Bundle\DotmailerBundle\Model\Action;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Common\Util\ClassUtils;
 
 use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIterator;
+use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\DotmailerBundle\Entity\Activity;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\Campaign;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\FeatureToggleBundle\Checker\FeatureCheckerHolderTrait;
 use Oro\Bundle\FeatureToggleBundle\Checker\FeatureToggleableInterface;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 use Oro\Bundle\MarketingActivityBundle\Model\ActivityFactory;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\WorkflowBundle\Model\EntityAwareInterface;
 
 use Oro\Component\Action\Action\AbstractAction;
 use Oro\Component\ConfigExpression\ContextAccessor;
 
-class AddMarketingActivitesAction extends AbstractAction implements FeatureToggleableInterface
+class AddMarketingActivitesAction extends AbstractMarketingListEntitiesAction implements FeatureToggleableInterface
 {
     use FeatureCheckerHolderTrait;
 
     const OPTION_KEY_CHANGESET = 'changeSet';
 
     /**
-     * @var ManagerRegistry
+     * @var DoctrineHelper
      */
-    protected $registry;
+    protected $doctrineHelper;
 
     /**
      * @var array
@@ -38,14 +42,19 @@ class AddMarketingActivitesAction extends AbstractAction implements FeatureToggl
      */
     protected $activityFactory;
 
-    public function __construct(
-        ContextAccessor $contextAccessor,
-        ManagerRegistry $registry,
-        ActivityFactory $activityFactory
-    ) {
-        parent::__construct($contextAccessor);
+    /**
+     * @param DoctrineHelper $doctrineHelper
+     */
+    public function setDoctrineHelper($doctrineHelper)
+    {
+        $this->doctrineHelper = $doctrineHelper;
+    }
 
-        $this->registry = $registry;
+    /**
+     * @param ActivityFactory $activityFactory
+     */
+    public function setActivityFactory($activityFactory)
+    {
         $this->activityFactory = $activityFactory;
     }
 
@@ -103,6 +112,10 @@ class AddMarketingActivitesAction extends AbstractAction implements FeatureToggl
             }
         )->toArray();
         $relatedEntities = $this->getEntitiesByOriginId($activity->getContact()->getOriginId(), $addressBooks);
+        if (count($relatedEntities) === 0) {
+            //if no entities found by origin ids, try to find matched entities by email
+            $relatedEntities = $this->findEntitiesByEmail($dmCampaign, $activity->getEmail());
+        }
 
         foreach ($relatedEntities as $relatedEntity) {
             $this->processSendActivity($activity, $relatedEntity, $changeSet);
@@ -110,6 +123,28 @@ class AddMarketingActivitesAction extends AbstractAction implements FeatureToggl
             $this->processSoftBounceActivity($activity, $relatedEntity, $changeSet);
             $this->processHardBounceActivity($activity, $relatedEntity, $changeSet);
         }
+    }
+
+    /**
+     * @param Campaign $dmCampaign
+     * @param string $email
+     * @return array
+     */
+    protected function findEntitiesByEmail($dmCampaign, $email)
+    {
+        $relatedEntities = [];
+        $entities = $this->getMarketingListEntitiesByEmail(
+            $dmCampaign->getEmailCampaign()->getMarketingList(),
+            $email
+        );
+        foreach ($entities as $entity) {
+            $relatedEntities[] = [
+                'entityId' => $this->doctrineHelper->getSingleEntityIdentifier($entity),
+                'entityClass' => ClassUtils::getClass($entity)
+            ];
+        }
+
+        return $relatedEntities;
     }
 
     /**
@@ -225,7 +260,7 @@ class AddMarketingActivitesAction extends AbstractAction implements FeatureToggl
      */
     protected function getEntityManager()
     {
-        return $this->registry->getManagerForClass(MarketingActivity::class);
+        return $this->doctrineHelper->getEntityManagerForClass(MarketingActivity::class);
     }
 
     /**
@@ -235,7 +270,16 @@ class AddMarketingActivitesAction extends AbstractAction implements FeatureToggl
      */
     protected function getEntitiesByOriginId($originId, $addressBooks)
     {
-        return $this->registry->getRepository('OroDotmailerBundle:Contact')
+        return $this->doctrineHelper->getEntityRepositoryForClass(Contact::class)
             ->getEntitiesDataByOriginIds([$originId], $addressBooks);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getEntitiesQueryBuilder(MarketingList $marketingList)
+    {
+        return $this->marketingListItemsQueryBuilderProvider
+            ->getCachedMarketingListEntitiesQB($marketingList);
     }
 }

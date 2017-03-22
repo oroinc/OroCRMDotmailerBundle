@@ -7,15 +7,19 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Oro\Bundle\CampaignBundle\Entity\Campaign as MarketingCampaign;
 use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
+use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\DotmailerBundle\Entity\Activity;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository;
 use Oro\Bundle\DotmailerBundle\Model\Action\AddMarketingActivitesAction;
+use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
+use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 use Oro\Bundle\FeatureToggleBundle\Checker\FeatureChecker;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 use Oro\Bundle\MarketingActivityBundle\Model\ActivityFactory;
+use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Bundle\WorkflowBundle\Model\EntityAwareInterface;
 
@@ -29,12 +33,27 @@ class AddMarketingActivitesActionTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
+    protected $contactInformationFieldsProvider;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $marketingListItemsQueryBuilderProvider;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $fieldHelper;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
     protected $contextAccessor;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    protected $registry;
+    protected $doctrineHelper;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -49,7 +68,17 @@ class AddMarketingActivitesActionTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->contextAccessor = $this->createMock(ContextAccessor::class);
-        $this->registry = $this->getMockBuilder(ManagerRegistry::class)
+        $this->contactInformationFieldsProvider = $this->getMockBuilder(ContactInformationFieldsProvider::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->marketingListItemsQueryBuilderProvider = $this
+            ->getMockBuilder(MarketingListItemsQueryBuilderProvider::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->fieldHelper = $this->getMockBuilder(FieldHelper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->doctrineHelper = $this->getMockBuilder(DoctrineHelper::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->activityFactory = $this->getMockBuilder(ActivityFactory::class)
@@ -58,9 +87,12 @@ class AddMarketingActivitesActionTest extends \PHPUnit_Framework_TestCase
 
         $this->action = new AddMarketingActivitesAction(
             $this->contextAccessor,
-            $this->registry,
-            $this->activityFactory
+            $this->contactInformationFieldsProvider,
+            $this->marketingListItemsQueryBuilderProvider,
+            $this->fieldHelper
         );
+        $this->action->setActivityFactory($this->activityFactory);
+        $this->action->setDoctrineHelper($this->doctrineHelper);
         $dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
             ->disableOriginalConstructor()
             ->getMock();
@@ -175,8 +207,8 @@ class AddMarketingActivitesActionTest extends \PHPUnit_Framework_TestCase
 
         $em = $this->getMockBuilder('Doctrine\ORM\EntityManagerInterface')
             ->getMock();
-        $this->registry->expects($this->any())
-            ->method('getManagerForClass')
+        $this->doctrineHelper->expects($this->any())
+            ->method('getEntityManagerForClass')
             ->will($this->returnValue($em));
 
         $repository = $this->getMockBuilder(ContactRepository::class)
@@ -191,9 +223,9 @@ class AddMarketingActivitesActionTest extends \PHPUnit_Framework_TestCase
                 ]
             ]));
 
-        $this->registry->expects($this->once())
-            ->method('getRepository')
-            ->with('OroDotmailerBundle:Contact')
+        $this->doctrineHelper->expects($this->once())
+            ->method('getEntityRepositoryForClass')
+            ->with(Contact::class)
             ->will($this->returnValue($repository));
 
         $marketingActivity = new MarketingActivity();
