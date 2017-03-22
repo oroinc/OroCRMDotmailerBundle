@@ -15,13 +15,13 @@
     },
     "require": {
         "php": ">=5.6",
-        "oro/crm": "1.x-dev",
+        "oro/crm": "2.x-dev",
         "romanpitak/dotmailer-api-v2-client": "1.0.11",
-        "oro/marketing" : "1.x-dev"
+        "oro/marketing" : "2.x-dev"
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.x-dev"
+            "dev-master": "2.x-dev"
         }
     }
 }
