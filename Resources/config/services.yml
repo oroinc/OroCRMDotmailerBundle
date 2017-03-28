@@ -1147,6 +1147,7 @@ services:
             - '@oro_entity.doctrine_helper'
             - '@oro_dotmailer.export_manager'
             - '@oro_message_queue.job.runner'
+            - '@security.token_storage'
             - '@logger'
         tags:
             - { name: 'oro_message_queue.client.message_processor' }

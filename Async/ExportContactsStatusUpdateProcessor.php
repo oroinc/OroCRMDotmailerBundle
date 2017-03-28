@@ -4,6 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Async;
 use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
+use Oro\Bundle\IntegrationBundle\Authentication\Token\IntegrationTokenAwareTrait;
 use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
 use Oro\Component\MessageQueue\Client\TopicSubscriberInterface;
 use Oro\Component\MessageQueue\Consumption\MessageProcessorInterface;
@@ -12,9 +13,12 @@ use Oro\Component\MessageQueue\Transport\MessageInterface;
 use Oro\Component\MessageQueue\Transport\SessionInterface;
 use Oro\Component\MessageQueue\Util\JSON;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, TopicSubscriberInterface
 {
+    use IntegrationTokenAwareTrait;
+
     /**
      * @var DoctrineHelper
      */
@@ -39,17 +43,20 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
      * @param DoctrineHelper $doctrineHelper
      * @param ExportManager $exportManager
      * @param JobRunner $jobRunner
+     * @param TokenStorageInterface $tokenStorage
      * @param LoggerInterface $logger
      */
     public function __construct(
         DoctrineHelper $doctrineHelper,
         ExportManager $exportManager,
         JobRunner $jobRunner,
+        TokenStorageInterface $tokenStorage,
         LoggerInterface $logger
     ) {
         $this->doctrineHelper = $doctrineHelper;
         $this->exportManager = $exportManager;
         $this->jobRunner = $jobRunner;
+        $this->tokenStorage = $tokenStorage;
         $this->logger = $logger;
     }
 
@@ -98,6 +105,8 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
             $em = $this->doctrineHelper->getEntityManagerForClass(Integration::class);
 
             $em->getConnection()->getConfiguration()->setSQLLogger(null);
+
+            $this->setTemporaryIntegrationToken($integration);
 
             /**
              * If previous export was not finished we need to update export results from Dotmailer.
