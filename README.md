@@ -21,8 +21,9 @@ Go to the "System -> Integrations" and click "Create Integration" button. Define
 
 After the Username and Password have been filled in, the *Check Connection* button appears. Click the button to check the credentials validity before saving the Integration.
 
-.. note:: Given Dotmailer's non-existent API and limitations, the export is ran asynchronously on OroCRM side by a message queue processor with very low priority, and tries from time to time to get an answer for the export status from Dotmailer. Until Dotmailer's WatchDog does not finish it's checks, the address book will not be updated, and it could last for undefined period of time. Given the discrepancies that can arise between two systems, until there is at least one export process in progress, all the upcoming export processes will be skipped.
-When dotmailer will respond to this export process, Marketing List statuses are correctly updated on OroCRM side, and the next exports will be processed.
+.. note:: 
+	Export is ran asynchronously in OroCRM, its job has low priority and it tries from time to time to get an answer for the export status from dotmailer. Until dotmailer WatchDog finishes its checks, the address book will not be updated, and it could last for an undefined period of time. Given the discrepancies that can arise between the two systems, while there is at least one export process in progress, all upcoming export processes will be skipped.
+ 	When dotmailer responds to this export process, Marketing List statuses will be correctly updated on the OroCRM side and the next exports will be processed.
 
 ## Connecting Marketing List to Dotmailer
 
