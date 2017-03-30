@@ -133,7 +133,7 @@ class DotmailerController extends Controller
             if ($transport->getClientId() && $transport->getClientKey()) {
                 $oauthHelper = $this->get('oro_dotmailer.oauth_manager');
                 $oauth = $this->getDoctrine()
-                    ->getRepository('OroDotmailerBundle::OAuth')
+                    ->getRepository('OroDotmailerBundle:OAuth')
                     ->findByChannelAndUser($channel, $this->getUser());
                 if ($oauth) {
                     try {

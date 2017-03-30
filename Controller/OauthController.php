@@ -53,7 +53,7 @@ class OauthController extends Controller
             }
             if ($refreshToken) {
                 $oauth = $this->getDoctrine()
-                    ->getRepository('OroDotmailerBundle::OAuth')
+                    ->getRepository('OroDotmailerBundle:OAuth')
                     ->findByChannelAndUser($channel, $this->getUser());
                 if (!$oauth) {
                     $oauth = new OAuth();
@@ -91,7 +91,7 @@ class OauthController extends Controller
     public function disconnectAction(Channel $channel)
     {
         $oauth = $this->getDoctrine()
-            ->getRepository('OroDotmailerBundle::OAuth')
+            ->getRepository('OroDotmailerBundle:OAuth')
             ->findByChannelAndUser($channel, $this->getUser());
         if ($oauth) {
             $em = $this->get('doctrine')->getManager();
