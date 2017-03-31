@@ -3,6 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\ImportExport;
 
 use Oro\Bundle\DotmailerBundle\ImportExport\JobContextComposite;
+use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyMethods)
@@ -11,11 +12,11 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 {
     public function testAddError()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->never())
             ->method('addError');
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('addError')
             ->with($expectedError = 'test error');
@@ -27,11 +28,11 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testAddErrors()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->never())
             ->method('addErrors');
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('addErrors')
             ->with($expectedErrors = ['test error']);
@@ -41,18 +42,50 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
         $target->addErrors($expectedErrors);
     }
 
+    public function testAddPostponedRow()
+    {
+        $previousStepContext = $this->createMock(ContextInterface::class);
+        $previousStepContext->expects($this->never())
+            ->method('addPostponedRow');
+        $contexts = [$previousStepContext];
+        $currentContext = $this->createMock(ContextInterface::class);
+        $currentContext->expects($this->once())
+            ->method('addPostponedRow')
+            ->with($expectedPostponedRow = ['header_1' => 1]);
+
+        $target = $this->initCompositeStubs($currentContext, $contexts);
+
+        $target->addPostponedRow($expectedPostponedRow);
+    }
+
+    public function testAddPostponedRows()
+    {
+        $previousStepContext = $this->createMock(ContextInterface::class);
+        $previousStepContext->expects($this->never())
+            ->method('addPostponedRows');
+        $contexts = [$previousStepContext];
+        $currentContext = $this->createMock(ContextInterface::class);
+        $currentContext->expects($this->once())
+            ->method('addPostponedRows')
+            ->with($expectedPostponedRows = [['header_1' => 1], ['header_1' => 2]]);
+
+        $target = $this->initCompositeStubs($currentContext, $contexts);
+
+        $target->addPostponedRows($expectedPostponedRows);
+    }
+
     public function testGetFailureExceptions()
     {
         $expected = [
             ['message' => 'second exception'],
             ['message' => 'first exception'],
         ];
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getFailureExceptions')
             ->will($this->returnValue([['message' => 'first exception']]));
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getFailureExceptions')
             ->will($this->returnValue([['message' => 'second exception']]));
@@ -65,11 +98,11 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testIncrementReadCount()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->never())
             ->method('incrementReadCount');
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('incrementReadCount');
 
@@ -80,12 +113,12 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetReadCount()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getReadCount')
             ->will($this->returnValue($previousStepContextReadCount = 21));
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getReadCount')
             ->will($this->returnValue($currentStepContextReadCount = 45));
@@ -99,11 +132,11 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testIncrementReadOffset()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->never())
             ->method('incrementReadOffset');
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('incrementReadOffset');
 
@@ -114,12 +147,12 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testReadOffset()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getReadOffset')
             ->will($this->returnValue($previousStepContextReadOffset = 21));
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getReadOffset')
             ->will($this->returnValue($currentStepContextReadOffset = 45));
@@ -133,11 +166,11 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testIncrementAddCount()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->never())
             ->method('incrementAddCount');
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('incrementAddCount');
 
@@ -148,12 +181,12 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetAddCount()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getAddCount')
             ->will($this->returnValue($previousStepContextAddCount = 21));
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getAddCount')
             ->will($this->returnValue($currentStepContextAddCount = 45));
@@ -167,11 +200,11 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testIncrementUpdateCount()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->never())
             ->method('incrementAddCount');
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('incrementAddCount');
 
@@ -182,12 +215,12 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetUpdateCount()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getUpdateCount')
             ->will($this->returnValue($previousStepContextUpdateCount = 21));
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getUpdateCount')
             ->will($this->returnValue($currentStepContextUpdateCount = 45));
@@ -201,11 +234,11 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testIncrementReplaceCount()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->never())
             ->method('incrementReplaceCount');
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('incrementReplaceCount');
 
@@ -216,12 +249,12 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetReplaceCount()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getReplaceCount')
             ->will($this->returnValue($previousStepContextReplaceCount = 21));
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getReplaceCount')
             ->will($this->returnValue($currentStepContextReplaceCount = 45));
@@ -235,11 +268,11 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testIncrementDeleteCount()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->never())
             ->method('incrementDeleteCount');
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('incrementDeleteCount');
 
@@ -250,12 +283,12 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDeleteCount()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getDeleteCount')
             ->will($this->returnValue($previousStepContextDeleteCount = 21));
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getDeleteCount')
             ->will($this->returnValue($currentStepContextDeleteCount = 45));
@@ -269,11 +302,11 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testIncrementErrorEntriesCount()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->never())
             ->method('incrementErrorEntriesCount');
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('incrementErrorEntriesCount');
 
@@ -284,12 +317,12 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetErrorEntriesCount()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getErrorEntriesCount')
             ->will($this->returnValue($previousStepContextErrorEntriesCount = 21));
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getErrorEntriesCount')
             ->will($this->returnValue($currentStepContextErrorEntriesCount = 45));
@@ -303,12 +336,12 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testSetValue()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('setValue')
             ->with($expectedValueName = 'testValue', null);
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->at(0))
             ->method('setValue')
             ->with($expectedValueName, null);
@@ -323,13 +356,13 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetValueReturnFirstFoundedScalarValue()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getValue')
             ->with($expectedValueName = 'testValue')
             ->will($this->returnValue($expectedValue = 23456));
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getValue')
             ->will($this->returnValue(null));
@@ -348,13 +381,13 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
             ['second test value'],
         ];
 
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getValue')
             ->with($expectedValueName = 'testValue')
             ->will($this->returnValue([$expectedValue[1]]));
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getValue')
             ->will($this->returnValue([$expectedValue[0]]));
@@ -367,11 +400,11 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetConfiguration()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->never())
             ->method('getConfiguration');
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getConfiguration')
             ->will($this->returnValue($expectedConfiguration = 'test configuration'));
@@ -384,13 +417,13 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testHasOption()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('hasOption')
             ->with($option = 'testOption')
             ->will($this->returnValue(true));
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('hasOption')
             ->with($option = 'testOption')
@@ -404,13 +437,13 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetOptionReturnFirstFoundedScalarValue()
     {
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getOption')
             ->with($expectedOptionName = 'testOption')
             ->will($this->returnValue($expectedValue = 23456));
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getOption')
             ->will($this->returnValue(null));
@@ -428,13 +461,13 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
             ['second test value'],
         ];
 
-        $previousStepContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getOption')
             ->with($expectedOptionName = 'testOption')
             ->will($this->returnValue([$expectedValue[1]]));
         $contexts = [$previousStepContext];
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getOption')
             ->will($this->returnValue([$expectedValue[0]]));
@@ -449,7 +482,7 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
     public function testGetOptionReturnCorrectDefaultValue()
     {
         $expectedOptionName = 'notExistOption';
-        $currentContext = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getOption')
             ->will($this->returnValue(null));
