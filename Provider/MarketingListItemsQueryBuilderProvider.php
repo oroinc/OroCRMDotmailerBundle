@@ -225,7 +225,7 @@ class MarketingListItemsQueryBuilderProvider
         if ($addressBook->isCreateEntities()) {
             //if address book allows to create new entities, take only contacts not makred as new entity
             $removedItemsQueryBuilder->andWhere(
-                $removedItemsQueryBuilder->expr()->eq('addressBookContact.marketingListItemId', ':newEntity')
+                $removedItemsQueryBuilder->expr()->eq('addressBookContact.newEntity', ':newEntity')
             )->setParameter('newEntity', false);
         }
 
