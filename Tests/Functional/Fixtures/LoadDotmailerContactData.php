@@ -60,6 +60,40 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'email_type'  => Contact::EMAIL_TYPE_PLAINTEXT
         ],
         [
+            'originId'     => 222,
+            'email'        => 'nick.case@example.com',
+            'channel'      => 'oro_dotmailer.channel.second',
+            'status'       => ApiContactStatuses::SUBSCRIBED,
+            'reference'    => 'oro_dotmailer.contact.nick_case.second_channel',
+            'addressBooks' => [
+                [
+                    'addressBook'         => 'oro_dotmailer.address_book.third',
+                    'marketing_list_item' => 'oro_dotmailer.orocrm_contact.nick.case'
+                ],
+                [
+                    'addressBook'         => 'oro_dotmailer.address_book.second',
+                    'marketing_list_item' => 'oro_dotmailer.orocrm_contact.nick.case'
+                ],
+            ],
+        ],
+        [
+            'originId'     => 223,
+            'email'        => 'mike.case@example.com',
+            'channel'      => 'oro_dotmailer.channel.second',
+            'status'       => ApiContactStatuses::SUBSCRIBED,
+            'reference'    => 'oro_dotmailer.contact.mike_case.second_channel',
+            'addressBooks' => [
+                [
+                    'addressBook'         => 'oro_dotmailer.address_book.third',
+                    'marketing_list_item' => 'oro_dotmailer.orocrm_contact.mike.case'
+                ],
+                [
+                    'addressBook'         => 'oro_dotmailer.address_book.second',
+                    'marketing_list_item' => 'oro_dotmailer.orocrm_contact.mike.case'
+                ],
+            ],
+        ],
+        [
             'originId'     => 42,
             'email'        => 'second@mail.com',
             'channel'      => 'oro_dotmailer.channel.third',

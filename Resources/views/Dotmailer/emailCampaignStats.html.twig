@@ -79,7 +79,7 @@
                 }}
                 {{ ui.renderAttributeWithTooltip(
                     'oro.dotmailer.emailcampaign.total_replies.label',
-                    campaignStats.numTotalReplies|oro_format_percent,
+                    campaignStats.numTotalReplies,
                     'oro.dotmailer.emailcampaign.total_replies.tooltip')
                 }}
                 {{ ui.renderAttributeWithTooltip(
@@ -117,9 +117,9 @@
                     'oro.dotmailer.emailcampaign.softBounces.tooltip')
                 }}
                 {{ ui.renderAttributeWithTooltip(
-                    'oro.dotmailer.emailcampaign.Percentage.label',
+                    'oro.dotmailer.emailcampaign.softBouncesPercentage.label',
                     campaignStats.percentageSoftBounces|oro_format_percent,
-                    'oro.dotmailer.emailcampaign.Percentage.tooltip')
+                    'oro.dotmailer.emailcampaign.softBouncesPercentage.tooltip')
                 }}
 
                 {{ ui.renderAttributeWithTooltip(
@@ -136,7 +136,7 @@
                 {{ ui.renderAttributeWithTooltip(
                     'oro.dotmailer.emailcampaign.isp_complaints.label',
                     campaignStats.numTotalIspComplaints|oro_format_decimal,
-                    'oro.dotmailer.emailcampaign.harisp_complaintsdBounces.tooltip')
+                    'oro.dotmailer.emailcampaign.isp_complaints.tooltip')
                 }}
             </div>
         </div>

@@ -12,6 +12,10 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
     protected function setUp()
     {
         parent::setUp();
+
+        //@todo: remove after CRM-7961 is resolved
+        $this->markTestSkipped('skip until CRM-7961 is resolved');
+
         $this->client->useHashNavigation(true);
         $this->loadFixtures(
             [

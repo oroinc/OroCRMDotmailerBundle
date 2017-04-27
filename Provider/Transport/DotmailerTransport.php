@@ -3,6 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 use DotMailer\Api\DataTypes\ApiAddressBook;
 use DotMailer\Api\DataTypes\ApiCampaign;
@@ -34,12 +35,15 @@ use Oro\Bundle\DotmailerBundle\Exception\RequiredOptionException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignClickIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignOpenIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\DataFieldIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReportIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
 
 class DotmailerTransport implements TransportInterface, LoggerAwareInterface
 {
@@ -51,6 +55,11 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
      * @var IResources
      */
     protected $dotmailerResources;
+
+    /**
+     * @var AdditionalResource
+     */
+    protected $additionalResource;
 
     /**
      * @var DotmailerResourcesFactory
@@ -93,6 +102,8 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
         }
 
         $this->dotmailerResources = $this->dotMailerResFactory->createResources($username, $password, $this->logger);
+        $this->additionalResource = $this->dotMailerResFactory
+            ->createAdditionalResource($username, $password, $this->logger);
     }
 
     /**
@@ -228,6 +239,70 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
                     $campaign['originId'],
                     $campaign['isInit'],
                     $lastSyncDate
+                )
+            );
+        }
+
+        return $iterator;
+    }
+
+    /**
+     * @param ManagerRegistry $registry
+     * @param array|ArrayCollection $campaignsToSynchronize
+     * @param \DateTime $lastSyncDate = null
+     *
+     * @return \Iterator
+     */
+    public function getCampaignClicks(
+        ManagerRegistry $registry,
+        array $campaignsToSynchronize = [],
+        \DateTime $lastSyncDate = null
+    ) {
+        $iterator = new AppendIterator();
+        foreach ($campaignsToSynchronize as $campaign) {
+            $iterator->append(
+                new CampaignClickIterator(
+                    $this->dotmailerResources,
+                    $registry,
+                    $campaign['originId'],
+                    $campaign['emailCampaignId'],
+                    $campaign['campaignId'],
+                    $campaign['addressBooks'],
+                    $campaign['isInit'],
+                    $lastSyncDate,
+                    $this->additionalResource
+                )
+            );
+        }
+
+        return $iterator;
+    }
+
+    /**
+     * @param ManagerRegistry $registry
+     * @param array|ArrayCollection $campaignsToSynchronize
+     * @param \DateTime $lastSyncDate = null
+     *
+     * @return \Iterator
+     */
+    public function getCampaignOpens(
+        ManagerRegistry $registry,
+        array $campaignsToSynchronize = [],
+        \DateTime $lastSyncDate = null
+    ) {
+        $iterator = new AppendIterator();
+        foreach ($campaignsToSynchronize as $campaign) {
+            $iterator->append(
+                new CampaignOpenIterator(
+                    $this->dotmailerResources,
+                    $registry,
+                    $campaign['originId'],
+                    $campaign['emailCampaignId'],
+                    $campaign['campaignId'],
+                    $campaign['addressBooks'],
+                    $campaign['isInit'],
+                    $lastSyncDate,
+                    $this->additionalResource
                 )
             );
         }

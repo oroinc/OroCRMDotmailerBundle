@@ -86,11 +86,11 @@ Import is performed with *oro:cron:integration:sync* cron command after the inte
  - **Address Book**: All Dotmailer Address Books are imported except "All Contacts" and "Test" (these Books are created for each Dotmailer Account by default).
  - **Campaign**:  Details of campaigns sent to the contacts on Address Books connected to Oro Marketing Lists are imported.
 
-For each Dotmailer campaign imported, a new Email Campaign will be created in Oro. During the import, the campaign related details are synchronized during the following imports as follows:
+For each Dotmailer campaign imported, a new Email Campaign and a Marketing Campaign will be created in Oro. During the import, the campaign related details are synchronized during the following imports as follows:
 
  - **Dotmailer Contact**: Import all the Dotmailer Contacts from all the Address Books imported to Oro (the contacts are added to the database and used at the backend, they won't be seen in the UI).
  - **Unsubscribed Contact**: Import all the contacts suppressed/unsubscribed from the Address Book since the first import. Status of this contacts in the related Oro Marketing Lists is set to unsubscribed.
- - **Contact Activity**: All the contact activities performed within a Dotmailer Campaign previously imported to ORoCRM are imported to Oro.
+ - **Contact Activity**: All the contact activities performed within a Dotmailer Campaign previously imported to OroCRM are imported to Oro. Activities (send, open, click etc.) are additionaly stored as marketing activities. In case several dotmailer email campaigns should be a part of a single marketing campaign, several automatically generated marketing campaigns can be merged within campaigns grid.
  - **Campaign Summary**: Campaign summary is imported for each Campaign previously imported to Oro.
 
 Each contact activity is mapped to Oro Marketing List Item and Email Campaign Statics by the Email value.
