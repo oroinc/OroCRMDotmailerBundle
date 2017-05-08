@@ -5,7 +5,7 @@ oro_entity:
             plural_alias: dotmaileractivities
         Oro\Bundle\DotmailerBundle\Entity\AddressBook:
             alias:        dotmaileraddressbook
-            plural_alias: dotmaileraddressbook
+            plural_alias: dotmaileraddressbooks
         Oro\Bundle\DotmailerBundle\Entity\AddressBookContact:
             alias:        dotmaileraddressbookcontact
             plural_alias: dotmaileraddressbookcontacts
@@ -21,6 +21,21 @@ oro_entity:
         Oro\Bundle\DotmailerBundle\Entity\Contact:
             alias:        dotmailercontact
             plural_alias: dotmailercontacts
+        Oro\Bundle\DotmailerBundle\Entity\DataField:
+            alias:        dotmailerdatafield
+            plural_alias: dotmailerdatafields
+        Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping:
+            alias:        dotmailerdatafieldmapping
+            plural_alias: dotmailerdatafieldmappings
+        Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig:
+            alias:        dotmailerdatafieldmappingconfig
+            plural_alias: dotmailerdatafieldmappingconfigs
+        Oro\Bundle\DotmailerBundle\Entity\ChangedFieldLog:
+            alias:        dotmailerchangedfieldlog
+            plural_alias: dotmailerchangedfieldlogs
+        Oro\Bundle\DotmailerBundle\Entity\OAuth:
+            alias:        dotmaileroauth
+            plural_alias: dotmaileroauth
         Extend\Entity\EV_Dm_Cnt_Status:
             alias:        dotmailercontactstatus
             plural_alias: dotmailercontactstatuses
@@ -45,3 +60,9 @@ oro_entity:
         Extend\Entity\EV_Dm_Import_Status:
             alias:        dotmailerimportstatus
             plural_alias: dotmailerimportstatuses
+        Extend\Entity\EV_Dm_Df_Type:
+            alias:        dotmailerdatafieldtype
+            plural_alias: dotmailerdatafieldtypes
+        Extend\Entity\EV_Dm_Df_Visibility:
+            alias:        dotmailerdatafieldvisibility
+            plural_alias: dotmailerdatafieldvisibilities

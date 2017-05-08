@@ -1,141 +1,31 @@
 api:
     entities:
         Extend\Entity\EV_Dm_Ab_Cnt_Exp_Type:
-            fields:
-                name:
-                    description:  The name specified for a Dotmailer address book export type ('Add Contact to Address Book,' 'Export New Contact,' or 'Update Contact').
-                default:
-                    description:  Whether a Dotmailer address book export type is set as default. A default export type is automatically assigned to a Dotmailer address book on creation.
-                priority:
-                    description:  The order in which Dotmailer address book visibilities are ranked.
-            actions:
-                get:
-                    documentation:  Retrieve a specific Dotmailer address book export type record. Defines whether a contact being synced with Dotmailer needs to be added to an address book, is already in an address book but needs an update, or is a totally new contact.
-                get_list:
-                    documentation:  Retrieve a collection of Dotmailer address book export type records. Defines whether a contact being synced with Dotmailer needs to be added to an address book, is already in an address book but needs an update, or is a totally new contact.
+            documentation_resource: '@OroDotmailerBundle/Resources/doc/api/address_book.md'
 
         Extend\Entity\EV_Dm_Ab_Visibility:
-            fields:
-                name:
-                    description:  A name of the Dotmailer address book visibility ('Public,' or 'Private').
-                default:
-                    description:  Whether a Dotmailer address book visibility is set as default.  A default field visibility is automatically assigned to a Dotmailer address book on creation.
-                priority:
-                    description:  The order in which Dotmailer address book visibilities are ranked.
-            actions:
-                get:
-                    documentation:  Retrieve a specific Dotmailer address book visibility record. Defines whether contacts are able to join or remove themselves from a Dotmailer address book.
-                get_list:
-                    documentation:  Retrieve a collection of Dotmailer address book visibility records. Defines whether contacts are able to join or remove themselves from a Dotmailer address book.
+            documentation_resource: '@OroDotmailerBundle/Resources/doc/api/address_book.md'
 
         Extend\Entity\EV_Dm_Cmp_Reply_Action:
-            fields:
-                name:
-                    description:  A name of the Dotmailer campaign reply action ('Unset,' 'Webmail,' 'WebMailForward,' 'Delete,' or 'NotAvailableInThisVersion').
-                default:
-                    description:  Whether a Dotmailer campaign reply action is set as default. A default campaign reply action is automatically chosen for a Dotmailer campaign replies.
-                priority:
-                    description:  The order in which Dotmailer campaign reply actions are ranked.
-            actions:
-                get:
-                    documentation:  Retrieve a specific Dotmailer campaign reply action record. Defines what to do when a contact replies to the campaign: whether to store replies, or also send them to the specified email.
-                get_list:
-                    documentation:  Retrieve a collection of Dotmailer campaign reply action records. Defines what to do when a contact replies to the campaign: whether to store replies, or also send them to the specified email.
+            documentation_resource: '@OroDotmailerBundle/Resources/doc/api/campaign.md'
 
         Extend\Entity\EV_Dm_Cmp_Status:
-            fields:
-                name:
-                    description:  A name of the Dotmailer campaign status ('Unsent,' 'Sending,' 'Sent,' 'Paused,' 'Cancelled,' 'RequiresSystemApproval,' 'RequiresSMSApproval,' 'RequiresWorkflowApproval,' or 'Triggered').
-                default:
-                    description:  Whether a Dotmailer campaign status is set as default. A default campaign status is automatically assigned to a Dotmailer campaign on creation.
-                priority:
-                    description:  The order in which Dotmailer campaign statuses are ranked.
-            actions:
-                get:
-                    documentation:  Retrieve a specific Dotmailer campaign status record. Describes the progress of sending a Dotmailer campaign.
-                get_list:
-                    documentation:  Retrieve a collection of Dotmailer campaign status records. Describes the progress of sending a Dotmailer campaign.
+            documentation_resource: '@OroDotmailerBundle/Resources/doc/api/campaign.md'
 
         Extend\Entity\EV_Dm_Cnt_Email_Type:
-            fields:
-                name:
-                    description:  A name of the Dotmailer contact email type ('PlainText,' 'Html,' or 'NotAvailableInThisVersion').
-                default:
-                    description:  Whether a Dotmailer contact email type is set as default. A default contact email type is automatically assigned to a Dotmailer contact email on creation.
-                priority:
-                    description:  The order in which Dotmailer contact email types are ranked.
-            actions:
-                get:
-                    documentation:  Retrieve a specific Dotmailer contact email type record. Defines which email format a contact prefers.
-                get_list:
-                    documentation:  Retrieve a collection of Dotmailer contact email type records. Defines which email format a contact prefers.
+            documentation_resource: '@OroDotmailerBundle/Resources/doc/api/contact.md'
 
         Extend\Entity\EV_Dm_Cnt_Opt_In_Type:
-            fields:
-                name:
-                    description:  A name of the Dotmailer contact option type ('Unknown,' 'Single,' 'Double,' 'VerifiedDouble,' or 'NotAvailableInThisVersion').
-                default:
-                    description:  Whether a Dotmailer contact option type is set as default. A default contact option type is automatically assigned to a Dotmailer contact option on creation.
-                priority:
-                    description:  The order in which Dotmailer contact option types are ranked.
-            actions:
-                get:
-                    documentation:  Retrieve a specific Dotmailer contact option type record. Defines how a contact opted in a Dotmailer address book: unknown, via a sign-up form (or similar), with confirmation via email, with confirmation via email sent by a Dotmailer.
-                get_list:
-                    documentation:	Retrieve a collection of Dotmailer contact option type records. Defines how a contact opted in a Dotmailer address book: unknown, via a sign-up form (or similar), with confirmation via email, with confirmation via email sent by a Dotmailer.
+            documentation_resource: '@OroDotmailerBundle/Resources/doc/api/contact.md'
 
         Extend\Entity\EV_Dm_Cnt_Status:
-            fields:
-                name:
-                    description:  A name of the Dotmailer contact status.
-                default:
-                    description:  Whether a Dotmailer contact status is set as default. A default contact status is automatically assigned to a Dotmailer contact on creation.
-                priority:
-                    description:  The order in which Dotmailer contact statuses are ranked.
-            actions:
-                get:
-                    documentation:  Retrieve a specific Dotmailer contact status record. Defines what status a Dotmailer contact currently has.
-                get_list:
-                    documentation:  Retrieve a collection of Dotmailer contact status records.  Defines what status a Dotmailer contact currently has.
+            documentation_resource: '@OroDotmailerBundle/Resources/doc/api/contact.md'
 
         Extend\Entity\EV_Dm_Import_Status:
-            fields:
-                name:
-                    description:  A name of the Dotmailer import status ('NotFinished,' 'Finished,' 'RejectedByWatchdog,' 'InvalidFileFormat,' etc.).
-                default:
-                    description:  Whether a Dotmailer import status is set as default.
-                priority:
-                    description:  The order in which Dotmailer import statuses are ranked.
-            actions:
-                get:
-                    documentation:  Retrieve a specific Dotmailer import status record. Describes the progress of a contact import.
-                get_list:
-                    documentation:	Retrieve a collection of Dotmailer import status records. Describes the progress of a contact import.
+            documentation_resource: '@OroDotmailerBundle/Resources/doc/api/contact.md'
 
         Extend\Entity\EV_Dm_Df_Type:
-            fields:
-                name:
-                    description:  A name of the Dotmailer data field type ('String,'  'Numeric,' 'Date,' or 'Boolean').
-                default:
-                    description:  Whether a Dotmailer data field type is set as default. A default field type is automatically assigned to a Dotmailer data field on creation.
-                priority:
-                    description:  The order in which Dotmailer data field types are ranked.
-            actions:
-                get:
-                    documentation:  Retrieve a specific Dotmailer data field type record. Defines what kind of data a Dotmailer data field can contain.
-                get_list:
-                    documentation:	Retrieve a collection of Dotmailer data field type records. Defines what kind of data a Dotmailer data field can contain.
+            documentation_resource: '@OroDotmailerBundle/Resources/doc/api/data_field.md'
 
         Extend\Entity\EV_Dm_Df_Visibility:
-            fields:
-                name:
-                    description:  A name of the Dotmailer data field visibility ('Public,' or 'Private').
-                default:
-                    description:  Whether a Dotmailer data field visibility is set as default. A default field visibility is automatically assigned to a Dotmailer data field on creation.
-                priority:
-                    description:  The order in which Dotmailer data field visibilities are ranked.
-            actions:
-                get:
-                    documentation:  Retrieve a specific Dotmailer data field visibility record. Defines whether contacts are able to view and amend a Dotmailer data field value.
-                get_list:
-                    documentation:	Retrieve a collection of Dotmailer data field visibility records. Defines whether contacts are able to view and amend a Dotmailer data field value.
+            documentation_resource: '@OroDotmailerBundle/Resources/doc/api/data_field.md'
