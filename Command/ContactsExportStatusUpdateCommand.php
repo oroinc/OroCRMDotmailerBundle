@@ -9,6 +9,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
 use Oro\Bundle\IntegrationBundle\Entity\Repository\ChannelRepository;
 use Oro\Component\MessageQueue\Client\Message;
 use Oro\Component\MessageQueue\Client\MessagePriority;
+use Oro\Component\MessageQueue\Job\Job;
 
 use Oro\Component\MessageQueue\Client\MessageProducerInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -63,10 +64,31 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
         $output->writeln('Send export contacts status update for integration:');
 
         $integrations = $this->getIntegrationRepository()->findBy(['type' => ChannelType::TYPE, 'enabled' => true]);
+        $jobProcessor = $this->container->get('oro_message_queue.job.processor');
+        $translator = $this->container->get('translator');
         foreach ($integrations as $integration) {
             /** @var Integration $integration */
 
             $output->writeln(sprintf('Integration "%s"', $integration->getId()));
+
+            // check if the integration job with `new` or `in progress` status already exists.
+            // @todo: Temporary solution. should be refacored during BAP-14803.
+            $jobName = 'oro_dotmailer:export_contacts_status_update:'.$integration->getId();
+            $existingJob = $jobProcessor->findRootJobByJobNameAndStatuses(
+                $jobName,
+                [Job::STATUS_NEW, Job::STATUS_RUNNING]
+            );
+            if ($existingJob) {
+                $output->writeln(
+                    sprintf(
+                        'Skip "%s" integration because such job already exists with "%s" status',
+                        $integration->getName(),
+                        $translator->trans($existingJob->getStatus())
+                    )
+                );
+
+                continue;
+            }
 
             $this->getMessageProducer()->send(
                 Topics::EXPORT_CONTACTS_STATUS_UPDATE,
