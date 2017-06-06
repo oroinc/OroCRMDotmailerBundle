@@ -5,7 +5,6 @@ namespace Oro\Bundle\DotmailerBundle\Controller;
 use FOS\RestBundle\Util\Codes;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
-use Oro\Bundle\IntegrationBundle\Manager\GenuineSyncScheduler;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
@@ -41,9 +40,11 @@ class AddressBookController extends Controller
     public function synchronizeAddressBookAction(AddressBook $addressBook)
     {
         try {
-            $this->getSyncScheduler()->schedule($addressBook->getChannel()->getId(), null, [
-                AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION => $addressBook->getId(),
-            ]);
+            $this->get('oro_integration.genuine_sync_scheduler')->schedule(
+                $addressBook->getChannel()->getId(),
+                null,
+                [AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION => $addressBook->getId()]
+            );
 
             $status = Codes::HTTP_OK;
             $response = [
@@ -54,11 +55,18 @@ class AddressBookController extends Controller
                 )
             ];
         } catch (\Exception $e) {
-            $status = Codes::HTTP_BAD_REQUEST;
-            $response['message'] = sprintf(
-                $this->get('translator')->trans('oro.integration.sync_error'),
-                $e->getMessage()
+            $this->get('logger')->error(
+                sprintf(
+                    'Failed to schedule address book synchronization. Address Book Id: %s.',
+                    $addressBook->getId()
+                ),
+                ['e' => $e]
             );
+
+            $status = Codes::HTTP_BAD_REQUEST;
+            $response = [
+                'message' => $this->get('translator')->trans('oro.integration.sync_error')
+            ];
         }
 
         return new JsonResponse($response, $status);
@@ -246,13 +254,5 @@ class AddressBookController extends Controller
             $this->get('translator')->trans('oro.dotmailer.addressbook.message.saved'),
             $this->get('oro_dotmailer.form.handler.address_book_update')
         );
-    }
-
-    /**
-     * @return GenuineSyncScheduler
-     */
-    private function getSyncScheduler()
-    {
-        return $this->container->get('oro_integration.genuine_sync_scheduler');
     }
 }

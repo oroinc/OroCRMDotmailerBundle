@@ -4,8 +4,6 @@ namespace Oro\Bundle\DotmailerBundle\Controller;
 
 use FOS\RestBundle\Util\Codes;
 
-use JMS\JobQueueBundle\Entity\Job;
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -128,23 +126,27 @@ class DataFieldController extends Controller
             $channels = $repository->getConfiguredChannelsForSync(ChannelType::TYPE, true);
             /** @var Channel $channel */
             foreach ($channels as $channel) {
-                $this->container->get('oro_integration.genuine_sync_scheduler')
-                    ->schedule(
-                        $channel->getId(),
-                        DataFieldConnector::TYPE,
-                        [
-                            DataFieldConnector::FORCE_SYNC_FLAG => 1,
-                        ]
-                    );
+                $this->get('oro_integration.genuine_sync_scheduler')->schedule(
+                    $channel->getId(),
+                    DataFieldConnector::TYPE,
+                    [DataFieldConnector::FORCE_SYNC_FLAG => 1]
+                );
             }
+
             $status = Codes::HTTP_OK;
-            $response = ['message' => $this->get('translator')->trans('oro.dotmailer.datafield.syncronize_scheduled')];
+            $response = [
+                'message' => $this->get('translator')->trans('oro.dotmailer.datafield.syncronize_scheduled')
+            ];
         } catch (\Exception $e) {
-            $status = Codes::HTTP_BAD_REQUEST;
-            $response['message'] = sprintf(
-                $this->get('translator')->trans('oro.integration.sync_error'),
-                $e->getMessage()
+            $this->get('logger')->error(
+                'Failed to schedule data field synchronization.',
+                ['e' => $e]
             );
+
+            $status = Codes::HTTP_BAD_REQUEST;
+            $response = [
+                'message' => $this->get('translator')->trans('oro.integration.sync_error')
+            ];
         }
 
         return new JsonResponse($response, $status);
