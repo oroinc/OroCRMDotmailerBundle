@@ -47,7 +47,8 @@ class ContactRepository extends EntityRepository
                 Join::WITH,
                 $joinCondition
             )
-            ->setParameter('addressBook', $addressBook);
+            ->setParameter('addressBook', $addressBook)
+            ->addOrderBy('contact.id');
     }
 
     /**
@@ -157,7 +158,8 @@ class ContactRepository extends EntityRepository
                    ->add($expr->isNotNull('addressBookContacts.marketingListItemId'))
             )
             ->setParameter('isScheduled', true)
-            ->setParameter('addressBook', $addressBook);
+            ->setParameter('addressBook', $addressBook)
+            ->addOrderBy('contact.id');
 
         return $qb;
     }
@@ -185,6 +187,7 @@ class ContactRepository extends EntityRepository
         if ($addressBooks) {
             $qb->andWhere($qb->expr()->in('addressBookContacts.addressBook', $addressBooks));
         };
+        $qb->addOrderBy('contact.originId');
         $query = $qb->getQuery()->useQueryCache(false);
 
         return new BufferedQueryResultIterator($query);

@@ -30,6 +30,7 @@ class AddressBookContactRepository extends EntityRepository
             ->innerJoin('address_book_contact.channel', 'channel')
             ->addSelect('channel')
             ->where('address_book_contact.exportId = :exportId')
+            ->addOrderBy('address_book_contact.id')
             ->setMaxResults($take)
             ->setFirstResult($skip)
             ->getQuery()
