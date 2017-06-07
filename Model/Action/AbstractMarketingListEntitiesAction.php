@@ -6,6 +6,7 @@ use Doctrine\ORM\QueryBuilder;
 
 use Oro\Bundle\BatchBundle\ORM\Query\BufferedIdentityQueryResultIterator;
 use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIteratorInterface;
+use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
@@ -16,6 +17,8 @@ use Oro\Component\ConfigExpression\ContextAccessor;
 
 abstract class AbstractMarketingListEntitiesAction extends AbstractAction
 {
+    const MARKETING_LIST_ENTITY_QB_ALIAS = 'marketingListEntity';
+
     /**
      * @var ContactInformationFieldsProvider
      */
@@ -30,6 +33,11 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
      * @var FieldHelper
      */
     protected $fieldHelper;
+
+    /**
+     * @var DoctrineHelper
+     */
+    protected $doctrineHelper;
 
     /**
      * @param ContextAccessor $contextAccessor
@@ -48,6 +56,14 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
         $this->contactInformationFieldsProvider = $contactInformationFieldsProvider;
         $this->marketingListItemsQueryBuilderProvider = $marketingListItemsQueryBuilderProvider;
         $this->fieldHelper = $fieldHelper;
+    }
+
+    /**
+     * @param DoctrineHelper $doctrineHelper
+     */
+    public function setDoctrineHelper($doctrineHelper)
+    {
+        $this->doctrineHelper = $doctrineHelper;
     }
 
     /**
@@ -102,5 +118,10 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
      * @param MarketingList $marketingList
      * @return QueryBuilder
      */
-    abstract protected function getEntitiesQueryBuilder(MarketingList $marketingList);
+    protected function getEntitiesQueryBuilder(MarketingList $marketingList)
+    {
+        return $this->doctrineHelper
+            ->getEntityRepository($marketingList->getEntity())
+            ->createQueryBuilder(self::MARKETING_LIST_ENTITY_QB_ALIAS);
+    }
 }
