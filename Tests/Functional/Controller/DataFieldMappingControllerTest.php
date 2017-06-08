@@ -29,9 +29,6 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
         $this->assertHtmlResponseStatusCodeEquals($result, 200);
     }
 
-    /**
-     * @return string
-     */
     public function testCreate()
     {
         $crawler = $this->client->request('GET', $this->getUrl('oro_dotmailer_datafield_mapping_create'));
