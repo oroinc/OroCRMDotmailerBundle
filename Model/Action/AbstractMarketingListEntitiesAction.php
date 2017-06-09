@@ -8,6 +8,7 @@ use Oro\Bundle\BatchBundle\ORM\Query\BufferedIdentityQueryResultIterator;
 use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIteratorInterface;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
+use Oro\Bundle\DotmailerBundle\Provider\CacheProvider;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
@@ -18,6 +19,8 @@ use Oro\Component\ConfigExpression\ContextAccessor;
 abstract class AbstractMarketingListEntitiesAction extends AbstractAction
 {
     const MARKETING_LIST_ENTITY_QB_ALIAS = 'marketingListEntity';
+
+    const CACHE_SCOPE = 'ml_contact_fields';
 
     /**
      * @var ContactInformationFieldsProvider
@@ -38,6 +41,11 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
      * @var DoctrineHelper
      */
     protected $doctrineHelper;
+
+    /**
+     * @var CacheProvider
+     */
+    protected $cacheProvider;
 
     /**
      * @param ContextAccessor $contextAccessor
@@ -67,6 +75,14 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
     }
 
     /**
+     * @param CacheProvider $cacheProvider
+     */
+    public function setCacheProvider(CacheProvider $cacheProvider)
+    {
+        $this->cacheProvider = $cacheProvider;
+    }
+
+    /**
      * @param MarketingList $marketingList
      * @param string $email
      * @return BufferedQueryResultIteratorInterface
@@ -91,11 +107,14 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
      */
     protected function getMarketingListEntitiesByEmailQueryBuilder(MarketingList $marketingList, $email)
     {
-        $emailFields = $this->contactInformationFieldsProvider->getMarketingListTypedFields(
-            $marketingList,
-            ContactInformationFieldsProvider::CONTACT_INFORMATION_SCOPE_EMAIL
-        );
-
+        $emailFields = $this->cacheProvider->getCachedItem(self::CACHE_SCOPE, $marketingList->getName());
+        if (!$emailFields) {
+            $emailFields = $this->contactInformationFieldsProvider->getMarketingListTypedFields(
+                $marketingList,
+                ContactInformationFieldsProvider::CONTACT_INFORMATION_SCOPE_EMAIL
+            );
+            $this->cacheProvider->setCachedItem(self::CACHE_SCOPE, $marketingList->getName(), $emailFields);
+        }
         $qb = $this->getEntitiesQueryBuilder($marketingList);
 
         $expr = $qb->expr()->orX();

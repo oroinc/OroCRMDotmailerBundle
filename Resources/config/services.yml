@@ -970,6 +970,7 @@ services:
             - "@oro_dotmailer.model.field_helper"
         calls:
             - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
+            - [setCacheProvider, ["@oro_dotmailer.provider.cache"]]
 
     oro_dotmailer.workflow.action.update_email_campaign_statistics:
         class: %oro_dotmailer.workflow.action.update_email_campaign_statistics.class%
