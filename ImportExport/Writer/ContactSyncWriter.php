@@ -14,7 +14,6 @@ class ContactSyncWriter extends ImportWriter
 
     /**
      * @param OptionalListenerManager $optionalListenerManager
-     * @return ContactSyncWriter
      */
     public function setOptionalListenerManager(OptionalListenerManager $optionalListenerManager)
     {
