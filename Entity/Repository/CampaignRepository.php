@@ -43,7 +43,8 @@ class CampaignRepository extends EntityRepository
         $qb = $this->createQueryBuilder('campaign');
         $qb->select('campaign.id')
             ->where('campaign.channel =:channel')
-            ->andWhere('campaign.deleted <> TRUE');
+            ->andWhere('campaign.deleted <> TRUE')
+            ->addOrderBy('campaign.id');
 
         if (count($keepCampaigns) > 0) {
             $qb->andWhere(
@@ -70,6 +71,7 @@ class CampaignRepository extends EntityRepository
             ->innerJoin('emailCampaign.campaign', 'marketingCampaign')
             ->where('campaign.channel = :channel')
             ->andWhere('campaign.deleted = :deleted')
+            ->addOrderBy('campaign.id')
             ->setParameters(
                 [
                     'channel' => $channel,

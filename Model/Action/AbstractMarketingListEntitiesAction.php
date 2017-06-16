@@ -6,7 +6,9 @@ use Doctrine\ORM\QueryBuilder;
 
 use Oro\Bundle\BatchBundle\ORM\Query\BufferedIdentityQueryResultIterator;
 use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIteratorInterface;
+use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
+use Oro\Bundle\DotmailerBundle\Provider\CacheProvider;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
@@ -16,6 +18,10 @@ use Oro\Component\ConfigExpression\ContextAccessor;
 
 abstract class AbstractMarketingListEntitiesAction extends AbstractAction
 {
+    const MARKETING_LIST_ENTITY_QB_ALIAS = 'marketingListEntity';
+
+    const CACHE_SCOPE = 'ml_contact_fields';
+
     /**
      * @var ContactInformationFieldsProvider
      */
@@ -30,6 +36,16 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
      * @var FieldHelper
      */
     protected $fieldHelper;
+
+    /**
+     * @var DoctrineHelper
+     */
+    protected $doctrineHelper;
+
+    /**
+     * @var CacheProvider
+     */
+    protected $cacheProvider;
 
     /**
      * @param ContextAccessor $contextAccessor
@@ -48,6 +64,22 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
         $this->contactInformationFieldsProvider = $contactInformationFieldsProvider;
         $this->marketingListItemsQueryBuilderProvider = $marketingListItemsQueryBuilderProvider;
         $this->fieldHelper = $fieldHelper;
+    }
+
+    /**
+     * @param DoctrineHelper $doctrineHelper
+     */
+    public function setDoctrineHelper($doctrineHelper)
+    {
+        $this->doctrineHelper = $doctrineHelper;
+    }
+
+    /**
+     * @param CacheProvider $cacheProvider
+     */
+    public function setCacheProvider(CacheProvider $cacheProvider)
+    {
+        $this->cacheProvider = $cacheProvider;
     }
 
     /**
@@ -75,11 +107,14 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
      */
     protected function getMarketingListEntitiesByEmailQueryBuilder(MarketingList $marketingList, $email)
     {
-        $emailFields = $this->contactInformationFieldsProvider->getMarketingListTypedFields(
-            $marketingList,
-            ContactInformationFieldsProvider::CONTACT_INFORMATION_SCOPE_EMAIL
-        );
-
+        $emailFields = $this->cacheProvider->getCachedItem(self::CACHE_SCOPE, $marketingList->getName());
+        if (!$emailFields) {
+            $emailFields = $this->contactInformationFieldsProvider->getMarketingListTypedFields(
+                $marketingList,
+                ContactInformationFieldsProvider::CONTACT_INFORMATION_SCOPE_EMAIL
+            );
+            $this->cacheProvider->setCachedItem(self::CACHE_SCOPE, $marketingList->getName(), $emailFields);
+        }
         $qb = $this->getEntitiesQueryBuilder($marketingList);
 
         $expr = $qb->expr()->orX();
@@ -102,5 +137,10 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
      * @param MarketingList $marketingList
      * @return QueryBuilder
      */
-    abstract protected function getEntitiesQueryBuilder(MarketingList $marketingList);
+    protected function getEntitiesQueryBuilder(MarketingList $marketingList)
+    {
+        return $this->doctrineHelper
+            ->getEntityRepository($marketingList->getEntity())
+            ->createQueryBuilder(self::MARKETING_LIST_ENTITY_QB_ALIAS);
+    }
 }

@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
-use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIterator;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
@@ -47,7 +46,8 @@ class ContactRepository extends EntityRepository
                 Join::WITH,
                 $joinCondition
             )
-            ->setParameter('addressBook', $addressBook);
+            ->setParameter('addressBook', $addressBook)
+            ->addOrderBy('contact.id');
     }
 
     /**
@@ -157,7 +157,8 @@ class ContactRepository extends EntityRepository
                    ->add($expr->isNotNull('addressBookContacts.marketingListItemId'))
             )
             ->setParameter('isScheduled', true)
-            ->setParameter('addressBook', $addressBook);
+            ->setParameter('addressBook', $addressBook)
+            ->addOrderBy('contact.id');
 
         return $qb;
     }
@@ -165,7 +166,7 @@ class ContactRepository extends EntityRepository
     /**
      * @param array $originIds
      * @param array $addressBooks
-     * @return BufferedQueryResultIterator
+     * @return array
      */
     public function getEntitiesDataByOriginIds(array $originIds, array $addressBooks = [])
     {
@@ -185,8 +186,17 @@ class ContactRepository extends EntityRepository
         if ($addressBooks) {
             $qb->andWhere($qb->expr()->in('addressBookContacts.addressBook', $addressBooks));
         };
-        $query = $qb->getQuery()->useQueryCache(false);
+        $result = $qb->getQuery()->getArrayResult();
+        //make sure entity is added to the result only 1 time
+        $uniqueItems = [];
+        $items = [];
+        foreach ($result as $item) {
+            if (!isset($uniqueItems[$item['entityClass']][$item['entityId']])) {
+                $items[] = $item;
+                $uniqueItems[$item['entityClass']][$item['entityId']] = true;
+            }
+        }
 
-        return new BufferedQueryResultIterator($query);
+        return $items;
     }
 }

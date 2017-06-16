@@ -89,13 +89,4 @@ class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
     {
         return $this;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getEntitiesQueryBuilder(MarketingList $marketingList)
-    {
-        return $this->marketingListItemsQueryBuilderProvider
-            ->getCachedMarketingListEntitiesQB($marketingList);
-    }
 }

@@ -84,7 +84,8 @@ class AddressBookRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('addressBook');
         $qb->select('addressBook.id')
-            ->where('addressBook.channel =:channel');
+            ->where('addressBook.channel =:channel')
+            ->addOrderBy('addressBook.id');
 
         if (count($keepAddressBooks) > 0) {
             $qb->andWhere(
