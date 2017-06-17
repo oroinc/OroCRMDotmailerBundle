@@ -20,7 +20,7 @@ datagrids:
                 where:
                     and:
                         - addressBook.marketingList IS NULL
-                        - addressBook.owner = @oro_security.security_facade->getOrganizationId
+                        - addressBook.owner = @oro_security.token_accessor->getOrganizationId
         columns:
             name:
                 label: oro.dotmailer.addressbook.name.label
