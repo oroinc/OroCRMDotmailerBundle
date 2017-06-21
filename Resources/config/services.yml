@@ -1037,6 +1037,8 @@ services:
     oro_dotmailer.importexport.writer.contact_sync:
         parent: oro_dotmailer.importexport.writer.import
         class: %oro_dotmailer.importexport.writer.contact_sync.class%
+        calls:
+            - [setOptionalListenerManager, ["@oro_platform.optional_listeners.manager"]]
 
     oro_dotmailer.importexport.writer.unsubscribed_contact_sync:
         parent: oro_dotmailer.importexport.writer.import
