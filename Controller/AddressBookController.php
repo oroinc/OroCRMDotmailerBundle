@@ -193,7 +193,6 @@ class AddressBookController extends Controller
      */
     public function connectionButtonsAction(MarketingList $marketingList)
     {
-
         if (!$this->isGranted('orocrm_marketing_list_update') ||
             !$this->isGranted('orocrm_dotmailer_address_book_update')
         ) {

@@ -8,7 +8,6 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterat
 
 class CampaignSummaryIteratorTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testIterator()
     {
         $resource = $this->createMock('DotMailer\Api\Resources\IResources');

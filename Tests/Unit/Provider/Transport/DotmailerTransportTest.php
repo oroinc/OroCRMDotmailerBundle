@@ -394,7 +394,6 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
         $resource->expects($this->once())
             ->method('PostAddressBookContactsImport')
             ->with($addressBookId, $this->callback(function (ApiFileMedia $apiFileMedia) use ($testCsv) {
-
                 $this->assertEquals(base64_encode($testCsv), $apiFileMedia->data);
 
                 return true;
