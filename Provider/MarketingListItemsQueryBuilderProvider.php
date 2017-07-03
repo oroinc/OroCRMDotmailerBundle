@@ -6,7 +6,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
-use Oro\Bundle\SecurityBundle\Owner\Metadata\OwnershipMetadataProvider;
+use Oro\Bundle\SecurityBundle\Owner\Metadata\OwnershipMetadataProviderInterface;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
@@ -33,7 +33,7 @@ class MarketingListItemsQueryBuilderProvider
     protected $contactInformationFieldsProvider;
 
     /**
-     * @var OwnershipMetadataProvider
+     * @var OwnershipMetadataProviderInterface
      */
     protected $ownershipMetadataProvider;
 
@@ -82,7 +82,7 @@ class MarketingListItemsQueryBuilderProvider
     /**
      * @param MarketingListProvider $marketingListProvider
      * @param ContactInformationFieldsProvider $contactInformationFieldsProvider
-     * @param OwnershipMetadataProvider $ownershipMetadataProvider
+     * @param OwnershipMetadataProviderInterface $ownershipMetadataProvider
      * @param ManagerRegistry $registry
      * @param FieldHelper $fieldHelper
      * @param ContactExportQBAdapterRegistry $exportQBAdapterRegistry
@@ -91,7 +91,7 @@ class MarketingListItemsQueryBuilderProvider
     public function __construct(
         MarketingListProvider $marketingListProvider,
         ContactInformationFieldsProvider $contactInformationFieldsProvider,
-        OwnershipMetadataProvider $ownershipMetadataProvider,
+        OwnershipMetadataProviderInterface $ownershipMetadataProvider,
         ManagerRegistry $registry,
         FieldHelper $fieldHelper,
         ContactExportQBAdapterRegistry $exportQBAdapterRegistry,
