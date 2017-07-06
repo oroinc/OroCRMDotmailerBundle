@@ -230,7 +230,6 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
      */
     public function getActivityContacts(array $campaignsToSynchronize = [], \DateTime $lastSyncDate = null)
     {
-
         $iterator = new AppendIterator();
         foreach ($campaignsToSynchronize as $campaign) {
             $iterator->append(

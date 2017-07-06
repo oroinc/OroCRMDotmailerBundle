@@ -11,7 +11,6 @@ class ContactSyncProcessor extends ImportProcessor
      */
     public function process($item)
     {
-
         $items = $this->context->getValue(self::CURRENT_BATCH_READ_ITEMS) ?: [];
         $items[] = $item;
 
