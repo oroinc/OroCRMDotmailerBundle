@@ -5,8 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
+use Oro\Bundle\SalesBundle\Entity\B2bCustomer;
+use Oro\Bundle\SalesBundle\Tests\Functional\DataFixtures\LoadB2bCustomerEmailData;
 use Oro\Bundle\SegmentBundle\Entity\Segment;
-use Oro\Bundle\SegmentBundle\Entity\SegmentType;
 
 class LoadSegmentData extends AbstractFixture implements DependentFixtureInterface
 {
@@ -148,6 +149,37 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
             ],
             'reference' => 'oro_dotmailer.segment.case',
         ],
+        [
+            'type' => 'dynamic',
+            'name' => 'Test ML B2b customer Segment',
+            'description' => 'description',
+            'entity' => B2bCustomer::class,
+            'definition' => [
+                'columns' => [
+                    [
+                        'name' => 'primaryEmail',
+                        'label' => 'Primary Email',
+                        'sorting' => '',
+                        'func' => null,
+                    ],
+                ],
+                'filters' => [
+                    [
+                        [
+                            'columnName' => 'primaryEmail',
+                            'criterion' => [
+                                'filter' => 'string',
+                                'data' => [
+                                    'value' => '',
+                                    'type' => 'filter_not_empty_option'
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            'reference' => 'oro_dotmailer.segment.b2b_customer',
+        ]
     ];
 
     /**
@@ -179,7 +211,8 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
     public function getDependencies()
     {
         return [
-            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadUserData'
+            LoadUserData::class,
+            LoadB2bCustomerEmailData::class
         ];
     }
 }

@@ -86,6 +86,16 @@ class LoadAddressBookData extends AbstractFixture implements DependentFixtureInt
             'owner'         => 'oro_dotmailer.organization.foo',
             'reference'     => 'oro_dotmailer.address_book.up_to_date'
         ],
+        [
+            'originId'      => 39,
+            'name'          => 'test8',
+            'contactCount'  => 0,
+            'visibility'    => 'Private',
+            'channel'       => 'oro_dotmailer.channel.fourth',
+            'marketingList' => 'oro_dotmailer.marketing_list.b2b_customer',
+            'owner'         => 'oro_dotmailer.organization.foo',
+            'reference'     => 'oro_dotmailer.address_book.b2b_customer'
+        ],
     ];
 
     /**
