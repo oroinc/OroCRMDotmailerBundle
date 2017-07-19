@@ -6,6 +6,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+use Oro\Bundle\SalesBundle\Entity\B2bCustomer;
 
 class LoadMarketingListData extends AbstractFixture implements DependentFixtureInterface
 {
@@ -75,6 +76,15 @@ class LoadMarketingListData extends AbstractFixture implements DependentFixtureI
             'organization'  => 'oro_dotmailer.organization.foo',
             'segment'       => 'oro_dotmailer.segment.empty',
             'reference'     => 'oro_dotmailer.marketing_list.up_to_date',
+        ],
+        [
+            'name'          => 'list8',
+            'entity'        => B2bCustomer::class,
+            'type'          => 'static',
+            'owner'         => 'oro_dotmailer.user.john.doe',
+            'organization'  => 'oro_dotmailer.organization.foo',
+            'segment'       => 'oro_dotmailer.segment.b2b_customer',
+            'reference'     => 'oro_dotmailer.marketing_list.b2b_customer',
         ],
     ];
 
