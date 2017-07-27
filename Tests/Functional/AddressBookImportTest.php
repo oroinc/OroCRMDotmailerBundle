@@ -48,6 +48,7 @@ class AddressBookImportTest extends AbstractImportExportTestCase
             $jobLog
         );
         $log = $this->formatImportExportJobLog($jobLog);
+
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $addressBookRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:AddressBook');
