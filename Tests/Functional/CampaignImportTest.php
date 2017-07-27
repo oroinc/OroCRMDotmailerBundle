@@ -61,15 +61,15 @@ class CampaignImportTest extends AbstractImportExportTestCase
 
         foreach ($expected as $campaign) {
             $searchCriteria = [
-                'originId' => $campaign['originId'],
-                'channel' => $channel,
-                'name' => $campaign['name'],
-                'subject' => $campaign['subject'],
-                'fromName' => $campaign['fromName'],
-                'fromAddress' => $campaign['fromAddress'],
+                'originId'     => $campaign['originId'],
+                'channel'      => $channel,
+                'name'         => $campaign['name'],
+                'subject'      => $campaign['subject'],
+                'fromName'     => $campaign['fromName'],
+                'fromAddress'  => $campaign['fromAddress'],
                 'reply_action' => $replyActionRepository->find($campaign['reply_action']),
-                'isSplitTest' => $campaign['isSplitTest'],
-                'status' => $statusRepository->find($campaign['status']),
+                'isSplitTest'  => $campaign['isSplitTest'],
+                'status'       => $statusRepository->find($campaign['status']),
             ];
 
             $campaignEntities = $campaignRepository->findBy($searchCriteria);
@@ -91,35 +91,35 @@ class CampaignImportTest extends AbstractImportExportTestCase
     {
         return [
             [
-                'expected'        => [
+                'expected'     => [
                     [
-                        'originId' => 15662,
-                        'name' => 'NewsLetter',
-                        'subject' => 'News Letter',
-                        'fromName' => 'CityBeach',
-                        'fromAddress' => 'Arbitbet@dotmailer-email.com',
+                        'originId'     => 15662,
+                        'name'         => 'NewsLetter',
+                        'subject'      => 'News Letter',
+                        'fromName'     => 'CityBeach',
+                        'fromAddress'  => 'Arbitbet@dotmailer-email.com',
                         'reply_action' => 'Webmail',
-                        'isSplitTest' => false,
-                        'status' => 'Unsent',
+                        'isSplitTest'  => false,
+                        'status'       => 'Sent',
                         'addressBooks' => ['oro_dotmailer.address_book.second']
                     ],
                 ],
                 'campaignList' => [
                     [
-                        'id' => 15662,
-                        'name' => 'NewsLetter',
-                        'subject' => 'News Letter',
-                        'fromname' => 'CityBeach',
-                        'fromaddress' => [
-                            'id' => 6141,
+                        'id'               => 15662,
+                        'name'             => 'NewsLetter',
+                        'subject'          => 'News Letter',
+                        'fromname'         => 'CityBeach',
+                        'fromaddress'      => [
+                            'id'    => 6141,
                             'email' => 'Arbitbet@dotmailer-email.com',
                         ],
-                        'htmlcontent' => 'null',
+                        'htmlcontent'      => 'null',
                         'plaintextcontent' => 'null',
-                        'replyaction' => 'Webmail',
-                        'replytoaddress' => '',
-                        'issplittest' => 'false',
-                        'status' => 'Unsent'
+                        'replyaction'      => 'Webmail',
+                        'replytoaddress'   => '',
+                        'issplittest'      => 'false',
+                        'status'           => 'Sent'
                     ],
                 ]
             ]
