@@ -1,3 +1,6 @@
+UPGRADE FROM 2.2 to 2.3
+========================
+
 DotmailerBundle
 ---------------
 * The `MarketingListItemsQueryBuilderProvider::__construct(MarketingListProvider $marketingListProvider, ContactInformationFieldsProvider $contactInformationFieldsProvider, OwnershipMetadataProvider $ownershipMetadataProvider, ManagerRegistry $registry, FieldHelper $fieldHelper, ContactExportQBAdapterRegistry $exportQBAdapterRegistry, EmailProvider $emailProvider)`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/2.2.0/Provider/MarketingListItemsQueryBuilderProvider.php#L91 "Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider")</sup> method was changed to `MarketingListItemsQueryBuilderProvider::__construct(MarketingListProvider $marketingListProvider, ContactInformationFieldsProvider $contactInformationFieldsProvider, OwnershipMetadataProviderInterface $ownershipMetadataProvider, ManagerRegistry $registry, FieldHelper $fieldHelper, ContactExportQBAdapterRegistry $exportQBAdapterRegistry, EmailProvider $emailProvider)`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/2.3.0/Provider/MarketingListItemsQueryBuilderProvider.php#L91 "Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider")</sup>
