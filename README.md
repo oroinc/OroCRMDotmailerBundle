@@ -19,7 +19,7 @@ Go to the "System -> Integrations" and click "Create Integration" button. Define
  - *Custom OAuth Domain*: fill in custom domain if it's is used in dotmailer. By default https://r1-app.dotmailer.com/ is used
  - *Default Owner*: Select the owner of the integration. The selected user will be defined as the owner for all the records imported within the integration.
 
-After the Username and Password have been filled in, the "Check Connection" button appears. Click the button to check the credentials validity before saving the Integration.
+After the Username and Password have been filled in, the **Check Connection** button appears. Click the button to check the credentials validity before saving the Integration.
 
 *Note*: OroCRM exports data into dotmailer asynchronously using a message queue processor. This export job has low priority, as it has to wait until dotmailer WatchDog finishes its checks and the time it takes is unpredictable. Until dotmailer returns the export status, the OroCRM address book is not updated. To avoid any discrepancies in the dotmailer and OroCRM data, the running export process blocks launching any new exports to dotmailer. As soon as OroCRM gets the response from dotmailer about the export process completion, Marketing List statuses are updated in OroCRM and further  exports are processed.
 
@@ -29,21 +29,21 @@ After the integration has been created and its status has been set to Active, th
 
 > Only Marketing Lists with Email fields can be connected.
 
-If a Marketing list is suitable for the connection, the "Connect to dotmailer" button will appear on the Marketing List view page.
+If a Marketing list is suitable for the connection, the **Connect to dotmailer** button will appear on the Marketing List view page.
 Each Marketing List may be connected only to one dotmailer Address Book and each dotmailer Address Book may be connected only to one Marketing List, so each Oro Marketing Lists connected will be represented as an Address Book in dotmailer.
 
-When "Connect to dotmailer" button is clicked, the form with two selectors will emerge:
+When **Connect to dotmailer** button is clicked, the form with two selectors will emerge:
 
  - *Integration*: the selector contains all the dotmailer integrations available in the Oro instance. Select the integration with the dotmailer instance, for which the connection must be performed. 
  - *Address Book*: the selector contains all the dotmailer Address Book records [created](https://support.dotmailer.com/entries/20663833-Creating-an-address-book) in dotmailer User Interface and available for connection. The selector does not contain the "All Contacts" and "Test" Address Books (automatically generated in dotmailer), nor the Address Books that have already been connected to another Marketing List in Oro.
  - *Create New Entities*: checkbox to control if new entities can be created. If a contact is found in address book and there is no entity in the application with such contact's email address, new entity will be created in the application based on the mapping setup. New entity will be created only in case there is a "two way sync" mapping configured for each entity's required fields.
 
 After the connection has been saved, the Marketing list contacts will be automatically exported from Oro to dotmailer.
-Since then, data synchronization (import and export) between Oro and dotmailer will be automatically performed once in every 4 minutes.
+Since then, data synchronization (import and export) between Oro and dotmailer will be automatically performed once every 4 minutes.
 
 > Job Queue Daemon has to be running.
 
-After the connection has been saved, the "Connect to dotmailer" button will disappear, and the "dotmailer" action drop-down menu will appear instead. The following options are available in the menu:
+After the connection has been saved, the **Connect to dotmailer** button will disappear, and the "dotmailer" action drop-down menu will appear instead. The following options are available in the menu:
 
 - "Connection Settings": edit the connection settings
 - "Disconnect": disconnect the Marketing List from the Address Book
