@@ -19,7 +19,7 @@ Go to the "System -> Integrations" and click "Create Integration" button. Define
  - *Custom OAuth Domain*: fill in custom domain if it's is used in dotmailer. By default https://r1-app.dotmailer.com/ is used
  - *Default Owner*: Select the owner of the integration. The selected user will be defined as the owner for all the records imported within the integration.
 
-After the Username and Password have been filled in, the **Check Connection** button appears. Click the button to check the credentials validity before saving the Integration.
+After the Username and Password have been filled in, the "Check Connection" button appears. Click the button to check the credentials validity before saving the Integration.
 
 *Note*: OroCRM exports data into dotmailer asynchronously using a message queue processor. This export job has low priority, as it has to wait until dotmailer WatchDog finishes its checks and the time it takes is unpredictable. Until dotmailer returns the export status, the OroCRM address book is not updated. To avoid any discrepancies in the dotmailer and OroCRM data, the running export process blocks launching any new exports to dotmailer. As soon as OroCRM gets the response from dotmailer about the export process completion, Marketing List statuses are updated in OroCRM and further  exports are processed.
 
