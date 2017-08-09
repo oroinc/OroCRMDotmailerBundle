@@ -62,7 +62,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $logger
             ->expects($this->once())
             ->method('critical')
-            ->with('The message invalid. It must have integrationId set', ['message' => $message])
+            ->with('The message invalid. It must have integrationId set')
         ;
 
         $processor = new ExportContactsStatusUpdateProcessor(
@@ -117,7 +117,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $logger
             ->expects($this->once())
             ->method('error')
-            ->with('The integration not found: theIntegrationId', ['message' => $message])
+            ->with('The integration not found: theIntegrationId')
         ;
 
         $processor = new ExportContactsStatusUpdateProcessor(
@@ -154,7 +154,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $logger
             ->expects($this->once())
             ->method('error')
-            ->with('The integration is not enabled: theIntegrationId', ['message' => $message])
+            ->with('The integration is not enabled: theIntegrationId')
         ;
 
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
