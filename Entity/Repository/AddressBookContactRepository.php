@@ -44,7 +44,8 @@ class AddressBookContactRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('address_book_contact');
         $qb->update()
-            ->where($qb->expr()->in('address_book_contact.id', $contactIds))
+            ->where($qb->expr()->in('address_book_contact.id', ':contactIds'))
+            ->setParameter('contactIds', $contactIds)
             ->set('address_book_contact.exportId', ':exportId')
             ->setParameter('exportId', $exportId)
             ->getQuery()
@@ -80,7 +81,8 @@ class AddressBookContactRepository extends EntityRepository
         $entityClasses = (array) $entityClasses;
         $qb = $this->createQueryBuilder('address_book_contact');
         $qb->update()
-            ->where($qb->expr()->in('address_book_contact.marketingListItemClass', $entityClasses))
+            ->where($qb->expr()->in('address_book_contact.marketingListItemClass', ':entityClasses'))
+            ->setParameter('entityClasses', $entityClasses)
             ->andWhere('address_book_contact.channel = :channel')
             ->setParameter('channel', $channel)
             ->andWhere($qb->expr()->isNotNull('address_book_contact.marketingListItemId'))
