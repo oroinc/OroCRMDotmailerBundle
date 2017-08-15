@@ -62,12 +62,31 @@ class JobContextComposite implements ContextInterface
      */
     public function getErrors()
     {
-        $errors = [];
-        foreach ($this->contexts as $context) {
-            $errors = array_merge($errors, $context->getErrors());
-        }
+        return $this->mergeValuesFromContexts('getErrors');
+    }
 
-        return $errors;
+    /**
+     * {@inheritdoc}
+     */
+    public function addPostponedRow(array $row)
+    {
+        $this->currentStepContext->addPostponedRow($row);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addPostponedRows(array $rows)
+    {
+        $this->currentStepContext->addPostponedRows($rows);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPostponedRows()
+    {
+        return $this->mergeValuesFromContexts('getPostponedRows');
     }
 
     /**
@@ -75,12 +94,7 @@ class JobContextComposite implements ContextInterface
      */
     public function getFailureExceptions()
     {
-        $exceptions = [];
-        foreach ($this->contexts as $context) {
-            $exceptions = array_merge($exceptions, $context->getFailureExceptions());
-        }
-
-        return $exceptions;
+        return $this->mergeValuesFromContexts('getFailureExceptions');
     }
 
     /**
@@ -96,12 +110,7 @@ class JobContextComposite implements ContextInterface
      */
     public function getReadCount()
     {
-        $count = 0;
-        foreach ($this->contexts as $context) {
-            $count += $context->getReadCount();
-        }
-
-        return $count;
+        return $this->sumCountsFromContexts('getReadCount');
     }
 
     /**
@@ -117,12 +126,7 @@ class JobContextComposite implements ContextInterface
      */
     public function getReadOffset()
     {
-        $offset = 0;
-        foreach ($this->contexts as $context) {
-            $offset += $context->getReadOffset();
-        }
-
-        return $offset;
+        return $this->sumCountsFromContexts('getReadOffset');
     }
 
     /**
@@ -138,12 +142,7 @@ class JobContextComposite implements ContextInterface
      */
     public function getAddCount()
     {
-        $count = 0;
-        foreach ($this->contexts as $context) {
-            $count += $context->getAddCount();
-        }
-
-        return $count;
+        return $this->sumCountsFromContexts('getAddCount');
     }
 
     /**
@@ -159,12 +158,7 @@ class JobContextComposite implements ContextInterface
      */
     public function getUpdateCount()
     {
-        $count = 0;
-        foreach ($this->contexts as $context) {
-            $count += $context->getUpdateCount();
-        }
-
-        return $count;
+        return $this->sumCountsFromContexts('getUpdateCount');
     }
 
     /**
@@ -180,12 +174,7 @@ class JobContextComposite implements ContextInterface
      */
     public function getReplaceCount()
     {
-        $count = 0;
-        foreach ($this->contexts as $context) {
-            $count += $context->getReplaceCount();
-        }
-
-        return $count;
+        return $this->sumCountsFromContexts('getReplaceCount');
     }
 
     /**
@@ -201,12 +190,7 @@ class JobContextComposite implements ContextInterface
      */
     public function getDeleteCount()
     {
-        $count = 0;
-        foreach ($this->contexts as $context) {
-            $count += $context->getDeleteCount();
-        }
-
-        return $count;
+        return $this->sumCountsFromContexts('getDeleteCount');
     }
 
     /**
@@ -222,12 +206,7 @@ class JobContextComposite implements ContextInterface
      */
     public function getErrorEntriesCount()
     {
-        $count = 0;
-        foreach ($this->contexts as $context) {
-            $count += $context->getErrorEntriesCount();
-        }
-
-        return $count;
+        return $this->sumCountsFromContexts('getErrorEntriesCount');
     }
 
     /**
@@ -316,5 +295,33 @@ class JobContextComposite implements ContextInterface
         foreach ($this->contexts as $context) {
             $context->removeOption($name);
         }
+    }
+
+    /**
+     * @param string $contextMethod
+     * @return array
+     */
+    private function mergeValuesFromContexts($contextMethod)
+    {
+        $values = [];
+        foreach ($this->contexts as $context) {
+            $values = array_merge($values, $context->$contextMethod());
+        }
+
+        return $values;
+    }
+
+    /**
+     * @param string $contextMethod
+     * @return int
+     */
+    private function sumCountsFromContexts($contextMethod)
+    {
+        $count = 0;
+        foreach ($this->contexts as $context) {
+            $count += $context->$contextMethod();
+        }
+
+        return $count;
     }
 }

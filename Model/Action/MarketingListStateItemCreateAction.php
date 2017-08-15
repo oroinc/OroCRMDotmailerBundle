@@ -4,32 +4,16 @@ namespace Oro\Bundle\DotmailerBundle\Model\Action;
 
 use Doctrine\ORM\Query\Expr\Join;
 
-use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface;
 
 class MarketingListStateItemCreateAction extends AbstractMarketingListEntitiesAction
 {
-    const MARKETING_LIST_ENTITY_QB_ALIAS = 'marketingListEntity';
-
-    /**
-     * @var DoctrineHelper
-     */
-    protected $doctrineHelper;
-
     /**
      * @var string
      */
     protected $marketingListStateItemClassName;
-
-    /**
-     * @param DoctrineHelper $doctrineHelper
-     */
-    public function setDoctrineHelper($doctrineHelper)
-    {
-        $this->doctrineHelper = $doctrineHelper;
-    }
 
     /**
      * @param string $marketingListStateItemClassName
@@ -118,15 +102,5 @@ class MarketingListStateItemCreateAction extends AbstractMarketingListEntitiesAc
         $qb->andWhere('mli.id is NULL');
 
         return $qb->select(sprintf('%s.id as id', self::MARKETING_LIST_ENTITY_QB_ALIAS));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getEntitiesQueryBuilder(MarketingList $marketingList)
-    {
-        return $this->doctrineHelper
-            ->getEntityRepository($marketingList->getEntity())
-            ->createQueryBuilder(self::MARKETING_LIST_ENTITY_QB_ALIAS);
     }
 }

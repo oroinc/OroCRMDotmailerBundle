@@ -968,6 +968,9 @@ services:
             - "@oro_marketing_list.provider.contact_information_fields"
             - "@oro_dotmailer.provider.marketing_list_items.query_builder"
             - "@oro_dotmailer.model.field_helper"
+        calls:
+            - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
+            - [setCacheProvider, ["@oro_dotmailer.provider.cache"]]
 
     oro_dotmailer.workflow.action.update_email_campaign_statistics:
         class: %oro_dotmailer.workflow.action.update_email_campaign_statistics.class%
@@ -982,7 +985,6 @@ services:
         parent: oro_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
             - [setMarketingListStateItemClassName, [%oro_marketing_list.unsubscribed_item.class%]]
-            - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
         tags:
             - { name: oro_action.action, alias: dm_create_marketing_list_unsubscribed_item }
 
@@ -991,7 +993,6 @@ services:
         parent: oro_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
             - [setMarketingListStateItemClassName, [%oro_marketing_list.removed_item.class%]]
-            - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
         tags:
             - { name: oro_action.action, alias: dm_create_marketing_list_removed_item }
 
@@ -1000,7 +1001,6 @@ services:
         parent: oro_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
             - [setMarketingListStateItemClassName, [%oro_marketing_list.unsubscribed_item.class%]]
-            - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
         tags:
             - { name: oro_action.action, alias: remove_marketing_list_unsubscribed_item }
 
@@ -1009,7 +1009,6 @@ services:
         parent: oro_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
             - [setMarketingListStateItemClassName, [%oro_marketing_list.removed_item.class%]]
-            - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
         tags:
             - { name: oro_action.action, alias: remove_marketing_list_removed_item }
 
@@ -1017,7 +1016,6 @@ services:
         class: 'Oro\Bundle\DotmailerBundle\Model\Action\AddMarketingActivitesAction'
         parent: oro_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
-            - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
             - [setActivityFactory, ["@oro_marketing_activity.factory"]]
         tags:
             - { name: oro_action.action, alias: add_marketing_activities }
@@ -1039,6 +1037,8 @@ services:
     oro_dotmailer.importexport.writer.contact_sync:
         parent: oro_dotmailer.importexport.writer.import
         class: %oro_dotmailer.importexport.writer.contact_sync.class%
+        calls:
+            - [setOptionalListenerManager, ["@oro_platform.optional_listeners.manager"]]
 
     oro_dotmailer.importexport.writer.unsubscribed_contact_sync:
         parent: oro_dotmailer.importexport.writer.import

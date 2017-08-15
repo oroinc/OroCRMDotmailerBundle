@@ -6,7 +6,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Util\ClassUtils;
 
 use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIterator;
-use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\DotmailerBundle\Entity\Activity;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Campaign;
@@ -28,11 +27,6 @@ class AddMarketingActivitesAction extends AbstractMarketingListEntitiesAction im
     const OPTION_KEY_CHANGESET = 'changeSet';
 
     /**
-     * @var DoctrineHelper
-     */
-    protected $doctrineHelper;
-
-    /**
      * @var array
      */
     protected $options = [];
@@ -41,14 +35,6 @@ class AddMarketingActivitesAction extends AbstractMarketingListEntitiesAction im
      * @var ActivityFactory
      */
     protected $activityFactory;
-
-    /**
-     * @param DoctrineHelper $doctrineHelper
-     */
-    public function setDoctrineHelper($doctrineHelper)
-    {
-        $this->doctrineHelper = $doctrineHelper;
-    }
 
     /**
      * @param ActivityFactory $activityFactory
@@ -272,14 +258,5 @@ class AddMarketingActivitesAction extends AbstractMarketingListEntitiesAction im
     {
         return $this->doctrineHelper->getEntityRepositoryForClass(Contact::class)
             ->getEntitiesDataByOriginIds([$originId], $addressBooks);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getEntitiesQueryBuilder(MarketingList $marketingList)
-    {
-        return $this->marketingListItemsQueryBuilderProvider
-            ->getCachedMarketingListEntitiesQB($marketingList);
     }
 }

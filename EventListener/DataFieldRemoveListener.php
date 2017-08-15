@@ -11,7 +11,7 @@ use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 
 class DataFieldRemoveListener
 {
-     /** @var DataFieldManager */
+    /** @var DataFieldManager */
     protected $dataFieldManager;
 
     /**

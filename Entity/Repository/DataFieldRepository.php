@@ -20,7 +20,8 @@ class DataFieldRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('dataField');
         $qb->select('dataField.id')
-            ->where('dataField.channel =:channel');
+            ->where('dataField.channel =:channel')
+            ->addOrderBy('dataField.id');
         $qb->setParameters(['channel' => $channel]);
 
         if (count($keepDataFieldsNames) > 0) {
