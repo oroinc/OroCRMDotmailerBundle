@@ -105,7 +105,8 @@ class AddressBookRepository extends EntityRepository
         if (count($addressBookIds)) {
             $qb = $this->createQueryBuilder('addressBook');
             $qb->update()
-                ->where($qb->expr()->in('addressBook.id', $addressBookIds))
+                ->where($qb->expr()->in('addressBook.id', ':addressBookIds'))
+                ->setParameter('addressBookIds', $addressBookIds)
                 ->set('addressBook.lastImportedAt', ':lastImportedAt')
                 ->setParameter('lastImportedAt', $importedAt)
                 ->getQuery()
