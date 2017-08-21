@@ -245,7 +245,8 @@ class AddressBookContactsExportRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('addressBookContactExport');
         $qb->innerJoin('addressBookContactExport.status', 'status')
-            ->where($qb->expr()->in('addressBookContactExport.status', $this->rejectedExportStatuses))
+            ->where($qb->expr()->in('addressBookContactExport.status', ':rejectedExportStatuses'))
+            ->setParameter('rejectedExportStatuses', $this->rejectedExportStatuses)
             ->andWhere('addressBookContactExport.channel = :channel')
             ->setParameter('channel', $channel);
 
