@@ -181,10 +181,12 @@ class ContactRepository extends EntityRepository
                 ]
             )
             ->innerJoin('contact.addressBookContacts', 'addressBookContacts')
-            ->where($qb->expr()->in('contact.originId', $originIds))
+            ->where($qb->expr()->in('contact.originId', ':originIds'))
+            ->setParameter('originIds', $originIds)
             ->andWhere($qb->expr()->isNotNull('addressBookContacts.marketingListItemId'));
         if ($addressBooks) {
-            $qb->andWhere($qb->expr()->in('addressBookContacts.addressBook', $addressBooks));
+            $qb->andWhere($qb->expr()->in('addressBookContacts.addressBook', ':addressBooks'))
+                ->setParameter('addressBooks', $addressBooks);
         };
         $result = $qb->getQuery()->getArrayResult();
         //make sure entity is added to the result only 1 time
