@@ -1,0 +1,6 @@
+DotmailerBundle
+---------------
+* The `AddMarketingActivitesAction::__construct`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/2.1.0/Model/Action/AddMarketingActivitesAction.php#L41 "Oro\Bundle\DotmailerBundle\Model\Action\AddMarketingActivitesAction::__construct")</sup> method was removed.
+* The `AddMarketingActivitesAction::$registry`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/2.1.0/Model/Action/AddMarketingActivitesAction.php#L29 "Oro\Bundle\DotmailerBundle\Model\Action\AddMarketingActivitesAction::$registry")</sup> property was removed.
+* The `ExportContactsStatusUpdateProcessor::__construct(DoctrineHelper $doctrineHelper, ExportManager $exportManager, JobRunner $jobRunner, LoggerInterface $logger)`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/2.1.0/Async/ExportContactsStatusUpdateProcessor.php#L44 "Oro\Bundle\DotmailerBundle\Async\ExportContactsStatusUpdateProcessor")</sup> method was changed to `ExportContactsStatusUpdateProcessor::__construct(DoctrineHelper $doctrineHelper, ExportManager $exportManager, JobRunner $jobRunner, TokenStorageInterface $tokenStorage, LoggerInterface $logger)`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/2.2.0/Async/ExportContactsStatusUpdateProcessor.php#L49 "Oro\Bundle\DotmailerBundle\Async\ExportContactsStatusUpdateProcessor")</sup>
+
