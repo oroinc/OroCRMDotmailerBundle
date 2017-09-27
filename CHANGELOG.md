@@ -1,11 +1,11 @@
 ## 2.3.0 (2017-07-28)
-[Show detailed list of changes](incompatibilities-2-3-0.md)
+[Show detailed list of changes](incompatibilities-2-3.md)
 
 ## 2.2.0 (2017-05-31)
-[Show detailed list of changes](incompatibilities-2-2-0.md)
+[Show detailed list of changes](incompatibilities-2-2.md)
 
 ## 2.1.0 (2017-03-30)
-[Show detailed list of changes](incompatibilities-2-1-0.md)
+[Show detailed list of changes](incompatibilities-2-1.md)
 ### Changed
 - Class `AbstractMarketingListEntitiesAction`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/2.1.0/Model/Action/AbstractMarketingListEntitiesAction.php "Oro\Bundle\DotmailerBundle\Model\Action\AbstractMarketingListEntitiesAction")</sup>
     - changed the return type of `getMarketingListEntitiesByEmail` method from `BufferedQueryResultIterator` to `BufferedQueryResultIteratorInterface`
