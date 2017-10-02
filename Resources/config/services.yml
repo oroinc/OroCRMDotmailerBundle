@@ -363,6 +363,12 @@ services:
         tags:
             - { name: oro_integration.channel, type: dotmailer }
 
+    oro_dotmailer.transport.cache:
+        parent: oro.cache.abstract
+        public: false
+        calls:
+            - [ setNamespace, [ 'oro_dotmailer_rest' ] ]
+
     oro_dotmailer.transport.integration_transport:
         class: %oro_dotmailer.transport.integration_transport.class%
         arguments:
@@ -375,6 +381,8 @@ services:
 
     oro_dotmailer.transport.resources_factory:
         class: %oro_dotmailer.transport.resources_factory.class%
+        calls:
+            - [setCache, ["@oro_dotmailer.transport.cache"]]
 
     oro_dotmailer.export_manager:
         class: %oro_dotmailer.export_manager.class%

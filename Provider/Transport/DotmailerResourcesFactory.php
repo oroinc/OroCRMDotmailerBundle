@@ -2,17 +2,19 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport;
 
-use Psr\Log\LoggerInterface;
-
+use DotMailer\Api\DataTypes\ApiAccount;
 use DotMailer\Api\Resources\IResources;
 use DotMailer\Api\Resources\Resources;
-use DotMailer\Api\DataTypes\ApiAccount;
-
+use DotMailer\Api\Rest\IClient;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\DotmailerClientInterface;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\CacheAwareClient;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\Client;
-use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
+use Psr\Log\LoggerInterface;
 
 class DotmailerResourcesFactory
 {
+    use CacheProviderAwareTrait;
+
     /**
      * @param string               $username
      * @param string               $password
@@ -55,17 +57,21 @@ class DotmailerResourcesFactory
      * @param $username
      * @param $password
      * @param LoggerInterface|null $logger
-     * @return Client
+     * @return IClient|DotmailerClientInterface
      */
     protected function initClient($username, $password, LoggerInterface $logger = null)
     {
         $restClient = new Client($username, $password);
+        $cacheClient = new CacheAwareClient($username);
+        $cacheClient->setCache($this->getCache());
+        $cacheClient->setClient($restClient);
 
         if ($logger) {
             $restClient->setLogger($logger);
+            $cacheClient->setLogger($logger);
         }
 
-        return $restClient;
+        return $cacheClient;
     }
 
     /**
