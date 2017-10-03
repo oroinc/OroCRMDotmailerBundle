@@ -2,17 +2,19 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport;
 
-use Psr\Log\LoggerInterface;
-
+use DotMailer\Api\DataTypes\ApiAccount;
 use DotMailer\Api\Resources\IResources;
 use DotMailer\Api\Resources\Resources;
-use DotMailer\Api\DataTypes\ApiAccount;
-
+use DotMailer\Api\Rest\IClient;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\DotmailerClientInterface;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\CacheAwareClient;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\Client;
-use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
+use Psr\Log\LoggerInterface;
 
 class DotmailerResourcesFactory
 {
+    use CacheProviderAwareTrait;
+
     /**
      * @param string               $username
      * @param string               $password
@@ -27,7 +29,7 @@ class DotmailerResourcesFactory
         $resources = new Resources($restClient);
 
         $account = $resources->GetAccountInfo();
-        $this->updateEndpoint($account, $restClient);
+        $this->updateBaseUrl($account, $restClient);
 
         return $resources;
     }
@@ -46,7 +48,7 @@ class DotmailerResourcesFactory
         $resources = new AdditionalResource($restClient);
 
         $account = $resources->getAccountInfo();
-        $this->updateEndpoint($account, $restClient);
+        $this->updateBaseUrl($account, $restClient);
 
         return $resources;
     }
@@ -55,24 +57,42 @@ class DotmailerResourcesFactory
      * @param $username
      * @param $password
      * @param LoggerInterface|null $logger
-     * @return Client
+     * @return IClient|DotmailerClientInterface
      */
     protected function initClient($username, $password, LoggerInterface $logger = null)
     {
         $restClient = new Client($username, $password);
+        $cacheClient = new CacheAwareClient($username);
+        $cacheClient->setCache($this->getCache());
+        $cacheClient->setClient($restClient);
 
         if ($logger) {
             $restClient->setLogger($logger);
+            $cacheClient->setLogger($logger);
         }
 
-        return $restClient;
+        return $cacheClient;
     }
 
     /**
      * @param ApiAccount $account
      * @param Client $restClient
+     * @deprecated
+     * @see \Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory::updateBaseUrl
      */
     protected function updateEndpoint(ApiAccount $account, Client $restClient)
+    {
+        $url = $this->getApiEndpoint($account);
+        if ($url) {
+            $restClient->setBaseUrl($url);
+        }
+    }
+
+    /**
+     * @param ApiAccount $account
+     * @param DotmailerClientInterface $restClient
+     */
+    protected function updateBaseUrl(ApiAccount $account, DotmailerClientInterface $restClient)
     {
         $url = $this->getApiEndpoint($account);
         if ($url) {
