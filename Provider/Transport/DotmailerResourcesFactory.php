@@ -29,7 +29,7 @@ class DotmailerResourcesFactory
         $resources = new Resources($restClient);
 
         $account = $resources->GetAccountInfo();
-        $this->updateEndpoint($account, $restClient);
+        $this->updateBaseUrl($account, $restClient);
 
         return $resources;
     }
@@ -48,7 +48,7 @@ class DotmailerResourcesFactory
         $resources = new AdditionalResource($restClient);
 
         $account = $resources->getAccountInfo();
-        $this->updateEndpoint($account, $restClient);
+        $this->updateBaseUrl($account, $restClient);
 
         return $resources;
     }
@@ -77,8 +77,22 @@ class DotmailerResourcesFactory
     /**
      * @param ApiAccount $account
      * @param Client $restClient
+     * @deprecated
+     * @see \Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory::updateBaseUrl
      */
     protected function updateEndpoint(ApiAccount $account, Client $restClient)
+    {
+        $url = $this->getApiEndpoint($account);
+        if ($url) {
+            $restClient->setBaseUrl($url);
+        }
+    }
+
+    /**
+     * @param ApiAccount $account
+     * @param DotmailerClientInterface $restClient
+     */
+    protected function updateBaseUrl(ApiAccount $account, DotmailerClientInterface $restClient)
     {
         $url = $this->getApiEndpoint($account);
         if ($url) {

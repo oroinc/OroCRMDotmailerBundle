@@ -28,9 +28,6 @@ class CacheAwareClient implements DotmailerClientInterface
     /** @var string */
     private $namespace;
 
-    /** @var bool */
-    private $unsafeMethodInvalidation = false;
-
     /**
      * {@inheritdoc}
      */
@@ -110,12 +107,8 @@ class CacheAwareClient implements DotmailerClientInterface
      */
     private function processNonSafeRequest(array $paramArr, array $responses = [])
     {
-        $cacheKey = $this->getCacheKey($paramArr);
-
-        if ($this->unsafeMethodInvalidation) {
-            $this->getCache()->delete($cacheKey);
-            $this->getLogger()->debug('[DM] Delete data from cache', $paramArr);
-        }
+        $this->getCache()->deleteAll();
+        $this->getLogger()->debug('[DM] Delete data from cache', $paramArr);
 
         return $this->getClient()->execute($paramArr, $responses);
     }
@@ -123,15 +116,7 @@ class CacheAwareClient implements DotmailerClientInterface
     private function getCacheKey(array $paramArr = [])
     {
         list($requestUrl) = array_pad(array_values($paramArr), 1, null);
-        return md5($this->namespace . $requestUrl);
-    }
-
-    /**
-     * @param bool $unsafeMethodInvalidation
-     */
-    public function setUnsafeMethodInvalidation($unsafeMethodInvalidation)
-    {
-        $this->unsafeMethodInvalidation = (bool)$unsafeMethodInvalidation;
+        return $this->namespace . md5($requestUrl);
     }
 
     /**

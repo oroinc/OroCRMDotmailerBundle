@@ -24,6 +24,9 @@ class CacheAwareClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testFailIfClientNotInjected()
     {
+        $cache = $this->createMock(CacheProvider::class);
+        $this->client->setCache($cache);
+
         $this->client->execute([]);
     }
 
@@ -53,24 +56,7 @@ class CacheAwareClientTest extends \PHPUnit_Framework_TestCase
         $this->client->setCache($cache);
 
         $cache->expects($this->never())->method('save');
-        $cache->expects($this->never())->method('delete');
-
-        $client->expects($this->once())->method('execute');
-
-        $this->client->execute([]);
-    }
-
-    public function testExecuteUnknownMethodWithInvalidation()
-    {
-        $client = $this->createMock(DotmailerClientInterface::class);
-        $cache = $this->createMock(CacheProvider::class);
-
-        $this->client->setClient($client);
-        $this->client->setCache($cache);
-        $this->client->setUnsafeMethodInvalidation(true);
-
-        $cache->expects($this->never())->method('save');
-        $cache->expects($this->once())->method('delete')->with($this->isType('string'));
+        $cache->expects($this->once())->method('deleteAll');
 
         $client->expects($this->once())->method('execute');
 
@@ -86,24 +72,7 @@ class CacheAwareClientTest extends \PHPUnit_Framework_TestCase
         $this->client->setCache($cache);
 
         $cache->expects($this->never())->method('save');
-        $cache->expects($this->never())->method('delete');
-
-        $client->expects($this->once())->method('execute');
-
-        $this->client->execute(['url', Request::METHOD_POST]);
-    }
-
-    public function testExecuteUnsafeMethodWithInvalidation()
-    {
-        $client = $this->createMock(DotmailerClientInterface::class);
-        $cache = $this->createMock(CacheProvider::class);
-
-        $this->client->setClient($client);
-        $this->client->setCache($cache);
-        $this->client->setUnsafeMethodInvalidation(true);
-
-        $cache->expects($this->never())->method('save');
-        $cache->expects($this->once())->method('delete')->with($this->isType('string'));
+        $cache->expects($this->once())->method('deleteAll');
 
         $client->expects($this->once())->method('execute');
 
