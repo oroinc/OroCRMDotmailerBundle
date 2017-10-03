@@ -3,6 +3,8 @@
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\UnitOfWork;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 
 class ScheduledForExportContactIterator extends AbstractIterator
@@ -15,8 +17,14 @@ class ScheduledForExportContactIterator extends AbstractIterator
 
     /**
      * @var AddressBook
+     * @deprecated
      */
     protected $addressBook;
+
+    /**
+     * @var int
+     */
+    protected $addressBookId;
 
     /**
      * @param AddressBook     $addressBook
@@ -25,7 +33,7 @@ class ScheduledForExportContactIterator extends AbstractIterator
     public function __construct(AddressBook $addressBook, ManagerRegistry $registry)
     {
         $this->registry = $registry;
-        $this->addressBook = $addressBook;
+        $this->addressBookId = $addressBook->getId();
     }
 
     /**
@@ -36,9 +44,15 @@ class ScheduledForExportContactIterator extends AbstractIterator
      */
     protected function getItems($take, $skip)
     {
+        /** @var EntityManagerInterface $objectManager */
+        $objectManager = $this->registry->getManagerForClass(AddressBook::class);
+
+        /** @var AddressBook $addressBook */
+        $addressBook = $objectManager->getReference(AddressBook::class, $this->addressBookId);
+
         $contacts = $this->registry
             ->getRepository('OroDotmailerBundle:Contact')
-            ->getScheduledForExportByChannelQB($this->addressBook)
+            ->getScheduledForExportByChannelQB($addressBook)
             ->setFirstResult($skip)
             ->setMaxResults($take)
             ->getQuery()
@@ -50,7 +64,7 @@ class ScheduledForExportContactIterator extends AbstractIterator
             ->getArrayResult();
 
         foreach ($contacts as &$contact) {
-            $contact[self::ADDRESS_BOOK_KEY] = $this->addressBook->getOriginId();
+            $contact[self::ADDRESS_BOOK_KEY] = $addressBook->getOriginId();
         }
         return $contacts;
     }
