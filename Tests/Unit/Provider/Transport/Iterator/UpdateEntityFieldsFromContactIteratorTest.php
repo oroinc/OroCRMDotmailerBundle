@@ -25,6 +25,9 @@ class UpdateEntityFieldsFromContactIteratorTest extends \PHPUnit_Framework_TestC
         $firstItem = ['id' => 23];
         $secondItem = ['id' => 44];
 
+        $marketingListItemsQueryBuilderProvider->expects($this->any())->method('getAddressBook')
+            ->willReturn($addressBook);
+
         $expectedItems = [
             ['id' => 23, AbstractMarketingListItemIterator::ADDRESS_BOOK_KEY => $addressBookOriginId],
             ['id' => 44, AbstractMarketingListItemIterator::ADDRESS_BOOK_KEY => $addressBookOriginId],
@@ -113,6 +116,10 @@ class UpdateEntityFieldsFromContactIteratorTest extends \PHPUnit_Framework_TestC
             ['id' => 23, AbstractMarketingListItemIterator::ADDRESS_BOOK_KEY => $addressBookOriginId],
             ['id' => 44, AbstractMarketingListItemIterator::ADDRESS_BOOK_KEY => $addressBookOriginId],
         ];
+
+        $marketingListItemsQueryBuilderProvider->expects($this->any())->method('getAddressBook')
+            ->willReturn($addressBook);
+
         $iterator = new UpdateEntityFieldsFromContactIterator(
             $addressBook,
             $marketingListItemsQueryBuilderProvider,
@@ -164,11 +171,7 @@ class UpdateEntityFieldsFromContactIteratorTest extends \PHPUnit_Framework_TestC
             ->method('useQueryCache')
             ->will($this->returnSelf());
 
-        $executeMap = [
-            [$firstItem],
-            [$secondItem],
-            []
-        ];
+        $executeMap = [[$firstItem],[$secondItem],[]];
         $query->expects($this->exactly(3))
             ->method('execute')
             ->will(

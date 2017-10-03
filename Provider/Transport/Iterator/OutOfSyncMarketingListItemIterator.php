@@ -18,7 +18,8 @@ class OutOfSyncMarketingListItemIterator extends AbstractMarketingListItemIterat
     {
         $items = parent::getItems($take, $skip);
         foreach ($items as &$item) {
-            $item[self::MARKETING_LIST] = $this->addressBook->getMarketingList();
+            $marketingList = $this->getAddressBook()->getMarketingList();
+            $item[self::MARKETING_LIST] = $marketingList ? $marketingList->getId() : false;
         }
         return $items;
     }
