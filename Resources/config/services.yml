@@ -408,13 +408,18 @@ services:
     oro_dotmailer.provider.cache:
         class: %oro_dotmailer.provider.cache.class%
 
+    oro_dotmailer.provider.state_aware_cache:
+        class: 'Oro\Bundle\DotmailerBundle\Provider\StateAwareCacheProvider'
+        arguments:
+            - "@oro_entity.doctrine_helper"
+
     oro_dotmailer.provider.campaign_statistic:
         class: %oro_dotmailer.provider.campaign_statistic.class%
         arguments:
             - "@oro_campaign.email_campaign.statistics_connector"
             - "@doctrine"
             - "@oro_entity.doctrine_helper"
-            - "@oro_dotmailer.provider.cache"
+            - "@oro_dotmailer.provider.state_aware_cache"
 
     oro_dotmailer.contact.export.query_builder_adapter:
         class: %oro_dotmailer.contact.export.query_builder_adapter.class%
@@ -672,7 +677,7 @@ services:
         class: %oro_dotmailer.importexport.data_converter.contact_sync.class%
         calls:
             - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
-            - [setCacheProvider, ["@oro_dotmailer.provider.cache"]]
+            - [setCacheProvider, ["@oro_dotmailer.provider.state_aware_cache"]]
 
     oro_dotmailer.importexport.data_converter.datafield:
         class: %oro_dotmailer.importexport.data_converter.datafield.class%
@@ -695,7 +700,7 @@ services:
         parent: oro_importexport.strategy.configurable_add_or_replace
         calls:
             - [setOwnerHelper, ["@oro_integration.helper.default_owner_helper"]]
-            - [setCacheProvider, ["@oro_dotmailer.provider.cache"]]
+            - [setCacheProvider, ["@oro_dotmailer.provider.state_aware_cache"]]
             - [setLogger, ["@oro_integration.logger.strategy"]]
 
     oro_dotmailer.importexport.strategy.import.abstract:
@@ -703,7 +708,7 @@ services:
         abstract: true
         calls:
             - [setRegistry, ["@doctrine"]]
-            - [setCacheProvider, ["@oro_dotmailer.provider.cache"]]
+            - [setCacheProvider, ["@oro_dotmailer.provider.state_aware_cache"]]
             - [setLogger, ["@oro_integration.logger.strategy"]]
 
     oro_dotmailer.importexport.strategy.not_exported_contact:
@@ -970,7 +975,7 @@ services:
             - "@oro_dotmailer.model.field_helper"
         calls:
             - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
-            - [setCacheProvider, ["@oro_dotmailer.provider.cache"]]
+            - [setCacheProvider, ["@oro_dotmailer.provider.state_aware_cache"]]
 
     oro_dotmailer.workflow.action.update_email_campaign_statistics:
         class: %oro_dotmailer.workflow.action.update_email_campaign_statistics.class%
@@ -1118,6 +1123,13 @@ services:
         class: %oro_dotmailer.listener.cache_clear.class%
         arguments:
             - "@oro_dotmailer.provider.cache"
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    oro_dotmailer.listener.state_aware_cache_clear:
+        class: %oro_dotmailer.listener.cache_clear.class%
+        arguments:
+            - "@oro_dotmailer.provider.state_aware_cache"
         tags:
             - { name: doctrine.event_subscriber }
 

@@ -21,6 +21,9 @@ class MarketingListItemIteratorTest extends \PHPUnit_Framework_TestCase
         $firstItem = ['id' => 23];
         $secondItem = ['id' => 44];
 
+        $marketingListItemsQueryBuilderProvider->expects($this->any())->method('getAddressBook')
+            ->willReturn($addressBook);
+
         $expectedItems = [
             ['id' => 23, MarketingListItemIterator::ADDRESS_BOOK_KEY => $addressBookOriginId],
             ['id' => 44, MarketingListItemIterator::ADDRESS_BOOK_KEY => $addressBookOriginId],
