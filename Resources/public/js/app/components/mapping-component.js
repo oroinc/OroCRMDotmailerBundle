@@ -11,6 +11,10 @@ define(function(require) {
     var DeleteConfirmation = require('oroui/js/delete-confirmation');
 
     MappingComponent = SegmentComponent.extend({
+        requiredSiblingComponents: {
+            conditionBuilderComponent: false
+        },
+
         defaults: {
             entityChoice: '',
             valueSource: '',
