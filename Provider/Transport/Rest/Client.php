@@ -4,11 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Rest;
 
 use RestClient\Request;
 
-use DotMailer\Api\Rest\IClient;
-use DotMailer\Api\Rest;
-
 use Psr\Log\LoggerAwareTrait;
-use Psr\Log\LoggerAwareInterface;
 
 use Oro\Bundle\DotmailerBundle\Exception\RestClientAttemptException;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
@@ -17,7 +13,7 @@ use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
  * Override Rest Client class from romanpitak/dotmailer-api-v2-php-client bundle is not possible because of
  * private fields.
  */
-class Client implements IClient, LoggerAwareInterface
+class Client implements DotmailerClientInterface
 {
     use LoggerAwareTrait;
 

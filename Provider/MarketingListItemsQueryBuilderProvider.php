@@ -3,6 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\Provider;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
@@ -76,6 +77,8 @@ class MarketingListItemsQueryBuilderProvider
 
     /**
      * @var QueryBuilder[]
+     *
+     * @deprecated use getMarketingListItemsQB instead
      */
     protected $cachedQueryBuilders = [];
 
@@ -326,6 +329,8 @@ class MarketingListItemsQueryBuilderProvider
      * @param MarketingList $marketingList
      *
      * @return QueryBuilder
+     *
+     * @deprecated use getMarketingListItemsQB instead
      */
     public function getCachedMarketingListEntitiesQB(MarketingList $marketingList)
     {
@@ -344,6 +349,32 @@ class MarketingListItemsQueryBuilderProvider
         }
 
         return clone $this->cachedQueryBuilders[$marketingList->getId()];
+    }
+
+    /**
+     * @param int $addressBookId
+     * @return AddressBook
+     *
+     * @deprecated avoid BC break while adding new iterators dependency, should be moved to separate provider
+     */
+    public function getAddressBook($addressBookId)
+    {
+        if (!filter_var($addressBookId, FILTER_VALIDATE_INT) || !$addressBookId) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Invalid $addressBookId, integer expected, "%s" given',
+                    is_object($addressBookId) ? get_class($addressBookId) : gettype($addressBookId)
+                )
+            );
+        }
+
+        /** @var EntityManagerInterface $em */
+        $em = $this->registry->getManagerForClass(AddressBook::class);
+
+        /** @var AddressBook $addressBook */
+        $addressBook = $em->getReference(AddressBook::class, $addressBookId);
+
+        return $addressBook;
     }
 
     /**

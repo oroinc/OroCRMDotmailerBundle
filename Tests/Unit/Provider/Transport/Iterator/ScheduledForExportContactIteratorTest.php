@@ -2,6 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExportContactIterator;
 
 class ScheduledForExportContactIteratorTest extends \PHPUnit_Framework_TestCase
@@ -13,6 +14,10 @@ class ScheduledForExportContactIteratorTest extends \PHPUnit_Framework_TestCase
         $addressBook->expects($this->any())
             ->method('getOriginId')
             ->will($this->returnValue($addressBookOriginId = 234));
+
+        $em = $this->createMock(EntityManagerInterface::class);
+        $registry->expects($this->any())->method('getManagerForClass')->willReturn($em);
+        $em->expects($this->any())->method('getReference')->willReturn($addressBook);
 
         $firstItem = ['id' => 23];
         $secondItem = ['id' => 44];

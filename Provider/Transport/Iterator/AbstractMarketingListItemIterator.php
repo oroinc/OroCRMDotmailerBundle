@@ -18,9 +18,9 @@ abstract class AbstractMarketingListItemIterator extends AbstractIterator
     protected $batchSize = 1000;
 
     /**
-     * @var AddressBook
+     * @var int
      */
-    protected $addressBook;
+    protected $addressBookId;
 
     /**
      * @var MarketingListItemsQueryBuilderProvider
@@ -42,9 +42,17 @@ abstract class AbstractMarketingListItemIterator extends AbstractIterator
         MarketingListItemsQueryBuilderProvider $marketingListItemsQueryBuilderProvider,
         ContextInterface $importExportContext
     ) {
-        $this->addressBook = $addressBook;
+        $this->addressBookId = $addressBook->getId();
         $this->marketingListItemsQueryBuilderProvider = $marketingListItemsQueryBuilderProvider;
         $this->importExportContext = $importExportContext;
+    }
+
+    /**
+     * @return AddressBook
+     */
+    protected function getAddressBook()
+    {
+        return $this->marketingListItemsQueryBuilderProvider->getAddressBook($this->addressBookId);
     }
 
     /**
@@ -52,7 +60,7 @@ abstract class AbstractMarketingListItemIterator extends AbstractIterator
      */
     protected function getItems($take, $skip)
     {
-        $qb = $this->getIteratorQueryBuilder($this->addressBook);
+        $qb = $this->getIteratorQueryBuilder($this->getAddressBook());
         $qb->setMaxResults($take);
 
         $items = $qb
@@ -64,7 +72,7 @@ abstract class AbstractMarketingListItemIterator extends AbstractIterator
             ->useQueryCache(false)
             ->execute();
         foreach ($items as &$item) {
-            $item[static::ADDRESS_BOOK_KEY] = $this->addressBook->getOriginId();
+            $item[static::ADDRESS_BOOK_KEY] = $this->getAddressBook()->getOriginId();
         }
         return $items;
     }
