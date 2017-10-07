@@ -13,7 +13,10 @@ use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
 use Oro\Bundle\DotmailerBundle\Validator\Constraints\DataFieldMappingConfigConstraint;
 use Oro\Bundle\EntityBundle\Provider\EntityFieldProvider;
+use Oro\Bundle\EntityBundle\DoctrineExtensions\DBAL\Types\DurationType;
 use Oro\Bundle\QueryDesignerBundle\QueryDesigner\JoinIdentifierHelper;
+use Oro\DBAL\Types\PercentType;
+use Oro\DBAL\Types\MoneyType;
 
 /**
  * Validate compatibility of entity field and dotmailer data field types
@@ -91,10 +94,18 @@ class DataFieldMappingConfigValidator extends ConstraintValidator
         $fieldName = $joinIdentifierHelper->getFieldName($field);
         $fieldTypes = $this->getFieldTypes($class);
         $fieldType = isset($fieldTypes[$fieldName]) ? $fieldTypes[$fieldName] : '';
-        $isCompatible = false;
         switch ($type) {
             case DataField::FIELD_TYPE_NUMERIC:
-                $numericTypes = [Type::BIGINT, Type::SMALLINT, Type::INTEGER, Type::DECIMAL, Type::FLOAT];
+                $numericTypes = [
+                    Type::BIGINT,
+                    Type::SMALLINT,
+                    Type::INTEGER,
+                    Type::DECIMAL,
+                    Type::FLOAT,
+                    MoneyType::TYPE,
+                    PercentType::TYPE,
+                    DurationType::TYPE,
+                ];
                 $isCompatible = in_array($fieldType, $numericTypes);
                 break;
             case DataField::FIELD_TYPE_DATE:
