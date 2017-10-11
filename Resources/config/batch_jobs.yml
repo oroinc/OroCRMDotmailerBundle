@@ -213,6 +213,7 @@ connector:
                         reader:    oro_dotmailer.connector.export_contacts
                         processor: oro_dotmailer.importexport.processor.contact_sync
                         writer:    oro_dotmailer.importexport.writer.contact_sync
+                        entityStateManager: oro_integration.manager.entity_stage_manager
                     parameters:
                         batch_size: 1000
                 exportContacts:
@@ -224,6 +225,7 @@ connector:
                         writer:           oro_dotmailer.importexport.writer.export.contacts
                         contextRegistry:  oro_importexport.context_registry
                         registry:         doctrine
+                        entityStateManager: oro_integration.manager.entity_stage_manager
                     parameters:
                         batch_size: 10000
 

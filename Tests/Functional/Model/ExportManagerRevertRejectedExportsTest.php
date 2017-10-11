@@ -12,6 +12,7 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\AbstractImportExportTestCase;
+use Oro\Bundle\IntegrationBundle\Entity\State;
 
 class ExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCase
 {
@@ -39,8 +40,13 @@ class ExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCas
         $rejectedByWatchDogImportId = $this->getReference('oro_dotmailer.address_book_contacts_export.rejected')
             ->getImportId();
 
-        $scheduledForExport = $this->managerRegistry->getRepository('OroDotmailerBundle:AddressBookContact')
-            ->findBy(['scheduledForExport' => true]);
+        $stateRepository = $this->managerRegistry->getRepository(State::class);
+        $scheduledForExport = $stateRepository->findBy(
+            [
+                'entityClass' => AddressBookContact::class,
+                'state'       => State::STATE_SCHEDULED_FOR_EXPORT,
+            ]
+        );
         $this->assertCount(2, $scheduledForExport);
 
         $this->stubResource();

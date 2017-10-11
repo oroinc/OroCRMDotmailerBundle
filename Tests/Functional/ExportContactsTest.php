@@ -12,6 +12,7 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
+use Oro\Bundle\IntegrationBundle\Entity\State;
 
 class ExportContactsTest extends AbstractImportExportTestCase
 {
@@ -173,7 +174,15 @@ class ExportContactsTest extends AbstractImportExportTestCase
         /**
          * Check status was reset after export
          */
-        $this->assertFalse($addressBookContact->isScheduledForExport());
+        $stateRepository = $this->managerRegistry->getRepository(State::class);
+        $state = $stateRepository->findOneBy(
+            [
+                'entityClass' => AddressBookContact::class,
+                'entityId'    => $addressBookContact->getId(),
+                'state'       => State::STATE_SCHEDULED_FOR_EXPORT,
+            ]
+        );
+        $this->assertNull($state);
 
         $this->assertArraySubset(
             [

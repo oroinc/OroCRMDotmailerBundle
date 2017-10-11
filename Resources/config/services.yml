@@ -762,6 +762,7 @@ services:
         parent: oro_dotmailer.importexport.strategy.add_or_replace
         calls:
             - [setMappingProvider, ["@oro_dotmailer.provider.mapping"]]
+            - [setEntityStateManager, ["@oro_integration.manager.entity_stage_manager"]]
 
     oro_dotmailer.importexport.strategy.datafield:
         class: %oro_dotmailer.importexport.strategy.datafield.class%

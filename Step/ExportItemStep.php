@@ -3,16 +3,18 @@
 namespace Oro\Bundle\DotmailerBundle\Step;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\EntityRepository;
 
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 
 use Oro\Bundle\BatchBundle\Step\ItemStep;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\IntegrationBundle\Manager\EntityStateManagerTrait;
 
 class ExportItemStep extends ItemStep
 {
+    use EntityStateManagerTrait;
+
     /**
      * @var ManagerRegistry
      */
@@ -28,6 +30,7 @@ class ExportItemStep extends ItemStep
      */
     public function doExecute(StepExecution $stepExecution)
     {
+        $entityStateManager = $this->getEntityStateManager();
         $channel = $this->getChannel($stepExecution);
 
         /**
@@ -43,18 +46,10 @@ class ExportItemStep extends ItemStep
 
         parent::doExecute($stepExecution);
 
-        /**
-         * @var EntityRepository $addressBookContactRepository
-         */
-        $addressBookContactRepository = $this->registry
-            ->getRepository('OroDotmailerBundle:AddressBookContact');
-
-        $addressBookContactRepository->createQueryBuilder('addressBookContact')
-            ->update()
-            ->where('addressBookContact.channel =:channel')
-            ->set('addressBookContact.scheduledForExport', ':scheduledForExport')
-            ->getQuery()
-            ->execute(['channel' => $channel, 'scheduledForExport' => false]);
+        $addressBookContactRepository = $this->registry->getRepository('OroDotmailerBundle:AddressBookContact');
+        $entitiesReadyToReset = $addressBookContactRepository->getAddressBookContactsScheduledToSync($channel);
+        $entityStateManager->resetState($entitiesReadyToReset);
+        $entityStateManager->flush();
     }
 
     /**

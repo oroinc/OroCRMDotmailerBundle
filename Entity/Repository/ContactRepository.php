@@ -6,9 +6,11 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\IntegrationBundle\Entity\State;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 
 class ContactRepository extends EntityRepository
@@ -23,21 +25,24 @@ class ContactRepository extends EntityRepository
         $qb = $this->createQueryBuilder('contact');
         $expr = $qb->expr();
         $joinCondition = $expr->andX()
-            ->add('addressBookContacts.addressBook =:addressBook')
-            ->add('addressBookContacts.scheduledForExport = TRUE');
+            ->add('addressBookContacts.addressBook = :addressBook');
 
-        return $qb
-            ->select(
-                [
-                    'addressBookContacts.id as addressBookContactId',
-                    'addressBookContacts.marketingListItemClass as entityClass',
-                    'contact.email',
-                    'contact.originId',
-                    'contact.dataFields',
-                    'opt_in_type.id as optInType',
-                    'email_type.id as emailType',
-                ]
-            )
+        $stateJoinCondition = $expr->andX()
+            ->add('state.entityId = addressBookContacts.id')
+            ->add('state.entityClass = :class')
+            ->add('state.state = :state');
+
+        $qb->select(
+            [
+                'addressBookContacts.id as addressBookContactId',
+                'addressBookContacts.marketingListItemClass as entityClass',
+                'contact.email',
+                'contact.originId',
+                'contact.dataFields',
+                'opt_in_type.id as optInType',
+                'email_type.id as emailType',
+            ]
+        )
             ->leftJoin('contact.opt_in_type', 'opt_in_type')
             ->leftJoin('contact.email_type', 'email_type')
             ->innerJoin(
@@ -46,8 +51,18 @@ class ContactRepository extends EntityRepository
                 Join::WITH,
                 $joinCondition
             )
-            ->setParameter('addressBook', $addressBook)
-            ->addOrderBy('contact.id');
+            ->innerJoin(
+                State::class,
+                'state',
+                Join::WITH,
+                $stateJoinCondition
+            );
+        $qb->addOrderBy('contact.id');
+        $qb->setParameter('addressBook', $addressBook);
+        $qb->setParameter('state', State::STATE_SCHEDULED_FOR_EXPORT);
+        $qb->setParameter('class', AddressBookContact::class);
+
+        return $qb;
     }
 
     /**

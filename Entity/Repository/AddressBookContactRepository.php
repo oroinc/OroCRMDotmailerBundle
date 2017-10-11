@@ -3,14 +3,45 @@
 namespace Oro\Bundle\DotmailerBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\IntegrationBundle\Entity\State;
 
 class AddressBookContactRepository extends EntityRepository
 {
+    /**
+     * @param Channel $channel
+     *
+     * @return AddressBookContact[]
+     */
+    public function getAddressBookContactsScheduledToSync(Channel $channel)
+    {
+        $qb = $this->createQueryBuilder('addressBookContact');
+
+        $stateJoinCondition = $qb->expr()->andX()
+            ->add('state.entityId = addressBookContact.id')
+            ->add('state.entityClass = :class')
+            ->add('state.state = :state');
+
+        $qb->select()
+            ->where('addressBookContact.channel = :channel')
+            ->innerJoin(
+                State::class,
+                'state',
+                Join::WITH,
+                $stateJoinCondition
+            );
+        $qb->setParameter('channel', $channel);
+        $qb->setParameter('state', State::STATE_SCHEDULED_FOR_EXPORT);
+        $qb->setParameter('class', AddressBookContact::class);
+
+        return $qb->getQuery()->getResult();
+    }
+
     /**
      * @param string $exportId
      * @param int $take

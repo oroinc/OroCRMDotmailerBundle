@@ -81,6 +81,9 @@ class AddressBookContact extends ExtendAddressBookContact implements ChannelAwar
      * @var bool
      *
      * @ORM\Column(name="scheduled_for_export", type="boolean")
+     *
+     * @deprecated
+     * @see \Oro\Bundle\IntegrationBundle\Entity\State::STATE_SCHEDULED_FOR_EXPORT
      */
     protected $scheduledForExport = false;
     
@@ -240,6 +243,9 @@ class AddressBookContact extends ExtendAddressBookContact implements ChannelAwar
      * @param boolean $scheduledForExport
      *
      * @return AddressBookContact
+     *
+     * @deprecated
+     * @see \Oro\Bundle\IntegrationBundle\Entity\State::STATE_SCHEDULED_FOR_EXPORT
      */
     public function setScheduledForExport($scheduledForExport)
     {
@@ -250,6 +256,9 @@ class AddressBookContact extends ExtendAddressBookContact implements ChannelAwar
     
     /**
      * @return boolean
+     *
+     * @deprecated
+     * @see \Oro\Bundle\IntegrationBundle\Entity\State::STATE_SCHEDULED_FOR_EXPORT
      */
     public function isScheduledForFieldsUpdate()
     {

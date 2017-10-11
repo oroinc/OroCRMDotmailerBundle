@@ -9,6 +9,7 @@ use DotMailer\Api\DataTypes\ApiContactStatuses;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
+use Oro\Bundle\IntegrationBundle\Entity\State;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
@@ -327,7 +328,6 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
                 $item = $this->resolveAddressBookRelations($item, $contact, $manager);
             }
 
-
             if (!empty($item['createdAt'])) {
                 $item['createdAt'] = new \DateTime($item['createdAt']);
             }
@@ -357,6 +357,8 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
         }
 
         $manager->flush();
+
+        $this->setToScheduleForExport($manager);
     }
 
     /**
@@ -404,9 +406,7 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             $addressBookContact->setAddressBook($addressBook);
             $addressBookContact->setStatus($status);
             $addressBookContact->setChannel($item['channel']);
-            if (empty($item['originId'])) {
-                $addressBookContact->setScheduledForExport(true);
-            }
+
             if (!empty($data['exportOperationType'])) {
                 $operationType = $this->findEnum('dm_ab_cnt_exp_type', $data['exportOperationType']);
                 $addressBookContact->setExportOperationType($operationType);
@@ -417,5 +417,27 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
         }
 
         return $item;
+    }
+
+    /**
+     * @param ObjectManager $manager
+     */
+    protected function setToScheduleForExport(ObjectManager $manager)
+    {
+        foreach ($this->data as $item) {
+            $contact = $this->getReference($item['reference']);
+            $addressBookContacts = $contact->getAddressBookContacts();
+            foreach ($addressBookContacts as $addressBookContact) {
+                if (empty($contact->getOriginId())) {
+                    $state = new State();
+                    $state->setState(State::STATE_SCHEDULED_FOR_EXPORT);
+                    $state->setEntityClass(AddressBookContact::class);
+                    $state->setEntityId($addressBookContact->getId());
+                    $manager->persist($state);
+                }
+            }
+        }
+
+        $manager->flush();
     }
 }

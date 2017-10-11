@@ -7,6 +7,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
+use Oro\Bundle\IntegrationBundle\Entity\State;
 use Oro\Bundle\SecurityBundle\Owner\Metadata\OwnershipMetadataProviderInterface;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
@@ -136,12 +138,23 @@ class MarketingListItemsQueryBuilderProvider
             self::ADDRESS_BOOK_CONTACT_ALIAS,
             Join::WITH,
             self::ADDRESS_BOOK_CONTACT_ALIAS . '.addressBook =:addressBook'
-        )->setParameter('addressBook', $addressBook);
-        $qb->andWhere(
-            $expr->orX()
-                ->add($expr->isNull(self::ADDRESS_BOOK_CONTACT_ALIAS . '.id'))
-                ->add(self::ADDRESS_BOOK_CONTACT_ALIAS . '.scheduledForExport <> TRUE')
         );
+
+        $stateJoinCondition = $expr->andX()
+                ->add('state.entityId = ' . self::ADDRESS_BOOK_CONTACT_ALIAS . '.id')
+                ->add('state.entityClass = :className')
+                ->add($expr->orX()->add('state.state <> :state')->add('state.state IS NULL'));
+        $qb->leftJoin(
+            State::class,
+            'state',
+            Join::WITH,
+            $stateJoinCondition
+        );
+
+        $qb->setParameter('addressBook', $addressBook);
+        $qb->setParameter('state', State::STATE_SCHEDULED_FOR_EXPORT);
+        $qb->setParameter('className', AddressBookContact::class);
+
         if (count($excludedItems) > 0) {
             $excludedItems = array_map(function ($item) {
                 return $item[self::MARKETING_LIST_ITEM_ID];

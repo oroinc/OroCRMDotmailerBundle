@@ -9,9 +9,13 @@ use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\MarketingListItemIterator;
+use Oro\Bundle\IntegrationBundle\Entity\State;
+use Oro\Bundle\IntegrationBundle\Manager\EntityStateManagerTrait;
 
 class ContactSyncStrategy extends AddOrReplaceStrategy
 {
+    use EntityStateManagerTrait;
+
     /**
      * Custom fields allowed for update
      *
@@ -91,7 +95,6 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
                 $this->updateOperationType(AddressBookContact::EXPORT_NEW_CONTACT, $addressBookContact);
             }
 
-
             $addressBookContact->setMarketingListItemId(
                 $this->getMarketingListItemId()
             );
@@ -109,9 +112,10 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
      */
     protected function processAbContactStateFlags(AddressBookContact $addressBookContact)
     {
+        $entityStateManager = $this->getEntityStateManager();
         if ($this->scheduleForExport ||
             $addressBookContact->getExportOperationType()->getId() !== AddressBookContact::EXPORT_UPDATE_CONTACT) {
-            $addressBookContact->setScheduledForExport(true);
+            $entityStateManager->setState([$addressBookContact], State::STATE_SCHEDULED_FOR_EXPORT);
         }
         //reset export flag
         $this->scheduleForExport = true;
