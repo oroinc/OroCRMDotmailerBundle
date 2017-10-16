@@ -5,14 +5,17 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 use Guzzle\Iterator\AppendIterator;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Oro\Bundle\IntegrationBundle\Provider\AllowedConnectorInterface;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Oro\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\MarketingListItemIterator;
+use Oro\Bundle\IntegrationBundle\Provider\AllowedConnectorInterface;
+use Oro\Bundle\IntegrationBundle\Provider\ParametrizedAllowedConnectorInterface;
 
-class ExportContactConnector extends AbstractDotmailerConnector implements AllowedConnectorInterface
+class ExportContactConnector extends AbstractDotmailerConnector implements
+    AllowedConnectorInterface,
+    ParametrizedAllowedConnectorInterface
 {
     const TYPE = 'contact_export';
     const EXPORT_JOB = 'dotmailer_contact_export';
@@ -35,16 +38,13 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
         $this->logger->info('Preparing Contacts for Export');
 
         $iterator = new AppendIterator();
-        $addressBooks = $this->getAddressBooksToSync();
-
-        foreach ($addressBooks as $addressBook) {
-            $marketingListItemIterator = new MarketingListItemIterator(
-                $addressBook,
-                $this->marketingListItemsQueryBuilderProvider,
-                $this->getContext()
-            );
-            $iterator->append($marketingListItemIterator);
-        }
+        $addressBook = $this->getAddressBooksToSync();
+        $marketingListItemIterator = new MarketingListItemIterator(
+            $addressBook,
+            $this->marketingListItemsQueryBuilderProvider,
+            $this->getContext()
+        );
+        $iterator->append($marketingListItemIterator);
 
         return $iterator;
     }
@@ -56,9 +56,7 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
     {
         $addressBookId = $this->getContext()->getOption(AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION);
 
-        return $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:AddressBook')
-            ->getAddressBooksToSync($this->getChannel(), $addressBookId);
+        return $this->getAddressBookById($this->getChannel(), $addressBookId);
     }
 
     /**
@@ -87,11 +85,32 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
 
     /**
      * {@inheritdoc}
+     *
+     * @deprecated
+     * @see isAllowedParametrized
      */
     public function isAllowed(Channel $integration, array $processedConnectorsStatuses)
     {
-        return $this->exportManager->isExportFinished($integration)
-            && $this->exportManager->isExportFaultsProcessed($integration);
+        return true;
+    }
+
+    /**
+     * @{@inheritdoc}
+     */
+    public function isAllowedParametrized(Channel $integration, array $processedConnectorsStatuses, array $parameters)
+    {
+        if (empty($parameters[AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION])) {
+            return false;
+        }
+
+        $addressBook = $this->getAddressBookById(
+            $integration,
+            $parameters[AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION]
+        );
+
+        return $addressBook
+            && $this->exportManager->isExportFinishedForAddressBook($integration, $addressBook)
+            && $this->exportManager->isExportFaultsProcessedForAddressBook($integration, $addressBook);
     }
 
     /**
@@ -117,5 +136,23 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
         $this->exportManager = $exportManager;
 
         return $this;
+    }
+
+    /**
+     * @param Channel $integration
+     * @param int $addressBookId
+     *
+     * @return AddressBook|bool
+     */
+    protected function getAddressBookById(Channel $integration, $addressBookId)
+    {
+        $addressBooks = $this->managerRegistry
+            ->getRepository('OroDotmailerBundle:AddressBook')
+            ->getConnectedAddressBooks(
+                $integration,
+                $addressBookId
+            );
+
+        return reset($addressBooks);
     }
 }

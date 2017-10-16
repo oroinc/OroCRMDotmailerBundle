@@ -1173,6 +1173,30 @@ services:
         tags:
             - { name: 'oro_message_queue.client.message_processor' }
 
+    oro_dotmailer.async.sync_integration_processor:
+        class: 'Oro\Bundle\DotmailerBundle\Async\SyncIntegrationProcessor'
+        parent: oro_integration.async.sync_integration_processor
+        tags:
+            - { name: 'oro_message_queue.client.message_processor' }
+
+    oro_dotmailer.async.contacts_clear:
+        class: 'Oro\Bundle\DotmailerBundle\Async\ContactsClearProcessor'
+        arguments:
+            - '@doctrine'
+            - '@oro_message_queue.job.runner'
+            - '@logger'
+        tags:
+            - { name: 'oro_message_queue.client.message_processor' }
+
+    oro_dotmailer.processor.sync_processor:
+        class: 'Oro\Bundle\DotmailerBundle\Processor\SyncProcessor'
+        parent: oro_integration.sync.processor
+        calls:
+            - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
+            - [setMessageProducer, ["@oro_message_queue.message_producer"]]
+        tags:
+            - { name: oro_integration.sync_processor, integration: dotmailer }
+
     oro_dotmailer.listener.datafield_remove:
         class: "%oro_dotmailer.listener.datafield_remove.class%"
         arguments:
@@ -1234,4 +1258,3 @@ services:
             - "@translator"
         tags:
             - { name: validator.constraint_validator, alias: oro_dotmailer.validator.datafield_mapping_config }
-

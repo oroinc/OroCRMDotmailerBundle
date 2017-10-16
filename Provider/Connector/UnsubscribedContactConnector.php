@@ -14,7 +14,7 @@ class UnsubscribedContactConnector extends AbstractDotmailerConnector
     {
         $this->logger->info('Importing Unsubscribed from Address Book Contacts.');
         $addressBooks = $this->managerRegistry->getRepository('OroDotmailerBundle:AddressBook')
-            ->getAddressBooksToSync($this->getChannel());
+            ->getConnectedAddressBooks($this->getChannel(), $this->getAddressBookId());
 
         return $this->transport->getUnsubscribedContacts($addressBooks);
     }

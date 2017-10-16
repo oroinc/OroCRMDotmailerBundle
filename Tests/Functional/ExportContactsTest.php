@@ -30,9 +30,7 @@ class ExportContactsTest extends AbstractImportExportTestCase
     public function testSync()
     {
         $channel = $this->getReference('oro_dotmailer.channel.fourth');
-
-        $previousNotExportedContact = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:Contact')
+        $previousNotExportedContact = $this->managerRegistry->getRepository('OroDotmailerBundle:Contact')
             ->findOneBy(['email' => 'test2@ex.com']);
         $this->assertNotNull($previousNotExportedContact);
 
@@ -41,20 +39,17 @@ class ExportContactsTest extends AbstractImportExportTestCase
             $firstAddressBookId = '391da8d7-70f0-405b-98d4-02faa41d499d',
             AddressBookContactsExport::STATUS_NOT_FINISHED
         );
-
         $secondAddressBook = $this->getReference('oro_dotmailer.address_book.six');
         $secondAddressBookImportStatus = $this->getImportStatus(
             $secondAddressBookId = '451da8d7-70f0-405b-98d4-02faa41d499d',
             AddressBookContactsExport::STATUS_FINISH
         );
-
         $expectedAddressBookMap = [
             (int)$firstAddressBook->getOriginId()  => $firstAddressBookImportStatus,
             (int)$secondAddressBook->getOriginId() => $secondAddressBookImportStatus,
         ];
 
-        $this->resource->expects($this->exactly(2))
-            ->method('PostAddressBookContactsImport')
+        $this->resource->expects($this->exactly(2))->method('PostAddressBookContactsImport')
             ->willReturnCallback(function ($originId) use ($expectedAddressBookMap) {
                 $this->assertArrayHasKey(
                     (int)$originId,
@@ -65,11 +60,31 @@ class ExportContactsTest extends AbstractImportExportTestCase
                 return $expectedAddressBookMap[$originId];
             });
 
-        $result = $this->runImportExportConnectorsJob(
+        $result1 = $this->runImportExportConnectorsJob(
             self::SYNC_PROCESSOR,
             $channel,
             ExportContactConnector::TYPE,
-            [],
+            ['address-book' => $firstAddressBook->getId()],
+            $jobLog
+        );
+        $log = $this->formatImportExportJobLog($jobLog);
+        $this->assertTrue($result1, "Job Failed with output:\n $log");
+        $result2 = $this->runImportExportConnectorsJob(
+            self::SYNC_PROCESSOR,
+            $channel,
+            ExportContactConnector::TYPE,
+            ['address-book' => $secondAddressBook->getId()],
+            $jobLog
+        );
+        $log = $this->formatImportExportJobLog($jobLog);
+        $this->assertTrue($result2, "Job Failed with output:\n $log");
+
+        $uptodateAddressBook = $this->getReference('oro_dotmailer.address_book.up_to_date');
+        $this->runImportExportConnectorsJob(
+            self::SYNC_PROCESSOR,
+            $channel,
+            ExportContactConnector::TYPE,
+            ['address-book' => $uptodateAddressBook->getId()],
             $jobLog
         );
 
@@ -78,10 +93,6 @@ class ExportContactsTest extends AbstractImportExportTestCase
         $upToDateAddressBook = $this->refreshAddressBook(
             $this->getReference('oro_dotmailer.address_book.up_to_date')
         );
-
-        $log = $this->formatImportExportJobLog($jobLog);
-        $this->assertTrue($result, "Job Failed with output:\n $log");
-
         $expectedContact = $this->getReference('oro_dotmailer.orocrm_contact.jack.case');
 
         /**
@@ -114,14 +125,6 @@ class ExportContactsTest extends AbstractImportExportTestCase
         $this->assertEquals($syncFinishedStatus, $upToDateAddressBook->getSyncStatus());
         $this->assertAddressBookExportStatus($firstAddressBook, $firstAddressBookId, $syncInProgressStatus);
         $this->assertAddressBookExportStatus($secondAddressBook, $secondAddressBookId, $syncFinishedStatus);
-
-        /**
-         * Check previous not exported contact was removed before new export start
-         */
-        $previousNotExportedContact = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:Contact')
-            ->findOneBy(['email' => 'test2@ex.com']);
-        $this->assertNull($previousNotExportedContact);
     }
 
     /**

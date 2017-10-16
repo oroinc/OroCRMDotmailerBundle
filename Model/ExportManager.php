@@ -59,36 +59,94 @@ class ExportManager
      * @param Channel $channel
      *
      * @return bool
+     *
+     * @deprecated
+     * @see isExportFinishedForAddressBook
      */
     public function isExportFinished(Channel $channel)
     {
-        return $this->getAddressBookContactsExportRepostiry()->isExportFinished($channel);
+        return $this->getAddressBookContactsExportRepository()->isExportFinished($channel);
+    }
+
+    /**
+     * @param Channel $channel
+     * @param null|AddressBook $addressBook
+     *
+     * @return bool
+     */
+    public function isExportFinishedForAddressBook(Channel $channel, AddressBook $addressBook)
+    {
+        return $this->getAddressBookContactsExportRepository()->isExportFinishedForAddressBook($channel, $addressBook);
     }
 
     /**
      * @param Channel $channel
      *
      * @return bool
+     *
+     * @deprecated
+     * @see isExportFaultsProcessedForAddressBook
      */
     public function isExportFaultsProcessed(Channel $channel)
     {
-        return $this->getAddressBookContactsExportRepostiry()->isExportFaultsProcessed($channel);
+        return $this->getAddressBookContactsExportRepository()->isExportFaultsProcessed($channel);
+    }
+
+    /**
+     * @param Channel $channel
+     * @param null|AddressBook $addressBook
+     *
+     * @return bool
+     */
+    public function isExportFaultsProcessedForAddressBook(Channel $channel, AddressBook $addressBook)
+    {
+        return $this->getAddressBookContactsExportRepository()
+            ->isExportFaultsProcessedForAddressBook($channel, $addressBook);
     }
 
     /**
      * @param Channel $channel
      *
      * @return bool
+     *
+     * @deprecated
+     * @see updateExportResultsForAddressBook
      */
     public function updateExportResults(Channel $channel)
     {
-        $exportRepository = $this->getAddressBookContactsExportRepostiry();
+        $exportRepository = $this->getAddressBookContactsExportRepository();
+        $this->dotmailerTransport->init($channel->getTransport());
+        $isExportFinished = true;
+        foreach ($exportRepository->getNotFinishedExports($channel) as $export) {
+            $dotmailerStatus = $this->dotmailerTransport->getImportStatus($export->getImportId());
+            $exportStatus = $exportRepository->getStatus($dotmailerStatus->status);
+            $export->setStatus($exportStatus);
+            if ($exportRepository->isNotFinishedStatus($exportStatus)) {
+                $isExportFinished = false;
+            }
+        }
+        $this->managerRegistry->getManager()->flush();
+        if ($isExportFinished) {
+            $this->processExportFaults($channel);
+        }
+        return $isExportFinished;
+    }
+
+    /**
+     * @param Channel $channel
+     * @param AddressBook $addressBook
+     *
+     * @return bool
+     */
+    public function updateExportResultsForAddressBook(Channel $channel, AddressBook $addressBook)
+    {
+        $exportRepository = $this->getAddressBookContactsExportRepository();
 
         $this->dotmailerTransport->init($channel->getTransport());
 
         $isExportFinished = true;
 
-        foreach ($exportRepository->getNotFinishedExports($channel) as $export) {
+        foreach ($exportRepository->getNotFinishedExportsForAddressBook($channel, $addressBook) as $export) {
             $dotmailerStatus = $this->dotmailerTransport->getImportStatus($export->getImportId());
             $exportStatus = $exportRepository->getStatus($dotmailerStatus->status);
 
@@ -101,7 +159,7 @@ class ExportManager
         $this->managerRegistry->getManager()->flush();
 
         if ($isExportFinished) {
-            $this->processExportFaults($channel);
+            $this->processExportFaultsForAddressBook($channel, $addressBook);
         }
 
         return $isExportFinished;
@@ -109,6 +167,9 @@ class ExportManager
 
     /**
      * @param Channel $channel
+     *
+     * @deprecated
+     * @see processExportFaultsForAddressBook
      */
     public function processExportFaults(Channel $channel)
     {
@@ -116,8 +177,22 @@ class ExportManager
         if (!$jobResult) {
             throw new RuntimeException('Update skipped contacts failed.');
         }
-
         $this->updateAddressBooksSyncStatus($channel);
+        $this->managerRegistry->getManager()->flush();
+    }
+
+    /**
+     * @param Channel $channel
+     * @param AddressBook $addressBook
+     */
+    public function processExportFaultsForAddressBook(Channel $channel, AddressBook $addressBook)
+    {
+        $jobResult = $this->startUpdateSkippedContactsStatusJob($channel);
+        if (!$jobResult) {
+            throw new RuntimeException('Update skipped contacts failed.');
+        }
+
+        $this->updateAddressBooksSyncStatuses([$addressBook]);
 
         $this->managerRegistry->getManager()->flush();
     }
@@ -127,11 +202,19 @@ class ExportManager
      */
     public function updateAddressBooksSyncStatus(Channel $channel)
     {
-        $exportRepository = $this->getAddressBookContactsExportRepostiry();
-
         $addressBooks = $this->managerRegistry
             ->getRepository('OroDotmailerBundle:AddressBook')
             ->findBy(['channel' => $channel]);
+
+        $this->updateAddressBooksSyncStatuses($addressBooks);
+    }
+
+    /**
+     * @param AddressBook[] $addressBooks
+     */
+    public function updateAddressBooksSyncStatuses(array $addressBooks)
+    {
+        $exportRepository = $this->getAddressBookContactsExportRepository();
 
         $lastFinishedStatus = null;
         foreach ($addressBooks as $addressBook) {
@@ -200,7 +283,7 @@ class ExportManager
     /**
      * @return AddressBookContactsExportRepository
      */
-    private function getAddressBookContactsExportRepostiry()
+    private function getAddressBookContactsExportRepository()
     {
         return $this->managerRegistry->getRepository(AddressBookContactsExport::class);
     }

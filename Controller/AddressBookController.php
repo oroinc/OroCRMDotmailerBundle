@@ -3,6 +3,9 @@
 namespace Oro\Bundle\DotmailerBundle\Controller;
 
 use FOS\RestBundle\Util\Codes;
+use Oro\Bundle\DotmailerBundle\Async\Topics;
+use Oro\Component\MessageQueue\Client\Message;
+use Oro\Component\MessageQueue\Client\MessagePriority;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
@@ -40,10 +43,20 @@ class AddressBookController extends Controller
     public function synchronizeAddressBookAction(AddressBook $addressBook)
     {
         try {
-            $this->get('oro_integration.genuine_sync_scheduler')->schedule(
-                $addressBook->getChannel()->getId(),
-                null,
-                [AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION => $addressBook->getId()]
+            $this->get('oro_message_queue.message_producer')->send(
+                Topics::SYNC_INTEGRATION,
+                new Message(
+                    [
+                        'integration_id'       => $addressBook->getChannel()->getId(),
+                        'connector_parameters' => [
+                            AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION => $addressBook->getId(),
+                            'parallel-process'     => true
+                        ],
+                        'connector'            => null,
+                        'transport_batch_size' => 100
+                    ],
+                    MessagePriority::NORMAL
+                )
             );
 
             $status = Codes::HTTP_OK;

@@ -23,10 +23,8 @@ class OAuthRepository extends EntityRepository
             ->where('oauth.channel = :channel')
             ->andWhere('oauth.user = :user')
             ->setMaxResults(1)
-            ->setParameters([
-                'channel' => $channel,
-                'user' => $user
-            ])
+            ->setParameter('channel', $channel)
+            ->setParameter('user', $user)
             ->getQuery()
             ->getOneOrNullResult();
     }

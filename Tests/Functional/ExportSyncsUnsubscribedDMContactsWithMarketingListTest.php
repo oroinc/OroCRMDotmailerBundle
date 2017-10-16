@@ -57,7 +57,7 @@ class ExportSyncsUnsubscribedDMContactsWithMarketingListTest extends AbstractImp
             (int)$secondAddressBook->getOriginId() => $secondAddressBookImportStatus,
         ];
 
-        $this->resource->expects($this->exactly(2))
+        $this->resource->expects($this->exactly(1))
             ->method('PostAddressBookContactsImport')
             ->willReturnCallback(function ($originId) use ($expectedAddressBookMap) {
                 $this->assertArrayHasKey(
@@ -73,7 +73,7 @@ class ExportSyncsUnsubscribedDMContactsWithMarketingListTest extends AbstractImp
             self::SYNC_PROCESSOR,
             $channel,
             ExportContactConnector::TYPE,
-            [],
+            ['address-book' => $firstAddressBook->getId()],
             $jobLog
         );
 

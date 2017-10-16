@@ -139,6 +139,11 @@ class MarketingListItemsQueryBuilderProvider
             Join::WITH,
             self::ADDRESS_BOOK_CONTACT_ALIAS . '.addressBook =:addressBook'
         );
+        $qb->andWhere(
+            $expr->orX()
+                ->add($expr->isNull(self::ADDRESS_BOOK_CONTACT_ALIAS . '.id'))
+                ->add($expr->orX()->add('state.state <> :state')->add('state.state IS NULL'))
+        );
 
         $stateJoinCondition = $expr->andX()
                 ->add('state.entityId = ' . self::ADDRESS_BOOK_CONTACT_ALIAS . '.id')

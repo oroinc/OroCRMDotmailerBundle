@@ -13,9 +13,23 @@ class ActivityContactConnector extends AbstractDotmailerConnector
     protected function getConnectorSource()
     {
         // Synchronize only campaign activities that are connected to marketing list.
-        $campaigns = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:Campaign')
-            ->findBy(['channel' => $this->getChannel(), 'deleted' => false]);
+        $campaignRepo = $this->managerRegistry
+            ->getRepository('OroDotmailerBundle:Campaign');
+        $qb = $campaignRepo->createQueryBuilder('campaign')
+            ->where('campaign.channel = :channel')
+            ->andWhere('campaign.deleted = :deleted')
+            ->setParameters(
+                [
+                    'channel' => $this->getChannel(),
+                    'deleted' => false
+                ]
+            );
+        if ($aBookId = $this->getAddressBookId()) {
+            $qb->innerJoin('campaign.addressBooks', 'addressBooks')
+                ->andWhere('addressBooks.id = :aBookId')
+                ->setParameter('aBookId', $aBookId);
+        }
+        $campaigns = $qb->getQuery()->getResult();
 
         $activityRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:Activity');
         $campaignsToSynchronize = [];

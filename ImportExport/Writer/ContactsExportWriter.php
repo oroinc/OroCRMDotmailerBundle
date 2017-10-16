@@ -7,6 +7,7 @@ use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 
 use DotMailer\Api\Exception;
 
+use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactRepository;
 use Psr\Log\LoggerInterface;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -174,8 +175,13 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
         $exportEntity->setStatus($status);
         $exportEntity->setChannel($channel);
 
-        $manager->getRepository('OroDotmailerBundle:AddressBookContact')
-            ->bulkUpdateAddressBookContactsExportId($addressBookContactIds, $importId);
+        /** @var AddressBookContactRepository $repository */
+        $repository = $manager->getRepository('OroDotmailerBundle:AddressBookContact');
+        $repository->bulkUpdateAddressBookContactsExportIdForAddressBook(
+            $addressBookContactIds,
+            $importId,
+            $addressBook->getId()
+        );
 
         $manager->persist($exportEntity);
 

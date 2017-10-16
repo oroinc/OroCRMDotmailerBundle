@@ -2,7 +2,9 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use Doctrine\ORM\EntityManagerInterface;
+
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData;
 use Oro\Bundle\IntegrationBundle\Async\Topics;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
@@ -47,7 +49,7 @@ class AddressBookTest extends WebTestCase
             'integration_id' => $addressBook->getChannel()->getId(),
             'connector' => null,
             'connector_parameters' => [
-                'address-book' => $addressBook->getId()
+                AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION => $addressBook->getId()
             ],
             'transport_batch_size' => 100,
         ], $traces[0]['message']->getBody());

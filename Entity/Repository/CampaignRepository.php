@@ -12,11 +12,24 @@ use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 class CampaignRepository extends EntityRepository
 {
     /**
+     * @deprecated since 2.4. Please use getCampaignsStatistic().
+     *
      * @param Channel $channel
      *
      * @return Campaign[]
      */
     public function getCampaignsToSyncStatistic(Channel $channel)
+    {
+        return $this->getCampaignsStatistic($channel);
+    }
+
+    /**
+     * @param Channel $channel
+     * @param int|null $aBookId
+     *
+     * @return Campaign[]
+     */
+    public function getCampaignsStatistic(Channel $channel, $aBookId = null)
     {
         $invalidCampaignStatuses = [
             Campaign::STATUS_SENDING,
@@ -26,10 +39,16 @@ class CampaignRepository extends EntityRepository
         $expression = $qb->expr();
         $qb->where('campaign.channel =:channel and campaign.deleted <> TRUE')
             ->leftJoin('campaign.status', 'campaignStatus')
-            ->andWhere($expression->notIn('campaignStatus.id', $invalidCampaignStatuses));
+            ->andWhere($expression->notIn('campaignStatus.id', $invalidCampaignStatuses))
+            ->setParameter('channel', $channel);
+        if ($aBookId) {
+            $qb->innerJoin('campaign.addressBooks', 'addressBooks')
+                ->andWhere('addressBooks.id = :aBookId')
+                ->setParameter('aBookId', $aBookId);
+        }
+        $result = $qb->getQuery()->execute();
 
-        return $qb->getQuery()
-            ->execute(['channel' => $channel]);
+        return $result;
     }
 
     /**
@@ -43,6 +62,7 @@ class CampaignRepository extends EntityRepository
         $qb = $this->createQueryBuilder('campaign');
         $qb->select('campaign.id')
             ->where('campaign.channel =:channel')
+            ->setParameter('channel', $channel)
             ->andWhere('campaign.deleted <> TRUE')
             ->addOrderBy('campaign.id');
 
@@ -53,10 +73,13 @@ class CampaignRepository extends EntityRepository
             );
         }
 
-        return $qb->setParameters(['channel' => $channel]);
+        return $qb;
     }
 
     /**
+     *
+     * @deprecated since 2.4. Please use getCampaigns().
+     *
      * Get campaigns to collect activities statistics (clicks, opens)
      * They must have related email campaign
      *
@@ -65,20 +88,30 @@ class CampaignRepository extends EntityRepository
      */
     public function getCampaignsToSynchronize(Channel $channel)
     {
-        $qb = $this->createQueryBuilder('campaign');
-        $qb->innerJoin('campaign.addressBooks', 'addressBooks')
+        return $this->getCampaigns($channel, null);
+    }
+
+    /**
+     * @param Channel $channel
+     * @param int|null $aBookId
+     *
+     * @return BufferedQueryResultIterator
+     */
+    public function getCampaigns(Channel $channel, $aBookId = null)
+    {
+        $qb = $this->createQueryBuilder('campaign')
+            ->innerJoin('campaign.addressBooks', 'addressBooks')
             ->innerJoin('campaign.emailCampaign', 'emailCampaign')
             ->innerJoin('emailCampaign.campaign', 'marketingCampaign')
             ->where('campaign.channel = :channel')
             ->andWhere('campaign.deleted = :deleted')
             ->addOrderBy('campaign.id')
-            ->setParameters(
-                [
-                    'channel' => $channel,
-                    'deleted' => false
-                ]
-            );
-
+            ->setParameter('channel', $channel)
+            ->setParameter('deleted', false);
+        if ($aBookId) {
+            $qb->andWhere('addressBooks.id = :aBookId')
+                ->setParameter('aBookId', $aBookId);
+        }
         $query = $qb->getQuery();
 
         return new BufferedQueryResultIterator($query);

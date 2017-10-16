@@ -4,7 +4,6 @@ namespace Oro\Bundle\DotmailerBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
@@ -13,7 +12,9 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 class AddressBookRepository extends EntityRepository
 {
     /**
-     * Get addressBook Ids which related with marketing lists
+     * Get addressBook originIds which related with marketing lists
+     *
+     * @deprecated since 2.4. Please use getConnectedAddressBooks().
      *
      * @param Channel $channel
      *
@@ -21,44 +22,65 @@ class AddressBookRepository extends EntityRepository
      */
     public function getSyncedAddressBooksToSyncOriginIds(Channel $channel)
     {
-        return $this->createQueryBuilder('addressBook')
-            ->select('addressBook.originId')
-            ->where('addressBook.channel = :channel and addressBook.marketingList IS NOT NULL')
-            ->setParameter('channel', $channel)
-            ->getQuery()
-            ->getScalarResult();
+        $entities = $this->getConnectedAddressBooks($channel, null, false);
+
+        $addressBooks = [];
+        foreach ($entities as $entity) {
+            $addressBooks[] = [
+                'originId' => $entity->getOriginId(),
+            ];
+        }
+
+        return $addressBooks;
     }
 
     /**
+     * Returns addressBook(s), connected with marketingList(s).
+     *
      * @param Channel $channel
-     * @param int|null $addressBookId
+     * @param int|null $aBookId
+     * @param bool $throwExceptionOnNotFound
+     *
      * @return AddressBook[]
+     *
      * @throws EntityNotFoundException
      */
-    public function getAddressBooksToSync(Channel $channel, $addressBookId = null)
+    public function getConnectedAddressBooks(Channel $channel, $aBookId = null, $throwExceptionOnNotFound = true)
     {
-        $queryBuilder = $this->createQueryBuilder('addressBook')
+        $qb = $this->createQueryBuilder('addressBook')
             ->where('addressBook.channel = :channel AND addressBook.marketingList IS NOT NULL')
             ->setParameter('channel', $channel);
-
-        if ($addressBookId) {
-            $queryBuilder->andWhere('addressBook = :addressBookId')
-                ->setParameter('addressBookId', $addressBookId);
+        if ($aBookId) {
+            $qb->andWhere('addressBook.id = :aBookId')
+                ->setParameter('aBookId', $aBookId);
         }
-
-        $result = $queryBuilder->getQuery()->execute();
-
-        if ($addressBookId && !$result) {
+        $result = $qb->getQuery()->execute();
+        if ($aBookId && !$result && $throwExceptionOnNotFound) {
             throw new EntityNotFoundException(
                 sprintf(
                     'Address book for ID %d, integration "%s" and existing marketing list was not found.',
-                    $addressBookId,
+                    $aBookId,
                     $channel->getName()
                 )
             );
         }
 
         return $result;
+    }
+
+    /**
+     * @deprecated since 2.4. Please use getConnectedAddressBooks().
+     *
+     * @param Channel $channel
+     * @param int|null $addressBookId
+     *
+     * @return AddressBook[]
+     *
+     * @throws EntityNotFoundException
+     */
+    public function getAddressBooksToSync(Channel $channel, $addressBookId = null)
+    {
+        return $this->getConnectedAddressBooks($channel, $addressBookId);
     }
 
     /**
@@ -85,6 +107,7 @@ class AddressBookRepository extends EntityRepository
         $qb = $this->createQueryBuilder('addressBook');
         $qb->select('addressBook.id')
             ->where('addressBook.channel =:channel')
+            ->setParameter('channel', $channel)
             ->addOrderBy('addressBook.id');
 
         if (count($keepAddressBooks) > 0) {
@@ -94,7 +117,7 @@ class AddressBookRepository extends EntityRepository
             );
         }
 
-        return $qb->setParameters(['channel' => $channel]);
+        return $qb;
     }
 
     /**

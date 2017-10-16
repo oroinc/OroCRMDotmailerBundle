@@ -55,12 +55,6 @@ class ContactExportListener extends AbstractImportExportListener
 
         $channel = $this->getChannel($configuration);
 
-        /**
-         * Remove contact drafts which was not fully exported to Dotmailer
-         */
-        $this->registry->getRepository('OroDotmailerBundle:Contact')
-            ->bulkRemoveNotExportedContacts($channel);
-
         /** @var AbstractEnumValue $inProgressStatus */
         $inProgressStatus = $this->registry
             ->getRepository('OroDotmailerBundle:AddressBookContactsExport')
@@ -81,8 +75,8 @@ class ContactExportListener extends AbstractImportExportListener
         }
 
         $configuration = $syncEvent->getConfiguration();
-        $channel= $this->getChannel($configuration);
-        $this->exportManager->updateAddressBooksSyncStatus($channel);
+        $addressBook = $this->getAddressBook($configuration);
+        $this->exportManager->updateAddressBooksSyncStatuses([$addressBook]);
     }
 
     /**
@@ -90,7 +84,7 @@ class ContactExportListener extends AbstractImportExportListener
      */
     protected function isApplicable(SyncEvent $syncEvent, $job)
     {
-        return $syncEvent->getJobName() == $job;
+        return $syncEvent->getJobName() === $job;
     }
 
     /**
@@ -106,7 +100,8 @@ class ContactExportListener extends AbstractImportExportListener
             ->getRepository('OroDotmailerBundle:AddressBook');
 
         if (!empty($configuration['import'][AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION])) {
-            $addressBook = $repository->find($configuration['import']['address-book']);
+            $aBookId = $configuration['import'][AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION];
+            $addressBook = $repository->find($aBookId);
             if (!$addressBook) {
                 throw new RuntimeException(
                     sprintf(
@@ -115,8 +110,10 @@ class ContactExportListener extends AbstractImportExportListener
                     )
                 );
             }
+
+            return $repository->getConnectedAddressBooks($channel, $aBookId);
         }
 
-        return $repository->getAddressBooksToSync($channel);
+        return $repository->getConnectedAddressBooks($channel);
     }
 }

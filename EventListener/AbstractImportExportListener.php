@@ -4,6 +4,8 @@ namespace Oro\Bundle\DotmailerBundle\EventListener;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
@@ -56,5 +58,26 @@ abstract class AbstractImportExportListener implements EventSubscriberInterface
         }
 
         return $channel;
+    }
+
+    /**
+     * @param array $configuration
+     *
+     * @return AddressBook
+     * @throws RuntimeException
+     */
+    protected function getAddressBook(array $configuration)
+    {
+        if (empty($configuration['import'][AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION])) {
+            throw new RuntimeException('Address Book Id required');
+        }
+        $addressBook = $this->registry
+            ->getRepository('OroDotmailerBundle:AddressBook')
+            ->find($configuration['import'][AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION]);
+        if (!$addressBook) {
+            throw new RuntimeException('Address Book is not exist');
+        }
+
+        return $addressBook;
     }
 }

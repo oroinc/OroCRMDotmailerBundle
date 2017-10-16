@@ -4,6 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
+use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Entity\Status;
@@ -138,5 +139,13 @@ abstract class AbstractDotmailerConnector extends AbstractConnector
     public function getImportEntityFQCN()
     {
         return $this->entityName;
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getAddressBookId()
+    {
+        return $this->getContext()->getOption(AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION);
     }
 }

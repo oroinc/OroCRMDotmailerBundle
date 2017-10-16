@@ -88,11 +88,8 @@ class ContactRepository extends EntityRepository
                 $expr->orX()
                     ->add($expr->notIn('contact.status', $subscribedStatuses))
                     ->add($expr->notIn('addressBookContacts.status', $subscribedStatuses))
-            )->setParameters(
-                [
-                    'marketingList' => $marketingList
-                ]
-            );
+            )
+            ->setParameter('marketingList', $marketingList);
 
         return (bool)$qb->getQuery()
             ->getSingleScalarResult();
@@ -127,12 +124,14 @@ class ContactRepository extends EntityRepository
      */
     public function bulkRemoveNotExportedContacts(Channel $channel)
     {
+        $created = new \DateTime('now', new \DateTimeZone('UTC'));
         $qb = $this->createQueryBuilder('contact');
         $qb->delete()
             ->where('contact.channel = :channel')
             ->andWhere('contact.originId IS NULL')
+            ->andWhere('contact.createdAt >= :created')
             ->getQuery()
-            ->execute(['channel' => $channel]);
+            ->execute(['channel' => $channel, 'created' => $created->modify('-1 day')]);
     }
 
     /**

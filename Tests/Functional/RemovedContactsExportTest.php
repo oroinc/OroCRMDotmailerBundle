@@ -55,7 +55,7 @@ class RemovedContactsExportTest extends AbstractImportExportTestCase
         $import2->id     = '451da8d7-70f0-405b-98d4-02faa41d499d';
         $import2->status = AddressBookContactsExport::STATUS_NOT_FINISHED;
 
-        $this->resource->expects($this->exactly(2))
+        $this->resource->expects($this->exactly(1))
             ->method('PostAddressBookContactsImport')
             ->will($this->onConsecutiveCalls($import, $import2));
 
@@ -73,7 +73,7 @@ class RemovedContactsExportTest extends AbstractImportExportTestCase
             self::SYNC_PROCESSOR,
             $channel,
             ExportContactConnector::TYPE,
-            [],
+            ['address-book' => $addressBook],
             $jobLog
         );
         $log = $this->formatImportExportJobLog($jobLog);

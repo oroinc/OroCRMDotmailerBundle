@@ -3,6 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr\Join;
 
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
@@ -17,16 +18,27 @@ class AddressBookContactRepository extends EntityRepository
      * @param Channel $channel
      *
      * @return AddressBookContact[]
+     *
+     * @deprecated
+     * @see getAddressBookContactsScheduledToSyncForAddressBook
      */
     public function getAddressBookContactsScheduledToSync(Channel $channel)
     {
-        $qb = $this->createQueryBuilder('addressBookContact');
+        return $this->getAddressBookContactsScheduledToSyncQB($channel)->getQuery()->getResult();
+    }
 
+    /**
+     * @param Channel $channel
+     *
+     * @return QueryBuilder
+     */
+    private function getAddressBookContactsScheduledToSyncQB(Channel $channel)
+    {
+        $qb = $this->createQueryBuilder('addressBookContact');
         $stateJoinCondition = $qb->expr()->andX()
             ->add('state.entityId = addressBookContact.id')
             ->add('state.entityClass = :class')
             ->add('state.state = :state');
-
         $qb->select()
             ->where('addressBookContact.channel = :channel')
             ->innerJoin(
@@ -38,6 +50,23 @@ class AddressBookContactRepository extends EntityRepository
         $qb->setParameter('channel', $channel);
         $qb->setParameter('state', State::STATE_SCHEDULED_FOR_EXPORT);
         $qb->setParameter('class', AddressBookContact::class);
+
+        return $qb;
+    }
+
+    /**
+     * @param Channel $channel
+     * @param int $addressBookId
+     *
+     * @return AddressBookContact[]
+     */
+    public function getAddressBookContactsScheduledToSyncForAddressBook(Channel $channel, $addressBookId)
+    {
+        $qb = $this->getAddressBookContactsScheduledToSyncQB($channel);
+
+        $qb
+            ->andWhere('addressBookContact.addressBook = :addressBookId')
+            ->setParameter('addressBookId', $addressBookId);
 
         return $qb->getQuery()->getResult();
     }
@@ -71,15 +100,45 @@ class AddressBookContactRepository extends EntityRepository
     /**
      * @param array  $contactIds
      * @param string $exportId
+     *
+     * @deprecated
+     * @see bulkUpdateAddressBookContactsExportIdForAddressBook
      */
     public function bulkUpdateAddressBookContactsExportId(array $contactIds, $exportId)
+    {
+        $this->bulkUpdateAddressBookContactsExportIdQB($contactIds, $exportId)->getQuery()->execute();
+    }
+
+    /**
+     * @param array $contactIds
+     * @param string $exportId
+     *
+     * @return QueryBuilder
+     */
+    public function bulkUpdateAddressBookContactsExportIdQB(array $contactIds, $exportId)
     {
         $qb = $this->createQueryBuilder('address_book_contact');
         $qb->update()
             ->where($qb->expr()->in('address_book_contact.id', ':contactIds'))
             ->setParameter('contactIds', $contactIds)
             ->set('address_book_contact.exportId', ':exportId')
-            ->setParameter('exportId', $exportId)
+            ->setParameter('exportId', $exportId);
+
+        return $qb;
+    }
+
+    /**
+     * @param array  $contactIds
+     * @param string $exportId
+     * @param int $addressBookId
+     */
+    public function bulkUpdateAddressBookContactsExportIdForAddressBook(array $contactIds, $exportId, $addressBookId)
+    {
+        $qb = $this->bulkUpdateAddressBookContactsExportIdQB($contactIds, $exportId);
+
+        $qb
+            ->andWhere('address_book_contact.addressBook = :addressBookId')
+            ->setParameter('addressBookId', $addressBookId)
             ->getQuery()
             ->execute();
     }
@@ -165,14 +224,45 @@ class AddressBookContactRepository extends EntityRepository
 
     /**
      * @param array $contactIds
+     *
+     * @deprecated
+     * @see resetScheduledForEntityFieldUpdateFlagForAddressBook
      */
     public function resetScheduledForEntityFieldUpdateFlag($contactIds)
     {
+        $this->resetScheduledForEntityFieldUpdateFlagQB($contactIds)->getQuery()->execute();
+    }
+
+    /**
+     * @param array $contactIds
+     *
+     * @param QueryBuilder
+     */
+    public function resetScheduledForEntityFieldUpdateFlagQB(array $contactIds)
+    {
         $qb = $this->createQueryBuilder('address_book_contact');
         $qb->update()
-           ->where($qb->expr()->in('address_book_contact.contact', ':contactIds'))
-           ->set('address_book_contact.scheduledForFieldsUpdate', ':scheduledForFieldsUpdate')
-           ->getQuery()
-           ->execute(['contactIds' => $contactIds, 'scheduledForFieldsUpdate' => false]);
+            ->where($qb->expr()->in('address_book_contact.contact', ':contactIds'))
+            ->set('address_book_contact.scheduledForFieldsUpdate', ':scheduledForFieldsUpdate')
+            ->setParameter('contactIds', $contactIds)
+            ->setParameter('scheduledForFieldsUpdate', false);
+
+        return $qb;
+    }
+
+    /**
+     * @param array $contactIds
+     * @param int|null $addressBookId
+     */
+    public function resetScheduledForEntityFieldUpdateFlagForAddressBook(array $contactIds, $addressBookId = null)
+    {
+        $qb = $this->resetScheduledForEntityFieldUpdateFlagQB($contactIds);
+
+        if ($addressBookId) {
+            $qb->andWhere('address_book_contact.addressBook = :addressBookId')
+                ->setParameter('addressBookId', $addressBookId);
+        }
+
+        $qb->getQuery()->execute();
     }
 }

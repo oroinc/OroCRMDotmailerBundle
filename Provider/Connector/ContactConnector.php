@@ -17,7 +17,7 @@ class ContactConnector extends AbstractDotmailerConnector
     {
         $addressBooksToSynchronize = $this->managerRegistry
             ->getRepository('OroDotmailerBundle:AddressBook')
-            ->getAddressBooksToSync($this->getChannel());
+            ->getConnectedAddressBooks($this->getChannel(), $this->getAddressBookId());
 
         $this->getContext()
             ->setValue(self::PROCESSED_ADDRESS_BOOK_IDS, array_map(function (AddressBook $addressBook) {

@@ -13,11 +13,22 @@ class CampaignConnector extends AbstractDotmailerConnector
     protected function getConnectorSource()
     {
         $this->logger->info('Importing Campaigns.');
-        $aBooksToSynchronize = $this->managerRegistry
+        $entities = $this->managerRegistry
             ->getRepository('OroDotmailerBundle:AddressBook')
-            ->getSyncedAddressBooksToSyncOriginIds($this->getChannel());
+            ->getConnectedAddressBooks(
+                $this->getChannel(),
+                $this->getAddressBookId(),
+                $throwExceptionOnNotFound = false
+            );
 
-        return $this->transport->getCampaigns($aBooksToSynchronize);
+        $addressBooks = [];
+        foreach ($entities as $entity) {
+            $addressBooks[] = [
+                'originId' => $entity->getOriginId(),
+            ];
+        }
+
+        return $this->transport->getCampaigns($addressBooks);
     }
 
     /**

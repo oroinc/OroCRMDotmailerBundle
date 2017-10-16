@@ -8,8 +8,10 @@ use Doctrine\ORM\EntityRepository;
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 
 use Oro\Bundle\BatchBundle\Step\ItemStep;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactRepository;
 use Oro\Bundle\DotmailerBundle\EventListener\EntityUpdateListener;
 use Oro\Bundle\DotmailerBundle\ImportExport\Processor\UpdateEntityFieldsFromContactProcessor;
+use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 
 class UpdateEntityFieldsStep extends ItemStep
@@ -48,13 +50,13 @@ class UpdateEntityFieldsStep extends ItemStep
             $this->entityListener->setEnabled(true);
         }
         /**
-         * @var EntityRepository contactRepository
+         * @var AddressBookContactRepository $contactRepository
          */
-        $contactRepository = $this->registry
-            ->getRepository('OroDotmailerBundle:AddressBookContact');
+        $contactRepository = $this->registry->getRepository('OroDotmailerBundle:AddressBookContact');
         $context = $this->contextRegistry->getByStepExecution($stepExecution);
-        $contactRepository->resetScheduledForEntityFieldUpdateFlag(
-            $context->getValue(UpdateEntityFieldsFromContactProcessor::PROCESSED_CONTACT_IDS)
+        $contactRepository->resetScheduledForEntityFieldUpdateFlagForAddressBook(
+            (array)$context->getValue(UpdateEntityFieldsFromContactProcessor::PROCESSED_CONTACT_IDS),
+            $context->getValue(AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION)
         );
     }
 

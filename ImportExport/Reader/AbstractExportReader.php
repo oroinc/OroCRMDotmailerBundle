@@ -42,7 +42,7 @@ abstract class AbstractExportReader extends AbstractReader
 
         return $this->managerRegistry
             ->getRepository('OroDotmailerBundle:AddressBook')
-            ->getAddressBooksToSync($this->getChannel(), $addressBookId);
+            ->getConnectedAddressBooks($this->getChannel(), $addressBookId);
     }
 
     /**

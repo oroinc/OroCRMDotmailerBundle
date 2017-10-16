@@ -108,14 +108,20 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
 
             $this->setTemporaryIntegrationToken($integration);
 
-            /**
-             * If previous export was not finished we need to update export results from Dotmailer.
-             * If finished we need to process export faults reports
-             */
-            if (!$this->exportManager->isExportFinished($integration)) {
-                $this->exportManager->updateExportResults($integration);
-            } elseif (!$this->exportManager->isExportFaultsProcessed($integration)) {
-                $this->exportManager->processExportFaults($integration);
+            $addressBooks = $this->doctrineHelper
+                ->getEntityRepository('OroDotmailerBundle:AddressBook')
+                ->getConnectedAddressBooks($integration);
+
+            foreach ($addressBooks as $addressBook) {
+                /**
+                 * If previous export was not finished we need to update export results from Dotmailer.
+                 * If finished we need to process export faults reports
+                 */
+                if (!$this->exportManager->isExportFinishedForAddressBook($integration, $addressBook)) {
+                    $this->exportManager->updateExportResultsForAddressBook($integration, $addressBook);
+                } elseif (!$this->exportManager->isExportFaultsProcessedForAddressBook($integration, $addressBook)) {
+                    $this->exportManager->processExportFaultsForAddressBook($integration, $addressBook);
+                }
             }
 
             return true;

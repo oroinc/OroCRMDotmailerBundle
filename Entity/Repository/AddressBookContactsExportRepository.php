@@ -22,30 +22,57 @@ class AddressBookContactsExportRepository extends EntityRepository
      * @param Channel $channel
      *
      * @return bool
+     *
+     * @deprecated
+     * @see isExportFinishedForAddressBook
      */
     public function isExportFinished(Channel $channel)
     {
         $qb = $this->createQueryBuilder('addressBookContactExport');
         $qb->select('addressBookContactExport.id')
             ->innerJoin('addressBookContactExport.status', 'status')
-            ->where('addressBookContactExport.channel =:channel')
+            ->where('addressBookContactExport.channel = :channel')
             ->andWhere('status.id = :status')
             ->setMaxResults(1)
-            ->setParameters(
-                [
-                    'channel' => $channel,
-                    'status' => AddressBookContactsExport::STATUS_NOT_FINISHED
-                ]
-            );
+            ->setParameter('channel', $channel)
+            ->setParameter('status', AddressBookContactsExport::STATUS_NOT_FINISHED);
 
         $result = $qb->getQuery()->getOneOrNullResult();
+
         return $result === null ? true : false;
+    }
+
+    /**
+     * @param Channel $channel
+     * @param AddressBook $addressBook
+     *
+     * @return bool
+     */
+    public function isExportFinishedForAddressBook(Channel $channel, AddressBook $addressBook)
+    {
+        $qb = $this->createQueryBuilder('addressBookContactExport');
+        $qb->select('addressBookContactExport.id')
+            ->innerJoin('addressBookContactExport.status', 'status')
+            ->where('addressBookContactExport.channel = :channel')
+            ->andWhere('status.id = :status')
+            ->andWhere('addressBookContactExport.addressBook = :addressBook')
+            ->setMaxResults(1)
+            ->setParameter('channel', $channel)
+            ->setParameter('status', AddressBookContactsExport::STATUS_NOT_FINISHED)
+            ->setParameter('addressBook', $addressBook);
+
+        $result = $qb->getQuery()->getOneOrNullResult();
+
+        return $result === null;
     }
 
     /**
      * @param Channel $channel
      *
      * @return bool
+     *
+     * @deprecated
+     * @see isExportFaultsProcessedForAddressBook
      */
     public function isExportFaultsProcessed(Channel $channel)
     {
@@ -53,9 +80,31 @@ class AddressBookContactsExportRepository extends EntityRepository
         $notProcessedExportFaultsCount = $qb->select('COUNT(addressBookContactExport.id)')
             ->where('addressBookContactExport.faultsProcessed = :faultsProcessed')
             ->andWhere('addressBookContactExport.channel = :channel')
-            ->setParameters(['faultsProcessed' => false, 'channel' => $channel])
+            ->setParameter('faultsProcessed', false)
+            ->setParameter('channel', $channel)
             ->getQuery()
             ->getSingleScalarResult();
+        return $notProcessedExportFaultsCount == 0;
+    }
+
+    /**
+     * @param Channel $channel
+     * @param AddressBook $addressBook
+     *
+     * @return bool
+     */
+    public function isExportFaultsProcessedForAddressBook(Channel $channel, AddressBook $addressBook)
+    {
+        $qb = $this->createQueryBuilder('addressBookContactExport');
+        $qb->select('COUNT(addressBookContactExport.id)')
+            ->where('addressBookContactExport.faultsProcessed = :faultsProcessed')
+            ->andWhere('addressBookContactExport.channel = :channel')
+            ->andWhere('addressBookContactExport.addressBook = :addressBook')
+            ->setParameter('faultsProcessed', false)
+            ->setParameter('channel', $channel)
+            ->setParameter('addressBook', $addressBook);
+
+        $notProcessedExportFaultsCount = $qb->getQuery()->getSingleScalarResult();
 
         return $notProcessedExportFaultsCount == 0;
     }
@@ -64,19 +113,45 @@ class AddressBookContactsExportRepository extends EntityRepository
      * @param Channel $channel
      *
      * @return AddressBookContactsExport[]
+     *
+     * @deprecated
+     * @see getNotFinishedExportsForAddressBook
      */
     public function getNotFinishedExports(Channel $channel)
     {
         $qb = $this->createQueryBuilder('addressBookContactExport');
         $qb->innerJoin('addressBookContactExport.status', 'status')
-            ->where('addressBookContactExport.channel =:channel')
-            ->andWhere('status.id =:status');
-
+            ->where('addressBookContactExport.channel = :channel')
+            ->andWhere('status.id = :status');
         return $qb->getQuery()
             ->execute(
                 [
                     'channel' => $channel,
                     'status' => AddressBookContactsExport::STATUS_NOT_FINISHED
+                ]
+            );
+    }
+
+    /**
+     * @param Channel $channel
+     * @param AddressBook $addressBook
+     *
+     * @return AddressBookContactsExport[]
+     */
+    public function getNotFinishedExportsForAddressBook(Channel $channel, AddressBook $addressBook)
+    {
+        $qb = $this->createQueryBuilder('addressBookContactExport');
+        $qb->innerJoin('addressBookContactExport.status', 'status')
+            ->where('addressBookContactExport.channel = :channel')
+            ->andWhere('status.id = :status')
+            ->andWhere('addressBookContactExport.addressBook = :addressBook');
+
+        return $qb->getQuery()
+            ->execute(
+                [
+                    'channel' => $channel,
+                    'status' => AddressBookContactsExport::STATUS_NOT_FINISHED,
+                    'addressBook' => $addressBook
                 ]
             );
     }
@@ -92,7 +167,7 @@ class AddressBookContactsExportRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('addressBookContactExport');
         $qb->innerJoin('addressBookContactExport.status', 'status')
-            ->where('addressBookContactExport.addressBook =:addressBook')
+            ->where('addressBookContactExport.addressBook = :addressBook')
             ->orderBy('addressBookContactExport.updatedAt', 'desc');
 
         return $qb->getQuery()->execute(['addressBook' => $addressBook]);
@@ -221,7 +296,7 @@ class AddressBookContactsExportRepository extends EntityRepository
     }
 
     /**
-     * @param Channel      $channel
+     * @param Channel $channel
      *
      * @return QueryBuilder
      */
@@ -237,7 +312,7 @@ class AddressBookContactsExportRepository extends EntityRepository
     }
 
     /**
-     * @param Channel      $channel
+     * @param Channel $channel
      *
      * @return QueryBuilder
      */

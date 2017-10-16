@@ -15,7 +15,7 @@ class CampaignSummaryConnector extends AbstractDotmailerConnector
         //Synchronize only campaign activities that are connected with address book that are used within Oro.
         $campaignsToSynchronize = $this->managerRegistry
             ->getRepository('OroDotmailerBundle:Campaign')
-            ->getCampaignsToSyncStatistic($this->getChannel());
+            ->getCampaignsStatistic($this->getChannel(), $this->getAddressBookId());
 
         return $this->transport->getCampaignSummary($campaignsToSynchronize);
     }

@@ -3,6 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Provider\Connector;
 
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
+use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 
@@ -19,7 +20,7 @@ class AbstractDotmailerConnectorTest extends WebTestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    protected $context;
+    protected $executionContext;
 
     protected function setUp()
     {
@@ -54,6 +55,16 @@ class AbstractDotmailerConnectorTest extends WebTestCase
      */
     protected function getConnector($channel)
     {
+        $context = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
+        $context->expects($this->any())
+            ->method('getOption')
+            ->with(AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION)
+            ->willReturn(null);
+        $contextRegistry = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextRegistry');
+        $contextRegistry->expects($this->any())
+            ->method('getByStepExecution')
+            ->willReturn($context);
+
         $this->contextMediator = $this->getMockBuilder(
             'Oro\Bundle\IntegrationBundle\Provider\ConnectorContextMediator'
         )
@@ -81,18 +92,17 @@ class AbstractDotmailerConnectorTest extends WebTestCase
             ->will($this->returnValue($this->getReference($channel)));
 
         $connector = new CampaignConnector(
-            $this->getContainer()
-                ->get('oro_importexport.context_registry'),
+            $contextRegistry,
             $this->getContainer()
                 ->get('oro_integration.logger.strategy'),
             $this->contextMediator
         );
         $connector->setManagerRegistry($this->getContainer()
             ->get('doctrine'));
-        $this->context = $this->createMock('Akeneo\Bundle\BatchBundle\Item\ExecutionContext');
+        $this->executionContext = $this->createMock('Akeneo\Bundle\BatchBundle\Item\ExecutionContext');
         $stepExecution->expects($this->any())
             ->method('getExecutionContext')
-            ->will($this->returnValue($this->context));
+            ->will($this->returnValue($this->executionContext));
         $connector->setStepExecution($stepExecution);
         return $connector;
     }

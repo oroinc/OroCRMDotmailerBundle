@@ -20,7 +20,7 @@ class CacheAwareClient implements DotmailerClientInterface
      * @see \Oro\Bundle\DotmailerBundle\Command\ContactsExportStatusUpdateCommand::getDefaultDefinition
      * 5 minutes cron definition
      */
-    const REDELIVERED_DELAY_TIME = 900;
+    const REDELIVERED_DELAY_TIME = 330;
 
     /** @var DotmailerClientInterface */
     private $client;

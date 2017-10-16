@@ -1,11 +1,17 @@
 <?php
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Async;
 
+use Psr\Log\LoggerInterface;
+
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
+
 use Oro\Bundle\DotmailerBundle\Async\ExportContactsStatusUpdateProcessor;
 use Oro\Bundle\DotmailerBundle\Async\Topics;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
@@ -17,8 +23,6 @@ use Oro\Component\MessageQueue\Transport\Null\NullMessage;
 use Oro\Component\MessageQueue\Transport\Null\NullSession;
 use Oro\Component\MessageQueue\Util\JSON;
 use Oro\Component\Testing\ClassExtensionTrait;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCase
 {
@@ -191,21 +195,21 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $exportManagerMock = $this->createExportManagerMock();
         $exportManagerMock
             ->expects(self::once())
-            ->method('isExportFinished')
+            ->method('isExportFinishedForAddressBook')
             ->willReturn(true)
         ;
         $exportManagerMock
             ->expects(self::once())
-            ->method('isExportFaultsProcessed')
+            ->method('isExportFaultsProcessedForAddressBook')
             ->willReturn(true)
         ;
         $exportManagerMock
             ->expects(self::never())
-            ->method('updateExportResults')
+            ->method('updateExportResultsForAddressBook')
         ;
         $exportManagerMock
             ->expects(self::never())
-            ->method('processExportFaults')
+            ->method('processExportFaultsForAddressBook')
         ;
 
         $processor = new ExportContactsStatusUpdateProcessor(
@@ -243,21 +247,21 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $exportManagerMock = $this->createExportManagerMock();
         $exportManagerMock
             ->expects(self::once())
-            ->method('isExportFinished')
+            ->method('isExportFinishedForAddressBook')
             ->willReturn(false)
         ;
         $exportManagerMock
             ->expects(self::never())
-            ->method('isExportFaultsProcessed')
+            ->method('isExportFaultsProcessedForAddressBook')
         ;
         $exportManagerMock
             ->expects(self::once())
-            ->method('updateExportResults')
+            ->method('updateExportResultsForAddressBook')
             ->with(self::identicalTo($integration))
         ;
         $exportManagerMock
             ->expects(self::never())
-            ->method('processExportFaults')
+            ->method('processExportFaultsForAddressBook')
         ;
 
         $processor = new ExportContactsStatusUpdateProcessor(
@@ -295,21 +299,21 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $exportManagerMock = $this->createExportManagerMock();
         $exportManagerMock
             ->expects(self::once())
-            ->method('isExportFinished')
+            ->method('isExportFinishedForAddressBook')
             ->willReturn(true)
         ;
         $exportManagerMock
             ->expects(self::once())
-            ->method('isExportFaultsProcessed')
+            ->method('isExportFaultsProcessedForAddressBook')
             ->willReturn(false)
         ;
         $exportManagerMock
             ->expects(self::never())
-            ->method('updateExportResults')
+            ->method('updateExportResultsForAddressBook')
         ;
         $exportManagerMock
             ->expects(self::once())
-            ->method('processExportFaults')
+            ->method('processExportFaultsForAddressBook')
         ;
 
         $processor = new ExportContactsStatusUpdateProcessor(
@@ -400,6 +404,26 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
             ->expects($this->any())
             ->method('getEntityManagerForClass')
             ->willReturn($entityManager)
+        ;
+
+        $repository = $this->getMockBuilder(
+            'Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBook'
+        )
+            ->setMethods(['getConnectedAddressBooks'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $repository
+            ->expects($this->any())
+            ->method('getConnectedAddressBooks')
+            ->willReturn(
+                [new AddressBook()]
+            );
+
+        $helperMock
+            ->expects($this->any())
+            ->method('getEntityRepository')
+            ->willReturn($repository)
         ;
 
         return $helperMock;

@@ -53,7 +53,6 @@ class AddressBookContactsExport extends ExtendAddressBookContactsExport implemen
      */
     protected $createdAt;
 
-
     /**
      * @var \DateTime
      *

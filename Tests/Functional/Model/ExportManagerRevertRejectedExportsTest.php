@@ -37,6 +37,8 @@ class ExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCas
         /** @var Channel $channel */
         $channel = $this->getReference('oro_dotmailer.channel.fourth');
 
+        /** @var AddressBook $addressBook */
+        $addressBook = $this->getReference('oro_dotmailer.address_book.six');
         $rejectedByWatchDogImportId = $this->getReference('oro_dotmailer.address_book_contacts_export.rejected')
             ->getImportId();
 
@@ -51,12 +53,10 @@ class ExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCas
 
         $this->stubResource();
 
-        $this->target->updateExportResults($channel);
+        $this->target->updateExportResultsForAddressBook($channel, $addressBook);
 
-        /** @var AddressBook $expectedAddressBook */
-        $expectedAddressBook = $this->getReference('oro_dotmailer.address_book.six');
-        $this->assertExportStatusUpdated($channel, $rejectedByWatchDogImportId, $expectedAddressBook);
-        $this->assertAddressBookContactsHandled($channel, $expectedAddressBook);
+        $this->assertExportStatusUpdated($channel, $rejectedByWatchDogImportId, $addressBook);
+        $this->assertAddressBookContactsHandled($channel, $addressBook);
     }
 
     /**
@@ -141,8 +141,6 @@ class ExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCas
      * @param Channel $channel
      * @param $importId
      * @param AddressBook $expectedAddressBook
-     *
-     * @return AddressBook
      */
     protected function assertExportStatusUpdated(Channel $channel, $importId, AddressBook $expectedAddressBook)
     {

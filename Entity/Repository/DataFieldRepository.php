@@ -21,8 +21,8 @@ class DataFieldRepository extends EntityRepository
         $qb = $this->createQueryBuilder('dataField');
         $qb->select('dataField.id')
             ->where('dataField.channel =:channel')
-            ->addOrderBy('dataField.id');
-        $qb->setParameters(['channel' => $channel]);
+            ->addOrderBy('dataField.id')
+            ->setParameter('channel', $channel);
 
         if (count($keepDataFieldsNames) > 0) {
             $qb->andWhere(
@@ -48,7 +48,8 @@ class DataFieldRepository extends EntityRepository
             ->select('dataField')
             ->where($qb->expr()->in('dataField.name', ':names'))
             ->andWhere('dataField.channel =:channel')
-            ->setParameters(['channel' => $channel, 'names' => $names])
+            ->setParameter('channel', $channel)
+            ->setParameter('names', $names)
             ->getQuery()
             ->getResult();
         $map = [];
