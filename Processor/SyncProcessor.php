@@ -14,6 +14,8 @@ use Oro\Bundle\IntegrationBundle\Entity\Status;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\IntegrationBundle\Provider\RedeliverableInterface;
+use Oro\Bundle\IntegrationBundle\Provider\ConnectorInterface;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\ParallelizableInterface;
 
 class SyncProcessor extends BaseSyncProcessor implements RedeliverableInterface
 {
@@ -55,9 +57,7 @@ class SyncProcessor extends BaseSyncProcessor implements RedeliverableInterface
 
         $integration = $this->reloadEntity($integration);
         if (!$this->isParallelProcess($parameters)) {
-            if ($this->scheduleInitialSyncIfRequired($integration, $connector, $parameters)) {
-                return true;
-            }
+            $this->scheduleInitialSyncIfRequired($integration, $connector, $parameters);
         }
 
         return parent::process($integration, $connector, $parameters);
@@ -170,5 +170,30 @@ class SyncProcessor extends BaseSyncProcessor implements RedeliverableInterface
             );
         }
         return parent::formatResultMessage($context);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function isConnectorAllowedParametrized(
+        ConnectorInterface $connector,
+        Integration $integration,
+        array $processedConnectorStatuses,
+        array $parameters = []
+    ) {
+        if (!$this->isParallelProcess($parameters) && $connector instanceof ParallelizableInterface) {
+            return false;
+        }
+
+        if ($this->isParallelProcess($parameters) && !$connector instanceof ParallelizableInterface) {
+            return false;
+        }
+
+        return parent::isConnectorAllowedParametrized(
+            $connector,
+            $integration,
+            $processedConnectorStatuses,
+            $parameters
+        );
     }
 }

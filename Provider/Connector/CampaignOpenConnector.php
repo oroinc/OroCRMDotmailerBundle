@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
-class CampaignOpenConnector extends AbstractActivityConnector
+class CampaignOpenConnector extends AbstractActivityConnector implements ParallelizableInterface
 {
     const TYPE = 'campaign_open';
     const JOB_IMPORT = 'dotmailer_campaign_open_import';

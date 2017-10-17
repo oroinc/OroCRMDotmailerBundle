@@ -24,6 +24,11 @@ class RemoveCampaignIterator extends AbstractIterator
     protected $channel;
 
     /**
+     * @var int
+     */
+    protected $addressBookId;
+
+    /**
      * @param ManagerRegistry $registry
      * @param Channel         $channel
      * @param array           $keepCampaigns
@@ -36,13 +41,21 @@ class RemoveCampaignIterator extends AbstractIterator
     }
 
     /**
+     * @param null|int $addressBookId
+     */
+    public function setAddressBookId($addressBookId)
+    {
+        $this->addressBookId = $addressBookId;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getItems($take, $skip)
     {
         $campaignsForRemoveQB = $this->registry
             ->getRepository('OroDotmailerBundle:Campaign')
-            ->getCampaignsForRemoveQB($this->channel, $this->keepCampaigns)
+            ->getCampaignsForRemoveQBForAddressBook($this->channel, $this->keepCampaigns, $this->addressBookId)
             ->setFirstResult($skip)
             ->setMaxResults($take);
 

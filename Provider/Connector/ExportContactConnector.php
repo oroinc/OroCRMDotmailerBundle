@@ -15,7 +15,8 @@ use Oro\Bundle\IntegrationBundle\Provider\ParametrizedAllowedConnectorInterface;
 
 class ExportContactConnector extends AbstractDotmailerConnector implements
     AllowedConnectorInterface,
-    ParametrizedAllowedConnectorInterface
+    ParametrizedAllowedConnectorInterface,
+    ParallelizableInterface
 {
     const TYPE = 'contact_export';
     const EXPORT_JOB = 'dotmailer_contact_export';

@@ -4,7 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 
-class ContactConnector extends AbstractDotmailerConnector
+class ContactConnector extends AbstractDotmailerConnector implements ParallelizableInterface
 {
     const TYPE = 'contact';
     const IMPORT_JOB = 'dotmailer_new_contacts';

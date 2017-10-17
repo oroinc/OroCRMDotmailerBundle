@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
-class ActivityContactConnector extends AbstractDotmailerConnector
+class ActivityContactConnector extends AbstractDotmailerConnector implements ParallelizableInterface
 {
     const TYPE = 'activity_contact';
     const JOB_IMPORT = 'dotmailer_activity_contact_import';

@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
-class UnsubscribedContactConnector extends AbstractDotmailerConnector
+class UnsubscribedContactConnector extends AbstractDotmailerConnector implements ParallelizableInterface
 {
     const TYPE = 'unsubscribed_contact';
     const IMPORT_JOB = 'dotmailer_unsubscribed_contact_import';

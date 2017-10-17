@@ -52,8 +52,8 @@ class CampaignRepository extends EntityRepository
     }
 
     /**
-     * @param Channel $channel
-     * @param array   $keepCampaigns
+     * @param Channel  $channel
+     * @param array    $keepCampaigns
      *
      * @return QueryBuilder
      */
@@ -62,9 +62,41 @@ class CampaignRepository extends EntityRepository
         $qb = $this->createQueryBuilder('campaign');
         $qb->select('campaign.id')
             ->where('campaign.channel =:channel')
-            ->setParameter('channel', $channel)
             ->andWhere('campaign.deleted <> TRUE')
-            ->addOrderBy('campaign.id');
+            ->addOrderBy('campaign.id')
+            ->setParameter('channel', $channel);
+
+        if (count($keepCampaigns) > 0) {
+            $qb->andWhere(
+                $qb->expr()
+                    ->notIn('campaign.originId', $keepCampaigns)
+            );
+        }
+
+        return $qb;
+    }
+
+    /**
+     * @param Channel  $channel
+     * @param array    $keepCampaigns
+     * @param int|null $aBookId
+     *
+     * @return QueryBuilder
+     */
+    public function getCampaignsForRemoveQBForAddressBook(Channel $channel, array $keepCampaigns, $aBookId = null)
+    {
+        $qb = $this->createQueryBuilder('campaign');
+        $qb->select('campaign.id')
+            ->where('campaign.channel =:channel')
+            ->andWhere('campaign.deleted <> TRUE')
+            ->addOrderBy('campaign.id')
+            ->setParameter('channel', $channel);
+
+        if ($aBookId) {
+            $qb->innerJoin('campaign.addressBooks', 'addressBooks')
+                ->andWhere('addressBooks.id = :aBookId')
+                ->setParameter('aBookId', $aBookId);
+        }
 
         if (count($keepCampaigns) > 0) {
             $qb->andWhere(

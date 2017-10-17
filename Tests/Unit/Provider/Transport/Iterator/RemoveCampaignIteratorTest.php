@@ -50,7 +50,7 @@ class RemoveCampaignIteratorTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $repository->expects($this->exactly(2))
-            ->method('getCampaignsForRemoveQB')
+            ->method('getCampaignsForRemoveQBForAddressBook')
             ->with($channel, $keepCampaigns)
             ->will($this->returnValue($qb));
 
