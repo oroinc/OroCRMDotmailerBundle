@@ -74,10 +74,15 @@ class SyncProcessor extends BaseSyncProcessor implements RedeliverableInterface
     /**
      * {@inheritdoc}
      */
-    protected function onProcessIntegrationConnector(Status $status)
+    protected function onProcessIntegrationConnector(ConnectorInterface $connector, array $parameters, Status $status)
     {
+        if (!$this->isParallelProcess($parameters)) {
+            return;
+        }
+
         if ($status->getCode() === Status::STATUS_REQUEUE) {
             $this->needRedelivery = true;
+            $status->setCode(Status::STATUS_FAILED);
         }
     }
 

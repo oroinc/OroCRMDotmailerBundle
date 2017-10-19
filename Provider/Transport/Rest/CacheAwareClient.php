@@ -12,15 +12,7 @@ class CacheAwareClient implements DotmailerClientInterface
 {
     use LoggerAwareTrait, CacheProviderAwareTrait;
 
-    /**
-     * Should be more than
-     * @see \Oro\Bundle\MessageQueueBundle\DependencyInjection\Configuration::getConfigTreeBuilder
-     * redelivered_delay_time 10 minutes
-     * and
-     * @see \Oro\Bundle\DotmailerBundle\Command\ContactsExportStatusUpdateCommand::getDefaultDefinition
-     * 5 minutes cron definition
-     */
-    const REDELIVERED_DELAY_TIME = 330;
+    const REDELIVERED_DELAY_TIME = 120;
 
     /** @var DotmailerClientInterface */
     private $client;
