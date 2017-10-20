@@ -175,6 +175,9 @@ class MarketingListItemsQueryBuilderProvider
      */
     public function getRemovedMarketingListItemsQB(AddressBook $addressBook, array $excludedItems)
     {
+        // skip union to get actual entities only
+        $addressBook->getMarketingList()->setUnion(false);
+
         $qb = $this->getMarketingListItemQuery($addressBook);
         $marketingList = $addressBook->getMarketingList();
         $contactInformationFields = $this->contactInformationFieldsProvider->getMarketingListTypedFields(
@@ -223,12 +226,12 @@ class MarketingListItemsQueryBuilderProvider
             ->andWhere(
                 $expr->notIn('contact.email', $qb->getDQL())
             )->andWhere(
-                $removedItemsQueryBuilder->expr()->isNotNull('addressBookContact.marketingListItemId')
+                $expr->isNotNull('addressBookContact.marketingListItemId')
             );
         if ($addressBook->isCreateEntities()) {
             //if address book allows to create new entities, take only contacts not makred as new entity
             $removedItemsQueryBuilder->andWhere(
-                $removedItemsQueryBuilder->expr()->eq('addressBookContact.newEntity', ':newEntity')
+                $expr->eq('addressBookContact.newEntity', ':newEntity')
             )->setParameter('newEntity', false);
         }
 
@@ -238,6 +241,9 @@ class MarketingListItemsQueryBuilderProvider
             }, $excludedItems);
             $removedItemsQueryBuilder->andWhere($expr->notIn('addressBookContact.id', $excludedItems));
         }
+
+        // enable union back to get all entities
+        $addressBook->getMarketingList()->setUnion(true);
 
         return $removedItemsQueryBuilder;
     }
@@ -385,30 +391,9 @@ class MarketingListItemsQueryBuilderProvider
     protected function getMarketingListItemQuery(AddressBook $addressBook)
     {
         $marketingList = $addressBook->getMarketingList();
-        $qb = $this->marketingListProvider->getMarketingListEntitiesQueryBuilder(
-            $marketingList,
-            MarketingListProvider::FULL_ENTITIES_MIXIN
-        );
+        $qb = $this->marketingListProvider->getMarketingListEntitiesQueryBuilder($marketingList);
         $expr = $qb->expr();
         $qb->resetDQLPart('select');
-        $rootAliases = $qb->getRootAliases();
-        $entityAlias = reset($rootAliases);
-        $qb
-            ->leftJoin(
-                $this->removedItemClassName,
-                'mlr',
-                Join::WITH,
-                "mlr.entityId = $entityAlias.id and mlr.marketingList =:marketingList"
-            )
-            ->andWhere($expr->isNull('mlr.id'))
-            ->leftJoin(
-                $this->unsubscribedItemClassName,
-                'mlu',
-                Join::WITH,
-                "mlu.entityId = $entityAlias.id and mlu.marketingList =:marketingList"
-            )
-            ->andWhere($expr->isNull('mlu.id'))
-            ->setParameter('marketingList', $marketingList);
 
         $contactInformationFields = $this->contactInformationFieldsProvider->getMarketingListTypedFields(
             $marketingList,
