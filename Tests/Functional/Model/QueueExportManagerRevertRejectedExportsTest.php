@@ -5,18 +5,17 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Model;
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\ApiContactImportStatuses;
 
+use Oro\Bundle\DotmailerBundle\Model\QueueExportManager;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
-use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
-use Oro\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\AbstractImportExportTestCase;
 
-class ExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCase
+class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCase
 {
     /**
-     * @var ExportManager
+     * @var QueueExportManager
      */
     protected $target;
 
@@ -28,7 +27,7 @@ class ExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCas
                 'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookContactsExportData',
             ]
         );
-        $this->target = $this->getContainer()->get('oro_dotmailer.export_manager');
+        $this->target = $this->getContainer()->get('oro_dotmailer.queue_export_manager');
     }
 
     public function testUpdateExportResultsRevertRejectedExports()
