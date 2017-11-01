@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\DotmailerBundle\Async\ExportContactsStatusUpdateProcessor;
 use Oro\Bundle\DotmailerBundle\Async\Topics;
 use Oro\Bundle\DotmailerBundle\Model\ExportManager;
+use Oro\Bundle\DotmailerBundle\Model\QueueExportManager;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
@@ -47,6 +48,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         new ExportContactsStatusUpdateProcessor(
             $this->createDoctrineHelperStub(),
             $this->createExportManagerMock(),
+            $this->createQueueExportManagerMock(),
             new JobRunner(),
             $this->createTokenStorageMock(),
             $this->createLoggerMock()
@@ -68,6 +70,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $this->createDoctrineHelperStub(),
             $this->createExportManagerMock(),
+            $this->createQueueExportManagerMock(),
             new JobRunner(),
             $this->createTokenStorageMock(),
             $logger
@@ -87,6 +90,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $this->createDoctrineHelperStub(),
             $this->createExportManagerMock(),
+            $this->createQueueExportManagerMock(),
             new JobRunner(),
             $this->createTokenStorageMock(),
             $this->createLoggerMock()
@@ -123,6 +127,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
             $this->createExportManagerMock(),
+            $this->createQueueExportManagerMock(),
             new JobRunner(),
             $this->createTokenStorageMock(),
             $logger
@@ -162,6 +167,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
             $this->createExportManagerMock(),
+            $this->createQueueExportManagerMock(),
             new JobRunner(),
             $this->createTokenStorageMock(),
             $logger
@@ -189,6 +195,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
 
         $exportManagerMock = $this->createExportManagerMock();
+        $queueExportManagerMock = $this->createQueueExportManagerMock();
         $exportManagerMock
             ->expects(self::once())
             ->method('isExportFinished')
@@ -199,11 +206,11 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
             ->method('isExportFaultsProcessed')
             ->willReturn(true)
         ;
-        $exportManagerMock
+        $queueExportManagerMock
             ->expects(self::never())
             ->method('updateExportResults')
         ;
-        $exportManagerMock
+        $queueExportManagerMock
             ->expects(self::never())
             ->method('processExportFaults')
         ;
@@ -211,6 +218,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
             $exportManagerMock,
+            $queueExportManagerMock,
             new JobRunner(),
             $this->createTokenStorageMock(),
             $this->createLoggerMock()
@@ -241,6 +249,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
 
         $exportManagerMock = $this->createExportManagerMock();
+        $queueExportManagerMock = $this->createQueueExportManagerMock();
         $exportManagerMock
             ->expects(self::once())
             ->method('isExportFinished')
@@ -250,12 +259,12 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
             ->expects(self::never())
             ->method('isExportFaultsProcessed')
         ;
-        $exportManagerMock
+        $queueExportManagerMock
             ->expects(self::once())
             ->method('updateExportResults')
             ->with(self::identicalTo($integration))
         ;
-        $exportManagerMock
+        $queueExportManagerMock
             ->expects(self::never())
             ->method('processExportFaults')
         ;
@@ -263,6 +272,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
             $exportManagerMock,
+            $queueExportManagerMock,
             new JobRunner(),
             $this->createTokenStorageMock(),
             $this->createLoggerMock()
@@ -293,6 +303,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
 
         $exportManagerMock = $this->createExportManagerMock();
+        $queueExportManagerMock = $this->createQueueExportManagerMock();
         $exportManagerMock
             ->expects(self::once())
             ->method('isExportFinished')
@@ -303,11 +314,11 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
             ->method('isExportFaultsProcessed')
             ->willReturn(false)
         ;
-        $exportManagerMock
+        $queueExportManagerMock
             ->expects(self::never())
             ->method('updateExportResults')
         ;
-        $exportManagerMock
+        $queueExportManagerMock
             ->expects(self::once())
             ->method('processExportFaults')
         ;
@@ -315,6 +326,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
             $exportManagerMock,
+            $queueExportManagerMock,
             new JobRunner(),
             $this->createTokenStorageMock(),
             $this->createLoggerMock()
@@ -349,6 +361,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
             $this->createExportManagerMock(),
+            $this->createQueueExportManagerMock(),
             $jobRunner,
             $this->createTokenStorageMock(),
             $this->createLoggerMock()
@@ -411,6 +424,14 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
     private function createExportManagerMock()
     {
         return $this->createMock(ExportManager::class);
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|QueueExportManager
+     */
+    private function createQueueExportManagerMock()
+    {
+        return $this->createMock(QueueExportManager::class);
     }
 
     /**

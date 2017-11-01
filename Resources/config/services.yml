@@ -21,6 +21,7 @@ parameters:
     oro_dotmailer.contact.export.query_builder_adapter.class:            Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapter
     oro_dotmailer.contact.export.query_builder_adapter.registry:         Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterRegistry
     oro_dotmailer.export_manager.class:                                  Oro\Bundle\DotmailerBundle\Model\ExportManager
+    oro_dotmailer.queue_export_manager.class:                            Oro\Bundle\DotmailerBundle\Model\QueueExportManager
     oro_dotmailer.datafield_manager.class:                               Oro\Bundle\DotmailerBundle\Model\DataFieldManager
     oro_dotmailer.log_helper.class:                                      Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper
     oro_dotmailer.oauth_manager.class:                                   Oro\Bundle\DotmailerBundle\Model\OAuthManager
@@ -386,6 +387,11 @@ services:
 
     oro_dotmailer.export_manager:
         class: %oro_dotmailer.export_manager.class%
+        arguments:
+            - "@doctrine"
+
+    oro_dotmailer.queue_export_manager:
+        class: %oro_dotmailer.queue_export_manager.class%
         arguments:
             - "@doctrine"
             - "@oro_dotmailer.transport.integration_transport"
@@ -1145,7 +1151,7 @@ services:
         class: %oro_dotmailer.listener.contact_export.class%
         arguments:
             - "@doctrine"
-            - "@oro_dotmailer.export_manager"
+            - "@oro_dotmailer.queue_export_manager"
         tags:
             - { name: kernel.event_subscriber }
 
@@ -1166,6 +1172,7 @@ services:
         arguments:
             - '@oro_entity.doctrine_helper'
             - '@oro_dotmailer.export_manager'
+            - '@oro_dotmailer.queue_export_manager'
             - '@oro_message_queue.job.runner'
             - '@security.token_storage'
             - '@logger'

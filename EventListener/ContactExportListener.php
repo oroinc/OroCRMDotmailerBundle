@@ -7,7 +7,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
-use Oro\Bundle\DotmailerBundle\Model\ExportManager;
+use Oro\Bundle\DotmailerBundle\Model\QueueExportManager;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
@@ -17,15 +17,15 @@ use Oro\Bundle\IntegrationBundle\Event\SyncEvent;
 class ContactExportListener extends AbstractImportExportListener
 {
     /**
-     * @var ExportManager
+     * @var QueueExportManager
      */
     protected $exportManager;
 
     /**
      * @param ManagerRegistry $registry
-     * @param ExportManager   $exportManager
+     * @param QueueExportManager $exportManager
      */
-    public function __construct(ManagerRegistry $registry, ExportManager $exportManager)
+    public function __construct(ManagerRegistry $registry, QueueExportManager $exportManager)
     {
         $this->exportManager = $exportManager;
         parent::__construct($registry);
@@ -63,7 +63,7 @@ class ContactExportListener extends AbstractImportExportListener
 
         /** @var AbstractEnumValue $inProgressStatus */
         $inProgressStatus = $this->registry
-            ->getRepository('OroDotmailerBundle:AddressBookContactsExport')
+            ->getRepository(AddressBookContactsExport::class)
             ->getNotFinishedStatus();
         $addressBooks = $this->getAddressBooksToSync($channel, $configuration);
         foreach ($addressBooks as $addressBook) {
