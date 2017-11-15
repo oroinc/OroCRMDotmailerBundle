@@ -129,7 +129,7 @@ class ContactRepository extends EntityRepository
         $qb->delete()
             ->where('contact.channel = :channel')
             ->andWhere('contact.originId IS NULL')
-            ->andWhere('contact.createdAt >= :created')
+            ->andWhere('contact.createdAt <= :created')
             ->getQuery()
             ->execute(['channel' => $channel, 'created' => $created->modify('-1 day')]);
     }
