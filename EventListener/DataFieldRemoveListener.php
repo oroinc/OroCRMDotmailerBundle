@@ -26,13 +26,13 @@ class DataFieldRemoveListener
      * Remove origin data field.
      * If origin data field can't be remove, throw exception and don't allow to remove record
      *
+     * @param DataField          $entity
      * @param LifecycleEventArgs $args
      * @throws RuntimeException
      */
-    public function preRemove(LifecycleEventArgs $args)
+    public function preRemove(DataField $entity, LifecycleEventArgs $args)
     {
-        $entity = $args->getEntity();
-        if (!$entity instanceof DataField || $entity->isForceRemove()) {
+        if ($entity->isForceRemove()) {
             return;
         }
 
