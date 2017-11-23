@@ -75,6 +75,8 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
         LoggerInterface $logger,
         ImportExportLogHelper $logHelper
     ) {
+        parent::__construct();
+
         $this->registry = $registry;
         $this->transport = $transport;
         $this->contextRegistry = $contextRegistry;
