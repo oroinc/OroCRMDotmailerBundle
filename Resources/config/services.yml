@@ -155,7 +155,6 @@ parameters:
     oro_dotmailer.listener.cache_clear.class:                      Oro\Bundle\DotmailerBundle\EventListener\CacheClearListener
     oro_dotmailer.listener.contact_export.class:                   Oro\Bundle\DotmailerBundle\EventListener\ContactExportListener
     oro_dotmailer.listener.update_address_book_last_imported_date.class: Oro\Bundle\DotmailerBundle\EventListener\UpdateAddressBookLastImportDateListener
-    oro_dotmailer.listener.datafield_remove.class:                       Oro\Bundle\DotmailerBundle\EventListener\DataFieldRemoveListener
     oro_dotmailer.listener.add_default_mapping.class:                    Oro\Bundle\DotmailerBundle\EventListener\AddDefaultMappingListener
     oro_dotmailer.listener.navigation.class:                             Oro\Bundle\DotmailerBundle\EventListener\NavigationListener
 
@@ -1180,11 +1179,11 @@ services:
             - { name: 'oro_message_queue.client.message_processor' }
 
     oro_dotmailer.listener.datafield_remove:
-        class: "%oro_dotmailer.listener.datafield_remove.class%"
+        class: Oro\Bundle\DotmailerBundle\EventListener\DataFieldRemoveListener
         arguments:
             - "@oro_dotmailer.datafield_manager"
         tags:
-            - { name: doctrine.event_listener, event: preRemove }
+            - { name: doctrine.orm.entity_listener, entity: '%oro_dotmailer.entity.datafield.class%', event: preRemove }
 
     oro_dotmailer.listener.add_default_mapping:
         class: %oro_dotmailer.listener.add_default_mapping.class%

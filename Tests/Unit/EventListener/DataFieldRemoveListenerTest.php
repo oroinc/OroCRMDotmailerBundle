@@ -30,7 +30,7 @@ class DataFieldRemoveListenerTest extends \PHPUnit_Framework_TestCase
         $entity->setForceRemove(true);
         $args = new LifecycleEventArgs($entity, $objectManager);
         $this->dataFieldManager->expects($this->never())->method('removeOriginDataField');
-        $this->listener->preRemove($args);
+        $this->listener->preRemove($entity, $args);
     }
 
     public function testPreRemoveWithException()
@@ -42,7 +42,7 @@ class DataFieldRemoveListenerTest extends \PHPUnit_Framework_TestCase
             ->will($this->throwException(new RestClientException()));
         $this->expectException('Oro\Bundle\DotmailerBundle\Exception\RuntimeException');
         $this->expectExceptionMessage('The field cannot be removed.');
-        $this->listener->preRemove($args);
+        $this->listener->preRemove($entity, $args);
     }
 
     public function testPreRemoveWithFalseResult()
@@ -54,7 +54,7 @@ class DataFieldRemoveListenerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(['result' => 'false']));
         $this->expectException('Oro\Bundle\DotmailerBundle\Exception\RuntimeException');
         $this->expectExceptionMessage('The field cannot be removed. It is in use elsewhere in the system.');
-        $this->listener->preRemove($args);
+        $this->listener->preRemove($entity, $args);
     }
 
     public function testPreRemoveWithTrueResult()
@@ -64,6 +64,6 @@ class DataFieldRemoveListenerTest extends \PHPUnit_Framework_TestCase
         $args = new LifecycleEventArgs($entity, $objectManager);
         $this->dataFieldManager->expects($this->once())->method('removeOriginDataField')->with($entity)
             ->will($this->returnValue(['result' => 'true']));
-        $this->listener->preRemove($args);
+        $this->listener->preRemove($entity, $args);
     }
 }
