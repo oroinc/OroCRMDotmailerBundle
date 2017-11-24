@@ -6,9 +6,10 @@ define(function(require) {
     var _ = require('underscore');
     var __ = require('orotranslation/js/translator');
     var SegmentComponent = require('orosegment/js/app/components/segment-component');
-    var FieldsCollection = require('orosegment/js/app/models/fields-collection');
+    var EntityFieldsCollection = require('oroquerydesigner/js/app/models/entity-fields-collection');
+    var EntityStructureDataProvider = require('oroentity/js/app/services/entity-structure-data-provider');
     var FieldChoiceItemView = require('orodotmailer/js/app/views/field-choice-item-view');
-    var MappingModel = require('orodotmailer/js/items-manager/mapping-model');
+    var MappingModel = require('orodotmailer/js/app/models/mapping-model');
     var DeleteConfirmation = require('oroui/js/delete-confirmation');
 
     MappingComponent = SegmentComponent.extend({
@@ -43,11 +44,21 @@ define(function(require) {
 
         initialize: function(options) {
             this.processOptions(options);
+            this._deferredInit();
+            EntityStructureDataProvider.getOwnDataContainer(this).then(function(provider) {
+                this._init(provider);
+                this._resolveDeferredInit();
+            }.bind(this));
+        },
+
+        _init: function(provider) {
+            this.dataProvider = provider;
             this.$storage = $(this.options.valueSource);
             this.fieldRowViews = [];
 
             this.initEntityFieldsUtil();
             this.$fieldsLoader = this.initFieldsLoader();
+            this.setupDataProvider();
             this.initMapping();
             if (this.options.initEntityChangeEvents) {
                 this.initEntityChangeEvents();
@@ -236,9 +247,9 @@ define(function(require) {
         },
 
         initFieldCollection: function() {
-            var collection = new FieldsCollection(this.load('mapping'), {
+            var collection = new EntityFieldsCollection(this.load('mapping'), {
                 model: MappingModel,
-                entityFieldsUtil: this.entityFieldsUtil
+                dataProvider: this.dataProvider
             });
             this.listenTo(collection, 'add remove change', function() {
                 this.save(collection.toJSON(), 'mapping');
