@@ -8,3 +8,7 @@ config:
         'orodotmailer/js/app/components/mapping-component': 'bundles/orodotmailer/js/app/components/mapping-component.js'
         'orodotmailer/js/app/models/mapping-model': 'bundles/orodotmailer/js/app/models/mapping-model.js'
         'orodotmailer/js/datafield-view': 'bundles/orodotmailer/js/datafield-view.js'
+        'orodotmailer/js/app/modules/entity-filter-preset-module': 'bundles/orodotmailer/js/app/modules/entity-filter-preset-module.js'
+
+    appmodules:
+        - orodotmailer/js/app/modules/entity-filter-preset-module
