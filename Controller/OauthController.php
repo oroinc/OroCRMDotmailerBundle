@@ -2,6 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Controller;
 
+use Oro\Bundle\DotmailerBundle\Exception\BadRequestException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -31,6 +32,10 @@ class OauthController extends Controller
     {
         $code  = $request->get('code');
         $state = $request->get('state');
+
+        if (!$state) {
+            throw new BadRequestException('The request does not contain a state parameter.');
+        }
 
         $channel = $this->getDoctrine()
             ->getRepository('OroIntegrationBundle:Channel')
