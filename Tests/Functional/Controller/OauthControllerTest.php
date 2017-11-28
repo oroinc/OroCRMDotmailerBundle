@@ -14,8 +14,8 @@ class OauthControllerTest extends WebTestCase
 
     public function testCallbackActionWhenNoStatusParameter()
     {
-        $this->client->request('GET', $this->getUrl('oro_dotmailer_oauth_callback'));
+        $this->client->request('GET', $this->getUrl('oro_dotmailer_oauth_callback', [], true));
         $result = $this->client->getResponse();
-        self::assertResponseStatusCodeEquals($result, 403);
+        self::assertResponseStatusCodeEquals($result, 400);
     }
 }
