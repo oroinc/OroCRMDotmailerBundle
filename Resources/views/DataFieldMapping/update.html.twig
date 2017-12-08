@@ -201,25 +201,11 @@
     </script>
 {% endmacro %}
 {% macro initJsWidgets(type, form, entities) %}
-    {# Rertrieving fields data(actually this code works for already saved entities that's going to edit)#}
-    {% set fieldsData = {} %}
-    {% if not form.entity.vars.value is empty %}
-        {% set encodedEntityName = form.entity.vars.value|replace({'\\': '_'}) %}
-        {% set routeParams       = {'entityName': encodedEntityName} %}
-
-        {% set fieldsData = render(path('oro_api_fields_dotmailer_datafield_mapping')) %}
-    {% endif %}
-
     {% set widgetOptions = {
-        valueSource: '[data-ftid=' ~ type ~ '_form_config_source]',
-        fieldsLoader: {
-            entityChoice:      '[data-ftid=' ~ type ~ '_form_entity]',
-            loadingMaskParent: '#' ~ form.vars.id,
-            router:            'oro_api_fields_dotmailer_datafield_mapping',
-            routingParams:     {},
-            fieldsData:        fieldsData,
-            confirmMessage:    'oro.dotmailer.datafieldmapping.change_entity_confirmation',
-        },
+        dataProviderFilterPreset:   'dotmailer',
+        valueSource:                '[data-ftid=' ~ type ~ '_form_config_source]',
+        entityChoice:               '[data-ftid=' ~ type ~ '_form_entity]',
+        entityChangeConfirmMessage: 'oro.dotmailer.datafieldmapping.change_entity_confirmation',
         mapping: {
             editor:        { namePattern: '^' ~ type ~ '_form\\[config\\]\\[([\\w\\W]*)\\]$' },
             form:          '#' ~ type ~ '-mapping-form',
@@ -232,7 +218,6 @@
         },
         select2FieldChoiceTemplate:     '#column-chain-template',
         select2FieldChoicePlaceholoder: 'oro.dotmailer.datafieldmappingconfig.entityField.placeholder'|trans,
-        entities:                       entities
     } %}
 
     <div data-page-component-module="orodotmailer/js/app/components/mapping-component"

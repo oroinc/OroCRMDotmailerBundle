@@ -16,14 +16,7 @@ define(function(require) {
         defaults: {
             entityChoice: '',
             valueSource: '',
-            fieldsLoader: {
-                loadingMaskParent: '',
-                router: null,
-                routingParams: {},
-                fieldsData: [],
-                confirmMessage: '',
-                loadEvent: 'fieldsLoaded'
-            },
+            dataProviderFilterPreset: 'dotmailer',
             mapping: {
                 editor: {},
                 form: '',
@@ -55,14 +48,9 @@ define(function(require) {
             this.dataProvider = provider;
             this.$storage = $(this.options.valueSource);
             this.fieldRowViews = [];
-
-            this.initEntityFieldsUtil();
-            this.$fieldsLoader = this.initFieldsLoader();
+            this.initEntityChangeEvents();
             this.setupDataProvider();
             this.initMapping();
-            if (this.options.initEntityChangeEvents) {
-                this.initEntityChangeEvents();
-            }
             this.initIntegrationChangeEvents();
 
             this.form = this.$storage.parents('form');
@@ -137,8 +125,8 @@ define(function(require) {
                 autoRender: true,
                 noWrap: true,
                 fieldChoiceOptions: {
-                    entity: this.$fieldsLoader.val(),
-                    fieldsLoaderSelector: this.$fieldsLoader,
+                    entity: this.entityClassName,
+                    filterPreset: this.options.dataProviderFilterPreset,
                     select2: {
                         placeholder: this.options.select2FieldChoicePlaceholoder,
                         pageableResults: true,
@@ -191,7 +179,7 @@ define(function(require) {
                 disabled = Boolean(_.detect(this.fieldRowViews, function(view) {
                     var value = view.getValue();
                     if (value) {
-                        var path = this.entityFieldsUtil.pathToEntityChain(value);
+                        var path = this.dataProvider.pathToEntityChain(value);
                         if (path.length > 2) {
                             return true;
                         }
@@ -309,7 +297,6 @@ define(function(require) {
             }
 
             this.initSyncCheckbox();
-            this.addEntityFieldRow();
             this.initFieldCollection();
             this.initFieldTable();
             this.initEditorForm();
@@ -329,7 +316,7 @@ define(function(require) {
                 }
             }.bind(this));
 
-            this.on('before-submit', function() {
+            this.once('before-submit', function() {
                 this.collection.removeInvalidModels();
                 this.$editorForm.itemsManagerEditor('reset');
             }.bind(this));
