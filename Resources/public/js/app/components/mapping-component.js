@@ -179,7 +179,7 @@ define(function(require) {
                 disabled = Boolean(_.detect(this.fieldRowViews, function(view) {
                     var value = view.getValue();
                     if (value) {
-                        var path = this.dataProvider.pathToEntityChain(value);
+                        var path = this.dataProvider.pathToEntityChainSafely(value);
                         if (path.length > 2) {
                             return true;
                         }
