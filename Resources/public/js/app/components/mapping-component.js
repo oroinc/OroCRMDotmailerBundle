@@ -38,7 +38,7 @@ define(function(require) {
         initialize: function(options) {
             this.processOptions(options);
             this._deferredInit();
-            EntityStructureDataProvider.getOwnDataContainer(this).then(function(provider) {
+            EntityStructureDataProvider.createDataProvider({}, this).then(function(provider) {
                 this._init(provider);
                 this._resolveDeferredInit();
             }.bind(this));
