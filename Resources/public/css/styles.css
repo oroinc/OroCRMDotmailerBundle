@@ -31,6 +31,10 @@
     width: 294px;
 }
 
+.entity-field-control .fields-container .field-row:only-child .remove-field {
+    display: none;
+}
+
 .entity-field-control .field-row {
     padding-bottom: 10px;
     min-width: 170px;
