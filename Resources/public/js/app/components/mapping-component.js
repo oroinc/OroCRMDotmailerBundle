@@ -4,24 +4,19 @@ define(function(require) {
     var MappingComponent;
     var $ = require('jquery');
     var _ = require('underscore');
-    var SegmentComponent = require('orosegment/js/app/components/segment-component');
-    var FieldsCollection = require('orosegment/js/app/models/fields-collection');
     var __ = require('orotranslation/js/translator');
-    var MappingModel = require('orodotmailer/js/items-manager/mapping-model');
+    var SegmentComponent = require('orosegment/js/app/components/segment-component');
+    var EntityFieldsCollection = require('oroquerydesigner/js/app/models/entity-fields-collection');
+    var EntityStructureDataProvider = require('oroentity/js/app/services/entity-structure-data-provider');
+    var FieldChoiceItemView = require('orodotmailer/js/app/views/field-choice-item-view');
+    var MappingModel = require('orodotmailer/js/app/models/mapping-model');
     var DeleteConfirmation = require('oroui/js/delete-confirmation');
 
     MappingComponent = SegmentComponent.extend({
         defaults: {
             entityChoice: '',
             valueSource: '',
-            fieldsLoader: {
-                loadingMaskParent: '',
-                router: null,
-                routingParams: {},
-                fieldsData: [],
-                confirmMessage: '',
-                loadEvent: 'fieldsLoaded'
-            },
+            dataProviderFilterPreset: 'dotmailer',
             mapping: {
                 editor: {},
                 form: '',
@@ -38,20 +33,32 @@ define(function(require) {
             initEntityChangeEvents: true
         },
 
+        fieldRowViews: null,
+
         initialize: function(options) {
             this.processOptions(options);
-            this.$storage = $(this.options.valueSource);
+            this._deferredInit();
+            EntityStructureDataProvider.createDataProvider({}, this).then(function(provider) {
+                this._init(provider);
+                this._resolveDeferredInit();
+            }.bind(this));
+        },
 
-            this.initEntityFieldsUtil();
-            this.$fieldsLoader = this.initFieldsLoader();
+        _init: function(provider) {
+            this.dataProvider = provider;
+            this.$storage = $(this.options.valueSource);
+            this.fieldRowViews = [];
+            this.initEntityChangeEvents();
+            this.setupDataProvider();
             this.initMapping();
-            if (this.options.initEntityChangeEvents) {
-                this.initEntityChangeEvents();
-            }
             this.initIntegrationChangeEvents();
 
             this.form = this.$storage.parents('form');
-            this.form.submit(_.bind(this.onBeforeSubmit, this));
+            this.form.submit(this.onBeforeSubmit.bind(this));
+        },
+
+        eventNamespace: function() {
+            return '.' + this.cid;
         },
 
         initIntegrationChangeEvents: function() {
@@ -112,161 +119,142 @@ define(function(require) {
 
         /**
          * Add row with entity field selector
-         *
-         * @param {Object} container
-         * @param {boolean} withRemove
          */
-        addEntityFieldRow: function(container, withRemove) {
-            if (_.isUndefined(withRemove)) {
-                withRemove = true;
+        addEntityFieldRow: function(value) {
+            var itemView = new FieldChoiceItemView({
+                autoRender: true,
+                noWrap: true,
+                fieldChoiceOptions: {
+                    entity: this.entityClassName,
+                    filterPreset: this.options.dataProviderFilterPreset,
+                    select2: {
+                        placeholder: this.options.select2FieldChoicePlaceholoder,
+                        pageableResults: true,
+                        dropdownAutoWidth: true
+                    }
+                }
+            });
+
+            this.$editorForm.find('.fields-container').append(itemView.el);
+            this.fieldRowViews.push(itemView);
+            this.listenTo(itemView, {
+                'change': this.updateSyncCheckbox,
+                'remove': function(cid) {
+                    var view = _.findWhere(this.fieldRowViews, {cid: cid});
+                    // do not remove last view manually
+                    if (view && this.fieldRowViews.length > 1) {
+                        this.removeFieldRowView(view);
+                    }
+                }
+            });
+            if (value) {
+                itemView.setValue(value);
             }
-            var template = _.template($('#field-row-template').text());
-            var $fieldsContainer = container.find('.fields-container');
-            $fieldsContainer.append(template({withRemove: withRemove}));
-            var $input = this._getEntityFields($fieldsContainer).last();
-            $input.fieldChoice({
-                fieldsLoaderSelector: this.$fieldsLoader,
-                select2: {placeholder: this.options.select2FieldChoicePlaceholoder}
-            });
-            this.trigger('entity-field-count-changed');
+            this.updateSyncCheckbox();
+            return itemView;
         },
 
-        /**
-         * Remove row with entity field selector
-         *
-         * @param {Object} row
-         */
-        removeEntityFieldRow: function(row) {
-            this._getEntityFields(row).fieldChoice('destroy');
-            row.remove();
-            this.trigger('entity-field-count-changed');
-        },
-
-        /**
-         * Handle add/remove field clicks
-         *
-         * @param {Object} container
-         */
-        initFieldRowActions: function(container) {
-            var self = this;
-            container.on('click', '.add-field', function() {
-                self.addEntityFieldRow(container);
-            });
-            container.on('click', '.remove-field', function() {
-                self.removeEntityFieldRow($(this).parent());
-            });
-
-            //adding first field row
-            this.addEntityFieldRow(container, false);
-        },
-
-        /**
-         * Return entity fields selector elements
-         *
-         * @param {Object} container
-         * @returns {*}
-         * @private
-         */
-        _getEntityFields: function(container) {
-            return container.find('[data-purpose=entityfield-selector]');
+        removeFieldRowView: function(view) {
+            this.stopListening(view);
+            this.fieldRowViews = _.without(this.fieldRowViews, view);
+            view.dispose();
+            this.updateSyncCheckbox();
         },
 
         /**
          * Handle two way sync checkbox behaviour
-         *
-         * @param {Object} container
          */
-        initTwoWaySyncHandlers: function(container) {
-            var self = this;
-            var $twoWaySyncCheckbox = container.find('[data-purpose=two-way-sync-selector]');
-            var disableCheckbox = function(disabled) {
-                if (disabled) {
-                    $twoWaySyncCheckbox.prop('checked', false);
-                }
-                $twoWaySyncCheckbox.prop('disabled', disabled);
-            };
+        initSyncCheckbox: function() {
+            this.$syncCheckbox = this.$editorForm.find('[data-purpose=two-way-sync-selector]');
             //disable checkbox if we have more than 1 entity field selected
-            this.on('entity-field-count-changed', function() {
-                var disabled = self._getEntityFields(container).length > 1;
-                disableCheckbox(disabled);
+            this.$editorForm.on('after-reset' + this.eventNamespace(), function() {
+                this.$syncCheckbox.prop('checked', false);
+            }.bind(this));
+        },
+
+        updateSyncCheckbox: function() {
+            var disabled = this.fieldRowViews.length > 1;
+
+            if (!disabled) {
+                disabled = Boolean(_.detect(this.fieldRowViews, function(view) {
+                    var value = view.getValue();
+                    if (value) {
+                        var path = this.dataProvider.pathToEntityChainSafely(value);
+                        if (path.length > 2) {
+                            return true;
+                        }
+                    }
+                }, this));
+            }
+
+            if (disabled) {
+                this.$syncCheckbox.prop('checked', false);
+            }
+            this.$syncCheckbox.prop('disabled', disabled);
+        },
+
+        initFieldTable: function() {
+            // setup confirmation dialog for delete item
+            this.confirmView = new DeleteConfirmation({content: ''});
+            this.confirmView.on('ok', function() {
+                this.collection.remove(this.confirmView.model);
+            }.bind(this));
+            this.confirmView.on('hidden', function() {
+                delete this.model;
             });
-            //disable checkbox if a relation field was selected (more than 2 pathes in the chain)
-            this._getEntityFields(container).on('change', function() {
-                var path = self.entityFieldsUtil.pathToEntityChain($(this).val());
-                var disabled = path.length > 2;
-                disableCheckbox(disabled);
-            });
-            //uncheck checkbox on reset (when cancel button is clicked)
-            container.on('after-reset', function() {
-                $twoWaySyncCheckbox.prop('checked', false);
+            var template = _.template($(this.options.select2FieldChoiceTemplate).text());
+            this.$table.itemsManagerTable({
+                collection: this.collection,
+                itemTemplate: $(this.options.mapping.itemTemplate).html(),
+                itemRender: function(tmpl, data) {
+                    try {
+                        var fields = data.entityFields.split(',');
+                        var fieldsRendered = _.map(fields, function(field) {
+                            return this.formatChoice(field, template);
+                        }, this);
+                        data.entityFields = fieldsRendered.join(' + ');
+                    } catch (e) {
+                        data.entityFields = __('oro.querydesigner.field_not_found');
+                        data.deleted = true;
+                    }
+                    data.dataField = data.dataField.name;
+                    if (data.isTwoWaySync) {
+                        data.isTwoWaySync = __('Yes');
+                    } else {
+                        data.isTwoWaySync = __('No');
+                    }
+
+                    return tmpl(data);
+                }.bind(this),
+                deleteHandler: function(model, data) {
+                    this.confirmView.setContent(data.message);
+                    this.confirmView.model = model;
+                    this.confirmView.open();
+                }.bind(this)
             });
         },
 
-        /**
-         * Initializes Mappings
-         */
-        initMapping: function() {
-            var self = this;
-            var options = this.options.mapping;
-            var $table = $(options.itemContainer);
-            var $editor = $(options.form);
-
-            if (_.isEmpty($table) || _.isEmpty($editor)) {
-                // there's no mapping
-                return;
-            }
-
-            this.initFieldRowActions($editor);
-            this.initTwoWaySyncHandlers($editor);
-
-            // prepare collection for Items Manager
-            var collection = new FieldsCollection(this.load('mapping'), {
+        initFieldCollection: function() {
+            var collection = new EntityFieldsCollection(this.load('mapping'), {
                 model: MappingModel,
-                entityFieldsUtil: this.entityFieldsUtil
+                dataProvider: this.dataProvider
             });
             this.listenTo(collection, 'add remove change', function() {
                 this.save(collection.toJSON(), 'mapping');
             });
 
-            // setup confirmation dialog for delete item
-            var confirm = new DeleteConfirmation({content: ''});
-            confirm.on('ok', function() {
-                collection.remove(this.model);
-            });
-            confirm.on('hidden', function() {
-                delete this.model;
-            });
+            this.collection = collection;
+        },
 
-            var $multipleEntityField = $editor.find('[data-purpose=multiple-entityfield-selector]');
-            $editor.on('before-save', function() {
-                var fieldsData = [];
-                self._getEntityFields($editor).each(function() {
-                    fieldsData.push($(this).val());
-                });
-                fieldsData = fieldsData.join(',');
-                $multipleEntityField.val(fieldsData);
-            });
+        initEditorForm: function() {
+            this.$editorForm
+                .on('before-save' + this.eventNamespace(), this.onBeforeSave.bind(this))
+                .on('click' + this.eventNamespace(), '.add-field', this.onAddFieldClick.bind(this))
+                .on('change' + this.eventNamespace(), MappingComponent.ORIGIN_FIELDS_SELECTOR,
+                    this.onOriginFieldsChange.bind(this));
 
-            $multipleEntityField.on('change', function() {
-                var value = $(this).val();
-                value = value.split(',');
-                //create necessary entity fields dropdowns
-                var toAdd = value.length - self._getEntityFields($editor).length;
-                _(toAdd).times(function() {
-                    self.addEntityFieldRow($editor);
-                });
-                //Update values for entity field dropdowns. Remove the rest if necessary
-                self._getEntityFields($editor).each(function(index, fieldChoice) {
-                    if (index < value.length) {
-                        $(fieldChoice).fieldChoice('instance').setValue(value[index]);
-                    } else {
-                        self.removeEntityFieldRow($(fieldChoice).parent());
-                    }
-                });
-            });
-
-            $editor.itemsManagerEditor($.extend(options.editor, {
-                collection: collection,
+            this.$editorForm.itemsManagerEditor($.extend(this.options.mapping.editor, {
+                collection: this.collection,
                 setter: function($el, name, value) {
                     if (name === 'dataField') {
                         value = value.value;
@@ -283,9 +271,9 @@ define(function(require) {
                     if (name === 'dataField') {
                         //keeping selected field name to show on the grid
                         value = $el.select2('data') && {
-                            name: $el.select2('data').name,
-                            value: value
-                        };
+                                name: $el.select2('data').name,
+                                value: value
+                            };
                     }
                     if (name === 'isTwoWaySync') {
                         value = $el.is(':checked') ? 1 : 0;
@@ -294,75 +282,82 @@ define(function(require) {
                     return value;
                 }
             }));
+        },
+
+        /**
+         * Initializes Mappings
+         */
+        initMapping: function() {
+            this.$table = $(this.options.mapping.itemContainer);
+            this.$editorForm = $(this.options.mapping.form);
+
+            if (this.$table.length === 0 || this.$editorForm.length === 0) {
+                // there's no mapping
+                return;
+            }
+
+            this.initSyncCheckbox();
+            this.initFieldCollection();
+            this.initFieldTable();
+            this.initEditorForm();
 
             this.on('validate-data', function(issues) {
-                if ($editor.itemsManagerEditor('hasChanges')) {
+                if (this.$editorForm.itemsManagerEditor('hasChanges')) {
                     issues.push({
                         component: __('oro.dotmailer.datafieldmapping.editor'),
                         type: MappingComponent.UNSAVED_CHANGES_ISSUE
                     });
                 }
-                if (!collection.isValid()) {
+                if (!this.collection.isValid()) {
                     issues.push({
                         component: __('oro.dotmailer.datafieldmapping.editor'),
                         type: MappingComponent.INVALID_DATA_ISSUE
                     });
                 }
-            });
+            }.bind(this));
 
-            this.on('before-submit', function() {
-                collection.removeInvalidModels();
-                $editor.itemsManagerEditor('reset');
-            });
-
-            var template = _.template($(this.options.select2FieldChoiceTemplate).text());
-            $table.itemsManagerTable({
-                collection: collection,
-                itemTemplate: $(options.itemTemplate).html(),
-                itemRender: function(tmpl, data) {
-                    try {
-                        var fieldsRendered = [];
-                        var fields = data.entityFields.split(',');
-                        _.each(fields, function(field) {
-                            fieldsRendered.push(self.formatChoice(field, template));
-                        });
-                        data.entityFields = fieldsRendered.join(' + ');
-                    } catch (e) {
-                        data.entityFields = __('oro.querydesigner.field_not_found');
-                        data.deleted = true;
-                    }
-                    data.dataField = data.dataField.name;
-                    if (data.isTwoWaySync) {
-                        data.isTwoWaySync = __('Yes');
-                    } else {
-                        data.isTwoWaySync = __('No');
-                    }
-
-                    return tmpl(data);
-                },
-                deleteHandler: function(model, data) {
-                    confirm.setContent(data.message);
-                    confirm.model = model;
-                    confirm.open();
-                }
-            });
+            this.once('before-submit', function() {
+                this.collection.removeInvalidModels();
+                this.$editorForm.itemsManagerEditor('reset');
+            }.bind(this));
 
             this.on('resetData', function(data) {
                 data.mappings = [];
-                $table.itemsManagerTable('reset');
-                $editor.itemsManagerEditor('reset');
-            });
+                this.$table.itemsManagerTable('reset');
+                this.$editorForm.itemsManagerEditor('reset');
+            }.bind(this));
+        },
 
-            this.once('dispose:before', function() {
-                confirm.dispose();
-                collection.dispose();
-                $editor.itemsManagerEditor('destroy');
-                $table.itemsManagerTable('destroy');
-            }, this);
+        onAddFieldClick: function() {
+            this.addEntityFieldRow();
+        },
+
+        onBeforeSave: function() {
+            var values = _.invoke(this.fieldRowViews, 'getValue');
+            this.$editorForm.find(MappingComponent.ORIGIN_FIELDS_SELECTOR).val(values.join(','));
+        },
+
+        onOriginFieldsChange: function(e) {
+            var values = $(e.currentTarget).val().split(',');
+            _.each(this.fieldRowViews, this.removeFieldRowView, this);
+            _.each(values, this.addEntityFieldRow, this);
+        },
+
+        dispose: function() {
+            if (this.disposed) {
+                return;
+            }
+            this.$editorForm.off(this.eventNamespace());
+            this.$editorForm.itemsManagerEditor('destroy');
+            this.$table.itemsManagerTable('destroy');
+            delete this.$editorForm;
+            delete this.$table;
+            MappingComponent.__super__.dispose.call(this);
         }
     }, {
         INVALID_DATA_ISSUE: 'INVALID_DATA',
-        UNSAVED_CHANGES_ISSUE: 'UNSAVED_CHANGES'
+        UNSAVED_CHANGES_ISSUE: 'UNSAVED_CHANGES',
+        ORIGIN_FIELDS_SELECTOR: '[data-purpose=multiple-entityfield-selector]'
     });
 
     return MappingComponent;

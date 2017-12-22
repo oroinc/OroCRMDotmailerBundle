@@ -3,7 +3,7 @@ define(function(require) {
 
     var MappingModel;
     var _ = require('underscore');
-    var EntityFieldModel = require('oroquerydesigner/js/items-manager/entity-field-model');
+    var EntityFieldModel = require('oroquerydesigner/js/app/models/entity-field-model');
 
     MappingModel = EntityFieldModel.extend({
         fieldAttribute: 'entityFields',
@@ -22,10 +22,9 @@ define(function(require) {
             var error;
             try {
                 var paths = attrs[this.fieldAttribute].split(',');
-                var self = this;
                 _.each(paths, function(path) {
-                    self.entityFieldsUtil.pathToEntityChain(path);
-                });
+                    this.dataProvider.pathToEntityChain(path);
+                }, this);
             } catch (e) {
                 error = e.message;
             }
