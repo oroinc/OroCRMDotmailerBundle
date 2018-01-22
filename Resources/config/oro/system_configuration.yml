@@ -11,6 +11,7 @@ system_configuration:
         oro_dotmailer.datafields_sync_interval:
             data_type: string
             type: text
+            search_type: text
             priority: 10
             options:
                 label:          oro.dotmailer.configuration.datafields_sync_interval
@@ -20,6 +21,7 @@ system_configuration:
         oro_dotmailer.force_sync_for_virtual_fields:
             data_type: string
             type: choice
+            search_type: choice
             priority: 20
             options:
                 label: oro.dotmailer.configuration.force_sync_for_virtual_fields.label
