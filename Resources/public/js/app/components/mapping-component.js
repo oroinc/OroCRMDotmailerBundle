@@ -138,8 +138,8 @@ define(function(require) {
             this.$editorForm.find('.fields-container').append(itemView.el);
             this.fieldRowViews.push(itemView);
             this.listenTo(itemView, {
-                'change': this.updateSyncCheckbox,
-                'remove': function(cid) {
+                change: this.updateSyncCheckbox,
+                remove: function(cid) {
                     var view = _.findWhere(this.fieldRowViews, {cid: cid});
                     // do not remove last view manually
                     if (view && this.fieldRowViews.length > 1) {
@@ -166,7 +166,7 @@ define(function(require) {
          */
         initSyncCheckbox: function() {
             this.$syncCheckbox = this.$editorForm.find('[data-purpose=two-way-sync-selector]');
-            //disable checkbox if we have more than 1 entity field selected
+            // disable checkbox if we have more than 1 entity field selected
             this.$editorForm.on('after-reset' + this.eventNamespace(), function() {
                 this.$syncCheckbox.prop('checked', false);
             }.bind(this));
@@ -269,11 +269,11 @@ define(function(require) {
                 },
                 getter: function($el, name, value) {
                     if (name === 'dataField') {
-                        //keeping selected field name to show on the grid
+                        // keeping selected field name to show on the grid
                         value = $el.select2('data') && {
-                                name: $el.select2('data').name,
-                                value: value
-                            };
+                            name: $el.select2('data').name,
+                            value: value
+                        };
                     }
                     if (name === 'isTwoWaySync') {
                         value = $el.is(':checked') ? 1 : 0;

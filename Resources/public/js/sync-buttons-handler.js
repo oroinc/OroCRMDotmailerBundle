@@ -67,8 +67,8 @@ define([
             var widget = new StatelessWidgetComponent(
                 {
                     options: {
-                        'url': this.data('url'),
-                        'title': this.data('title')
+                        url: this.data('url'),
+                        title: this.data('title')
                     }
                 }
             );
@@ -95,6 +95,6 @@ define([
             $(syncButtonsSelector).click(this.syncButtonsClickHandlerDelegate);
         };
 
-        this.bindElementsEvents.call(this);
+        this.bindElementsEvents();
     };
 });
