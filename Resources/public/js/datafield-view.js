@@ -3,7 +3,7 @@ define([
     'backbone',
     'underscore',
     'orotranslation/js/translator',
-    'oroui/js/mediator',
+    'oroui/js/mediator'
 ], function($, Backbone, _, __, mediator) {
     'use strict';
 
@@ -23,7 +23,7 @@ define([
          * Depends on what exact field changed
          */
         fieldsSets: {
-            type:          [],
+            type: []
         },
 
         requiredOptions: ['typeSelector', 'fieldsSets', 'formSelector'],
