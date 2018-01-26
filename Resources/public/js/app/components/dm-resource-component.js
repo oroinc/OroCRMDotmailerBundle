@@ -40,7 +40,7 @@ define(function(require) {
             if ($username.valid() && $password.valid()) {
                 $.getJSON(
                     options.pingUrl,
-                    {'username': $username.val(), 'password': $password.val()},
+                    {username: $username.val(), password: $password.val()},
                     function(response) {
                         if (_.isUndefined(response.error)) {
                             $status.removeClass('alert-error')
