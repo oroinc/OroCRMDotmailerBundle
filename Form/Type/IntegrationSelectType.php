@@ -43,7 +43,7 @@ class IntegrationSelectType extends AbstractType
         $integrations = $this->getDotmailerIntegrations();
         $options = [
             'class'    => self::ENTITY,
-            'property' => 'name',
+            'choice_label' => 'name',
             'choices'  => $integrations
         ];
 
