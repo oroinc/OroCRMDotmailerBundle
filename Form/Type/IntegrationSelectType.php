@@ -4,6 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -78,7 +79,7 @@ class IntegrationSelectType extends AbstractType
      */
     public function getParent()
     {
-        return 'entity';
+        return EntityType::class;
     }
 
     /**
