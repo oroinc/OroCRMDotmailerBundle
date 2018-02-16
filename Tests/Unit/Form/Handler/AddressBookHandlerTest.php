@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Handler;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
 use Doctrine\Common\Persistence\ObjectManager;
@@ -67,6 +68,8 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
         $this->request = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $requestStack = new RequestStack();
+        $requestStack->push($this->request);
         $this->manager = $this->getMockBuilder(ObjectManager::class)->getMock();
         $this->transport = $this->getMockBuilder(DotmailerTransport::class)
             ->disableOriginalConstructor()
@@ -76,7 +79,7 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
         $this->entity = $this->getMockBuilder(AddressBook::class)->getMock();
         $this->handler = new AddressBookHandler(
             $this->form,
-            $this->request,
+            $requestStack,
             $this->manager,
             $this->transport,
             $this->translator,

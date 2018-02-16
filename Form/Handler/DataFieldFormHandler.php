@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
@@ -29,11 +30,11 @@ class DataFieldFormHandler
     /** @var FormInterface */
     protected $form;
 
-    /** @var ManagerRegistry  */
+    /** @var ManagerRegistry */
     protected $managerRegistry;
 
-    /** @var Request  */
-    protected $request;
+    /** @var RequestStack */
+    protected $requestStack;
 
     /** @var DataFieldManager */
     protected $dataFieldManager;
@@ -41,7 +42,7 @@ class DataFieldFormHandler
     /**
      * @param FormInterface $form
      * @param ManagerRegistry $managerRegistry
-     * @param Request $request
+     * @param RequestStack $requestStack
      * @param LoggerInterface $logger
      * @param TranslatorInterface $translator
      * @param DataFieldManager $dataFieldManager
@@ -49,14 +50,14 @@ class DataFieldFormHandler
     public function __construct(
         FormInterface $form,
         ManagerRegistry $managerRegistry,
-        Request $request,
+        RequestStack $requestStack,
         LoggerInterface $logger,
         TranslatorInterface $translator,
         DataFieldManager $dataFieldManager
     ) {
         $this->form = $form;
         $this->managerRegistry = $managerRegistry;
-        $this->request = $request;
+        $this->requestStack = $requestStack;
         $this->logger = $logger;
         $this->translator = $translator;
         $this->dataFieldManager = $dataFieldManager;
@@ -70,9 +71,10 @@ class DataFieldFormHandler
     public function process(DataField $entity)
     {
         $this->form->setData($entity);
-        if ($this->request->isMethod('POST')) {
-            $this->form->submit($this->request);
-            if (!$this->request->get(self::UPDATE_MARKER, false) && $this->form->isValid()) {
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request->isMethod('POST')) {
+            $this->form->submit($request);
+            if (!$request->get(self::UPDATE_MARKER, false) && $this->form->isValid()) {
                 return $this->onSuccess($entity);
             }
         }
