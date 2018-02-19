@@ -9,6 +9,7 @@ use Oro\Bundle\DotmailerBundle\Form\Handler\DataFieldFormHandler;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Exception\InvalidDefaultValueException;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,6 +40,8 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->request = new Request();
+        $requestStack = new RequestStack();
+        $requestStack->push($this->request);
         $this->form = $this->getMockBuilder('Symfony\Component\Form\Form')
             ->disableOriginalConstructor()->getMock();
         $this->managerRegistry = $this->getMockBuilder('Doctrine\Common\Persistence\ManagerRegistry')
@@ -53,7 +56,7 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
         $this->handler = new DataFieldFormHandler(
             $this->form,
             $this->managerRegistry,
-            $this->request,
+            $requestStack,
             $this->logger,
             $this->translator,
             $this->dataFieldManager

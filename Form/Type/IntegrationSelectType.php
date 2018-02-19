@@ -6,7 +6,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 use Oro\Bundle\SecurityBundle\ORM\Walker\AclHelper;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
@@ -39,7 +39,7 @@ class IntegrationSelectType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $integrations = $this->getDotmailerIntegrations();
         $options = [

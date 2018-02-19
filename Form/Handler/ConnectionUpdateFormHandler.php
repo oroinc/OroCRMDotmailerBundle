@@ -3,11 +3,9 @@
 namespace Oro\Bundle\DotmailerBundle\Form\Handler;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-
-use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\Request;
-
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class ConnectionUpdateFormHandler
 {
@@ -17,18 +15,18 @@ class ConnectionUpdateFormHandler
     protected $managerRegistry;
 
     /**
-     * @var Request
+     * @var RequestStack
      */
-    protected $request;
+    protected $requestStack;
 
     /**
      * @param ManagerRegistry $managerRegistry
-     * @param Request $request
+     * @param RequestStack $requestStack
      */
-    public function __construct(ManagerRegistry $managerRegistry, Request $request)
+    public function __construct(ManagerRegistry $managerRegistry, RequestStack $requestStack)
     {
         $this->managerRegistry = $managerRegistry;
-        $this->request = $request;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -40,10 +38,9 @@ class ConnectionUpdateFormHandler
     public function handle(Form $form, array $data)
     {
         $form->setData($data);
-        if ($this->request->isMethod('POST')) {
-            if ($form->submit($this->request)->isValid()) {
-                return $this->onSuccess($form);
-            }
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request->isMethod('POST') && $form->submit($request)->isValid()) {
+            return $this->onSuccess($form);
         }
 
         return null;

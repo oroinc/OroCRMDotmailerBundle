@@ -295,16 +295,14 @@ services:
 
     oro_dotmailer.datafield.form:
         class: Symfony\Component\Form\Form
-        factory_method: createNamed
-        factory_service: form.factory
+        factory: ['@form.factory', createNamed]
         arguments:
             - "oro_dotmailer_data_field_form"
             - "oro_dotmailer_data_field"
 
     oro_dotmailer.datafield_mapping.form:
         class: Symfony\Component\Form\Form
-        factory_method: createNamed
-        factory_service: form.factory
+        factory: ['@form.factory', createNamed]
         arguments:
             - "oro_dotmailer_datafield_mapping_form"
             - "oro_dotmailer_datafield_mapping"
@@ -316,8 +314,7 @@ services:
 
     oro_dotmailer.form.address_book:
         class: Symfony\Component\Form\Form
-        factory_method: createNamed
-        factory_service: form.factory
+        factory: ['@form.factory', createNamed]
         arguments:
             - "oro_dotmailer_address_book_form"
             - "oro_dotmailer_address_book_form"
@@ -332,30 +329,27 @@ services:
         class: %oro_dotmailer.form.handler.connection_update.class%
         arguments:
             - "@doctrine"
-            - "@request"
-        scope: request
+            - "@request_stack"
 
     oro_dotmailer.form.handler.address_book_update:
         class: %oro_dotmailer.form.handler.address_book_update.class%
         arguments:
             - "@oro_dotmailer.form.address_book"
-            - "@request"
+            - "@request_stack"
             - "@doctrine.orm.entity_manager"
             - "@oro_dotmailer.transport.integration_transport"
             - "@translator"
             - "@oro_integration.logger.strategy"
-        scope: request
 
     oro_dotmailer.form.handler.datafield_update:
         class: %oro_dotmailer.form.handler.datafield_update.class%
         arguments:
             - "@oro_dotmailer.datafield.form"
             - "@doctrine"
-            - "@request"
+            - "@request_stack"
             - "@logger"
             - "@translator"
             - "@oro_dotmailer.datafield_manager"
-        scope: request
 
     # Integration related services
     oro_dotmailer.provider.channel_type:
