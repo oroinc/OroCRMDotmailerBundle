@@ -71,15 +71,17 @@ class DotmailerController extends Controller
 
     /**
      * @Route("/ping", name="oro_dotmailer_ping")
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function pingAction()
+    public function pingAction(Request $request)
     {
         if (!$this->isGranted('oro_integration_create') && !$this->isGranted('oro_integration_update')) {
             throw new AccessDeniedException();
         }
 
-        $username = $this->getRequest()->get('username');
-        $password = $this->getRequest()->get('password');
+        $username = $request->get('username');
+        $password = $request->get('password');
 
         $dotmailerResourceFactory = $this->get('oro_dotmailer.transport.resources_factory');
         try {
