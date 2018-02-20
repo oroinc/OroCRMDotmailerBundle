@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Provider;
 
 use Doctrine\ORM\QueryBuilder;
-
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 
 interface ContactExportQBAdapterInterface

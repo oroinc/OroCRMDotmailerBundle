@@ -2,17 +2,15 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
-use Psr\Log\LoggerInterface;
-
 use Doctrine\Common\Persistence\ManagerRegistry;
-
+use Oro\Bundle\DotmailerBundle\Provider\CacheProvider;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\ImportExportBundle\Context\ContextAwareInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Strategy\StrategyInterface;
-use Oro\Bundle\DotmailerBundle\Provider\CacheProvider;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Psr\Log\LoggerInterface;
 
 abstract class AbstractImportStrategy implements StrategyInterface, ContextAwareInterface
 {

@@ -2,12 +2,12 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
-use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
 use Oro\Bundle\DotmailerBundle\Entity\Activity;
-use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Entity\Campaign;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
+use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
 
 class ActivityContactStrategy extends AddOrReplaceStrategy
 {

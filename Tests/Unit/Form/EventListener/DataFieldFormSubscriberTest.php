@@ -2,12 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\EventListener;
 
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-
+use Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldFormSubscriber;
 use Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\DataFieldStub;
 use Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\EnumValueStub;
-use Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldFormSubscriber;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class DataFieldFormSubscriberTest extends \PHPUnit_Framework_TestCase
 {

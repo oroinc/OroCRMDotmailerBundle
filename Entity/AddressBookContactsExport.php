@@ -3,10 +3,9 @@
 namespace Oro\Bundle\DotmailerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Oro\Bundle\DotmailerBundle\Model\ExtendAddressBookContactsExport;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Oro\Bundle\DotmailerBundle\Model\ExtendAddressBookContactsExport;
 
 /**
  * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactsExportRepository")

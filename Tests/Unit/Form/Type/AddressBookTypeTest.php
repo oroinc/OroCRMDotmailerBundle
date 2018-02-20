@@ -2,12 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Type;
 
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Form\Type\AddressBookType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
-
-use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
-use Oro\Bundle\DotmailerBundle\Form\Type\AddressBookType;
 
 class AddressBookTypeTest extends \PHPUnit_Framework_TestCase
 {

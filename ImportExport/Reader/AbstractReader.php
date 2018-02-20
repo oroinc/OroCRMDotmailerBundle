@@ -3,17 +3,14 @@
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Reader;
 
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
-
-use Psr\Log\LoggerInterface;
-
 use Doctrine\Common\Persistence\ManagerRegistry;
-
-use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
-use Oro\Bundle\IntegrationBundle\Provider\ConnectorContextMediator;
+use Oro\Bundle\DotmailerBundle\ImportExport\JobContextComposite;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
+use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\ImportExportBundle\Reader\IteratorBasedReader;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Oro\Bundle\DotmailerBundle\ImportExport\JobContextComposite;
+use Oro\Bundle\IntegrationBundle\Provider\ConnectorContextMediator;
+use Psr\Log\LoggerInterface;
 
 abstract class AbstractReader extends IteratorBasedReader
 {

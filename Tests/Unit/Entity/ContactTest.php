@@ -3,10 +3,9 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Entity\Activity;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 class ContactTest extends \PHPUnit_Framework_TestCase
 {

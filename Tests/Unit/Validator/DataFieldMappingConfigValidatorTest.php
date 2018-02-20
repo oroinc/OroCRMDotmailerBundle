@@ -3,14 +3,13 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Validator;
 
 use Doctrine\DBAL\Types\Type;
-
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
 use Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\DataFieldStub;
 use Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\EnumValueStub;
-use Oro\Bundle\DotmailerBundle\Validator\DataFieldMappingConfigValidator;
 use Oro\Bundle\DotmailerBundle\Validator\Constraints\DataFieldMappingConfigConstraint;
+use Oro\Bundle\DotmailerBundle\Validator\DataFieldMappingConfigValidator;
 use Oro\Bundle\EntityBundle\DoctrineExtensions\DBAL\Types\DurationType;
 use Oro\DBAL\Types\MoneyType;
 use Oro\DBAL\Types\PercentType;
@@ -20,7 +19,7 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     protected $entityFieldProvider;
 
-     /** @var \PHPUnit_Framework_MockObject_MockObject */
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
     protected $translator;
 
     /** @var DataFieldMappingConfigValidator */

@@ -4,7 +4,6 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\EventListener;
 
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
-
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
 use Oro\Bundle\DotmailerBundle\EventListener\MappingUpdateListener;

@@ -6,10 +6,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\From;
 use Doctrine\ORM\Query\Expr\Select;
 use Doctrine\ORM\QueryBuilder;
-
 use Oro\Bundle\ContactBundle\Entity\Contact;
-use Oro\Bundle\QueryDesignerBundle\Tests\Unit\OrmQueryConverterTest;
 use Oro\Bundle\DotmailerBundle\QueryDesigner\MappingQueryConverter;
+use Oro\Bundle\QueryDesignerBundle\Tests\Unit\OrmQueryConverterTest;
 
 class MappingQueryConverterTest extends OrmQueryConverterTest
 {

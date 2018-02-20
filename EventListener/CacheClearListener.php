@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\EventListener;
 
 use Doctrine\Common\EventSubscriber;
-
 use Oro\Bundle\DotmailerBundle\Provider\CacheProvider;
 
 class CacheClearListener implements EventSubscriber

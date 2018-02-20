@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Placeholders;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 
 class MarketingListPlaceholderFilter

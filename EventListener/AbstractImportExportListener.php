@@ -3,12 +3,10 @@
 namespace Oro\Bundle\DotmailerBundle\EventListener;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Event\SyncEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 abstract class AbstractImportExportListener implements EventSubscriberInterface
 {

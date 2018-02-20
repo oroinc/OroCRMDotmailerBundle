@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
-
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\EventListener\DataFieldRemoveListener;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;

@@ -3,10 +3,9 @@
 namespace Oro\Bundle\DotmailerBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
-
+use Oro\Bundle\DotmailerBundle\Entity\OAuth;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\UserBundle\Entity\User;
-use Oro\Bundle\DotmailerBundle\Entity\OAuth;
 
 class OAuthRepository extends EntityRepository
 {

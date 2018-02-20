@@ -3,15 +3,13 @@
 namespace Oro\Bundle\DotmailerBundle\Provider;
 
 use Doctrine\Common\Cache\CacheProvider as DoctrineCacheProvider;
-
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-
-use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
-use Oro\Bundle\EntityBundle\Provider\ChainVirtualFieldProvider;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\DataFieldMappingRepository;
+use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
+use Oro\Bundle\EntityBundle\Provider\ChainVirtualFieldProvider;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\QueryDesignerBundle\QueryDesigner\JoinIdentifierHelper;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class MappingProvider
 {

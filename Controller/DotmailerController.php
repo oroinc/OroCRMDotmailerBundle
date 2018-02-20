@@ -2,21 +2,19 @@
 
 namespace Oro\Bundle\DotmailerBundle\Controller;
 
+use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
+use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-
-use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
-use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
-use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
-use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
-use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 /**
  * @Route("/dotmailer")

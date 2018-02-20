@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Provider;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-
 use Oro\Bundle\EntityBundle\Provider\EntityFieldProvider;
 
 class FieldProvider extends EntityFieldProvider

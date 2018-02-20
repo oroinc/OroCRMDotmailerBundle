@@ -3,17 +3,16 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\QueryDesigner;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\From;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\Expr\Select;
-use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\QueryBuilder;
-
 use Oro\Bundle\ContactBundle\Entity\Contact;
 use Oro\Bundle\ContactBundle\Entity\ContactAddress;
-use Oro\Bundle\QueryDesignerBundle\Tests\Unit\OrmQueryConverterTest;
 use Oro\Bundle\DotmailerBundle\QueryDesigner\ParentEntityFindQueryConverter;
+use Oro\Bundle\QueryDesignerBundle\Tests\Unit\OrmQueryConverterTest;
 
 class ParentEntityFindQueryConverterTest extends OrmQueryConverterTest
 {

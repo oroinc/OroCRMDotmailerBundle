@@ -5,7 +5,6 @@ namespace Oro\Bundle\DotmailerBundle\EventListener;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
-
 use Oro\Bundle\DotmailerBundle\Entity\ChangedFieldLog;
 use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;

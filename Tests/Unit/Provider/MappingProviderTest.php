@@ -2,12 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider;
 
-use Oro\Component\Testing\Unit\EntityTrait;
-
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
 use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\DotmailerBundle\Provider\MappingTrackedFieldsEvent;
+use Oro\Component\Testing\Unit\EntityTrait;
 
 class MappingProviderTest extends \PHPUnit_Framework_TestCase
 {

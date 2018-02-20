@@ -3,14 +3,13 @@
 namespace Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_2;
 
 use Doctrine\DBAL\Schema\Schema;
-
+use Oro\Bundle\DotmailerBundle\Migration\AddContactExportConnectorToExistedIntegrationsQuery;
 use Oro\Bundle\EntityExtendBundle\EntityConfig\ExtendScope;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtension;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareInterface;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\MigrationBundle\Migration\Migration;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
-use Oro\Bundle\DotmailerBundle\Migration\AddContactExportConnectorToExistedIntegrationsQuery;
 
 class OroDotmailerBundle implements Migration, ExtendExtensionAwareInterface
 {

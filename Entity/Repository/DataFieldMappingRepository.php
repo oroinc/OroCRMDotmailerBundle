@@ -4,7 +4,6 @@ namespace Oro\Bundle\DotmailerBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr;
-
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 class DataFieldMappingRepository extends EntityRepository

@@ -2,23 +2,20 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Handler;
 
-use Symfony\Component\Form\FormInterface;
+use Doctrine\Common\Persistence\ObjectManager;
+use DotMailer\Api\DataTypes\JsonObject;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport as Transport;
+use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
+use Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
-
-use Doctrine\Common\Persistence\ObjectManager;
-
-use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
-use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
-use Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler;
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport as Transport;
-use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
-
-use DotMailer\Api\DataTypes\JsonObject;
-use Psr\Log\LoggerInterface;
 
 class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
 {

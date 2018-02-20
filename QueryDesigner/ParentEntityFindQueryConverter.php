@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\QueryDesigner;
 
 use Doctrine\ORM\QueryBuilder;
-
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\QueryDesignerBundle\QueryDesigner\AbstractOrmQueryConverter;
 

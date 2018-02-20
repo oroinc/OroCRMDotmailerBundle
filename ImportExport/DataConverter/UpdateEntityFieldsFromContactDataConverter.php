@@ -5,9 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Provider\EmailProvider;
 use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
-use Oro\Bundle\ImportExportBundle\Processor\EntityNameAwareInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextAwareInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
+use Oro\Bundle\ImportExportBundle\Processor\EntityNameAwareInterface;
 
 class UpdateEntityFieldsFromContactDataConverter extends AbstractDataConverter implements
     EntityNameAwareInterface,

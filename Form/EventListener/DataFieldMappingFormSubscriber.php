@@ -2,11 +2,10 @@
 
 namespace Oro\Bundle\DotmailerBundle\Form\EventListener;
 
+use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
-use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 
 class DataFieldMappingFormSubscriber implements EventSubscriberInterface
 {

@@ -2,17 +2,15 @@
 
 namespace Oro\Bundle\DotmailerBundle\Form\Handler;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
-
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
-use Psr\Log\LoggerInterface;
-
-use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
-use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
-use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 
 class AddressBookHandler
 {

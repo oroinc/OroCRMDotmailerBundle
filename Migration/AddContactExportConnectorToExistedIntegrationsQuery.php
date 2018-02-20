@@ -2,15 +2,13 @@
 
 namespace Oro\Bundle\DotmailerBundle\Migration;
 
-use Psr\Log\LoggerInterface;
-
-use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Connection;
-
+use Doctrine\DBAL\Types\Type;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 use Oro\Bundle\MigrationBundle\Migration\ConnectionAwareInterface;
 use Oro\Bundle\MigrationBundle\Migration\MigrationQuery;
+use Psr\Log\LoggerInterface;
 
 class AddContactExportConnectorToExistedIntegrationsQuery implements MigrationQuery, ConnectionAwareInterface
 {

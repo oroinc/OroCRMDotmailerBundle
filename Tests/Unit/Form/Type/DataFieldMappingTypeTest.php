@@ -2,19 +2,18 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Type;
 
-use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\PreloadedExtension;
-
-use Oro\Component\Testing\Unit\EntityTrait;
-use Oro\Component\Testing\Unit\FormIntegrationTestCase;
-use Oro\Component\Testing\Unit\Form\Type\Stub\EntityType;
-use Oro\Component\Testing\Unit\Form\Extension\Stub\FormTypeValidatorExtensionStub;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
-use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldMappingType;
 use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldMappingConfigType;
-use Oro\Bundle\FormBundle\Form\Type\CollectionType;
+use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldMappingType;
 use Oro\Bundle\FormBundle\Form\Extension\TooltipFormExtension;
+use Oro\Bundle\FormBundle\Form\Type\CollectionType;
+use Oro\Component\Testing\Unit\EntityTrait;
+use Oro\Component\Testing\Unit\Form\Extension\Stub\FormTypeValidatorExtensionStub;
+use Oro\Component\Testing\Unit\Form\Type\Stub\EntityType;
+use Oro\Component\Testing\Unit\FormIntegrationTestCase;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\PreloadedExtension;
 
 class DataFieldMappingTypeTest extends FormIntegrationTestCase
 {

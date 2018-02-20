@@ -3,12 +3,10 @@
 namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\SecurityBundle\ORM\Walker\AclHelper;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
-use Oro\Bundle\SecurityBundle\ORM\Walker\AclHelper;
-use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 
 class IntegrationSelectType extends AbstractType
 {

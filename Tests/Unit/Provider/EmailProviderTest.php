@@ -2,9 +2,8 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider;
 
-use Oro\Component\Testing\Unit\EntityTrait;
-
 use Oro\Bundle\DotmailerBundle\Provider\EmailProvider;
+use Oro\Component\Testing\Unit\EntityTrait;
 
 class EmailProviderTest extends \PHPUnit_Framework_TestCase
 {

@@ -2,19 +2,18 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Model;
 
-use Oro\Component\Testing\Unit\EntityTrait;
-
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
-use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookRepository;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactRepository;
-use Oro\Bundle\DotmailerBundle\Model\SyncManager;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookRepository;
 use Oro\Bundle\DotmailerBundle\Model\ForceSyncEvent;
+use Oro\Bundle\DotmailerBundle\Model\SyncManager;
 use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+use Oro\Component\Testing\Unit\EntityTrait;
 
 class SyncManagerTest extends \PHPUnit_Framework_TestCase
 {

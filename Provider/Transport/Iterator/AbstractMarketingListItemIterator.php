@@ -3,10 +3,9 @@
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use Doctrine\ORM\QueryBuilder;
-
-use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
+use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 
 abstract class AbstractMarketingListItemIterator extends AbstractIterator
 {

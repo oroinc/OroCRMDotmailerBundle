@@ -3,11 +3,10 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiContactList;
-
-use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 class ContactUpdateTest extends AbstractImportExportTestCase
 {

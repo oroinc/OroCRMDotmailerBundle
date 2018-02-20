@@ -2,9 +2,8 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Controller;
 
-use Symfony\Component\DomCrawler\Form;
-
 use Oro\Bundle\DataGridBundle\Tests\Functional\AbstractDatagridTestCase;
+use Symfony\Component\DomCrawler\Form;
 
 class DataFieldMappingControllerTest extends AbstractDatagridTestCase
 {

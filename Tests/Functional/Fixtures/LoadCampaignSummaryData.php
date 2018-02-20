@@ -2,13 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-
 use Oro\Bundle\DotmailerBundle\Entity\CampaignSummary;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class LoadCampaignSummaryData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {

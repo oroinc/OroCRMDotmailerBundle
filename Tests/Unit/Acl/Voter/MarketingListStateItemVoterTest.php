@@ -3,13 +3,11 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Acl\Voter;
 
 use Doctrine\ORM\Query\Expr;
-
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-
 use Oro\Bundle\DotmailerBundle\Acl\Voter\MarketingListStateItemVoter;
-use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
+use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class MarketingListStateItemVoterTest extends \PHPUnit_Framework_TestCase
 {

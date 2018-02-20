@@ -3,11 +3,10 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiDataFieldList;
-
-use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
-use Oro\Bundle\IntegrationBundle\Entity\Status;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
+use Oro\Bundle\IntegrationBundle\Entity\Status;
 
 class DataFieldImportTest extends AbstractImportExportTestCase
 {

@@ -2,9 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Entity;
 
+use Oro\Bundle\DotmailerBundle\Entity\OAuth;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\UserBundle\Entity\User;
-use Oro\Bundle\DotmailerBundle\Entity\OAuth;
 use Oro\Component\Testing\Unit\EntityTestCaseTrait;
 
 class OAuthTest extends \PHPUnit_Framework_TestCase

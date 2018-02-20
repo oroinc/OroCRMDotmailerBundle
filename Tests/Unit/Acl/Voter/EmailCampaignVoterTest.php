@@ -2,11 +2,10 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Acl\Voter;
 
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-
-use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 use Oro\Bundle\DotmailerBundle\Acl\Voter\EmailCampaignVoter;
+use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class EmailCampaignVoterTest extends \PHPUnit_Framework_TestCase
 {

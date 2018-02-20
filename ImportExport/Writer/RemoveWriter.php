@@ -5,12 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Writer;
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 use Akeneo\Bundle\BatchBundle\Item\ItemWriterInterface;
 use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
-
-use Psr\Log\LoggerInterface;
-
 use Doctrine\Common\Persistence\ManagerRegistry;
-
 use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
+use Psr\Log\LoggerInterface;
 
 class RemoveWriter implements ItemWriterInterface, StepExecutionAwareInterface
 {

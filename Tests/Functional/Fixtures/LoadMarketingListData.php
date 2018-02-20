@@ -4,7 +4,6 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\SalesBundle\Entity\B2bCustomer;
 

@@ -3,16 +3,13 @@
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Processor;
 
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
-
 use Doctrine\Common\Persistence\ManagerRegistry;
-
-use Psr\Log\LoggerInterface;
-
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\ImportExportBundle\Processor\StepExecutionAwareProcessor;
-use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
-use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Psr\Log\LoggerInterface;
 
 class RejectedContactExportProcessor implements StepExecutionAwareProcessor
 {

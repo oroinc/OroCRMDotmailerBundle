@@ -4,7 +4,6 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiCampaign;
 use DotMailer\Api\DataTypes\ApiCampaignList;
-
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 
 class RemoveCampaignsImportTest extends AbstractImportExportTestCase

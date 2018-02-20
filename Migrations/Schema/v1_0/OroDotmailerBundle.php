@@ -3,10 +3,9 @@
 namespace Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_0;
 
 use Doctrine\DBAL\Schema\Schema;
-
 use Oro\Bundle\MigrationBundle\Migration\Migration;
-use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 use Oro\Bundle\MigrationBundle\Migration\OrderedMigrationInterface;
+use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyMethods)

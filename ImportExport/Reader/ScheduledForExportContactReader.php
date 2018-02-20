@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Reader;
 
 use Guzzle\Iterator\AppendIterator;
-
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExportContactIterator;
 
 class ScheduledForExportContactReader extends AbstractExportReader

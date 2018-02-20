@@ -2,9 +2,8 @@
 
 namespace Oro\Bundle\DotmailerBundle\Validator\Constraints;
 
-use Symfony\Component\Validator\Constraint;
-
 use Oro\Bundle\DotmailerBundle\Validator\DataFieldMappingConfigValidator;
+use Symfony\Component\Validator\Constraint;
 
 class DataFieldMappingConfigConstraint extends Constraint
 {

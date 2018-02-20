@@ -4,7 +4,6 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 
 class LoadDataFieldData extends AbstractFixture implements DependentFixtureInterface

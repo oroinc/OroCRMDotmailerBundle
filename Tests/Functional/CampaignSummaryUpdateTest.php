@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiCampaignSummary;
-
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector;
 
 class CampaignSummaryUpdateTest extends AbstractImportExportTestCase
