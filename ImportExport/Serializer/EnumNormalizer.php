@@ -2,10 +2,10 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Serializer;
 
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\DenormalizerInterface;
 use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\NormalizerInterface;
-use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 
 class EnumNormalizer implements NormalizerInterface, DenormalizerInterface
 {

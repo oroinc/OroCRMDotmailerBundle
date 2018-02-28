@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiContactList;
-
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 
 class UpdateEntityFieldsFromContactTest extends AbstractImportExportTestCase

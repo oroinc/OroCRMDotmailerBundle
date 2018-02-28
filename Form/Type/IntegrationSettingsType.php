@@ -2,13 +2,12 @@
 
 namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
+use Oro\Bundle\DotmailerBundle\Form\EventListener\IntegrationSettingsSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
-
-use Oro\Bundle\DotmailerBundle\Form\EventListener\IntegrationSettingsSubscriber;
 
 class IntegrationSettingsType extends AbstractType
 {
@@ -107,7 +106,7 @@ class IntegrationSettingsType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             [

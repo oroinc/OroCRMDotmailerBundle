@@ -2,9 +2,8 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
-use Oro\Bundle\ImportExportBundle\Converter\AbstractTableDataConverter;
-
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
+use Oro\Bundle\ImportExportBundle\Converter\AbstractTableDataConverter;
 
 class DataFieldDataConverter extends AbstractTableDataConverter
 {

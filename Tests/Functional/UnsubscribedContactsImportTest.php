@@ -5,11 +5,10 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 use DotMailer\Api\DataTypes\ApiContactEmailTypes;
 use DotMailer\Api\DataTypes\ApiContactStatuses;
 use DotMailer\Api\DataTypes\ApiContactSuppressionList;
-
-use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
 {

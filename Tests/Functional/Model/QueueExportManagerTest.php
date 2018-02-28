@@ -4,13 +4,12 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Model;
 
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\ApiContactImportStatuses;
-
-use Oro\Bundle\DotmailerBundle\Model\QueueExportManager;
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Model\QueueExportManager;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\AbstractImportExportTestCase;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 class QueueExportManagerTest extends AbstractImportExportTestCase
 {

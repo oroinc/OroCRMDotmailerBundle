@@ -2,11 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\ImportExport\Reader;
 
-use Oro\Bundle\IntegrationBundle\Entity\Status;
 use Oro\Bundle\DotmailerBundle\ImportExport\Reader\UnsubscribedFromAccountContactReader;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
+use Oro\Bundle\IntegrationBundle\Entity\Status;
 
 class UnsubscribedFromAccountContactReaderTest extends \PHPUnit_Framework_TestCase
 {

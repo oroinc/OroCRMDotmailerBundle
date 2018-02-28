@@ -2,19 +2,17 @@
 
 namespace Oro\Bundle\DotmailerBundle\Model;
 
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-
-use Buzz\Message\MessageInterface;
 use Buzz\Client\ClientInterface;
 use Buzz\Client\Curl;
+use Buzz\Message\MessageInterface;
 use Buzz\Message\Request;
 use Buzz\Message\RequestInterface;
 use Buzz\Message\Response;
-
-use Oro\Bundle\SecurityBundle\Encoder\Mcrypt;
 use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\SecurityBundle\Encoder\Mcrypt;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 class OAuthManager
 {

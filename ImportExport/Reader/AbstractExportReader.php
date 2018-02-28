@@ -2,9 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Reader;
 
-use Oro\Bundle\ImportExportBundle\Exception\LogicException;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
+use Oro\Bundle\ImportExportBundle\Exception\LogicException;
 
 abstract class AbstractExportReader extends AbstractReader
 {

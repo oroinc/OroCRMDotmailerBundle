@@ -3,9 +3,8 @@
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 class RemoveDataFieldIterator extends AbstractIterator
 {

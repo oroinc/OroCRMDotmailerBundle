@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
-
 use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 
 class ActivityRepository extends EntityRepository

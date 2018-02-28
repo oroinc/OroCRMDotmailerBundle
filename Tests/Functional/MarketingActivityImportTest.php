@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiCampaignContactSummaryList;
-
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 

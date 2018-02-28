@@ -2,14 +2,12 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Model;
 
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\RouterInterface;
-
-use Oro\Bundle\SecurityBundle\Encoder\Mcrypt;
+use Buzz\Client\ClientInterface;
 use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport;
 use Oro\Bundle\DotmailerBundle\Model\OAuthManager;
-
-use Buzz\Client\ClientInterface;
+use Oro\Bundle\SecurityBundle\Encoder\Mcrypt;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 class OAuthManagerTest extends \PHPUnit_Framework_TestCase
 {

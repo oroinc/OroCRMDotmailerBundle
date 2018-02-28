@@ -3,11 +3,11 @@
 namespace Oro\Bundle\DotmailerBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
-
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Component\DoctrineUtils\ORM\QueryBuilderUtil;
 
 class AddressBookContactRepository extends EntityRepository
 {
@@ -87,7 +87,7 @@ class AddressBookContactRepository extends EntityRepository
             ->andWhere('address_book_contact.channel = :channel')
             ->setParameter('channel', $channel)
             ->andWhere($qb->expr()->isNotNull('address_book_contact.marketingListItemId'))
-            ->set('address_book_contact.' . $flagColumn, ':value')
+            ->set(QueryBuilderUtil::getField('address_book_contact', $flagColumn), ':value')
             ->setParameter('value', $value)
             ->getQuery()
             ->execute();

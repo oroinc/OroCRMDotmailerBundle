@@ -2,11 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Entity;
 
+use Oro\Bundle\DotmailerBundle\Entity\Activity;
+use Oro\Bundle\DotmailerBundle\Entity\Campaign;
+use Oro\Bundle\DotmailerBundle\Entity\CampaignSummary;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Tests\Unit\Fixture\Entity\Organization;
-use Oro\Bundle\DotmailerBundle\Entity\Activity;
-use Oro\Bundle\DotmailerBundle\Entity\CampaignSummary;
-use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 
 class CampaignSummaryTest extends \PHPUnit_Framework_TestCase
 {

@@ -2,11 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\Step;
 
+use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityRepository;
-
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
-
 use Oro\Bundle\BatchBundle\Step\ItemStep;
 use Oro\Bundle\DotmailerBundle\EventListener\EntityUpdateListener;
 use Oro\Bundle\DotmailerBundle\ImportExport\Processor\UpdateEntityFieldsFromContactProcessor;

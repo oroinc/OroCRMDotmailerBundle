@@ -3,13 +3,11 @@
 namespace Oro\Bundle\DotmailerBundle\Step;
 
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
-
 use Doctrine\Common\Persistence\ManagerRegistry;
-
 use Oro\Bundle\BatchBundle\Step\ItemStep;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 
 class ImportRejectedExportsStep extends ItemStep
 {

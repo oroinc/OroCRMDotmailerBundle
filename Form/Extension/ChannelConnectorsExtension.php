@@ -2,15 +2,14 @@
 
 namespace Oro\Bundle\DotmailerBundle\Form\Extension;
 
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\FormBundle\Utils\FormUtils;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-
-use Oro\Bundle\FormBundle\Utils\FormUtils;
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 
 class ChannelConnectorsExtension extends AbstractTypeExtension
 {

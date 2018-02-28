@@ -2,21 +2,19 @@
 
 namespace Oro\Bundle\DotmailerBundle\Controller;
 
+use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
+use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-
-use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
-use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
-use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
-use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
-use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 /**
  * @Route("/dotmailer")
@@ -71,15 +69,17 @@ class DotmailerController extends Controller
 
     /**
      * @Route("/ping", name="oro_dotmailer_ping")
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function pingAction()
+    public function pingAction(Request $request)
     {
         if (!$this->isGranted('oro_integration_create') && !$this->isGranted('oro_integration_update')) {
             throw new AccessDeniedException();
         }
 
-        $username = $this->getRequest()->get('username');
-        $password = $this->getRequest()->get('password');
+        $username = $request->get('username');
+        $password = $request->get('password');
 
         $dotmailerResourceFactory = $this->get('oro_dotmailer.transport.resources_factory');
         try {

@@ -3,11 +3,9 @@
 namespace Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_1;
 
 use Doctrine\DBAL\Platforms\PostgreSQL92Platform;
-
-use Psr\Log\LoggerInterface;
-
 use Oro\Bundle\MigrationBundle\Migration\ArrayLogger;
 use Oro\Bundle\MigrationBundle\Migration\ParametrizedMigrationQuery;
+use Psr\Log\LoggerInterface;
 
 class UpdateContactJsonArrayQuery extends ParametrizedMigrationQuery
 {

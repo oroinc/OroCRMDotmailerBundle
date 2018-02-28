@@ -3,21 +3,19 @@
 namespace Oro\Bundle\DotmailerBundle\Controller;
 
 use FOS\RestBundle\Util\Codes;
-
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Oro\Bundle\SecurityBundle\Annotation\Acl;
-use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
-
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Form\Handler\DataFieldFormHandler;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\SecurityBundle\Annotation\Acl;
+use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/data-field")
@@ -63,8 +61,10 @@ class DataFieldController extends Controller
      *      permission="CREATE",
      *      class="OroDotmailerBundle:DataField"
      * )
+     * @param Request $request
+     * @return array|RedirectResponse
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
         $field = new DataField();
         if ($this->get('oro_dotmailer.form.handler.datafield_update')->process($field)) {
@@ -76,7 +76,7 @@ class DataFieldController extends Controller
             return $this->get('oro_ui.router')->redirect($field);
         }
 
-        $isTypeUpdate = $this->get('request')->get(DataFieldFormHandler::UPDATE_MARKER, false);
+        $isTypeUpdate = $request->get(DataFieldFormHandler::UPDATE_MARKER, false);
 
         $form = $this->get('oro_dotmailer.datafield.form');
         if ($isTypeUpdate) {

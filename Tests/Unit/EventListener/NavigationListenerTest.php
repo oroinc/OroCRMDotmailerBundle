@@ -2,12 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\EventListener;
 
-use Knp\Menu\MenuItem;
 use Knp\Menu\MenuFactory;
-
-use Oro\Bundle\NavigationBundle\Event\ConfigureMenuEvent;
+use Knp\Menu\MenuItem;
 use Oro\Bundle\DotmailerBundle\EventListener\NavigationListener;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\NavigationBundle\Event\ConfigureMenuEvent;
 
 class NavigationListenerTest extends \PHPUnit_Framework_TestCase
 {

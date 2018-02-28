@@ -3,18 +3,17 @@
 namespace Oro\Bundle\DotmailerBundle\Model\Action;
 
 use Doctrine\ORM\QueryBuilder;
-
 use Oro\Bundle\BatchBundle\ORM\Query\BufferedIdentityQueryResultIterator;
 use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIteratorInterface;
-use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
 use Oro\Bundle\DotmailerBundle\Provider\CacheProvider;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
+use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
-
 use Oro\Component\Action\Action\AbstractAction;
 use Oro\Component\ConfigExpression\ContextAccessor;
+use Oro\Component\DoctrineUtils\ORM\QueryBuilderUtil;
 
 abstract class AbstractMarketingListEntitiesAction extends AbstractAction
 {
@@ -120,6 +119,7 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
         $expr = $qb->expr()->orX();
         foreach ($emailFields as $emailField) {
             $parameterName = $emailField . mt_rand();
+            QueryBuilderUtil::checkIdentifier($parameterName);
             $expr->add(
                 $qb->expr()->eq(
                     $this->fieldHelper->getFieldExpr($marketingList->getEntity(), $qb, $emailField),

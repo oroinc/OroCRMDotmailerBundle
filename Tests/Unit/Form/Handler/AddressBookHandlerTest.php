@@ -2,22 +2,20 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Handler;
 
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Translation\TranslatorInterface;
-
 use Doctrine\Common\Persistence\ObjectManager;
-
-use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use DotMailer\Api\DataTypes\JsonObject;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
-use Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler;
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport as Transport;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
-
-use DotMailer\Api\DataTypes\JsonObject;
+use Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
 {
@@ -67,6 +65,8 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
         $this->request = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $requestStack = new RequestStack();
+        $requestStack->push($this->request);
         $this->manager = $this->getMockBuilder(ObjectManager::class)->getMock();
         $this->transport = $this->getMockBuilder(DotmailerTransport::class)
             ->disableOriginalConstructor()
@@ -76,7 +76,7 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
         $this->entity = $this->getMockBuilder(AddressBook::class)->getMock();
         $this->handler = new AddressBookHandler(
             $this->form,
-            $this->request,
+            $requestStack,
             $this->manager,
             $this->transport,
             $this->translator,

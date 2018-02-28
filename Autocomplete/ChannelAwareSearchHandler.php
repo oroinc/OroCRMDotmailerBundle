@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Autocomplete;
 
 use Doctrine\ORM\QueryBuilder;
-
 use Oro\Bundle\FormBundle\Autocomplete\SearchHandler;
 
 class ChannelAwareSearchHandler extends SearchHandler

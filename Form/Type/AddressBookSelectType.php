@@ -2,11 +2,10 @@
 
 namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
+use Oro\Bundle\ChannelBundle\Form\Type\CreateOrSelectInlineChannelAwareType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-
-use Oro\Bundle\ChannelBundle\Form\Type\CreateOrSelectInlineChannelAwareType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AddressBookSelectType extends CreateOrSelectInlineChannelAwareType
 {
@@ -15,7 +14,7 @@ class AddressBookSelectType extends CreateOrSelectInlineChannelAwareType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired(['marketing_list_id']);
         $resolver->setDefaults(

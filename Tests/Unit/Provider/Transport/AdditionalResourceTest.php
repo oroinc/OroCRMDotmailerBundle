@@ -6,7 +6,6 @@ use DotMailer\Api\DataTypes\ApiAccount;
 use DotMailer\Api\DataTypes\ApiCampaignContactClickList;
 use DotMailer\Api\DataTypes\ApiCampaignContactOpenList;
 use DotMailer\Api\Rest\IClient;
-
 use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
 
 class AdditionalResourceTest extends \PHPUnit_Framework_TestCase

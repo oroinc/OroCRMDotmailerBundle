@@ -2,14 +2,13 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
-use DotMailer\Api\DataTypes\ApiCampaignContactClickList;
 use DotMailer\Api\DataTypes\ApiCampaignContactClick;
-
-use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
+use DotMailer\Api\DataTypes\ApiCampaignContactClickList;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AbstractActivityIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignClickIterator;
-use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
+use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 
 class CampaignClickIteratorTest extends \PHPUnit_Framework_TestCase
 {

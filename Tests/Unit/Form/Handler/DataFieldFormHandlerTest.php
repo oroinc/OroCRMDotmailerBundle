@@ -2,13 +2,13 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Handler;
 
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\Request;
-
-use Oro\Bundle\DotmailerBundle\Form\Handler\DataFieldFormHandler;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Exception\InvalidDefaultValueException;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
+use Oro\Bundle\DotmailerBundle\Form\Handler\DataFieldFormHandler;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,7 +21,7 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     protected $managerRegistry;
 
-     /** @var \PHPUnit_Framework_MockObject_MockObject */
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
     protected $translator;
 
     /** @var \PHPUnit_Framework_MockObject_MockObject */
@@ -39,6 +39,8 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->request = new Request();
+        $requestStack = new RequestStack();
+        $requestStack->push($this->request);
         $this->form = $this->getMockBuilder('Symfony\Component\Form\Form')
             ->disableOriginalConstructor()->getMock();
         $this->managerRegistry = $this->getMockBuilder('Doctrine\Common\Persistence\ManagerRegistry')
@@ -53,7 +55,7 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
         $this->handler = new DataFieldFormHandler(
             $this->form,
             $this->managerRegistry,
-            $this->request,
+            $requestStack,
             $this->logger,
             $this->translator,
             $this->dataFieldManager

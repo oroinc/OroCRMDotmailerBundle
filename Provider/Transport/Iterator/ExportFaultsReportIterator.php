@@ -4,7 +4,6 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use DotMailer\Api\DataTypes\Guid;
 use DotMailer\Api\Resources\IResources;
-
 use Oro\Bundle\DotmailerBundle\Provider\CsvStringReader;
 
 class ExportFaultsReportIterator implements \Iterator

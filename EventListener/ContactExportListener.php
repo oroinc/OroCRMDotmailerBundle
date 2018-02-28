@@ -3,13 +3,12 @@
 namespace Oro\Bundle\DotmailerBundle\EventListener;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Oro\Bundle\DotmailerBundle\Model\QueueExportManager;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
-use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Event\SyncEvent;

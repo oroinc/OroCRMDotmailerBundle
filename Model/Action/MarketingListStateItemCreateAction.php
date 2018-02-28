@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Model\Action;
 
 use Doctrine\ORM\Query\Expr\Join;
-
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface;

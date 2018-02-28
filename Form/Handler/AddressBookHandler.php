@@ -2,17 +2,15 @@
 
 namespace Oro\Bundle\DotmailerBundle\Form\Handler;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\Request;
-
-use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
-use Psr\Log\LoggerInterface;
-
-use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
-use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
-use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 
 class AddressBookHandler
 {
@@ -22,9 +20,9 @@ class AddressBookHandler
     protected $form;
 
     /**
-     * @var Request
+     * @var RequestStack
      */
-    protected $request;
+    protected $requestStack;
 
     /**
      * @var ObjectManager
@@ -49,7 +47,7 @@ class AddressBookHandler
     /**
      *
      * @param FormInterface       $form
-     * @param Request             $request
+     * @param RequestStack        $requestStack
      * @param ObjectManager       $manager
      * @param DotmailerTransport  $transport
      * @param TranslatorInterface $translator
@@ -57,14 +55,14 @@ class AddressBookHandler
      */
     public function __construct(
         FormInterface $form,
-        Request $request,
+        RequestStack $requestStack,
         ObjectManager $manager,
         DotmailerTransport $transport,
         TranslatorInterface $translator,
         LoggerInterface $logger
     ) {
         $this->form       = $form;
-        $this->request    = $request;
+        $this->requestStack = $requestStack;
         $this->manager    = $manager;
         $this->transport  = $transport;
         $this->translator = $translator;
@@ -81,8 +79,9 @@ class AddressBookHandler
     {
         $this->form->setData($entity);
 
-        if (in_array($this->request->getMethod(), array('POST', 'PUT'))) {
-            $this->form->submit($this->request);
+        $request = $this->requestStack->getCurrentRequest();
+        if (in_array($request->getMethod(), ['POST', 'PUT'], true)) {
+            $this->form->submit($request);
             if ($this->form->isValid()) {
                 try {
                     $this->transport->init($entity->getChannel()->getTransport());

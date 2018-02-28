@@ -5,15 +5,12 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Writer;
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 use Akeneo\Bundle\BatchBundle\Item\ItemWriterInterface;
 use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
-
-use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Persistence\ManagerRegistry;
-
-use Psr\Log\LoggerInterface;
-
+use Doctrine\ORM\EntityManager;
+use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
-use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
+use Psr\Log\LoggerInterface;
 
 class RejectedContactExportWriter implements ItemWriterInterface, StepExecutionAwareInterface
 {

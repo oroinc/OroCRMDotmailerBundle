@@ -2,10 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
-use Psr\Log\LoggerInterface;
-
-use Oro\Bundle\ImportExportBundle\Strategy\Import\ImportStrategyHelper;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
+use Oro\Bundle\ImportExportBundle\Strategy\Import\ImportStrategyHelper;
+use Psr\Log\LoggerInterface;
 
 class ImportStrategyHelperWithLog extends ImportStrategyHelper
 {

@@ -2,9 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Provider\Connector;
 
-use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
+use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 
 class AbstractDotmailerConnectorTest extends WebTestCase
 {

@@ -2,12 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Model;
 
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport;
 use Oro\Bundle\DotmailerBundle\Model\DataFieldManager;
-
-use Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\EnumValueStub;
 use Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\DataFieldStub;
+use Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\EnumValueStub;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 class DataFieldManagerTest extends \PHPUnit_Framework_TestCase
 {
