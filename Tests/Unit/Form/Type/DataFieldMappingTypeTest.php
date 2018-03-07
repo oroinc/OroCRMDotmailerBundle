@@ -155,7 +155,6 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
 
         $expectedOptions = [
             'data_class' => 'Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping',
-            'cascade_validation' => true
         ];
 
         $formOptions = $form->getConfig()->getOptions();

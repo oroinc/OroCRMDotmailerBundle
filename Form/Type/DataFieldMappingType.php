@@ -105,7 +105,6 @@ class DataFieldMappingType extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class' => $this->dataClass,
-                'cascade_validation' => true
             ]
         );
     }

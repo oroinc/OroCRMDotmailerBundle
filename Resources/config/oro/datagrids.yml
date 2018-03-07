@@ -1,6 +1,6 @@
 datagrids:
     oro_dotmailer_address_books_grid:
-        extended_entity_name: %oro_dotmailer.entity.address_book.class%
+        extended_entity_name: '%oro_dotmailer.entity.address_book.class%'
         channel_limitation:
             channel_relation_path: .channel
         options:
@@ -13,7 +13,7 @@ datagrids:
                     - addressBook.name
                     - addressBook.contactCount
                 from:
-                    - { table: %oro_dotmailer.entity.address_book.class%, alias: addressBook }
+                    - { table: '%oro_dotmailer.entity.address_book.class%', alias: addressBook }
                 join:
                     left:
                         - { join: addressBook.visibility, alias: address_book_visibility }
@@ -46,7 +46,7 @@ datagrids:
             id: ~
 
     oro_dotmailer_datafield_grid:
-        extended_entity_name: %oro_dotmailer.entity.datafield.class%
+        extended_entity_name: '%oro_dotmailer.entity.datafield.class%'
         channel_limitation:
             channel_relation_path: .channel
         options:
@@ -60,7 +60,7 @@ datagrids:
                     - field.notes
                     - channel.name as channelName
                 from:
-                    - { table: %oro_dotmailer.entity.datafield.class%, alias: field }
+                    - { table: '%oro_dotmailer.entity.datafield.class%', alias: field }
                 join:
                     left:
                         - { join: field.channel, alias: channel }
@@ -125,7 +125,7 @@ datagrids:
                 link:          delete_link
 
     oro_dotmailer_datafield_mapping_grid:
-        extended_entity_name: %oro_dotmailer.entity.datafield_mapping.class%
+        extended_entity_name: '%oro_dotmailer.entity.datafield_mapping.class%'
         options:
             entityHint: Data field mapping lists
         source:
@@ -137,7 +137,7 @@ datagrids:
                     - mapping.syncPriority
                     - channel.name as channelName
                 from:
-                    - { table: %oro_dotmailer.entity.datafield_mapping.class%, alias: mapping }
+                    - { table: '%oro_dotmailer.entity.datafield_mapping.class%', alias: mapping }
                 join:
                     left:
                         - { join: mapping.channel, alias: channel }
