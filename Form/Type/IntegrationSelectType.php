@@ -46,7 +46,7 @@ class IntegrationSelectType extends AbstractType
         ];
 
         if (count($integrations) != 1) {
-            $options['empty_value'] = 'oro.dotmailer.integration.select.placeholder';
+            $options['placeholder'] = 'oro.dotmailer.integration.select.placeholder';
         }
 
         $resolver->setDefaults($options);
