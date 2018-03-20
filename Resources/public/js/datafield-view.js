@@ -7,12 +7,13 @@ define([
 ], function($, Backbone, _, __, mediator) {
     'use strict';
 
+    var DataFieldCiew;
     /**
      * @export  orodotmailer/js/datafield-view
      * @class   orodotmailer.datafieldView
      * @extends Backbone.View
      */
-    return Backbone.View.extend({
+    DataFieldCiew = Backbone.View.extend({
         /**
          * @const
          */
@@ -27,6 +28,13 @@ define([
         },
 
         requiredOptions: ['typeSelector', 'fieldsSets', 'formSelector'],
+
+        /**
+         * @inheritDoc
+         */
+        constructor: function DataFieldCiew() {
+            DataFieldCiew.__super__.constructor.apply(this, arguments);
+        },
 
         /**
          * @param options Object
@@ -63,4 +71,6 @@ define([
             mediator.execute('submitPage', {url: url, type: $form.attr('method'), data: $.param(data)});
         }
     });
+
+    return DataFieldCiew;
 });

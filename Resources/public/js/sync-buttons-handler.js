@@ -53,6 +53,13 @@ define([
                     }
                 },
 
+                /**
+                 * @inheritDoc
+                 */
+                constructor: function StatelessWidgetComponent() {
+                    StatelessWidgetComponent.__super__.constructor.apply(this, arguments);
+                },
+
                 _bindEnvironmentEvent: function(widget) {
                     this.listenTo(widget, 'formSave', function() {
                         widget.remove();

@@ -18,6 +18,13 @@ define(function(require) {
         /**
          * @inheritDoc
          */
+        constructor: function MappingModel() {
+            MappingModel.__super__.constructor.apply(this, arguments);
+        },
+
+        /**
+         * @inheritDoc
+         */
         validate: function(attrs, options) {
             var error;
             try {

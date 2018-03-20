@@ -7,12 +7,14 @@ define([
 ], function($, Backbone, _, __, mediator) {
     'use strict';
 
+    var IntegrationConnection;
+
     /**
      * @export  orodotmailer/js/integration-connection
      * @class   orodotmailer.IntegrationConnection
      * @extends Backbone.View
      */
-    return Backbone.View.extend({
+    IntegrationConnection = Backbone.View.extend({
         /**
          * Array of fields that should be submitted for form update
          */
@@ -21,6 +23,13 @@ define([
         },
 
         requiredOptions: ['channelSelector', 'fieldsSets', 'formSelector'],
+
+        /**
+         * @inheritDoc
+         */
+        constructor: function IntegrationConnection() {
+            IntegrationConnection.__super__.constructor.apply(this, arguments);
+        },
 
         /**
          * @param options Object
@@ -57,4 +66,6 @@ define([
             mediator.execute('submitPage', {url: url, type: $form.attr('method'), data: $.param(data)});
         }
     });
+
+    return IntegrationConnection;
 });
