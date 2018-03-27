@@ -105,7 +105,7 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
             ->with($this->entity);
 
         $this->form->expects($this->never())
-            ->method('submit');
+            ->method('handleRequest');
 
         $this->assertFalse($this->handler->process($this->entity));
     }
@@ -125,7 +125,7 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($method));
 
         $this->form->expects($this->once())
-            ->method('submit')
+            ->method('handleRequest')
             ->with($this->request);
 
         $this->assertFalse($this->handler->process($this->entity));
@@ -148,7 +148,7 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('getMethod')
             ->will($this->returnValue('POST'));
         $this->form->expects($this->once())
-            ->method('submit')
+            ->method('handleRequest')
             ->with($this->request);
         $this->form->expects($this->once())
             ->method('isValid')
@@ -212,7 +212,7 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('getMethod')
             ->will($this->returnValue('POST'));
         $this->form->expects($this->once())
-            ->method('submit')
+            ->method('handleRequest')
             ->with($this->request);
         $this->form->expects($this->once())
             ->method('isValid')
@@ -263,7 +263,7 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('getMethod')
             ->will($this->returnValue('POST'));
         $this->form->expects($this->once())
-            ->method('submit')
+            ->method('handleRequest')
             ->with($this->request);
         $this->form->expects($this->once())
             ->method('isValid')
