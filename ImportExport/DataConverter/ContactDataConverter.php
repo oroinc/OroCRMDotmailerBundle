@@ -8,6 +8,9 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExportCon
 use Oro\Bundle\ImportExportBundle\Context\ContextAwareInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 
+/**
+ * Prepares dotmailer contact data for import and export
+ */
 class ContactDataConverter extends AbstractDataConverter implements ContextAwareInterface
 {
     const ADDRESS_BOOK_CONTACT_ID = 'addressBookContactId';
@@ -83,6 +86,17 @@ class ContactDataConverter extends AbstractDataConverter implements ContextAware
             }
         } else {
             $importedRecord['datafields'] = [];
+        }
+
+        /**
+         * Due to implicit Dotmailer API logic which causes all emails passed always turned to lowercase
+         * we need to cast emails to lowercase to have all our `orocrm_dm_contact.email` records prepared to export
+         * (null originId) to be converted to lowercase before saving as well. So this will make possible syncing
+         * emails which have different letter cases.
+         */
+        if (isset($importedRecord[ContactSyncDataConverter::EMAIL_FIELD])) {
+            $importedRecord[ContactSyncDataConverter::EMAIL_FIELD] =
+                strtolower($importedRecord[ContactSyncDataConverter::EMAIL_FIELD]);
         }
 
         return parent::convertToImportFormat($importedRecord, $skipNullValues);
