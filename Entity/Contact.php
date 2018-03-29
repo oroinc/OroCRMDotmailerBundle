@@ -14,6 +14,7 @@ use Oro\Bundle\LocaleBundle\Model\LastNameInterface;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 /**
+ * Entity which represents contacts synced with dotmailer
  * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository")
  * @ORM\Table(
  *      name="orocrm_dm_contact",
@@ -303,7 +304,7 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
      */
     public function setEmail($email)
     {
-        $this->email = $email;
+        $this->email = strtolower($email);
 
         return $this;
     }

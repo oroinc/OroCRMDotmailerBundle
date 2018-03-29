@@ -11,6 +11,9 @@ use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareInterf
 use Oro\Bundle\MigrationBundle\Migration\Installation;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 
+/**
+ * Installer executes all needed table changes during install
+ */
 class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareInterface
 {
     /**
@@ -23,7 +26,7 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
      */
     public function getMigrationVersion()
     {
-        return 'v1_4';
+        return 'v1_5';
     }
 
     /**
