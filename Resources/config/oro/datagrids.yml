@@ -94,7 +94,7 @@ datagrids:
                     options:
                         field_options:
                             class: "OroIntegrationBundle:Channel"
-                            property: name
+                            choice_label: name
                             translatable_options: false
                 name:
                     type: string
@@ -171,7 +171,7 @@ datagrids:
                     options:
                         field_options:
                             class: "OroIntegrationBundle:Channel"
-                            property: name
+                            choice_label: name
                             translatable_options: false
                 entity:
                     type: string
