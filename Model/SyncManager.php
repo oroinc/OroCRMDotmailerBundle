@@ -2,15 +2,14 @@
 
 namespace Oro\Bundle\DotmailerBundle\Model;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
-use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookRepository;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactRepository;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookRepository;
 use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SyncManager
 {

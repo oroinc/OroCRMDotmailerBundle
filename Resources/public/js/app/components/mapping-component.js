@@ -35,6 +35,16 @@ define(function(require) {
 
         fieldRowViews: null,
 
+        /**
+         * @inheritDoc
+         */
+        constructor: function MappingComponent() {
+            MappingComponent.__super__.constructor.apply(this, arguments);
+        },
+
+        /**
+         * @inheritDoc
+         */
         initialize: function(options) {
             this.processOptions(options);
             this._deferredInit();

@@ -3,14 +3,13 @@
 namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Entity\Status;
 use Oro\Bundle\IntegrationBundle\Provider\AbstractConnector;
 use Oro\Bundle\IntegrationBundle\Provider\ConnectorInterface;
-use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
-use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
 /**
  * @property DotmailerTransport $transport

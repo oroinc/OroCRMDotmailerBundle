@@ -2,13 +2,12 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Handler;
 
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\Request;
-
-use Oro\Bundle\DotmailerBundle\Form\Handler\DataFieldFormHandler;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Exception\InvalidDefaultValueException;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
+use Oro\Bundle\DotmailerBundle\Form\Handler\DataFieldFormHandler;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
@@ -22,7 +21,7 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     protected $managerRegistry;
 
-     /** @var \PHPUnit_Framework_MockObject_MockObject */
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
     protected $translator;
 
     /** @var \PHPUnit_Framework_MockObject_MockObject */
@@ -68,7 +67,7 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
         $this->form->expects($this->once())->method('setData')
             ->with($this->entity);
 
-        $this->form->expects($this->never())->method('submit');
+        $this->form->expects($this->never())->method('handleRequest');
 
         $this->assertFalse($this->handler->process($this->entity));
     }
@@ -78,7 +77,7 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
         $this->request->setMethod('POST');
 
         $this->form->expects($this->once())->method('setData')->with($this->entity);
-        $this->form->expects($this->once()) ->method('submit') ->with($this->request);
+        $this->form->expects($this->once()) ->method('handleRequest') ->with($this->request);
         $this->form->expects($this->once()) ->method('isValid')
             ->will($this->returnValue(true));
 
@@ -97,7 +96,7 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
         $this->request->setMethod('POST');
 
         $this->form->expects($this->once())->method('setData')->with($this->entity);
-        $this->form->expects($this->once()) ->method('submit') ->with($this->request);
+        $this->form->expects($this->once()) ->method('handleRequest') ->with($this->request);
         $this->form->expects($this->once()) ->method('isValid')
             ->will($this->returnValue(true));
 
@@ -120,7 +119,7 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
         $this->request->setMethod('POST');
 
         $this->form->expects($this->once())->method('setData')->with($this->entity);
-        $this->form->expects($this->once()) ->method('submit') ->with($this->request);
+        $this->form->expects($this->once()) ->method('handleRequest') ->with($this->request);
         $this->form->expects($this->once()) ->method('isValid')
             ->will($this->returnValue(true));
 
@@ -147,7 +146,7 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
         $this->request->setMethod('POST');
 
         $this->form->expects($this->once())->method('setData')->with($this->entity);
-        $this->form->expects($this->once()) ->method('submit') ->with($this->request);
+        $this->form->expects($this->once()) ->method('handleRequest') ->with($this->request);
         $this->form->expects($this->once()) ->method('isValid')
             ->will($this->returnValue(true));
 
@@ -177,7 +176,7 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
         $this->form->expects($this->once())->method('setData')
             ->with($this->entity);
 
-        $this->form->expects($this->once())->method('submit');
+        $this->form->expects($this->once())->method('handleRequest');
 
         $this->dataFieldManager->expects($this->never())->method('createOriginDataField');
 

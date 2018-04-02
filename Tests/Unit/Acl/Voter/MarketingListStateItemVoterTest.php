@@ -3,13 +3,11 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Acl\Voter;
 
 use Doctrine\ORM\Query\Expr;
-
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-
 use Oro\Bundle\DotmailerBundle\Acl\Voter\MarketingListStateItemVoter;
-use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
+use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class MarketingListStateItemVoterTest extends \PHPUnit_Framework_TestCase
 {
@@ -55,56 +53,6 @@ class MarketingListStateItemVoterTest extends \PHPUnit_Framework_TestCase
             $this->fieldHelper,
             'Oro\Bundle\DotmailerBundle\Entity\Contact'
         );
-    }
-
-    /**
-     * @param string $attribute
-     * @param bool   $expected
-     *
-     * @dataProvider supportsAttributeDataProvider
-     */
-    public function testSupportsAttribute($attribute, $expected)
-    {
-        $this->assertEquals($expected, $this->voter->supportsAttribute($attribute));
-    }
-
-    /**
-     * @return array
-     */
-    public function supportsAttributeDataProvider()
-    {
-        return [
-            'VIEW'   => ['VIEW', false],
-            'CREATE' => ['CREATE', false],
-            'EDIT'   => ['EDIT', false],
-            'DELETE' => ['DELETE', true],
-            'ASSIGN' => ['ASSIGN', false],
-        ];
-    }
-
-    /**
-     * @param string $class
-     * @param string $actualClass
-     * @param bool   $expected
-     *
-     * @dataProvider supportsClassDataProvider
-     */
-    public function testSupportsClass($class, $actualClass, $expected)
-    {
-        $this->voter->setClassName($actualClass);
-
-        $this->assertEquals($expected, $this->voter->supportsClass($class));
-    }
-
-    /**
-     * @return array
-     */
-    public function supportsClassDataProvider()
-    {
-        return [
-            'supported'     => ['stdClass', 'stdClass', true],
-            'not_supported' => ['NotSupportedClass', 'stdClass', false],
-        ];
     }
 
     /**

@@ -5,22 +5,18 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Writer;
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 use Akeneo\Bundle\BatchBundle\Item\ItemWriterInterface;
 use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
-
-use DotMailer\Api\Exception;
-
-use Psr\Log\LoggerInterface;
-
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-
+use DotMailer\Api\Exception;
+use Oro\Bundle\DotmailerBundle\ImportExport\Processor\RemovedExportProcessor;
+use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemovedContactsExportIterator;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Oro\Bundle\DotmailerBundle\ImportExport\Processor\RemovedExportProcessor;
-use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
-use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemovedContactsExportIterator;
-use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
+use Psr\Log\LoggerInterface;
 
 class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionAwareInterface
 {

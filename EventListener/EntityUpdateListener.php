@@ -2,15 +2,17 @@
 
 namespace Oro\Bundle\DotmailerBundle\EventListener;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
-
 use Oro\Bundle\DotmailerBundle\Entity\ChangedFieldLog;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\ChangedFieldLogRepository;
 use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\PlatformBundle\EventListener\OptionalListenerInterface;
 
+/**
+ * Tracks changes that done on fields of entities which are used in mapping configuration
+ */
 class EntityUpdateListener implements OptionalListenerInterface
 {
     /** @var bool  */
@@ -46,6 +48,7 @@ class EntityUpdateListener implements OptionalListenerInterface
         if (!$this->enabled) {
             return;
         }
+
         $em = $args->getEntityManager();
         $uow = $em->getUnitOfWork();
         $entities = array_merge($uow->getScheduledEntityUpdates(), $uow->getScheduledEntityInsertions());
@@ -55,7 +58,7 @@ class EntityUpdateListener implements OptionalListenerInterface
             $mappedClasses = array_keys($trackedFieldsConfig);
             foreach ($entities as $entity) {
                 $entityClass = $this->doctrineHelper->getEntityClass($entity);
-                if (!in_array($entityClass, $mappedClasses)) {
+                if (!in_array($entityClass, $mappedClasses, true)) {
                     continue;
                 }
                 $isInsertion = $uow->isScheduledForInsert($entity);
@@ -68,27 +71,51 @@ class EntityUpdateListener implements OptionalListenerInterface
                         if (isset($trackedFieldsConfig[$entityClass][$field])) {
                             $fieldConfigs = $trackedFieldsConfig[$entityClass][$field];
                             foreach ($fieldConfigs as $fieldConfig) {
-                                $log = new ChangedFieldLog();
-                                $log->setChannelId($fieldConfig['channel_id']);
-                                $log->setParentEntity($fieldConfig['parent_entity']);
-                                $log->setRelatedFieldPath($fieldConfig['field_path']);
-                                if (!$isInsertion) {
-                                    $entityId = $this->doctrineHelper->getSingleEntityIdentifier($entity, false);
-                                    $log->setRelatedId($entityId);
-                                }
+                                $log = $this->createLog($fieldConfig, $entity, $isInsertion);
+
                                 $em->persist($log);
                                 $uow->computeChangeSet($metadata, $log);
-                                if ($isInsertion) {
-                                    $this->logs[] = [
-                                        'entity' => $entity,
-                                        'log'    => $log
-                                    ];
-                                }
+
+                                $this->schedule($log, $entity, $isInsertion);
                             }
                         }
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * @param array $fieldConfig
+     * @param object $entity
+     * @param bool $isInsertion
+     * @return ChangedFieldLog
+     */
+    private function createLog(array $fieldConfig, $entity, $isInsertion)
+    {
+        $log = new ChangedFieldLog();
+        $log->setChannelId($fieldConfig['channel_id']);
+        $log->setParentEntity($fieldConfig['parent_entity']);
+        $log->setRelatedFieldPath($fieldConfig['field_path']);
+
+        if (!$isInsertion) {
+            $log->setRelatedId(
+                $this->doctrineHelper->getSingleEntityIdentifier($entity, false)
+            );
+        }
+
+        return $log;
+    }
+
+    /**
+     * @param ChangedFieldLog $log
+     * @param object $entity
+     * @param bool $isInsertion
+     */
+    private function schedule(ChangedFieldLog $log, $entity, $isInsertion)
+    {
+        if ($isInsertion) {
+            $this->logs[] = ['entity' => $entity, 'log' => $log];
         }
     }
 
@@ -103,8 +130,9 @@ class EntityUpdateListener implements OptionalListenerInterface
             return;
         }
 
-        $em = $args->getEntityManager();
-        $repository = $em->getRepository(ChangedFieldLog::class);
+        /** @var ChangedFieldLogRepository $repository */
+        $repository = $this->doctrineHelper->getEntityRepositoryForClass(ChangedFieldLog::class);
+
         foreach ($this->logs as $log) {
             $entityId = $this->doctrineHelper->getSingleEntityIdentifier($log['entity'], false);
             /** @var ChangedFieldLog $logEntity */

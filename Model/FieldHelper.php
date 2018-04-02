@@ -5,7 +5,6 @@ namespace Oro\Bundle\DotmailerBundle\Model;
 use Doctrine\ORM\Query\Expr\From;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
-
 use Oro\Bundle\EntityBundle\Provider\VirtualFieldProviderInterface;
 
 class FieldHelper

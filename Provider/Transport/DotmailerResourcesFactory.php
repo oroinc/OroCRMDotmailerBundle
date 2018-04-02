@@ -6,9 +6,9 @@ use DotMailer\Api\DataTypes\ApiAccount;
 use DotMailer\Api\Resources\IResources;
 use DotMailer\Api\Resources\Resources;
 use DotMailer\Api\Rest\IClient;
-use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\DotmailerClientInterface;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\CacheAwareClient;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\Client;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\DotmailerClientInterface;
 use Psr\Log\LoggerInterface;
 
 class DotmailerResourcesFactory

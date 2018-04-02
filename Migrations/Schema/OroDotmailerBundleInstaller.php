@@ -3,15 +3,17 @@
 namespace Oro\Bundle\DotmailerBundle\Migrations\Schema;
 
 use Doctrine\DBAL\Schema\Schema;
-
+use Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_0;
+use Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_2;
+use Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_3;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtension;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareInterface;
 use Oro\Bundle\MigrationBundle\Migration\Installation;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
-use Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_0;
-use Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_2;
-use Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_3;
 
+/**
+ * Installer executes all needed table changes during install
+ */
 class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareInterface
 {
     /**
@@ -24,7 +26,7 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
      */
     public function getMigrationVersion()
     {
-        return 'v1_4';
+        return 'v1_5';
     }
 
     /**

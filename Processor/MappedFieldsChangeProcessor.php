@@ -2,13 +2,12 @@
 
 namespace Oro\Bundle\DotmailerBundle\Processor;
 
-use Psr\Log\LoggerInterface;
-
 use Oro\Bundle\BatchBundle\ORM\Query\BufferedIdentityQueryResultIterator;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\ChangedFieldLog;
 use Oro\Bundle\DotmailerBundle\QueryDesigner\ParentEntityFindQueryConverter;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
+use Psr\Log\LoggerInterface;
 
 class MappedFieldsChangeProcessor
 {

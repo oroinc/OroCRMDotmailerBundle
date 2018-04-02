@@ -2,13 +2,12 @@
 
 namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
+use Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldMappingFormSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
-use Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldMappingFormSubscriber;
 
 class DataFieldMappingType extends AbstractType
 {
@@ -106,7 +105,6 @@ class DataFieldMappingType extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class' => $this->dataClass,
-                'cascade_validation' => true
             ]
         );
     }

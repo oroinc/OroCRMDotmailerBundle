@@ -2,8 +2,8 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
-use DotMailer\Api\DataTypes\ApiCampaignContactSummaryList;
 use DotMailer\Api\DataTypes\ApiCampaignContactSummary;
+use DotMailer\Api\DataTypes\ApiCampaignContactSummaryList;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
 
 class ActivityContactIteratorTest extends \PHPUnit_Framework_TestCase

@@ -2,8 +2,8 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
-use Oro\Bundle\ImportExportBundle\Converter\DataConverterInterface;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIterator;
+use Oro\Bundle\ImportExportBundle\Converter\DataConverterInterface;
 
 class UnsubscribedContactDataConverter implements DataConverterInterface
 {

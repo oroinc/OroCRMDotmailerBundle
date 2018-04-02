@@ -3,11 +3,10 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
-use Oro\Bundle\DotmailerBundle\Entity\Campaign;
-use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 
 class AddressBookTest extends \PHPUnit_Framework_TestCase
 {

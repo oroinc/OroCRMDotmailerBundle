@@ -4,7 +4,6 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiDataField;
 use DotMailer\Api\DataTypes\ApiDataFieldList;
-
 use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
 
 class RemoveDataFieldImportTest extends AbstractImportExportTestCase

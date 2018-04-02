@@ -2,13 +2,12 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\EventListener;
 
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-
-use Oro\Component\Testing\Unit\EntityTrait;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
 use Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldMappingFormSubscriber;
+use Oro\Component\Testing\Unit\EntityTrait;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
 {

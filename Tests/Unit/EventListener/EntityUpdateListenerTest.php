@@ -4,7 +4,6 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\EventListener;
 
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
-
 use Oro\Bundle\DotmailerBundle\Entity\ChangedFieldLog;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\ChangedFieldLogRepository;
 use Oro\Bundle\DotmailerBundle\EventListener\EntityUpdateListener;
@@ -181,8 +180,10 @@ class EntityUpdateListenerTest extends \PHPUnit_Framework_TestCase
             ->getMockBuilder(ChangedFieldLogRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $em->expects($this->once())->method('getRepository')->with(ChangedFieldLog::class)
-            ->will($this->returnValue($repository));
+        $this->doctrineHelper->expects($this->once())
+            ->method('getEntityRepositoryForClass')
+            ->with(ChangedFieldLog::class)
+            ->willReturn($repository);
         $this->doctrineHelper->expects($this->once())->method('getSingleEntityIdentifier')
             ->with('insertedEntityClass', false)->will($this->returnValue(42));
         $repository->expects($this->once())->method('addEntityIdToLog')->with(42, null);

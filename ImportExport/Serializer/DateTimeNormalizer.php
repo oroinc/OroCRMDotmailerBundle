@@ -2,11 +2,10 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Serializer;
 
-use Symfony\Component\Serializer\Exception\RuntimeException;
-
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\DenormalizerInterface;
 use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\NormalizerInterface;
-use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
+use Symfony\Component\Serializer\Exception\RuntimeException;
 
 class DateTimeNormalizer implements NormalizerInterface, DenormalizerInterface
 {

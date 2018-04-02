@@ -2,16 +2,13 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
-use DotMailer\Api\DataTypes\ApiContactStatuses;
-
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-
+use DotMailer\Api\DataTypes\ApiContactStatuses;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
-use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class LoadDotmailerContactData extends AbstractFixture implements DependentFixtureInterface
 {

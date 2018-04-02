@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Step;
 
 use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
-
 use Oro\Bundle\BatchBundle\Step\ItemStep;
 use Oro\Bundle\WorkflowBundle\Model\ProcessLogger;
 

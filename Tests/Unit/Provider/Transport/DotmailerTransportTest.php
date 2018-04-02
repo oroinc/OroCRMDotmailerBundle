@@ -8,7 +8,6 @@ use DotMailer\Api\DataTypes\ApiDataField;
 use DotMailer\Api\DataTypes\ApiFileMedia;
 use DotMailer\Api\DataTypes\ApiResubscribeResult;
 use DotMailer\Api\DataTypes\Int32List;
-
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
 /**

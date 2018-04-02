@@ -6,8 +6,6 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
-
-use Oro\Bundle\SecurityBundle\Owner\Metadata\OwnershipMetadataProviderInterface;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
@@ -16,7 +14,11 @@ use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 use Oro\Bundle\MarketingListBundle\Provider\MarketingListProvider;
+use Oro\Bundle\SecurityBundle\Owner\Metadata\OwnershipMetadataProviderInterface;
 
+/**
+ * Prepares QB with all needed Marketing list items
+ */
 class MarketingListItemsQueryBuilderProvider
 {
     const CONTACT_ALIAS = 'dm_contact';
@@ -319,10 +321,10 @@ class MarketingListItemsQueryBuilderProvider
         $qb->add('from', $from);
         if (is_array($emailField)) {
             $qb->leftJoin(sprintf('%s.%s', $entityAlias, $emailField['entityEmailField']), 'entityEmail');
-            $fieldExp = sprintf('entityEmail.%s', $emailField['emailField']);
+            $fieldExp = sprintf('LOWER(entityEmail.%s)', $emailField['emailField']);
             $qb->addSelect($fieldExp);
         } else {
-            $fieldExp = sprintf('%s.%s', $entityAlias, $emailField);
+            $fieldExp = sprintf('LOWER(%s.%s)', $entityAlias, $emailField);
             $qb->addSelect($fieldExp);
         }
         $qb->andWhere($qb->expr()->isNotNull($fieldExp));

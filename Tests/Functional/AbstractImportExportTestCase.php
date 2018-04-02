@@ -3,14 +3,12 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
-
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Provider\SyncProcessor;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory;
 
 abstract class AbstractImportExportTestCase extends WebTestCase
 {

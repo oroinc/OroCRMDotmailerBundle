@@ -3,19 +3,17 @@
 namespace Oro\Bundle\DotmailerBundle\Command;
 
 use Doctrine\ORM\EntityRepository;
-
+use Oro\Bundle\CronBundle\Command\CronCommandInterface;
+use Oro\Bundle\DotmailerBundle\Model\SyncManager;
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
+use Oro\Bundle\IntegrationBundle\Entity\Repository\ChannelRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
-
-use Oro\Bundle\CronBundle\Command\CronCommandInterface;
-use Oro\Bundle\DotmailerBundle\Model\SyncManager;
-use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
-use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
-use Oro\Bundle\IntegrationBundle\Entity\Repository\ChannelRepository;
 
 class FieldsForceSyncCommand extends Command implements CronCommandInterface, ContainerAwareInterface
 {

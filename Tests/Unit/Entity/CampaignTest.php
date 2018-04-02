@@ -3,12 +3,11 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Oro\Bundle\DotmailerBundle\Entity\Campaign;
-use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Activity;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 use Oro\Bundle\DotmailerBundle\Entity\CampaignSummary;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 /**
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)

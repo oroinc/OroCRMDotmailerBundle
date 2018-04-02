@@ -4,7 +4,6 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-
 use Oro\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem;
 
 class LoadMarketingListUnsubscribedData extends AbstractFixture implements DependentFixtureInterface

@@ -4,11 +4,11 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Transport;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ManagerRegistry;
-
 use DotMailer\Api\DataTypes\ApiAddressBook;
 use DotMailer\Api\DataTypes\ApiCampaign;
 use DotMailer\Api\DataTypes\ApiCampaignSend;
 use DotMailer\Api\DataTypes\ApiContactImport;
+use DotMailer\Api\DataTypes\ApiContactResubscription;
 use DotMailer\Api\DataTypes\ApiDataField;
 use DotMailer\Api\DataTypes\ApiDependencyResult;
 use DotMailer\Api\DataTypes\ApiFileMedia;
@@ -18,32 +18,28 @@ use DotMailer\Api\DataTypes\ApiTransactionalDataImportReport;
 use DotMailer\Api\DataTypes\ApiTransactionalDataList;
 use DotMailer\Api\DataTypes\Int32List;
 use DotMailer\Api\Resources\IResources;
-use DotMailer\Api\DataTypes\ApiContactResubscription;
-
 use Guzzle\Iterator\AppendIterator;
-
-use Psr\Log\LoggerAwareTrait;
-use Psr\Log\LoggerAwareInterface;
-
-use Oro\Bundle\IntegrationBundle\Entity\Transport;
-use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
-use Oro\Bundle\SecurityBundle\Encoder\Mcrypt;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Exception\RequiredOptionException;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
-use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignClickIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignOpenIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\DataFieldIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReportIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactIterator;
-use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
-use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
+use Oro\Bundle\IntegrationBundle\Entity\Transport;
+use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
+use Oro\Bundle\SecurityBundle\Encoder\Mcrypt;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
 class DotmailerTransport implements TransportInterface, LoggerAwareInterface
 {

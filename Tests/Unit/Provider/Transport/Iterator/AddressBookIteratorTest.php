@@ -4,7 +4,6 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
 use DotMailer\Api\DataTypes\ApiAddressBook;
 use DotMailer\Api\DataTypes\ApiAddressBookList;
-
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
 
 class AddressBookIteratorTest extends \PHPUnit_Framework_TestCase

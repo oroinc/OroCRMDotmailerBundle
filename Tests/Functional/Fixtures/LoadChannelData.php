@@ -2,25 +2,23 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-
-use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignClickConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignOpenConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
+use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
-use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
-use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
-use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
-use Oro\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
-use Oro\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
-use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector;
-use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
-use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignClickConnector;
-use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignOpenConnector;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class LoadChannelData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {

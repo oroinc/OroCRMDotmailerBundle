@@ -2,26 +2,25 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Handler;
 
-use Symfony\Component\Form\FormInterface;
+use Doctrine\Common\Persistence\ObjectManager;
+use DotMailer\Api\DataTypes\JsonObject;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport as Transport;
+use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
+use Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
-use Doctrine\Common\Persistence\ObjectManager;
-
-use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
-use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
-use Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler;
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport as Transport;
-use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
-
-use DotMailer\Api\DataTypes\JsonObject;
-use Psr\Log\LoggerInterface;
-
 class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
 {
+    const FORM_DATA = ['field' => 'value'];
+
     /**
      * @var FormInterface|\PHPUnit_Framework_MockObject_MockObject
      */
@@ -65,9 +64,7 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->form = $this->getMockBuilder(FormInterface::class)->getMock();
-        $this->request = $this->getMockBuilder(Request::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->request = new Request();
         $requestStack = new RequestStack();
         $requestStack->push($this->request);
         $this->manager = $this->getMockBuilder(ObjectManager::class)->getMock();
@@ -123,13 +120,12 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('setData')
             ->with($this->entity);
 
-        $this->request->expects($this->once())
-            ->method('getMethod')
-            ->will($this->returnValue($method));
+        $this->request->initialize([], self::FORM_DATA);
+        $this->request->setMethod($method);
 
         $this->form->expects($this->once())
             ->method('submit')
-            ->with($this->request);
+            ->with(self::FORM_DATA);
 
         $this->assertFalse($this->handler->process($this->entity));
     }
@@ -147,12 +143,11 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
         $this->form->expects($this->once())
             ->method('setData')
             ->with($this->entity);
-        $this->request->expects($this->once())
-            ->method('getMethod')
-            ->will($this->returnValue('POST'));
+        $this->request->initialize([], self::FORM_DATA);
+        $this->request->setMethod('POST');
         $this->form->expects($this->once())
             ->method('submit')
-            ->with($this->request);
+            ->with(self::FORM_DATA);
         $this->form->expects($this->once())
             ->method('isValid')
             ->will($this->returnValue(true));
@@ -178,10 +173,11 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
         $visibilityForm->expects($this->once())
             ->method('getData')
             ->will($this->returnValue('Public'));
-        $this->form->expects($this->at(3))
+        $this->form->expects($this->any())
             ->method('get')
-            ->with('visibility')
-            ->will($this->returnValue($visibilityForm));
+            ->willReturnMap([
+                ['visibility', $visibilityForm]
+            ]);
         /** @var JsonObject|\PHPUnit_Framework_MockObject_MockObject $apiAddressBook **/
         $apiAddressBook = $this->getMockBuilder(JsonObject::class)
             ->disableOriginalConstructor()
@@ -211,12 +207,11 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
         $this->form->expects($this->once())
             ->method('setData')
             ->with($this->entity);
-        $this->request->expects($this->once())
-            ->method('getMethod')
-            ->will($this->returnValue('POST'));
+        $this->request->initialize([], self::FORM_DATA);
+        $this->request->setMethod('POST');
         $this->form->expects($this->once())
             ->method('submit')
-            ->with($this->request);
+            ->with(self::FORM_DATA);
         $this->form->expects($this->once())
             ->method('isValid')
             ->will($this->returnValue(true));
@@ -242,10 +237,11 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
         $visibilityForm->expects($this->once())
             ->method('getData')
             ->will($this->returnValue('Public'));
-        $this->form->expects($this->at(3))
+        $this->form->expects($this->any())
             ->method('get')
-            ->with('visibility')
-            ->will($this->returnValue($visibilityForm));
+            ->willReturnMap([
+                ['visibility', $visibilityForm]
+            ]);
         $this->transport->expects($this->once())
             ->method('createAddressBook')
             ->willThrowException(new RestClientException('Test rest client exception'));
@@ -262,12 +258,11 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
         $this->form->expects($this->once())
             ->method('setData')
             ->with($this->entity);
-        $this->request->expects($this->once())
-            ->method('getMethod')
-            ->will($this->returnValue('POST'));
+        $this->request->initialize([], self::FORM_DATA);
+        $this->request->setMethod('POST');
         $this->form->expects($this->once())
             ->method('submit')
-            ->with($this->request);
+            ->with(self::FORM_DATA);
         $this->form->expects($this->once())
             ->method('isValid')
             ->will($this->returnValue(true));

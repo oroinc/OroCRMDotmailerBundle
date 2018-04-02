@@ -2,12 +2,14 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
-use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\Query\Expr\Andx;
-
+use Doctrine\ORM\Query\Parameter;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AbstractMarketingListItemIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UpdateEntityFieldsFromContactIterator;
 
+/**
+ * Prepares dotmailer QB contacts for iteration
+ */
 class UpdateEntityFieldsFromContactIteratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testIterator()

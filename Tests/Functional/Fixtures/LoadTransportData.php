@@ -4,12 +4,10 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture as BaseAbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-
+use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport;
+use Oro\Bundle\SecurityBundle\Encoder\Mcrypt;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
-use Oro\Bundle\SecurityBundle\Encoder\Mcrypt;
-use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport;
 
 class LoadTransportData extends BaseAbstractFixture implements ContainerAwareInterface
 {

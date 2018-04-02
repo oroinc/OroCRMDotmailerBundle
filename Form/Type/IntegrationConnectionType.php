@@ -4,7 +4,6 @@ namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class IntegrationConnectionType extends AbstractType
 {
@@ -16,7 +15,7 @@ class IntegrationConnectionType extends AbstractType
         $builder
             ->add('channel', 'oro_dotmailer_integration_select', [
                 'label'       => 'oro.dotmailer.integration.label',
-                'empty_value' => 'oro.dotmailer.integration.select.placeholder',
+                'placeholder' => 'oro.dotmailer.integration.select.placeholder',
                 'required'    => false
             ]);
     }

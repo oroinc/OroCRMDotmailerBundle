@@ -2,11 +2,10 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Acl\Voter;
 
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-
-use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 use Oro\Bundle\DotmailerBundle\Acl\Voter\EmailCampaignVoter;
+use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class EmailCampaignVoterTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,54 +32,6 @@ class EmailCampaignVoterTest extends \PHPUnit_Framework_TestCase
     {
         unset($this->voter);
         unset($this->doctrineHelper);
-    }
-
-    /**
-     * @param string $attribute
-     * @param bool $expected
-     * @dataProvider supportsAttributeDataProvider
-     */
-    public function testSupportsAttribute($attribute, $expected)
-    {
-        $this->assertEquals($expected, $this->voter->supportsAttribute($attribute));
-    }
-
-    /**
-     * @return array
-     */
-    public function supportsAttributeDataProvider()
-    {
-        return [
-            'VIEW'   => ['VIEW', false],
-            'CREATE' => ['CREATE', false],
-            'EDIT'   => ['EDIT', true],
-            'DELETE' => ['DELETE', false],
-            'ASSIGN' => ['ASSIGN', false],
-        ];
-    }
-
-    /**
-     * @param string $class
-     * @param string $actualClass
-     * @param bool $expected
-     * @dataProvider supportsClassDataProvider
-     */
-    public function testSupportsClass($class, $actualClass, $expected)
-    {
-        $this->voter->setClassName($actualClass);
-
-        $this->assertEquals($expected, $this->voter->supportsClass($class));
-    }
-
-    /**
-     * @return array
-     */
-    public function supportsClassDataProvider()
-    {
-        return [
-            'supported class' => ['stdClass', 'stdClass', true],
-            'not supported class' => ['NotSupportedClass', 'stdClass', false],
-        ];
     }
 
     /**

@@ -4,7 +4,6 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiAddressBook;
 use DotMailer\Api\DataTypes\ApiAddressBookList;
-
 use Oro\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
 
 class RemoveAddressBookImportTest extends AbstractImportExportTestCase

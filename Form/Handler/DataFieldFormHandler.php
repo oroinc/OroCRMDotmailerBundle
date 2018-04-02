@@ -3,19 +3,16 @@
 namespace Oro\Bundle\DotmailerBundle\Form\Handler;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-
+use Oro\Bundle\DotmailerBundle\Entity\DataField;
+use Oro\Bundle\DotmailerBundle\Exception\InvalidDefaultValueException;
+use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
+use Oro\Bundle\DotmailerBundle\Model\DataFieldManager;
 use Psr\Log\LoggerInterface;
-
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
-
-use Oro\Bundle\DotmailerBundle\Entity\DataField;
-use Oro\Bundle\DotmailerBundle\Exception\InvalidDefaultValueException;
-use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
-use Oro\Bundle\DotmailerBundle\Model\DataFieldManager;
 
 class DataFieldFormHandler
 {
@@ -73,7 +70,7 @@ class DataFieldFormHandler
         $this->form->setData($entity);
         $request = $this->requestStack->getCurrentRequest();
         if ($request->isMethod('POST')) {
-            $this->form->submit($request);
+            $this->form->handleRequest($request);
             if (!$request->get(self::UPDATE_MARKER, false) && $this->form->isValid()) {
                 return $this->onSuccess($entity);
             }

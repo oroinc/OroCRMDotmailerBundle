@@ -2,12 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\Migrations\Data\ORM;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-
+use Doctrine\ORM\EntityManagerInterface;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Entity\Campaign;
-use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 
 class LoadEnumValues extends AbstractEnumFixture

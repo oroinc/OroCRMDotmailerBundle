@@ -3,9 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\EventListener;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-
 use Knp\Menu\ItemInterface;
-
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\NavigationBundle\Event\ConfigureMenuEvent;
 

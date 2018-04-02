@@ -3,12 +3,10 @@
 namespace Oro\Bundle\DotmailerBundle\Model;
 
 use DotMailer\Api\DataTypes\ApiDataField;
-
-use Oro\Bundle\IntegrationBundle\Entity\Channel;
-
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Exception\InvalidDefaultValueException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 class DataFieldManager
 {
