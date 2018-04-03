@@ -67,7 +67,7 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
         $this->form->expects($this->once())->method('setData')
             ->with($this->entity);
 
-        $this->form->expects($this->never())->method('submit');
+        $this->form->expects($this->never())->method('handleRequest');
 
         $this->assertFalse($this->handler->process($this->entity));
     }
@@ -77,7 +77,7 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
         $this->request->setMethod('POST');
 
         $this->form->expects($this->once())->method('setData')->with($this->entity);
-        $this->form->expects($this->once()) ->method('submit') ->with($this->request);
+        $this->form->expects($this->once()) ->method('handleRequest') ->with($this->request);
         $this->form->expects($this->once()) ->method('isValid')
             ->will($this->returnValue(true));
 
@@ -96,7 +96,7 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
         $this->request->setMethod('POST');
 
         $this->form->expects($this->once())->method('setData')->with($this->entity);
-        $this->form->expects($this->once()) ->method('submit') ->with($this->request);
+        $this->form->expects($this->once()) ->method('handleRequest') ->with($this->request);
         $this->form->expects($this->once()) ->method('isValid')
             ->will($this->returnValue(true));
 
@@ -119,7 +119,7 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
         $this->request->setMethod('POST');
 
         $this->form->expects($this->once())->method('setData')->with($this->entity);
-        $this->form->expects($this->once()) ->method('submit') ->with($this->request);
+        $this->form->expects($this->once()) ->method('handleRequest') ->with($this->request);
         $this->form->expects($this->once()) ->method('isValid')
             ->will($this->returnValue(true));
 
@@ -146,7 +146,7 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
         $this->request->setMethod('POST');
 
         $this->form->expects($this->once())->method('setData')->with($this->entity);
-        $this->form->expects($this->once()) ->method('submit') ->with($this->request);
+        $this->form->expects($this->once()) ->method('handleRequest') ->with($this->request);
         $this->form->expects($this->once()) ->method('isValid')
             ->will($this->returnValue(true));
 
@@ -176,7 +176,7 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
         $this->form->expects($this->once())->method('setData')
             ->with($this->entity);
 
-        $this->form->expects($this->once())->method('submit');
+        $this->form->expects($this->once())->method('handleRequest');
 
         $this->dataFieldManager->expects($this->never())->method('createOriginDataField');
 

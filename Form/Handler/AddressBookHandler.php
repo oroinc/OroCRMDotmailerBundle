@@ -6,6 +6,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use Oro\Bundle\FormBundle\Form\Handler\RequestHandlerTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -14,6 +15,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class AddressBookHandler
 {
+    use RequestHandlerTrait;
+
     /**
      * @var FormInterface
      */
@@ -81,7 +84,7 @@ class AddressBookHandler
 
         $request = $this->requestStack->getCurrentRequest();
         if (in_array($request->getMethod(), ['POST', 'PUT'], true)) {
-            $this->form->submit($request);
+            $this->submitPostPutRequest($this->form, $request);
             if ($this->form->isValid()) {
                 try {
                     $this->transport->init($entity->getChannel()->getTransport());
