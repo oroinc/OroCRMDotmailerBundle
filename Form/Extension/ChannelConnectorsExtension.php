@@ -2,9 +2,10 @@
 
 namespace Oro\Bundle\DotmailerBundle\Form\Extension;
 
-use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType as ChannelTypeProvider;
 use Oro\Bundle\FormBundle\Utils\FormUtils;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\IntegrationBundle\Form\Type\ChannelType;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -42,7 +43,7 @@ class ChannelConnectorsExtension extends AbstractTypeExtension
      */
     public function isApplicable(Channel $data = null)
     {
-        return $data && $data->getType() === ChannelType::TYPE;
+        return $data && $data->getType() === ChannelTypeProvider::TYPE;
     }
 
     /**
@@ -111,6 +112,6 @@ class ChannelConnectorsExtension extends AbstractTypeExtension
      */
     public function getExtendedType()
     {
-        return 'oro_integration_channel_form';
+        return ChannelType::class;
     }
 }

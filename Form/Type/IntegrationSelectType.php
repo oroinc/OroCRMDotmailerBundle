@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Form\Type;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\SecurityBundle\ORM\Walker\AclHelper;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -41,7 +42,7 @@ class IntegrationSelectType extends AbstractType
         $integrations = $this->getDotmailerIntegrations();
         $options = [
             'class'    => self::ENTITY,
-            'property' => 'name',
+            'choice_label' => 'name',
             'choices'  => $integrations
         ];
 
@@ -76,7 +77,7 @@ class IntegrationSelectType extends AbstractType
      */
     public function getParent()
     {
-        return 'entity';
+        return EntityType::class;
     }
 
     /**

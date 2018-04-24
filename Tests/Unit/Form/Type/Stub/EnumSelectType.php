@@ -3,6 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Type\Stub;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EnumSelectType extends AbstractType
@@ -24,7 +25,7 @@ class EnumSelectType extends AbstractType
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return static::NAME;
     }
@@ -34,6 +35,6 @@ class EnumSelectType extends AbstractType
      */
     public function getParent()
     {
-        return 'text';
+        return TextType::class;
     }
 }

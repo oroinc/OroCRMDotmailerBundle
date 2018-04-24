@@ -5,6 +5,8 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\EventListener;
 use Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldFormSubscriber;
 use Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\DataFieldStub;
 use Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\EnumValueStub;
+use Oro\Bundle\FormBundle\Form\Type\OroDateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
@@ -91,7 +93,7 @@ class DataFieldFormSubscriberTest extends \PHPUnit_Framework_TestCase
         $form->expects($this->once())->method('add')
             ->with(
                 'defaultValue',
-                'oro_date',
+                OroDateTimeType::class,
                 [
                     'label' => 'oro.dotmailer.datafield.default_value.label',
                     'required' => false
@@ -105,7 +107,7 @@ class DataFieldFormSubscriberTest extends \PHPUnit_Framework_TestCase
         $form->expects($this->once())->method('add')
             ->with(
                 'defaultValue',
-                'choice',
+                ChoiceType::class,
                 [
                     'label' => 'oro.dotmailer.datafield.default_value.label',
                     'required' => false,

@@ -2,7 +2,10 @@
 
 namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
+use Oro\Bundle\DotmailerBundle\Form\Type\AddressBookSelectType;
+use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -23,7 +26,7 @@ class MarketingListConnectionType extends AbstractType
         $builder
             ->add(
                 'channel',
-                'oro_dotmailer_integration_select',
+                IntegrationSelectType::class,
                 [
                     'label'    => 'oro.dotmailer.integration.label',
                     'required' => true
@@ -31,7 +34,7 @@ class MarketingListConnectionType extends AbstractType
             )
             ->add(
                 'addressBook',
-                'oro_dotmailer_address_book_list_select',
+                AddressBookSelectType::class,
                 [
                     'label'         => 'oro.dotmailer.addressbook.entity_label',
                     'required'      => true,
@@ -42,7 +45,7 @@ class MarketingListConnectionType extends AbstractType
             )
             ->add(
                 'createEntities',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'label'    => 'oro.dotmailer.addressbook.create_entities.label',
                     'tooltip'  => 'oro.dotmailer.addressbook.create_entities.tooltip',

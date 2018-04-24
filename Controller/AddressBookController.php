@@ -4,6 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Controller;
 
 use FOS\RestBundle\Util\Codes;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Form\Type\MarketingListConnectionType;
 use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
@@ -152,7 +153,7 @@ class AddressBookController extends Controller
     public function addressBookConnectionUpdateAction(MarketingList $marketingList)
     {
         $form = $this->createForm(
-            'oro_dotmailer_marketing_list_connection',
+            MarketingListConnectionType::class,
             null,
             [ 'marketingList' => $marketingList ]
         );

@@ -3,7 +3,13 @@
 namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
 use Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldMappingFormSubscriber;
+use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldMappingConfigType;
+use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType;
+use Oro\Bundle\FormBundle\Form\Type\CollectionType;
+use Oro\Bundle\MarketingListBundle\Form\Type\ContactInformationEntityChoiceType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -38,7 +44,7 @@ class DataFieldMappingType extends AbstractType
         $builder
             ->add(
                 'channel',
-                'oro_dotmailer_integration_select',
+                IntegrationSelectType::class,
                 [
                     'label'    => 'oro.dotmailer.integration.label',
                     'required' => true
@@ -46,7 +52,7 @@ class DataFieldMappingType extends AbstractType
             )
             ->add(
                 'entity',
-                'oro_marketing_list_contact_information_entity_choice',
+                ContactInformationEntityChoiceType::class,
                 [
                     'label' => 'oro.dotmailer.datafieldmapping.entity.label',
                     'required' => true
@@ -54,7 +60,7 @@ class DataFieldMappingType extends AbstractType
             )
             ->add(
                 'syncPriority',
-                'integer',
+                IntegerType::class,
                 [
                     'label' => 'oro.dotmailer.datafieldmapping.sync_priority.label',
                     'tooltip' => 'oro.dotmailer.datafieldmapping.sync_priority.tooltip',
@@ -63,7 +69,7 @@ class DataFieldMappingType extends AbstractType
             )
             ->add(
                 'config',
-                'oro_dotmailer_datafield_mapping_config',
+                DataFieldMappingConfigType::class,
                 [
                     'validation_groups' => false,
                     'mapped'             => false,
@@ -72,17 +78,17 @@ class DataFieldMappingType extends AbstractType
             )
             ->add(
                 'config_source',
-                'hidden',
+                HiddenType::class,
                 [
                     'mapped' => false,
                 ]
             )
             ->add(
                 'configs',
-                'oro_collection',
+                CollectionType::class,
                 [
                     'handle_primary' => false,
-                    'entry_type' => DataFieldMappingConfigType::NAME
+                    'entry_type' => DataFieldMappingConfigType::class
                 ]
             );
     }

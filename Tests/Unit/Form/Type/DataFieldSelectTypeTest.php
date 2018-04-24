@@ -2,43 +2,26 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Type;
 
+use Oro\Bundle\ChannelBundle\Form\Type\CreateOrSelectInlineChannelAwareType;
 use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldSelectType;
 use Oro\Component\Testing\Unit\Form\Type\Stub\EntityType;
 use Oro\Component\Testing\Unit\FormIntegrationTestCase;
+use Oro\Component\Testing\Unit\PreloadedExtension;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\PreloadedExtension;
 
 class DataFieldSelectTypeTest extends FormIntegrationTestCase
 {
-    /** @var  DataFieldSelectType $type */
-    protected $formType;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->formType = new DataFieldSelectType();
-    }
-
-    public function tearDown()
-    {
-        unset($this->formType);
-        parent::tearDown();
-    }
-
     /**
      * @return array
      */
     protected function getExtensions()
     {
-        $entityType = new EntityType([], 'oro_entity_create_or_select_inline_channel_aware');
+        $entityType = new EntityType([], CreateOrSelectInlineChannelAwareType::NAME);
 
         return [
             new PreloadedExtension(
                 [
-                    'oro_entity_create_or_select_inline_channel_aware' => $entityType
+                    CreateOrSelectInlineChannelAwareType::class => $entityType
                 ],
                 []
             )
@@ -47,7 +30,7 @@ class DataFieldSelectTypeTest extends FormIntegrationTestCase
 
     public function testDefaultOptions()
     {
-        $form = $this->factory->create($this->formType);
+        $form = $this->factory->create(DataFieldSelectType::class);
 
         $expectedOptions = [
             'autocomplete_alias' => 'dotmailer_data_fields',
@@ -74,7 +57,8 @@ class DataFieldSelectTypeTest extends FormIntegrationTestCase
 
         $form = $this->createMock('Symfony\Component\Form\FormInterface');
 
-        $this->formType->buildView(
+        $formType = new DataFieldSelectType();
+        $formType->buildView(
             $formView,
             $form,
             [
@@ -94,16 +78,12 @@ class DataFieldSelectTypeTest extends FormIntegrationTestCase
         $this->assertEquals('full_channel_field_name', $formView->vars['component_options']['channel_field_name']);
     }
 
-    public function testGetName()
-    {
-        $this->assertEquals(DataFieldSelectType::NAME, $this->formType->getName());
-    }
-
     public function testGetParent()
     {
+        $formType = new DataFieldSelectType();
         $this->assertEquals(
-            'oro_entity_create_or_select_inline_channel_aware',
-            $this->formType->getParent()
+            CreateOrSelectInlineChannelAwareType::class,
+            $formType->getParent()
         );
     }
 }

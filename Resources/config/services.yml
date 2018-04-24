@@ -243,7 +243,7 @@ services:
     oro_dotmailer.form.extension.channel_connectors:
         class: '%oro_dotmailer.form.extension.channel_connectors.class%'
         tags:
-            - { name: form.type_extension, alias: oro_integration_channel_form }
+            - { name: form.type_extension, alias: oro_integration_channel_form, extended_type: Oro\Bundle\IntegrationBundle\Form\Type\ChannelType }
 
     oro_dotmailer.form.type.soap_transport_check:
         class: '%oro_dotmailer.form.type.transport_check.class%'
@@ -298,14 +298,14 @@ services:
         factory: ['@form.factory', createNamed]
         arguments:
             - "oro_dotmailer_data_field_form"
-            - "oro_dotmailer_data_field"
+            - Oro\Bundle\DotmailerBundle\Form\Type\DataFieldType
 
     oro_dotmailer.datafield_mapping.form:
         class: Symfony\Component\Form\Form
         factory: ['@form.factory', createNamed]
         arguments:
             - "oro_dotmailer_datafield_mapping_form"
-            - "oro_dotmailer_datafield_mapping"
+            - Oro\Bundle\DotmailerBundle\Form\Type\DataFieldMappingType
 
     oro_dotmailer.form.type.address_book:
         class: '%oro_dotmailer.form.type.address_book.class%'
@@ -317,7 +317,7 @@ services:
         factory: ['@form.factory', createNamed]
         arguments:
             - "oro_dotmailer_address_book_form"
-            - "oro_dotmailer_address_book_form"
+            - Oro\Bundle\DotmailerBundle\Form\Type\AddressBookType
 
     oro_dotmailer.form.type.integration_connection:
         class: '%oro_dotmailer.form.type.integration_connection.class%'

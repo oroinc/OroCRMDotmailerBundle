@@ -3,7 +3,11 @@
 namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
 use Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldFormSubscriber;
+use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType;
+use Oro\Bundle\EntityExtendBundle\Form\Type\EnumSelectType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -36,7 +40,7 @@ class DataFieldType extends AbstractType
         $builder
             ->add(
                 'channel',
-                'oro_dotmailer_integration_select',
+                IntegrationSelectType::class,
                 [
                     'label'    => 'oro.dotmailer.integration.label',
                     'required' => true
@@ -44,7 +48,7 @@ class DataFieldType extends AbstractType
             )
             ->add(
                 'name',
-                'text',
+                TextType::class,
                 [
                     'label' => 'oro.dotmailer.datafield.name.label',
                     'required' => true
@@ -52,7 +56,7 @@ class DataFieldType extends AbstractType
             )
             ->add(
                 'type',
-                'oro_enum_select',
+                EnumSelectType::class,
                 [
                     'label' => 'oro.dotmailer.datafield.type.label',
                     'tooltip' => 'oro.dotmailer.datafield.type.tooltip',
@@ -62,7 +66,7 @@ class DataFieldType extends AbstractType
             )
             ->add(
                 'visibility',
-                'oro_enum_select',
+                EnumSelectType::class,
                 [
                     'label' => 'oro.dotmailer.datafield.visibility.label',
                     'tooltip' => 'oro.dotmailer.datafield.visibility.tooltip',
@@ -72,7 +76,7 @@ class DataFieldType extends AbstractType
             )
             ->add(
                 'defaultValue',
-                'text',
+                TextType::class,
                 [
                     'label' => 'oro.dotmailer.datafield.default_value.label',
                     'tooltip' => 'oro.dotmailer.datafield.default_value.tooltip',
@@ -81,7 +85,7 @@ class DataFieldType extends AbstractType
             )
             ->add(
                 'notes',
-                'textarea',
+                TextareaType::class,
                 [
                     'label' => 'oro.dotmailer.datafield.notes.label',
                     'required' => false
