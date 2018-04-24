@@ -2,11 +2,23 @@
 
 namespace OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_5_1;
 
-use OroCRM\Bundle\DotmailerBundle\Migrations\Schema\v1_4_1\MakeEmailsLowercase as BaseMigration;
+use Doctrine\DBAL\Schema\Schema;
+
+use Oro\Bundle\MigrationBundle\Migration\Migration;
+use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 
 /**
- * Migration version bump for users who updating from version 1.3 with v1_5 migration
+ * Please, pay attention that this class has incorrect namespace - Oro should be instead of OroCRM.
+ * It can cause fatal error if you try to inherit this class.
  */
-class MakeEmailsLowercase extends BaseMigration
+class MakeEmailsLowercase implements Migration
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function up(Schema $schema, QueryBag $queries)
+    {
+        $queries->addPostQuery("DELETE FROM orocrm_dm_contact WHERE origin_id IS NULL;");
+        $queries->addPostQuery("UPDATE orocrm_dm_contact SET email = LOWER(email);");
+    }
 }
