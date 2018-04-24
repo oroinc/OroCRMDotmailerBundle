@@ -18,7 +18,7 @@ class DotmailerTransportSettingsType extends AbstractTransportSettingsType
         $builder
             ->add(
                 'channel',
-                'oro_dotmailer_integration_select',
+                IntegrationSelectType::class,
                 [
                     'label' => 'oro.dotmailer.emailcampaign.integration.label',
                     'required' => true

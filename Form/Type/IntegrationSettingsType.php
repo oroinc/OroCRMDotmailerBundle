@@ -3,7 +3,10 @@
 namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
 use Oro\Bundle\DotmailerBundle\Form\EventListener\IntegrationSettingsSubscriber;
+use Oro\Bundle\DotmailerBundle\Form\Type\DotmailerTransportCheckButtonType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -36,7 +39,7 @@ class IntegrationSettingsType extends AbstractType
         $builder
             ->add(
                 'username',
-                'text',
+                TextType::class,
                 [
                     'label'    => 'oro.dotmailer.integration_transport.username.label',
                     'tooltip'  => 'oro.dotmailer.form.username.tooltip',
@@ -48,7 +51,7 @@ class IntegrationSettingsType extends AbstractType
             )
             ->add(
                 'password',
-                'password',
+                PasswordType::class,
                 [
                     'label'       => 'oro.dotmailer.integration_transport.password.label',
                     'tooltip'     => 'oro.dotmailer.form.password.tooltip',
@@ -61,14 +64,14 @@ class IntegrationSettingsType extends AbstractType
             )
             ->add(
                 'check',
-                'oro_dotmailer_transport_check_button',
+                DotmailerTransportCheckButtonType::class,
                 [
                     'label' => 'oro.dotmailer.integration.check_connection.label'
                 ]
             )
             ->add(
                 'clientId',
-                'text',
+                TextType::class,
                 [
                     'label'    => 'oro.dotmailer.integration_transport.client_id.label',
                     'tooltip'  => 'oro.dotmailer.form.client_id.tooltip',
@@ -80,7 +83,7 @@ class IntegrationSettingsType extends AbstractType
             )
             ->add(
                 'clientKey',
-                'password',
+                PasswordType::class,
                 [
                     'label'    => 'oro.dotmailer.integration_transport.client_key.label',
                     'required' => false,
@@ -91,7 +94,7 @@ class IntegrationSettingsType extends AbstractType
             )
             ->add(
                 'customDomain',
-                'text',
+                TextType::class,
                 [
                     'label'    => 'oro.dotmailer.integration_transport.custom_domain.label',
                     'tooltip'  => 'oro.dotmailer.form.custom_domain.tooltip',

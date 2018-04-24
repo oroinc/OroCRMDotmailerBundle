@@ -40,7 +40,7 @@ class DotmailerEmailCampaignTransport implements TransportInterface, VisibilityT
      */
     public function getSettingsFormType()
     {
-        return DotmailerTransportSettingsType::NAME;
+        return DotmailerTransportSettingsType::class;
     }
 
     /**

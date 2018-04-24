@@ -4,6 +4,9 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Type;
 
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Form\Type\AddressBookType;
+use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType;
+use Oro\Bundle\EntityExtendBundle\Form\Type\EnumSelectType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -29,7 +32,7 @@ class AddressBookTypeTest extends \PHPUnit_Framework_TestCase
             ->method('add')
             ->with(
                 'channel',
-                'oro_dotmailer_integration_select',
+                IntegrationSelectType::class,
                 [
                     'label'    => 'oro.dotmailer.integration.label',
                     'required' => true
@@ -41,7 +44,7 @@ class AddressBookTypeTest extends \PHPUnit_Framework_TestCase
             ->method('add')
             ->with(
                 'name',
-                'text',
+                TextType::class,
                 [
                     'label'    => 'oro.dotmailer.addressbook.name.label',
                     'required' => true
@@ -53,7 +56,7 @@ class AddressBookTypeTest extends \PHPUnit_Framework_TestCase
             ->method('add')
             ->with(
                 'visibility',
-                'oro_enum_select',
+                EnumSelectType::class,
                 [
                     'label'           => 'oro.dotmailer.addressbook.visibility.label',
                     'tooltip'         => 'oro.dotmailer.addressbook.visibility.tooltip',
@@ -79,11 +82,6 @@ class AddressBookTypeTest extends \PHPUnit_Framework_TestCase
             ]);
 
         $this->type->configureOptions($resolver);
-    }
-
-    public function testGetName()
-    {
-        $this->assertEquals('oro_dotmailer_address_book_form', $this->type->getName());
     }
 
     public function testGetBlockPrefix()
