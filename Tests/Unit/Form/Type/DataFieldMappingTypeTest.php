@@ -6,14 +6,18 @@ use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
 use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldMappingConfigType;
 use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldMappingType;
+use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldSelectType;
+use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType;
 use Oro\Bundle\FormBundle\Form\Extension\TooltipFormExtension;
 use Oro\Bundle\FormBundle\Form\Type\CollectionType;
+use Oro\Bundle\MarketingListBundle\Form\Type\ContactInformationEntityChoiceType;
 use Oro\Component\Testing\Unit\EntityTrait;
 use Oro\Component\Testing\Unit\Form\Extension\Stub\FormTypeValidatorExtensionStub;
 use Oro\Component\Testing\Unit\Form\Type\Stub\EntityType;
 use Oro\Component\Testing\Unit\FormIntegrationTestCase;
+use Oro\Component\Testing\Unit\PreloadedExtension;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\PreloadedExtension;
 
 class DataFieldMappingTypeTest extends FormIntegrationTestCase
 {
@@ -27,7 +31,6 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
      */
     protected function setUp()
     {
-        parent::setUp();
         $subscriber = $this->createPartialMock(
             'Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldMappingFormSubscriber',
             ['postSet', 'preSubmit']
@@ -36,6 +39,7 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
             'Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping',
             $subscriber
         );
+        parent::setUp();
     }
 
     public function tearDown()
@@ -60,33 +64,34 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
         return [
             new PreloadedExtension(
                 [
-                    'oro_dotmailer_integration_select' => new EntityType(
+                    DataFieldMappingType::class => $this->formType,
+                    IntegrationSelectType::class => new EntityType(
                         [
                             '1' => $this->getEntity('Oro\Bundle\IntegrationBundle\Entity\Channel', ['id' => 1])
                         ],
-                        'oro_dotmailer_integration_select'
+                        IntegrationSelectType::NAME
                     ),
-                    'oro_marketing_list_contact_information_entity_choice' => new EntityType(
+                    ContactInformationEntityChoiceType::class => new EntityType(
                         [
                             'lead' => 'leadClass'
                         ],
-                        'oro_marketing_list_contact_information_entity_choice'
+                        ContactInformationEntityChoiceType::NAME
                     ),
-                    'oro_dotmailer_datafield_select' => new EntityType(
+                    DataFieldSelectType::class => new EntityType(
                         [
                             '1' => $this->getEntity('Oro\Bundle\DotmailerBundle\Entity\DataField', ['id' => 1])
                         ],
-                        'oro_dotmailer_datafield_select',
+                        DataFieldSelectType::NAME,
                         [
                             'channel_field' => ''
                         ]
                     ),
-                    'oro_dotmailer_datafield_mapping_config' =>
+                    DataFieldMappingConfigType::class =>
                         new DataFieldMappingConfigType('Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig'),
-                    'oro_collection' => new CollectionType()
+                    CollectionType::class => new CollectionType()
                 ],
                 [
-                    'form' => [
+                    FormType::class => [
                         new TooltipFormExtension($configProvider, $translator),
                         new FormTypeValidatorExtensionStub()
                     ]
@@ -105,7 +110,7 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
      */
     public function testSubmit($isValid, $defaultData, $submittedData, $expectedData, array $options = [])
     {
-        $form = $this->factory->create($this->formType, $defaultData, $options);
+        $form = $this->factory->create(DataFieldMappingType::class, $defaultData, $options);
         $this->assertEquals($defaultData, $form->getData());
         $form->submit($submittedData);
         $this->assertEquals($isValid, $form->isValid());
@@ -151,7 +156,7 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
 
     public function testDefaultOptions()
     {
-        $form = $this->factory->create($this->formType);
+        $form = $this->factory->create(DataFieldMappingType::class);
 
         $expectedOptions = [
             'data_class' => 'Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping',
@@ -173,10 +178,5 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
         $this->formType->finishView($formView, $form, []);
 
         $this->assertTrue($mappingConfigsView->isRendered());
-    }
-
-    public function testGetName()
-    {
-        $this->assertEquals(DataFieldMappingType::NAME, $this->formType->getName());
     }
 }

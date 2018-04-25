@@ -4,8 +4,11 @@ namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
 use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType;
+use Oro\Bundle\EntityExtendBundle\Form\Type\EnumSelectType;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -18,15 +21,15 @@ class AddressBookType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('channel', 'oro_dotmailer_integration_select', [
+            ->add('channel', IntegrationSelectType::class, [
                 'label'    => 'oro.dotmailer.integration.label',
                 'required' => true
             ])
-            ->add('name', 'text', [
+            ->add('name', TextType::class, [
                 'label'    => 'oro.dotmailer.addressbook.name.label',
                 'required' => true
             ])
-            ->add('visibility', 'oro_enum_select', [
+            ->add('visibility', EnumSelectType::class, [
                 'label'           => 'oro.dotmailer.addressbook.visibility.label',
                 'tooltip'         => 'oro.dotmailer.addressbook.visibility.tooltip',
                 'enum_code'       => 'dm_ab_visibility',

@@ -3,7 +3,9 @@
 namespace Oro\Bundle\DotmailerBundle\Form\EventListener;
 
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
+use Oro\Bundle\FormBundle\Form\Type\OroDateTimeType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
@@ -61,12 +63,12 @@ class DataFieldFormSubscriber implements EventSubscriberInterface
     {
         switch ($type) {
             case DataField::FIELD_TYPE_DATE:
-                $this->updateDefaultValueField($form, 'oro_date');
+                $this->updateDefaultValueField($form, OroDateTimeType::class);
                 break;
             case DataField::FIELD_TYPE_BOOLEAN:
                 $this->updateDefaultValueField(
                     $form,
-                    'choice',
+                    ChoiceType::class,
                     [
                         'choices' => [
                             'Yes' => DataField::DEFAULT_BOOLEAN_YES,

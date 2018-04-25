@@ -23,6 +23,7 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Exception\RequiredOptionException;
+use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSettingsType;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
@@ -499,7 +500,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
      */
     public function getSettingsFormType()
     {
-        return 'oro_dotmailer_transport_setting_type';
+        return IntegrationSettingsType::class;
     }
 
     /**

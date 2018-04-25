@@ -46,7 +46,7 @@ class AddressBookSelectType extends CreateOrSelectInlineChannelAwareType
      */
     public function getParent()
     {
-        return 'oro_entity_create_or_select_inline_channel_aware';
+        return CreateOrSelectInlineChannelAwareType::class;
     }
 
     /**

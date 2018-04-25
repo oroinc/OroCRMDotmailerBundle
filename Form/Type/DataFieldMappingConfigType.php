@@ -2,7 +2,10 @@
 
 namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
+use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldSelectType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -29,7 +32,7 @@ class DataFieldMappingConfigType extends AbstractType
         $builder
             ->add(
                 'entityFields',
-                'hidden',
+                HiddenType::class,
                 [
                     'label'    => 'oro.dotmailer.datafieldmappingconfig.entity_fields.label',
                     'required' => true,
@@ -37,7 +40,7 @@ class DataFieldMappingConfigType extends AbstractType
             )
             ->add(
                 'dataField',
-                'oro_dotmailer_datafield_select',
+                DataFieldSelectType::class,
                 [
                     'label'    => '',
                     'required' => true,
@@ -46,7 +49,7 @@ class DataFieldMappingConfigType extends AbstractType
             )
             ->add(
                 'isTwoWaySync',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'label' => 'oro.dotmailer.datafieldmappingconfig.is_two_way_sync.label',
                     'tooltip' => 'oro.dotmailer.datafieldmappingconfig.is_two_way_sync.tooltip',

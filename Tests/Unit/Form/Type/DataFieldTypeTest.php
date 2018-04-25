@@ -4,12 +4,15 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Type;
 
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldType;
-use Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Type\Stub\EnumSelectType;
+use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType;
+use Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Type\Stub\EnumSelectType as EnumSelectTypeStub;
+use Oro\Bundle\EntityExtendBundle\Form\Type\EnumSelectType;
 use Oro\Bundle\FormBundle\Form\Extension\TooltipFormExtension;
 use Oro\Component\Testing\Unit\EntityTrait;
 use Oro\Component\Testing\Unit\Form\Type\Stub\EntityType;
 use Oro\Component\Testing\Unit\FormIntegrationTestCase;
-use Symfony\Component\Form\PreloadedExtension;
+use Oro\Component\Testing\Unit\PreloadedExtension;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 
 class DataFieldTypeTest extends FormIntegrationTestCase
 {
@@ -26,7 +29,6 @@ class DataFieldTypeTest extends FormIntegrationTestCase
      */
     protected function setUp()
     {
-        parent::setUp();
         $this->subscriber = $this->createPartialMock(
             'Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldFormSubscriber',
             ['preSet', 'preSubmit']
@@ -36,6 +38,7 @@ class DataFieldTypeTest extends FormIntegrationTestCase
             'Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\DataFieldStub',
             $this->subscriber
         );
+        parent::setUp();
     }
 
     /**
@@ -48,7 +51,7 @@ class DataFieldTypeTest extends FormIntegrationTestCase
      */
     public function testSubmit($isValid, $defaultData, $submittedData, $expectedData, array $options = [])
     {
-        $form = $this->factory->create($this->formType, $defaultData, $options);
+        $form = $this->factory->create(DataFieldType::class, $defaultData, $options);
         $this->assertEquals($defaultData, $form->getData());
         $form->submit($submittedData);
         $this->assertEquals($isValid, $form->isValid());
@@ -89,11 +92,6 @@ class DataFieldTypeTest extends FormIntegrationTestCase
         ];
     }
 
-    public function testGetName()
-    {
-        $this->assertEquals(DataFieldType::NAME, $this->formType->getName());
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -111,16 +109,17 @@ class DataFieldTypeTest extends FormIntegrationTestCase
         return [
             new PreloadedExtension(
                 [
-                    'oro_dotmailer_integration_select' => new EntityType(
+                    DataFieldType::class => $this->formType,
+                    IntegrationSelectType::class => new EntityType(
                         [
                             '1' => $this->getEntity('Oro\Bundle\IntegrationBundle\Entity\Channel', ['id' => 1])
                         ],
-                        'oro_dotmailer_integration_select'
+                        IntegrationSelectType::NAME
                     ),
-                    'oro_enum_select' => new EnumSelectType(),
+                    EnumSelectType::class => new EnumSelectTypeStub(),
                 ],
                 [
-                    'form' => [
+                    FormType::class => [
                         new TooltipFormExtension($configProvider, $translator),
                     ]
                 ]

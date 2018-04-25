@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Controller;
 use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationConnectionType;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
@@ -122,7 +123,7 @@ class DotmailerController extends Controller
             $channel = $this->getCurrentChannel($request);
         }
 
-        $form = $this->createForm('oro_dotmailer_integration_connection');
+        $form = $this->createForm(IntegrationConnectionType::class);
         $formData = $channel ? ['channel' => $channel] : [];
         $form->setData($formData);
 
