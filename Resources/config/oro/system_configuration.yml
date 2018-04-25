@@ -10,7 +10,7 @@ system_configuration:
     fields:
         oro_dotmailer.datafields_sync_interval:
             data_type: string
-            type: text
+            type: Symfony\Component\Form\Extension\Core\Type\TextType
             search_type: text
             priority: 10
             options:
@@ -20,7 +20,7 @@ system_configuration:
 
         oro_dotmailer.force_sync_for_virtual_fields:
             data_type: string
-            type: choice
+            type: Symfony\Component\Form\Extension\Core\Type\ChoiceType
             search_type: choice
             priority: 20
             options:
