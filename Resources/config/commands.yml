@@ -1,0 +1,18 @@
+services:
+    Oro\Bundle\DotmailerBundle\Command\ContactsExportStatusUpdateCommand:
+        public: false
+        class: Oro\Bundle\DotmailerBundle\Command\ContactsExportStatusUpdateCommand
+        tags:
+            - { name: console.command }
+
+    Oro\Bundle\DotmailerBundle\Command\FieldsForceSyncCommand:
+        public: false
+        class: Oro\Bundle\DotmailerBundle\Command\FieldsForceSyncCommand
+        tags:
+            - { name: console.command }
+
+    Oro\Bundle\DotmailerBundle\Command\ProcessMappedFieldsUpdatesCommand:
+        public: false
+        class: Oro\Bundle\DotmailerBundle\Command\ProcessMappedFieldsUpdatesCommand
+        tags:
+            - { name: console.command }
