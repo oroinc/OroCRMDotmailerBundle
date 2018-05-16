@@ -26,8 +26,6 @@ system_configuration:
             options:
                 label: oro.dotmailer.configuration.force_sync_for_virtual_fields.label
                 tooltip: oro.dotmailer.configuration.force_sync_for_virtual_fields.tooltip
-                # TODO: remove 'choices_as_values' option below in scope of BAP-15236
-                choices_as_values: true
                 choices:
                     oro.dotmailer.configuration.force_sync_for_virtual_fields.choices.none: None
                     oro.dotmailer.configuration.force_sync_for_virtual_fields.choices.virtual_only: VirtualOnly

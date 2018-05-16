@@ -39,7 +39,8 @@ class ConnectionUpdateFormHandler
     {
         $form->setData($data);
         $request = $this->requestStack->getCurrentRequest();
-        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+        $form->handleRequest($request);
+        if ($request->isMethod('POST') && $form->isSubmitted() && $form->isValid()) {
             return $this->onSuccess($form);
         }
 

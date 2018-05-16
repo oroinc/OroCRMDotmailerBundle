@@ -72,10 +72,10 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->will($this->returnValueMap(
                 [
-                    ['username', null, false, $username],
-                    ['password', null, false, $passwordEncoded],
-                    ['clientId', null, false, $clientId],
-                    ['clientKey', null, false, $clientKeyEncoded],
+                    ['username', null, $username],
+                    ['password', null, $passwordEncoded],
+                    ['clientId', null, $clientId],
+                    ['clientKey', null, $clientKeyEncoded],
                 ]
             ));
         $transport->expects($this->once())
@@ -113,8 +113,8 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->will($this->returnValueMap(
                 [
-                    ['username', null, false, 'any not empty username'],
-                    ['password', null, false, null],
+                    ['username', null, 'any not empty username'],
+                    ['password', null, null],
                 ]
             ));
 
@@ -472,10 +472,10 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->will($this->returnValueMap(
                 [
-                    ['username', null, false, $username],
-                    ['password', null, false, $passwordEncoded],
-                    ['clientId', null, false, $clientId],
-                    ['clientKey', null, false, $clientKeyEncoded],
+                    ['username', null, $username],
+                    ['password', null, $passwordEncoded],
+                    ['clientId', null, $clientId],
+                    ['clientKey', null,$clientKeyEncoded],
                 ]
             ));
 

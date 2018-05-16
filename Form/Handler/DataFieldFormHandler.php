@@ -71,7 +71,7 @@ class DataFieldFormHandler
         $request = $this->requestStack->getCurrentRequest();
         if ($request->isMethod('POST')) {
             $this->form->handleRequest($request);
-            if (!$request->get(self::UPDATE_MARKER, false) && $this->form->isValid()) {
+            if (!$request->get(self::UPDATE_MARKER, false) && $this->form->isSubmitted() && $this->form->isValid()) {
                 return $this->onSuccess($entity);
             }
         }
