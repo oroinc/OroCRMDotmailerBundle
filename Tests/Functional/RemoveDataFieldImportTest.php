@@ -7,9 +7,6 @@ use DotMailer\Api\DataTypes\ApiDataFieldList;
 
 use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
 
-/**
- * @dbIsolation
- */
 class RemoveDataFieldImportTest extends AbstractImportExportTestCase
 {
     protected function setUp()

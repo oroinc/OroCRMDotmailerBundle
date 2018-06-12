@@ -8,9 +8,6 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 
-/**
- * @dbIsolation
- */
 class ExportSyncsUnsubscribedDMContactsWithMarketingListItemsTest extends AbstractImportExportTestCase
 {
     protected function setUp()

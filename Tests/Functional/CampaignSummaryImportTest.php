@@ -6,9 +6,6 @@ use DotMailer\Api\DataTypes\ApiCampaignSummary;
 
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector;
 
-/**
- * @dbIsolation
- */
 class CampaignSummaryImportTest extends AbstractImportExportTestCase
 {
     protected function setUp()

@@ -8,9 +8,6 @@ use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 
-/**
- * @dbIsolation
- */
 class CampaignImportTest extends AbstractImportExportTestCase
 {
     protected function setUp()
