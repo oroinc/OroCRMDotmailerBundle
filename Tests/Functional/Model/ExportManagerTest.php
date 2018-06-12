@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Model;
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\ApiContactImportStatuses;
 
+use DotMailer\Api\DataTypes\Guid;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
@@ -14,7 +15,7 @@ use Oro\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\AbstractImportExportTestCase;
 
 /**
- * @dbIsolation
+ * @dbIsolationPerTest
  */
 class ExportManagerTest extends AbstractImportExportTestCase
 {
@@ -58,10 +59,18 @@ class ExportManagerTest extends AbstractImportExportTestCase
             ->with($importWithFaultsId)
             ->willReturn($apiContactImportStatus);
 
+        // willReturnMap doesn't work here because it uses strict comparison
+        // but Guid is created inside ExportFaultsReportIterator
+        $contactsImportReportFaultsMap = [
+            $importWithFaultsId => file_get_contents(__DIR__ . '/Fixtures/importFaults.csv'),
+            $importAddToAddressBook => '',
+        ];
+
         $this->resource->expects($this->exactly(2))
             ->method('GetContactsImportReportFaults')
-            ->withConsecutive([$importWithFaultsId], [$importAddToAddressBook])
-            ->willReturnOnConsecutiveCalls(file_get_contents(__DIR__ . '/Fixtures/importFaults.csv'), '');
+            ->willReturnCallback(function (Guid $importId) use ($contactsImportReportFaultsMap) {
+                return $contactsImportReportFaultsMap[(string)$importId];
+            });
 
         $this->target->updateExportResults($channel);
 

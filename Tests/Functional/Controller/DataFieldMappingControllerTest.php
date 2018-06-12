@@ -6,10 +6,6 @@ use Symfony\Component\DomCrawler\Form;
 
 use Oro\Bundle\DataGridBundle\Tests\Functional\AbstractDatagridTestCase;
 
-/**
- * @outputBuffering enabled
- * @dbIsolation
- */
 class DataFieldMappingControllerTest extends AbstractDatagridTestCase
 {
     /** @var bool */

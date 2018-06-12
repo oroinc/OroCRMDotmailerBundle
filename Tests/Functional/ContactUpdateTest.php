@@ -9,9 +9,6 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
 
-/**
- * @dbIsolation
- */
 class ContactUpdateTest extends AbstractImportExportTestCase
 {
     /**

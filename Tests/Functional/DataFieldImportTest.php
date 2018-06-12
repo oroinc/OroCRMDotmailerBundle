@@ -9,9 +9,6 @@ use Oro\Bundle\IntegrationBundle\Entity\Status;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
 
-/**
- * @dbIsolation
- */
 class DataFieldImportTest extends AbstractImportExportTestCase
 {
     protected function setUp()

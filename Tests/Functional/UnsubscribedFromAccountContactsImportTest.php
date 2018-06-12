@@ -10,9 +10,6 @@ use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
 
-/**
- * @dbIsolation
- */
 class UnsubscribedFromAccountContactsImportTest extends AbstractImportExportTestCase
 {
     protected function setUp()
