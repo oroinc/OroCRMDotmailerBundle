@@ -183,10 +183,10 @@ class MarketingListItemsQueryBuilderProvider
 
         $qb = $this->getMarketingListItemQuery($addressBook);
         $marketingList = $addressBook->getMarketingList();
-        $contactInformationFields = $this->contactInformationFieldsProvider->getMarketingListTypedFields(
+        $contactInformationFields = array_keys($this->contactInformationFieldsProvider->getMarketingListTypedFields(
             $marketingList,
             ContactInformationFieldsProvider::CONTACT_INFORMATION_SCOPE_EMAIL
-        );
+        ));
 
         if (!$contactInformationField = reset($contactInformationFields)) {
             throw new RuntimeException('Contact information is not provided');
@@ -398,10 +398,10 @@ class MarketingListItemsQueryBuilderProvider
         $expr = $qb->expr();
         $qb->resetDQLPart('select');
 
-        $contactInformationFields = $this->contactInformationFieldsProvider->getMarketingListTypedFields(
+        $contactInformationFields = array_keys($this->contactInformationFieldsProvider->getMarketingListTypedFields(
             $marketingList,
             ContactInformationFieldsProvider::CONTACT_INFORMATION_SCOPE_EMAIL
-        );
+        ));
 
         if (!$contactInformationField = reset($contactInformationFields)) {
             throw new RuntimeException('Contact information is not provided');
