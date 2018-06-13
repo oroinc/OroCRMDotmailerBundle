@@ -138,10 +138,10 @@ class MarketingListItemGridListener
      */
     protected function joinSubscriberStatus(MarketingList $marketingList, QueryBuilder $queryBuilder)
     {
-        $contactInformationFields = $this->contactInformationProvider->getMarketingListTypedFields(
+        $contactInformationFields = array_keys($this->contactInformationProvider->getMarketingListTypedFields(
             $marketingList,
             ContactInformationFieldsProvider::CONTACT_INFORMATION_SCOPE_EMAIL
-        );
+        ));
 
         if (!$contactInformationField = reset($contactInformationFields)) {
             throw new \RuntimeException('Contact information is not provided');
