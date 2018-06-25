@@ -8,15 +8,15 @@ use Oro\Bundle\DotmailerBundle\Entity\ChangedFieldLog;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\ChangedFieldLogRepository;
 use Oro\Bundle\DotmailerBundle\EventListener\EntityUpdateListener;
 
-class EntityUpdateListenerTest extends \PHPUnit_Framework_TestCase
+class EntityUpdateListenerTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $doctrineHelper;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $mappingProvider;
 

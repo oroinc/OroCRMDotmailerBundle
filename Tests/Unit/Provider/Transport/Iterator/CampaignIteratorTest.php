@@ -6,7 +6,7 @@ use DotMailer\Api\DataTypes\ApiCampaign;
 use DotMailer\Api\DataTypes\ApiCampaignList;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
 
-class CampaignIteratorTest extends \PHPUnit_Framework_TestCase
+class CampaignIteratorTest extends \PHPUnit\Framework\TestCase
 {
     public function testIterator()
     {

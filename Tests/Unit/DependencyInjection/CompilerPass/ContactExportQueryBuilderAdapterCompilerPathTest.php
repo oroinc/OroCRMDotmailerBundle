@@ -5,7 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\DependencyInjection\CompilerPass
 use Oro\Bundle\DotmailerBundle\DependencyInjection\CompilerPass\ContactExportQueryBuilderAdapterCompilerPath;
 use Symfony\Component\DependencyInjection\Reference;
 
-class ContactExportQueryBuilderAdapterCompilerPathTest extends \PHPUnit_Framework_TestCase
+class ContactExportQueryBuilderAdapterCompilerPathTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ContactExportQueryBuilderAdapterCompilerPath

@@ -4,7 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
 use Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator\Stub\StubOverlapIterator;
 
-class OverlapIteratorTest extends \PHPUnit_Framework_TestCase
+class OverlapIteratorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var StubOverlapIterator

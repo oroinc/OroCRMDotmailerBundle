@@ -9,7 +9,7 @@ use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class MarketingListStateItemVoterTest extends \PHPUnit_Framework_TestCase
+class MarketingListStateItemVoterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var MarketingListStateItemVoter
@@ -17,17 +17,17 @@ class MarketingListStateItemVoterTest extends \PHPUnit_Framework_TestCase
     protected $voter;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|DoctrineHelper
+     * @var \PHPUnit\Framework\MockObject\MockObject|DoctrineHelper
      */
     protected $doctrineHelper;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|ContactInformationFieldsProvider
+     * @var \PHPUnit\Framework\MockObject\MockObject|ContactInformationFieldsProvider
      */
     protected $contactInformationFieldsProvider;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|FieldHelper
+     * @var \PHPUnit\Framework\MockObject\MockObject|FieldHelper
      */
     protected $fieldHelper;
 
@@ -156,7 +156,7 @@ class MarketingListStateItemVoterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function getItem()
     {

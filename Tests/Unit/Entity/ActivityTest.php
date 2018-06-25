@@ -8,7 +8,7 @@ use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Tests\Unit\Fixture\Entity\Organization;
 
-class ActivityTest extends \PHPUnit_Framework_TestCase
+class ActivityTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Activity

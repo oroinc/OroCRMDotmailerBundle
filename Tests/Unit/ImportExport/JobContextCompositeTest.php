@@ -8,7 +8,7 @@ use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 /**
  * @SuppressWarnings(PHPMD.TooManyMethods)
  */
-class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
+class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
 {
     public function testAddError()
     {
@@ -494,12 +494,12 @@ class JobContextCompositeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param \PHPUnit_Framework_MockObject_MockObject   $currentContext
-     * @param \PHPUnit_Framework_MockObject_MockObject[] $contexts
+     * @param \PHPUnit\Framework\MockObject\MockObject   $currentContext
+     * @param \PHPUnit\Framework\MockObject\MockObject[] $contexts
      *
      * @return JobContextComposite
      */
-    protected function initCompositeStubs(\PHPUnit_Framework_MockObject_MockObject $currentContext, array $contexts)
+    protected function initCompositeStubs(\PHPUnit\Framework\MockObject\MockObject $currentContext, array $contexts)
     {
         $currentStepExecution = $this->getMockBuilder('Akeneo\Bundle\BatchBundle\Entity\StepExecution')
             ->disableOriginalConstructor()

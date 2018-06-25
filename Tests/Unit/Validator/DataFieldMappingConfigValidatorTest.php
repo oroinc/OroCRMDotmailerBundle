@@ -14,18 +14,18 @@ use Oro\Bundle\EntityBundle\DoctrineExtensions\DBAL\Types\DurationType;
 use Oro\DBAL\Types\MoneyType;
 use Oro\DBAL\Types\PercentType;
 
-class DataFieldMappingConfigValidatorTest extends \PHPUnit_Framework_TestCase
+class DataFieldMappingConfigValidatorTest extends \PHPUnit\Framework\TestCase
 {
-    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    /** @var \PHPUnit\Framework\MockObject\MockObject */
     protected $entityFieldProvider;
 
-    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    /** @var \PHPUnit\Framework\MockObject\MockObject */
     protected $translator;
 
     /** @var DataFieldMappingConfigValidator */
     protected $validator;
 
-    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    /** @var \PHPUnit\Framework\MockObject\MockObject */
     protected $context;
 
     protected function setUp()

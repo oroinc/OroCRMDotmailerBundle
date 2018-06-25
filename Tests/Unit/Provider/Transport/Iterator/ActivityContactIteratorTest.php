@@ -6,7 +6,7 @@ use DotMailer\Api\DataTypes\ApiCampaignContactSummary;
 use DotMailer\Api\DataTypes\ApiCampaignContactSummaryList;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
 
-class ActivityContactIteratorTest extends \PHPUnit_Framework_TestCase
+class ActivityContactIteratorTest extends \PHPUnit\Framework\TestCase
 {
     public function testIteratorInitTrue()
     {

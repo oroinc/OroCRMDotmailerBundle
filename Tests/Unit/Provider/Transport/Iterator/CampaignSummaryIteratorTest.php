@@ -5,7 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 use DotMailer\Api\DataTypes\ApiCampaignSummary;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterator;
 
-class CampaignSummaryIteratorTest extends \PHPUnit_Framework_TestCase
+class CampaignSummaryIteratorTest extends \PHPUnit\Framework\TestCase
 {
     public function testIterator()
     {

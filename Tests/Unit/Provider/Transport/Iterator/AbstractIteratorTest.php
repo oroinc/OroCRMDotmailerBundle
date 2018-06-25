@@ -4,7 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
 use Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator\Stub\StubAbstractIterator;
 
-class AbstractIteratorTest extends \PHPUnit_Framework_TestCase
+class AbstractIteratorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var StubAbstractIterator

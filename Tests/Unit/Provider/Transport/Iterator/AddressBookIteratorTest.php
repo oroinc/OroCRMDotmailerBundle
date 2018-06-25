@@ -6,7 +6,7 @@ use DotMailer\Api\DataTypes\ApiAddressBook;
 use DotMailer\Api\DataTypes\ApiAddressBookList;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
 
-class AddressBookIteratorTest extends \PHPUnit_Framework_TestCase
+class AddressBookIteratorTest extends \PHPUnit\Framework\TestCase
 {
     public function testIterator()
     {

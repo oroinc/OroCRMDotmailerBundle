@@ -4,7 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Model;
 
 use Oro\Bundle\DotmailerBundle\Model\CampaignHelper;
 
-class CampaignHelperTest extends \PHPUnit_Framework_TestCase
+class CampaignHelperTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var CampaignHelper

@@ -5,7 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\ImportExport\Serializer;
 use Oro\Bundle\DotmailerBundle\ImportExport\Serializer\DateTimeNormalizer;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 
-class DateTimeNormalizerTest extends \PHPUnit_Framework_TestCase
+class DateTimeNormalizerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DateTimeNormalizer

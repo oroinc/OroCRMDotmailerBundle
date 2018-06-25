@@ -8,7 +8,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
 use Oro\Bundle\IntegrationBundle\Entity\Status;
 
-class UnsubscribedFromAccountContactReaderTest extends \PHPUnit_Framework_TestCase
+class UnsubscribedFromAccountContactReaderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var UnsubscribedFromAccountContactReader
@@ -16,22 +16,22 @@ class UnsubscribedFromAccountContactReaderTest extends \PHPUnit_Framework_TestCa
     protected $reader;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $contextRegistry;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $managerRegistry;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $logger;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $contextMediator;
 
@@ -138,8 +138,8 @@ class UnsubscribedFromAccountContactReaderTest extends \PHPUnit_Framework_TestCa
 
     /**
      * @param array                                    $data
-     * @param \PHPUnit_Framework_MockObject_MockObject $channel
-     * @param \PHPUnit_Framework_MockObject_MockObject $transport
+     * @param \PHPUnit\Framework\MockObject\MockObject $channel
+     * @param \PHPUnit\Framework\MockObject\MockObject $transport
      */
     protected function setupReaderDependenciesStubs(array $data, $channel, $transport)
     {

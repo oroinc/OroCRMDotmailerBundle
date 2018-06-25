@@ -10,7 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
-class DataFieldFormSubscriberTest extends \PHPUnit_Framework_TestCase
+class DataFieldFormSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DataFieldFormSubscriber

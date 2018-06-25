@@ -6,7 +6,7 @@ use DotMailer\Api\DataTypes\ApiContactSuppression;
 use DotMailer\Api\DataTypes\ApiContactSuppressionList;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIterator;
 
-class UnsubscribedContactIteratorTest extends \PHPUnit_Framework_TestCase
+class UnsubscribedContactIteratorTest extends \PHPUnit\Framework\TestCase
 {
     public function testIterator()
     {

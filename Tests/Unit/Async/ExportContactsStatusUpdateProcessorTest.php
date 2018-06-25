@@ -21,7 +21,7 @@ use Oro\Component\Testing\ClassExtensionTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCase
+class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCase
 {
     use ClassExtensionTrait;
 
@@ -380,7 +380,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|EntityManagerInterface
+     * @return \PHPUnit\Framework\MockObject\MockObject|EntityManagerInterface
      */
     private function createEntityManagerStub()
     {
@@ -404,7 +404,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|DoctrineHelper
+     * @return \PHPUnit\Framework\MockObject\MockObject|DoctrineHelper
      */
     private function createDoctrineHelperStub($entityManager = null)
     {
@@ -419,7 +419,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|ExportManager
+     * @return \PHPUnit\Framework\MockObject\MockObject|ExportManager
      */
     private function createExportManagerMock()
     {
@@ -427,7 +427,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|QueueExportManager
+     * @return \PHPUnit\Framework\MockObject\MockObject|QueueExportManager
      */
     private function createQueueExportManagerMock()
     {
@@ -435,7 +435,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|TokenStorageInterface
+     * @return \PHPUnit\Framework\MockObject\MockObject|TokenStorageInterface
      */
     private function createTokenStorageMock()
     {
@@ -443,7 +443,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit_Framework_TestCas
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|LoggerInterface
+     * @return \PHPUnit\Framework\MockObject\MockObject|LoggerInterface
      */
     private function createLoggerMock()
     {

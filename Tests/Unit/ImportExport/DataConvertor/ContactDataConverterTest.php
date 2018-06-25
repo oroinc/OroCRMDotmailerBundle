@@ -4,7 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\ImportExport\DataConverter;
 
 use Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactDataConverter;
 
-class ContactDataConverterTest extends \PHPUnit_Framework_TestCase
+class ContactDataConverterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ContactDataConverter

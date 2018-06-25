@@ -9,15 +9,15 @@ use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
 use Oro\Bundle\DotmailerBundle\EventListener\MappingUpdateListener;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
-class MappingUpdateListenerTest extends \PHPUnit_Framework_TestCase
+class MappingUpdateListenerTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $doctrineHelper;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $mappingProvider;
 

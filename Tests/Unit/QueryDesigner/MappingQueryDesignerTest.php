@@ -5,7 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\QueryDesigner;
 use Oro\Bundle\DotmailerBundle\QueryDesigner\MappingQueryDesigner;
 use Oro\Component\Testing\Unit\EntityTestCaseTrait;
 
-class MappingQueryDesignerTest extends \PHPUnit_Framework_TestCase
+class MappingQueryDesignerTest extends \PHPUnit\Framework\TestCase
 {
     use EntityTestCaseTrait;
 

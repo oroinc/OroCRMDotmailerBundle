@@ -5,17 +5,17 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider;
 use Oro\Bundle\DotmailerBundle\Provider\EmailProvider;
 use Oro\Component\Testing\Unit\EntityTrait;
 
-class EmailProviderTest extends \PHPUnit_Framework_TestCase
+class EmailProviderTest extends \PHPUnit\Framework\TestCase
 {
     use EntityTrait;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $contactInformationFieldHelper;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $virtualFieldProvider;
 
