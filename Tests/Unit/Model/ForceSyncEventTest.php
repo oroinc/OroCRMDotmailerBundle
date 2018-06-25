@@ -4,7 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Model;
 
 use Oro\Bundle\DotmailerBundle\Model\ForceSyncEvent;
 
-class ForceSyncEventTest extends \PHPUnit_Framework_TestCase
+class ForceSyncEventTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetSet()
     {

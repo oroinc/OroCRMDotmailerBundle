@@ -4,7 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider;
 
 use Oro\Bundle\DotmailerBundle\Provider\MappingTrackedFieldsEvent;
 
-class MappingTrackedFieldsEventTest extends \PHPUnit_Framework_TestCase
+class MappingTrackedFieldsEventTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetSet()
     {

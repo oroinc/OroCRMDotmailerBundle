@@ -53,11 +53,11 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
      */
     protected function getExtensions()
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject $configProvider */
+        /** @var \PHPUnit\Framework\MockObject\MockObject $configProvider */
         $configProvider = $this->getMockBuilder('Oro\Bundle\EntityConfigBundle\Provider\ConfigProvider')
             ->disableOriginalConstructor()
             ->getMock();
-        /** @var \PHPUnit_Framework_MockObject_MockObject $translator */
+        /** @var \PHPUnit\Framework\MockObject\MockObject $translator */
         $translator = $this->getMockBuilder('Oro\Bundle\TranslationBundle\Translation\Translator')
             ->disableOriginalConstructor()
             ->getMock();

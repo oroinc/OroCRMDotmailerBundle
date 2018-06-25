@@ -8,7 +8,7 @@ use Oro\Bundle\DotmailerBundle\Entity\CampaignSummary;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Tests\Unit\Fixture\Entity\Organization;
 
-class CampaignSummaryTest extends \PHPUnit_Framework_TestCase
+class CampaignSummaryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Activity

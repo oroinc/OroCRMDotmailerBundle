@@ -4,7 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Rest;
 
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\Client;
 
-class ClientTest extends \PHPUnit_Framework_TestCase
+class ClientTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Client
@@ -12,7 +12,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     protected $client;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $response;
 
@@ -22,7 +22,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     protected $info;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $logger;
 

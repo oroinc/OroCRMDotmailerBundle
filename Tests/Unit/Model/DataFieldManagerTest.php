@@ -8,10 +8,10 @@ use Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\DataFieldStub;
 use Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\EnumValueStub;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
-class DataFieldManagerTest extends \PHPUnit_Framework_TestCase
+class DataFieldManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $transport;
 

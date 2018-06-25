@@ -9,14 +9,14 @@ use Oro\Bundle\DotmailerBundle\Provider\StateAwareCacheProvider;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Component\Testing\Unit\EntityTrait;
 
-class StateAwareCacheProviderTest extends \PHPUnit_Framework_TestCase
+class StateAwareCacheProviderTest extends \PHPUnit\Framework\TestCase
 {
     use EntityTrait;
 
     /** @var StateAwareCacheProvider */
     protected $provider;
 
-    /** @var DoctrineHelper|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var DoctrineHelper|\PHPUnit\Framework\MockObject\MockObject */
     protected $doctrineHelper;
 
     protected function setUp()

@@ -5,7 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\ImportExport\DataConverter;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\DataFieldDataConverter;
 
-class DataFieldDataConverterTest extends \PHPUnit_Framework_TestCase
+class DataFieldDataConverterTest extends \PHPUnit\Framework\TestCase
 {
     /** @var  DataFieldDataConverter */
     protected $converter;

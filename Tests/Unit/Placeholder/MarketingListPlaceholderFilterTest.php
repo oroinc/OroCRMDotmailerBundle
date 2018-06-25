@@ -4,7 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Placeholder;
 
 use Oro\Bundle\DotmailerBundle\Placeholders\MarketingListPlaceholderFilter;
 
-class MarketingListPlaceholderFilterTest extends \PHPUnit_Framework_TestCase
+class MarketingListPlaceholderFilterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var MarketingListPlaceholderFilter
@@ -12,12 +12,12 @@ class MarketingListPlaceholderFilterTest extends \PHPUnit_Framework_TestCase
     protected $target;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $registry;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $repository;
 

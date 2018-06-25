@@ -6,7 +6,7 @@ use Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactSyncDataConvert
 use Oro\Bundle\DotmailerBundle\Provider\CacheProvider;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 
-class ContactSyncDataConverterTest extends \PHPUnit_Framework_TestCase
+class ContactSyncDataConverterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ContactSyncDataConverter
@@ -14,12 +14,12 @@ class ContactSyncDataConverterTest extends \PHPUnit_Framework_TestCase
     private $contactSyncDataConverter;
 
     /**
-     * @var ContextInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ContextInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $context;
 
     /**
-     * @var CacheProvider|\PHPUnit_Framework_MockObject_MockObject
+     * @var CacheProvider|\PHPUnit\Framework\MockObject\MockObject
      */
     private $cacheProvider;
 

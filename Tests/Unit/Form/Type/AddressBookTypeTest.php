@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AddressBookTypeTest extends \PHPUnit_Framework_TestCase
+class AddressBookTypeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var AddressBookType
@@ -25,7 +25,7 @@ class AddressBookTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testBuildForm()
     {
-        /** @var FormBuilderInterface|\PHPUnit_Framework_MockObject_MockObject $builder **/
+        /** @var FormBuilderInterface|\PHPUnit\Framework\MockObject\MockObject $builder **/
         $builder = $this->getMockBuilder(FormBuilderInterface::class)->getMock();
 
         $builder->expects($this->at(0))
@@ -73,7 +73,7 @@ class AddressBookTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testConfigureOptions()
     {
-        /** @var OptionsResolver|\PHPUnit_Framework_MockObject_MockObject $resolver **/
+        /** @var OptionsResolver|\PHPUnit\Framework\MockObject\MockObject $resolver **/
         $resolver = $this->getMockBuilder(OptionsResolver::class)->getMock();
         $resolver->expects($this->once())
             ->method('setDefaults')

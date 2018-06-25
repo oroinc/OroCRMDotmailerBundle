@@ -15,22 +15,22 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Component\Testing\Unit\EntityTrait;
 
-class SyncManagerTest extends \PHPUnit_Framework_TestCase
+class SyncManagerTest extends \PHPUnit\Framework\TestCase
 {
     use EntityTrait;
 
     /**
-     * @var DoctrineHelper|\PHPUnit_Framework_MockObject_MockObject
+     * @var DoctrineHelper|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $doctrineHelper;
 
     /**
-     * @var MappingProvider|\PHPUnit_Framework_MockObject_MockObject
+     * @var MappingProvider|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $mappingProvider;
 
     /**
-     * @var ConfigManager|\PHPUnit_Framework_MockObject_MockObject
+     * @var ConfigManager|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $configManager;
 

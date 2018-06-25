@@ -9,7 +9,7 @@ use Oro\Component\Testing\Unit\EntityTrait;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
-class DataFieldMappingFormSubscriberTest extends \PHPUnit_Framework_TestCase
+class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     use EntityTrait;
 

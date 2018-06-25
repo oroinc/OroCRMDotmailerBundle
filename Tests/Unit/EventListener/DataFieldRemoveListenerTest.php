@@ -7,9 +7,9 @@ use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\EventListener\DataFieldRemoveListener;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 
-class DataFieldRemoveListenerTest extends \PHPUnit_Framework_TestCase
+class DataFieldRemoveListenerTest extends \PHPUnit\Framework\TestCase
 {
-    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    /** @var \PHPUnit\Framework\MockObject\MockObject */
     protected $dataFieldManager;
 
     /** @var DataFieldRemoveListener */

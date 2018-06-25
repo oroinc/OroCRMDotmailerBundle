@@ -10,7 +10,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UpdateEntityFieldsFro
 /**
  * Prepares dotmailer QB contacts for iteration
  */
-class UpdateEntityFieldsFromContactIteratorTest extends \PHPUnit_Framework_TestCase
+class UpdateEntityFieldsFromContactIteratorTest extends \PHPUnit\Framework\TestCase
 {
     public function testIterator()
     {

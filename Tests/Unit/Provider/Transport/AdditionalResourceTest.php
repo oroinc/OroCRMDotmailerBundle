@@ -8,10 +8,10 @@ use DotMailer\Api\DataTypes\ApiCampaignContactOpenList;
 use DotMailer\Api\Rest\IClient;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
 
-class AdditionalResourceTest extends \PHPUnit_Framework_TestCase
+class AdditionalResourceTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var IClient|\PHPUnit_Framework_MockObject_MockObject
+     * @var IClient|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $restClient;
 

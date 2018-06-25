@@ -13,7 +13,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 /**
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  */
-class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
+class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DotmailerTransport
@@ -21,17 +21,17 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
     protected $target;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $factory;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $logger;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $encoder;
 
@@ -451,7 +451,7 @@ class DotmailerTransportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      * @throws \Oro\Bundle\DotmailerBundle\Exception\RequiredOptionException
      */
     protected function initTransportStub()

@@ -4,7 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider;
 
 use Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterRegistry;
 
-class ContactExportQBAdapterRegistryTest extends \PHPUnit_Framework_TestCase
+class ContactExportQBAdapterRegistryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ContactExportQBAdapterRegistry

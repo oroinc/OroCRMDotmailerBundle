@@ -4,7 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\MarketingListItemIterator;
 
-class MarketingListItemIteratorTest extends \PHPUnit_Framework_TestCase
+class MarketingListItemIteratorTest extends \PHPUnit\Framework\TestCase
 {
     public function testIterator()
     {

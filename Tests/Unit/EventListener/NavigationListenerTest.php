@@ -8,9 +8,9 @@ use Oro\Bundle\DotmailerBundle\EventListener\NavigationListener;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\NavigationBundle\Event\ConfigureMenuEvent;
 
-class NavigationListenerTest extends \PHPUnit_Framework_TestCase
+class NavigationListenerTest extends \PHPUnit\Framework\TestCase
 {
-    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    /** @var \PHPUnit\Framework\MockObject\MockObject */
     protected $registry;
 
     /** @var  NavigationListener */

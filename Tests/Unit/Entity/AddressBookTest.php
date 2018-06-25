@@ -8,7 +8,7 @@ use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 
-class AddressBookTest extends \PHPUnit_Framework_TestCase
+class AddressBookTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var AddressBook

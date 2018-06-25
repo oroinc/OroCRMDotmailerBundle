@@ -5,7 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Placeholder;
 use Oro\Bundle\DotmailerBundle\Placeholders\ButtonFilter;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 
-class ButtonFilterTest extends \PHPUnit_Framework_TestCase
+class ButtonFilterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ButtonFilter
@@ -13,7 +13,7 @@ class ButtonFilterTest extends \PHPUnit_Framework_TestCase
     protected $target;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $fieldsProvider;
 
