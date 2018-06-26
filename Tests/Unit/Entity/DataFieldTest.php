@@ -6,7 +6,7 @@ use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Component\Testing\Unit\EntityTestCaseTrait;
 
-class DataFieldTest extends \PHPUnit_Framework_TestCase
+class DataFieldTest extends \PHPUnit\Framework\TestCase
 {
     use EntityTestCaseTrait;
 

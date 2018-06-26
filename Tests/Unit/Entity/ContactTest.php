@@ -7,7 +7,7 @@ use Oro\Bundle\DotmailerBundle\Entity\Activity;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
-class ContactTest extends \PHPUnit_Framework_TestCase
+class ContactTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Contact

@@ -10,7 +10,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AbstractActivityItera
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignClickIterator;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 
-class CampaignClickIteratorTest extends \PHPUnit_Framework_TestCase
+class CampaignClickIteratorTest extends \PHPUnit\Framework\TestCase
 {
     public function testIteratorInitTrue()
     {
@@ -155,7 +155,7 @@ class CampaignClickIteratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param \PHPUnit_Framework_MockObject_MockObject $registry
+     * @param \PHPUnit\Framework\MockObject\MockObject $registry
      * @param array $expectedData
      */
     protected function prepareRepositoryMock($registry, $expectedData)

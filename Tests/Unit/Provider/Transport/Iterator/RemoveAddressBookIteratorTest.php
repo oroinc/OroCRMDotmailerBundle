@@ -4,7 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemoveAddressBookIterator;
 
-class RemoveAddressBookIteratorTest extends \PHPUnit_Framework_TestCase
+class RemoveAddressBookIteratorTest extends \PHPUnit\Framework\TestCase
 {
     public function testIterator()
     {

@@ -17,42 +17,42 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
+class AddressBookHandlerTest extends \PHPUnit\Framework\TestCase
 {
     const FORM_DATA = ['field' => 'value'];
 
     /**
-     * @var FormInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var FormInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $form;
 
     /**
-     * @var Request|\PHPUnit_Framework_MockObject_MockObject
+     * @var Request|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $request;
 
     /**
-     * @var ObjectManager|\PHPUnit_Framework_MockObject_MockObject
+     * @var ObjectManager|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $manager;
 
     /**
-     * @var DotmailerTransport|\PHPUnit_Framework_MockObject_MockObject
+     * @var DotmailerTransport|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $transport;
 
     /**
-     * @var TranslatorInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var TranslatorInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $translator;
 
     /**
-     * @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var LoggerInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $logger;
 
     /**
-     * @var AddressBook|\PHPUnit_Framework_MockObject_MockObject
+     * @var AddressBook|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $entity;
 
@@ -152,9 +152,9 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('isValid')
             ->will($this->returnValue(true));
 
-        /** @var Channel|\PHPUnit_Framework_MockObject_MockObject $channel **/
+        /** @var Channel|\PHPUnit\Framework\MockObject\MockObject $channel **/
         $channel = $this->getMockBuilder(Channel::class)->getMock();
-        /** @var Transport|\PHPUnit_Framework_MockObject_MockObject $transport **/
+        /** @var Transport|\PHPUnit\Framework\MockObject\MockObject $transport **/
         $transport = $this->getMockBuilder(Transport::class)->getMock();
         $this->entity->expects($this->once())
             ->method('getChannel')
@@ -178,7 +178,7 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
             ->willReturnMap([
                 ['visibility', $visibilityForm]
             ]);
-        /** @var JsonObject|\PHPUnit_Framework_MockObject_MockObject $apiAddressBook **/
+        /** @var JsonObject|\PHPUnit\Framework\MockObject\MockObject $apiAddressBook **/
         $apiAddressBook = $this->getMockBuilder(JsonObject::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -216,9 +216,9 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('isValid')
             ->will($this->returnValue(true));
 
-        /** @var Channel|\PHPUnit_Framework_MockObject_MockObject $channel **/
+        /** @var Channel|\PHPUnit\Framework\MockObject\MockObject $channel **/
         $channel = $this->getMockBuilder(Channel::class)->getMock();
-        /** @var Transport|\PHPUnit_Framework_MockObject_MockObject $transport **/
+        /** @var Transport|\PHPUnit\Framework\MockObject\MockObject $transport **/
         $transport = $this->getMockBuilder(Transport::class)->getMock();
         $this->entity->expects($this->once())
             ->method('getChannel')
@@ -267,9 +267,9 @@ class AddressBookHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('isValid')
             ->will($this->returnValue(true));
 
-        /** @var Channel|\PHPUnit_Framework_MockObject_MockObject $channel **/
+        /** @var Channel|\PHPUnit\Framework\MockObject\MockObject $channel **/
         $channel = $this->getMockBuilder(Channel::class)->getMock();
-        /** @var Transport|\PHPUnit_Framework_MockObject_MockObject $transport **/
+        /** @var Transport|\PHPUnit\Framework\MockObject\MockObject $transport **/
         $transport = $this->getMockBuilder(Transport::class)->getMock();
         $this->entity->expects($this->once())
             ->method('getChannel')

@@ -8,7 +8,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\DotmailerClientInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class CacheAwareClientTest extends \PHPUnit_Framework_TestCase
+class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
 {
     /** @var CacheAwareClient */
     protected $client;

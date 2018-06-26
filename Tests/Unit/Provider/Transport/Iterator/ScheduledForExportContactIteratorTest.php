@@ -5,7 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExportContactIterator;
 
-class ScheduledForExportContactIteratorTest extends \PHPUnit_Framework_TestCase
+class ScheduledForExportContactIteratorTest extends \PHPUnit\Framework\TestCase
 {
     public function testIterator()
     {

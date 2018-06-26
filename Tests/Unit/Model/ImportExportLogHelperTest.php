@@ -4,7 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Model;
 
 use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 
-class ImportExportLogHelperTest extends \PHPUnit_Framework_TestCase
+class ImportExportLogHelperTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ImportExportLogHelper

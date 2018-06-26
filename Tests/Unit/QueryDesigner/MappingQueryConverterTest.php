@@ -23,7 +23,7 @@ class MappingQueryConverterTest extends OrmQueryConverterTest
             ]
         );
 
-        /** @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject $em */
+        /** @var EntityManagerInterface|\PHPUnit\Framework\MockObject\MockObject $em */
         $em = $doctrine->getManagerForClass(Contact::class);
         $qb = new QueryBuilder($em);
         $qb->from(Contact::class, 't1');

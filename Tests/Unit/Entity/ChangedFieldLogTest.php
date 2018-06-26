@@ -5,7 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Entity;
 use Oro\Bundle\DotmailerBundle\Entity\ChangedFieldLog;
 use Oro\Component\Testing\Unit\EntityTestCaseTrait;
 
-class ChangedFieldLogTest extends \PHPUnit_Framework_TestCase
+class ChangedFieldLogTest extends \PHPUnit\Framework\TestCase
 {
     use EntityTestCaseTrait;
 

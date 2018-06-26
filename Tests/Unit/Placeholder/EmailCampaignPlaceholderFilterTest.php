@@ -5,7 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Placeholder;
 use Oro\Bundle\DotmailerBundle\Placeholders\EmailCampaignPlaceholderFilter;
 use Oro\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport;
 
-class EmailCampaignPlaceholderFilterTest extends \PHPUnit_Framework_TestCase
+class EmailCampaignPlaceholderFilterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var EmailCampaignPlaceholderFilter
@@ -13,12 +13,12 @@ class EmailCampaignPlaceholderFilterTest extends \PHPUnit_Framework_TestCase
     protected $target;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $registry;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $repository;
 

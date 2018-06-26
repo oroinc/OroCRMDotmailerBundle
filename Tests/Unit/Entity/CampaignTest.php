@@ -12,7 +12,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 /**
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  */
-class CampaignTest extends \PHPUnit_Framework_TestCase
+class CampaignTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Campaign
