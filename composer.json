@@ -14,9 +14,9 @@
         "exclude-from-classmap": ["/Tests/"]
     },
     "require": {
-        "oro/crm": "3.0.*",
+        "oro/crm": "3.0.x-dev",
         "romanpitak/dotmailer-api-v2-client": "1.1.*",
-        "oro/marketing" : "3.0.*"
+        "oro/marketing" : "3.0.x-dev"
     },
     "repositories": {
         "oro": {
