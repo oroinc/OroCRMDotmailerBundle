@@ -57,7 +57,6 @@
     {% set type = 'oro_dotmailer_datafield_mapping' %}
     {% set dataBlocks = [{
         'title': 'oro.dotmailer.block.general'|trans,
-        'class': 'nav-item active',
         'subblocks': [{
             'title': '',
             'data': [
@@ -69,7 +68,6 @@
     }] %}
     {% set dataBlocks =  dataBlocks|merge( [{
         'title': 'oro.dotmailer.block.mapping'|trans,
-        'class': 'nav-item',
         'subblocks': [{
             'title': '',
             'data': [
@@ -103,7 +101,6 @@
     {% if additionalData is not empty %}
         {% set dataBlocks = dataBlocks|merge([{
             'title':     'oro.dotmailer.block.additional'|trans,
-            'class': 'nav-item',
             'subblocks': [{ 'title': '', 'useSpan': false, 'data' : additionalData }]
         }] ) %}
     {% endif %}
