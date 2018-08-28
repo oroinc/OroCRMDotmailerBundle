@@ -90,6 +90,23 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
                 continue;
             }
 
+            $jobName = 'oro_integration:sync_integration:'.$integration->getId();
+            $existingJob = $jobProcessor->findRootJobByJobNameAndStatuses(
+                $jobName,
+                [Job::STATUS_NEW, Job::STATUS_RUNNING]
+            );
+            if ($existingJob) {
+                $output->writeln(
+                    sprintf(
+                        'Skip "%s" integration because integration job already exists with "%s" status',
+                        $integration->getName(),
+                        $translator->trans($existingJob->getStatus())
+                    )
+                );
+
+                continue;
+            }
+
             $this->getMessageProducer()->send(
                 Topics::EXPORT_CONTACTS_STATUS_UPDATE,
                 new Message(
