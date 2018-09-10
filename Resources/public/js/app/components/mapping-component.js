@@ -209,7 +209,7 @@ define(function(require) {
             this.confirmView.on('ok', function() {
                 this.collection.remove(this.confirmView.model);
             }.bind(this));
-            this.confirmView.on('hidden', function() {
+            this.confirmView.on('hidden.bs.modal', function() {
                 delete this.model;
             });
             var template = _.template($(this.options.select2FieldChoiceTemplate).text());
