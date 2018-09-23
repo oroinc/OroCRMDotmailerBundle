@@ -61,7 +61,7 @@ class MappingProvider
     {
         $cacheKey = sprintf('two_way_sync_%s_%s', $entityClass, $channelId);
         $twoWayMappings = $this->cache->fetch($cacheKey);
-        if (!$this->cache->contains($cacheKey)) {
+        if (false === $twoWayMappings) {
             $mapping = $this->getMappingRepository()->getTwoWaySyncFieldsForEntity($entityClass, $channelId);
             if ($mapping) {
                 $idField = $this->doctrineHelper->getSingleEntityIdentifierFieldName($entityClass);
@@ -86,7 +86,7 @@ class MappingProvider
     {
         $cacheKey = sprintf('export_%s_%s', $entityClass, $channelId);
         $exportMappings = $this->cache->fetch($cacheKey);
-        if (!$this->cache->contains($cacheKey)) {
+        if (false === $exportMappings) {
             $exportMappings = $this->getMappingRepository()->getMappingConfigForEntity($entityClass, $channelId);
             $this->cache->save($cacheKey, $exportMappings);
         }
@@ -106,7 +106,7 @@ class MappingProvider
         $channelId = $channel->getId();
         $cacheKey = sprintf('prioritized_%s', $channelId);
         $prioritizedMappings = $this->cache->fetch($cacheKey);
-        if (!$this->cache->contains($cacheKey)) {
+        if (false === $prioritizedMappings) {
             $channelMappings = $this->getMappingRepository()->getMappingBySyncPriority($channel);
             $mappings = [];
             foreach ($channelMappings as $mappingData) {
@@ -128,7 +128,7 @@ class MappingProvider
         $channelId = $channel->getId();
         $cacheKey = sprintf('two_way_sync_entities_%s', $channelId);
         $entities = $this->cache->fetch($cacheKey);
-        if (!$this->cache->contains($cacheKey)) {
+        if (false === $entities) {
             $entities = $this->getMappingRepository()->getEntitiesQualifiedForTwoWaySync($channel);
             $this->cache->save($cacheKey, $entities);
         }
@@ -164,7 +164,7 @@ class MappingProvider
     {
         $cacheKey = 'tracked_fields';
         $trackedFields = $this->cache->fetch($cacheKey);
-        if (!$this->cache->contains($cacheKey)) {
+        if (false === $trackedFields) {
             $trackedFields = [];
             $mappings = $this->getMappingRepository()->findAll();
             /** @var DataFieldMapping $mapping */

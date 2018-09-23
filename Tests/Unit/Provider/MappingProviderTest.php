@@ -54,8 +54,6 @@ class MappingProviderTest extends \PHPUnit_Framework_TestCase
     {
         $cacheKey = 'two_way_sync_entity_1';
         $this->cache->expects($this->once())->method('fetch')->with($cacheKey)
-            ->will($this->returnValue([]));
-        $this->cache->expects($this->once())->method('contains')->with($cacheKey)
             ->will($this->returnValue(false));
         $repository = $this->getRepositoryMock();
         $mapping = ['field' => 'datafield'];
@@ -89,8 +87,6 @@ class MappingProviderTest extends \PHPUnit_Framework_TestCase
         $cacheKey = 'two_way_sync_entity_1';
         $this->cache->expects($this->once())->method('fetch')->with($cacheKey)
             ->will($this->returnValue(['field' => 'datafield']));
-        $this->cache->expects($this->once())->method('contains')->with($cacheKey)
-            ->will($this->returnValue(true));
         $this->doctrineHelper->expects($this->never())->method('getSingleEntityIdentifierFieldName');
 
         $result = $this->mappingProvider->getTwoWaySyncFieldsForEntity('entity', 1);
@@ -101,8 +97,6 @@ class MappingProviderTest extends \PHPUnit_Framework_TestCase
     {
         $cacheKey = 'export_entity_1';
         $this->cache->expects($this->once())->method('fetch')->with($cacheKey)
-            ->will($this->returnValue([]));
-        $this->cache->expects($this->once())->method('contains')->with($cacheKey)
             ->will($this->returnValue(false));
         $repository = $this->getRepositoryMock();
         $mapping = ['field' => 'datafield'];
@@ -131,8 +125,6 @@ class MappingProviderTest extends \PHPUnit_Framework_TestCase
         $cacheKey = 'export_entity_1';
         $this->cache->expects($this->once())->method('fetch')->with($cacheKey)
             ->will($this->returnValue(['field' => 'datafield']));
-        $this->cache->expects($this->once())->method('contains')->with($cacheKey)
-            ->will($this->returnValue(true));
 
         $result = $this->mappingProvider->getExportMappingConfigForEntity('entity', 1);
         $this->assertEquals(['field' => 'datafield'], $result);
@@ -142,8 +134,6 @@ class MappingProviderTest extends \PHPUnit_Framework_TestCase
     {
         $cacheKey = 'prioritized_1';
         $this->cache->expects($this->once())->method('fetch')->with($cacheKey)
-            ->will($this->returnValue([]));
-        $this->cache->expects($this->once())->method('contains')->with($cacheKey)
             ->will($this->returnValue(false));
         $repository = $this->getRepositoryMock();
         $mappings = [
@@ -191,8 +181,6 @@ class MappingProviderTest extends \PHPUnit_Framework_TestCase
         $cacheKey = 'prioritized_1';
         $this->cache->expects($this->once())->method('fetch')->with($cacheKey)
             ->will($this->returnValue(['field' => 'datafield']));
-        $this->cache->expects($this->once())->method('contains')->with($cacheKey)
-            ->will($this->returnValue(true));
         $channel = $this->getEntity('Oro\Bundle\IntegrationBundle\Entity\Channel', ['id' => 1]);
         $result = $this->mappingProvider->getDataFieldMappingBySyncPriority($channel);
         $this->assertEquals(['field' => 'datafield'], $result);
@@ -202,8 +190,6 @@ class MappingProviderTest extends \PHPUnit_Framework_TestCase
     {
         $cacheKey = 'two_way_sync_entities_1';
         $this->cache->expects($this->once())->method('fetch')->with($cacheKey)
-            ->will($this->returnValue([]));
-        $this->cache->expects($this->once())->method('contains')->with($cacheKey)
             ->will($this->returnValue(false));
         $repository = $this->getRepositoryMock();
         $entities = ['testEntity'];
@@ -229,8 +215,6 @@ class MappingProviderTest extends \PHPUnit_Framework_TestCase
         $cacheKey = 'two_way_sync_entities_1';
         $this->cache->expects($this->once())->method('fetch')->with($cacheKey)
             ->will($this->returnValue(['field' => 'datafield']));
-        $this->cache->expects($this->once())->method('contains')->with($cacheKey)
-            ->will($this->returnValue(true));
         $channel = $this->getEntity('Oro\Bundle\IntegrationBundle\Entity\Channel', ['id' => 1]);
         $result = $this->mappingProvider->getEntitiesQualifiedForTwoWaySync($channel);
         $this->assertEquals(['field' => 'datafield'], $result);
@@ -240,8 +224,6 @@ class MappingProviderTest extends \PHPUnit_Framework_TestCase
     {
         $cacheKey = 'tracked_fields';
         $this->cache->expects($this->once())->method('fetch')->with($cacheKey)
-            ->will($this->returnValue([]));
-        $this->cache->expects($this->once())->method('contains')->with($cacheKey)
             ->will($this->returnValue(false));
         $repository = $this->getRepositoryMock();
         $mappings = [];
@@ -302,8 +284,6 @@ class MappingProviderTest extends \PHPUnit_Framework_TestCase
     {
         $cacheKey = 'tracked_fields';
         $this->cache->expects($this->once())->method('fetch')->with($cacheKey)
-            ->will($this->returnValue([]));
-        $this->cache->expects($this->once())->method('contains')->with($cacheKey)
             ->will($this->returnValue(false));
         $repository = $this->getRepositoryMock();
         $mappings = [];
@@ -363,8 +343,6 @@ class MappingProviderTest extends \PHPUnit_Framework_TestCase
     {
         $cacheKey = 'tracked_fields';
         $this->cache->expects($this->once())->method('fetch')->with($cacheKey)
-            ->will($this->returnValue([]));
-        $this->cache->expects($this->once())->method('contains')->with($cacheKey)
             ->will($this->returnValue(false));
         $repository = $this->getRepositoryMock();
         $mappings = [];
@@ -390,8 +368,6 @@ class MappingProviderTest extends \PHPUnit_Framework_TestCase
         $cacheKey = 'tracked_fields';
         $this->cache->expects($this->once())->method('fetch')->with($cacheKey)
             ->will($this->returnValue(['array']));
-        $this->cache->expects($this->once())->method('contains')->with($cacheKey)
-            ->will($this->returnValue(true));
         $result = $this->mappingProvider->getTrackedFieldsConfig();
         $this->assertEquals(['array'], $result);
     }
