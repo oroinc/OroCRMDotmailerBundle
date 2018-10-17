@@ -8,7 +8,7 @@
             <div class="controls">
                 <div style="margin-top: 10px;display: none;" class="ping-holder">
                     <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ label|trans({}, translation_domain) }}</button>
-                    <div class="connection-status alert" style="display: none"></div>
+                    <div class="connection-status alert" role="alert" style="display: none"></div>
                 </div>
             </div>
         </div>
