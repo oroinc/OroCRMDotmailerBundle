@@ -5,7 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 use Doctrine\Common\DataFixtures\AbstractFixture as BaseAbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport;
-use Oro\Bundle\SecurityBundle\Encoder\Mcrypt;
+use Oro\Bundle\SecurityBundle\Encoder\SymmetricCrypterInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -46,7 +46,7 @@ class LoadTransportData extends BaseAbstractFixture implements ContainerAwareInt
     ];
 
     /**
-     * @var Mcrypt
+     * @var SymmetricCrypterInterface
      */
     protected $encoder;
 
@@ -74,6 +74,6 @@ class LoadTransportData extends BaseAbstractFixture implements ContainerAwareInt
      */
     public function setContainer(ContainerInterface $container = null)
     {
-        $this->encoder = $container->get('oro_security.encoder.mcrypt');
+        $this->encoder = $container->get('oro_security.encoder.default');
     }
 }

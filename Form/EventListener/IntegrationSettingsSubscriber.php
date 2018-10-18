@@ -3,22 +3,25 @@
 namespace Oro\Bundle\DotmailerBundle\Form\EventListener;
 
 use Oro\Bundle\FormBundle\Utils\FormUtils;
-use Oro\Bundle\SecurityBundle\Encoder\Mcrypt;
+use Oro\Bundle\SecurityBundle\Encoder\SymmetricCrypterInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
+/**
+ * Class handles settings modification on integration page
+ */
 class IntegrationSettingsSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var Mcrypt
+     * @var SymmetricCrypterInterface
      */
     protected $encoder;
 
     /**
-     * @param Mcrypt $encoder
+     * @param SymmetricCrypterInterface $encoder
      */
-    public function __construct(Mcrypt $encoder)
+    public function __construct(SymmetricCrypterInterface $encoder)
     {
         $this->encoder = $encoder;
     }

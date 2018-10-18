@@ -38,10 +38,13 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIt
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedFromAccountContactIterator;
 use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
-use Oro\Bundle\SecurityBundle\Encoder\Mcrypt;
+use Oro\Bundle\SecurityBundle\Encoder\SymmetricCrypterInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
+/**
+ * Class provides ability to interact dotmailer
+ */
 class DotmailerTransport implements TransportInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
@@ -64,17 +67,17 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     protected $dotMailerResFactory;
 
     /**
-     * @var Mcrypt
+     * @var SymmetricCrypterInterface
      */
     protected $encryptor;
 
     /**
      * @param DotmailerResourcesFactory $dotmailerResourcesFactory
-     * @param Mcrypt                    $encryptor
+     * @param SymmetricCrypterInterface $encryptor
      */
     public function __construct(
         DotmailerResourcesFactory $dotmailerResourcesFactory,
-        Mcrypt $encryptor
+        SymmetricCrypterInterface $encryptor
     ) {
         $this->dotMailerResFactory = $dotmailerResourcesFactory;
         $this->encryptor = $encryptor;

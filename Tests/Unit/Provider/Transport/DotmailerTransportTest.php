@@ -43,7 +43,7 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
 
         $this->logger = $this->createMock('Psr\Log\LoggerInterface');
 
-        $this->encoder = $this->getMockBuilder('Oro\Bundle\SecurityBundle\Encoder\Mcrypt')
+        $this->encoder = $this->getMockBuilder('Oro\Bundle\SecurityBundle\Encoder\SymmetricCrypterInterface')
             ->disableOriginalConstructor()
             ->getMock();
 

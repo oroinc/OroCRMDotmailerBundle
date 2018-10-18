@@ -10,10 +10,13 @@ use Buzz\Message\RequestInterface;
 use Buzz\Message\Response;
 use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
-use Oro\Bundle\SecurityBundle\Encoder\Mcrypt;
+use Oro\Bundle\SecurityBundle\Encoder\SymmetricCrypterInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
+/**
+ * This class provides ability to handle OAuth interaction with dotmailer API
+ */
 class OAuthManager
 {
     const API_ENDPOINT   = 'https://r1-app.dotmailer.com/';
@@ -29,7 +32,7 @@ class OAuthManager
     /** @var RouterInterface */
     protected $router;
 
-    /** @var Mcrypt */
+    /** @var SymmetricCrypterInterface */
     protected $encryptor;
 
     /** @var Curl */
@@ -37,12 +40,12 @@ class OAuthManager
 
     /**
      * @param RouterInterface $router
-     * @param Mcrypt $encryptor
+     * @param SymmetricCrypterInterface $encryptor
      * @param ClientInterface $curlClient
      */
     public function __construct(
         RouterInterface $router,
-        Mcrypt $encryptor,
+        SymmetricCrypterInterface $encryptor,
         ClientInterface $curlClient
     ) {
         $this->router = $router;
