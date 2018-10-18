@@ -179,7 +179,7 @@ services:
     oro_dotmailer.form.event_listener.integration_transport_settings:
         class: '%oro_dotmailer.form.event_listener.integration_transport_settings.class%'
         arguments:
-            - "@oro_security.encoder.mcrypt"
+            - "@oro_security.encoder.default"
 
     oro_dotmailer.form.type.integration_transport_settings:
         class: '%oro_dotmailer.form.type.integration_transport_settings.class%'
@@ -367,7 +367,7 @@ services:
         class: '%oro_dotmailer.transport.integration_transport.class%'
         arguments:
             - "@oro_dotmailer.transport.resources_factory"
-            - "@oro_security.encoder.mcrypt"
+            - "@oro_security.encoder.default"
         calls:
             - [setLogger, ["@oro_integration.logger.strategy"]]
         tags:
@@ -489,7 +489,7 @@ services:
         class: '%oro_dotmailer.oauth_manager.class%'
         arguments:
             - "@router"
-            - "@oro_security.encoder.mcrypt"
+            - "@oro_security.encoder.default"
             - "@hwi_oauth.http_client"
 
     oro_dotmailer.manager.sync_manager:
