@@ -16,7 +16,7 @@
     "require": {
         "php": "7.1.*",
         "oro/crm": "2.6.*",
-        "romanpitak/dotmailer-api-v2-client": "1.0.11",
+        "romanpitak/dotmailer-api-v2-client": "3.0.*",
         "oro/marketing" : "2.6.*"
     },
     "repositories": {
