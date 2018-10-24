@@ -197,7 +197,7 @@ class MarketingListItemsQueryBuilderProvider
          * Distinct used in select leads to exception in postgresql
          * in case if order by field not presented in select
          */
-        $qb->select($contactInformationFieldExpr);
+        $qb->select($qb->expr()->lower($contactInformationFieldExpr));
         $qb->resetDQLPart('orderBy');
 
         $removedItemsQueryBuilder = clone $qb;
@@ -225,13 +225,11 @@ class MarketingListItemsQueryBuilderProvider
             /**
              * Select only Address book contacts for which marketing list items not exist
              */
-            ->andWhere(
-                $expr->notIn('contact.email', $qb->getDQL())
-            )->andWhere(
-                $expr->isNotNull('addressBookContact.marketingListItemId')
-            );
+            ->andWhere($expr->notIn('contact.email', $qb->getDQL()))
+            ->andWhere($expr->isNotNull('addressBookContact.marketingListItemId'))
+            ->andWhere($expr->isNotNull('contact.originId'));
         if ($addressBook->isCreateEntities()) {
-            //if address book allows to create new entities, take only contacts not makred as new entity
+            //if address book allows to create new entities, take only contacts not marked as new entity
             $removedItemsQueryBuilder->andWhere(
                 $expr->eq('addressBookContact.newEntity', ':newEntity')
             )->setParameter('newEntity', false);
@@ -410,10 +408,10 @@ class MarketingListItemsQueryBuilderProvider
         $contactInformationFieldExpr = $this->fieldHelper
             ->getFieldExpr($marketingList->getEntity(), $qb, $contactInformationField);
 
-        $qb->addSelect($contactInformationFieldExpr . ' AS ' . ContactSyncDataConverter::EMAIL_FIELD);
+        $qb->addSelect($expr->lower($contactInformationFieldExpr) . ' AS ' . ContactSyncDataConverter::EMAIL_FIELD);
         $joinContactsExpr->add(
             $expr->eq(
-                $contactInformationFieldExpr,
+                $expr->lower($contactInformationFieldExpr),
                 sprintf('%s.email', self::CONTACT_ALIAS)
             )
         );

@@ -8,6 +8,7 @@ use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIteratorInterface;
 use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
 use Oro\Bundle\DotmailerBundle\Provider\CacheProvider;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
+use Oro\Bundle\DotmailerBundle\Utils\EmailUtils;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
@@ -15,6 +16,9 @@ use Oro\Component\Action\Action\AbstractAction;
 use Oro\Component\ConfigExpression\ContextAccessor;
 use Oro\Component\DoctrineUtils\ORM\QueryBuilderUtil;
 
+/**
+ * Abstract class that return query builder based on marketing list
+ */
 abstract class AbstractMarketingListEntitiesAction extends AbstractAction
 {
     const MARKETING_LIST_ENTITY_QB_ALIAS = 'marketingListEntity';
@@ -122,11 +126,11 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
             QueryBuilderUtil::checkIdentifier($parameterName);
             $expr->add(
                 $qb->expr()->eq(
-                    $this->fieldHelper->getFieldExpr($marketingList->getEntity(), $qb, $emailField),
+                    $qb->expr()->lower($this->fieldHelper->getFieldExpr($marketingList->getEntity(), $qb, $emailField)),
                     ':' . $parameterName
                 )
             );
-            $qb->setParameter($parameterName, $email);
+            $qb->setParameter($parameterName, EmailUtils::getLowerCaseEmail($email));
         }
         $qb->andWhere($expr);
 

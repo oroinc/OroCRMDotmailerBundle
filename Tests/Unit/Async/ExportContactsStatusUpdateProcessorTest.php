@@ -10,9 +10,11 @@ use Oro\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\DotmailerBundle\Model\QueueExportManager;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
+use Oro\Bundle\MessageQueueBundle\Entity\Job;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Component\MessageQueue\Client\TopicSubscriberInterface;
 use Oro\Component\MessageQueue\Consumption\MessageProcessorInterface;
+use Oro\Component\MessageQueue\Job\JobProcessor;
 use Oro\Component\MessageQueue\Test\JobRunner;
 use Oro\Component\MessageQueue\Transport\Null\NullMessage;
 use Oro\Component\MessageQueue\Transport\Null\NullSession;
@@ -51,7 +53,8 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createQueueExportManagerMock(),
             new JobRunner(),
             $this->createTokenStorageMock(),
-            $this->createLoggerMock()
+            $this->createLoggerMock(),
+            $this->createJobProcessorMock()
         );
     }
 
@@ -73,7 +76,8 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createQueueExportManagerMock(),
             new JobRunner(),
             $this->createTokenStorageMock(),
-            $logger
+            $logger,
+            $this->createJobProcessorMock()
         );
 
         $status = $processor->process($message, new NullSession());
@@ -93,7 +97,8 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createQueueExportManagerMock(),
             new JobRunner(),
             $this->createTokenStorageMock(),
-            $this->createLoggerMock()
+            $this->createLoggerMock(),
+            $this->createJobProcessorMock()
         );
 
         $message = new NullMessage();
@@ -130,7 +135,8 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createQueueExportManagerMock(),
             new JobRunner(),
             $this->createTokenStorageMock(),
-            $logger
+            $logger,
+            $this->createJobProcessorMock()
         );
 
 
@@ -170,7 +176,8 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createQueueExportManagerMock(),
             new JobRunner(),
             $this->createTokenStorageMock(),
-            $logger
+            $logger,
+            $this->createJobProcessorMock()
         );
 
         $status = $processor->process($message, new NullSession());
@@ -221,7 +228,8 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $queueExportManagerMock,
             new JobRunner(),
             $this->createTokenStorageMock(),
-            $this->createLoggerMock()
+            $this->createLoggerMock(),
+            $this->createJobProcessorMock()
         );
 
         $message = new NullMessage();
@@ -275,7 +283,8 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $queueExportManagerMock,
             new JobRunner(),
             $this->createTokenStorageMock(),
-            $this->createLoggerMock()
+            $this->createLoggerMock(),
+            $this->createJobProcessorMock()
         );
 
         $message = new NullMessage();
@@ -329,7 +338,8 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $queueExportManagerMock,
             new JobRunner(),
             $this->createTokenStorageMock(),
-            $this->createLoggerMock()
+            $this->createLoggerMock(),
+            $this->createJobProcessorMock()
         );
 
         $message = new NullMessage();
@@ -338,6 +348,52 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
         $status = $processor->process($message, new NullSession());
 
         $this->assertEquals(MessageProcessorInterface::ACK, $status);
+    }
+
+    public function testShouldRejectMessageIfIntegrationIsInProgress()
+    {
+        $integration = new Integration();
+        $integration->setEnabled(true);
+        $integration->setOrganization(new Organization());
+
+        $entityManagerMock = $this->createEntityManagerStub();
+        $entityManagerMock
+            ->expects($this->once())
+            ->method('find')
+            ->with(Integration::class, 'theIntegrationId')
+            ->willReturn($integration);
+
+        $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
+
+        $exportManagerMock = $this->createExportManagerMock();
+        $queueExportManagerMock = $this->createQueueExportManagerMock();
+        $exportManagerMock->expects(self::never())->method('isExportFinished');
+        $exportManagerMock->expects(self::never())->method('isExportFaultsProcessed');
+        $queueExportManagerMock->expects(self::never())->method('updateExportResults');
+        $queueExportManagerMock->expects(self::never())->method('processExportFaults');
+
+        $jobProcessor = $this->createJobProcessorMock();
+        $jobProcessor
+            ->expects(self::once())
+            ->method('findRootJobByJobNameAndStatuses')
+            ->willReturn(new Job());
+
+        $processor = new ExportContactsStatusUpdateProcessor(
+            $doctrineHelperStub,
+            $exportManagerMock,
+            $queueExportManagerMock,
+            new JobRunner(),
+            $this->createTokenStorageMock(),
+            $this->createLoggerMock(),
+            $jobProcessor
+        );
+
+        $message = new NullMessage();
+        $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
+
+        $status = $processor->process($message, new NullSession());
+
+        $this->assertEquals(MessageProcessorInterface::REJECT, $status);
     }
 
     public function testShouldRunExportAsUniqueJob()
@@ -364,7 +420,8 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createQueueExportManagerMock(),
             $jobRunner,
             $this->createTokenStorageMock(),
-            $this->createLoggerMock()
+            $this->createLoggerMock(),
+            $this->createJobProcessorMock()
         );
 
         $message = new NullMessage();
@@ -448,5 +505,13 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
     private function createLoggerMock()
     {
         return $this->createMock(LoggerInterface::class);
+    }
+
+    /**
+     * @return \PHPUnit\Framework\MockObject\MockObject|JobProcessor
+     */
+    private function createJobProcessorMock()
+    {
+        return $this->createMock(JobProcessor::class);
     }
 }

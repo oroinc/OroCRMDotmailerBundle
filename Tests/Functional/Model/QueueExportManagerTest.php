@@ -43,7 +43,7 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
 
         $scheduledForExport = $this->managerRegistry->getRepository('OroDotmailerBundle:AddressBookContact')
             ->findBy(['scheduledForExport' => true]);
-        $this->assertCount(2, $scheduledForExport);
+        $this->assertCount(3, $scheduledForExport);
 
         // Expect Dotmailer will return FINISHED status for import with id=$importWithFaultsId which was NOT_FINISHED
         $apiContactImportStatus = new ApiContactImport();

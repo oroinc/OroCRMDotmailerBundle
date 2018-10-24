@@ -1,4 +1,5 @@
 <?php
+
 namespace Oro\Bundle\DotmailerBundle\Async;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -9,6 +10,8 @@ use Oro\Bundle\IntegrationBundle\Authentication\Token\IntegrationTokenAwareTrait
 use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
 use Oro\Component\MessageQueue\Client\TopicSubscriberInterface;
 use Oro\Component\MessageQueue\Consumption\MessageProcessorInterface;
+use Oro\Component\MessageQueue\Job\Job;
+use Oro\Component\MessageQueue\Job\JobProcessor;
 use Oro\Component\MessageQueue\Job\JobRunner;
 use Oro\Component\MessageQueue\Transport\MessageInterface;
 use Oro\Component\MessageQueue\Transport\SessionInterface;
@@ -16,6 +19,9 @@ use Oro\Component\MessageQueue\Util\JSON;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
+/**
+ * Processor to load export statuses from Dotmailer
+ */
 class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, TopicSubscriberInterface
 {
     use IntegrationTokenAwareTrait;
@@ -46,12 +52,18 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
     private $logger;
 
     /**
+     * @var JobProcessor
+     */
+    private $jobProcessor;
+
+    /**
      * @param DoctrineHelper $doctrineHelper
      * @param ExportManager $exportManager
      * @param QueueExportManager $queueExportManager
      * @param JobRunner $jobRunner
      * @param TokenStorageInterface $tokenStorage
      * @param LoggerInterface $logger
+     * @param JobProcessor $jobProcessor
      */
     public function __construct(
         DoctrineHelper $doctrineHelper,
@@ -59,7 +71,8 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
         QueueExportManager $queueExportManager,
         JobRunner $jobRunner,
         TokenStorageInterface $tokenStorage,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        JobProcessor $jobProcessor
     ) {
         $this->doctrineHelper = $doctrineHelper;
         $this->exportManager = $exportManager;
@@ -67,6 +80,7 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
         $this->jobRunner = $jobRunner;
         $this->tokenStorage = $tokenStorage;
         $this->logger = $logger;
+        $this->jobProcessor = $jobProcessor;
     }
 
     /**
@@ -101,6 +115,14 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
                 sprintf('The integration is not enabled: %s', $body['integrationId'])
             );
 
+            return self::REJECT;
+        }
+
+        $existingJob = $this->jobProcessor->findRootJobByJobNameAndStatuses(
+            'oro_dotmailer:export_contacts_status_update:'.$integration->getId(),
+            [Job::STATUS_NEW, Job::STATUS_RUNNING]
+        );
+        if ($existingJob) {
             return self::REJECT;
         }
 
