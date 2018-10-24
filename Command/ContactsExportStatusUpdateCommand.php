@@ -18,6 +18,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
+/**
+ * Import export results and reports, process not exported and rejected contacts
+ */
 class ContactsExportStatusUpdateCommand extends Command implements CronCommandInterface, ContainerAwareInterface
 {
     use ContainerAwareTrait;
@@ -71,16 +74,31 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
             $output->writeln(sprintf('Integration "%s"', $integration->getId()));
 
             // check if the integration job with `new` or `in progress` status already exists.
-            // @todo: Temporary solution. should be refacored during BAP-14803.
-            $jobName = 'oro_dotmailer:export_contacts_status_update:'.$integration->getId();
+            // Temporary solution. should be refacored during BAP-14803.
             $existingJob = $jobProcessor->findRootJobByJobNameAndStatuses(
-                $jobName,
+                'oro_dotmailer:export_contacts_status_update:'.$integration->getId(),
                 [Job::STATUS_NEW, Job::STATUS_RUNNING]
             );
             if ($existingJob) {
                 $output->writeln(
                     sprintf(
                         'Skip "%s" integration because such job already exists with "%s" status',
+                        $integration->getName(),
+                        $translator->trans($existingJob->getStatus())
+                    )
+                );
+
+                continue;
+            }
+
+            $existingJob = $jobProcessor->findRootJobByJobNameAndStatuses(
+                'oro_integration:sync_integration:'.$integration->getId(),
+                [Job::STATUS_NEW, Job::STATUS_RUNNING]
+            );
+            if ($existingJob) {
+                $output->writeln(
+                    sprintf(
+                        'Skip "%s" integration because integration job already exists with "%s" status',
                         $integration->getName(),
                         $translator->trans($existingJob->getStatus())
                     )

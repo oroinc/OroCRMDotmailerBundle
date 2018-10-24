@@ -39,7 +39,7 @@ class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTe
 
         $scheduledForExport = $this->managerRegistry->getRepository('OroDotmailerBundle:AddressBookContact')
             ->findBy(['scheduledForExport' => true]);
-        $this->assertCount(2, $scheduledForExport);
+        $this->assertCount(3, $scheduledForExport);
 
         $this->stubResource();
 

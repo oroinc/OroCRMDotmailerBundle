@@ -23,6 +23,9 @@ use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MarketingListBundle\Model\MarketingListHelper;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 
+/**
+ * Join real subscriber status on the marketing list data grid
+ */
 class MarketingListItemGridListener
 {
     /** @var ManagerRegistry */
@@ -146,16 +149,16 @@ class MarketingListItemGridListener
             throw new \RuntimeException('Contact information is not provided');
         }
 
+        $expr = $queryBuilder->expr();
 
         $contactInformationFieldExpr = $this->fieldHelper
             ->getFieldExpr($marketingList->getEntity(), $queryBuilder, $contactInformationField);
-        $queryBuilder->addSelect($contactInformationFieldExpr . ' AS entityEmail');
+        $queryBuilder->addSelect($expr->lower($contactInformationFieldExpr) . ' AS entityEmail');
 
-        $expr = $queryBuilder->expr();
         $joinContactsExpr = $expr->andX()
             ->add(
                 $expr->eq(
-                    $contactInformationFieldExpr,
+                    $expr->lower($contactInformationFieldExpr),
                     'dm_contact_subscriber.email'
                 )
             );

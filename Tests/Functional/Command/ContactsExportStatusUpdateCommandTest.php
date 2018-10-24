@@ -4,8 +4,10 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Command;
 
 use Oro\Bundle\DotmailerBundle\Async\Topics;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\MessageQueueBundle\Test\Functional\MessageQueueExtension;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
+use Oro\Component\MessageQueue\Job\JobProcessor;
 
 /**
  * @dbIsolationPerTest
@@ -38,5 +40,32 @@ class ContactsExportStatusUpdateCommandTest extends WebTestCase
         $this->assertContains('Completed', $result);
 
         self::assertMessagesCount(Topics::EXPORT_CONTACTS_STATUS_UPDATE, 4);
+    }
+
+    public function testShouldSkipWhenIntegrationSyncInProgress()
+    {
+        /** @var Channel $integration */
+        $integration = $this->getReference('oro_dotmailer.channel.first');
+
+        /** @var JobProcessor $jobProcessor */
+        $jobProcessor = $this->getContainer()->get('oro_message_queue.job.processor');
+        $job = $jobProcessor->findOrCreateRootJob(
+            uniqid('dm', true),
+            'oro_integration:sync_integration:'.$integration->getId(),
+            true
+        );
+
+        self::assertNotNull($job->getId());
+
+        $result = $this->runCommand('oro:cron:dotmailer:export-status:update');
+
+        $this->assertContains('Send export contacts status update for integration:', $result);
+        $this->assertContains(
+            sprintf('Skip "%s" integration because integration job already exists', $integration->getName()),
+            $result
+        );
+        $this->assertContains('Completed', $result);
+
+        self::assertMessagesCount(Topics::EXPORT_CONTACTS_STATUS_UPDATE, 3);
     }
 }

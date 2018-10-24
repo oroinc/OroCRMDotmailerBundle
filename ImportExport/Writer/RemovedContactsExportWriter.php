@@ -8,7 +8,6 @@ use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use DotMailer\Api\Exception;
 use Oro\Bundle\DotmailerBundle\ImportExport\Processor\RemovedExportProcessor;
 use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
@@ -18,6 +17,9 @@ use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Remove Contact from Address Book in Dotmailer, remove Address Book Contact internally
+ */
 class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionAwareInterface
 {
     /**
@@ -111,7 +113,6 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
         }
     }
 
-
     /**
      * @param array            $items
      * @param EntityRepository $repository
@@ -119,38 +120,36 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
      */
     protected function removeAddressBookContacts(array $items, EntityRepository $repository, $addressBookOriginId)
     {
+        $removingItemsIds = [];
+        $removingItemsOriginIds = [];
+
+        foreach ($items as $item) {
+            if (empty($item['id']) || empty($item['originId'])) {
+                continue;
+            }
+
+            $removingItemsIds[] = $item['id'];
+            $removingItemsOriginIds[] = $item['originId'];
+            $this->context->incrementDeleteCount();
+        }
+
         try {
-            $removingItemsIds = [];
-            $removingItemsOriginIds = [];
-
-            /**
-             * Remove Dotmailer Contacts from DB.
-             * Smaller, than step batch used because of "IN" max length
-             */
-            foreach ($items as $item) {
-                $removingItemsIds[] = $item['id'];
-                $removingItemsOriginIds[] = $item['originId'];
-
-                $this->context->incrementDeleteCount();
-            }
-
-            if (count($removingItemsIds) > 0) {
-                $this->removeContacts($repository, $removingItemsIds);
-
-                /**
-                 * Remove Dotmailer Contacts from Dotmailer
-                 * Operation is Async in Dotmailer side
-                 */
+            $removingItemsOriginIds = $this->prepareIds($removingItemsOriginIds);
+            if ($removingItemsOriginIds) {
                 $this->transport->removeContactsFromAddressBook($removingItemsOriginIds, $addressBookOriginId);
+                $this->logBatchInfo($removingItemsOriginIds, $addressBookOriginId);
             }
-
-            $this->logBatchInfo($removingItemsOriginIds, $addressBookOriginId);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->logger
                 ->warning(
-                    "Remove contacts from Address Book '{$addressBookOriginId}' failed. Message: {$e->getMessage()}"
+                    "Remove contacts from Address Book '{$addressBookOriginId}' failed. Message: {$e->getMessage()}",
+                    ['exception' => $e]
                 );
+
+            return;
         }
+
+        $this->removeContacts($repository, $removingItemsIds);
     }
 
     /**
@@ -196,11 +195,32 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
      */
     protected function removeContacts(EntityRepository $repository, array $removingItemsIds)
     {
+        $removingItemsIds = $this->prepareIds($removingItemsIds);
+        if (!$removingItemsIds) {
+            return;
+        }
+
         $qb = $repository->createQueryBuilder('contact');
         $qb->delete()
             ->where($qb->expr()->in('contact.id', ':removingItemsIds'))
             ->setParameter('removingItemsIds', $removingItemsIds)
             ->getQuery()
             ->execute();
+    }
+
+    /**
+     * @param array $ids
+     * @return array
+     */
+    protected function prepareIds(array $ids)
+    {
+        $ids = array_filter($ids);
+        if (!$ids) {
+            return [];
+        }
+
+        sort($ids);
+
+        return $ids;
     }
 }

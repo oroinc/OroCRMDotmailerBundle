@@ -300,6 +300,22 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
                 ]
             ]
         ],
+        [
+            'originId'     => null,
+            'email'        => 'new@emailsim.io',
+            'firstName'    => 'new',
+            'lastName'     => 'new',
+            'channel'      => 'oro_dotmailer.channel.fourth',
+            'reference'    => 'oro_dotmailer.contact.new',
+            'status'       => ApiContactStatuses::SUBSCRIBED,
+            'addressBooks' => [
+                [
+                    'addressBook'         => 'oro_dotmailer.address_book.fifth',
+                    'status'              => Contact::STATUS_SUBSCRIBED,
+                    'marketing_list_item' => 'oro_dotmailer.orocrm_contact.new'
+                ]
+            ]
+        ],
     ];
 
     /**
