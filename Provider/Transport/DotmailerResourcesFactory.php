@@ -11,6 +11,9 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\Client;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\DotmailerClientInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Factory of resources for dotmailer
+ */
 class DotmailerResourcesFactory
 {
     use CacheProviderAwareTrait;
@@ -72,20 +75,6 @@ class DotmailerResourcesFactory
         }
 
         return $cacheClient;
-    }
-
-    /**
-     * @param ApiAccount $account
-     * @param Client $restClient
-     * @deprecated
-     * @see \Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory::updateBaseUrl
-     */
-    protected function updateEndpoint(ApiAccount $account, Client $restClient)
-    {
-        $url = $this->getApiEndpoint($account);
-        if ($url) {
-            $restClient->setBaseUrl($url);
-        }
     }
 
     /**
