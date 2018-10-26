@@ -9,6 +9,8 @@ use Oro\Bundle\IntegrationBundle\Authentication\Token\IntegrationTokenAwareTrait
 use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
 use Oro\Component\MessageQueue\Client\TopicSubscriberInterface;
 use Oro\Component\MessageQueue\Consumption\MessageProcessorInterface;
+use Oro\Component\MessageQueue\Job\Job;
+use Oro\Component\MessageQueue\Job\JobProcessor;
 use Oro\Component\MessageQueue\Job\JobRunner;
 use Oro\Component\MessageQueue\Transport\MessageInterface;
 use Oro\Component\MessageQueue\Transport\SessionInterface;
@@ -46,6 +48,11 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
     private $logger;
 
     /**
+     * @var JobProcessor
+     */
+    private $jobProcessor;
+
+    /**
      * @param DoctrineHelper $doctrineHelper
      * @param ExportManager $exportManager
      * @param QueueExportManager $queueExportManager
@@ -67,6 +74,14 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
         $this->jobRunner = $jobRunner;
         $this->tokenStorage = $tokenStorage;
         $this->logger = $logger;
+    }
+
+    /**
+     * @param JobProcessor $jobProcessor
+     */
+    public function setJobProcessor(JobProcessor $jobProcessor)
+    {
+        $this->jobProcessor = $jobProcessor;
     }
 
     /**
@@ -102,6 +117,16 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
             );
 
             return self::REJECT;
+        }
+
+        if ($this->jobProcessor) {
+            $existingJob = $this->jobProcessor->findRootJobByJobNameAndStatuses(
+                'oro_dotmailer:export_contacts_status_update:'.$integration->getId(),
+                [Job::STATUS_NEW, Job::STATUS_RUNNING]
+            );
+            if ($existingJob) {
+                return self::REJECT;
+            }
         }
 
         $jobName = 'oro_dotmailer:export_contacts_status_update:'.$body['integrationId'];

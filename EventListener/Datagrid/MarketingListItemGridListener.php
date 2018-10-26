@@ -147,16 +147,16 @@ class MarketingListItemGridListener
             throw new \RuntimeException('Contact information is not provided');
         }
 
+        $expr = $queryBuilder->expr();
 
         $contactInformationFieldExpr = $this->fieldHelper
             ->getFieldExpr($marketingList->getEntity(), $queryBuilder, $contactInformationField);
-        $queryBuilder->addSelect($contactInformationFieldExpr . ' AS entityEmail');
+        $queryBuilder->addSelect($expr->lower($contactInformationFieldExpr) . ' AS entityEmail');
 
-        $expr = $queryBuilder->expr();
         $joinContactsExpr = $expr->andX()
             ->add(
                 $expr->eq(
-                    $contactInformationFieldExpr,
+                    $expr->lower($contactInformationFieldExpr),
                     'dm_contact_subscriber.email'
                 )
             );

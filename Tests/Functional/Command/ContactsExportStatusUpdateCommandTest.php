@@ -46,11 +46,14 @@ class ContactsExportStatusUpdateCommandTest extends WebTestCase
     {
         /** @var Channel $integration */
         $integration = $this->getReference('oro_dotmailer.channel.first');
-        $jobName = 'oro_integration:sync_integration:'.$integration->getId();
 
         /** @var JobProcessor $jobProcessor */
         $jobProcessor = $this->getContainer()->get('oro_message_queue.job.processor');
-        $job = $jobProcessor->findOrCreateRootJob(uniqid('dm', true), $jobName, true);
+        $job = $jobProcessor->findOrCreateRootJob(
+            uniqid('dm', true),
+            'oro_integration:sync_integration:'.$integration->getId(),
+            true
+        );
 
         self::assertNotNull($job->getId());
 

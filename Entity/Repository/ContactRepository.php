@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
+use Oro\Bundle\DotmailerBundle\Utils\EmailUtils;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
@@ -68,7 +69,7 @@ class ContactRepository extends EntityRepository
             ->where(
                 $expr->eq('addressBook.marketingList', ':marketingList')
             )
-            ->andWhere($expr->in('contact.email', $emails))
+            ->andWhere($expr->in($expr->lower('contact.email'), EmailUtils::getLowerCaseEmails($emails)))
             ->andWhere(
                 $expr->orX()
                     ->add($expr->notIn('contact.status', $subscribedStatuses))
@@ -95,7 +96,7 @@ class ContactRepository extends EntityRepository
         $result = $qb
             ->select('contact.originId, contact.email')
             ->where($qb->expr()->in('contact.email', ':emails'))
-            ->setParameter('emails', $emails)
+            ->setParameter('emails', EmailUtils::getLowerCaseEmails($emails))
             ->getQuery()
             ->getArrayResult();
 

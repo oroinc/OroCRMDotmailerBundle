@@ -1154,6 +1154,14 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    oro_dotmailer.processor.sync_processor:
+        class: 'Oro\Bundle\DotmailerBundle\Provider\SyncProcessor'
+        arguments:
+            - '@oro_message_queue.job.processor'
+            - '@oro_integration.sync.processor'
+        tags:
+            - { name: oro_integration.sync_processor, integration: dotmailer }
+
     oro_dotmailer.listener.update_address_book_last_imported_date:
         class: %oro_dotmailer.listener.update_address_book_last_imported_date.class%
         arguments:
@@ -1175,6 +1183,8 @@ services:
             - '@oro_message_queue.job.runner'
             - '@security.token_storage'
             - '@logger'
+        calls:
+            - [setJobProcessor, ["@oro_message_queue.job.processor"]]
         tags:
             - { name: 'oro_message_queue.client.message_processor' }
 

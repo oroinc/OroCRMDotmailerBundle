@@ -73,9 +73,8 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
 
             // check if the integration job with `new` or `in progress` status already exists.
             // @todo: Temporary solution. should be refacored during BAP-14803.
-            $jobName = 'oro_dotmailer:export_contacts_status_update:'.$integration->getId();
             $existingJob = $jobProcessor->findRootJobByJobNameAndStatuses(
-                $jobName,
+                'oro_dotmailer:export_contacts_status_update:'.$integration->getId(),
                 [Job::STATUS_NEW, Job::STATUS_RUNNING]
             );
             if ($existingJob) {
@@ -90,9 +89,8 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
                 continue;
             }
 
-            $jobName = 'oro_integration:sync_integration:'.$integration->getId();
             $existingJob = $jobProcessor->findRootJobByJobNameAndStatuses(
-                $jobName,
+                'oro_integration:sync_integration:'.$integration->getId(),
                 [Job::STATUS_NEW, Job::STATUS_RUNNING]
             );
             if ($existingJob) {

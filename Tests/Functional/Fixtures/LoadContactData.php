@@ -22,7 +22,7 @@ class LoadContactData extends AbstractFixture implements DependentFixtureInterfa
         [
             'firstName'    => 'John',
             'lastName'     => 'Case',
-            'email'        => 'john.case@example.com',
+            'email'        => 'John.Case@Example.Com',
             'organization' => 'oro_dotmailer.organization.foo',
             'owner'        => 'oro_dotmailer.user.john.doe',
             'reference'    => 'oro_dotmailer.orocrm_contact.john.case',
@@ -38,7 +38,7 @@ class LoadContactData extends AbstractFixture implements DependentFixtureInterfa
         [
             'firstName'    => 'Alex',
             'lastName'     => 'Case',
-            'email'        => 'alex.case@example.com',
+            'email'        => 'ALEX.CASE@EXAMPLE.COM',
             'organization' => 'oro_dotmailer.organization.foo',
             'owner'        => 'oro_dotmailer.user.john.doe',
             'reference'    => 'oro_dotmailer.orocrm_contact.alex.case',
@@ -89,6 +89,14 @@ class LoadContactData extends AbstractFixture implements DependentFixtureInterfa
             'organization' => 'oro_dotmailer.organization.foo',
             'owner'        => 'oro_dotmailer.user.john.doe',
             'reference'    => 'oro_dotmailer.orocrm_contact.john.doe',
+        ],
+        [
+            'firstName'    => 'New',
+            'lastName'     => 'Contact',
+            'email'        => 'new@emailsim.io',
+            'organization' => 'oro_dotmailer.organization.foo',
+            'owner'        => 'oro_dotmailer.user.john.doe',
+            'reference'    => 'oro_dotmailer.orocrm_contact.new',
         ]
     ];
 

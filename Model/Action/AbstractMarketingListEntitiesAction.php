@@ -6,6 +6,7 @@ use Doctrine\ORM\QueryBuilder;
 
 use Oro\Bundle\BatchBundle\ORM\Query\BufferedIdentityQueryResultIterator;
 use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIteratorInterface;
+use Oro\Bundle\DotmailerBundle\Utils\EmailUtils;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
 use Oro\Bundle\DotmailerBundle\Provider\CacheProvider;
@@ -113,11 +114,11 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
             $parameterName = $emailField . mt_rand();
             $expr->add(
                 $qb->expr()->eq(
-                    $this->fieldHelper->getFieldExpr($marketingList->getEntity(), $qb, $emailField),
+                    $qb->expr()->lower($this->fieldHelper->getFieldExpr($marketingList->getEntity(), $qb, $emailField)),
                     ':' . $parameterName
                 )
             );
-            $qb->setParameter($parameterName, $email);
+            $qb->setParameter($parameterName, EmailUtils::getLowerCaseEmail($email));
         }
         $qb->andWhere($expr);
 
