@@ -11,7 +11,6 @@ use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactSyncDataConverter;
 use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
-use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 use Oro\Bundle\MarketingListBundle\Provider\MarketingListProvider;
 use Oro\Bundle\SecurityBundle\Owner\Metadata\OwnershipMetadataProviderInterface;
@@ -329,32 +328,6 @@ class MarketingListItemsQueryBuilderProvider
         $this->applyOrganizationRestrictions($addressBook, $qb);
 
         return $qb;
-    }
-
-    /**
-     * @param MarketingList $marketingList
-     *
-     * @return QueryBuilder
-     *
-     * @deprecated use getMarketingListItemsQB instead
-     */
-    public function getCachedMarketingListEntitiesQB(MarketingList $marketingList)
-    {
-        if (count($this->cachedQueryBuilders) > 100) {
-            $this->cachedQueryBuilders = [];
-        }
-
-        if (!isset($this->cachedQueryBuilders[$marketingList->getId()])) {
-            $this->cachedQueryBuilders[$marketingList->getId()] = $this->marketingListProvider
-                ->getMarketingListEntitiesQueryBuilder($marketingList, MarketingListProvider::FULL_ENTITIES_MIXIN)
-                /**
-                 * In some cases Marketing list segment can contain duplicate records because of
-                 * join to many entities. Duplicate records should not be processed during import
-                 */
-                ->distinct(true);
-        }
-
-        return clone $this->cachedQueryBuilders[$marketingList->getId()];
     }
 
     /**
