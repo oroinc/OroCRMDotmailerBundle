@@ -186,15 +186,17 @@
             <td class="datafield-cell"><%- dataField %></td>
             <td class="twowaysync-cell"><%= isTwoWaySync %></td>
             <td class="action-cell">
-                <a href="javascript: void(0);" class="action no-hash edit-button"
+                {% spaceless %}
+                <a href="javascript: void(0);" class="btn btn-icon btn-lighter action no-hash edit-button"
                         title="{{ 'oro.dotmailer.datafieldmappingconfig.update_mapping'|trans }}"
                         data-collection-action="edit">
-                    <i class="icon-edit hide-text"></i></a>
-                <a href="javascript: void(0);" class="action no-hash delete-button"
+                    <span class="icon-edit" aria-hidden="true"></span></a>
+                <a href="javascript: void(0);" class="btn btn-icon btn-lighter action no-hash delete-button"
                         title="{{ 'oro.dotmailer.datafieldmappingconfig.delete_mapping'|trans }}"
                         data-collection-action="delete"
                         data-message="{{ 'oro.dotmailer.datafieldmappingconfig.delete_mapping_confirmation'|trans }}">
-                    <i class="icon-trash hide-text"></i></a>
+                    <span class="icon-trash" aria-hidden="true"></span></a>
+                {% endspaceless %}
             </td>
         </tr>
     </script>
