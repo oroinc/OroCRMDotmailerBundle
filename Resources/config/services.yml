@@ -862,7 +862,7 @@ services:
             - [setDataConverter, ["@oro_dotmailer.importexport.data_converter.campaign"]]
             - [setStrategy, ["@oro_dotmailer.importexport.strategy.campaign"]]
             - [setEntityName, ['%oro_dotmailer.entity.campaign.class%']]
-    
+
     oro_dotmailer.importexport.processor.contact:
         parent: oro_dotmailer.importexport.processor.import_abstract
         calls:
@@ -974,7 +974,7 @@ services:
     #workflow actions
     oro_dotmailer.workflow.action.abstract_marketing_list_entities:
         class: '%oro_dotmailer.workflow.action.abstract_marketing_list_entities.class%'
-        astract: true
+        abstract: true
         arguments:
             - "@oro_action.expression.context_accessor"
             - "@oro_marketing_list.provider.contact_information_fields"
@@ -1242,4 +1242,3 @@ services:
             - "@translator"
         tags:
             - { name: validator.constraint_validator, alias: oro_dotmailer.validator.datafield_mapping_config }
-
