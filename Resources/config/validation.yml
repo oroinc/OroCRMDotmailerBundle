@@ -107,7 +107,7 @@ Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
             fields: [channel, entity]
             errorPath: entity
-            message: "Mapping for this entity already exists in this Dotmailer integration"
+            message: oro.dotmailer.validators.data_field_mapping.unique_entity.message
     properties:
         channel:
             - NotBlank: ~

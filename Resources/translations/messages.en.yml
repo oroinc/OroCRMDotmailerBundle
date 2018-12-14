@@ -224,6 +224,7 @@ oro:
             faults_processed.label:           Faults Processed
 
         datafield:
+            title:                            Data Field Information
             select.placeholder:               Select Data Field
             entity_label:                     dotmailer Data Field
             entity_plural_label:              Data Fields
