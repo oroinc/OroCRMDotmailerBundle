@@ -1,4 +1,3 @@
-assets:
-    css:
-        inputs:
-          - 'bundles/orodotmailer/css/styles.css'
+css:
+    inputs:
+      - 'bundles/orodotmailer/css/styles.css'
