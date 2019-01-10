@@ -2,11 +2,16 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider;
 
+use Doctrine\Common\Cache\CacheProvider;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\DataFieldMappingRepository;
 use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\DotmailerBundle\Provider\MappingTrackedFieldsEvent;
+use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
+use Oro\Bundle\EntityBundle\Provider\VirtualFieldProviderInterface;
 use Oro\Component\Testing\Unit\EntityTrait;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class MappingProviderTest extends \PHPUnit\Framework\TestCase
 {
@@ -34,13 +39,9 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $this->doctrineHelper = $this->getMockBuilder('Oro\Bundle\EntityBundle\ORM\DoctrineHelper')
-            ->disableOriginalConstructor()->getMock();
-        $this->cache = $this->getMockBuilder('Doctrine\Common\Cache\CacheProvider')
-            ->disableOriginalConstructor()->getMock();
-        $this->virtualFieldsProvider = $this
-            ->getMockBuilder('Oro\Bundle\EntityBundle\Provider\ChainVirtualFieldProvider')
-            ->disableOriginalConstructor()->getMock();
+        $this->doctrineHelper = $this->createMock(DoctrineHelper::class);
+        $this->cache = $this->createMock(CacheProvider::class);
+        $this->virtualFieldsProvider = $this->createMock(VirtualFieldProviderInterface::class);
 
         $this->mappingProvider = new MappingProvider(
             $this->doctrineHelper,
@@ -314,10 +315,8 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
                 ],
             ]
         ];
-        $event = new MappingTrackedFieldsEvent([]);
-        $dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')
-            ->disableArgumentCloning()
-            ->getMock();
+
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
         $dispatcher->expects($this->once())->method('hasListeners')->with(MappingTrackedFieldsEvent::NAME)
             ->will($this->returnValue(true));
         $dispatcher->expects($this->once())->method('dispatch')->with(
@@ -394,10 +393,7 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
      */
     protected function getRepositoryMock()
     {
-        $repository = $this
-            ->getMockBuilder('Oro\Bundle\DotmailerBundle\Entity\Repository\DataFieldMappingRepository')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $repository = $this->createMock(DataFieldMappingRepository::class);
         $this->doctrineHelper->expects($this->once())->method('getEntityRepository')->with(DataFieldMapping::class)
             ->will($this->returnValue($repository));
 

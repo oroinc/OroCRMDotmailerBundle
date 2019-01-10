@@ -6,7 +6,7 @@ use Doctrine\Common\Cache\CacheProvider as DoctrineCacheProvider;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\DataFieldMappingRepository;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
-use Oro\Bundle\EntityBundle\Provider\ChainVirtualFieldProvider;
+use Oro\Bundle\EntityBundle\Provider\VirtualFieldProviderInterface;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\QueryDesignerBundle\QueryDesigner\JoinIdentifierHelper;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -22,7 +22,7 @@ class MappingProvider
     /** @var DoctrineCacheProvider */
     protected $cache;
 
-    /** @var ChainVirtualFieldProvider */
+    /** @var VirtualFieldProviderInterface */
     protected $virtualFieldsProvider;
 
     /** @var EventDispatcherInterface */
@@ -31,12 +31,12 @@ class MappingProvider
     /**
      * @param DoctrineHelper $doctrineHelper
      * @param DoctrineCacheProvider $cache
-     * @param ChainVirtualFieldProvider $virtualFieldsProvider
+     * @param VirtualFieldProviderInterface $virtualFieldsProvider
      */
     public function __construct(
         DoctrineHelper $doctrineHelper,
         DoctrineCacheProvider $cache,
-        ChainVirtualFieldProvider $virtualFieldsProvider
+        VirtualFieldProviderInterface $virtualFieldsProvider
     ) {
         $this->doctrineHelper = $doctrineHelper;
         $this->cache = $cache;
