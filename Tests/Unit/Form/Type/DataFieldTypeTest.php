@@ -3,13 +3,19 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Type;
 
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
+use Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldFormSubscriber;
 use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldType;
 use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType;
-use Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Type\Stub\EnumSelectType as EnumSelectTypeStub;
+use Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\DataFieldStub;
+use Oro\Bundle\EntityConfigBundle\Provider\ConfigProvider;
 use Oro\Bundle\EntityExtendBundle\Form\Type\EnumSelectType;
 use Oro\Bundle\FormBundle\Form\Extension\TooltipFormExtension;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\TranslationBundle\Translation\Translator;
+use Oro\Component\Testing\Unit\Entity\Stub\StubEnumValue;
 use Oro\Component\Testing\Unit\EntityTrait;
 use Oro\Component\Testing\Unit\Form\Type\Stub\EntityType;
+use Oro\Component\Testing\Unit\Form\Type\Stub\EnumSelectType as EnumSelectTypeStub;
 use Oro\Component\Testing\Unit\FormIntegrationTestCase;
 use Oro\Component\Testing\Unit\PreloadedExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -18,10 +24,10 @@ class DataFieldTypeTest extends FormIntegrationTestCase
 {
     use EntityTrait;
 
-    /** @var  DataFieldType $type */
+    /** @var DataFieldType $type */
     protected $formType;
 
-    /** @var  \PHPUnit\Framework\MockObject\MockObject */
+    /** @var DataFieldFormSubscriber|\PHPUnit\Framework\MockObject\MockObject */
     protected $subscriber;
 
     /**
@@ -30,14 +36,15 @@ class DataFieldTypeTest extends FormIntegrationTestCase
     protected function setUp()
     {
         $this->subscriber = $this->createPartialMock(
-            'Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldFormSubscriber',
+            DataFieldFormSubscriber::class,
             ['preSet', 'preSubmit']
         );
 
         $this->formType = new DataFieldType(
-            'Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\DataFieldStub',
+            DataFieldStub::class,
             $this->subscriber
         );
+
         parent::setUp();
     }
 
@@ -49,12 +56,17 @@ class DataFieldTypeTest extends FormIntegrationTestCase
      * @param array $options
      * @dataProvider submitProvider
      */
-    public function testSubmit($isValid, $defaultData, $submittedData, $expectedData, array $options = [])
+    public function testSubmit(bool $isValid, $defaultData, array $submittedData, $expectedData, array $options = [])
     {
         $form = $this->factory->create(DataFieldType::class, $defaultData, $options);
+
         $this->assertEquals($defaultData, $form->getData());
         $form->submit($submittedData);
+
+        $this->assertEquals(true, $form->isSubmitted());
+        $this->assertEquals(true, $form->isSynchronized());
         $this->assertEquals($isValid, $form->isValid());
+
         $this->assertEquals($expectedData, $form->getData());
     }
 
@@ -64,9 +76,9 @@ class DataFieldTypeTest extends FormIntegrationTestCase
     public function submitProvider()
     {
         $expectedEntity = $this->getEntity(
-            'Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\DataFieldStub',
+            DataFieldStub::class,
             [
-                'channel' => $this->getEntity('Oro\Bundle\IntegrationBundle\Entity\Channel', ['id' => 1]),
+                'channel' => $this->getEntity(Channel::class, ['id' => 1]),
                 'name' => 'Test Field',
                 'type' => DataField::FIELD_TYPE_STRING,
                 'visibility' => DataField::VISIBILITY_PRIVATE,
@@ -97,14 +109,11 @@ class DataFieldTypeTest extends FormIntegrationTestCase
      */
     protected function getExtensions()
     {
-        /** @var \PHPUnit\Framework\MockObject\MockObject $configProvider */
-        $configProvider = $this->getMockBuilder('Oro\Bundle\EntityConfigBundle\Provider\ConfigProvider')
-            ->disableOriginalConstructor()
-            ->getMock();
-        /** @var \PHPUnit\Framework\MockObject\MockObject $translator */
-        $translator = $this->getMockBuilder('Oro\Bundle\TranslationBundle\Translation\Translator')
-            ->disableOriginalConstructor()
-            ->getMock();
+        /** @var ConfigProvider|\PHPUnit\Framework\MockObject\MockObject $configProvider */
+        $configProvider = $this->createMock(ConfigProvider::class);
+
+        /** @var Translator|\PHPUnit\Framework\MockObject\MockObject $translator */
+        $translator = $this->createMock(Translator::class);
 
         return [
             new PreloadedExtension(
@@ -112,11 +121,18 @@ class DataFieldTypeTest extends FormIntegrationTestCase
                     DataFieldType::class => $this->formType,
                     IntegrationSelectType::class => new EntityType(
                         [
-                            '1' => $this->getEntity('Oro\Bundle\IntegrationBundle\Entity\Channel', ['id' => 1])
+                            '1' => $this->getEntity(Channel::class, ['id' => 1])
                         ],
                         IntegrationSelectType::NAME
                     ),
-                    EnumSelectType::class => new EnumSelectTypeStub(),
+                    EnumSelectType::class => new EnumSelectTypeStub(
+                        [
+                            // Field "type"
+                            new StubEnumValue('String', 'String'),
+                            // Field "visibility"
+                            new StubEnumValue('Private', 'Private')
+                        ]
+                    )
                 ],
                 [
                     FormType::class => [
