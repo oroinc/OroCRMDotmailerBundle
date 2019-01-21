@@ -26,6 +26,9 @@ system_configuration:
             options:
                 label: oro.dotmailer.configuration.force_sync_for_virtual_fields.label
                 tooltip: oro.dotmailer.configuration.force_sync_for_virtual_fields.tooltip
+                required: true
+                constraints:
+                    - NotBlank: ~
                 choices:
                     oro.dotmailer.configuration.force_sync_for_virtual_fields.choices.none: None
                     oro.dotmailer.configuration.force_sync_for_virtual_fields.choices.virtual_only: VirtualOnly
