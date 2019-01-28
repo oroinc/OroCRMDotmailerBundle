@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
-use Oro\Bundle\IntegrationBundle\Entity\Status;
 
 class DataFieldConnector extends AbstractDotmailerConnector
 {

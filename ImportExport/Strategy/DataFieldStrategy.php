@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
-use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 
 class DataFieldStrategy extends AddOrReplaceStrategy
 {

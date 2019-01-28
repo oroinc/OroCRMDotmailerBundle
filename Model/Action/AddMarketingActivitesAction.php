@@ -13,10 +13,7 @@ use Oro\Bundle\FeatureToggleBundle\Checker\FeatureCheckerHolderTrait;
 use Oro\Bundle\FeatureToggleBundle\Checker\FeatureToggleableInterface;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 use Oro\Bundle\MarketingActivityBundle\Model\ActivityFactory;
-use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\WorkflowBundle\Model\EntityAwareInterface;
-use Oro\Component\Action\Action\AbstractAction;
-use Oro\Component\ConfigExpression\ContextAccessor;
 
 class AddMarketingActivitesAction extends AbstractMarketingListEntitiesAction implements FeatureToggleableInterface
 {

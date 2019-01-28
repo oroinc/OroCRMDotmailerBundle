@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Model\Action;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Oro\Bundle\CampaignBundle\Entity\Campaign as MarketingCampaign;
 use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 use Oro\Bundle\DotmailerBundle\Entity\Activity;

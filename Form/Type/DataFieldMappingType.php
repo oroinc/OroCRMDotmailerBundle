@@ -3,8 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
 use Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldMappingFormSubscriber;
-use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldMappingConfigType;
-use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType;
 use Oro\Bundle\FormBundle\Form\Type\CollectionType;
 use Oro\Bundle\MarketingListBundle\Form\Type\ContactInformationEntityChoiceType;
 use Symfony\Component\Form\AbstractType;
