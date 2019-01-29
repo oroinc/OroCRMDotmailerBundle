@@ -4,7 +4,6 @@ namespace Oro\Bundle\DotmailerBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;

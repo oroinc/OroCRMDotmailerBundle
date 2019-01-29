@@ -2,11 +2,8 @@
 
 namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
-use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
-use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType;
 use Oro\Bundle\EntityExtendBundle\Form\Type\EnumSelectType;
-use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;

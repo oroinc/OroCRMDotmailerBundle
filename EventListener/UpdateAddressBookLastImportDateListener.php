@@ -2,7 +2,6 @@
 
 namespace Oro\Bundle\DotmailerBundle\EventListener;
 
-use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 use Oro\Bundle\IntegrationBundle\Event\SyncEvent;

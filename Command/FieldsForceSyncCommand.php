@@ -2,7 +2,6 @@
 
 namespace Oro\Bundle\DotmailerBundle\Command;
 
-use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\CronBundle\Command\CronCommandInterface;
 use Oro\Bundle\DotmailerBundle\Model\SyncManager;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;

@@ -5,7 +5,6 @@ namespace Oro\Bundle\DotmailerBundle\Model\Action;
 use Oro\Bundle\CampaignBundle\Entity\EmailCampaignStatistics;
 use Oro\Bundle\DotmailerBundle\Entity\Activity;
 use Oro\Bundle\DotmailerBundle\Provider\CampaignStatisticProvider;
-use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\WorkflowBundle\Model\EntityAwareInterface;
 
 class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction

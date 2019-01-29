@@ -4,7 +4,6 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiCampaignContactOpenList;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignOpenConnector;
-use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 
 class CampaignOpenImportTest extends AbstractImportExportTestCase

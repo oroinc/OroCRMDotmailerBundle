@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 class RemoveAddressBookIterator extends AbstractIterator

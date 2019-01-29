@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
 use Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldFormSubscriber;
-use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType;
 use Oro\Bundle\EntityExtendBundle\Form\Type\EnumSelectType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;

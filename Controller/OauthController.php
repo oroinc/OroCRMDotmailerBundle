@@ -6,7 +6,6 @@ use Oro\Bundle\DotmailerBundle\Entity\OAuth;
 use Oro\Bundle\DotmailerBundle\Exception\BadRequestException;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;

@@ -2,7 +2,6 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Acl\Voter;
 
-use Doctrine\ORM\Query\Expr;
 use Oro\Bundle\DotmailerBundle\Acl\Voter\MarketingListStateItemVoter;
 use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;

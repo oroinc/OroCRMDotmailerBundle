@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
 use Oro\Bundle\DotmailerBundle\Form\EventListener\IntegrationSettingsSubscriber;
-use Oro\Bundle\DotmailerBundle\Form\Type\DotmailerTransportCheckButtonType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;

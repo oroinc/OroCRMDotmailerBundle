@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
-use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AbstractActivityIterator;
 use Oro\Bundle\ImportExportBundle\Strategy\Import\ConfigurableAddOrReplaceStrategy;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 
