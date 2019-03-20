@@ -102,7 +102,7 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
      */
     public function testDelete($returnValue)
     {
-        $this->client->request(
+        $this->ajaxRequest(
             'DELETE',
             $this->getUrl('oro_api_delete_dotmailer_datafield_mapping', ['id' => $returnValue['id']])
         );
