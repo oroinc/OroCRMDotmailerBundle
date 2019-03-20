@@ -1,3 +1,18 @@
+## 2.6.40
+### Changed
+* In `Oro\Bundle\DotmailerBundle\Controller\AddressBookController::synchronizeAddressBookAction` 
+ (`oro_dotmailer_synchronize_adddress_book` route)
+ action the request method was changed to POST. 
+* In `Oro\Bundle\DotmailerBundle\Controller\AddressBookController::synchronizeAddressBookDataFieldsAction` 
+ (`oro_dotmailer_synchronize_adddress_book_datafields` route)
+ action the request method was changed to POST. 
+* In `Oro\Bundle\DotmailerBundle\Controller\AddressBookController::disconnectMarketingListAction` 
+ (`oro_dotmailer_marketing_list_disconnect` route)
+ action the request method was changed to DELETE. 
+* In `Oro\Bundle\DotmailerBundle\Controller\DataFieldController::synchronizeAction` 
+ (`oro_dotmailer_datafield_synchronize` route)
+ action the request method was changed to POST. 
+
 ## 2.6.0 (2018-01-31)
 [Show detailed list of changes](incompatibilities-2-6.md)
 

@@ -8,15 +8,17 @@ use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
+use Oro\Bundle\SecurityBundle\Annotation\CsrfProtection;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
+ * Dotmailer Address Book Controller
  * @Route("/address-book")
  */
 class AddressBookController extends Controller
@@ -33,8 +35,10 @@ class AddressBookController extends Controller
      *      permission="EDIT",
      *      class="OroDotmailerBundle:AddressBook"
      * )
-     * @param AddressBook $addressBook
+     * @Method("POST")
+     * @CsrfProtection()
      *
+     * @param AddressBook $addressBook
      * @return JsonResponse
      */
     public function synchronizeAddressBookAction(AddressBook $addressBook)
@@ -84,8 +88,10 @@ class AddressBookController extends Controller
      *      permission="EDIT",
      *      class="OroDotmailerBundle:AddressBook"
      * )
-     * @param AddressBook $addressBook
+     * @Method("POST")
+     * @CsrfProtection()
      *
+     * @param AddressBook $addressBook
      * @return JsonResponse
      */
     public function synchronizeAddressBookDataFieldsAction(AddressBook $addressBook)
@@ -121,9 +127,11 @@ class AddressBookController extends Controller
      *      permission="EDIT",
      *      class="OroDotmailerBundle:AddressBook"
      * )
-     * @param AddressBook $addressBook
+     * @Method("DELETE")
+     * @CsrfProtection()
      *
-     * @return Response
+     * @param AddressBook $addressBook
+     * @return JsonResponse
      */
     public function disconnectMarketingListAction(AddressBook $addressBook)
     {
@@ -133,7 +141,7 @@ class AddressBookController extends Controller
         $em->persist($addressBook);
         $em->flush($addressBook);
 
-        return new Response();
+        return new JsonResponse();
     }
 
     /**
