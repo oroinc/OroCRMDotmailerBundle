@@ -10,6 +10,8 @@ use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
+use Oro\Bundle\SecurityBundle\Annotation\CsrfProtection;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -18,6 +20,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * Dotmailer Data Field Controller
  * @Route("/data-field")
  */
 class DataFieldController extends Controller
@@ -116,6 +119,8 @@ class DataFieldController extends Controller
      *      name="oro_dotmailer_datafield_synchronize"
      * )
      * @AclAncestor("oro_dotmailer_datafield_create")
+     * @Method("POST")
+     * @CsrfProtection()
      *
      * @return JsonResponse
      */
