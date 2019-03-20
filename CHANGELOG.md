@@ -2,6 +2,21 @@ Please refer first to [UPGRADE.md](UPGRADE.md) for the most important items that
 
 The current file describes significant changes in the code that may affect the upgrade of your customizations.
 
+## 3.1.4
+### Changed
+* In `Oro\Bundle\DotmailerBundle\Controller\AddressBookController::synchronizeAddressBookAction` 
+ (`oro_dotmailer_synchronize_adddress_book` route)
+ action the request method was changed to POST. 
+* In `Oro\Bundle\DotmailerBundle\Controller\AddressBookController::synchronizeAddressBookDataFieldsAction` 
+ (`oro_dotmailer_synchronize_adddress_book_datafields` route)
+ action the request method was changed to POST. 
+* In `Oro\Bundle\DotmailerBundle\Controller\AddressBookController::disconnectMarketingListAction` 
+ (`oro_dotmailer_marketing_list_disconnect` route)
+ action the request method was changed to DELETE. 
+* In `Oro\Bundle\DotmailerBundle\Controller\DataFieldController::synchronizeAction` 
+ (`oro_dotmailer_datafield_synchronize` route)
+ action the request method was changed to POST. 
+ 
 ## 3.1.0 (2019-01-30)
 [Show detailed list of changes](incompatibilities-3-1.md)
 
