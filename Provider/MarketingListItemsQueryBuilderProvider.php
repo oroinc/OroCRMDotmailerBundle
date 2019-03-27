@@ -333,8 +333,6 @@ class MarketingListItemsQueryBuilderProvider
     /**
      * @param int $addressBookId
      * @return AddressBook
-     *
-     * @deprecated avoid BC break while adding new iterators dependency, should be moved to separate provider
      */
     public function getAddressBook($addressBookId)
     {
