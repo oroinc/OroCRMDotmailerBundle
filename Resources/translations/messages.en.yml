@@ -28,6 +28,8 @@ oro:
                 label: Client Secret Key
             custom_domain:
                 label: Custom OAuth domain
+            api_key:
+                check.message: 'Check Api Key'
 
         addressbook:
             select.placeholder:                   Select Address Book
