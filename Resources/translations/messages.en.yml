@@ -62,6 +62,9 @@ oro:
                 saved: Address Book saved
                 failed: Could not create Address Book
 
+            datagrid:
+                entity_hint: Address Books
+
         activity:
             entity_label:                 dotmailer Activity
             entity_plural_label:          dotmailer Activities

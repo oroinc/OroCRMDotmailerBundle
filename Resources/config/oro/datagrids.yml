@@ -4,7 +4,7 @@ datagrids:
         channel_limitation:
             channel_relation_path: .channel
         options:
-            entityHint: Address book lists
+            entityHint: oro.dotmailer.addressbook.datagrid.entity_hint
         source:
             type: orm
             query:
@@ -50,7 +50,7 @@ datagrids:
         channel_limitation:
             channel_relation_path: .channel
         options:
-            entityHint: Data field lists
+            entityHint: oro.dotmailer.datafield.entity_plural_label
         source:
             type: orm
             query:
@@ -127,7 +127,7 @@ datagrids:
     oro_dotmailer_datafield_mapping_grid:
         extended_entity_name: '%oro_dotmailer.entity.datafield_mapping.class%'
         options:
-            entityHint: Data field mapping lists
+            entityHint: oro.dotmailer.datafieldmapping.entity_plural_label
         source:
             type: orm
             query:
