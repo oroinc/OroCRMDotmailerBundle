@@ -12,6 +12,9 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+/**
+ * DotMailer transport settings form
+ */
 class IntegrationSettingsType extends AbstractType
 {
     const NAME = 'oro_dotmailer_transport_setting_type';
@@ -59,6 +62,7 @@ class IntegrationSettingsType extends AbstractType
                     'constraints' => [new NotBlank()],
                     'attr'        => [
                         'class' => 'dm-password',
+                        'autocomplete' => 'new-password'
                     ],
                 ]
             )
@@ -89,6 +93,7 @@ class IntegrationSettingsType extends AbstractType
                     'required' => false,
                     'attr'     => [
                         'class' => 'dm-client-key',
+                        'autocomplete' => 'new-password'
                     ],
                 ]
             )
