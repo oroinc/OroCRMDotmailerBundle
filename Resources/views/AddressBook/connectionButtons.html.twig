@@ -4,7 +4,7 @@
     {% if addressBook %}
         {% set html %}
         {{ UI.dropdownItem({
-            'path': 'javascript:void(0);',
+            'path': '#',
             'data': {
                 'url': path('oro_dotmailer_synchronize_adddress_book', {id: addressBook.id}),
                 'success-message': 'oro.dotmailer.connection.message.syncronize_scheduled'|trans,
@@ -17,7 +17,7 @@
         }) }}
 
         {{ UI.dropdownItem({
-            'path': 'javascript:void(0);',
+            'path': '#',
             'data': {
                 'url': path('oro_dotmailer_synchronize_adddress_book_datafields', {id: addressBook.id}),
                 'action': 'sync-with-dotmailer'
@@ -28,7 +28,7 @@
         }) }}
 
         {{ UI.dropdownItem({
-            'path': 'javascript:void(0);',
+            'path': '#',
             'data': {
                 'url': path('oro_dotmailer_marketing_list_connect', {id: marketingList.id}),
                 'action': 'connect-with-dotmailer-setting-update',
@@ -62,7 +62,7 @@
         }) }}
     {% else %}
         {{ UI.link({
-            'path': 'javascript:void(0);',
+            'path': '#',
             'data': {
                 'url': path('oro_dotmailer_marketing_list_connect', {id: marketingList.id}),
                 'action': 'connect-with-dotmailer-setting-update',
