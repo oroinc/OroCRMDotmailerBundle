@@ -63,8 +63,8 @@ class DataFieldTypeTest extends FormIntegrationTestCase
         $this->assertEquals($defaultData, $form->getData());
         $form->submit($submittedData);
 
-        $this->assertEquals(true, $form->isSubmitted());
-        $this->assertEquals(true, $form->isSynchronized());
+        $this->assertTrue($form->isSubmitted());
+        $this->assertTrue($form->isSynchronized());
         $this->assertEquals($isValid, $form->isValid());
 
         $this->assertEquals($expectedData, $form->getData());
