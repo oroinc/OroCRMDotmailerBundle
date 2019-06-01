@@ -1,25 +1,38 @@
 <?php
+
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Command;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Oro\Bundle\CronBundle\Command\CronCommandInterface;
 use Oro\Bundle\DotmailerBundle\Command\FieldsForceSyncCommand;
+use Oro\Bundle\DotmailerBundle\Model\SyncManager;
 use Oro\Component\Testing\ClassExtensionTrait;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 class FieldsForceSyncCommandTest extends \PHPUnit\Framework\TestCase
 {
     use ClassExtensionTrait;
 
-    public function testShouldBeSubClassOfCommand()
+    /** @var SyncManager|\PHPUnit\Framework\MockObject\MockObject */
+    private $syncManager;
+
+    /** @var ManagerRegistry|\PHPUnit\Framework\MockObject\MockObject */
+    private $registry;
+
+    /** @var FieldsForceSyncCommand */
+    private $command;
+
+    public function setUp()
     {
-        $this->assertClassExtends(Command::class, FieldsForceSyncCommand::class);
+        $this->syncManager = $this->createMock(SyncManager::class);
+        $this->registry = $this->createMock(ManagerRegistry::class);
+
+        $this->command = new FieldsForceSyncCommand($this->syncManager, $this->registry);
     }
 
-    public function testShouldImplementContainerAwareInterface()
+    public function testShouldBeSubClassOfCommand()
     {
-        $this->assertClassImplements(ContainerAwareInterface::class, FieldsForceSyncCommand::class);
+        $this->assertInstanceOf(Command::class, $this->command);
     }
 
     public function testShouldImplementCronCommandInterface()
@@ -27,26 +40,8 @@ class FieldsForceSyncCommandTest extends \PHPUnit\Framework\TestCase
         $this->assertClassImplements(CronCommandInterface::class, FieldsForceSyncCommand::class);
     }
 
-    public function testCouldBeConstructedWithoutAnyArguments()
-    {
-        new FieldsForceSyncCommand();
-    }
-
     public function testShouldBeRunDaily()
     {
-        $command = new FieldsForceSyncCommand();
-
-        self::assertEquals('0 1 * * *', $command->getDefaultDefinition());
-    }
-
-    public function testShouldAllowSetContainer()
-    {
-        $container = new Container();
-
-        $command = new FieldsForceSyncCommand();
-
-        $command->setContainer($container);
-
-        $this->assertAttributeSame($container, 'container', $command);
+        self::assertEquals('0 1 * * *', $this->command->getDefaultDefinition());
     }
 }
