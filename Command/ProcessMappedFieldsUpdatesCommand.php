@@ -2,20 +2,39 @@
 
 namespace Oro\Bundle\DotmailerBundle\Command;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Oro\Bundle\CronBundle\Command\CronCommandInterface;
 use Oro\Bundle\DotmailerBundle\Entity\ChangedFieldLog;
 use Oro\Bundle\DotmailerBundle\Processor\MappedFieldsChangeProcessor;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-class ProcessMappedFieldsUpdatesCommand extends Command implements CronCommandInterface, ContainerAwareInterface
+/**
+ * Process the queue of changed mapped entities fields and mark corresponding contacts for export
+ */
+class ProcessMappedFieldsUpdatesCommand extends Command implements CronCommandInterface
 {
-    use ContainerAwareTrait;
+    /** @var string */
+    protected static $defaultName = 'oro:cron:dotmailer:mapped-fields-updates:process';
+
+    /** @var ManagerRegistry */
+    private $registry;
+
+    /** @var MappedFieldsChangeProcessor */
+    private $processor;
+
+    /**
+     * @param ManagerRegistry $registry
+     * @param MappedFieldsChangeProcessor $processor
+     */
+    public function __construct(ManagerRegistry $registry, MappedFieldsChangeProcessor $processor)
+    {
+        parent::__construct();
+
+        $this->registry = $registry;
+        $this->processor = $processor;
+    }
 
     /**
      * {@inheritdoc}
@@ -30,7 +49,7 @@ class ProcessMappedFieldsUpdatesCommand extends Command implements CronCommandIn
      */
     public function isActive()
     {
-        $count = $this->getChangedFieldsLogRepository()
+        $count = $this->registry->getRepository(ChangedFieldLog::class)
             ->createQueryBuilder('cl')
             ->select('COUNT(cl.id)')
             ->getQuery()
@@ -45,7 +64,6 @@ class ProcessMappedFieldsUpdatesCommand extends Command implements CronCommandIn
     protected function configure()
     {
         $this
-            ->setName('oro:cron:dotmailer:mapped-fields-updates:process')
             ->setDescription('Process the queue of changed mapped entities fields ' .
                 'and mark corresponding contacts for export');
     }
@@ -60,26 +78,8 @@ class ProcessMappedFieldsUpdatesCommand extends Command implements CronCommandIn
         }
 
         $output->writeln('Start queue processing');
-        $this->getProcessor()->processFieldChangesQueue();
+        $this->processor->processFieldChangesQueue();
 
         $output->writeln('Completed');
-    }
-
-    /**
-     * @return MappedFieldsChangeProcessor
-     */
-    private function getProcessor()
-    {
-        return $this->container->get('oro_dotmailer.processor.mapped_fields_change');
-    }
-
-    /**
-     * @return EntityRepository
-     */
-    private function getChangedFieldsLogRepository()
-    {
-        /** @var RegistryInterface $doctrine */
-        $doctrine = $this->container->get('doctrine');
-        return $doctrine->getRepository(ChangedFieldLog::class);
     }
 }
