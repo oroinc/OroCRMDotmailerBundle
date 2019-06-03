@@ -8,11 +8,14 @@ services:
 
     Oro\Bundle\DotmailerBundle\Command\FieldsForceSyncCommand:
         arguments:
-            - '@oro_dotmailer.manager.sync_manager'
             - '@doctrine'
+            - '@oro_dotmailer.manager.sync_manager'
         tags:
             - { name: console.command }
 
     Oro\Bundle\DotmailerBundle\Command\ProcessMappedFieldsUpdatesCommand:
+        arguments:
+            - '@doctrine'
+            - '@oro_dotmailer.processor.mapped_fields_change'
         tags:
             - { name: console.command }

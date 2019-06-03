@@ -13,21 +13,21 @@ class FieldsForceSyncCommandTest extends \PHPUnit\Framework\TestCase
 {
     use ClassExtensionTrait;
 
-    /** @var SyncManager|\PHPUnit\Framework\MockObject\MockObject */
-    private $syncManager;
-
     /** @var ManagerRegistry|\PHPUnit\Framework\MockObject\MockObject */
     private $registry;
+
+    /** @var SyncManager|\PHPUnit\Framework\MockObject\MockObject */
+    private $syncManager;
 
     /** @var FieldsForceSyncCommand */
     private $command;
 
     public function setUp()
     {
-        $this->syncManager = $this->createMock(SyncManager::class);
         $this->registry = $this->createMock(ManagerRegistry::class);
+        $this->syncManager = $this->createMock(SyncManager::class);
 
-        $this->command = new FieldsForceSyncCommand($this->syncManager, $this->registry);
+        $this->command = new FieldsForceSyncCommand($this->registry, $this->syncManager);
     }
 
     public function testShouldBeSubClassOfCommand()

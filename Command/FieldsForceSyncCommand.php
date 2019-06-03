@@ -20,22 +20,22 @@ class FieldsForceSyncCommand extends Command implements CronCommandInterface
     /** @var string */
     protected static $defaultName = 'oro:cron:dotmailer:force-fields-sync';
 
-    /** @var SyncManager */
-    private $syncManager;
-
     /** @var ManagerRegistry */
     private $registry;
+
+    /** @var SyncManager */
+    private $syncManager;
 
     /**
      * @param SyncManager $syncManager
      * @param ManagerRegistry $registry
      */
-    public function __construct(SyncManager $syncManager, ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, SyncManager $syncManager)
     {
         parent::__construct();
 
-        $this->syncManager = $syncManager;
         $this->registry = $registry;
+        $this->syncManager = $syncManager;
     }
 
     /**
