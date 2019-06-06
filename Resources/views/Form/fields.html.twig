@@ -22,7 +22,7 @@
 {% block _oro_dotmailer_datafield_mapping_form_config_entityFields_row %}
     {% spaceless %}
         <div class="control-group entity-field-control">
-            {% if label is not sameas(false) %}
+            {% if label is not same as(false) %}
                 <div class="control-label wrap">
                     {{ form_label(form, '' , { label_attr: label_attr}) }}
                 </div>
