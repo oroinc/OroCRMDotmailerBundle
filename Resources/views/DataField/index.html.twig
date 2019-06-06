@@ -4,6 +4,8 @@
 {% set pageTitle = 'oro.dotmailer.datafield.entity_plural_label'|trans %}
 {% block bodyClass %}dotmailer-page{% endblock %}
 {% block navButtons %}
+    {% import 'OroUIBundle::macros.html.twig' as UI %}
+
     {% if is_granted('oro_dotmailer_datafield_create') %}
         <div class="btn-group">
             {{ UI.addButton({

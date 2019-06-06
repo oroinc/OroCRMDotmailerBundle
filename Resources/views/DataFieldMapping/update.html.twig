@@ -10,6 +10,8 @@
 {% set formAction = form.vars.value.id ? path('oro_dotmailer_datafield_mapping_update', { 'id': form.vars.value.id }) : path('oro_dotmailer_datafield_mapping_create')  %}
 {% block bodyClass %}dotmailer-page{% endblock %}
 {% block navButtons %}
+    {% import 'OroUIBundle::macros.html.twig' as UI %}
+
     {% if form.vars.value.id and is_granted('DELETE', form.vars.value) %}
         {{ UI.deleteButton({
             'dataUrl': path('oro_api_delete_dotmailer_datafield_mapping', {'id': form.vars.value.id}),
@@ -53,6 +55,9 @@
 {% endblock pageHeader %}
 
 {% block content_data %}
+    {% import 'OroUIBundle::macros.html.twig' as UI %}
+    {% import _self as dataFieldMappingUpdate %}
+
     {% set id = 'dotmailer-datafield-mapping-form' %}
     {% set type = 'oro_dotmailer_datafield_mapping' %}
     {% set dataBlocks = [{
@@ -75,11 +80,11 @@
                 UI.scrollSubblock(
                     '',
                     [
-                        _self.mapping_form(
+                        dataFieldMappingUpdate.mapping_form(
                             form.config,
                             {'id': type ~ '-mapping-form'}
                         ),
-                        _self.mapping_list(
+                        dataFieldMappingUpdate.mapping_list(
                             {
                                 'id': type ~ '-mapping-list',
                                 'rowId': type ~ '-mapping-row'
@@ -111,7 +116,7 @@
     } %}
 
     {{ QD.query_designer_column_chain_template('column-chain-template') }}
-    {{ _self.initJsWidgets(type, form, entities) }}
+    {{ dataFieldMappingUpdate.initJsWidgets(type, form, entities) }}
 
     {{ parent() }}
 {% endblock content_data %}
@@ -162,6 +167,8 @@
 {% endmacro %}
 {% macro mapping_list(attr) %}
     {% import 'OroUIBundle::macros.html.twig' as UI %}
+    {% import _self as dataFieldMappingUpdate %}
+
     {% set attr = attr|default({})|merge({'class': (attr.class|default('') ~ ' grid-container query-designer-grid-container query-designer-columns-grid-container')|trim}) %}
     <div{{ UI.attributes(attr) }}>
         <table class="grid table-hover table table-bordered table-condensed" style="display: table;">
@@ -177,7 +184,7 @@
             </tbody>
         </table>
     </div>
-    {{ _self.mapping_template(attr.rowId) }}
+    {{ dataFieldMappingUpdate.mapping_template(attr.rowId) }}
 {% endmacro %}
 {% macro mapping_template(id) %}
     <script type="text/html" id="{{ id }}">

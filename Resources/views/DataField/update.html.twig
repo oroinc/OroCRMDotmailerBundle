@@ -9,6 +9,8 @@
 {% set formAction = path('oro_dotmailer_datafield_create') %}
 {% block bodyClass %}dotmailer-page{% endblock %}
 {% block navButtons %}
+    {% import 'OroUIBundle::macros.html.twig' as UI %}
+
     {% set html = UI.saveAndCloseButton({
         'route': 'oro_dotmailer_datafield_view',
         'params': {'id': '$id'}

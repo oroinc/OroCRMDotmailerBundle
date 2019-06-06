@@ -3,16 +3,23 @@
 namespace Oro\Bundle\DotmailerBundle\Controller;
 
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
+use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldMappingType;
+use Oro\Bundle\EntityBundle\Provider\EntityProvider;
+use Oro\Bundle\FormBundle\Model\UpdateHandlerFacade;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
+ * Serves CRUD of DataFieldMapping entity.
+ *
  * @Route("/data-field-mapping")
  */
-class DataFieldMappingController extends Controller
+class DataFieldMappingController extends AbstractController
 {
     /**
      * @Route(
@@ -27,7 +34,7 @@ class DataFieldMappingController extends Controller
     public function indexAction()
     {
         return [
-            'entity_class' => $this->container->getParameter('oro_dotmailer.entity.datafield_mapping.class')
+            'entity_class' => DataFieldMapping::class
         ];
     }
 
@@ -70,21 +77,41 @@ class DataFieldMappingController extends Controller
      */
     protected function update(DataFieldMapping $mapping)
     {
-        $response = $this->get('oro_form.model.update_handler')->update(
+        $form = $this->get(FormFactoryInterface::class)
+            ->createNamed('oro_dotmailer_datafield_mapping_form', DataFieldMappingType::class);
+
+        $response = $this->get(UpdateHandlerFacade::class)->update(
             $mapping,
-            $this->get('oro_dotmailer.datafield_mapping.form'),
-            $this->get('translator')->trans('oro.dotmailer.controller.datafield_mapping.saved.message')
+            $form,
+            $this->get(TranslatorInterface::class)->trans('oro.dotmailer.controller.datafield_mapping.saved.message')
         );
 
         if (is_array($response)) {
             $response = array_merge(
                 $response,
                 [
-                    'entities' => $this->get('oro_dotmailer.entity_provider')->getEntities()
+                    'entities' => $this->get(EntityProvider::class)->getEntities()
                 ]
             );
         }
 
         return $response;
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedServices()
+    {
+        return array_merge(
+            parent::getSubscribedServices(),
+            [
+                TranslatorInterface::class,
+                FormFactoryInterface::class,
+                EntityProvider::class,
+                UpdateHandlerFacade::class,
+            ]
+        );
     }
 }

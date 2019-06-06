@@ -2,25 +2,32 @@
 
 namespace Oro\Bundle\DotmailerBundle\Controller;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationConnectionType;
+use Oro\Bundle\DotmailerBundle\Model\OAuthManager;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
+ * Serves dotmailer actions.
+ *
  * @Route("/dotmailer")
  */
-class DotmailerController extends Controller
+class DotmailerController extends AbstractController
 {
     const CHANNEL_SESSION_KEY = 'selected-integration-channel';
 
@@ -82,11 +89,12 @@ class DotmailerController extends Controller
         $username = $request->get('username');
         $password = $request->get('password');
 
-        $dotmailerResourceFactory = $this->get('oro_dotmailer.transport.resources_factory');
+        $dotmailerResourceFactory = $this->get(DotmailerResourcesFactory::class);
         try {
             $dotmailerResourceFactory->createResources($username, $password);
             $result = [
-                'msg' => $this->get('translator')->trans('oro.dotmailer.integration.connection_successful.label')
+                'msg' => $this->get(TranslatorInterface::class)
+                    ->trans('oro.dotmailer.integration.connection_successful.label')
             ];
         } catch (\Exception $exception) {
             $message = $exception->getMessage();
@@ -132,31 +140,32 @@ class DotmailerController extends Controller
         if ($channel) {
             $transport = $channel->getTransport();
             if ($transport->getClientId() && $transport->getClientKey()) {
-                $oauthHelper = $this->get('oro_dotmailer.oauth_manager');
+                $oauthHelper = $this->get(OAuthManager::class);
                 $oauth = $this->getDoctrine()
                     ->getRepository('OroDotmailerBundle:OAuth')
                     ->findByChannelAndUser($channel, $this->getUser());
                 if ($oauth) {
                     try {
                         $loginUserUrl = $oauthHelper->generateLoginUserUrl($transport, $oauth->getRefreshToken());
-                        $this->get('session')->set(self::CHANNEL_SESSION_KEY, $channel->getId());
+                        $this->get(SessionInterface::class)->set(self::CHANNEL_SESSION_KEY, $channel->getId());
                     } catch (RuntimeException $e) {
-                        $this->get('session')->getFlashBag()->add(
+                        $this->get(SessionInterface::class)->getFlashBag()->add(
                             'error',
                             $e->getMessage()
                         );
                     } catch (\Exception $e) {
-                        $this->get('session')->getFlashBag()->add(
+                        $this->get(SessionInterface::class)->getFlashBag()->add(
                             'error',
-                            $this->get('translator')->trans('oro.dotmailer.integration.messsage.unable_to_connect')
+                            $this->get(TranslatorInterface::class)
+                                ->trans('oro.dotmailer.integration.messsage.unable_to_connect')
                         );
                     }
                 }
                 $connectUrl = $oauthHelper->generateAuthorizeUrl($transport, $channel->getId());
             } else {
-                $this->get('session')->getFlashBag()->add(
+                $this->get(SessionInterface::class)->getFlashBag()->add(
                     'error',
-                    $this->get('translator')->trans(
+                    $this->get(TranslatorInterface::class)->trans(
                         'oro.dotmailer.integration.messsage.enter_client_id_client_key',
                         ['%update_url%' => $this->generateUrl('oro_integration_update', ['id' => $channel->getId()])]
                     )
@@ -178,16 +187,33 @@ class DotmailerController extends Controller
      */
     protected function getCurrentChannel(Request $request)
     {
-        $session = $this->get('session');
+        $session = $this->get(SessionInterface::class);
         $data = $request->get('oro_dotmailer_integration_connection');
         $channelId = isset($data['channel']) ? $data['channel'] : $session->get(self::CHANNEL_SESSION_KEY);
         $channel = null;
         if ($channelId) {
-            $channel = $this->getDoctrine()
+            $channel = $this->get(ManagerRegistry::class)
                 ->getRepository(Channel::class)
                 ->getOrLoadById($channelId);
         }
 
         return $channel;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedServices()
+    {
+        return array_merge(
+            parent::getSubscribedServices(),
+            [
+                SessionInterface::class,
+                ManagerRegistry::class,
+                DotmailerResourcesFactory::class,
+                TranslatorInterface::class,
+                OAuthManager::class
+            ]
+        );
     }
 }
