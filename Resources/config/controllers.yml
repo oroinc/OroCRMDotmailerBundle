@@ -1,20 +1,15 @@
 services:
-    oro_dotmailer.controller.data_field_mapping:
-        class: Oro\Bundle\DotmailerBundle\Controller\DataFieldMappingController
-        calls:
-            - [setContainer, ['@Psr\Container\ContainerInterface']]
-        tags:
-            - { name: container.service_subscriber }
+    _defaults:
+        public: true
 
     Oro\Bundle\DotmailerBundle\Controller\DataFieldMappingController:
-        alias: oro_dotmailer.controller.data_field_mapping
-
-    oro_dotmailer.controller.dotmailer:
-        class: Oro\Bundle\DotmailerBundle\Controller\DotmailerController
         calls:
             - [setContainer, ['@Psr\Container\ContainerInterface']]
         tags:
             - { name: container.service_subscriber }
 
     Oro\Bundle\DotmailerBundle\Controller\DotmailerController:
-        alias: oro_dotmailer.controller.dotmailer
+        calls:
+            - [setContainer, ['@Psr\Container\ContainerInterface']]
+        tags:
+            - { name: container.service_subscriber }
