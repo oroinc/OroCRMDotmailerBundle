@@ -344,6 +344,9 @@ services:
             - "@translator"
             - "@oro_dotmailer.datafield_manager"
 
+    Oro\Bundle\DotmailerBundle\Form\Handler\DataFieldFormHandler:
+        alias: oro_dotmailer.form.handler.datafield_update
+
     # Integration related services
     oro_dotmailer.provider.channel_type:
         class: '%oro_dotmailer.provider.channel_type.class%'

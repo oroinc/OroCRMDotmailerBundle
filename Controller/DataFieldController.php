@@ -2,29 +2,53 @@
 
 namespace Oro\Bundle\DotmailerBundle\Controller;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use FOS\RestBundle\Util\Codes;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Form\Handler\DataFieldFormHandler;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\IntegrationBundle\Manager\GenuineSyncScheduler;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Oro\Bundle\SecurityBundle\Annotation\CsrfProtection;
+use Oro\Bundle\UIBundle\Route\Router;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Dotmailer Data Field Controller
  * @Route("/data-field")
  */
-class DataFieldController extends Controller
+class DataFieldController extends AbstractController
 {
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedServices()
+    {
+        return array_merge(parent::getSubscribedServices(), [
+            DataFieldFormHandler::class,
+            SessionInterface::class,
+            TranslatorInterface::class,
+            Router::class,
+            FormFactoryInterface::class,
+            ManagerRegistry::class,
+            GenuineSyncScheduler::class,
+            LoggerInterface::class
+        ]);
+    }
+
     /**
      * @Route("/view/{id}", name="oro_dotmailer_datafield_view", requirements={"id"="\d+"})
      * @Template
@@ -34,6 +58,8 @@ class DataFieldController extends Controller
      *      permission="VIEW",
      *      class="OroDotmailerBundle:DataField"
      * )
+     * @param DataField $field
+     * @return array
      */
     public function viewAction(DataField $field)
     {
@@ -46,12 +72,14 @@ class DataFieldController extends Controller
      * @Route("/info/{id}", name="oro_dotmailer_datafield_info", requirements={"id"="\d+"})
      * @AclAncestor("oro_dotmailer_datafield_view")
      * @Template()
+     * @param DataField $field
+     * @return array
      */
     public function infoAction(DataField $field)
     {
-        return array(
+        return [
             'entity'  => $field
-        );
+        ];
     }
 
     /**
@@ -70,21 +98,22 @@ class DataFieldController extends Controller
     public function createAction(Request $request)
     {
         $field = new DataField();
-        if ($this->get('oro_dotmailer.form.handler.datafield_update')->process($field)) {
-            $this->get('session')->getFlashBag()->add(
+        if ($this->get(DataFieldFormHandler::class)->process($field)) {
+            $this->get(SessionInterface::class)->getFlashBag()->add(
                 'success',
-                $this->get('translator')->trans('oro.dotmailer.controller.datafield.saved.message')
+                $this->get(TranslatorInterface::class)->trans('oro.dotmailer.controller.datafield.saved.message')
             );
 
-            return $this->get('oro_ui.router')->redirect($field);
+            return $this->get(Router::class)->redirect($field);
         }
 
         $isTypeUpdate = $request->get(DataFieldFormHandler::UPDATE_MARKER, false);
 
-        $form = $this->get('oro_dotmailer.datafield.form');
+        $form = $this->get(FormFactoryInterface::class)
+            ->createNamed('oro_dotmailer_data_field_form', 'oro_dotmailer_data_field');
         if ($isTypeUpdate) {
             //take different form not to show JS validation on after typ update only
-            $form = $this->get('form.factory')
+            $form = $this->get(FormFactoryInterface::class)
                 ->createNamed('oro_dotmailer_data_field_form', 'oro_dotmailer_data_field', $form->getData());
         }
 
@@ -107,7 +136,7 @@ class DataFieldController extends Controller
     public function indexAction()
     {
         return [
-            'entity_class' => $this->container->getParameter('oro_dotmailer.entity.datafield.class')
+            'entity_class' => DataField::class
         ];
     }
 
@@ -127,11 +156,11 @@ class DataFieldController extends Controller
     public function synchronizeAction()
     {
         try {
-            $repository = $this->get('doctrine')->getRepository('OroIntegrationBundle:Channel');
+            $repository = $this->get(ManagerRegistry::class)->getRepository('OroIntegrationBundle:Channel');
             $channels = $repository->getConfiguredChannelsForSync(ChannelType::TYPE, true);
             /** @var Channel $channel */
             foreach ($channels as $channel) {
-                $this->get('oro_integration.genuine_sync_scheduler')->schedule(
+                $this->get(GenuineSyncScheduler::class)->schedule(
                     $channel->getId(),
                     DataFieldConnector::TYPE,
                     [DataFieldConnector::FORCE_SYNC_FLAG => 1]
@@ -140,17 +169,18 @@ class DataFieldController extends Controller
 
             $status = Codes::HTTP_OK;
             $response = [
-                'message' => $this->get('translator')->trans('oro.dotmailer.datafield.syncronize_scheduled')
+                'message' => $this->get(TranslatorInterface::class)
+                    ->trans('oro.dotmailer.datafield.syncronize_scheduled')
             ];
         } catch (\Exception $e) {
-            $this->get('logger')->error(
+            $this->get(LoggerInterface::class)->error(
                 'Failed to schedule data field synchronization.',
                 ['e' => $e]
             );
 
             $status = Codes::HTTP_BAD_REQUEST;
             $response = [
-                'message' => $this->get('translator')->trans('oro.integration.sync_error')
+                'message' => $this->get(TranslatorInterface::class)->trans('oro.integration.sync_error')
             ];
         }
 
