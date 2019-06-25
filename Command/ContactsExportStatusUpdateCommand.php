@@ -11,19 +11,51 @@ use Oro\Component\MessageQueue\Client\Message;
 use Oro\Component\MessageQueue\Client\MessagePriority;
 use Oro\Component\MessageQueue\Client\MessageProducerInterface;
 use Oro\Component\MessageQueue\Job\Job;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Oro\Component\MessageQueue\Job\JobProcessor;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Import export results and reports, process not exported and rejected contacts
  */
-class ContactsExportStatusUpdateCommand extends Command implements CronCommandInterface, ContainerAwareInterface
+class ContactsExportStatusUpdateCommand extends Command implements CronCommandInterface
 {
-    use ContainerAwareTrait;
+    /** @var string */
+    protected static $defaultName = 'oro:cron:dotmailer:export-status:update';
+
+    /** @var TranslatorInterface */
+    private $translator;
+
+    /** @var JobProcessor */
+    private $jobProcessor;
+
+    /** @var ManagerRegistry */
+    private $doctrine;
+
+    /** @var MessageProducerInterface */
+    private $messageProducer;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param JobProcessor $jobProcessor
+     * @param ManagerRegistry $doctrine
+     * @param MessageProducerInterface $messageProducer
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        JobProcessor $jobProcessor,
+        ManagerRegistry $doctrine,
+        MessageProducerInterface $messageProducer
+    ) {
+        $this->translator = $translator;
+        $this->jobProcessor = $jobProcessor;
+        $this->doctrine = $doctrine;
+        $this->messageProducer = $messageProducer;
+        parent::__construct();
+    }
 
     /**
      * {@inheritdoc}
@@ -48,10 +80,7 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
      */
     protected function configure()
     {
-        $this
-            ->setName('oro:cron:dotmailer:export-status:update')
-            ->setDescription('Updates status of Dotmailer\'s contacts export operations.')
-        ;
+        $this->setDescription('Updates status of Dotmailer\'s contacts export operations.');
     }
 
     /**
@@ -66,8 +95,7 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
         $output->writeln('Send export contacts status update for integration:');
 
         $integrations = $this->getIntegrationRepository()->findBy(['type' => ChannelType::TYPE, 'enabled' => true]);
-        $jobProcessor = $this->container->get('oro_message_queue.job.processor');
-        $translator = $this->container->get('translator');
+
         foreach ($integrations as $integration) {
             /** @var Integration $integration */
 
@@ -75,7 +103,7 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
 
             // check if the integration job with `new` or `in progress` status already exists.
             // Temporary solution. should be refacored during BAP-14803.
-            $existingJob = $jobProcessor->findRootJobByJobNameAndStatuses(
+            $existingJob = $this->jobProcessor->findRootJobByJobNameAndStatuses(
                 'oro_dotmailer:export_contacts_status_update:'.$integration->getId(),
                 [Job::STATUS_NEW, Job::STATUS_RUNNING]
             );
@@ -84,14 +112,14 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
                     sprintf(
                         'Skip "%s" integration because such job already exists with "%s" status',
                         $integration->getName(),
-                        $translator->trans($existingJob->getStatus())
+                        $this->translator->trans($existingJob->getStatus())
                     )
                 );
 
                 continue;
             }
 
-            $existingJob = $jobProcessor->findRootJobByJobNameAndStatuses(
+            $existingJob = $this->jobProcessor->findRootJobByJobNameAndStatuses(
                 'oro_integration:sync_integration:'.$integration->getId(),
                 [Job::STATUS_NEW, Job::STATUS_RUNNING]
             );
@@ -100,14 +128,14 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
                     sprintf(
                         'Skip "%s" integration because integration job already exists with "%s" status',
                         $integration->getName(),
-                        $translator->trans($existingJob->getStatus())
+                        $this->translator->trans($existingJob->getStatus())
                     )
                 );
 
                 continue;
             }
 
-            $this->getMessageProducer()->send(
+            $this->messageProducer->send(
                 Topics::EXPORT_CONTACTS_STATUS_UPDATE,
                 new Message(
                     ['integrationId' => $integration->getId()],
@@ -124,17 +152,6 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
      */
     protected function getIntegrationRepository()
     {
-        /** @var RegistryInterface $doctrine */
-        $doctrine = $this->container->get('doctrine');
-
-        return $doctrine->getRepository(Integration::class);
-    }
-
-    /**
-     * @return MessageProducerInterface
-     */
-    private function getMessageProducer()
-    {
-        return $this->container->get('oro_message_queue.message_producer');
+        return $this->doctrine->getRepository(Integration::class);
     }
 }

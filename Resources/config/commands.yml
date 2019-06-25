@@ -3,6 +3,11 @@ services:
         public: false
 
     Oro\Bundle\DotmailerBundle\Command\ContactsExportStatusUpdateCommand:
+        arguments:
+            - '@translator'
+            - '@oro_message_queue.job.processor'
+            - '@doctrine'
+            - '@oro_message_queue.message_producer'
         tags:
             - { name: console.command }
 
