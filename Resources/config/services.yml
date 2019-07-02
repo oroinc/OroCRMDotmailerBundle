@@ -172,6 +172,8 @@ services:
 
     oro_dotmailer.entity_field_list_provider:
         parent: oro_query_designer.entity_field_list_provider
+        # This service marked as public for compatibility with Symfony 4. All dependencies must be refactored after BAP-17037
+        public: true
         arguments:
             index_0: '@oro_dotmailer.entity_field_provider'
 
@@ -281,6 +283,8 @@ services:
 
     oro_dotmailer.datafield.manager.api:
         class: 'Oro\Bundle\SoapBundle\Entity\Manager\ApiEntityManager'
+        # This service marked as public for compatibility with Symfony 4. All dependencies must be refactored after BAP-17037
+        public: true
         parent: oro_soap.manager.entity_manager.abstract
         arguments:
             - "%oro_dotmailer.entity.datafield.class%"
@@ -288,6 +292,8 @@ services:
 
     oro_dotmailer.datafield_mapping.manager.api:
         class: 'Oro\Bundle\SoapBundle\Entity\Manager\ApiEntityManager'
+        # This service marked as public for compatibility with Symfony 4. All dependencies must be refactored after BAP-17037
+        public: true
         parent: oro_soap.manager.entity_manager.abstract
         arguments:
             - "%oro_dotmailer.entity.datafield_mapping.class%"
@@ -307,6 +313,8 @@ services:
 
     oro_dotmailer.form.address_book:
         class: Symfony\Component\Form\Form
+        # This service marked as public for compatibility with Symfony 4. All dependencies must be refactored after BAP-17037
+        public: true
         factory: ['@form.factory', createNamed]
         arguments:
             - "oro_dotmailer_address_book_form"
@@ -320,12 +328,16 @@ services:
     #Form handlers
     oro_dotmailer.form.handler.connection_update:
         class: '%oro_dotmailer.form.handler.connection_update.class%'
+        # This service marked as public for compatibility with Symfony 4. All dependencies must be refactored after BAP-17037
+        public: true
         arguments:
             - "@doctrine"
             - "@request_stack"
 
     oro_dotmailer.form.handler.address_book_update:
         class: '%oro_dotmailer.form.handler.address_book_update.class%'
+        # This service marked as public for compatibility with Symfony 4. All dependencies must be refactored after BAP-17037
+        public: true
         arguments:
             - "@oro_dotmailer.form.address_book"
             - "@request_stack"
@@ -443,6 +455,8 @@ services:
 
     oro_dotmailer.campaign_helper:
         class: 'Oro\Bundle\DotmailerBundle\Model\CampaignHelper'
+        # This service marked as public for compatibility with Symfony 4. All dependencies must be refactored after BAP-17037
+        public: true
 
     oro_dotmailer.cache:
         public: false
@@ -486,6 +500,8 @@ services:
 
     oro_dotmailer.oauth_manager:
         class: '%oro_dotmailer.oauth_manager.class%'
+        # This service marked as public for compatibility with Symfony 4. All dependencies must be refactored after BAP-17037
+        public: true
         arguments:
             - "@router"
             - "@oro_security.encoder.default"
