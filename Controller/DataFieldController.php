@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Controller;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use FOS\RestBundle\Util\Codes;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Form\Handler\DataFieldFormHandler;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
@@ -23,6 +22,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -167,7 +167,7 @@ class DataFieldController extends AbstractController
                 );
             }
 
-            $status = Codes::HTTP_OK;
+            $status = Response::HTTP_OK;
             $response = [
                 'message' => $this->get(TranslatorInterface::class)
                     ->trans('oro.dotmailer.datafield.syncronize_scheduled')
@@ -178,7 +178,7 @@ class DataFieldController extends AbstractController
                 ['e' => $e]
             );
 
-            $status = Codes::HTTP_BAD_REQUEST;
+            $status = Response::HTTP_BAD_REQUEST;
             $response = [
                 'message' => $this->get(TranslatorInterface::class)->trans('oro.integration.sync_error')
             ];

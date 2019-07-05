@@ -5,7 +5,6 @@ namespace Oro\Bundle\DotmailerBundle\Controller\Api\Rest;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use FOS\RestBundle\Util\Codes;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
@@ -40,14 +39,14 @@ class DataFieldController extends RestController implements ClassResourceInterfa
         } catch (RuntimeException $e) {
             //handle Dotmailer exception and show correct message to the user
             $view = $this->view(
-                ['message' => $e->getMessage(), 'code' => Codes::HTTP_INTERNAL_SERVER_ERROR],
-                Codes::HTTP_INTERNAL_SERVER_ERROR
+                ['message' => $e->getMessage(), 'code' => Response::HTTP_INTERNAL_SERVER_ERROR],
+                Response::HTTP_INTERNAL_SERVER_ERROR
             );
             $response = $this->buildResponse(
                 $view,
                 self::ACTION_DELETE,
                 ['id' => $id, 'success' => false],
-                Codes::HTTP_INTERNAL_SERVER_ERROR
+                Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
 

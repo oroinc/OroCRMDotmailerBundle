@@ -2,7 +2,6 @@
 
 namespace Oro\Bundle\DotmailerBundle\Controller;
 
-use FOS\RestBundle\Util\Codes;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Form\Type\MarketingListConnectionType;
 use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
@@ -15,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -51,7 +51,7 @@ class AddressBookController extends Controller
                 [AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION => $addressBook->getId()]
             );
 
-            $status = Codes::HTTP_OK;
+            $status = Response::HTTP_OK;
             $response = [
                 'message' => str_replace(
                     '{{ job_view_link }}',
@@ -68,7 +68,7 @@ class AddressBookController extends Controller
                 ['e' => $e]
             );
 
-            $status = Codes::HTTP_BAD_REQUEST;
+            $status = Response::HTTP_BAD_REQUEST;
             $response = [
                 'message' => $this->get('translator')->trans('oro.integration.sync_error')
             ];
@@ -101,12 +101,12 @@ class AddressBookController extends Controller
             $this->getDoctrine()->getRepository('OroDotmailerBundle:AddressBookContact')
                 ->bulkEntityUpdatedByAddressBook($addressBook);
 
-            $status = Codes::HTTP_OK;
+            $status = Response::HTTP_OK;
             $response = [
                 'message' => $this->get('translator')->trans('oro.dotmailer.addressbook.sync_datafields_success')
             ];
         } catch (\Exception $e) {
-            $status = Codes::HTTP_BAD_REQUEST;
+            $status = Response::HTTP_BAD_REQUEST;
             $response['message'] = sprintf(
                 $this->get('translator')->trans('oro.dotmailer.addressbook.sync_datafields_failed'),
                 $e->getMessage()
