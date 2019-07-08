@@ -2,10 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Model;
 
-use Buzz\Client\ClientInterface;
+use Http\Client\Common\HttpMethodsClient;
 use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport;
 use Oro\Bundle\DotmailerBundle\Model\OAuthManager;
 use Oro\Bundle\SecurityBundle\Encoder\SymmetricCrypterInterface;
+use Psr\Http\Message\MessageInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -22,7 +23,7 @@ class OAuthManagerTest extends \PHPUnit\Framework\TestCase
     protected $encryptor;
 
     /**
-     * @var ClientInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var HttpMethodsClient|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $curlClient;
 
@@ -35,7 +36,11 @@ class OAuthManagerTest extends \PHPUnit\Framework\TestCase
     {
         $this->router = $this->createMock(RouterInterface::class);
         $this->encryptor = $this->createMock(SymmetricCrypterInterface::class);
-        $this->curlClient = $this->createMock(ClientInterface::class);
+        $this->curlClient = $this->createMock(HttpMethodsClient::class);
+        $this->curlClient->expects($this->any())
+            ->method('post')
+            ->willReturn($this->createMock(MessageInterface::class));
+
         $this->oAuthManager = new OAuthManager($this->router, $this->encryptor, $this->curlClient);
     }
 
