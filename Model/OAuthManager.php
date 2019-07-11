@@ -2,15 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\Model;
 
-use Buzz\Client\ClientInterface;
-use Buzz\Client\Curl;
-use Buzz\Message\MessageInterface;
-use Buzz\Message\Request;
-use Buzz\Message\RequestInterface;
-use Buzz\Message\Response;
+use Http\Client\Common\HttpMethodsClient;
 use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\SecurityBundle\Encoder\SymmetricCrypterInterface;
+use Psr\Http\Message\MessageInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -35,18 +31,18 @@ class OAuthManager
     /** @var SymmetricCrypterInterface */
     protected $encryptor;
 
-    /** @var Curl */
+    /** @var HttpMethodsClient */
     protected $curlClient;
 
     /**
      * @param RouterInterface $router
      * @param SymmetricCrypterInterface $encryptor
-     * @param ClientInterface $curlClient
+     * @param HttpMethodsClient $curlClient
      */
     public function __construct(
         RouterInterface $router,
         SymmetricCrypterInterface $encryptor,
-        ClientInterface $curlClient
+        HttpMethodsClient $curlClient
     ) {
         $this->router = $router;
         $this->encryptor = $encryptor;
@@ -212,25 +208,20 @@ class OAuthManager
     /**
      * Perform a cUrl request
      *
-     * @param array $url
+     * @param string $url
      * @param array $params
      * @return array
      */
     protected function doCurlRequest($url, $params)
     {
-        $request = new Request(RequestInterface::METHOD_POST, $url);
-        $response = new Response();
-
         $content = http_build_query($params, '', '&');
         $headers = [
             'Content-length: ' . strlen($content),
             'content-type: application/x-www-form-urlencoded',
             'user-agent: oro-oauth'
         ];
-        $request->setHeaders($headers);
-        $request->setContent($content);
 
-        $this->curlClient->send($request, $response);
+        $response = $this->curlClient->post($url, $headers, $content);
         $responseContent = $this->getResponseContent($response);
 
         if (isset($responseContent['error_description'])) {
@@ -250,7 +241,7 @@ class OAuthManager
      */
     protected function getResponseContent(MessageInterface $response)
     {
-        $content = $response->getContent();
+        $content = $response->getBody();
         if (!$content) {
             return [];
         }
