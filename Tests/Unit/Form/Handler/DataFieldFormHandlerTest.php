@@ -45,7 +45,7 @@ class DataFieldFormHandlerTest extends \PHPUnit\Framework\TestCase
             ->disableOriginalConstructor()->getMock();
         $this->managerRegistry = $this->getMockBuilder('Doctrine\Common\Persistence\ManagerRegistry')
             ->disableOriginalConstructor()->getMock();
-        $this->translator = $this->getMockBuilder('Symfony\Component\Translation\TranslatorInterface')
+        $this->translator = $this->getMockBuilder('Symfony\Contracts\Translation\TranslatorInterface')
             ->disableOriginalConstructor()->getMock();
         $this->dataFieldManager = $this->getMockBuilder('Oro\Bundle\DotmailerBundle\Model\DataFieldManager')
             ->disableOriginalConstructor()->getMock();

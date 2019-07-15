@@ -11,7 +11,7 @@ use Oro\Bundle\EntityBundle\Provider\EntityFieldProvider;
 use Oro\Bundle\QueryDesignerBundle\QueryDesigner\JoinIdentifierHelper;
 use Oro\DBAL\Types\MoneyType;
 use Oro\DBAL\Types\PercentType;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
