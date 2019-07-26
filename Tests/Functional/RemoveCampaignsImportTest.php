@@ -44,6 +44,7 @@ class RemoveCampaignsImportTest extends AbstractImportExportTestCase
         $this->resource->expects($this->any())
             ->method('GetAddressBookCampaigns')
             ->will($this->returnValue($entity));
+
         $channel = $this->getReference('oro_dotmailer.channel.first');
 
         $result = $this->runImportExportConnectorsJob(

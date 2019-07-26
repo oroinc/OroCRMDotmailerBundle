@@ -5,20 +5,14 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
-use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Provider\SyncProcessor;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 
 abstract class AbstractImportExportTestCase extends WebTestCase
 {
-    const RESOURCES_FACTORY_ID = 'oro_dotmailer.transport.resources_factory';
+    const RESOURCES_FACTORY_ID = 'oro_dotmailer.transport.resources_factory.stub';
     const SYNC_PROCESSOR = 'oro_integration.sync.processor';
-
-    /**
-     * @var DotmailerResourcesFactory
-     */
-    protected $oldResourceFactory;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject
@@ -40,13 +34,9 @@ abstract class AbstractImportExportTestCase extends WebTestCase
         $this->initClient();
 
         $this->stubResources();
+
         $this->managerRegistry = $this->getContainer()
             ->get('doctrine');
-    }
-
-    public function tearDown()
-    {
-        $this->getContainer()->set(self::RESOURCES_FACTORY_ID, $this->oldResourceFactory);
     }
 
     /**
@@ -103,6 +93,7 @@ abstract class AbstractImportExportTestCase extends WebTestCase
     protected function stubResources()
     {
         $this->resource = $this->createMock('DotMailer\Api\Resources\IResources');
+
         $this->resourceFactory = $this->createMock(
             'Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory'
         );
@@ -110,8 +101,6 @@ abstract class AbstractImportExportTestCase extends WebTestCase
             ->method('createResources')
             ->will($this->returnValue($this->resource));
 
-        $this->oldResourceFactory = $this->getContainer()
-            ->get(self::RESOURCES_FACTORY_ID);
         $this->getContainer()
             ->set(self::RESOURCES_FACTORY_ID, $this->resourceFactory);
     }

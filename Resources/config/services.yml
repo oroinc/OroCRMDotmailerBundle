@@ -165,6 +165,7 @@ parameters:
 services:
     oro_dotmailer.entity_provider:
         alias: oro_entity.entity_provider
+        public: true
 
     oro_dotmailer.entity_field_provider:
         class: 'Oro\Bundle\DotmailerBundle\Provider\FieldProvider'
