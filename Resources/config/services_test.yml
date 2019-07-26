@@ -1,0 +1,5 @@
+services:
+    oro_dotmailer.transport.resources_factory.stub:
+        parent: oro_dotmailer.transport.resources_factory
+        decorates: oro_dotmailer.transport.resources_factory
+        public: true

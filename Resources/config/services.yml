@@ -165,6 +165,7 @@ parameters:
 services:
     oro_dotmailer.entity_provider:
         alias: oro_entity.entity_provider
+        public: true
 
     oro_dotmailer.entity_field_provider:
         class: 'Oro\Bundle\DotmailerBundle\Provider\FieldProvider'
@@ -976,16 +977,19 @@ services:
     #filters
     oro_dotmailer.placeholder.filter.buttons_filter:
         class: '%oro_dotmailer.placeholder.filter.buttons_filter.class%'
+        public: true
         arguments:
             - "@oro_marketing_list.provider.contact_information_fields"
 
     oro_dotmailer.placeholder.filter.email_campaign:
         class: '%oro_dotmailer.placeholder.filter.email_campaign.class%'
+        public: true
         arguments:
             - "@doctrine"
 
     oro_dotmailer.placeholder.filter.sync_status:
         class: '%oro_dotmailer.placeholder.filter.marketing_list.class%'
+        public: true
         arguments:
             - "@doctrine"
 

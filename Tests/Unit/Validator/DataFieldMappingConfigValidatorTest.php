@@ -32,7 +32,7 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit\Framework\TestCase
     {
         $this->entityFieldProvider = $this->getMockBuilder('Oro\Bundle\EntityBundle\Provider\EntityFieldProvider')
             ->disableOriginalConstructor()->getMock();
-        $this->translator = $this->getMockBuilder('Symfony\Component\Translation\TranslatorInterface')
+        $this->translator = $this->getMockBuilder('Symfony\Contracts\Translation\TranslatorInterface')
             ->disableOriginalConstructor()->getMock();
         $this->validator = new DataFieldMappingConfigValidator($this->entityFieldProvider, $this->translator);
         $this->context = $this->getMockBuilder('Symfony\Component\Validator\Context\ExecutionContextInterface')
