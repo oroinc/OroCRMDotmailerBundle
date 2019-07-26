@@ -277,6 +277,7 @@ oro:
                 incompatible_types_date:       Mapping for field "%datafield%" must be of datetime type
                 incompatible_types_string:     Mapping for field "%datafield%" must be convertable to string
                 multiple:                      Several entity fields can be mapped only to the Data Field of type string
+                entity_field_required:         At least one entity field must be defined
 
         changedfieldlog:
             entity_label:                     Entity Change Mapped Fields Log

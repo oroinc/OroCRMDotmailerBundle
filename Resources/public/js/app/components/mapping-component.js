@@ -63,8 +63,7 @@ define(function(require) {
             this.initMapping();
             this.initIntegrationChangeEvents();
 
-            this.form = this.$storage.parents('form');
-            this.form.submit(this.onBeforeSubmit.bind(this));
+            this.form = this.$storage.closest('form');
         },
 
         eventNamespace: function() {
@@ -145,15 +144,19 @@ define(function(require) {
                 }
             });
 
-            this.$editorForm.find('.fields-container').append(itemView.el);
+            this.$editorForm.find('[data-role="fields-container"]').append(itemView.el);
             this.fieldRowViews.push(itemView);
             this.listenTo(itemView, {
-                change: this.updateSyncCheckbox,
+                change: function() {
+                    this.updateSyncCheckbox();
+                    this.updateOriginField();
+                },
                 remove: function(cid) {
                     var view = _.findWhere(this.fieldRowViews, {cid: cid});
-                    // do not remove last view manually
-                    if (view && this.fieldRowViews.length > 1) {
+
+                    if (view) {
                         this.removeFieldRowView(view);
+                        this.updateOriginField();
                     }
                 }
             });
@@ -258,8 +261,8 @@ define(function(require) {
 
         initEditorForm: function() {
             this.$editorForm
-                .on('before-save' + this.eventNamespace(), this.onBeforeSave.bind(this))
                 .on('click' + this.eventNamespace(), '.add-field', this.onAddFieldClick.bind(this))
+                .on('before-save' + this.eventNamespace(), _.debounce(this.checkFieldRowExistOnError.bind(this)))
                 .on('change' + this.eventNamespace(), MappingComponent.ORIGIN_FIELDS_SELECTOR,
                     this.onOriginFieldsChange.bind(this));
 
@@ -300,6 +303,7 @@ define(function(require) {
         initMapping: function() {
             this.$table = $(this.options.mapping.itemContainer);
             this.$editorForm = $(this.options.mapping.form);
+            this.$entityFieldsInput = this.$editorForm.find(MappingComponent.ORIGIN_FIELDS_SELECTOR);
 
             if (this.$table.length === 0 || this.$editorForm.length === 0) {
                 // there's no mapping
@@ -342,12 +346,31 @@ define(function(require) {
             this.addEntityFieldRow();
         },
 
-        onBeforeSave: function() {
+        checkFieldRowExistOnError: function() {
+            if (this.fieldRowViews.length === 0 && this.$entityFieldsInput.hasClass('error')) {
+                this.addEntityFieldRow();
+            }
+        },
+
+        updateOriginField: function() {
             var values = _.invoke(this.fieldRowViews, 'getValue');
-            this.$editorForm.find(MappingComponent.ORIGIN_FIELDS_SELECTOR).val(values.join(','));
+
+            values = _.compact(values).join(',');
+
+            if (this.$entityFieldsInput.val() !== values) {
+                this.ignoreFieldChange = true;
+                this.$entityFieldsInput.val(values).trigger('change');
+                delete this.ignoreFieldChange;
+
+                this.checkFieldRowExistOnError();
+            }
         },
 
         onOriginFieldsChange: function(e) {
+            if (this.ignoreFieldChange) {
+                return;
+            }
+
             var values = $(e.currentTarget).val().split(',');
             _.each(this.fieldRowViews, this.removeFieldRowView, this);
             _.each(values, this.addEntityFieldRow, this);
