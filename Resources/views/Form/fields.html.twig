@@ -28,12 +28,9 @@
                 </div>
             {% endif %}
             <div class="controls{% if errors|length > 0 %} validation-error{% endif %}">
+                <div class="fields-container" data-role="fields-container"></div>
                 {{ form_widget(form) }}
                 {{ form_errors(form) }}
-            </div>
-            <div class="control-group">
-                <div class="controls fields-container">
-                </div>
                 <a class="btn add-field" href="#"><i class="icon-plus"></i>{{ 'Add'|trans }}</a>
             </div>
         </div>

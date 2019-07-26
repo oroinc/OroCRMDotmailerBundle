@@ -123,14 +123,14 @@
 {% macro mapping_form(form, attr, params) %}
     {% import 'OroUIBundle::macros.html.twig' as UI %}
     {% set attr = attr|default({})|merge({
-        'class': (attr.class|default('') ~ ' query-designer-form clearfix')|trim
+        'class': (attr.class|default('') ~ ' dotmailer-mapping-form clearfix')|trim
     }) %}
     <div{{ UI.attributes(attr) }}>
         {{ form_row(form.entityFields, {
             'label': 'oro.dotmailer.datafieldmappingconfig.entity_fields.label',
             'attr': {
                 'data-purpose': 'multiple-entityfield-selector',
-                'data-validation': { NotBlank: null }|json_encode
+                'data-validation': { NotBlank: {'message': 'oro.dotmailer.datafieldmappingconfig.validation.entity_field_required'|trans } }|json_encode
             }
         }) }}
         {{ form_row(form.dataField, {
@@ -148,20 +148,26 @@
             }
         }) }}
         <div class="pull-right">
-            {{ UI.clientButton({
-                'aCss': 'no-hash cancel-button column-form-button',
-                'label' : 'oro.query_designer.form.action.cancel'|trans
-            }) }}
-            {{ UI.clientButton({
-                'visible': false,
-                'aCss': 'no-hash btn-success save-button column-form-button',
-                'label' : 'oro.query_designer.form.action.save'|trans
-            }) }}
-            {{ UI.clientButton({
-                'visible': false,
-                'aCss': 'no-hash btn-primary add-button column-form-button',
-                'label' : 'oro.query_designer.form.action.add'|trans
-            }) }}
+            <div class="btn-group">
+                {{ UI.clientButton({
+                    'aCss': 'no-hash cancel-button column-form-button',
+                    'label' : 'oro.query_designer.form.action.cancel'|trans
+                }) }}
+            </div>
+            <div class="btn-group">
+                {{ UI.clientButton({
+                    'visible': false,
+                    'aCss': 'no-hash btn-success save-button column-form-button',
+                    'label' : 'oro.query_designer.form.action.save'|trans
+                }) }}
+            </div>
+            <div class="btn-group">
+                {{ UI.clientButton({
+                    'visible': false,
+                    'aCss': 'no-hash btn-primary add-button column-form-button',
+                    'label' : 'oro.query_designer.form.action.add'|trans
+                }) }}
+            </div>
         </div>
     </div>
 {% endmacro %}
@@ -169,9 +175,9 @@
     {% import 'OroUIBundle::macros.html.twig' as UI %}
     {% import _self as dataFieldMappingUpdate %}
 
-    {% set attr = attr|default({})|merge({'class': (attr.class|default('') ~ ' grid-container query-designer-grid-container query-designer-columns-grid-container')|trim}) %}
+    {% set attr = attr|default({})|merge({'class': (attr.class|default('') ~ ' grid-container query-designer-grid-container')|trim}) %}
     <div{{ UI.attributes(attr) }}>
-        <table class="grid table-hover table table-bordered table-condensed" style="display: table;">
+        <table class="grid table-hover table table-bordered table-condensed">
             <thead>
             <tr>
                 <th class="entityfield-column"><span>{{ 'oro.dotmailer.datafieldmappingconfig.entity_fields.label'|trans }}</span></th>
@@ -196,13 +202,17 @@
                 {% spaceless %}
                 <a href="#" class="btn btn-icon btn-lighter action no-hash edit-button"
                         title="{{ 'oro.dotmailer.datafieldmappingconfig.update_mapping'|trans }}"
+                        role="button"
                         data-collection-action="edit">
-                    <span class="icon-edit" aria-hidden="true"></span></a>
+                    <span class="fa-edit" aria-hidden="true"></span>
+                </a>
                 <a href="#" class="btn btn-icon btn-lighter action no-hash delete-button"
                         title="{{ 'oro.dotmailer.datafieldmappingconfig.delete_mapping'|trans }}"
+                        role="button"
                         data-collection-action="delete"
                         data-message="{{ 'oro.dotmailer.datafieldmappingconfig.delete_mapping_confirmation'|trans }}">
-                    <span class="icon-trash" aria-hidden="true"></span></a>
+                    <span class="fa-trash" aria-hidden="true"></span>
+                </a>
                 {% endspaceless %}
             </td>
         </tr>

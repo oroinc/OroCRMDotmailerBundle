@@ -1,0 +1,72 @@
+@import "oroui/css/scss/variables";
+
+.icon-dotmailer {
+    background-image: url(../../img/dotmailer.ico);
+
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    line-height: 16px;
+    margin-#{$end}: 5px;
+
+    background-size: 16px 16px;
+    filter: grayscale(100%);
+
+    &.hide-text {
+        font-size: 16px;
+        line-height: 16px;
+        color: transparent;
+        background-position: 0 0;
+    }
+}
+
+.dotmailer-mapping-form {
+    margin-bottom: 8px;
+}
+
+.connection-status {
+    width: 294px;
+}
+
+.entity-field-control {
+    .fields-container:not(:empty) {
+        margin-bottom: 10px;
+    }
+
+    .field-row {
+        margin-bottom: 10px;
+        min-width: 170px;
+        min-height: 32px;
+
+        .mobile-version & {
+            display: flex;
+        }
+    }
+
+    .validation-error .field-row:only-child .remove-item {
+        display: none;
+    }
+
+    .validation-failed {
+        position: relative;
+        top: -6px;
+    }
+}
+
+.oro_dotmailer_datafield_mapping-mappings {
+    .grid-container {
+        overflow-x: auto;
+    }
+}
+
+.dotmailer-page .btn,
+.dotmailer-page .oro-subtitle,
+.dotmailer-sync-btn,
+.dotmailer-group a.btn {
+    text-transform: none !important;
+}
+
+.nav .dotmailer .title,
+.dotmailer-page .breadcrumb li:nth-child(2) {
+    text-transform: lowercase !important;
+}
