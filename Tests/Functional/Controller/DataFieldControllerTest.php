@@ -11,12 +11,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
 
     protected function setUp()
     {
-        $this->markTestSkipped('CRM-7979');
-
         parent::setUp();
-
-        //@todo: remove after CRM-7961 is resolved
-        $this->markTestSkipped('skip until CRM-7961 is resolved');
 
         $this->client->useHashNavigation(true);
         $this->loadFixtures(
@@ -98,7 +93,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
                         'channelName' => 'first channel',
                         'name'        => 'FIRSTNAME',
                     ],
-                    'expectedResultCount' => 4
+                    'expectedResultCount' => 5
                 ],
             ],
             'Data Fields grid with filters'   => [
@@ -129,5 +124,25 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
                 ],
             ],
         ];
+    }
+
+    public function testCreateAction(): void
+    {
+        $crawler = $this->client->request('GET', $this->getUrl('oro_dotmailer_datafield_create'));
+
+        $form = $crawler->selectButton('Save and Close')->form();
+        $form['oro_dotmailer_data_field_form[channel]'] = $this->getReference('oro_dotmailer.channel.first')->getId();
+        $form['oro_dotmailer_data_field_form[name]'] = 'test_name';
+        $form['oro_dotmailer_data_field_form[type]'] = 'String';
+        $form['oro_dotmailer_data_field_form[visibility]'] = 'Private';
+        $form['oro_dotmailer_data_field_form[defaultValue]'] = 'test';
+        $form['oro_dotmailer_data_field_form[notes]'] = 'test note';
+
+        $this->client->followRedirects(true);
+        $crawler = $this->client->submit($form);
+
+        $result = $this->client->getResponse();
+        $this->assertHtmlResponseStatusCodeEquals($result, 200);
+        $this->assertContains('Data Field Saved', $crawler->html());
     }
 }
