@@ -3,3 +3,7 @@ services:
         parent: oro_dotmailer.transport.resources_factory
         decorates: oro_dotmailer.transport.resources_factory
         public: true
+
+    oro_dotmailer.datafield_manager.stub:
+        class: Oro\Bundle\DotmailerBundle\Tests\Functional\Stub\DataFieldManagerStub
+        decorates: oro_dotmailer.datafield_manager

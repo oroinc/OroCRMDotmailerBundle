@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Controller;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Form\Handler\DataFieldFormHandler;
+use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldType;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
@@ -110,11 +111,11 @@ class DataFieldController extends AbstractController
         $isTypeUpdate = $request->get(DataFieldFormHandler::UPDATE_MARKER, false);
 
         $form = $this->get(FormFactoryInterface::class)
-            ->createNamed('oro_dotmailer_data_field_form', 'oro_dotmailer_data_field');
+            ->createNamed('oro_dotmailer_data_field_form', DataFieldType::class);
         if ($isTypeUpdate) {
-            //take different form not to show JS validation on after typ update only
+            //take different form not to show JS validation on after type update only
             $form = $this->get(FormFactoryInterface::class)
-                ->createNamed('oro_dotmailer_data_field_form', 'oro_dotmailer_data_field', $form->getData());
+                ->createNamed('oro_dotmailer_data_field_form', DataFieldType::class, $form->getData());
         }
 
         return [
