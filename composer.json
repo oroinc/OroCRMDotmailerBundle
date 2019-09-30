@@ -16,7 +16,7 @@
     "require": {
         "oro/crm": "4.1.*",
         "romanpitak/dotmailer-api-v2-client": "3.0.*",
-        "oro/marketing" : "4.0.*"
+        "oro/marketing" : "4.1.*"
     },
     "repositories": {
         "oro": {
