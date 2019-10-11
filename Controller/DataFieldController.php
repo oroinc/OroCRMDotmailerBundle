@@ -15,8 +15,6 @@ use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Oro\Bundle\SecurityBundle\Annotation\CsrfProtection;
 use Oro\Bundle\UIBundle\Route\Router;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -25,6 +23,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -146,10 +145,10 @@ class DataFieldController extends AbstractController
      *
      * @Route(
      *      "/synchronize",
-     *      name="oro_dotmailer_datafield_synchronize"
+     *      name="oro_dotmailer_datafield_synchronize",
+     *      methods={"POST"}
      * )
      * @AclAncestor("oro_dotmailer_datafield_create")
-     * @Method("POST")
      * @CsrfProtection()
      *
      * @return JsonResponse

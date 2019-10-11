@@ -9,7 +9,6 @@ use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Oro\Bundle\SecurityBundle\Annotation\CsrfProtection;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -28,7 +27,8 @@ class AddressBookController extends Controller
      * @Route(
      *      "/synchronize/{id}",
      *      name="oro_dotmailer_synchronize_adddress_book",
-     *      requirements={"id"="\d+"}
+     *      requirements={"id"="\d+"},
+     *      methods={"POST"}
      * )
      * @Acl(
      *      id="oro_dotmailer_address_book_update",
@@ -36,7 +36,6 @@ class AddressBookController extends Controller
      *      permission="EDIT",
      *      class="OroDotmailerBundle:AddressBook"
      * )
-     * @Method("POST")
      * @CsrfProtection()
      *
      * @param AddressBook $addressBook
@@ -81,7 +80,8 @@ class AddressBookController extends Controller
      * @Route(
      *      "/synchronize_datafields/{id}",
      *      name="oro_dotmailer_synchronize_adddress_book_datafields",
-     *      requirements={"id"="\d+"}
+     *      requirements={"id"="\d+"},
+     *      methods={"POST"}
      * )
      * @Acl(
      *      id="oro_dotmailer_address_book_update",
@@ -89,7 +89,6 @@ class AddressBookController extends Controller
      *      permission="EDIT",
      *      class="OroDotmailerBundle:AddressBook"
      * )
-     * @Method("POST")
      * @CsrfProtection()
      *
      * @param AddressBook $addressBook
@@ -120,7 +119,8 @@ class AddressBookController extends Controller
      * @Route(
      *      "/marketing-list/disconnect/{id}",
      *      name="oro_dotmailer_marketing_list_disconnect",
-     *      requirements={"id"="\d+"}
+     *      requirements={"id"="\d+"},
+     *      methods={"DELETE"}
      * )
      * @Acl(
      *      id="oro_dotmailer_address_book_update",
@@ -128,7 +128,6 @@ class AddressBookController extends Controller
      *      permission="EDIT",
      *      class="OroDotmailerBundle:AddressBook"
      * )
-     * @Method("DELETE")
      * @CsrfProtection()
      *
      * @param AddressBook $addressBook
