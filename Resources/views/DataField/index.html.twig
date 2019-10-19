@@ -25,7 +25,7 @@
             'label': 'oro.dotmailer.datafield.synchronize'|trans
         }) }}
         <script type="text/javascript">
-            require(['orodotmailer/js/sync-buttons-handler'], function(Handler){
+            loadModules(['orodotmailer/js/sync-buttons-handler'], function(Handler){
                 new Handler('.dotmailer-sync-btn');
             });
         </script>

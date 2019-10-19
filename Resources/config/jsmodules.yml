@@ -1,0 +1,11 @@
+aliases:
+    oro/select2-autocomplete-channel-aware-address-book-component$: orodotmailer/js/app/components/select2-autocomplete-channel-aware-address-book-component
+app-modules:
+    - orodotmailer/js/app/modules/entity-filter-preset-module
+dynamic-imports:
+    orodotmailer:
+        - orodotmailer/js/app/components/dm-resource-component
+        - orodotmailer/js/app/components/mapping-component
+        - orodotmailer/js/datafield-view
+        - orodotmailer/js/integration-connection
+        - orodotmailer/js/sync-buttons-handler
