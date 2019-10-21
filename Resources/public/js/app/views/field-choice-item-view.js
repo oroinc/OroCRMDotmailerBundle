@@ -7,7 +7,7 @@ define(function(require) {
     var FieldChoiceView = require('oroentity/js/app/views/field-choice-view');
 
     FieldChoiceItem = BaseView.extend({
-        template: require('text!orodotmailer/templates/field-choice-item.html'),
+        template: require('text-loader!orodotmailer/templates/field-choice-item.html'),
         events: {
             'click [data-role="remove-item"]': 'onRemove'
         },

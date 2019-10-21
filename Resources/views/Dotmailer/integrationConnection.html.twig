@@ -84,7 +84,7 @@
         {% set fieldsToSendOnChannelChange = fieldsToSendOnChannelChange|merge([form._token.vars.full_name]) %}
     {% endif %}
     <script type="text/javascript">
-        require(['orodotmailer/js/integration-connection'], function (IntegrationConnection) {
+        loadModules(['orodotmailer/js/integration-connection'], function (IntegrationConnection) {
             "use strict";
 
             $(function () {
