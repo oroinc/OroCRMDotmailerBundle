@@ -7,13 +7,12 @@ define([
 ], function($, Backbone, _, __, mediator) {
     'use strict';
 
-    var DataFieldCiew;
     /**
      * @export  orodotmailer/js/datafield-view
      * @class   orodotmailer.datafieldView
      * @extends Backbone.View
      */
-    DataFieldCiew = Backbone.View.extend({
+    const DataFieldCiew = Backbone.View.extend({
         /**
          * @const
          */
@@ -32,8 +31,8 @@ define([
         /**
          * @inheritDoc
          */
-        constructor: function DataFieldCiew() {
-            DataFieldCiew.__super__.constructor.apply(this, arguments);
+        constructor: function DataFieldCiew(options) {
+            DataFieldCiew.__super__.constructor.call(this, options);
         },
 
         /**
@@ -41,7 +40,7 @@ define([
          */
         initialize: function(options) {
             this.options = _.defaults(options || {}, this.options);
-            var requiredMissed = this.requiredOptions.filter(function(option) {
+            const requiredMissed = this.requiredOptions.filter(function(option) {
                 return _.isUndefined(options[option]);
             });
             if (requiredMissed.length) {
@@ -58,10 +57,10 @@ define([
          * @param {$.Event} e
          */
         processChange: function(e) {
-            var $form = $(this.options.formSelector);
-            var data = $form.serializeArray();
-            var url = $form.attr('action');
-            var fieldsSet = this.fieldsSets.type;
+            const $form = $(this.options.formSelector);
+            let data = $form.serializeArray();
+            const url = $form.attr('action');
+            const fieldsSet = this.fieldsSets.type;
 
             data = _.filter(data, function(field) {
                 return _.indexOf(fieldsSet, field.name) !== -1;
