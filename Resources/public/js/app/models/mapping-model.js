@@ -1,11 +1,10 @@
 define(function(require) {
     'use strict';
 
-    var MappingModel;
-    var _ = require('underscore');
-    var EntityFieldModel = require('oroquerydesigner/js/app/models/entity-field-model');
+    const _ = require('underscore');
+    const EntityFieldModel = require('oroquerydesigner/js/app/models/entity-field-model');
 
-    MappingModel = EntityFieldModel.extend({
+    const MappingModel = EntityFieldModel.extend({
         fieldAttribute: 'entityFields',
 
         defaults: {
@@ -18,17 +17,17 @@ define(function(require) {
         /**
          * @inheritDoc
          */
-        constructor: function MappingModel() {
-            MappingModel.__super__.constructor.apply(this, arguments);
+        constructor: function MappingModel(attrs, options) {
+            MappingModel.__super__.constructor.call(this, attrs, options);
         },
 
         /**
          * @inheritDoc
          */
         validate: function(attrs, options) {
-            var error;
+            let error;
             try {
-                var paths = attrs[this.fieldAttribute].split(',');
+                const paths = attrs[this.fieldAttribute].split(',');
                 _.each(paths, function(path) {
                     this.dataProvider.pathToEntityChain(path);
                 }, this);

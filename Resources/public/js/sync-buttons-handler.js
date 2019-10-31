@@ -5,7 +5,7 @@ define([
 ], function($, mediator, WidgetComponent) {
     'use strict';
 
-    var console = window.console;
+    const console = window.console;
 
     /**
      * @export  orodotmailer/js/sync-buttons-handler
@@ -14,10 +14,10 @@ define([
      * @param {string} syncButtonsSelector JQuery selector
      */
     return function(syncButtonsSelector) {
-        var updateSyncSettingsAction = 'connect-with-dotmailer-setting-update';
-        var startSyncAction = 'sync-with-dotmailer';
+        const updateSyncSettingsAction = 'connect-with-dotmailer-setting-update';
+        const startSyncAction = 'sync-with-dotmailer';
 
-        var self = this;
+        const self = this;
 
         /**
          * @this jQuery current button
@@ -36,8 +36,8 @@ define([
          * @this jQuery current button
          */
         this.updateSettingsDelegate = function() {
-            var message = this.data('message');
-            var StatelessWidgetComponent = WidgetComponent.extend({
+            const message = this.data('message');
+            const StatelessWidgetComponent = WidgetComponent.extend({
                 defaults: {
                     type: 'dialog',
                     options: {
@@ -56,8 +56,8 @@ define([
                 /**
                  * @inheritDoc
                  */
-                constructor: function StatelessWidgetComponent() {
-                    StatelessWidgetComponent.__super__.constructor.apply(this, arguments);
+                constructor: function StatelessWidgetComponent(options) {
+                    StatelessWidgetComponent.__super__.constructor.call(this, options);
                 },
 
                 _bindEnvironmentEvent: function(widget) {
@@ -71,7 +71,7 @@ define([
                 }
             });
 
-            var widget = new StatelessWidgetComponent(
+            const widget = new StatelessWidgetComponent(
                 {
                     options: {
                         url: this.data('url'),
@@ -83,8 +83,8 @@ define([
         };
 
         this.syncButtonsClickHandlerDelegate = function() {
-            var $this = $(this);
-            var action = $this.data('action');
+            const $this = $(this);
+            const action = $this.data('action');
             switch (action) {
                 case startSyncAction:
                     self.startSyncDelegate.call($this);

@@ -1,12 +1,11 @@
 define(function(require) {
     'use strict';
 
-    var FieldChoiceItem;
-    var _ = require('underscore');
-    var BaseView = require('oroui/js/app/views/base/view');
-    var FieldChoiceView = require('oroentity/js/app/views/field-choice-view');
+    const _ = require('underscore');
+    const BaseView = require('oroui/js/app/views/base/view');
+    const FieldChoiceView = require('oroentity/js/app/views/field-choice-view');
 
-    FieldChoiceItem = BaseView.extend({
+    const FieldChoiceItem = BaseView.extend({
         template: require('text-loader!orodotmailer/templates/field-choice-item.html'),
         events: {
             'click [data-role="remove-item"]': 'onRemove'
@@ -16,8 +15,8 @@ define(function(require) {
         /**
          * @inheritDoc
          */
-        constructor: function FieldChoiceItem() {
-            FieldChoiceItem.__super__.constructor.apply(this, arguments);
+        constructor: function FieldChoiceItem(options) {
+            FieldChoiceItem.__super__.constructor.call(this, options);
         },
         /**
          * @inheritDoc
@@ -28,7 +27,7 @@ define(function(require) {
         },
         render: function() {
             FieldChoiceItem.__super__.render.call(this);
-            var $input = this.$('input');
+            const $input = this.$('input');
             this.subview('field-choice', new FieldChoiceView(_.extend({
                 autoRender: true,
                 el: $input
