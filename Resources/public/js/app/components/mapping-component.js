@@ -1,18 +1,17 @@
 define(function(require) {
     'use strict';
 
-    var MappingComponent;
-    var $ = require('jquery');
-    var _ = require('underscore');
-    var __ = require('orotranslation/js/translator');
-    var SegmentComponent = require('orosegment/js/app/components/segment-component');
-    var EntityFieldsCollection = require('oroquerydesigner/js/app/models/entity-fields-collection');
-    var EntityStructureDataProvider = require('oroentity/js/app/services/entity-structure-data-provider');
-    var FieldChoiceItemView = require('orodotmailer/js/app/views/field-choice-item-view');
-    var MappingModel = require('orodotmailer/js/app/models/mapping-model');
-    var DeleteConfirmation = require('oroui/js/delete-confirmation');
+    const $ = require('jquery');
+    const _ = require('underscore');
+    const __ = require('orotranslation/js/translator');
+    const SegmentComponent = require('orosegment/js/app/components/segment-component');
+    const EntityFieldsCollection = require('oroquerydesigner/js/app/models/entity-fields-collection');
+    const EntityStructureDataProvider = require('oroentity/js/app/services/entity-structure-data-provider');
+    const FieldChoiceItemView = require('orodotmailer/js/app/views/field-choice-item-view');
+    const MappingModel = require('orodotmailer/js/app/models/mapping-model');
+    const DeleteConfirmation = require('oroui/js/delete-confirmation');
 
-    MappingComponent = SegmentComponent.extend({
+    const MappingComponent = SegmentComponent.extend({
         defaults: {
             entityChoice: '',
             valueSource: '',
@@ -38,8 +37,8 @@ define(function(require) {
         /**
          * @inheritDoc
          */
-        constructor: function MappingComponent() {
-            MappingComponent.__super__.constructor.apply(this, arguments);
+        constructor: function MappingComponent(options) {
+            MappingComponent.__super__.constructor.call(this, options);
         },
 
         /**
@@ -71,30 +70,30 @@ define(function(require) {
         },
 
         initIntegrationChangeEvents: function() {
-            var confirm = new DeleteConfirmation({
+            const confirm = new DeleteConfirmation({
                 title: __('Change Integration Confirmation'),
                 okText: __('Yes'),
                 content: __(this.options.channel.changeChannelConfirmMessage)
             });
 
-            var self = this;
-            var $channelChoice = $(this.options.channel.channelChoice);
+            const self = this;
+            const $channelChoice = $(this.options.channel.channelChoice);
             $channelChoice.data('previous', $channelChoice.val());
             $channelChoice.on('change', function() {
-                var data = self.load() || [];
-                var requiresConfirm = _.some(data, function(value) {
+                const data = self.load() || [];
+                const requiresConfirm = _.some(data, function(value) {
                     return !_.isEmpty(value);
                 });
 
-                var ok = function() {
-                    var data = {};
+                const ok = function() {
+                    const data = {};
                     self.trigger('resetData', data);
                     self.save(data);
                     $channelChoice.data('previous', $channelChoice.val());
                 };
 
-                var cancel = function() {
-                    var oldVal = $channelChoice.data('previous');
+                const cancel = function() {
+                    const oldVal = $channelChoice.data('previous');
                     $channelChoice.val(oldVal).change();
                 };
 
@@ -130,7 +129,7 @@ define(function(require) {
          * Add row with entity field selector
          */
         addEntityFieldRow: function(value) {
-            var itemView = new FieldChoiceItemView({
+            const itemView = new FieldChoiceItemView({
                 autoRender: true,
                 noWrap: true,
                 fieldChoiceOptions: {
@@ -152,7 +151,7 @@ define(function(require) {
                     this.updateOriginField();
                 },
                 remove: function(cid) {
-                    var view = _.findWhere(this.fieldRowViews, {cid: cid});
+                    const view = _.findWhere(this.fieldRowViews, {cid: cid});
 
                     if (view) {
                         this.removeFieldRowView(view);
@@ -186,13 +185,13 @@ define(function(require) {
         },
 
         updateSyncCheckbox: function() {
-            var disabled = this.fieldRowViews.length > 1;
+            let disabled = this.fieldRowViews.length > 1;
 
             if (!disabled) {
                 disabled = Boolean(_.detect(this.fieldRowViews, function(view) {
-                    var value = view.getValue();
+                    const value = view.getValue();
                     if (value) {
-                        var path = this.dataProvider.pathToEntityChainSafely(value);
+                        const path = this.dataProvider.pathToEntityChainSafely(value);
                         if (path.length > 2) {
                             return true;
                         }
@@ -215,14 +214,14 @@ define(function(require) {
             this.confirmView.on('hidden', function() {
                 delete this.model;
             });
-            var template = _.template($(this.options.select2FieldChoiceTemplate).text());
+            const template = _.template($(this.options.select2FieldChoiceTemplate).text());
             this.$table.itemsManagerTable({
                 collection: this.collection,
                 itemTemplate: $(this.options.mapping.itemTemplate).html(),
                 itemRender: function(tmpl, data) {
                     try {
-                        var fields = data.entityFields.split(',');
-                        var fieldsRendered = _.map(fields, function(field) {
+                        const fields = data.entityFields.split(',');
+                        const fieldsRendered = _.map(fields, function(field) {
                             return this.formatChoice(field, template);
                         }, this);
                         data.entityFields = fieldsRendered.join(' + ');
@@ -248,7 +247,7 @@ define(function(require) {
         },
 
         initFieldCollection: function() {
-            var collection = new EntityFieldsCollection(this.load('mapping'), {
+            const collection = new EntityFieldsCollection(this.load('mapping'), {
                 model: MappingModel,
                 dataProvider: this.dataProvider
             });
@@ -353,7 +352,7 @@ define(function(require) {
         },
 
         updateOriginField: function() {
-            var values = _.invoke(this.fieldRowViews, 'getValue');
+            let values = _.invoke(this.fieldRowViews, 'getValue');
 
             values = _.compact(values).join(',');
 
@@ -371,7 +370,7 @@ define(function(require) {
                 return;
             }
 
-            var values = $(e.currentTarget).val().split(',');
+            const values = $(e.currentTarget).val().split(',');
             _.each(this.fieldRowViews, this.removeFieldRowView, this);
             _.each(values, this.addEntityFieldRow, this);
         },

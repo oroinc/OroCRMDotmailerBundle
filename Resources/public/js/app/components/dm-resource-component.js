@@ -1,26 +1,26 @@
 define(function(require) {
     'use strict';
 
-    var _ = require('underscore');
-    var __ = require('orotranslation/js/translator');
-    var $ = require('jquery');
+    const _ = require('underscore');
+    const __ = require('orotranslation/js/translator');
+    const $ = require('jquery');
 
     return function(options) {
-        var $source = options._sourceElement;
-        var $username = $('input.dm-username');
-        var $password = $('input.dm-password');
-        var $btn = $source.find('button');
-        var $status = $source.find('.connection-status');
-        var $pingHolder = $source.find('.ping-holder');
+        const $source = options._sourceElement;
+        const $username = $('input.dm-username');
+        const $password = $('input.dm-password');
+        const $btn = $source.find('button');
+        const $status = $source.find('.connection-status');
+        const $pingHolder = $source.find('.ping-holder');
 
-        var onError = function(message) {
+        const onError = function(message) {
             message = message || __('oro.dotmailer.integration_transport.api_key.check.message');
             $status.removeClass('alert-info')
                 .addClass('alert-error')
                 .html(message);
         };
 
-        var localCheckCredentials = function() {
+        const localCheckCredentials = function() {
             if ($username.val().length && $password.val().length && $password.valid()) {
                 $pingHolder.show();
             } else {
