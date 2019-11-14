@@ -2,6 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Controller\Api\Rest;
 
+use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -14,12 +15,16 @@ use Oro\Bundle\SoapBundle\Controller\Api\Rest\RestController;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
+ * API CRUD controller for DataFieldMapping entity.
+ *
  * @RouteResource("dotmailer_datafield_mapping")
  * @NamePrefix("oro_api_")
  */
 class DataFieldMappingController extends RestController implements ClassResourceInterface
 {
     /**
+     * @Rest\Delete(requirements={"id"="\d+"})
+     *
      * @ApiDoc(
      *      description="Delete dotmailer data field mapping",
      *      resource=true
