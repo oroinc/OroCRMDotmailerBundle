@@ -200,7 +200,6 @@ services:
         arguments:
             - "@oro_dotmailer.datafield.form"
             - "@doctrine"
-            - "@request_stack"
             - "@logger"
             - "@translator"
             - "@oro_dotmailer.datafield_manager"

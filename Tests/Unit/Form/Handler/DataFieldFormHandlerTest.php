@@ -2,32 +2,33 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Handler;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Exception\InvalidDefaultValueException;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 use Oro\Bundle\DotmailerBundle\Form\Handler\DataFieldFormHandler;
+use Oro\Bundle\DotmailerBundle\Model\DataFieldManager;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DataFieldFormHandlerTest extends \PHPUnit\Framework\TestCase
 {
     /** @var \PHPUnit\Framework\MockObject\MockObject|FormInterface */
     protected $form;
 
-    /** @var Request */
-    protected $request;
-
-    /** @var \PHPUnit\Framework\MockObject\MockObject */
+    /** @var \PHPUnit\Framework\MockObject\MockObject|ManagerRegistry */
     protected $managerRegistry;
 
-    /** @var \PHPUnit\Framework\MockObject\MockObject */
+    /** @var \PHPUnit\Framework\MockObject\MockObject|TranslatorInterface */
     protected $translator;
 
-    /** @var \PHPUnit\Framework\MockObject\MockObject */
+    /** @var \PHPUnit\Framework\MockObject\MockObject|DataFieldManager */
     protected $dataFieldManager;
 
-    /** @var \PHPUnit\Framework\MockObject\MockObject */
+    /** @var \PHPUnit\Framework\MockObject\MockObject|LoggerInterface */
     protected $logger;
 
     /** @var DataFieldFormHandler */
@@ -38,24 +39,15 @@ class DataFieldFormHandlerTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $this->request = new Request();
-        $requestStack = new RequestStack();
-        $requestStack->push($this->request);
-        $this->form = $this->getMockBuilder('Symfony\Component\Form\Form')
-            ->disableOriginalConstructor()->getMock();
-        $this->managerRegistry = $this->getMockBuilder('Doctrine\Common\Persistence\ManagerRegistry')
-            ->disableOriginalConstructor()->getMock();
-        $this->translator = $this->getMockBuilder('Symfony\Contracts\Translation\TranslatorInterface')
-            ->disableOriginalConstructor()->getMock();
-        $this->dataFieldManager = $this->getMockBuilder('Oro\Bundle\DotmailerBundle\Model\DataFieldManager')
-            ->disableOriginalConstructor()->getMock();
-        $this->logger = $this->getMockBuilder('Psr\Log\LoggerInterface')
-            ->disableOriginalConstructor()->getMock();
-        $this->entity  = new DataField();
+        $this->form = $this->createMock(Form::class);
+        $this->managerRegistry = $this->createMock(ManagerRegistry::class);
+        $this->translator = $this->createMock(TranslatorInterface::class);
+        $this->dataFieldManager = $this->createMock(DataFieldManager::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
+        $this->entity = new DataField();
         $this->handler = new DataFieldFormHandler(
             $this->form,
             $this->managerRegistry,
-            $requestStack,
             $this->logger,
             $this->translator,
             $this->dataFieldManager
@@ -64,44 +56,45 @@ class DataFieldFormHandlerTest extends \PHPUnit\Framework\TestCase
 
     public function testProcessUnsupportedRequest()
     {
-        $this->form->expects($this->once())->method('setData')
-            ->with($this->entity);
+        $request = new Request();
 
         $this->form->expects($this->never())->method('handleRequest');
 
-        $this->assertFalse($this->handler->process($this->entity));
+        $this->assertFalse($this->handler->process($request));
     }
 
     public function testProcessValidFormWithDMFieldCreated()
     {
-        $this->request->setMethod('POST');
+        $request = new Request();
+        $request->setMethod(Request::METHOD_POST);
 
-        $this->form->expects($this->once())->method('setData')->with($this->entity);
-        $this->form->expects($this->once()) ->method('handleRequest') ->with($this->request);
-        $this->form->expects($this->once()) ->method('isSubmitted')
+        $this->form->expects($this->any())->method('getData')->willReturn($this->entity);
+        $this->form->expects($this->once())->method('handleRequest')->with($request);
+        $this->form->expects($this->once())->method('isSubmitted')
             ->will($this->returnValue(true));
-        $this->form->expects($this->once()) ->method('isValid')
+        $this->form->expects($this->once())->method('isValid')
             ->will($this->returnValue(true));
 
         $this->dataFieldManager->expects($this->once())->method('createOriginDataField')->with($this->entity);
 
         $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')->disableOriginalConstructor()->getMock();
         $this->managerRegistry->expects($this->any())->method('getManager')->will($this->returnValue($em));
-        $em->expects($this->once()) ->method('persist') ->with($this->entity);
+        $em->expects($this->once())->method('persist')->with($this->entity);
         $em->expects($this->once())->method('flush');
 
-        $this->assertTrue($this->handler->process($this->entity));
+        $this->assertTrue($this->handler->process($request));
     }
 
     public function testProcessFormWithInvalidDefaultValueException()
     {
-        $this->request->setMethod('POST');
+        $request = new Request();
+        $request->setMethod(Request::METHOD_POST);
 
-        $this->form->expects($this->once())->method('setData')->with($this->entity);
-        $this->form->expects($this->once()) ->method('handleRequest') ->with($this->request);
-        $this->form->expects($this->once()) ->method('isSubmitted')
+        $this->form->expects($this->any())->method('getData')->willReturn($this->entity);
+        $this->form->expects($this->once())->method('handleRequest')->with($request);
+        $this->form->expects($this->once())->method('isSubmitted')
             ->will($this->returnValue(true));
-        $this->form->expects($this->once()) ->method('isValid')
+        $this->form->expects($this->once())->method('isValid')
             ->will($this->returnValue(true));
 
         $this->dataFieldManager->expects($this->once())->method('createOriginDataField')->with($this->entity)
@@ -115,18 +108,19 @@ class DataFieldFormHandlerTest extends \PHPUnit\Framework\TestCase
 
         $this->managerRegistry->expects($this->never())->method('getManager');
 
-        $this->assertFalse($this->handler->process($this->entity));
+        $this->assertFalse($this->handler->process($request));
     }
 
     public function testProcessFormWithRestClientException()
     {
-        $this->request->setMethod('POST');
+        $request = new Request();
+        $request->setMethod(Request::METHOD_POST);
 
-        $this->form->expects($this->once())->method('setData')->with($this->entity);
-        $this->form->expects($this->once()) ->method('handleRequest') ->with($this->request);
-        $this->form->expects($this->once()) ->method('isSubmitted')
+        $this->form->expects($this->any())->method('getData')->willReturn($this->entity);
+        $this->form->expects($this->once())->method('handleRequest')->with($request);
+        $this->form->expects($this->once())->method('isSubmitted')
             ->will($this->returnValue(true));
-        $this->form->expects($this->once()) ->method('isValid')
+        $this->form->expects($this->once())->method('isValid')
             ->will($this->returnValue(true));
 
         $this->dataFieldManager->expects($this->once())->method('createOriginDataField')->with($this->entity)
@@ -144,18 +138,19 @@ class DataFieldFormHandlerTest extends \PHPUnit\Framework\TestCase
 
         $this->managerRegistry->expects($this->never())->method('getManager');
 
-        $this->assertFalse($this->handler->process($this->entity));
+        $this->assertFalse($this->handler->process($request));
     }
 
     public function testProcessFormWithException()
     {
-        $this->request->setMethod('POST');
+        $request = new Request();
+        $request->setMethod(Request::METHOD_POST);
 
-        $this->form->expects($this->once())->method('setData')->with($this->entity);
-        $this->form->expects($this->once()) ->method('handleRequest') ->with($this->request);
-        $this->form->expects($this->once()) ->method('isSubmitted')
+        $this->form->expects($this->any())->method('getData')->willReturn($this->entity);
+        $this->form->expects($this->once())->method('handleRequest')->with($request);
+        $this->form->expects($this->once())->method('isSubmitted')
             ->will($this->returnValue(true));
-        $this->form->expects($this->once()) ->method('isValid')
+        $this->form->expects($this->once())->method('isValid')
             ->will($this->returnValue(true));
 
         $this->dataFieldManager->expects($this->once())->method('createOriginDataField')->with($this->entity)
@@ -170,24 +165,23 @@ class DataFieldFormHandlerTest extends \PHPUnit\Framework\TestCase
 
         $this->managerRegistry->expects($this->never())->method('getManager');
 
-        $this->assertFalse($this->handler->process($this->entity));
+        $this->assertFalse($this->handler->process($request));
     }
 
     public function testProcessFormWithUpdateMarker()
     {
-        $this->request->setMethod('POST');
-        $this->request->attributes->add(
+        $request = new Request();
+        $request->setMethod(Request::METHOD_POST);
+        $request->attributes->add(
             [
                 DataFieldFormHandler::UPDATE_MARKER => 1
             ]
         );
-        $this->form->expects($this->once())->method('setData')
-            ->with($this->entity);
-
+        $this->form->expects($this->any())->method('getData')->willReturn($this->entity);
         $this->form->expects($this->once())->method('handleRequest');
 
         $this->dataFieldManager->expects($this->never())->method('createOriginDataField');
 
-        $this->assertFalse($this->handler->process($this->entity));
+        $this->assertFalse($this->handler->process($request));
     }
 }

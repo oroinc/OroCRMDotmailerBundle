@@ -10,9 +10,12 @@ use Oro\Bundle\DotmailerBundle\Model\DataFieldManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Form handler for Dotmailer DataField.
+ */
 class DataFieldFormHandler
 {
     const UPDATE_MARKER = 'formUpdateMarker';
@@ -29,16 +32,12 @@ class DataFieldFormHandler
     /** @var ManagerRegistry */
     protected $managerRegistry;
 
-    /** @var RequestStack */
-    protected $requestStack;
-
     /** @var DataFieldManager */
     protected $dataFieldManager;
 
     /**
      * @param FormInterface $form
      * @param ManagerRegistry $managerRegistry
-     * @param RequestStack $requestStack
      * @param LoggerInterface $logger
      * @param TranslatorInterface $translator
      * @param DataFieldManager $dataFieldManager
@@ -46,32 +45,32 @@ class DataFieldFormHandler
     public function __construct(
         FormInterface $form,
         ManagerRegistry $managerRegistry,
-        RequestStack $requestStack,
         LoggerInterface $logger,
         TranslatorInterface $translator,
         DataFieldManager $dataFieldManager
     ) {
         $this->form = $form;
         $this->managerRegistry = $managerRegistry;
-        $this->requestStack = $requestStack;
         $this->logger = $logger;
         $this->translator = $translator;
         $this->dataFieldManager = $dataFieldManager;
     }
 
     /**
-     * @param DataField $entity
+     * @param Request $request
+     *
      * @return bool Return true if form is valid and Data Field was created in DM
      * and false otherwise
      */
-    public function process(DataField $entity)
+    public function process(Request $request): bool
     {
-        $this->form->setData($entity);
-        $request = $this->requestStack->getCurrentRequest();
-        if ($request->isMethod('POST')) {
+        if ($request->isMethod(Request::METHOD_POST)) {
             $this->form->handleRequest($request);
-            if (!$request->get(self::UPDATE_MARKER, false) && $this->form->isSubmitted() && $this->form->isValid()) {
-                return $this->onSuccess($entity);
+            if (!$request->get(self::UPDATE_MARKER, false)
+                && $this->form->isSubmitted()
+                && $this->form->isValid()
+            ) {
+                return $this->onSuccess($this->form->getData());
             }
         }
 
@@ -135,5 +134,13 @@ class DataFieldFormHandler
             new FormError($this->translator->trans('oro.dotmailer.handler.unable_to_create_field'))
         );
         $this->logger->error('Failed to create field in Dotmailer', ['exception' => $e]);
+    }
+
+    /**
+     * @return FormInterface
+     */
+    public function getForm(): FormInterface
+    {
+        return $this->form;
     }
 }

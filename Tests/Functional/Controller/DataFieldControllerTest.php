@@ -3,6 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Controller;
 
 use Oro\Bundle\DataGridBundle\Tests\Functional\AbstractDatagridTestCase;
+use Oro\Bundle\DotmailerBundle\Entity\DataField;
 
 class DataFieldControllerTest extends AbstractDatagridTestCase
 {
@@ -144,5 +145,10 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
         $result = $this->client->getResponse();
         $this->assertHtmlResponseStatusCodeEquals($result, 200);
         $this->assertContains('Data Field Saved', $crawler->html());
+        $em = $this->getContainer()->get('doctrine')->getManagerForClass(DataField::class);
+        /** @var DataField $dataField */
+        $dataField = $em->getRepository(DataField::class)->findOneBy(['name' => 'test_name']);
+        $this->assertNotNull($dataField);
+        $this->assertNotEmpty($dataField->getOwner());
     }
 }
