@@ -10,6 +10,8 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 /**
+ * Dotmailer DataField entity.
+ *
  * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\DataFieldRepository")
  * @ORM\Table(
  *      name="orocrm_dm_data_field",
@@ -36,7 +38,7 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  *  }
  * )
  */
-class DataField extends ExtendDataField
+class DataField extends ExtendDataField implements ChannelAwareInterface
 {
     /** constant for enum dm_df_visibility */
     const VISIBILITY_PRIVATE                    = 'Private';

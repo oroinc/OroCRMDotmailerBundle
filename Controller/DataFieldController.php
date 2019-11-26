@@ -97,25 +97,28 @@ class DataFieldController extends AbstractController
      */
     public function createAction(Request $request)
     {
-        $field = new DataField();
-        if ($this->get(DataFieldFormHandler::class)->process($field)) {
+        $formHandler = $this->get(DataFieldFormHandler::class);
+        $form = $formHandler->getForm();
+        if ($formHandler->process($request)) {
             $this->get(SessionInterface::class)->getFlashBag()->add(
                 'success',
                 $this->get(TranslatorInterface::class)->trans('oro.dotmailer.controller.datafield.saved.message')
             );
 
-            return $this->get(Router::class)->redirect($field);
+            return $this->get(Router::class)->redirect(
+                $form->getData()
+            );
         }
 
         $isTypeUpdate = $request->get(DataFieldFormHandler::UPDATE_MARKER, false);
 
-        $form = $this->get(FormFactoryInterface::class)
-            ->createNamed('oro_dotmailer_data_field_form', DataFieldType::class);
         if ($isTypeUpdate) {
             //take different form not to show JS validation on after type update only
             $form = $this->get(FormFactoryInterface::class)
                 ->createNamed('oro_dotmailer_data_field_form', DataFieldType::class, $form->getData());
         }
+
+        $field = $form->getData() instanceof DataField ? $form->getData() : new DataField();
 
         return [
             'entity' => $field,
