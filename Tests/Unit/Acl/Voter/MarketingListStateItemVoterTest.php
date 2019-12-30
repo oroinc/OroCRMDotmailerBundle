@@ -2,136 +2,88 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Acl\Voter;
 
+use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\DotmailerBundle\Acl\Voter\MarketingListStateItemVoter;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository;
 use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class MarketingListStateItemVoterTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var MarketingListStateItemVoter
-     */
-    protected $voter;
+    /** @var MarketingListStateItemVoter */
+    private $voter;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|DoctrineHelper
-     */
-    protected $doctrineHelper;
+    /** @var \PHPUnit\Framework\MockObject\MockObject|DoctrineHelper */
+    private $doctrineHelper;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ContactInformationFieldsProvider
-     */
-    protected $contactInformationFieldsProvider;
+    /** @var \PHPUnit\Framework\MockObject\MockObject|ContactInformationFieldsProvider */
+    private $contactInformationFieldsProvider;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|FieldHelper
-     */
-    protected $fieldHelper;
+    /** @var \PHPUnit\Framework\MockObject\MockObject|FieldHelper */
+    private $fieldHelper;
 
     protected function setUp()
     {
-        $this->doctrineHelper = $this->getMockBuilder('Oro\Bundle\EntityBundle\ORM\DoctrineHelper')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->contactInformationFieldsProvider = $this->getMockBuilder(
-            'Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider'
-        )
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->fieldHelper = $this->getMockBuilder('Oro\Bundle\DotmailerBundle\Model\FieldHelper')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->doctrineHelper = $this->createMock(DoctrineHelper::class);
+        $this->contactInformationFieldsProvider = $this->createMock(ContactInformationFieldsProvider::class);
+        $this->fieldHelper = $this->createMock(FieldHelper::class);
 
         $this->voter = new MarketingListStateItemVoter(
             $this->doctrineHelper,
             $this->contactInformationFieldsProvider,
             $this->fieldHelper,
-            'Oro\Bundle\DotmailerBundle\Entity\Contact'
+            Contact::class
         );
     }
 
     /**
-     * @param mixed $identifier
-     * @param mixed $className
-     * @param mixed $object
-     * @param bool  $expected
-     * @param array $attributes
-     * @param bool  $queryResult
-     *
      * @dataProvider attributesDataProvider
      */
-    public function testVote($identifier, $className, $object, $expected, $attributes, $queryResult = false)
+    public function testVote($identifier, $object, $entity, $expected, $attributes, $queryResult = false)
     {
-        $this->doctrineHelper
-            ->expects($this->any())
+        $this->doctrineHelper->expects($this->any())
             ->method('getSingleEntityIdentifier')
             ->will($this->returnValue($identifier));
 
-        $repository = $this->getMockBuilder('\Doctrine\Common\Persistence\ObjectRepository')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $repository = $this->createMock(EntityRepository::class);
+        $contactRepository = $this->createMock(ContactRepository::class);
 
-        $contactRepository = $this->getMockBuilder(
-            'Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository'
-        )
-            ->setMethods(['isUnsubscribedFromAddressBookByMarketingList'])
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $repository
-            ->expects($this->any())
+        $repository->expects($this->any())
             ->method('find')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        [$identifier, $this->getItem()],
-                        [2, $object]
-                    ]
-                )
-            );
+            ->with($identifier)
+            ->willReturn($object);
+        $contactRepository->expects($this->any())
+            ->method('find')
+            ->with(2)
+            ->willReturn($entity);
 
-        $this->doctrineHelper
-            ->expects($this->any())
+        $this->doctrineHelper->expects($this->any())
             ->method('getEntityRepository')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        ['stdClass', $repository],
-                        ['Oro\Bundle\DotmailerBundle\Entity\Contact', $contactRepository],
-                    ]
-                )
-            );
+            ->willReturnMap([
+                [MarketingListUnsubscribedItem::class, $repository],
+                [Contact::class, $contactRepository],
+            ]);
 
-        if (is_object($object)) {
-            $this->doctrineHelper
-                ->expects($this->any())
-                ->method('getEntityClass')
-                ->will($this->returnValue(get_class($object)));
-        }
-
-        $this->contactInformationFieldsProvider
-            ->expects($this->any())
+        $this->contactInformationFieldsProvider->expects($this->any())
             ->method('getEntityTypedFields')
             ->will($this->returnValue(['email']));
 
-        $this->contactInformationFieldsProvider
-            ->expects($this->any())
+        $this->contactInformationFieldsProvider->expects($this->any())
             ->method('getTypedFieldsValues')
             ->will($this->returnValue(['email']));
 
-        $contactRepository
-            ->expects($this->any())
+        $contactRepository->expects($this->any())
             ->method('isUnsubscribedFromAddressBookByMarketingList')
             ->will($this->returnValue($queryResult));
 
-        $this->voter->setClassName($className);
+        $this->voter->setClassName(MarketingListUnsubscribedItem::class);
 
-        /** @var TokenInterface $token */
-        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->createMock(TokenInterface::class);
         $this->assertEquals(
             $expected,
             $this->voter->vote($token, $object, $attributes)
@@ -143,39 +95,31 @@ class MarketingListStateItemVoterTest extends \PHPUnit\Framework\TestCase
      */
     public function attributesDataProvider()
     {
+        $item = $this->getItem();
+        $entity = new Contact();
+
         return [
-            [null, null, [], MarketingListStateItemVoter::ACCESS_ABSTAIN, []],
-            [null, null, new \stdClass(), MarketingListStateItemVoter::ACCESS_ABSTAIN, []],
-            [1, null, new \stdClass(), MarketingListStateItemVoter::ACCESS_ABSTAIN, ['VIEW']],
-            [1, 'NotSupports', new \stdClass(), MarketingListStateItemVoter::ACCESS_ABSTAIN, ['DELETE']],
-            [1, 'stdClass', new \stdClass(), MarketingListStateItemVoter::ACCESS_ABSTAIN, ['DELETE']],
-            [1, 'stdClass', new \stdClass(), MarketingListStateItemVoter::ACCESS_DENIED, ['DELETE'], true],
-            [1, 'stdClass', null, MarketingListStateItemVoter::ACCESS_ABSTAIN, ['DELETE'], true],
+            [null, [], null, MarketingListStateItemVoter::ACCESS_ABSTAIN, []],
+            [null, $item, $entity, MarketingListStateItemVoter::ACCESS_ABSTAIN, []],
+            [1, $item, $entity, MarketingListStateItemVoter::ACCESS_ABSTAIN, ['VIEW']],
+            [1, $item, $entity, MarketingListStateItemVoter::ACCESS_ABSTAIN, ['DELETE']],
+            [1, $item, $entity, MarketingListStateItemVoter::ACCESS_ABSTAIN, ['DELETE']],
+            [1, $item, $entity, MarketingListStateItemVoter::ACCESS_DENIED, ['DELETE'], true],
+            [1, $item, null, MarketingListStateItemVoter::ACCESS_ABSTAIN, ['DELETE'], true],
         ];
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject
+     * @return MarketingListUnsubscribedItem
      */
-    protected function getItem()
+    private function getItem()
     {
-        $item = $this->createMock('Oro\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface');
-        $marketingList = $this->createMock('Oro\Bundle\MarketingListBundle\Entity\MarketingList');
+        $item = new MarketingListUnsubscribedItem();
+        $marketingList = new MarketingList();
 
-        $item
-            ->expects($this->any())
-            ->method('getMarketingList')
-            ->will($this->returnValue($marketingList));
-
-        $item
-            ->expects($this->any())
-            ->method('getEntityId')
-            ->will($this->returnValue(2));
-
-        $marketingList
-            ->expects($this->any())
-            ->method('getEntity')
-            ->will($this->returnValue('stdClass'));
+        $item->setMarketingList($marketingList);
+        $item->setEntityId(2);
+        $marketingList->setEntity(Contact::class);
 
         return $item;
     }
