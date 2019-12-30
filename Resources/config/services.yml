@@ -18,6 +18,7 @@ services:
     oro_dotmailer.entity_field_provider:
         class: 'Oro\Bundle\DotmailerBundle\Provider\FieldProvider'
         parent: oro_query_designer.entity_field_provider
+        lazy: true
 
     oro_dotmailer.entity_field_list_provider:
         parent: oro_query_designer.entity_field_list_provider
