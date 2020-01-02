@@ -90,7 +90,7 @@ class DataFieldMappingController extends AbstractController
             $response = array_merge(
                 $response,
                 [
-                    'entities' => $this->get(EntityProvider::class)->getEntities()
+                    'entities' => $this->get('oro_dotmailer.entity_provider')->getEntities()
                 ]
             );
         }
@@ -107,9 +107,9 @@ class DataFieldMappingController extends AbstractController
         return array_merge(
             parent::getSubscribedServices(),
             [
+                'oro_dotmailer.entity_provider' => EntityProvider::class,
                 TranslatorInterface::class,
                 FormFactoryInterface::class,
-                EntityProvider::class,
                 UpdateHandlerFacade::class,
             ]
         );
