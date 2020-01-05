@@ -968,25 +968,26 @@ services:
     oro_dotmailer.acl.voter.marketing_list_state_item:
         class: Oro\Bundle\DotmailerBundle\Acl\Voter\MarketingListStateItemVoter
         arguments:
-            - "@oro_entity.doctrine_helper"
-            - "@oro_marketing_list.provider.contact_information_fields"
-            - "@oro_dotmailer.model.field_helper"
+            - '@oro_entity.doctrine_helper'
+            - '@Psr\Container\ContainerInterface'
             - '%oro_dotmailer.entity.contact.class%'
         calls:
             - [setClassName, ['%oro_marketing_list.unsubscribed_item.class%']]
         tags:
             - { name: security.voter, priority: 500 }
+            - { name: container.service_subscriber, id: oro_marketing_list.provider.contact_information_fields }
 
     #listeners
     oro_dotmailer.listener.datagrid.marketing_list_item:
         class: Oro\Bundle\DotmailerBundle\EventListener\Datagrid\MarketingListItemGridListener
         arguments:
-            - "@doctrine"
-            - "@oro_marketing_list.provider.contact_information_fields"
-            - "@oro_dotmailer.model.field_helper"
-            - "@oro_marketing_list.model.helper"
+            - '@doctrine'
+            - '@Psr\Container\ContainerInterface'
         tags:
             - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.after, method: onBuildAfter }
+            - { name: container.service_subscriber, id: oro_marketing_list.provider.contact_information_fields }
+            - { name: container.service_subscriber, id: oro_marketing_list.model.helper }
+            - { name: container.service_subscriber, id: oro_dotmailer.model.field_helper }
 
     oro_dotmailer.listener.cache_clear:
         class: Oro\Bundle\DotmailerBundle\EventListener\CacheClearListener
