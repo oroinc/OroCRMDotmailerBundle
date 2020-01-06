@@ -6,11 +6,11 @@ use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\DotmailerBundle\Acl\Voter\MarketingListStateItemVoter;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository;
-use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
+use Oro\Component\Testing\Unit\TestContainerBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class MarketingListStateItemVoterTest extends \PHPUnit\Framework\TestCase
@@ -24,19 +24,18 @@ class MarketingListStateItemVoterTest extends \PHPUnit\Framework\TestCase
     /** @var \PHPUnit\Framework\MockObject\MockObject|ContactInformationFieldsProvider */
     private $contactInformationFieldsProvider;
 
-    /** @var \PHPUnit\Framework\MockObject\MockObject|FieldHelper */
-    private $fieldHelper;
-
     protected function setUp()
     {
         $this->doctrineHelper = $this->createMock(DoctrineHelper::class);
         $this->contactInformationFieldsProvider = $this->createMock(ContactInformationFieldsProvider::class);
-        $this->fieldHelper = $this->createMock(FieldHelper::class);
+
+        $container = TestContainerBuilder::create()
+            ->add('oro_marketing_list.provider.contact_information_fields', $this->contactInformationFieldsProvider)
+            ->getContainer($this);
 
         $this->voter = new MarketingListStateItemVoter(
             $this->doctrineHelper,
-            $this->contactInformationFieldsProvider,
-            $this->fieldHelper,
+            $container,
             Contact::class
         );
     }
@@ -63,7 +62,7 @@ class MarketingListStateItemVoterTest extends \PHPUnit\Framework\TestCase
             ->willReturn($entity);
 
         $this->doctrineHelper->expects($this->any())
-            ->method('getEntityRepository')
+            ->method('getEntityRepositoryForClass')
             ->willReturnMap([
                 [MarketingListUnsubscribedItem::class, $repository],
                 [Contact::class, $contactRepository],

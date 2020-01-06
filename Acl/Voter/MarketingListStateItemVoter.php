@@ -3,60 +3,50 @@
 namespace Oro\Bundle\DotmailerBundle\Acl\Voter;
 
 use Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository;
-use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 use Oro\Bundle\SecurityBundle\Acl\Voter\AbstractEntityVoter;
+use Psr\Container\ContainerInterface;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
-class MarketingListStateItemVoter extends AbstractEntityVoter
+/**
+ * Checks whether MarketingListUnsubscribedItem entity can be deleted.
+ */
+class MarketingListStateItemVoter extends AbstractEntityVoter implements ServiceSubscriberInterface
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $supportedAttributes = ['DELETE'];
 
-    /**
-     * @var ContactInformationFieldsProvider
-     */
-    protected $contactInformationFieldsProvider;
+    /** @var ContainerInterface */
+    private $container;
+
+    /** @var string */
+    private $contactClassName;
 
     /**
-     * @var FieldHelper
-     */
-    protected $fieldHelper;
-
-    /**
-     * @var string
-     */
-    protected $contactClassName;
-
-    /**
-     * @var string
-     */
-    protected $addressBookClassName;
-
-    /**
-     * @var string
-     */
-    protected $marketingListClassName;
-
-    /**
-     * @param DoctrineHelper $doctrineHelper
-     * @param ContactInformationFieldsProvider $contactInformationFieldsProvider
-     * @param FieldHelper $fieldHelper
-     * @param string $contactClassName
+     * @param DoctrineHelper     $doctrineHelper
+     * @param ContainerInterface $container
+     * @param string             $contactClassName
      */
     public function __construct(
         DoctrineHelper $doctrineHelper,
-        ContactInformationFieldsProvider $contactInformationFieldsProvider,
-        FieldHelper $fieldHelper,
-        $contactClassName
+        ContainerInterface $container,
+        string $contactClassName
     ) {
-        $this->doctrineHelper = $doctrineHelper;
-        $this->contactInformationFieldsProvider = $contactInformationFieldsProvider;
-        $this->fieldHelper = $fieldHelper;
+        parent::__construct($doctrineHelper);
+        $this->container = $container;
         $this->contactClassName = $contactClassName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getSubscribedServices()
+    {
+        return [
+            'oro_marketing_list.provider.contact_information_fields' => ContactInformationFieldsProvider::class
+        ];
     }
 
     /**
@@ -65,38 +55,54 @@ class MarketingListStateItemVoter extends AbstractEntityVoter
     protected function getPermissionForAttribute($class, $identifier, $attribute)
     {
         /** @var MarketingListStateItemInterface $item */
-        $item = $this->doctrineHelper
-            ->getEntityRepository($this->className)
-            ->find($identifier);
+        $item = $this->findEntity($this->className, $identifier);
         $entityClass = $item->getMarketingList()->getEntity();
-        $entity = $this->doctrineHelper
-            ->getEntityRepository($entityClass)
-            ->find($item->getEntityId());
+        $entity = $this->findEntity($entityClass, $item->getEntityId());
 
         if (!$entity) {
             return self::ACCESS_ABSTAIN;
         }
 
-        $contactInformationFields = $this->contactInformationFieldsProvider
-            ->getEntityTypedFields(
-                $entityClass,
-                ContactInformationFieldsProvider::CONTACT_INFORMATION_SCOPE_EMAIL
-            );
-
-        $contactInformationValues = $this->contactInformationFieldsProvider
-            ->getTypedFieldsValues(
-                $contactInformationFields,
-                $entity
-            );
-
         /** @var ContactRepository $contactRepository */
-        $contactRepository = $this->doctrineHelper
-            ->getEntityRepository($this->contactClassName);
-        $result = $contactRepository->isUnsubscribedFromAddressBookByMarketingList(
-            $contactInformationValues,
+        $contactRepository = $this->doctrineHelper->getEntityRepositoryForClass($this->contactClassName);
+        $unsubscribed = $contactRepository->isUnsubscribedFromAddressBookByMarketingList(
+            $this->getContactInformationValues($entityClass, $entity),
             $item->getMarketingList()
         );
 
-        return $result ? self::ACCESS_DENIED : self::ACCESS_ABSTAIN;
+        return $unsubscribed
+            ? self::ACCESS_DENIED
+            : self::ACCESS_ABSTAIN;
+    }
+
+    /**
+     * @param string $entityClass
+     * @param mixed  $entityId
+     *
+     * @return object|null
+     */
+    private function findEntity(string $entityClass, $entityId)
+    {
+        return $this->doctrineHelper->getEntityRepositoryForClass($entityClass)->find($entityId);
+    }
+
+    /**
+     * @param string $entityClass
+     * @param object $entity
+     *
+     * @return array
+     */
+    private function getContactInformationValues(string $entityClass, $entity): array
+    {
+        /** @var ContactInformationFieldsProvider $fieldsProvider */
+        $fieldsProvider = $this->container->get('oro_marketing_list.provider.contact_information_fields');
+
+        return $fieldsProvider->getTypedFieldsValues(
+            $fieldsProvider->getEntityTypedFields(
+                $entityClass,
+                ContactInformationFieldsProvider::CONTACT_INFORMATION_SCOPE_EMAIL
+            ),
+            $entity
+        );
     }
 }
