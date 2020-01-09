@@ -994,14 +994,14 @@ services:
         arguments:
             - "@oro_dotmailer.provider.cache"
         tags:
-            - { name: doctrine.event_subscriber }
+            - { name: doctrine.event_listener, event: onClear }
 
     oro_dotmailer.listener.state_aware_cache_clear:
         class: Oro\Bundle\DotmailerBundle\EventListener\CacheClearListener
         arguments:
             - "@oro_dotmailer.provider.state_aware_cache"
         tags:
-            - { name: doctrine.event_subscriber }
+            - { name: doctrine.event_listener, event: onClear }
 
     oro_dotmailer.listener.contact_export:
         class: Oro\Bundle\DotmailerBundle\EventListener\ContactExportListener

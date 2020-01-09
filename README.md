@@ -118,3 +118,9 @@ The requested callback url to provide is https://{your domain}/dotmailer/oauth/c
 After this, navigate to Marketing->dotmailer->Email Studio and choose the integration you'd like to connect with your dotmailer account.
 Click connect button to perform the OAuth authorization. After successful login to your dotmailer account, you should be redirected back to the application and see your dotmailer account dashboard in the iframe.
 After this you will not need to login into dotmailer account each time and can access it from the application.
+
+Resources
+---------
+
+  * [OroCommerce, OroCRM and OroPlatform Documentation](https://doc.oroinc.com)
+  * [Contributing](https://doc.oroinc.com/community/contribute/)
