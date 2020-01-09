@@ -2,15 +2,15 @@
 
 namespace Oro\Bundle\DotmailerBundle\EventListener;
 
-use Doctrine\Common\EventSubscriber;
 use Oro\Bundle\DotmailerBundle\Provider\CacheProvider;
 
-class CacheClearListener implements EventSubscriber
+/**
+ * Clears a given cache when the entity manager is cleared.
+ */
+class CacheClearListener
 {
-    /**
-     * @var CacheProvider
-     */
-    protected $cacheProvider;
+    /** @var CacheProvider */
+    private $cacheProvider;
 
     /**
      * @param CacheProvider $cacheProvider
@@ -23,15 +23,5 @@ class CacheClearListener implements EventSubscriber
     public function onClear()
     {
         $this->cacheProvider->clearCache();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSubscribedEvents()
-    {
-        return [
-            'onClear'
-        ];
     }
 }
