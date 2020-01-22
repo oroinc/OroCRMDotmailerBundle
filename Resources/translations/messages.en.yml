@@ -33,6 +33,7 @@ oro:
             select.placeholder:                   Select Address Book
             entity_label:                         dotmailer Address Book
             entity_plural_label:                  dotmailer Address Books
+            entity_grid_all_view_label: All %entity_plural_label%
             campaigns.label:                      Campaign
             channel.label:                        Channel
             contact_count.label:                  Contacts count
@@ -68,6 +69,7 @@ oro:
         activity:
             entity_label:                 dotmailer Activity
             entity_plural_label:          dotmailer Activities
+            entity_grid_all_view_label: All %entity_plural_label%
             campaign.label:               Campaign
             channel.label:                Channel
             contact.label:                Contact
@@ -91,6 +93,7 @@ oro:
         contact:
             entity_label:                 dotmailer Contact
             entity_plural_label:          dotmailer Contacts
+            entity_grid_all_view_label: All %entity_plural_label%
             activities.label:             Activities
             address_books.label:          Address Books
             channel.label:                Channel
@@ -115,6 +118,7 @@ oro:
         campaign:
             entity_label:             dotmailer Campaign
             entity_plural_label:      dotmailer Campaigns
+            entity_grid_all_view_label: All %entity_plural_label%
             activities.label:         Activities
             address_books.label:      Address Books
             channel.label:            Channel
@@ -139,6 +143,7 @@ oro:
         campaignsummary:
             entity_label:                       Campaign summary
             entity_plural_label:                Campaigns summary
+            entity_grid_all_view_label: All %entity_plural_label%
             campaign.label:                     Campaign
             channel.label:                      Integration
             date_sent.label:                    Date sent
@@ -199,6 +204,7 @@ oro:
         addressbookcontact:
             entity_label:                      Address Book Contact
             entity_plural_label:               Address Book Contacts
+            entity_grid_all_view_label: All %entity_plural_label%
             address_book.label:                Address Book
             contact.label:                     Contact
             id.label:                          Id
@@ -217,6 +223,7 @@ oro:
         addressbookcontactsexport:
             entity_label:                     Address Book Contact Export
             entity_plural_label:              Address Book Contact Exports
+            entity_grid_all_view_label: All %entity_plural_label%
             address_book.label:               Address Book
             created_at.label:                 Created At
             id.label:                         Id
@@ -231,6 +238,7 @@ oro:
             select.placeholder:               Select Data Field
             entity_label:                     dotmailer Data Field
             entity_plural_label:              Data Fields
+            entity_grid_all_view_label: All %entity_plural_label%
             channel.label:                    Channel
             id.label:                         Id
             name.label:                       Name
@@ -249,6 +257,7 @@ oro:
         datafieldmapping:
             entity_label:                     dotmailer Data Field Mapping
             entity_plural_label:              Data Field Mappings
+            entity_grid_all_view_label: All %entity_plural_label%
             channel.label:                    Channel
             mapping.label:                    Mapping
             configs.label:                    Mapping Configuration
@@ -261,6 +270,7 @@ oro:
         datafieldmappingconfig:
             entity_label:                     Data Field Mapping Config
             entity_plural_label:              Data Field Mapping Configs
+            entity_grid_all_view_label: All %entity_plural_label%
             mapping.label:                    Data Field Mapping
             id.label:                         Id
             entity_fields.label:              Fields
@@ -282,6 +292,7 @@ oro:
         changedfieldlog:
             entity_label:                     Entity Change Mapped Fields Log
             entity_plural_label:              Entity Change Mapped Fields Logs
+            entity_grid_all_view_label: All %entity_plural_label%
             channel_id.label:                 Channel id
             id.label:                         Id
             parent_entity.label:              Parent Entity
