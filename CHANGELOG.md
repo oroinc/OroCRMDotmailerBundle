@@ -5,7 +5,7 @@ The current file describes significant changes in the code that may affect the u
 ## 4.1.0-rc (2019-12-10)
 [Show detailed list of changes](incompatibilities-4-1-rc.md)
 
-## 4.1.0-beta
+## 4.1.0-beta (2019-09-30)
 
 ### Removed
 * All `*.class` parameters were removed from the dependency injection container.
