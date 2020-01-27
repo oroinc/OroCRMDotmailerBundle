@@ -1,15 +1,3 @@
-parameters:
-    oro_dotmailer.entity.transport.class:                          Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport
-    oro_dotmailer.entity.campaign.class:                           Oro\Bundle\DotmailerBundle\Entity\Campaign
-    oro_dotmailer.entity.address_book.class:                       Oro\Bundle\DotmailerBundle\Entity\AddressBook
-    oro_dotmailer.entity.address_book_contact.class:               Oro\Bundle\DotmailerBundle\Entity\AddressBookContact
-    oro_dotmailer.entity.contact.class:                            Oro\Bundle\DotmailerBundle\Entity\Contact
-    oro_dotmailer.entity.activity.class:                           Oro\Bundle\DotmailerBundle\Entity\Activity
-    oro_dotmailer.entity.campaign_summary.class:                   Oro\Bundle\DotmailerBundle\Entity\CampaignSummary
-    oro_dotmailer.entity.datafield.class:                          Oro\Bundle\DotmailerBundle\Entity\DataField
-    oro_dotmailer.entity.datafield_mapping.class:                  Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping
-    oro_dotmailer.entity.datafield_mapping_config.class:           Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig
-
 services:
     oro_dotmailer.entity_provider:
         alias: oro_entity.entity_provider
@@ -78,7 +66,7 @@ services:
         class: Oro\Bundle\DotmailerBundle\Autocomplete\AddressBooksSearchHandler
         parent: oro_dotmailer.form.autocomplete.channel_aware.search_handler
         arguments:
-            - '%oro_dotmailer.entity.address_book.class%'
+            - 'Oro\Bundle\DotmailerBundle\Entity\AddressBook'
             - ["name"]
         tags:
             - { name: oro_form.autocomplete.search_handler, alias: "dotmailer_address_books" }
@@ -86,7 +74,7 @@ services:
     oro_dotmailer.form.autocomplete.datafield_list.search_handler:
         parent: oro_dotmailer.form.autocomplete.channel_aware.search_handler
         arguments:
-            - '%oro_dotmailer.entity.datafield.class%'
+            - 'Oro\Bundle\DotmailerBundle\Entity\DataField'
             - ["name"]
         tags:
             - { name: oro_form.autocomplete.search_handler, alias: "dotmailer_data_fields" }
@@ -110,7 +98,7 @@ services:
     oro_dotmailer.form.type.datafield:
         class: Oro\Bundle\DotmailerBundle\Form\Type\DataFieldType
         arguments:
-            - "%oro_dotmailer.entity.datafield.class%"
+            - 'Oro\Bundle\DotmailerBundle\Entity\DataField'
             - "@oro_dotmailer.form.event_listener.datafield"
         tags:
             - { name: form.type, alias: "oro_dotmailer_data_field" }
@@ -118,7 +106,7 @@ services:
     oro_dotmailer.form.type.datafield_mapping:
         class: Oro\Bundle\DotmailerBundle\Form\Type\DataFieldMappingType
         arguments:
-            - "%oro_dotmailer.entity.datafield_mapping.class%"
+            - 'Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping'
             - "@oro_dotmailer.form.event_listener.datafield_mapping"
         tags:
             - { name: form.type, alias: "oro_dotmailer_datafield_mapping" }
@@ -126,7 +114,7 @@ services:
     oro_dotmailer.form.type.datafield_mapping_config:
         class: Oro\Bundle\DotmailerBundle\Form\Type\DataFieldMappingConfigType
         arguments:
-            - "%oro_dotmailer.entity.datafield_mapping_config.class%"
+            - 'Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig'
         tags:
             - { name: form.type, alias: "oro_dotmailer_datafield_mapping_config" }
 
@@ -135,7 +123,7 @@ services:
         public: true
         parent: oro_soap.manager.entity_manager.abstract
         arguments:
-            - "%oro_dotmailer.entity.datafield.class%"
+            - 'Oro\Bundle\DotmailerBundle\Entity\DataField'
             - "@doctrine.orm.entity_manager"
 
     oro_dotmailer.datafield_mapping.manager.api:
@@ -143,7 +131,7 @@ services:
         public: true
         parent: oro_soap.manager.entity_manager.abstract
         arguments:
-            - "%oro_dotmailer.entity.datafield_mapping.class%"
+            - 'Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping'
             - "@doctrine.orm.entity_manager"
 
     oro_dotmailer.datafield.form:
@@ -243,7 +231,7 @@ services:
             - "@doctrine"
             - "@oro_dotmailer.transport.integration_transport"
             - "@oro_integration.job_executor"
-            - '%oro_dotmailer.entity.address_book_contact.class%'
+            - 'Oro\Bundle\DotmailerBundle\Entity\AddressBookContact'
 
     oro_dotmailer.datafield_manager:
         class: Oro\Bundle\DotmailerBundle\Model\DataFieldManager
@@ -261,10 +249,10 @@ services:
             - "@oro_dotmailer.contact.export.query_builder_adapter.registry"
             - "@oro_dotmailer.provider.email"
         calls:
-            - [setRemovedItemClassName, ['%oro_marketing_list.removed_item.class%']]
-            - [setUnsubscribedItemClassName, ['%oro_marketing_list.unsubscribed_item.class%']]
-            - [setContactClassName, ['%oro_dotmailer.entity.contact.class%']]
-            - [setAddressBookContactClassName, ['%oro_dotmailer.entity.address_book_contact.class%']]
+            - [setRemovedItemClassName, ['Oro\Bundle\MarketingListBundle\Entity\MarketingListRemovedItem']]
+            - [setUnsubscribedItemClassName, ['Oro\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem']]
+            - [setContactClassName, ['Oro\Bundle\DotmailerBundle\Entity\Contact']]
+            - [setAddressBookContactClassName, ['Oro\Bundle\DotmailerBundle\Entity\AddressBookContact']]
 
     oro_dotmailer.provider.cache:
         class: Oro\Bundle\DotmailerBundle\Provider\CacheProvider
@@ -429,7 +417,7 @@ services:
         class: Oro\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector
         parent: oro_dotmailer.connector.abstract
         calls:
-            - [setEntityName, ['%oro_dotmailer.entity.address_book.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\AddressBook']]
         tags:
             - { name: oro_integration.connector, type: address_book, channel_type: dotmailer }
 
@@ -438,7 +426,7 @@ services:
         class: Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector
         parent: oro_dotmailer.connector.abstract
         calls:
-            - [setEntityName, ['%oro_dotmailer.entity.campaign.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\Campaign']]
         tags:
             - { name: oro_integration.connector, type: campaign, channel_type: dotmailer }
 
@@ -446,7 +434,7 @@ services:
         class: Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector
         parent: oro_dotmailer.connector.abstract
         calls:
-            - [setEntityName, ['%oro_dotmailer.entity.contact.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\Contact']]
         tags:
             - { name: oro_integration.connector, type: contact, channel_type: dotmailer }
 
@@ -455,7 +443,7 @@ services:
         class: Oro\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector
         parent: oro_dotmailer.connector.abstract
         calls:
-            - [setEntityName, ['%oro_dotmailer.entity.contact.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\Contact']]
         tags:
             - { name: oro_integration.connector, type: unsubscribed_contact, channel_type: dotmailer }
 
@@ -463,7 +451,7 @@ services:
         class: Oro\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector
         parent: oro_dotmailer.connector.abstract
         calls:
-            - [setEntityName, ['%oro_dotmailer.entity.activity.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\Activity']]
         tags:
             - { name: oro_integration.connector, type: activity_contact, channel_type: dotmailer }
 
@@ -471,7 +459,7 @@ services:
         class: Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector
         parent: oro_dotmailer.connector.abstract
         calls:
-            - [setEntityName, ['%oro_dotmailer.entity.campaign_summary.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\CampaignSummary']]
         tags:
             - { name: oro_integration.connector, type: campaign_summary, channel_type: dotmailer }
 
@@ -479,7 +467,7 @@ services:
         class: Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector
         parent: oro_dotmailer.connector.abstract
         calls:
-            - [setEntityName, ['%oro_dotmailer.entity.contact.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\Contact']]
             - [setMarketingListItemsQueryBuilderProvider,  ["@oro_dotmailer.provider.marketing_list_items.query_builder"]]
             - [setExportManager,  ["@oro_dotmailer.export_manager"]]
         tags:
@@ -489,7 +477,7 @@ services:
         class: Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector
         parent: oro_dotmailer.connector.abstract
         calls:
-            - [setEntityName, ['%oro_dotmailer.entity.datafield.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\DataField']]
             - [setConfigManager, ["@oro_config.user"]]
         tags:
             - { name: oro_integration.connector, type: datafield, channel_type: dotmailer }
@@ -498,7 +486,7 @@ services:
         class: 'Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignClickConnector'
         parent: oro_dotmailer.connector.abstract
         calls:
-            - [setEntityName, ['%oro_marketing_activity.entity.class%']]
+            - [setEntityName, ['Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity']]
         tags:
             - { name: oro_integration.connector, type: campaign_click, channel_type: dotmailer }
             - { name: oro_featuretogle.feature, feature: 'marketingactivity' }
@@ -507,7 +495,7 @@ services:
         class: 'Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignOpenConnector'
         parent: oro_dotmailer.connector.abstract
         calls:
-            - [setEntityName, ['%oro_marketing_activity.entity.class%']]
+            - [setEntityName, ['Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity']]
         tags:
             - { name: oro_integration.connector, type: campaign_open, channel_type: dotmailer }
             - { name: oro_featuretogle.feature, feature: 'marketingactivity' }
@@ -645,7 +633,7 @@ services:
         class: 'Oro\Bundle\DotmailerBundle\ImportExport\Strategy\MarketingActivityStrategy'
         parent: oro_dotmailer.importexport.strategy.add_or_replace
         calls:
-            - [setRelatedCampaignClassName, ['%oro_campaign.email_campaign.entity.class%']]
+            - [setRelatedCampaignClassName, ['Oro\Bundle\CampaignBundle\Entity\EmailCampaign']]
 
     #processor
     oro_dotmailer.importexport.processor.import_abstract:
@@ -659,7 +647,7 @@ services:
         parent: oro_dotmailer.importexport.processor.import_abstract
         calls:
             - [setDataConverter, ["@oro_dotmailer.importexport.data_converter.not_exported_contact"]]
-            - [setEntityName, ['%oro_dotmailer.entity.address_book_contact.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\AddressBookContact']]
             - [setStrategy, ["@oro_dotmailer.importexport.strategy.not_exported_contact"]]
 
     oro_dotmailer.importexport.processor.unsubscribed_contact_sync:
@@ -673,7 +661,7 @@ services:
         parent: oro_dotmailer.importexport.processor.import_abstract
         calls:
             - [setDataConverter, ["@oro_dotmailer.importexport.data_converter.contact_sync"]]
-            - [setEntityName, ['%oro_dotmailer.entity.contact.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\Contact']]
             - [setStrategy, ["@oro_dotmailer.importexport.strategy.contact_sync"]]
 
     oro_dotmailer.importexport.processor.address_book:
@@ -681,67 +669,67 @@ services:
         calls:
             - [setDataConverter, ["@oro_dotmailer.importexport.data_converter.address_book"]]
             - [setStrategy, ["@oro_dotmailer.importexport.strategy.address_book"]]
-            - [setEntityName, ['%oro_dotmailer.entity.address_book.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\AddressBook']]
 
     oro_dotmailer.importexport.processor.address_book.remove:
         parent: oro_dotmailer.importexport.processor.import_abstract
         calls:
             - [setStrategy, ["@oro_dotmailer.importexport.strategy.remove_address_book"]]
-            - [setEntityName, ['%oro_dotmailer.entity.address_book.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\AddressBook']]
 
     oro_dotmailer.importexport.processor.datafield.remove:
         parent: oro_dotmailer.importexport.processor.import_abstract
         calls:
             - [setStrategy, ["@oro_dotmailer.importexport.strategy.remove_datafield"]]
-            - [setEntityName, ['%oro_dotmailer.entity.datafield.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\DataField']]
 
     oro_dotmailer.importexport.processor.remove_campaign:
         parent: oro_dotmailer.importexport.processor.import_abstract
         calls:
             - [setStrategy, ["@oro_dotmailer.importexport.strategy.remove_campaign"]]
-            - [setEntityName, ['%oro_dotmailer.entity.campaign.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\Campaign']]
 
     oro_dotmailer.importexport.processor.unsubscribed_contact:
         parent: oro_dotmailer.importexport.processor.import_abstract
         calls:
             - [setDataConverter, ["@oro_dotmailer.importexport.data_converter.unsubscribed_contact"]]
             - [setStrategy, ["@oro_dotmailer.importexport.strategy.unsubscribed_contact"]]
-            - [setEntityName, ['%oro_dotmailer.entity.address_book_contact.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\AddressBookContact']]
 
     oro_dotmailer.importexport.processor.unsubscribed_from_account_contact:
         parent: oro_dotmailer.importexport.processor.import_abstract
         calls:
             - [setDataConverter, ["@oro_dotmailer.importexport.data_converter.unsubscribed_from_account_contact"]]
             - [setStrategy, ["@oro_dotmailer.importexport.strategy.unsubscribed_from_account_contact"]]
-            - [setEntityName, ['%oro_dotmailer.entity.contact.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\Contact']]
 
     oro_dotmailer.importexport.processor.campaign:
         parent: oro_dotmailer.importexport.processor.import_abstract
         calls:
             - [setDataConverter, ["@oro_dotmailer.importexport.data_converter.campaign"]]
             - [setStrategy, ["@oro_dotmailer.importexport.strategy.campaign"]]
-            - [setEntityName, ['%oro_dotmailer.entity.campaign.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\Campaign']]
 
     oro_dotmailer.importexport.processor.contact:
         parent: oro_dotmailer.importexport.processor.import_abstract
         calls:
             - [setDataConverter, ["@oro_dotmailer.importexport.data_converter.contact"]]
             - [setStrategy, ["@oro_dotmailer.importexport.strategy.contact"]]
-            - [setEntityName, ['%oro_dotmailer.entity.contact.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\Contact']]
 
     oro_dotmailer.importexport.processor.activity_contact:
         parent: oro_dotmailer.importexport.processor.import_abstract
         calls:
             - [setDataConverter, ["@oro_dotmailer.importexport.data_converter.activity_contact"]]
             - [setStrategy, ["@oro_dotmailer.importexport.strategy.activity_contact"]]
-            - [setEntityName, ['%oro_dotmailer.entity.activity.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\Activity']]
 
     oro_dotmailer.importexport.processor.campaign_summary:
         parent: oro_dotmailer.importexport.processor.import_abstract
         calls:
             - [setDataConverter, ["@oro_dotmailer.importexport.data_converter.campaign_summary"]]
             - [setStrategy, ["@oro_dotmailer.importexport.strategy.add_or_replace"]]
-            - [setEntityName, ['%oro_dotmailer.entity.campaign_summary.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\CampaignSummary']]
 
     oro_dotmailer.importexport.processor.export_removed:
         class: Oro\Bundle\DotmailerBundle\ImportExport\Processor\RemovedExportProcessor
@@ -754,7 +742,7 @@ services:
         calls:
             - [setDataConverter, ["@oro_dotmailer.importexport.data_converter.contact"]]
             - [setContextRegistry, ["@oro_importexport.context_registry"]]
-            - [setEntityName, ['%oro_dotmailer.entity.contact.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\Contact']]
 
     oro_dotmailer.importexport.processor.export.rejected_contact:
         class: Oro\Bundle\DotmailerBundle\ImportExport\Processor\RejectedContactExportProcessor
@@ -768,7 +756,7 @@ services:
         calls:
             - [setDataConverter, ["@oro_dotmailer.importexport.data_converter.datafield"]]
             - [setStrategy, ["@oro_dotmailer.importexport.strategy.datafield"]]
-            - [setEntityName, ['%oro_dotmailer.entity.datafield.class%']]
+            - [setEntityName, ['Oro\Bundle\DotmailerBundle\Entity\DataField']]
 
     oro_dotmailer.importexport.processor.update_entity_field_from_contacts:
         class: Oro\Bundle\DotmailerBundle\ImportExport\Processor\UpdateEntityFieldsFromContactProcessor
@@ -783,7 +771,7 @@ services:
         abstract: true
         calls:
             - [setStrategy, ["@oro_dotmailer.importexport.strategy.marketing_activity"]]
-            - [setEntityName, ['%oro_marketing_activity.entity.class%']]
+            - [setEntityName, ['Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity']]
 
     oro_dotmailer.importexport.processor.campaign_click:
         parent: oro_dotmailer.importexport.processor.campaign_activity
@@ -858,7 +846,7 @@ services:
         class: Oro\Bundle\DotmailerBundle\Model\Action\MarketingListStateItemCreateAction
         parent: oro_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
-            - [setMarketingListStateItemClassName, ['%oro_marketing_list.unsubscribed_item.class%']]
+            - [setMarketingListStateItemClassName, ['Oro\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem']]
         tags:
             - { name: oro_action.action, alias: dm_create_marketing_list_unsubscribed_item }
 
@@ -866,7 +854,7 @@ services:
         class: Oro\Bundle\DotmailerBundle\Model\Action\MarketingListStateItemCreateAction
         parent: oro_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
-            - [setMarketingListStateItemClassName, ['%oro_marketing_list.removed_item.class%']]
+            - [setMarketingListStateItemClassName, ['Oro\Bundle\MarketingListBundle\Entity\MarketingListRemovedItem']]
         tags:
             - { name: oro_action.action, alias: dm_create_marketing_list_removed_item }
 
@@ -874,7 +862,7 @@ services:
         class: Oro\Bundle\DotmailerBundle\Model\Action\MarketingListStateItemRemoveAction
         parent: oro_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
-            - [setMarketingListStateItemClassName, ['%oro_marketing_list.unsubscribed_item.class%']]
+            - [setMarketingListStateItemClassName, ['Oro\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem']]
         tags:
             - { name: oro_action.action, alias: remove_marketing_list_unsubscribed_item }
 
@@ -882,7 +870,7 @@ services:
         class: Oro\Bundle\DotmailerBundle\Model\Action\MarketingListStateItemRemoveAction
         parent: oro_dotmailer.workflow.action.abstract_marketing_list_entities
         calls:
-            - [setMarketingListStateItemClassName, ['%oro_marketing_list.removed_item.class%']]
+            - [setMarketingListStateItemClassName, ['Oro\Bundle\MarketingListBundle\Entity\MarketingListRemovedItem']]
         tags:
             - { name: oro_action.action, alias: remove_marketing_list_removed_item }
 
@@ -961,7 +949,7 @@ services:
         arguments:
             - "@oro_entity.doctrine_helper"
         calls:
-            - [setClassName, ['%oro_campaign.email_campaign.entity.class%']]
+            - [setClassName, ['Oro\Bundle\CampaignBundle\Entity\EmailCampaign']]
         tags:
             - { name: security.voter, priority: 500 }
 
@@ -970,9 +958,9 @@ services:
         arguments:
             - '@oro_entity.doctrine_helper'
             - '@Psr\Container\ContainerInterface'
-            - '%oro_dotmailer.entity.contact.class%'
+            - 'Oro\Bundle\DotmailerBundle\Entity\Contact'
         calls:
-            - [setClassName, ['%oro_marketing_list.unsubscribed_item.class%']]
+            - [setClassName, ['Oro\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem']]
         tags:
             - { name: security.voter, priority: 500 }
             - { name: container.service_subscriber, id: oro_marketing_list.provider.contact_information_fields }
@@ -1049,7 +1037,7 @@ services:
         arguments:
             - "@oro_dotmailer.datafield_manager"
         tags:
-            - { name: doctrine.orm.entity_listener, entity: '%oro_dotmailer.entity.datafield.class%', event: preRemove }
+            - { name: doctrine.orm.entity_listener, entity: 'Oro\Bundle\DotmailerBundle\Entity\DataField', event: preRemove }
 
     oro_dotmailer.listener.add_default_mapping:
         class: Oro\Bundle\DotmailerBundle\EventListener\AddDefaultMappingListener
