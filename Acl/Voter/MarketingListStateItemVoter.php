@@ -6,6 +6,7 @@ use Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
+use Oro\Bundle\SecurityBundle\Acl\BasicPermission;
 use Oro\Bundle\SecurityBundle\Acl\Voter\AbstractEntityVoter;
 use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -16,7 +17,7 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 class MarketingListStateItemVoter extends AbstractEntityVoter implements ServiceSubscriberInterface
 {
     /** @var array */
-    protected $supportedAttributes = ['DELETE'];
+    protected $supportedAttributes = [BasicPermission::DELETE];
 
     /** @var ContainerInterface */
     private $container;

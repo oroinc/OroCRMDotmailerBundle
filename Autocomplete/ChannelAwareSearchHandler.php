@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\Autocomplete;
 use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\FormBundle\Autocomplete\SearchHandler;
 
+/**
+ * The base class for autocomplete handlers to search dotmailer channel aware entities.
+ */
 class ChannelAwareSearchHandler extends SearchHandler
 {
     /**
@@ -46,7 +49,7 @@ class ChannelAwareSearchHandler extends SearchHandler
     {
         list($searchTerm, $channelId) = explode(';', $search);
         $queryBuilder = $this->prepareQueryBuilder($searchTerm, $channelId, $firstResult, $maxResults);
-        $query = $this->aclHelper->apply($queryBuilder, 'VIEW');
+        $query = $this->aclHelper->apply($queryBuilder);
 
         return $query->getResult();
     }

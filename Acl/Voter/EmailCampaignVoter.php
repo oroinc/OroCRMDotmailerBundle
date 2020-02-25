@@ -2,14 +2,18 @@
 
 namespace Oro\Bundle\DotmailerBundle\Acl\Voter;
 
+use Oro\Bundle\SecurityBundle\Acl\BasicPermission;
 use Oro\Bundle\SecurityBundle\Acl\Voter\AbstractEntityVoter;
 
+/**
+ * Prevents editing of dotmailer email campaigns that are already sent.
+ */
 class EmailCampaignVoter extends AbstractEntityVoter
 {
     /**
      * @var array
      */
-    protected $supportedAttributes = ['EDIT'];
+    protected $supportedAttributes = [BasicPermission::EDIT];
 
     /**
      * {@inheritdoc}
