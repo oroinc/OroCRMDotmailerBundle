@@ -6,6 +6,7 @@ dynamic-imports:
     orodotmailer:
         - orodotmailer/js/app/components/dm-resource-component
         - orodotmailer/js/app/components/mapping-component
+        - oro/select2-autocomplete-channel-aware-address-book-component
         - orodotmailer/js/datafield-view
         - orodotmailer/js/integration-connection
         - orodotmailer/js/sync-buttons-handler
