@@ -3,24 +3,22 @@
 <div class="widget-content" xmlns="http://www.w3.org/1999/html">
     <div class="row-fluid form-horizontal">
         <div class="responsive-block">
-            <div class="control-group">
-                {% if address_book.syncStatus %}
-                    {% set status = ('oro.dotmailer.syncstatus.' ~ address_book.syncStatus.id)|trans %}
-                {% else %}
-                    {% set status = 'oro.ui.empty'|trans %}
-                {% endif %}
+            {% if address_book.syncStatus %}
+                {% set status = ('oro.dotmailer.syncstatus.' ~ address_book.syncStatus.id)|trans %}
+            {% else %}
+                {% set status = 'oro.ui.empty'|trans %}
+            {% endif %}
 
-                {{ 'oro.dotmailer.syncstatus.list_is_connected.label'|trans({
-                    '%address_book%': '<strong>' ~ address_book.name|e ~ '</strong>',
-                    '%synced%': '<strong>'
-                        ~ address_book.lastExportedAt|oro_format_datetime|default('oro.ui.empty'|trans)
-                        ~ '</strong>',
-                    '%status%': '<strong>'
-                        ~ status
-                        ~ '</strong>'
-                    })|raw
-                }}
-            </div>
+            {{ 'oro.dotmailer.syncstatus.list_is_connected.label'|trans({
+                '%address_book%': '<strong>' ~ address_book.name|e ~ '</strong>',
+                '%synced%': '<strong>'
+                    ~ address_book.lastExportedAt|oro_format_datetime|default('oro.ui.empty'|trans)
+                    ~ '</strong>',
+                '%status%': '<strong>'
+                    ~ status
+                    ~ '</strong>'
+                })|raw
+            }}
         </div>
     </div>
 </div>
