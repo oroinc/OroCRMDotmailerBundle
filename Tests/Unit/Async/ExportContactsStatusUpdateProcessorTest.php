@@ -1,4 +1,5 @@
 <?php
+
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Async;
 
 use Doctrine\DBAL\Connection;
@@ -16,8 +17,8 @@ use Oro\Component\MessageQueue\Client\TopicSubscriberInterface;
 use Oro\Component\MessageQueue\Consumption\MessageProcessorInterface;
 use Oro\Component\MessageQueue\Job\JobProcessor;
 use Oro\Component\MessageQueue\Test\JobRunner;
-use Oro\Component\MessageQueue\Transport\Null\NullMessage;
-use Oro\Component\MessageQueue\Transport\Null\NullSession;
+use Oro\Component\MessageQueue\Transport\Message;
+use Oro\Component\MessageQueue\Transport\SessionInterface;
 use Oro\Component\MessageQueue\Util\JSON;
 use Oro\Component\Testing\ClassExtensionTrait;
 use Psr\Log\LoggerInterface;
@@ -60,7 +61,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
 
     public function testShouldLogAndRejectIfMessageBodyMissIntegrationId()
     {
-        $message = new NullMessage();
+        $message = new Message();
         $message->setBody('[]');
 
         $logger = $this->createLoggerMock();
@@ -80,7 +81,9 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createJobProcessorMock()
         );
 
-        $status = $processor->process($message, new NullSession());
+        /** @var SessionInterface|\PHPUnit\Framework\MockObject\MockObject $session */
+        $session = $this->createMock(SessionInterface::class);
+        $status = $processor->process($message, $session);
 
         $this->assertEquals(MessageProcessorInterface::REJECT, $status);
     }
@@ -101,10 +104,12 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createJobProcessorMock()
         );
 
-        $message = new NullMessage();
+        $message = new Message();
         $message->setBody('[}');
 
-        $processor->process($message, new NullSession());
+        /** @var SessionInterface|\PHPUnit\Framework\MockObject\MockObject $session */
+        $session = $this->createMock(SessionInterface::class);
+        $processor->process($message, $session);
     }
 
     public function testShouldRejectMessageIfIntegrationNotExist()
@@ -119,7 +124,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
 
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
 
-        $message = new NullMessage();
+        $message = new Message();
         $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
 
         $logger = $this->createLoggerMock();
@@ -139,8 +144,9 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createJobProcessorMock()
         );
 
-
-        $status = $processor->process($message, new NullSession());
+        /** @var SessionInterface|\PHPUnit\Framework\MockObject\MockObject $session */
+        $session = $this->createMock(SessionInterface::class);
+        $status = $processor->process($message, $session);
 
         $this->assertEquals(MessageProcessorInterface::REJECT, $status);
     }
@@ -158,7 +164,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             ->willReturn($integration)
         ;
 
-        $message = new NullMessage();
+        $message = new Message();
         $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
 
         $logger = $this->createLoggerMock();
@@ -180,7 +186,9 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createJobProcessorMock()
         );
 
-        $status = $processor->process($message, new NullSession());
+        /** @var SessionInterface|\PHPUnit\Framework\MockObject\MockObject $session */
+        $session = $this->createMock(SessionInterface::class);
+        $status = $processor->process($message, $session);
 
         $this->assertEquals(MessageProcessorInterface::REJECT, $status);
     }
@@ -232,10 +240,12 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createJobProcessorMock()
         );
 
-        $message = new NullMessage();
+        $message = new Message();
         $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
 
-        $status = $processor->process($message, new NullSession());
+        /** @var SessionInterface|\PHPUnit\Framework\MockObject\MockObject $session */
+        $session = $this->createMock(SessionInterface::class);
+        $status = $processor->process($message, $session);
 
         $this->assertEquals(MessageProcessorInterface::ACK, $status);
     }
@@ -287,10 +297,12 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createJobProcessorMock()
         );
 
-        $message = new NullMessage();
+        $message = new Message();
         $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
 
-        $status = $processor->process($message, new NullSession());
+        /** @var SessionInterface|\PHPUnit\Framework\MockObject\MockObject $session */
+        $session = $this->createMock(SessionInterface::class);
+        $status = $processor->process($message, $session);
 
         $this->assertEquals(MessageProcessorInterface::ACK, $status);
     }
@@ -342,10 +354,12 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createJobProcessorMock()
         );
 
-        $message = new NullMessage();
+        $message = new Message();
         $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
 
-        $status = $processor->process($message, new NullSession());
+        /** @var SessionInterface|\PHPUnit\Framework\MockObject\MockObject $session */
+        $session = $this->createMock(SessionInterface::class);
+        $status = $processor->process($message, $session);
 
         $this->assertEquals(MessageProcessorInterface::ACK, $status);
     }
@@ -388,10 +402,12 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $jobProcessor
         );
 
-        $message = new NullMessage();
+        $message = new Message();
         $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
 
-        $status = $processor->process($message, new NullSession());
+        /** @var SessionInterface|\PHPUnit\Framework\MockObject\MockObject $session */
+        $session = $this->createMock(SessionInterface::class);
+        $status = $processor->process($message, $session);
 
         $this->assertEquals(MessageProcessorInterface::REJECT, $status);
     }
@@ -424,11 +440,13 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createJobProcessorMock()
         );
 
-        $message = new NullMessage();
+        $message = new Message();
         $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
         $message->setMessageId('theMessageId');
 
-        $processor->process($message, new NullSession());
+        /** @var SessionInterface|\PHPUnit\Framework\MockObject\MockObject $session */
+        $session = $this->createMock(SessionInterface::class);
+        $processor->process($message, $session);
 
         $uniqueJobs = $jobRunner->getRunUniqueJobs();
         self::assertCount(1, $uniqueJobs);
