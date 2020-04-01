@@ -176,11 +176,12 @@ class MarketingListItemsQueryBuilderProvider
      */
     public function getRemovedMarketingListItemsQB(AddressBook $addressBook, array $excludedItems)
     {
+        $marketingList = $addressBook->getMarketingList();
+        $savedIsUnion = $marketingList->isUnion();
         // skip union to get actual entities only
         $addressBook->getMarketingList()->setUnion(false);
 
         $qb = $this->getMarketingListItemQuery($addressBook);
-        $marketingList = $addressBook->getMarketingList();
         $contactInformationFields = $this->contactInformationFieldsProvider->getMarketingListTypedFields(
             $marketingList,
             ContactInformationFieldsProvider::CONTACT_INFORMATION_SCOPE_EMAIL
@@ -241,8 +242,8 @@ class MarketingListItemsQueryBuilderProvider
             $removedItemsQueryBuilder->andWhere($expr->notIn('addressBookContact.id', $excludedItems));
         }
 
-        // enable union back to get all entities
-        $addressBook->getMarketingList()->setUnion(true);
+        // revert union back to saved value
+        $addressBook->getMarketingList()->setUnion($savedIsUnion);
 
         return $removedItemsQueryBuilder;
     }
