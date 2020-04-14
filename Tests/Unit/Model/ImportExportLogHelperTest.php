@@ -18,7 +18,7 @@ class ImportExportLogHelperTest extends \PHPUnit\Framework\TestCase
 
     public function testGetMemoryConsumption()
     {
-        $this->assertInternalType('int', $this->target->getMemoryConsumption());
+        $this->assertIsInt($this->target->getMemoryConsumption());
     }
 
     public function testGetStepExecutionTime()
