@@ -20,8 +20,8 @@ class ProcessMappedFieldsUpdatesCommandTest extends WebTestCase
     {
         $result = $this->runCommand('oro:cron:dotmailer:mapped-fields-updates:process', ['--help']);
 
-        self::assertContains('Usage:', $result);
-        self::assertContains('oro:cron:dotmailer:mapped-fields-updates:process', $result);
+        static::assertStringContainsString('Usage:', $result);
+        static::assertStringContainsString('oro:cron:dotmailer:mapped-fields-updates:process', $result);
     }
 
     public function testRunCommand()
@@ -44,7 +44,7 @@ class ProcessMappedFieldsUpdatesCommandTest extends WebTestCase
             );
         $this->assertCount(1, $entityUpdated);
 
-        $this->assertContains('Start queue processing', $result);
-        $this->assertContains('Completed', $result);
+        static::assertStringContainsString('Start queue processing', $result);
+        static::assertStringContainsString('Completed', $result);
     }
 }

@@ -56,7 +56,7 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
 
         $result = $this->client->getResponse();
         $this->assertHtmlResponseStatusCodeEquals($result, 200);
-        $this->assertContains("Data Field Mapping Saved", $crawler->html());
+        static::assertStringContainsString("Data Field Mapping Saved", $crawler->html());
     }
 
     /**
@@ -91,7 +91,7 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
 
         $result = $this->client->getResponse();
         $this->assertHtmlResponseStatusCodeEquals($result, 200);
-        $this->assertContains("Data Field Mapping Saved", $crawler->html());
+        static::assertStringContainsString("Data Field Mapping Saved", $crawler->html());
 
         return $returnValue;
     }

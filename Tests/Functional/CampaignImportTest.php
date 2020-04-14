@@ -87,8 +87,8 @@ class CampaignImportTest extends AbstractImportExportTestCase
             $marketingCampaign = $emailCampaign->getCampaign();
             $this->assertNotNull($marketingCampaign, 'Marketing Campaign should be added automatically');
             $this->assertEquals($marketingCampaign->getName(), $campaign['name']);
-            $this->assertContains($campaign['name'], $marketingCampaign->getDescription());
-            $this->assertContains((string) $campaign['originId'], $marketingCampaign->getCode());
+            static::assertStringContainsString($campaign['name'], $marketingCampaign->getDescription());
+            static::assertStringContainsString((string) $campaign['originId'], $marketingCampaign->getCode());
         }
     }
 
