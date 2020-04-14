@@ -10,7 +10,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Status;
 
 class DataFieldImportTest extends AbstractImportExportTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->loadFixtures(

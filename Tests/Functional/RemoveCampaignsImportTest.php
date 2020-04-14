@@ -8,7 +8,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 
 class RemoveCampaignsImportTest extends AbstractImportExportTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->loadFixtures(

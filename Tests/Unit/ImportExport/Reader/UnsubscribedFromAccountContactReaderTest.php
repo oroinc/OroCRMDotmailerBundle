@@ -35,7 +35,7 @@ class UnsubscribedFromAccountContactReaderTest extends \PHPUnit\Framework\TestCa
      */
     protected $contextMediator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->contextRegistry = $this->getMockBuilder('Oro\Bundle\ImportExportBundle\Context\ContextRegistry')
             ->disableOriginalConstructor()

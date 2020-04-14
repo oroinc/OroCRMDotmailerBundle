@@ -39,7 +39,7 @@ class SyncManagerTest extends \PHPUnit\Framework\TestCase
      */
     protected $syncManager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->doctrineHelper = $this->getMockBuilder(DoctrineHelper::class)
             ->disableOriginalConstructor()

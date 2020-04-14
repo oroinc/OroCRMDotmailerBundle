@@ -15,7 +15,7 @@ class DataFieldRemoveListenerTest extends \PHPUnit\Framework\TestCase
     /** @var DataFieldRemoveListener */
     protected $listener;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dataFieldManager = $this->getMockBuilder('Oro\Bundle\DotmailerBundle\Model\DataFieldManager')
             ->disableOriginalConstructor()->getMock();

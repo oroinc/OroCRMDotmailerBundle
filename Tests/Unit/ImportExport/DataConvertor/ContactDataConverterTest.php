@@ -14,7 +14,7 @@ class ContactDataConverterTest extends \PHPUnit\Framework\TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->contactDataConverter = new ContactDataConverter();
     }

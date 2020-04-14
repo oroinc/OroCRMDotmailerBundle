@@ -23,7 +23,7 @@ class EntityUpdateListenerTest extends \PHPUnit\Framework\TestCase
     /** @var EntityUpdateListener */
     protected $listener;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->doctrineHelper = $this->getMockBuilder('Oro\Bundle\EntityBundle\ORM\DoctrineHelper')
             ->disableOriginalConstructor()->getMock();
@@ -78,7 +78,7 @@ class EntityUpdateListenerTest extends \PHPUnit\Framework\TestCase
                 ]
             ]
         ));
-        
+
         $this->doctrineHelper->expects($this->any())->method('getEntityClass')->will($this->returnArgument(0));
 
         $unitOfWork->expects($this->once())->method('getEntityChangeSet')->with('entityClassWithTrackedFields')
@@ -86,7 +86,7 @@ class EntityUpdateListenerTest extends \PHPUnit\Framework\TestCase
                 'trackedField' => [],
                 'anotherChangedField' => []
             ]));
-        
+
         $this->doctrineHelper->expects($this->once())->method('getSingleEntityIdentifier')
             ->with('entityClassWithTrackedFields', false)
             ->will($this->returnValue(42));
@@ -96,8 +96,8 @@ class EntityUpdateListenerTest extends \PHPUnit\Framework\TestCase
         $this->doctrineHelper->expects($this->once())->method('getEntityMetadataForClass')
             ->with(ChangedFieldLog::class)
             ->will($this->returnValue($metaData));
-        
-        
+
+
         $em->expects($this->once())->method('persist')->with($this->callback(
             function ($log) {
                 $this->assertInstanceOf(ChangedFieldLog::class, $log);
@@ -160,14 +160,14 @@ class EntityUpdateListenerTest extends \PHPUnit\Framework\TestCase
                 ]
             ]
         ));
-        
+
         $this->doctrineHelper->expects($this->any())->method('getEntityClass')->will($this->returnArgument(0));
 
         $unitOfWork->expects($this->once())->method('getEntityChangeSet')->with('insertedEntityClass')
             ->will($this->returnValue([
                 'trackedField' => []
             ]));
-        
+
         $metaData = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')->disableOriginalConstructor()
             ->getMock();
         $this->doctrineHelper->expects($this->once())->method('getEntityMetadataForClass')

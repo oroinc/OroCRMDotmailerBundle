@@ -9,7 +9,7 @@ use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
  */
 class ProcessMappedFieldsUpdatesCommandTest extends WebTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -43,7 +43,7 @@ class ProcessMappedFieldsUpdatesCommandTest extends WebTestCase
                 ]
             );
         $this->assertCount(1, $entityUpdated);
-     
+
         $this->assertContains('Start queue processing', $result);
         $this->assertContains('Completed', $result);
     }

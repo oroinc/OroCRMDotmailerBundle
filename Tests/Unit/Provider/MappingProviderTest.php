@@ -37,7 +37,7 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
      */
     protected $mappingProvider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->doctrineHelper = $this->createMock(DoctrineHelper::class);
         $this->cache = $this->createMock(CacheProvider::class);
@@ -185,7 +185,7 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
         $result = $this->mappingProvider->getDataFieldMappingBySyncPriority($channel);
         $this->assertEquals(['field' => 'datafield'], $result);
     }
-    
+
     public function testGetEntitiesQualifiedForTwoWaySyncNoCache()
     {
         $cacheKey = 'two_way_sync_entities_1';
@@ -219,7 +219,7 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
         $result = $this->mappingProvider->getEntitiesQualifiedForTwoWaySync($channel);
         $this->assertEquals(['field' => 'datafield'], $result);
     }
-    
+
     public function testGetTrackedFieldsConfigNoCache()
     {
         $cacheKey = 'tracked_fields';

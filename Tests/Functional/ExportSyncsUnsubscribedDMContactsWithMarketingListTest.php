@@ -9,7 +9,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 
 class ExportSyncsUnsubscribedDMContactsWithMarketingListTest extends AbstractImportExportTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->loadFixtures(

@@ -10,7 +10,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
     /** @var bool */
     protected $isRealGridRequest = false;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

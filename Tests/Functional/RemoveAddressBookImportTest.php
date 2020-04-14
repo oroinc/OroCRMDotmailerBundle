@@ -8,7 +8,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
 
 class RemoveAddressBookImportTest extends AbstractImportExportTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->loadFixtures(

@@ -20,7 +20,7 @@ class AdditionalResourceTest extends \PHPUnit\Framework\TestCase
      */
     protected $additionalResource;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->restClient = $this->createMock(IClient::class);
         $this->additionalResource = new AdditionalResource($this->restClient);

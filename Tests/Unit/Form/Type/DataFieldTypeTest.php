@@ -33,7 +33,7 @@ class DataFieldTypeTest extends FormIntegrationTestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subscriber = $this->createPartialMock(
             DataFieldFormSubscriber::class,

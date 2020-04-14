@@ -11,7 +11,7 @@ class AbstractIteratorTest extends \PHPUnit\Framework\TestCase
      */
     protected $iterator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->iterator = new StubAbstractIterator();
     }

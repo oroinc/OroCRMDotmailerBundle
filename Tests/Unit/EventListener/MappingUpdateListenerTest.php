@@ -24,7 +24,7 @@ class MappingUpdateListenerTest extends \PHPUnit\Framework\TestCase
     /** @var MappingUpdateListener */
     protected $listener;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->doctrineHelper = $this->getMockBuilder('Oro\Bundle\EntityBundle\ORM\DoctrineHelper')
             ->disableOriginalConstructor()->getMock();
@@ -64,7 +64,7 @@ class MappingUpdateListenerTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue([]));
         $unitOfWork->expects($this->once())->method('getScheduledEntityDeletions')
             ->will($this->returnValue([]));
-        
+
         $addressBookContactRepository = $this
             ->getMockBuilder('Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactRepository')
             ->disableOriginalConstructor()
@@ -72,13 +72,13 @@ class MappingUpdateListenerTest extends \PHPUnit\Framework\TestCase
         $this->doctrineHelper->expects($this->any())->method('getEntityRepositoryForClass')
             ->with('OroDotmailerBundle:AddressBookContact')
             ->will($this->returnValue($addressBookContactRepository));
-        
+
         $addressBookContactRepository->expects($this->once())->method('bulkUpdateScheduledForEntityFieldUpdateFlag')
             ->with('MappingEntityClass', $channel);
-        
+
         $addressBookContactRepository->expects($this->once())->method('bulkUpdateEntityUpdatedFlag')
             ->with('MappingEntityClass', $channel);
-        
+
         $onFlushEvent = new OnFlushEventArgs($em);
 
         $this->listener->onFlush($onFlushEvent);

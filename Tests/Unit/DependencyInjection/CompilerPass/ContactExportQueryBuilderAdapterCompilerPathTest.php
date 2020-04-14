@@ -12,7 +12,7 @@ class ContactExportQueryBuilderAdapterCompilerPathTest extends \PHPUnit\Framewor
      */
     protected $target;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->target = new ContactExportQueryBuilderAdapterCompilerPath();
     }

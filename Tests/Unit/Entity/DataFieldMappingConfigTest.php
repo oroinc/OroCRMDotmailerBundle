@@ -10,7 +10,7 @@ use Oro\Component\Testing\Unit\EntityTestCaseTrait;
 class DataFieldMappingConfigTest extends \PHPUnit\Framework\TestCase
 {
     use EntityTestCaseTrait;
-    
+
     /**
      * @var DataFieldMappingConfig
      */
@@ -19,7 +19,7 @@ class DataFieldMappingConfigTest extends \PHPUnit\Framework\TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->entity = new DataFieldMappingConfig();
     }

@@ -61,7 +61,7 @@ class AddressBookHandlerTest extends \PHPUnit\Framework\TestCase
      */
     protected $handler;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->form = $this->getMockBuilder(FormInterface::class)->getMock();
         $this->request = new Request();
@@ -84,7 +84,7 @@ class AddressBookHandlerTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset(
             $this->form,

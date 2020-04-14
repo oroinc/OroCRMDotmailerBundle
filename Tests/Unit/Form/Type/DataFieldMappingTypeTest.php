@@ -29,7 +29,7 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $subscriber = $this->createPartialMock(
             'Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldMappingFormSubscriber',
@@ -42,7 +42,7 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
         parent::setUp();
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         unset($this->formType);
         parent::tearDown();

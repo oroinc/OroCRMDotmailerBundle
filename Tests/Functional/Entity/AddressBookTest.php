@@ -16,7 +16,7 @@ class AddressBookTest extends WebTestCase
 {
     use MessageQueueExtension;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

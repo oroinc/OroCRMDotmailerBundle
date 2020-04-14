@@ -21,7 +21,7 @@ class MarketingListPlaceholderFilterTest extends \PHPUnit\Framework\TestCase
      */
     protected $repository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->registry = $this->createMock('Doctrine\Common\Persistence\ManagerRegistry');
         $this->repository = $this->createMock('Doctrine\Common\Persistence\ObjectRepository');

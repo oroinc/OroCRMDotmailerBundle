@@ -37,7 +37,7 @@ class DataFieldFormHandlerTest extends \PHPUnit\Framework\TestCase
     /** @var DataField */
     protected $entity;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->form = $this->createMock(Form::class);
         $this->managerRegistry = $this->createMock(ManagerRegistry::class);

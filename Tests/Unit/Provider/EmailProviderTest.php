@@ -24,7 +24,7 @@ class EmailProviderTest extends \PHPUnit\Framework\TestCase
      */
     protected $emailProvider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->contactInformationFieldHelper = $this
             ->getMockBuilder('Oro\Bundle\MarketingListBundle\Model\ContactInformationFieldHelper')

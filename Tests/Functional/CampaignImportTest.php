@@ -9,7 +9,7 @@ use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 class CampaignImportTest extends AbstractImportExportTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->loadFixtures(

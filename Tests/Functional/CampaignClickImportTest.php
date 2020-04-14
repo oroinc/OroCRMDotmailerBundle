@@ -8,7 +8,7 @@ use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 
 class CampaignClickImportTest extends AbstractImportExportTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->loadFixtures(

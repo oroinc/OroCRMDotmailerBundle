@@ -35,7 +35,7 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
      */
     protected $encoder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->factory = $this->createMock(
             'Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory'

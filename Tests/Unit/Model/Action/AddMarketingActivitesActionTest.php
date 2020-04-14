@@ -62,7 +62,7 @@ class AddMarketingActivitesActionTest extends \PHPUnit\Framework\TestCase
      */
     protected $action;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->contextAccessor = $this->createMock(ContextAccessor::class);
         $this->contactInformationFieldsProvider = $this->getMockBuilder(ContactInformationFieldsProvider::class)

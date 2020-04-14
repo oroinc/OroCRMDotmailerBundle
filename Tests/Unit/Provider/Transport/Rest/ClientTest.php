@@ -26,7 +26,7 @@ class ClientTest extends \PHPUnit\Framework\TestCase
      */
     protected $logger;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->logger = $this->createMock('Psr\Log\LoggerInterface');
         $this->client = new Client('username', 'password');

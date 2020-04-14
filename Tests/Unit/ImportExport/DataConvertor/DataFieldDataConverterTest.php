@@ -10,7 +10,7 @@ class DataFieldDataConverterTest extends \PHPUnit\Framework\TestCase
     /** @var  DataFieldDataConverter */
     protected $converter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->converter = new DataFieldDataConverter();
     }

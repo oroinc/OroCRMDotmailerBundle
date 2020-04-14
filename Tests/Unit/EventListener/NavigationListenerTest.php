@@ -16,7 +16,7 @@ class NavigationListenerTest extends \PHPUnit\Framework\TestCase
     /** @var  NavigationListener */
     protected $listener;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->registry = $this->getMockBuilder('Doctrine\Common\Persistence\ManagerRegistry')
             ->disableOriginalConstructor()->getMock();
