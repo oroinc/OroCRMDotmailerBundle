@@ -174,13 +174,9 @@ class ExportContactsTest extends AbstractImportExportTestCase
          */
         $this->assertFalse($addressBookContact->isScheduledForExport());
 
-        $this->assertArraySubset(
-            [
-                'FIRSTNAME' => $expected->getFirstName(),
-                'LASTNAME'  => $expected->getLastName()
-            ],
-            $actual->getDataFields()
-        );
+        $dataFields = $actual->getDataFields();
+        static::assertEquals($dataFields['FIRSTNAME'], $expected->getFirstName());
+        static::assertEquals($dataFields['LASTNAME'], $expected->getLastName());
     }
 
     /**

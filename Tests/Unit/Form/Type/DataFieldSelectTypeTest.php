@@ -32,17 +32,11 @@ class DataFieldSelectTypeTest extends FormIntegrationTestCase
     {
         $form = $this->factory->create(DataFieldSelectType::class);
 
-        $expectedOptions = [
-            'autocomplete_alias' => 'dotmailer_data_fields',
-            'grid_name'          => 'oro_dotmailer_datafield_grid',
-            'configs'            => [
-                'placeholder'  => 'oro.dotmailer.datafield.select.placeholder',
-            ]
-        ];
-
         $formOptions = $form->getConfig()->getOptions();
 
-        $this->assertArraySubset($expectedOptions, $formOptions);
+        $this->assertSame('dotmailer_data_fields', $formOptions['autocomplete_alias']);
+        $this->assertSame('oro_dotmailer_datafield_grid', $formOptions['grid_name']);
+        $this->assertSame(['placeholder'  => 'oro.dotmailer.datafield.select.placeholder'], $formOptions['configs']);
     }
 
     public function testBuildView()

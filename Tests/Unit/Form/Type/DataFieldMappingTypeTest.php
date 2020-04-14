@@ -159,13 +159,10 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
     {
         $form = $this->factory->create(DataFieldMappingType::class);
 
-        $expectedOptions = [
-            'data_class' => 'Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping',
-        ];
-
-        $formOptions = $form->getConfig()->getOptions();
-
-        $this->assertArraySubset($expectedOptions, $formOptions);
+        $this->assertSame(
+            'Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping',
+            $form->getConfig()->getOptions()['data_class']
+        );
     }
 
     public function testFinishView()

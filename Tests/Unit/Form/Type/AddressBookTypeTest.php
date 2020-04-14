@@ -73,36 +73,24 @@ class AddressBookTypeTest extends FormIntegrationTestCase
     public function testBuildForm()
     {
         $form = $this->factory->create(AddressBookType::class);
-        $this->assertArraySubset(['data_class' => AddressBook::class], $form->getConfig()->getOptions());
+        $this->assertSame(AddressBook::class, $form->getConfig()->getOptions()['data_class']);
 
         $this->assertTrue($form->has('channel'));
-        $this->assertArraySubset(
-            [
-                'label' => 'oro.dotmailer.integration.label',
-                'required' => true
-            ],
-            $form->get('channel')->getConfig()->getOptions()
-        );
+        $channelOptions = $form->get('channel')->getConfig()->getOptions();
+        $this->assertSame('oro.dotmailer.integration.label', $channelOptions['label']);
+        $this->assertSame(true, $channelOptions['required']);
 
         $this->assertTrue($form->has('name'));
-        $this->assertArraySubset(
-            [
-                'label' => 'oro.dotmailer.addressbook.name.label',
-                'required' => true
-            ],
-            $form->get('name')->getConfig()->getOptions()
-        );
+        $nameOptions = $form->get('name')->getConfig()->getOptions();
+        $this->assertSame('oro.dotmailer.addressbook.name.label', $nameOptions['label']);
+        $this->assertSame(true, $nameOptions['required']);
 
         $this->assertTrue($form->has('visibility'));
-        $this->assertArraySubset(
-            [
-                'label' => 'oro.dotmailer.addressbook.visibility.label',
-                'tooltip' => 'oro.dotmailer.addressbook.visibility.tooltip',
-                'enum_code' => 'dm_ab_visibility',
-                'excluded_values' => [AddressBook::VISIBILITY_NOTAVAILABLEINTHISVERSION],
-                'required' => true
-            ],
-            $form->get('visibility')->getConfig()->getOptions()
-        );
+        $visibilityOptions = $form->get('visibility')->getConfig()->getOptions();
+        $this->assertSame('oro.dotmailer.addressbook.visibility.label', $visibilityOptions['label']);
+        $this->assertSame('oro.dotmailer.addressbook.visibility.tooltip', $visibilityOptions['tooltip']);
+        $this->assertSame('dm_ab_visibility', $visibilityOptions['enum_code']);
+        $this->assertSame([AddressBook::VISIBILITY_NOTAVAILABLEINTHISVERSION], $visibilityOptions['excluded_values']);
+        $this->assertSame(true, $visibilityOptions['required']);
     }
 }
