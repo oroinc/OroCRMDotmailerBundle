@@ -94,12 +94,11 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
         $this->target->init($transport);
     }
 
-    /**
-     * @expectedException \Oro\Bundle\DotmailerBundle\Exception\RequiredOptionException
-     * @expectedExceptionMessage Option "password" is required
-     */
     public function testInitThrowAnExceptionIfUsernameOptionsEmpty()
     {
+        $this->expectException(\Oro\Bundle\DotmailerBundle\Exception\RequiredOptionException::class);
+        $this->expectExceptionMessage('Option "password" is required');
+
         $transport = $this->createMock(
             'Oro\Bundle\IntegrationBundle\Entity\Transport'
         );
@@ -121,12 +120,11 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
         $this->target->init($transport);
     }
 
-    /**
-     * @expectedException \Oro\Bundle\DotmailerBundle\Exception\RequiredOptionException
-     * @expectedExceptionMessage Option "username" is required
-     */
     public function testInitThrowAnExceptionIfPasswordOptionsEmpty()
     {
+        $this->expectException(\Oro\Bundle\DotmailerBundle\Exception\RequiredOptionException::class);
+        $this->expectExceptionMessage('Option "username" is required');
+
         $transport = $this->createMock(
             'Oro\Bundle\IntegrationBundle\Entity\Transport'
         );

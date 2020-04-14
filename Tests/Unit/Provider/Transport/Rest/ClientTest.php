@@ -131,7 +131,7 @@ class ClientTest extends \PHPUnit\Framework\TestCase
             '[response code] ' . $responseCode . PHP_EOL .
             '[response body] ' . $responseBody;
 
-        $this->expectException('Oro\Bundle\DotmailerBundle\Exception\RestClientException');
+        $this->expectException(\Oro\Bundle\DotmailerBundle\Exception\RestClientException::class);
         $this->expectExceptionMessage($exceptionMessage);
 
         $restClient = $this->createMock('RestClient\Client');
