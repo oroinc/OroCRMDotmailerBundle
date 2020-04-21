@@ -153,7 +153,9 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
         /**
          * Test iterator initialized with correct address book origin id and last sync date
          */
-        $contactsList = $this->createPartialMock(\stdClass::class, ['toArray']);
+        $contactsList = $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['toArray'])
+            ->getMock();
         $contactsList->expects($this->once())
             ->method('toArray')
             ->will($this->returnValue([]));
@@ -193,7 +195,9 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
         /**
          * Test iterator initialized with correct address book origin id and last sync date
          */
-        $contactsList = $this->createPartialMock(\stdClass::class, ['toArray']);
+        $contactsList = $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['toArray'])
+            ->getMock();
         $contactsList->expects($this->once())
             ->method('toArray')
             ->will($this->returnValue([]));
@@ -232,7 +236,9 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
         /**
          * Test iterator initialized with correct address book origin id and last sync date
          */
-        $contactsList = $this->createPartialMock(\stdClass::class, ['toArray']);
+        $contactsList = $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['toArray'])
+            ->getMock();
         $contactsList->expects($this->once())
             ->method('toArray')
             ->will($this->returnValue([]));
@@ -268,7 +274,9 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
         /**
          * Test iterator initialized with correct address book origin id
          */
-        $campaignsList = $this->createPartialMock(\stdClass::class, ['toArray']);
+        $campaignsList = $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['toArray'])
+            ->getMock();
         $campaignsList->expects($this->once())
             ->method('toArray')
             ->will($this->returnValue([]));
@@ -284,7 +292,9 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
         $resource = $this->initTransportStub();
         $expectedAddressBookOriginId = 42;
 
-        $contactsList = $this->createPartialMock(\stdClass::class, ['toArray']);
+        $contactsList = $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['toArray'])
+            ->getMock();
         $contactsList->expects($this->once())
             ->method('toArray')
             ->will($this->returnValue([]));
@@ -313,7 +323,9 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
 
         $dateSince = new \DateTime();
 
-        $contactsList = $this->createPartialMock(\stdClass::class, ['toArray']);
+        $contactsList = $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['toArray'])
+            ->getMock();
         $contactsList->expects($this->once())
             ->method('toArray')
             ->will($this->returnValue([['id' => 1, 'email' => 'test@test.com']]));
@@ -425,7 +437,9 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
     {
         $fieldName = 'test_name';
         $resource = $this->initTransportStub();
-        $result = $this->createPartialMock(\stdClass::class, ['toArray']);
+        $result = $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['toArray'])
+            ->getMock();
         $result->expects($this->once())
             ->method('toArray')
             ->will($this->returnValue([]));
