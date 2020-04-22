@@ -21,7 +21,7 @@ class DataFieldFormHandlerTest extends \PHPUnit_Framework_TestCase
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     protected $managerRegistry;
 
-     /** @var \PHPUnit_Framework_MockObject_MockObject */
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
     protected $translator;
 
     /** @var \PHPUnit_Framework_MockObject_MockObject */
