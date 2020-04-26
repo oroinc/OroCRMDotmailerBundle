@@ -10,6 +10,7 @@ use Oro\Bundle\DotmailerBundle\Form\Handler\DataFieldFormHandler;
 use Oro\Bundle\DotmailerBundle\Model\DataFieldManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -93,18 +94,21 @@ class DataFieldFormHandlerTest extends \PHPUnit\Framework\TestCase
         $this->form->expects($this->any())->method('getData')->willReturn($this->entity);
         $this->form->expects($this->once())->method('handleRequest')->with($request);
         $this->form->expects($this->once())->method('isSubmitted')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $this->form->expects($this->once())->method('isValid')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $this->dataFieldManager->expects($this->once())->method('createOriginDataField')->with($this->entity)
-            ->will($this->throwException(new InvalidDefaultValueException('Invalid Default Value')));
+            ->willThrowException(new InvalidDefaultValueException('Invalid Default Value'));
         $this->translator->expects($this->once())->method('trans')
             ->with('oro.dotmailer.handler.default_value_not_match')
-            ->will($this->returnValue('Translated Default Value Error.'));
+            ->willReturn('Translated Default Value Error.');
 
-        $this->form->expects($this->once())->method('addError')
-            ->with($this->attributeEqualTo('message', 'Translated Default Value Error. Invalid Default Value'));
+        $this->form->expects(static::once())
+            ->method('addError')
+            ->with(static::callback(function (FormError $error) {
+                return 'Translated Default Value Error. Invalid Default Value' === $error->getMessage();
+            }));
 
         $this->managerRegistry->expects($this->never())->method('getManager');
 
@@ -119,22 +123,21 @@ class DataFieldFormHandlerTest extends \PHPUnit\Framework\TestCase
         $this->form->expects($this->any())->method('getData')->willReturn($this->entity);
         $this->form->expects($this->once())->method('handleRequest')->with($request);
         $this->form->expects($this->once())->method('isSubmitted')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $this->form->expects($this->once())->method('isValid')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $this->dataFieldManager->expects($this->once())->method('createOriginDataField')->with($this->entity)
-            ->will($this->throwException(new RestClientException(
-                '',
-                0,
-                new \Exception('Dotmailer Exception Message')
-            )));
+            ->willThrowException(new RestClientException('', 0, new \Exception('Dotmailer Exception Message')));
         $this->translator->expects($this->once())->method('trans')
             ->with('oro.dotmailer.handler.unable_to_create_field')
-            ->will($this->returnValue('Translated Default Value Error.'));
+            ->willReturn('Translated Default Value Error.');
 
-        $this->form->expects($this->once())->method('addError')
-            ->with($this->attributeEqualTo('message', 'Translated Default Value Error. Dotmailer Exception Message'));
+        $this->form->expects(static::once())
+            ->method('addError')
+            ->with(static::callback(function (FormError $error) {
+                return 'Translated Default Value Error. Dotmailer Exception Message' === $error->getMessage();
+            }));
 
         $this->managerRegistry->expects($this->never())->method('getManager');
 
@@ -149,17 +152,20 @@ class DataFieldFormHandlerTest extends \PHPUnit\Framework\TestCase
         $this->form->expects($this->any())->method('getData')->willReturn($this->entity);
         $this->form->expects($this->once())->method('handleRequest')->with($request);
         $this->form->expects($this->once())->method('isSubmitted')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $this->form->expects($this->once())->method('isValid')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $this->dataFieldManager->expects($this->once())->method('createOriginDataField')->with($this->entity)
-            ->will($this->throwException(new \Exception()));
+            ->willThrowException(new \Exception());
         $this->translator->expects($this->once())->method('trans')
             ->with('oro.dotmailer.handler.unable_to_create_field')
-            ->will($this->returnValue('Translated Default Value Error.'));
-        $this->form->expects($this->once())->method('addError')
-            ->with($this->attributeEqualTo('message', 'Translated Default Value Error.'));
+            ->willReturn('Translated Default Value Error.');
+        $this->form->expects(static::once())
+            ->method('addError')
+            ->with(static::callback(function (FormError $error) {
+                return 'Translated Default Value Error.' === $error->getMessage();
+            }));
 
         $this->logger->expects($this->once())->method('error');
 
