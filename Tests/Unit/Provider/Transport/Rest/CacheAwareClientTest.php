@@ -13,17 +13,16 @@ class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
     /** @var CacheAwareClient */
     protected $client;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = new CacheAwareClient('namespace');
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage DotmailerClientInterface is not injected
-     */
     public function testFailIfClientNotInjected()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('DotmailerClientInterface is not injected');
+
         $cache = $this->createMock(CacheProvider::class);
         $this->client->setCache($cache);
 

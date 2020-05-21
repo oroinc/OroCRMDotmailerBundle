@@ -11,14 +11,14 @@ class ImportExportLogHelperTest extends \PHPUnit\Framework\TestCase
      */
     protected $target;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->target = new ImportExportLogHelper();
     }
 
     public function testGetMemoryConsumption()
     {
-        $this->assertInternalType('int', $this->target->getMemoryConsumption());
+        $this->assertIsInt($this->target->getMemoryConsumption());
     }
 
     public function testGetStepExecutionTime()

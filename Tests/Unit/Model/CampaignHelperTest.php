@@ -11,7 +11,7 @@ class CampaignHelperTest extends \PHPUnit\Framework\TestCase
      */
     protected $helper;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->helper = new CampaignHelper();
     }

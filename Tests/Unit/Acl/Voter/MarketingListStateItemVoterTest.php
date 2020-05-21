@@ -24,7 +24,7 @@ class MarketingListStateItemVoterTest extends \PHPUnit\Framework\TestCase
     /** @var \PHPUnit\Framework\MockObject\MockObject|ContactInformationFieldsProvider */
     private $contactInformationFieldsProvider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->doctrineHelper = $this->createMock(DoctrineHelper::class);
         $this->contactInformationFieldsProvider = $this->createMock(ContactInformationFieldsProvider::class);

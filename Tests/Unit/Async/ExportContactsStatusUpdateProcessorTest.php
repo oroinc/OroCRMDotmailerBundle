@@ -88,12 +88,11 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
         $this->assertEquals(MessageProcessorInterface::REJECT, $status);
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage The malformed json given.
-     */
     public function testThrowIfMessageBodyInvalidJson()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('The malformed json given.');
+
         $processor = new ExportContactsStatusUpdateProcessor(
             $this->createDoctrineHelperStub(),
             $this->createExportManagerMock(),

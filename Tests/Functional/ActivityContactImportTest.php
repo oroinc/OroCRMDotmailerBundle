@@ -7,7 +7,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
 
 class ActivityContactImportTest extends AbstractImportExportTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->loadFixtures(

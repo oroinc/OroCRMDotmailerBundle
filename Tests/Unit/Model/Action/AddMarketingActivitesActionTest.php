@@ -22,47 +22,35 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Bundle\WorkflowBundle\Model\EntityAwareInterface;
 use Oro\Component\ConfigExpression\ContextAccessor;
 use Oro\Component\Testing\Unit\EntityTrait;
+use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class AddMarketingActivitesActionTest extends \PHPUnit\Framework\TestCase
 {
     use EntityTrait;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var MockObject|ContactInformationFieldsProvider */
     protected $contactInformationFieldsProvider;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var MockObject|MarketingListItemsQueryBuilderProvider */
     protected $marketingListItemsQueryBuilderProvider;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var MockObject|FieldHelper */
     protected $fieldHelper;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var MockObject|ContextAccessor */
     protected $contextAccessor;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var MockObject|DoctrineHelper */
     protected $doctrineHelper;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var MockObject|ActivityFactory */
     protected $activityFactory;
 
-    /**
-     * @var AddMarketingActivitesAction
-     */
+    /** @var AddMarketingActivitesAction */
     protected $action;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->contextAccessor = $this->createMock(ContextAccessor::class);
         $this->contactInformationFieldsProvider = $this->getMockBuilder(ContactInformationFieldsProvider::class)
@@ -72,35 +60,35 @@ class AddMarketingActivitesActionTest extends \PHPUnit\Framework\TestCase
             ->getMockBuilder(MarketingListItemsQueryBuilderProvider::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->fieldHelper = $this->getMockBuilder(FieldHelper::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->doctrineHelper = $this->getMockBuilder(DoctrineHelper::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->activityFactory = $this->getMockBuilder(ActivityFactory::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->fieldHelper = $this->getMockBuilder(FieldHelper::class)->disableOriginalConstructor()->getMock();
+        $this->doctrineHelper = $this->getMockBuilder(DoctrineHelper::class)->disableOriginalConstructor()->getMock();
+        $this->activityFactory = $this->getMockBuilder(ActivityFactory::class)->disableOriginalConstructor()->getMock();
 
-        $this->action = new AddMarketingActivitesAction(
+        $this->action = new class(
             $this->contextAccessor,
             $this->contactInformationFieldsProvider,
             $this->marketingListItemsQueryBuilderProvider,
             $this->fieldHelper
-        );
+        ) extends AddMarketingActivitesAction {
+            public function xgetOptions(): array
+            {
+                return $this->options;
+            }
+        };
+
         $this->action->setActivityFactory($this->activityFactory);
         $this->action->setDoctrineHelper($this->doctrineHelper);
-        $dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
-            ->disableOriginalConstructor()
-            ->getMock();
+
+        /** @var EventDispatcher $dispatcher */
+        $dispatcher = $this->getMockBuilder(EventDispatcher::class)->disableOriginalConstructor()->getMock();
         $this->action->setDispatcher($dispatcher);
     }
 
     public function testInitialize()
     {
         $options = ['options'];
-        $this->assertSame($this->action, $this->action->initialize($options));
-        $this->assertAttributeEquals($options, 'options', $this->action);
+        static::assertSame($this->action, $this->action->initialize($options));
+        static::assertEquals($options, $this->action->xgetOptions());
     }
 
     public function testExecuteNotAllowedNotActivityEntity()

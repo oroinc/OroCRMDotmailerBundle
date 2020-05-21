@@ -9,7 +9,7 @@ use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 class CampaignImportTest extends AbstractImportExportTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->loadFixtures(
@@ -87,8 +87,8 @@ class CampaignImportTest extends AbstractImportExportTestCase
             $marketingCampaign = $emailCampaign->getCampaign();
             $this->assertNotNull($marketingCampaign, 'Marketing Campaign should be added automatically');
             $this->assertEquals($marketingCampaign->getName(), $campaign['name']);
-            $this->assertContains($campaign['name'], $marketingCampaign->getDescription());
-            $this->assertContains((string) $campaign['originId'], $marketingCampaign->getCode());
+            static::assertStringContainsString($campaign['name'], $marketingCampaign->getDescription());
+            static::assertStringContainsString((string) $campaign['originId'], $marketingCampaign->getCode());
         }
     }
 

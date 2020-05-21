@@ -28,7 +28,7 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit\Framework\TestCase
     /** @var \PHPUnit\Framework\MockObject\MockObject */
     protected $context;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->entityFieldProvider = $this->getMockBuilder('Oro\Bundle\EntityBundle\Provider\EntityFieldProvider')
             ->disableOriginalConstructor()->getMock();

@@ -11,27 +11,27 @@ class ContactExportQBAdapterRegistryTest extends \PHPUnit\Framework\TestCase
      */
     protected $target;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->target = new ContactExportQBAdapterRegistry();
     }
 
-    /**
-     * @expectedException \Oro\Bundle\DotmailerBundle\Exception\RuntimeException
-     * @expectedExceptionMessage Incorrect adapter format.
-     */
     public function testSetAdaptersValidateAdaptersFormat()
     {
+        $this->expectException(\Oro\Bundle\DotmailerBundle\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('Incorrect adapter format.');
+
         $this->target->setAdapters([['test' => new \StdClass()]]);
     }
 
-    /**
-     * @expectedException \Oro\Bundle\DotmailerBundle\Exception\RuntimeException
-     * @expectedExceptionMessage Instance of Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterInterface
-     *                           required. Instance of %s given.
-     */
     public function testSetAdaptersValidateAdaptersImplementCorrectInterface()
     {
+        $this->expectException(\Oro\Bundle\DotmailerBundle\Exception\RuntimeException::class);
+        $this->expectExceptionMessage(\sprintf(
+            'Instance of %s required. Instance of stdClass given.',
+            \Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterInterface::class
+        ));
+
         $this->target->setAdapters(
             [
                 [
@@ -75,12 +75,11 @@ class ContactExportQBAdapterRegistryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedAdapters, $actual);
     }
 
-    /**
-     * @expectedException \Oro\Bundle\DotmailerBundle\Exception\RuntimeException
-     * @expectedExceptionMessage Provider for Address Book '21' not exist
-     */
     public function testGetAdapterByAddressBookThrowAnExceptionIfHasNoAdapters()
     {
+        $this->expectException(\Oro\Bundle\DotmailerBundle\Exception\RuntimeException::class);
+        $this->expectExceptionMessage("Provider for Address Book '21' not exist");
+
         $addressBook = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
         $addressBook->expects($this->once())
             ->method('getId')
@@ -88,12 +87,11 @@ class ContactExportQBAdapterRegistryTest extends \PHPUnit\Framework\TestCase
         $this->target->getAdapterByAddressBook($addressBook);
     }
 
-    /**
-     * @expectedException \Oro\Bundle\DotmailerBundle\Exception\RuntimeException
-     * @expectedExceptionMessage Provider for Address Book '21' not exist
-     */
     public function testGetAdapterByAddressBookThrowAnExceptionIfHasApplicableAdapters()
     {
+        $this->expectException(\Oro\Bundle\DotmailerBundle\Exception\RuntimeException::class);
+        $this->expectExceptionMessage("Provider for Address Book '21' not exist");
+
         $addressBook = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
         $addressBook->expects($this->once())
             ->method('getId')

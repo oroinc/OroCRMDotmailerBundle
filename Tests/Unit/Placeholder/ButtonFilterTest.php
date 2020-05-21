@@ -17,7 +17,7 @@ class ButtonFilterTest extends \PHPUnit\Framework\TestCase
      */
     protected $fieldsProvider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->fieldsProvider = $this->getMockBuilder(
             'Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider'

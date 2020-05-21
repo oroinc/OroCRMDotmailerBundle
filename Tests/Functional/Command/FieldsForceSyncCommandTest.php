@@ -9,7 +9,7 @@ use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
  */
 class FieldsForceSyncCommandTest extends WebTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -20,15 +20,15 @@ class FieldsForceSyncCommandTest extends WebTestCase
     {
         $result = $this->runCommand('oro:cron:dotmailer:force-fields-sync', ['--help']);
 
-        self::assertContains('Usage:', $result);
-        self::assertContains('oro:cron:dotmailer:force-fields-sync', $result);
+        static::assertStringContainsString('Usage:', $result);
+        static::assertStringContainsString('oro:cron:dotmailer:force-fields-sync', $result);
     }
 
     public function testRunCommand()
     {
         $result = $this->runCommand('oro:cron:dotmailer:force-fields-sync');
 
-        $this->assertContains('Start update of address book contacts', $result);
-        $this->assertContains('Completed', $result);
+        static::assertStringContainsString('Start update of address book contacts', $result);
+        static::assertStringContainsString('Completed', $result);
     }
 }

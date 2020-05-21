@@ -8,7 +8,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
 
 class RemoveDataFieldImportTest extends AbstractImportExportTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->loadFixtures(

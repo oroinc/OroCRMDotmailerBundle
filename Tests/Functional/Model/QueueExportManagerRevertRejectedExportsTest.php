@@ -18,7 +18,7 @@ class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTe
      */
     protected $target;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->loadFixtures(

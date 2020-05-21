@@ -32,7 +32,7 @@ class OAuthManagerTest extends \PHPUnit\Framework\TestCase
      */
     protected $oAuthManager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->router = $this->createMock(RouterInterface::class);
         $this->encryptor = $this->createMock(SymmetricCrypterInterface::class);

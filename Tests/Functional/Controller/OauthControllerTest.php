@@ -6,7 +6,7 @@ use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 
 class OauthControllerTest extends WebTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->initClient([], array_merge(self::generateBasicAuthHeader(), ['HTTPS' => true]));
         $this->client->useHashNavigation(true);

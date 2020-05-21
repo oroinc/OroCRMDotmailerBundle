@@ -12,7 +12,7 @@ class DateTimeNormalizerTest extends \PHPUnit\Framework\TestCase
      */
     protected $normalizer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->normalizer = new DateTimeNormalizer();
     }
@@ -31,12 +31,11 @@ class DateTimeNormalizerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->normalizer->supportsDenormalization('2013-12-31', 'DateTime', null, $context));
     }
 
-    /**
-     * @expectedException \Symfony\Component\Serializer\Exception\RuntimeException
-     * @expectedExceptionMessage Do not support normalization.
-     */
     public function testNormalize()
     {
+        $this->expectException(\Symfony\Component\Serializer\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('Do not support normalization.');
+
         $date = new \DateTime('2013-12-31 23:59:59+0200');
         $this->normalizer->normalize($date, null);
     }
@@ -68,12 +67,11 @@ class DateTimeNormalizerTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($this->normalizer->denormalize(null, 'DateTime'));
     }
 
-    /**
-     * @expectedException \Symfony\Component\Serializer\Exception\RuntimeException
-     * @expectedExceptionMessage Invalid datetime "qwerty".
-     */
     public function testDenormalizeException()
     {
+        $this->expectException(\Symfony\Component\Serializer\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('Invalid datetime "qwerty".');
+
         $this->normalizer->denormalize('qwerty', 'DateTime', null);
     }
 }

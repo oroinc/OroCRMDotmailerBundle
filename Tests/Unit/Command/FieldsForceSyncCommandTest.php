@@ -22,7 +22,7 @@ class FieldsForceSyncCommandTest extends \PHPUnit\Framework\TestCase
     /** @var FieldsForceSyncCommand */
     private $command;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->registry = $this->createMock(ManagerRegistry::class);
         $this->syncManager = $this->createMock(SyncManager::class);

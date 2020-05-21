@@ -10,7 +10,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
     /** @var bool */
     protected $isRealGridRequest = false;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -50,7 +50,10 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
 
         $result = $this->client->getResponse();
         $this->assertHtmlResponseStatusCodeEquals($result, 200);
-        $this->assertContains("{$returnValue['name']} - Data Fields - dotmailer - Marketing", $crawler->html());
+        static::assertStringContainsString(
+            "{$returnValue['name']} - Data Fields - dotmailer - Marketing",
+            $crawler->html()
+        );
 
         return $returnValue;
     }
@@ -73,7 +76,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
 
         $result = $this->client->getResponse();
         $this->assertHtmlResponseStatusCodeEquals($result, 200);
-        $this->assertContains($returnValue['name'], $crawler->html());
+        static::assertStringContainsString($returnValue['name'], $crawler->html());
     }
 
     /**
@@ -144,7 +147,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
 
         $result = $this->client->getResponse();
         $this->assertHtmlResponseStatusCodeEquals($result, 200);
-        $this->assertContains('Data Field Saved', $crawler->html());
+        static::assertStringContainsString('Data Field Saved', $crawler->html());
         $em = $this->getContainer()->get('doctrine')->getManagerForClass(DataField::class);
         /** @var DataField $dataField */
         $dataField = $em->getRepository(DataField::class)->findOneBy(['name' => 'test_name']);

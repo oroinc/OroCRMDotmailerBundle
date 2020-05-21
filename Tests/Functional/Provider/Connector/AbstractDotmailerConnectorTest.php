@@ -21,7 +21,7 @@ class AbstractDotmailerConnectorTest extends WebTestCase
      */
     protected $context;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->initClient();
         $this->loadFixtures(

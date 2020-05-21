@@ -12,7 +12,7 @@ class ContactImportTest extends AbstractImportExportTestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
