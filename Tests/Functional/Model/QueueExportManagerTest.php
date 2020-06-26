@@ -4,11 +4,14 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Model;
 
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\ApiContactImportStatuses;
+use DotMailer\Api\DataTypes\Guid;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Model\QueueExportManager;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\AbstractImportExportTestCase;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookContactsExportData;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 class QueueExportManagerTest extends AbstractImportExportTestCase
@@ -23,7 +26,7 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
         parent::setUp();
         $this->loadFixtures(
             [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookContactsExportData',
+                LoadAddressBookContactsExportData::class
             ]
         );
         $this->target = $this->getContainer()->get('oro_dotmailer.queue_export_manager');
@@ -41,7 +44,7 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
             ->getReference('oro_dotmailer.address_book_contacts_export.add_to_address_book')
             ->getImportId();
 
-        $scheduledForExport = $this->managerRegistry->getRepository('OroDotmailerBundle:AddressBookContact')
+        $scheduledForExport = $this->managerRegistry->getRepository(AddressBookContact::class)
             ->findBy(['scheduledForExport' => true]);
         $this->assertCount(3, $scheduledForExport);
 
@@ -55,8 +58,13 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
 
         $this->resource->expects($this->exactly(2))
             ->method('GetContactsImportReportFaults')
-            ->withConsecutive([$importWithFaultsId], [$importAddToAddressBook])
-            ->willReturnOnConsecutiveCalls(file_get_contents(__DIR__ . '/Fixtures/importFaults.csv'), '');
+            ->willReturnCallback(static function (Guid $id) use ($importWithFaultsId) {
+                if ((string)$id === $importWithFaultsId) {
+                    return file_get_contents(__DIR__ . '/Fixtures/importFaults.csv');
+                }
+
+                return '';
+            });
 
         $this->target->updateExportResults($channel);
 
@@ -67,8 +75,8 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
         /**
          * Check not exported contacts properly handled
          */
-        $addressBookContact = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:AddressBookContact')
+        $addressBookContacts = $this->managerRegistry
+            ->getRepository(AddressBookContact::class)
             ->findBy(
                 [
                     'contact' => $this->getReference('oro_dotmailer.contact.update_1'),
@@ -77,20 +85,21 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
                 ]
             );
 
-        $this->assertCount(1, $addressBookContact);
-        $addressBookContact = reset($addressBookContact);
+
+        $this->assertCount(1, $addressBookContacts);
+        $addressBookContact = reset($addressBookContacts);
 
         $this->assertEquals(Contact::STATUS_SUPPRESSED, $addressBookContact->getStatus()->getId());
     }
 
     /**
-     * @param Channel     $channel
-     * @param string      $importId
+     * @param Channel $channel
+     * @param string $importId
      * @param AddressBook $expectedAddressBook
      */
     protected function assertExportStatusUpdated(Channel $channel, $importId, AddressBook $expectedAddressBook)
     {
-        $exportEntities = $this->managerRegistry->getRepository('OroDotmailerBundle:AddressBookContactsExport')
+        $exportEntities = $this->managerRegistry->getRepository(AddressBookContactsExport::class)
             ->findBy(['channel' => $channel, 'importId' => $importId]);
         $this->assertCount(1, $exportEntities);
 
