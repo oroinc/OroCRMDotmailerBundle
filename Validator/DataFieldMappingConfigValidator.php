@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Validator;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
 use Oro\Bundle\DotmailerBundle\Validator\Constraints\DataFieldMappingConfigConstraint;
@@ -95,11 +95,11 @@ class DataFieldMappingConfigValidator extends ConstraintValidator
         switch ($type) {
             case DataField::FIELD_TYPE_NUMERIC:
                 $numericTypes = [
-                    Type::BIGINT,
-                    Type::SMALLINT,
-                    Type::INTEGER,
-                    Type::DECIMAL,
-                    Type::FLOAT,
+                    Types::BIGINT,
+                    Types::SMALLINT,
+                    Types::INTEGER,
+                    Types::DECIMAL,
+                    Types::FLOAT,
                     MoneyType::TYPE,
                     PercentType::TYPE,
                     DurationType::TYPE,
@@ -107,15 +107,15 @@ class DataFieldMappingConfigValidator extends ConstraintValidator
                 $isCompatible = in_array($fieldType, $numericTypes);
                 break;
             case DataField::FIELD_TYPE_DATE:
-                $dateTypes = [Type::DATETIME, Type::DATETIMETZ, Type::DATE];
+                $dateTypes = [Types::DATETIME_MUTABLE, Types::DATETIMETZ_MUTABLE, Types::DATE_MUTABLE];
                 $isCompatible = in_array($fieldType, $dateTypes);
                 break;
             case DataField::FIELD_TYPE_BOOLEAN:
-                $booleanTypes = [Type::BOOLEAN];
+                $booleanTypes = [Types::BOOLEAN];
                 $isCompatible = in_array($fieldType, $booleanTypes);
                 break;
             default:
-                $complexDataTypes = [Type::BINARY, Type::BLOB, Type::OBJECT];
+                $complexDataTypes = [Types::BINARY, Types::BLOB, Types::OBJECT];
                 $isCompatible = !in_array($fieldType, $complexDataTypes);
         }
         $message = '';

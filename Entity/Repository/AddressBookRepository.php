@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Entity\Repository;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -111,7 +111,7 @@ class AddressBookRepository extends EntityRepository
                 ->where($qb->expr()->in('addressBook.id', ':addressBookIds'))
                 ->setParameter('addressBookIds', $addressBookIds)
                 ->set('addressBook.lastImportedAt', ':lastImportedAt')
-                ->setParameter('lastImportedAt', $importedAt, Type::DATETIME)
+                ->setParameter('lastImportedAt', $importedAt, Types::DATETIME_MUTABLE)
                 ->getQuery()
                 ->execute();
         }
