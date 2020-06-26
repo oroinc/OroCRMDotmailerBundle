@@ -4,12 +4,17 @@ namespace Oro\Bundle\DotmailerBundle\Migration;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 use Oro\Bundle\MigrationBundle\Migration\ConnectionAwareInterface;
 use Oro\Bundle\MigrationBundle\Migration\MigrationQuery;
 use Psr\Log\LoggerInterface;
 
+/**
+ * A custom query which is responsible to add new connector "ExportContactConnector::TYPE"
+ * to the existing integrations with the Dotmailer
+ */
 class AddContactExportConnectorToExistedIntegrationsQuery implements MigrationQuery, ConnectionAwareInterface
 {
     /**
@@ -104,7 +109,7 @@ SQL;
      */
     private function prepareConnectors($connectors)
     {
-        $type = Type::getType(Type::TARRAY);
+        $type = Type::getType(Types::ARRAY);
         $platform = $this->connection->getDatabasePlatform();
         $deserializedConnectors = $type->convertToPHPValue($connectors, $platform);
         $deserializedConnectors[] = ExportContactConnector::TYPE;

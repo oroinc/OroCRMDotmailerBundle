@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Validator;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
@@ -56,7 +56,7 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue([
                 [
                     'name' => 'entityFieldName',
-                    'type' => Type::STRING
+                    'type' => Types::STRING
                 ]
             ]));
 
@@ -90,7 +90,7 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue([
                 [
                     'name' => 'entityFieldName',
-                    'type' => Type::STRING
+                    'type' => Types::STRING
                 ]
             ]));
 
@@ -124,7 +124,7 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue([
                 [
                     'name' => 'entityFieldName',
-                    'type' => Type::STRING
+                    'type' => Types::STRING
                 ]
             ]));
 
@@ -201,19 +201,19 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit\Framework\TestCase
     public function dataFieldDataProvider()
     {
         return [
-            'string'    => [DataField::FIELD_TYPE_STRING, Type::STRING],
-            'integer'   => [DataField::FIELD_TYPE_NUMERIC, Type::INTEGER],
-            'binint'    => [DataField::FIELD_TYPE_NUMERIC, Type::BIGINT],
-            'smallint'  => [DataField::FIELD_TYPE_NUMERIC, Type::SMALLINT],
-            'decimal'   => [DataField::FIELD_TYPE_NUMERIC, Type::DECIMAL],
-            'float'     => [DataField::FIELD_TYPE_NUMERIC, Type::FLOAT],
+            'string'    => [DataField::FIELD_TYPE_STRING, Types::STRING],
+            'integer'   => [DataField::FIELD_TYPE_NUMERIC, Types::INTEGER],
+            'binint'    => [DataField::FIELD_TYPE_NUMERIC, Types::BIGINT],
+            'smallint'  => [DataField::FIELD_TYPE_NUMERIC, Types::SMALLINT],
+            'decimal'   => [DataField::FIELD_TYPE_NUMERIC, Types::DECIMAL],
+            'float'     => [DataField::FIELD_TYPE_NUMERIC, Types::FLOAT],
             'money'     => [DataField::FIELD_TYPE_NUMERIC, MoneyType::TYPE],
             'percent'   => [DataField::FIELD_TYPE_NUMERIC, PercentType::TYPE],
             'duration'  => [DataField::FIELD_TYPE_NUMERIC, DurationType::TYPE],
-            'datetime'  => [DataField::FIELD_TYPE_DATE, Type::DATETIME],
-            'datetimez' => [DataField::FIELD_TYPE_DATE, Type::DATETIMETZ],
-            'date'      => [DataField::FIELD_TYPE_DATE, Type::DATE],
-            'boolean'   => [DataField::FIELD_TYPE_BOOLEAN, Type::BOOLEAN],
+            'datetime'  => [DataField::FIELD_TYPE_DATE, Types::DATETIME_MUTABLE],
+            'datetimez' => [DataField::FIELD_TYPE_DATE, Types::DATETIMETZ_MUTABLE],
+            'date'      => [DataField::FIELD_TYPE_DATE, Types::DATE_MUTABLE],
+            'boolean'   => [DataField::FIELD_TYPE_BOOLEAN, Types::BOOLEAN],
         ];
     }
 }

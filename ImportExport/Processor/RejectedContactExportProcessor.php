@@ -11,6 +11,9 @@ use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\ImportExportBundle\Processor\StepExecutionAwareProcessor;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Dotmailer Export processor for rejected contacts.
+ */
 class RejectedContactExportProcessor implements StepExecutionAwareProcessor
 {
     /**
@@ -59,7 +62,7 @@ class RejectedContactExportProcessor implements StepExecutionAwareProcessor
             throw new RuntimeException(
                 sprintf(
                     '"%s" expected, "%s" given',
-                    'Oro\Bundle\DotmailerBundle\Entity\AddressBookContact',
+                    AddressBookContact::class,
                     is_object($item) ? get_class($item) : gettype($item)
                 )
             );
