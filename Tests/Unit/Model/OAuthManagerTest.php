@@ -2,44 +2,36 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Model;
 
-use Http\Client\Common\HttpMethodsClient;
+use Http\Client\Common\HttpMethodsClientInterface;
 use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport;
 use Oro\Bundle\DotmailerBundle\Model\OAuthManager;
 use Oro\Bundle\SecurityBundle\Encoder\SymmetricCrypterInterface;
-use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 class OAuthManagerTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var RouterInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $router;
+    /** @var RouterInterface|\PHPUnit\Framework\MockObject\MockObject */
+    private $router;
 
-    /**
-     * @var SymmetricCrypterInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $encryptor;
+    /** @var SymmetricCrypterInterface|\PHPUnit\Framework\MockObject\MockObject */
+    private $encryptor;
 
-    /**
-     * @var HttpMethodsClient|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $curlClient;
+    /** @var HttpMethodsClientInterface|\PHPUnit\Framework\MockObject\MockObject */
+    private $curlClient;
 
-    /**
-     * @var OAuthManager
-     */
-    protected $oAuthManager;
+    /** @var OAuthManager */
+    private $oAuthManager;
 
     protected function setUp(): void
     {
         $this->router = $this->createMock(RouterInterface::class);
         $this->encryptor = $this->createMock(SymmetricCrypterInterface::class);
-        $this->curlClient = $this->createMock(HttpMethodsClient::class);
+        $this->curlClient = $this->createMock(HttpMethodsClientInterface::class);
         $this->curlClient->expects($this->any())
             ->method('post')
-            ->willReturn($this->createMock(MessageInterface::class));
+            ->willReturn($this->createMock(ResponseInterface::class));
 
         $this->oAuthManager = new OAuthManager($this->router, $this->encryptor, $this->curlClient);
     }

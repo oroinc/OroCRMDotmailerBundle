@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Model;
 
-use Http\Client\Common\HttpMethodsClient;
+use Http\Client\Common\HttpMethodsClientInterface;
 use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\SecurityBundle\Encoder\SymmetricCrypterInterface;
@@ -31,18 +31,18 @@ class OAuthManager
     /** @var SymmetricCrypterInterface */
     protected $encryptor;
 
-    /** @var HttpMethodsClient */
+    /** @var HttpMethodsClientInterface */
     protected $curlClient;
 
     /**
-     * @param RouterInterface $router
-     * @param SymmetricCrypterInterface $encryptor
-     * @param HttpMethodsClient $curlClient
+     * @param RouterInterface            $router
+     * @param SymmetricCrypterInterface  $encryptor
+     * @param HttpMethodsClientInterface $curlClient
      */
     public function __construct(
         RouterInterface $router,
         SymmetricCrypterInterface $encryptor,
-        HttpMethodsClient $curlClient
+        HttpMethodsClientInterface $curlClient
     ) {
         $this->router = $router;
         $this->encryptor = $encryptor;
@@ -53,6 +53,7 @@ class OAuthManager
      * Returns API endpoint
      *
      * @param DotmailerTransport $transport
+     *
      * @return string
      */
     public function getApiEndpoint(DotmailerTransport $transport)
@@ -64,6 +65,7 @@ class OAuthManager
      * Returns authorize URL
      *
      * @param DotmailerTransport $transport
+     *
      * @return string
      */
     public function getAuthorizeUrl(DotmailerTransport $transport)
@@ -75,6 +77,7 @@ class OAuthManager
      * Returns token URL
      *
      * @param DotmailerTransport $transport
+     *
      * @return string
      */
     public function getTokenUrl(DotmailerTransport $transport)
@@ -86,6 +89,7 @@ class OAuthManager
      * Returns login user URL
      *
      * @param DotmailerTransport $transport
+     *
      * @return string
      */
     public function getLoginUserUrl(DotmailerTransport $transport)
@@ -100,42 +104,42 @@ class OAuthManager
      */
     public function getCallbackUrl()
     {
-        $callbackUrl = $this->router->generate(
+        return $this->router->generate(
             'oro_dotmailer_oauth_callback',
             [],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-
-        return $callbackUrl;
     }
 
     /**
      * Generate authorize URL
      *
      * @param DotmailerTransport $transport
-     * @param string $state
+     * @param string             $state
+     *
      * @return string|false
      */
     public function generateAuthorizeUrl(DotmailerTransport $transport, $state)
     {
-        $params = array(
+        $params = [
             'redirect_uri'  => $this->getCallbackUrl(),
             'response_type' => 'code',
             'scope'         => 'Account',
             'state'         => $state
-        );
-        $authorizeUrl = $this->getAuthorizeUrl($transport) .
-            http_build_query($params) .
-            '&client_id=' . $transport->getClientId();
+        ];
 
-        return $authorizeUrl;
+        return
+            $this->getAuthorizeUrl($transport)
+            . http_build_query($params)
+            . '&client_id=' . $transport->getClientId();
     }
 
     /**
      * Generate refresh token
      *
      * @param DotmailerTransport $transport
-     * @param string $code
+     * @param string             $code
+     *
      * @return string|false
      */
     public function generateRefreshToken(DotmailerTransport $transport, $code)
@@ -163,7 +167,8 @@ class OAuthManager
      * Generate login user URL
      *
      * @param DotmailerTransport $transport
-     * @param string $refreshToken
+     * @param string             $refreshToken
+     *
      * @return string|false
      */
     public function generateLoginUserUrl(DotmailerTransport $transport, $refreshToken)
@@ -173,16 +178,15 @@ class OAuthManager
             return false;
         }
 
-        $loginUserUrl = $this->getLoginUserUrl($transport) . $token;
-
-        return $loginUserUrl;
+        return $this->getLoginUserUrl($transport) . $token;
     }
 
     /**
      * Generate token
      *
      * @param DotmailerTransport $transport
-     * @param string $refreshToken
+     * @param string             $refreshToken
+     *
      * @return string|false
      */
     public function generateAccessToken(DotmailerTransport $transport, $refreshToken)
@@ -209,7 +213,8 @@ class OAuthManager
      * Perform a cUrl request
      *
      * @param string $url
-     * @param array $params
+     * @param array  $params
+     *
      * @return array
      */
     protected function doCurlRequest($url, $params)
@@ -226,7 +231,8 @@ class OAuthManager
 
         if (isset($responseContent['error_description'])) {
             throw new RuntimeException($responseContent['error_description']);
-        } elseif (isset($responseContent['error'])) {
+        }
+        if (isset($responseContent['error'])) {
             throw new RuntimeException($responseContent['error']);
         }
 
@@ -237,6 +243,7 @@ class OAuthManager
      * Get the 'parsed' content based on the response headers
      *
      * @param MessageInterface $response
+     *
      * @return array
      */
     protected function getResponseContent(MessageInterface $response)
