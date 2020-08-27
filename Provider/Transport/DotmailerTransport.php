@@ -41,6 +41,7 @@ use Psr\Log\LoggerAwareTrait;
 
 /**
  * Class provides ability to interact dotmailer
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class DotmailerTransport implements TransportInterface, LoggerAwareInterface
 {

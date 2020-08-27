@@ -9,6 +9,8 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 /**
+ * Stores dotdigital campaign activity stats.
+ *
  * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\ActivityRepository")
  * @ORM\Table(
  *      name="orocrm_dm_activity",
@@ -38,6 +40,7 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  *      }
  *  }
  * )
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class Activity implements ChannelAwareInterface
 {

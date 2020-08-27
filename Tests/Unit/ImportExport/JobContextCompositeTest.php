@@ -7,6 +7,7 @@ use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
 {

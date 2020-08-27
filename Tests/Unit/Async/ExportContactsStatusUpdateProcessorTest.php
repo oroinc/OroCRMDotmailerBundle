@@ -24,6 +24,9 @@ use Oro\Component\Testing\ClassExtensionTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCase
 {
     use ClassExtensionTrait;

@@ -11,6 +11,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 /**
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CampaignTest extends \PHPUnit\Framework\TestCase
 {
