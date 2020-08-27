@@ -11,6 +11,9 @@ use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * Marks address book contacts as updated to make sure updated field values are synced to Dotmailer.
+ */
 class SyncManager
 {
     const FORCE_SYNC_NONE = 'None';
@@ -54,6 +57,7 @@ class SyncManager
 
     /**
      * Mark address book contacts as updated to make sure updated field values are synced to Dotmailer
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function forceMarkEntityUpdate()
     {

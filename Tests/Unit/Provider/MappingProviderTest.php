@@ -13,6 +13,9 @@ use Oro\Bundle\EntityBundle\Provider\VirtualFieldProviderInterface;
 use Oro\Component\Testing\Unit\EntityTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class MappingProviderTest extends \PHPUnit\Framework\TestCase
 {
     use EntityTrait;

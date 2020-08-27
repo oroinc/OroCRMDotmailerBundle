@@ -7,6 +7,9 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\EntityBundle\Provider\VirtualFieldProviderInterface;
 
+/**
+ * Various utility methods to work with DQL.
+ */
 class FieldHelper
 {
     /**
@@ -55,6 +58,7 @@ class FieldHelper
      * @param string $entityClass
      * @param string $fieldName
      * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function getVirtualFieldExpression(QueryBuilder $qb, $entityClass, $fieldName)
     {

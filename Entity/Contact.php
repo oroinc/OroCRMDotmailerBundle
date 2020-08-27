@@ -41,6 +41,7 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  *      }
  *  }
  * )
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class Contact extends ExtendContact implements OriginAwareInterface, FirstNameInterface, LastNameInterface
 {
