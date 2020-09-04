@@ -69,6 +69,7 @@ class Client implements DotmailerClientInterface
      * @throws RestClientException
      *
      * @return string|null
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function execute($paramArr, $responses = [])
     {

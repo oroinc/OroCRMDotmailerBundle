@@ -7,6 +7,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
+/**
+ * Adjusts data mapping for two-way sync.
+ */
 class DataFieldMappingFormSubscriber implements EventSubscriberInterface
 {
     /**
@@ -57,6 +60,7 @@ class DataFieldMappingFormSubscriber implements EventSubscriberInterface
      * Process submitted mapping data and add to mapping collection form
      *
      * @param FormEvent $event
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function preSubmit(FormEvent $event)
     {

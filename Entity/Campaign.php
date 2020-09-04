@@ -13,6 +13,8 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 /**
+ * Represents a dotdigital campaign.
+ *
  * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\CampaignRepository")
  * @ORM\Table(
  *      name="orocrm_dm_campaign",
@@ -39,6 +41,7 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  *  }
  * )
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class Campaign extends ExtendCampaign implements OriginAwareInterface
 {

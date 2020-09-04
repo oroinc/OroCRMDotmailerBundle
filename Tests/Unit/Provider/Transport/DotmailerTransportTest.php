@@ -12,6 +12,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
 /**
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
 {
