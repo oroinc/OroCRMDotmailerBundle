@@ -40,10 +40,10 @@ class SyncProcessorTest extends \PHPUnit\Framework\TestCase
     public function testShouldThrowAnExceptionForOtherIntegraiton()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Wrong integration type, "dotmailer" expected, "magento" given');
+        $this->expectExceptionMessage('Wrong integration type, "dotmailer" expected, "other" given');
 
         $integration = new Channel();
-        $integration->setType('magento');
+        $integration->setType('other');
 
         $this->jobProcessor->expects($this->never())->method('findRootJobByJobNameAndStatuses');
         $this->decoratedSyncProcessor->expects($this->never())->method('process');
