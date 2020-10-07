@@ -38,7 +38,7 @@ class Client implements DotmailerClientInterface
     {
         $this->restClient = new \RestClient\Client(
             [
-                Request::BASE_URL_KEY => 'https://api.dotmailer.com/v2',
+                Request::BASE_URL_KEY => 'https://api.dotmailer.com/v2/',
                 Request::USERNAME_KEY => $username,
                 Request::PASSWORD_KEY => $password,
                 Request::USER_AGENT_KEY => 'romanpitak/dotmailer-api-v2-php-client',

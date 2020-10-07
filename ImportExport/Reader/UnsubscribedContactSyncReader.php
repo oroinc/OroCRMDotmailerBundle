@@ -2,9 +2,12 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Reader;
 
-use Guzzle\Iterator\AppendIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AppendIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\OutOfSyncMarketingListItemIterator;
 
+/**
+ * Export reader for sync unsubscribed contacts
+ */
 class UnsubscribedContactSyncReader extends AbstractExportReader
 {
     protected function initializeReader()

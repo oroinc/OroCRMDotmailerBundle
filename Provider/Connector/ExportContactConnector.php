@@ -2,15 +2,18 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
-use Guzzle\Iterator\AppendIterator;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Oro\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AppendIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\MarketingListItemIterator;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Provider\AllowedConnectorInterface;
 
+/**
+ * Export connector for contacts synchronization
+ */
 class ExportContactConnector extends AbstractDotmailerConnector implements AllowedConnectorInterface
 {
     const TYPE = 'contact_export';
@@ -94,7 +97,7 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
     }
 
     /**
-     * @param MarketingListItemsQueryBuilderProvider $marketingListItemsQueryBuilderProvider
+     * @param MarketingListItemsQueryBuilderProvider|null $marketingListItemsQueryBuilderProvider
      *
      * @return ExportContactConnector
      */

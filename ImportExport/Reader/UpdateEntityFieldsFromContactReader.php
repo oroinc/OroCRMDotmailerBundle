@@ -2,9 +2,12 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Reader;
 
-use Guzzle\Iterator\AppendIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AppendIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UpdateEntityFieldsFromContactIterator;
 
+/**
+ * Export reader for updating contact entity data fields based on mappings
+ */
 class UpdateEntityFieldsFromContactReader extends AbstractExportReader
 {
     protected function initializeReader()

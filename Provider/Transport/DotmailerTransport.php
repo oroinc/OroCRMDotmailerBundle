@@ -17,13 +17,13 @@ use DotMailer\Api\DataTypes\ApiTransactionalDataImportReport;
 use DotMailer\Api\DataTypes\ApiTransactionalDataList;
 use DotMailer\Api\DataTypes\Int32List;
 use DotMailer\Api\Resources\IResources;
-use Guzzle\Iterator\AppendIterator;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Exception\RequiredOptionException;
 use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSettingsType;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AddressBookIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AppendIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignClickIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignOpenIterator;
@@ -118,9 +118,9 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     }
 
     /**
-     * @param AddressBook[]  $addressBooks
+     * @param AddressBook[] $addressBooks
      *
-     * @return ContactIterator
+     * @return AppendIterator
      */
     public function getAddressBookContacts($addressBooks)
     {

@@ -9,6 +9,7 @@ use DotMailer\Api\DataTypes\ApiFileMedia;
 use DotMailer\Api\DataTypes\ApiResubscribeResult;
 use DotMailer\Api\DataTypes\Int32List;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AppendIterator;
 
 /**
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
@@ -189,7 +190,7 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
             [$expectedAddressBook]
         );
         $this->assertInstanceOf(
-            'Guzzle\Iterator\AppendIterator',
+            AppendIterator::class,
             $iterator
         );
 
@@ -230,7 +231,7 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
             [$expectedAddressBook]
         );
         $this->assertInstanceOf(
-            'Guzzle\Iterator\AppendIterator',
+            AppendIterator::class,
             $iterator
         );
 
@@ -268,7 +269,7 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
         $expectedAddressBookOriginId = 15645;
         $iterator = $this->target->getCampaigns([0 => ['originId' => $expectedAddressBookOriginId]]);
         $this->assertInstanceOf(
-            'Guzzle\Iterator\AppendIterator',
+            AppendIterator::class,
             $iterator
         );
 

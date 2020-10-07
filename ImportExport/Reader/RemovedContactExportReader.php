@@ -2,9 +2,12 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Reader;
 
-use Guzzle\Iterator\AppendIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AppendIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemovedContactsExportIterator;
 
+/**
+ * Export reader for removed contacts
+ */
 class RemovedContactExportReader extends AbstractExportReader
 {
     protected function initializeReader()
