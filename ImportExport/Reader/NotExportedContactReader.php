@@ -2,10 +2,13 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Reader;
 
-use Guzzle\Iterator\AppendIterator;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AppendIterator;
 
+/**
+ * Export reader for not synced contacts
+ */
 class NotExportedContactReader extends AbstractReader
 {
     protected function initializeReader()
