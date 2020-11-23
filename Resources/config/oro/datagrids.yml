@@ -93,7 +93,7 @@ datagrids:
                     data_name: channel.id
                     options:
                         field_options:
-                            class: "OroIntegrationBundle:Channel"
+                            class: Oro\Bundle\IntegrationBundle\Entity\Channel
                             choice_label: name
                             translatable_options: false
                 name:
@@ -170,7 +170,7 @@ datagrids:
                     data_name: channel.id
                     options:
                         field_options:
-                            class: "OroIntegrationBundle:Channel"
+                            class: Oro\Bundle\IntegrationBundle\Entity\Channel
                             choice_label: name
                             translatable_options: false
                 entity:
