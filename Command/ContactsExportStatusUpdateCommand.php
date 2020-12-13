@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Oro\Bundle\DotmailerBundle\Command;
 
@@ -19,31 +20,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Import export results and reports, process not exported and rejected contacts
+ * Schedules status updates of dotdigital contact export operations.
  */
 class ContactsExportStatusUpdateCommand extends Command implements CronCommandInterface
 {
     /** @var string */
     protected static $defaultName = 'oro:cron:dotmailer:export-status:update';
 
-    /** @var TranslatorInterface */
-    private $translator;
+    private TranslatorInterface $translator;
+    private JobProcessor $jobProcessor;
+    private ManagerRegistry $doctrine;
+    private MessageProducerInterface $messageProducer;
 
-    /** @var JobProcessor */
-    private $jobProcessor;
-
-    /** @var ManagerRegistry */
-    private $doctrine;
-
-    /** @var MessageProducerInterface */
-    private $messageProducer;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param JobProcessor $jobProcessor
-     * @param ManagerRegistry $doctrine
-     * @param MessageProducerInterface $messageProducer
-     */
     public function __construct(
         TranslatorInterface $translator,
         JobProcessor $jobProcessor,
@@ -57,9 +45,6 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultDefinition()
     {
         return '*/5 * * * *';
@@ -75,16 +60,28 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
         return ($count > 0);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** @noinspection PhpMissingParentCallCommonInspection */
     protected function configure()
     {
-        $this->setDescription('Updates status of Dotmailer\'s contacts export operations.');
+        $this->setDescription('Schedules status updates of dotdigital contact export operations.')
+            ->setHelp(
+                <<<'HELP'
+The <info>%command.name%</info> command schedules status updates of dotdigital contact export operations.
+
+This command only schedules the jobs by adding messages to the message queue, so ensure
+that the message consumer processes (<info>oro:message-queue:consume</info>) are running
+for the actual status updates to be performed.
+
+  <info>php %command.full_name%</info>
+
+HELP
+            )
+        ;
     }
 
     /**
-     * {@inheritdoc}
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @noinspection PhpMissingParentCallCommonInspection
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
@@ -147,10 +144,7 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
         $output->writeln('Completed');
     }
 
-    /**
-     * @return ChannelRepository
-     */
-    protected function getIntegrationRepository()
+    protected function getIntegrationRepository(): ChannelRepository
     {
         return $this->doctrine->getRepository(Integration::class);
     }
