@@ -9,10 +9,10 @@ use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType;
 use Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\DataFieldStub;
 use Oro\Bundle\EntityConfigBundle\Provider\ConfigProvider;
 use Oro\Bundle\EntityExtendBundle\Form\Type\EnumSelectType;
+use Oro\Bundle\EntityExtendBundle\Tests\Unit\Fixtures\TestEnumValue;
 use Oro\Bundle\FormBundle\Form\Extension\TooltipFormExtension;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\TranslationBundle\Translation\Translator;
-use Oro\Component\Testing\Unit\Entity\Stub\StubEnumValue;
 use Oro\Component\Testing\Unit\EntityTrait;
 use Oro\Component\Testing\Unit\Form\Type\Stub\EntityType;
 use Oro\Component\Testing\Unit\Form\Type\Stub\EnumSelectType as EnumSelectTypeStub;
@@ -128,9 +128,9 @@ class DataFieldTypeTest extends FormIntegrationTestCase
                     EnumSelectType::class => new EnumSelectTypeStub(
                         [
                             // Field "type"
-                            new StubEnumValue('String', 'String'),
+                            new TestEnumValue('String', 'String'),
                             // Field "visibility"
-                            new StubEnumValue('Private', 'Private')
+                            new TestEnumValue('Private', 'Private')
                         ]
                     )
                 ],

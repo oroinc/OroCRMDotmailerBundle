@@ -7,11 +7,11 @@ use Oro\Bundle\DotmailerBundle\Form\Type\AddressBookType;
 use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType;
 use Oro\Bundle\EntityConfigBundle\Provider\ConfigProvider;
 use Oro\Bundle\EntityExtendBundle\Form\Type\EnumSelectType;
+use Oro\Bundle\EntityExtendBundle\Tests\Unit\Fixtures\TestEnumValue;
 use Oro\Bundle\EntityExtendBundle\Tests\Unit\Form\Extension\Stub\DynamicFieldsExtensionStub;
 use Oro\Bundle\FormBundle\Form\Extension\TooltipFormExtension;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\TranslationBundle\Translation\Translator;
-use Oro\Component\Testing\Unit\Entity\Stub\StubEnumValue;
 use Oro\Component\Testing\Unit\EntityTrait;
 use Oro\Component\Testing\Unit\Form\Extension\Stub\FormTypeValidatorExtensionStub;
 use Oro\Component\Testing\Unit\Form\Type\Stub\EntityType;
@@ -46,8 +46,8 @@ class AddressBookTypeTest extends FormIntegrationTestCase
                     ),
                     EnumSelectType::class => new EnumSelectTypeStub(
                         [
-                            new StubEnumValue('Public', 'Public'),
-                            new StubEnumValue('Private', 'Private')
+                            new TestEnumValue('Public', 'Public'),
+                            new TestEnumValue('Private', 'Private')
                         ]
                     )
                 ],
