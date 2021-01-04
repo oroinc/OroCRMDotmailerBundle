@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Oro\Bundle\DotmailerBundle\Command;
 
@@ -11,23 +12,16 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Process the queue of changed mapped entities fields and mark corresponding contacts for export
+ * Processes changed mapped entity field log and marks affected contacts for export.
  */
 class ProcessMappedFieldsUpdatesCommand extends Command implements CronCommandInterface
 {
     /** @var string */
     protected static $defaultName = 'oro:cron:dotmailer:mapped-fields-updates:process';
 
-    /** @var ManagerRegistry */
-    private $registry;
+    private ManagerRegistry $registry;
+    private MappedFieldsChangeProcessor $processor;
 
-    /** @var MappedFieldsChangeProcessor */
-    private $processor;
-
-    /**
-     * @param ManagerRegistry $registry
-     * @param MappedFieldsChangeProcessor $processor
-     */
     public function __construct(ManagerRegistry $registry, MappedFieldsChangeProcessor $processor)
     {
         parent::__construct();
@@ -36,9 +30,6 @@ class ProcessMappedFieldsUpdatesCommand extends Command implements CronCommandIn
         $this->processor = $processor;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultDefinition()
     {
         return '*/5 * * * *';
@@ -58,18 +49,17 @@ class ProcessMappedFieldsUpdatesCommand extends Command implements CronCommandIn
         return ($count > 0);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** @noinspection PhpMissingParentCallCommonInspection */
     protected function configure()
     {
-        $this
-            ->setDescription('Process the queue of changed mapped entities fields ' .
-                'and mark corresponding contacts for export');
+        $this->setDescription(
+            'Processes changed mapped entity field log and marks affected contacts for export.'
+        );
     }
 
     /**
-     * {@inheritdoc}
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @noinspection PhpMissingParentCallCommonInspection
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
