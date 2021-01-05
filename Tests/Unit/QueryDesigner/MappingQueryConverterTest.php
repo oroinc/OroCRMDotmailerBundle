@@ -31,6 +31,7 @@ class MappingQueryConverterTest extends OrmQueryConverterTest
         $converter = new MappingQueryConverter(
             $this->getFunctionProvider(),
             $this->getVirtualFieldProvider(),
+            $this->getVirtualRelationProvider(),
             $doctrine
         );
 

@@ -6,15 +6,15 @@ use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\QueryDesignerBundle\QueryDesigner\AbstractOrmQueryConverter;
 
+/**
+ * Converts column definitions to an ORM query.
+ */
 class ParentEntityFindQueryConverter extends AbstractOrmQueryConverter
 {
     const PARENT_ENTITY_ID_ALIAS = 'entityId';
 
     /** @var QueryBuilder */
     protected $qb;
-
-    /** @var string */
-    protected $rootEntityAlias;
 
     /** @var DoctrineHelper  */
     protected $doctrineHelper;
@@ -34,14 +34,26 @@ class ParentEntityFindQueryConverter extends AbstractOrmQueryConverter
      */
     public function convert($entity, $columns)
     {
-        $this->qb = $this->doctrine->getManagerForClass($entity)->createQueryBuilder();
         $source = new MappingQueryDesigner();
         $source->setEntity($entity);
         $definition['columns'] = $columns;
         $source->setDefinition(json_encode($definition));
+
+        $qb = $this->doctrine->getManagerForClass($entity)->createQueryBuilder();
+
+        $this->qb = $qb;
         $this->doConvert($source);
 
-        return $this->qb;
+        return $qb;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function resetConvertState(): void
+    {
+        parent::resetConvertState();
+        $this->qb = null;
     }
 
     /**
