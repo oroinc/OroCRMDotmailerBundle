@@ -10,8 +10,6 @@ use Oro\Bundle\QueryDesignerBundle\QueryDesigner\AbstractOrmQueryConverter;
  */
 class MappingQueryConverter extends AbstractOrmQueryConverter
 {
-    const TABLE_ALIAS_TEMPLATE  = 'tm%d';
-
     /** @var QueryBuilder */
     protected $qb;
 
