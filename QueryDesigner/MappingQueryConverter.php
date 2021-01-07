@@ -5,10 +5,11 @@ namespace Oro\Bundle\DotmailerBundle\QueryDesigner;
 use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\QueryDesignerBundle\QueryDesigner\AbstractOrmQueryConverter;
 
+/**
+ * Adds mapping columns to an ORM query.
+ */
 class MappingQueryConverter extends AbstractOrmQueryConverter
 {
-    const TABLE_ALIAS_TEMPLATE  = 'tm%d';
-
     /** @var QueryBuilder */
     protected $qb;
 
@@ -25,16 +26,27 @@ class MappingQueryConverter extends AbstractOrmQueryConverter
      */
     public function addMappingColumns(QueryBuilder $qb, $entity, $columns, $compositeColumns)
     {
-        $this->qb = $qb;
-        $rootAliases = $qb->getRootAliases();
-        $entityAlias = reset($rootAliases);
-        $this->rootEntityAlias = $entityAlias;
         $source = new MappingQueryDesigner();
         $source->setEntity($entity);
-        $definition['columns'] = $columns;
-        $definition['composite_columns'] = $compositeColumns;
-        $source->setDefinition(json_encode($definition));
+        $source->setDefinition(json_encode([
+            'columns'           => $columns,
+            'composite_columns' => $compositeColumns
+        ]));
+
+        $rootAliases = $qb->getRootAliases();
+        $this->rootEntityAlias = reset($rootAliases);
+        $this->qb = $qb;
         $this->doConvert($source);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function resetConvertState(): void
+    {
+        parent::resetConvertState();
+        $this->rootEntityAlias = null;
+        $this->qb = null;
     }
 
     /**

@@ -38,6 +38,7 @@ class ParentEntityFindQueryConverterTest extends OrmQueryConverterTest
         $converter = new ParentEntityFindQueryConverter(
             $this->getFunctionProvider(),
             $this->getVirtualFieldProvider(),
+            $this->getVirtualRelationProvider(),
             $doctrine
         );
 
