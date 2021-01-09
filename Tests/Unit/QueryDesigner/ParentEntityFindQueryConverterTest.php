@@ -12,13 +12,13 @@ use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\ContactBundle\Entity\Contact;
 use Oro\Bundle\ContactBundle\Entity\ContactAddress;
 use Oro\Bundle\DotmailerBundle\QueryDesigner\ParentEntityFindQueryConverter;
-use Oro\Bundle\QueryDesignerBundle\Tests\Unit\OrmQueryConverterTest;
+use Oro\Bundle\QueryDesignerBundle\Tests\Unit\OrmQueryConverterTestCase;
 
-class ParentEntityFindQueryConverterTest extends OrmQueryConverterTest
+class ParentEntityFindQueryConverterTest extends OrmQueryConverterTestCase
 {
     public function testConvert()
     {
-        $doctrine = $this->getDoctrine(
+        $doctrineHelper = $this->getDoctrineHelper(
             [
                 Contact::class => [],
                 ContactAddress::class => [],
@@ -30,7 +30,7 @@ class ParentEntityFindQueryConverterTest extends OrmQueryConverterTest
         );
 
         /** @var EntityManagerInterface|\PHPUnit\Framework\MockObject\MockObject $em */
-        $em = $doctrine->getManagerForClass(Contact::class);
+        $em = $doctrineHelper->getEntityManagerForClass(Contact::class);
         $em->expects($this->once())
             ->method('createQueryBuilder')
             ->willReturn(new QueryBuilder($em));
@@ -39,20 +39,11 @@ class ParentEntityFindQueryConverterTest extends OrmQueryConverterTest
             $this->getFunctionProvider(),
             $this->getVirtualFieldProvider(),
             $this->getVirtualRelationProvider(),
-            $doctrine
+            $doctrineHelper
         );
 
-        $doctrineHelper = $this->getMockBuilder('Oro\Bundle\EntityBundle\ORM\DoctrineHelper')
-                    ->disableOriginalConstructor()->getMock();
-        $doctrineHelper->expects($this->any())->method('getSingleEntityIdentifierFieldName')
-            ->will($this->returnValue('id'));
-        $converter->setDoctrineHelper($doctrineHelper);
-
         $columns = [
-            [
-                'name' => 'addresses+Oro\Bundle\ContactBundle\Entity\ContactAddress::postalCode',
-                'value' => 42
-            ],
+            ['name' => 'addresses+Oro\Bundle\ContactBundle\Entity\ContactAddress::postalCode', 'value' => 42]
         ];
         $qb = $converter->convert(Contact::class, $columns);
 

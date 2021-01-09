@@ -3,133 +3,96 @@
 namespace Oro\Bundle\DotmailerBundle\QueryDesigner;
 
 use Doctrine\ORM\QueryBuilder;
-use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
-use Oro\Bundle\QueryDesignerBundle\QueryDesigner\AbstractOrmQueryConverter;
+use Oro\Bundle\QueryDesignerBundle\Model\QueryDesigner;
+use Oro\Bundle\QueryDesignerBundle\QueryDesigner\QueryBuilderGroupingOrmQueryConverter;
 
 /**
  * Converts column definitions to an ORM query.
  */
-class ParentEntityFindQueryConverter extends AbstractOrmQueryConverter
+class ParentEntityFindQueryConverter extends QueryBuilderGroupingOrmQueryConverter
 {
-    const PARENT_ENTITY_ID_ALIAS = 'entityId';
-
-    /** @var QueryBuilder */
-    protected $qb;
-
-    /** @var DoctrineHelper  */
-    protected $doctrineHelper;
-
-    /**
-     * @param DoctrineHelper $doctrineHelper
-     */
-    public function setDoctrineHelper($doctrineHelper)
-    {
-        $this->doctrineHelper = $doctrineHelper;
-    }
+    public const PARENT_ENTITY_ID_ALIAS = 'entityId';
 
     /**
      * @param string $entity
-     * @param array $columns
+     * @param array  $columns
+     *
      * @return QueryBuilder
      */
-    public function convert($entity, $columns)
+    public function convert(string $entity, array $columns): QueryBuilder
     {
-        $source = new MappingQueryDesigner();
-        $source->setEntity($entity);
-        $definition['columns'] = $columns;
-        $source->setDefinition(json_encode($definition));
+        $source = new QueryDesigner(
+            $entity,
+            $this->encodeDefinition(['columns' => $columns])
+        );
 
-        $qb = $this->doctrine->getManagerForClass($entity)->createQueryBuilder();
-
-        $this->qb = $qb;
+        $qb = $this->doctrineHelper->getEntityManagerForClass($entity)->createQueryBuilder();
+        $this->context()->setQueryBuilder($qb);
         $this->doConvert($source);
 
         return $qb;
     }
 
     /**
-     * {@inheritDoc}
-     */
-    protected function resetConvertState(): void
-    {
-        parent::resetConvertState();
-        $this->qb = null;
-    }
-
-    /**
      * {@inheritdoc}
      */
-    protected function addSelectStatement()
+    protected function addSelectStatement(): void
     {
-        //need to know parent entity id only
-        $idField = $this->doctrineHelper->getSingleEntityIdentifierFieldName($this->getRootEntity());
-        $tableAlias = $this->getTableAliasForColumn(self::ROOT_ALIAS_KEY);
-        $this->qb->addSelect(sprintf('%s.%s as %s', $tableAlias, $idField, self::PARENT_ENTITY_ID_ALIAS));
+        $this->context()->getQueryBuilder()->addSelect(sprintf(
+            '%s.%s as %s',
+            $this->context()->getRootTableAlias(),
+            $this->doctrineHelper->getSingleEntityIdentifierFieldName($this->context()->getRootEntity()),
+            self::PARENT_ENTITY_ID_ALIAS
+        ));
     }
 
     /**
      * {@inheritdoc}
      */
     protected function addSelectColumn(
-        $entityClassName,
-        $tableAlias,
-        $fieldName,
-        $columnExpr,
-        $columnAlias,
-        $columnLabel,
+        string $entityClass,
+        string $tableAlias,
+        string $fieldName,
+        string $columnExpr,
+        string $columnAlias,
+        string $columnLabel,
         $functionExpr,
-        $functionReturnType,
-        $isDistinct = false
-    ) {
+        ?string $functionReturnType,
+        bool $isDistinct
+    ): void {
         //not used
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function addJoinStatement($joinType, $join, $joinAlias, $joinConditionType, $joinCondition)
+    protected function addWhereStatement(): void
     {
-        if (self::LEFT_JOIN === $joinType) {
-            $this->qb->leftJoin($join, $joinAlias, $joinConditionType, $joinCondition);
-        } else {
-            $this->qb->innerJoin($join, $joinAlias, $joinConditionType, $joinCondition);
-        }
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
-    protected function addFromStatement($entityClassName, $tableAlias)
-    {
-        $this->qb->from($entityClassName, $tableAlias);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function addWhereStatement()
-    {
-        foreach ($this->definition['columns'] as $column) {
+        $context = $this->context();
+        $definition = $context->getDefinition();
+        foreach ($definition['columns'] as $column) {
             /**
              * add condition to find parent entity id by modified entity id
              */
             $columnName = $column['name'];
             $value = $column['value'];
-            $relatedEntity = $this->getEntityClassName($columnName);
+            $relatedEntity = $this->getEntityClass($columnName);
             $relatedFieldName = $this->getFieldName($columnName);
             $idFieldName = $this->doctrineHelper->getSingleEntityIdentifierFieldName($relatedEntity);
             $tableAlias = $this->getTableAliasForColumn($columnName);
             $columnExpression = $this->buildColumnExpression($columnName, $tableAlias, $idFieldName);
             //in case of virtual relations, field name still should be replaced with id field name
             $columnExpression = str_replace($relatedFieldName, $idFieldName, $columnExpression);
-            $this->qb->andWhere(sprintf("%s = :value", $columnExpression))->setParameter('value', $value);
+            $context->getQueryBuilder()
+                ->andWhere(sprintf('%s = :value', $columnExpression))
+                ->setParameter('value', $value);
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function saveTableAliases($tableAliases)
+    protected function saveTableAliases(array $tableAliases): void
     {
         // nothing to do
     }
@@ -137,7 +100,7 @@ class ParentEntityFindQueryConverter extends AbstractOrmQueryConverter
     /**
      * {@inheritdoc}
      */
-    protected function saveColumnAliases($columnAliases)
+    protected function saveColumnAliases(array $columnAliases): void
     {
         // nothing to do
     }
@@ -145,7 +108,7 @@ class ParentEntityFindQueryConverter extends AbstractOrmQueryConverter
     /**
      * {@inheritdoc}
      */
-    protected function addGroupByColumn($columnAlias)
+    protected function addGroupByColumn(string $columnAlias): void
     {
         // do nothing, grouping is not allowed
     }
@@ -153,7 +116,7 @@ class ParentEntityFindQueryConverter extends AbstractOrmQueryConverter
     /**
      * {@inheritdoc}
      */
-    protected function addOrderByColumn($columnAlias, $columnSorting)
+    protected function addOrderByColumn(string $columnAlias, string $columnSorting): void
     {
         // do nothing, order could not change results
     }
@@ -161,7 +124,7 @@ class ParentEntityFindQueryConverter extends AbstractOrmQueryConverter
     /**
      * {@inheritdoc}
      */
-    protected function beginWhereGroup()
+    protected function beginWhereGroup(): void
     {
         // do nothing, where is not used
     }
@@ -169,7 +132,7 @@ class ParentEntityFindQueryConverter extends AbstractOrmQueryConverter
     /**
      * {@inheritdoc}
      */
-    protected function endWhereGroup()
+    protected function endWhereGroup(): void
     {
         // do nothing, where is not used
     }
@@ -177,7 +140,7 @@ class ParentEntityFindQueryConverter extends AbstractOrmQueryConverter
     /**
      * {@inheritdoc}
      */
-    protected function addWhereOperator($operator)
+    protected function addWhereOperator(string $operator): void
     {
         // do nothing, where is not used
     }
@@ -186,15 +149,15 @@ class ParentEntityFindQueryConverter extends AbstractOrmQueryConverter
      * {@inheritdoc}
      */
     protected function addWhereCondition(
-        $entityClassName,
-        $tableAlias,
-        $fieldName,
-        $columnExpr,
-        $columnAlias,
-        $filterName,
+        string $entityClass,
+        string $tableAlias,
+        string $fieldName,
+        string $columnExpr,
+        ?string $columnAlias,
+        string $filterName,
         array $filterData,
         $functionExpr = null
-    ) {
+    ): void {
         // do nothing, where is not used
     }
 }
