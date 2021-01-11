@@ -8,13 +8,13 @@ use Doctrine\ORM\Query\Expr\Select;
 use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\ContactBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\QueryDesigner\MappingQueryConverter;
-use Oro\Bundle\QueryDesignerBundle\Tests\Unit\OrmQueryConverterTest;
+use Oro\Bundle\QueryDesignerBundle\Tests\Unit\OrmQueryConverterTestCase;
 
-class MappingQueryConverterTest extends OrmQueryConverterTest
+class MappingQueryConverterTest extends OrmQueryConverterTestCase
 {
     public function testConvert()
     {
-        $doctrine = $this->getDoctrine(
+        $doctrineHelper = $this->getDoctrineHelper(
             [
                 Contact::class => [],
             ],
@@ -24,7 +24,7 @@ class MappingQueryConverterTest extends OrmQueryConverterTest
         );
 
         /** @var EntityManagerInterface|\PHPUnit\Framework\MockObject\MockObject $em */
-        $em = $doctrine->getManagerForClass(Contact::class);
+        $em = $doctrineHelper->getEntityManagerForClass(Contact::class);
         $qb = new QueryBuilder($em);
         $qb->from(Contact::class, 't1');
 
@@ -32,7 +32,7 @@ class MappingQueryConverterTest extends OrmQueryConverterTest
             $this->getFunctionProvider(),
             $this->getVirtualFieldProvider(),
             $this->getVirtualRelationProvider(),
-            $doctrine
+            $doctrineHelper
         );
 
         $columns = [

@@ -315,7 +315,7 @@ services:
             - "@oro_query_designer.query_designer.manager"
             - "@oro_entity.virtual_field_provider"
             - "@oro_entity.virtual_relation_provider"
-            - "@doctrine"
+            - "@oro_entity.doctrine_helper"
 
     oro_dotmailer.query_designer.parent_entity_query_converter:
         class: 'Oro\Bundle\DotmailerBundle\QueryDesigner\ParentEntityFindQueryConverter'
@@ -323,9 +323,7 @@ services:
             - "@oro_query_designer.query_designer.manager"
             - "@oro_entity.virtual_field_provider"
             - "@oro_entity.virtual_relation_provider"
-            - "@doctrine"
-        calls:
-            - [setDoctrineHelper, ["@oro_entity.doctrine_helper"]]
+            - "@oro_entity.doctrine_helper"
 
     oro_dotmailer.oauth_manager:
         class: Oro\Bundle\DotmailerBundle\Model\OAuthManager

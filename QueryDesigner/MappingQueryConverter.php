@@ -3,61 +3,46 @@
 namespace Oro\Bundle\DotmailerBundle\QueryDesigner;
 
 use Doctrine\ORM\QueryBuilder;
-use Oro\Bundle\QueryDesignerBundle\QueryDesigner\AbstractOrmQueryConverter;
+use Oro\Bundle\QueryDesignerBundle\Model\QueryDesigner;
+use Oro\Bundle\QueryDesignerBundle\QueryDesigner\QueryBuilderGroupingOrmQueryConverter;
 
 /**
  * Adds mapping columns to an ORM query.
  */
-class MappingQueryConverter extends AbstractOrmQueryConverter
+class MappingQueryConverter extends QueryBuilderGroupingOrmQueryConverter
 {
-    /** @var QueryBuilder */
-    protected $qb;
-
-    /** @var string */
-    protected $rootEntityAlias;
-
     /**
      * Add mapping columns to the query builder
      *
      * @param QueryBuilder $qb
-     * @param string $entity
-     * @param array $columns
-     * @param array $compositeColumns
+     * @param string       $entity
+     * @param array        $columns
+     * @param array        $compositeColumns
      */
-    public function addMappingColumns(QueryBuilder $qb, $entity, $columns, $compositeColumns)
+    public function addMappingColumns(QueryBuilder $qb, string $entity, array $columns, array $compositeColumns): void
     {
-        $source = new MappingQueryDesigner();
-        $source->setEntity($entity);
-        $source->setDefinition(json_encode([
-            'columns'           => $columns,
-            'composite_columns' => $compositeColumns
-        ]));
+        $source = new QueryDesigner(
+            $entity,
+            $this->encodeDefinition(['columns' => $columns, 'composite_columns' => $compositeColumns])
+        );
 
         $rootAliases = $qb->getRootAliases();
-        $this->rootEntityAlias = reset($rootAliases);
-        $this->qb = $qb;
+        $this->context()->setRootEntityAlias(reset($rootAliases));
+        $this->context()->setQueryBuilder($qb);
         $this->doConvert($source);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function resetConvertState(): void
-    {
-        parent::resetConvertState();
-        $this->rootEntityAlias = null;
-        $this->qb = null;
     }
 
     /**
      * Performs conversion of SELECT statement
      */
-    protected function addSelectStatement()
+    protected function addSelectStatement(): void
     {
-        foreach ($this->definition['composite_columns'] as $compositeColumn) {
+        $context = $this->context();
+        $definition = $context->getDefinition();
+        foreach ($definition['composite_columns'] as $compositeColumn) {
             $columnExpressions = [];
             foreach ($compositeColumn['columns'] as $columnName) {
-                $fieldName          = $this->getFieldName($columnName);
+                $fieldName = $this->getFieldName($columnName);
                 $tableAlias = $this->getTableAliasForColumn($columnName);
                 $columnExpressions[] = $this->buildColumnExpression($columnName, $tableAlias, $fieldName);
             }
@@ -66,70 +51,39 @@ class MappingQueryConverter extends AbstractOrmQueryConverter
             } else {
                 $columnExpression = current($columnExpressions);
             }
-            $this->qb->addSelect(sprintf('%s as %s', $columnExpression, $compositeColumn['alias']));
+            $context->getQueryBuilder()->addSelect(sprintf('%s as %s', $columnExpression, $compositeColumn['alias']));
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function addTableAliasForRootEntity()
+    protected function addTableAliasForRootEntity(): void
     {
-        $joinId                              = self::ROOT_ALIAS_KEY;
-        $this->tableAliases[$joinId]         = $this->rootEntityAlias;
-        $this->joins[$this->rootEntityAlias] = $joinId;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function buildColumnAliasKey($column)
-    {
-        if (is_string($column)) {
-            return $column;
-        }
-
-        $result = $column['name'];
-        if (is_array($result)) {
-            $result = md5(implode(','), $result);
-        }
-
-        return $result;
+        $this->context()->setRootTableAlias($this->context()->getRootEntityAlias());
     }
 
     /**
      * {@inheritdoc}
      */
     protected function addSelectColumn(
-        $entityClassName,
-        $tableAlias,
-        $fieldName,
-        $columnExpr,
-        $columnAlias,
-        $columnLabel,
+        string $entityClass,
+        string $tableAlias,
+        string $fieldName,
+        string $columnExpr,
+        string $columnAlias,
+        string $columnLabel,
         $functionExpr,
-        $functionReturnType,
-        $isDistinct = false
-    ) {
+        ?string $functionReturnType,
+        bool $isDistinct
+    ): void {
         //not used
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function addJoinStatement($joinType, $join, $joinAlias, $joinConditionType, $joinCondition)
-    {
-        if (self::LEFT_JOIN === $joinType) {
-            $this->qb->leftJoin($join, $joinAlias, $joinConditionType, $joinCondition);
-        } else {
-            $this->qb->innerJoin($join, $joinAlias, $joinConditionType, $joinCondition);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function addFromStatement($entityClassName, $tableAlias)
+    protected function addFromStatement(string $entityClass, string $tableAlias): void
     {
         // nothing to do
     }
@@ -137,7 +91,7 @@ class MappingQueryConverter extends AbstractOrmQueryConverter
     /**
      * {@inheritdoc}
      */
-    protected function saveTableAliases($tableAliases)
+    protected function saveTableAliases(array $tableAliases): void
     {
         // nothing to do
     }
@@ -145,7 +99,7 @@ class MappingQueryConverter extends AbstractOrmQueryConverter
     /**
      * {@inheritdoc}
      */
-    protected function saveColumnAliases($columnAliases)
+    protected function saveColumnAliases(array $columnAliases): void
     {
         // nothing to do
     }
@@ -153,7 +107,7 @@ class MappingQueryConverter extends AbstractOrmQueryConverter
     /**
      * {@inheritdoc}
      */
-    protected function addWhereStatement()
+    protected function addWhereStatement(): void
     {
         // do nothing, where is not used
     }
@@ -161,7 +115,7 @@ class MappingQueryConverter extends AbstractOrmQueryConverter
     /**
      * {@inheritdoc}
      */
-    protected function addGroupByColumn($columnAlias)
+    protected function addGroupByColumn(string $columnAlias): void
     {
         // do nothing, grouping is not allowed
     }
@@ -169,7 +123,7 @@ class MappingQueryConverter extends AbstractOrmQueryConverter
     /**
      * {@inheritdoc}
      */
-    protected function addOrderByColumn($columnAlias, $columnSorting)
+    protected function addOrderByColumn(string $columnAlias, string $columnSorting): void
     {
         // do nothing, order could not change results
     }
@@ -177,7 +131,7 @@ class MappingQueryConverter extends AbstractOrmQueryConverter
     /**
      * {@inheritdoc}
      */
-    protected function beginWhereGroup()
+    protected function beginWhereGroup(): void
     {
         // do nothing, where is not used
     }
@@ -185,7 +139,7 @@ class MappingQueryConverter extends AbstractOrmQueryConverter
     /**
      * {@inheritdoc}
      */
-    protected function endWhereGroup()
+    protected function endWhereGroup(): void
     {
         // do nothing, where is not used
     }
@@ -193,7 +147,7 @@ class MappingQueryConverter extends AbstractOrmQueryConverter
     /**
      * {@inheritdoc}
      */
-    protected function addWhereOperator($operator)
+    protected function addWhereOperator(string $operator): void
     {
         // do nothing, where is not used
     }
@@ -202,15 +156,15 @@ class MappingQueryConverter extends AbstractOrmQueryConverter
      * {@inheritdoc}
      */
     protected function addWhereCondition(
-        $entityClassName,
-        $tableAlias,
-        $fieldName,
-        $columnExpr,
-        $columnAlias,
-        $filterName,
+        string $entityClass,
+        string $tableAlias,
+        string $fieldName,
+        string $columnExpr,
+        ?string $columnAlias,
+        string $filterName,
         array $filterData,
         $functionExpr = null
-    ) {
+    ): void {
         // do nothing, where is not used
     }
 }
