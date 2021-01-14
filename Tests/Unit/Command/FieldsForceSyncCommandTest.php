@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Command;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\CronBundle\Command\CronCommandInterface;
 use Oro\Bundle\DotmailerBundle\Command\FieldsForceSyncCommand;
 use Oro\Bundle\DotmailerBundle\Model\SyncManager;

@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 use Oro\Bundle\CampaignBundle\Entity\EmailCampaignStatistics;
 use Oro\Bundle\CampaignBundle\Model\EmailCampaignStatisticsConnector;

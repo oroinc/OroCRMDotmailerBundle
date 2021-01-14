@@ -2,8 +2,8 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 
 class ScheduledForExportContactIterator extends AbstractIterator

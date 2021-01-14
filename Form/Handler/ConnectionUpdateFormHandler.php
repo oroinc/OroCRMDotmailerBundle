@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Form\Handler;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RequestStack;

@@ -55,7 +55,7 @@ class AddDefaultMappingListenerTest extends \PHPUnit\Framework\TestCase
         $this->ownerHelper = $this
             ->getMockBuilder('Oro\Bundle\IntegrationBundle\ImportExport\Helper\DefaultOwnerHelper')
             ->disableOriginalConstructor()->getMock();
-        $this->registry = $this->getMockBuilder('Doctrine\Common\Persistence\ManagerRegistry')
+        $this->registry = $this->getMockBuilder('Doctrine\Persistence\ManagerRegistry')
             ->getMock();
         $this->mappingListener = $this->getMockBuilder('Oro\Bundle\DotmailerBundle\EventListener\MappingUpdateListener')
             ->disableOriginalConstructor()->getMock();
@@ -130,7 +130,7 @@ class AddDefaultMappingListenerTest extends \PHPUnit\Framework\TestCase
             ]
         ));
 
-        $manager = $this->getMockBuilder('Doctrine\Common\Persistence\ObjectManager')
+        $manager = $this->getMockBuilder('Doctrine\Persistence\ObjectManager')
                     ->disableOriginalConstructor()->getMock();
         $this->registry->expects($this->once())->method('getManager')->will($this->returnValue($manager));
 
@@ -157,8 +157,8 @@ class AddDefaultMappingListenerTest extends \PHPUnit\Framework\TestCase
 
         $this->ownerHelper->expects($this->exactly(2))->method('populateChannelOwner');
 
-        $contactMetadata = $this->createMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
-        $customerMetadata = $this->createMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
+        $contactMetadata = $this->createMock('Doctrine\Persistence\Mapping\ClassMetadata');
+        $customerMetadata = $this->createMock('Doctrine\Persistence\Mapping\ClassMetadata');
         $this->doctrineHelper->expects($this->any())->method('getEntityMetadata')->will($this->returnValueMap(
             [
                 ['ContactClass', true, $contactMetadata],

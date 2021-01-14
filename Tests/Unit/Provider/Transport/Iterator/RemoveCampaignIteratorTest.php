@@ -8,7 +8,7 @@ class RemoveCampaignIteratorTest extends \PHPUnit\Framework\TestCase
 {
     public function testIterator()
     {
-        $registry = $this->createMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $registry = $this->createMock('Doctrine\Persistence\ManagerRegistry');
         $channel = $this->createMock('Oro\Bundle\IntegrationBundle\Entity\Channel');
         $keepCampaigns = [
             42,

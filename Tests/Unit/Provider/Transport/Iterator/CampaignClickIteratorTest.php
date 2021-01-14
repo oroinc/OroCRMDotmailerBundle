@@ -15,7 +15,7 @@ class CampaignClickIteratorTest extends \PHPUnit\Framework\TestCase
     public function testIteratorInitTrue()
     {
         $resource = $this->createMock('DotMailer\Api\Resources\IResources');
-        $registry = $this->createMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $registry = $this->createMock('Doctrine\Persistence\ManagerRegistry');
         $additionalResource = $this->getMockBuilder(AdditionalResource::class)
             ->disableOriginalConstructor()->getMock();
         $expectedCampaignOriginId = 15662;
@@ -87,7 +87,7 @@ class CampaignClickIteratorTest extends \PHPUnit\Framework\TestCase
     public function testIteratorInitFalse()
     {
         $resource = $this->createMock('DotMailer\Api\Resources\IResources');
-        $registry = $this->createMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $registry = $this->createMock('Doctrine\Persistence\ManagerRegistry');
         $additionalResource = $this->getMockBuilder(AdditionalResource::class)
             ->disableOriginalConstructor()->getMock();
         $expectedCampaignOriginId = 15662;
