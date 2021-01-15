@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Handler;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Exception\InvalidDefaultValueException;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;

@@ -3,7 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use DotMailer\Api\DataTypes\ApiAddressBook;
 use DotMailer\Api\DataTypes\ApiCampaign;
 use DotMailer\Api\DataTypes\ApiCampaignSend;

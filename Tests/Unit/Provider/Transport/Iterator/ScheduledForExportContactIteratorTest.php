@@ -9,7 +9,7 @@ class ScheduledForExportContactIteratorTest extends \PHPUnit\Framework\TestCase
 {
     public function testIterator()
     {
-        $registry = $this->createMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $registry = $this->createMock('Doctrine\Persistence\ManagerRegistry');
         $addressBook = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
         $addressBook->expects($this->any())
             ->method('getOriginId')

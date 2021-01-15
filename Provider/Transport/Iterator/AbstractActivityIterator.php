@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use DotMailer\Api\DataTypes\JsonArray;
 use DotMailer\Api\Resources\IResources;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;

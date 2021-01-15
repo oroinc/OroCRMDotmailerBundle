@@ -43,7 +43,7 @@ class UnsubscribedFromAccountContactReaderTest extends \PHPUnit\Framework\TestCa
         $this->contextMediator = $this->getMockBuilder('Oro\Bundle\IntegrationBundle\Provider\ConnectorContextMediator')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->managerRegistry = $this->createMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $this->managerRegistry = $this->createMock('Doctrine\Persistence\ManagerRegistry');
         $this->logger = $this->createMock('\Psr\Log\LoggerInterface');
 
         $this->reader = new UnsubscribedFromAccountContactReader(

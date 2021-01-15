@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Form\Type;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\SecurityBundle\ORM\Walker\AclHelper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;

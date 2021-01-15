@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Controller;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Form\Handler\DataFieldFormHandler;
 use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldType;

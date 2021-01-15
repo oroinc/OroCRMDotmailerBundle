@@ -50,7 +50,7 @@ class UpdateEntityFieldsFromContactIteratorTest extends \PHPUnit\Framework\TestC
         $repository->expects($this->any())->method('getScheduledForEntityFieldsUpdateQB')
             ->with($addressBook)
             ->will($this->returnValue($contactsToUpdateFromQB));
-        $registry = $this->createMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $registry = $this->createMock('Doctrine\Persistence\ManagerRegistry');
         $registry->expects($this->any())->method('getRepository')->with('OroDotmailerBundle:Contact')
             ->will($this->returnValue($repository));
 
@@ -137,7 +137,7 @@ class UpdateEntityFieldsFromContactIteratorTest extends \PHPUnit\Framework\TestC
         $repository->expects($this->any())->method('getScheduledForEntityFieldsUpdateQB')
             ->with($addressBook)
             ->will($this->returnValue($contactsToUpdateFromQB));
-        $registry = $this->createMock('Doctrine\Common\Persistence\ManagerRegistry');
+        $registry = $this->createMock('Doctrine\Persistence\ManagerRegistry');
         $registry->expects($this->any())->method('getRepository')->with('OroDotmailerBundle:Contact')
             ->will($this->returnValue($repository));
         $iterator->setRegistry($registry);

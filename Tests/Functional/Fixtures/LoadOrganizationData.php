@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 class LoadOrganizationData extends AbstractFixture

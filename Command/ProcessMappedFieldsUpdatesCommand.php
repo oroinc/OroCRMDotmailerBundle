@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Oro\Bundle\DotmailerBundle\Command;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\CronBundle\Command\CronCommandInterface;
 use Oro\Bundle\DotmailerBundle\Entity\ChangedFieldLog;
 use Oro\Bundle\DotmailerBundle\Processor\MappedFieldsChangeProcessor;

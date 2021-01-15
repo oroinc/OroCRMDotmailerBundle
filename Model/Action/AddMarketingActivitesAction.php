@@ -2,8 +2,8 @@
 
 namespace Oro\Bundle\DotmailerBundle\Model\Action;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Util\ClassUtils;
+use Doctrine\Persistence\ObjectManager;
 use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIterator;
 use Oro\Bundle\DotmailerBundle\Entity\Activity;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
