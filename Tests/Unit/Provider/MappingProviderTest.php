@@ -323,9 +323,9 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
         $dispatcher->expects($this->once())->method('hasListeners')->with(MappingTrackedFieldsEvent::NAME)
             ->will($this->returnValue(true));
         $dispatcher->expects($this->once())->method('dispatch')->with(
-            MappingTrackedFieldsEvent::NAME,
-            $this->isInstanceOf(MappingTrackedFieldsEvent::class)
-        )->will($this->returnCallback(function ($name, MappingTrackedFieldsEvent $event) use ($eventData) {
+            $this->isInstanceOf(MappingTrackedFieldsEvent::class),
+            MappingTrackedFieldsEvent::NAME
+        )->will($this->returnCallback(function (MappingTrackedFieldsEvent $event, $name) use ($eventData) {
             $event->setFields($eventData);
         }));
         $this->mappingProvider->setDispatcher($dispatcher);

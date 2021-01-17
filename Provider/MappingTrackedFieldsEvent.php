@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * The event can be used to add additional fields for tracking. For example, if a virtual field is used in the mapping

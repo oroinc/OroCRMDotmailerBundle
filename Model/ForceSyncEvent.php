@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Model;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * The event can be used to control which entities should be marked for force data fields sync

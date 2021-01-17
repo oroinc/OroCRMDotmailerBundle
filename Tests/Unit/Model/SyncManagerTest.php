@@ -178,9 +178,9 @@ class SyncManagerTest extends \PHPUnit\Framework\TestCase
         $dispatcher->expects($this->once())->method('hasListeners')->with(ForceSyncEvent::NAME)
             ->will($this->returnValue(true));
         $dispatcher->expects($this->once())->method('dispatch')->with(
-            ForceSyncEvent::NAME,
-            $this->isInstanceOf(ForceSyncEvent::class)
-        )->will($this->returnCallback(function ($name, ForceSyncEvent $event) use ($eventData) {
+            $this->isInstanceOf(ForceSyncEvent::class),
+            ForceSyncEvent::NAME
+        )->will($this->returnCallback(function (ForceSyncEvent $event, $name) use ($eventData) {
             $event->setClasses($eventData);
         }));
         $this->syncManager->setDispatcher($dispatcher);
