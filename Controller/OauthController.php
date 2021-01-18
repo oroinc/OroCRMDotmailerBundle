@@ -6,7 +6,7 @@ use Oro\Bundle\DotmailerBundle\Entity\OAuth;
 use Oro\Bundle\DotmailerBundle\Exception\BadRequestException;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/oauth")
  */
-class OauthController extends Controller
+class OauthController extends AbstractController
 {
     /**
      * @Route(

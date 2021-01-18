@@ -196,7 +196,7 @@ class MappingProvider
             }
             if ($this->dispatcher && $this->dispatcher->hasListeners(MappingTrackedFieldsEvent::NAME)) {
                 $event = new MappingTrackedFieldsEvent($trackedFields);
-                $this->dispatcher->dispatch(MappingTrackedFieldsEvent::NAME, $event);
+                $this->dispatcher->dispatch($event, MappingTrackedFieldsEvent::NAME);
                 $trackedFields = $event->getFields();
             }
             $this->cache->save($cacheKey, $trackedFields);

@@ -89,7 +89,7 @@ class SyncManager
 
         if ($this->dispatcher && $this->dispatcher->hasListeners(ForceSyncEvent::NAME)) {
             $event = new ForceSyncEvent($classesForForceUpdate);
-            $this->dispatcher->dispatch(ForceSyncEvent::NAME, $event);
+            $this->dispatcher->dispatch($event, ForceSyncEvent::NAME);
             $classesForForceUpdate = $event->getClasses();
         }
 
