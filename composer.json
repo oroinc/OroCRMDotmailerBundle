@@ -16,7 +16,7 @@
     "require": {
         "ext-curl": "*",
         "oro/crm": "4.2.*",
-        "romanpitak/dotmailer-api-v2-client": "3.0.*",
+        "romanpitak/dotmailer-api-v2-client": "4.2.*",
         "oro/marketing" : "4.2.*"
     },
     "repositories": {
