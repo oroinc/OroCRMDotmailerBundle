@@ -2,7 +2,10 @@ Please refer first to [UPGRADE.md](UPGRADE.md) for the most important items that
 
 The current file describes significant changes in the code that may affect the upgrade of your customizations.
 
-## 4.1.0
+## 4.2.0 (2020-01-29)
+[Show detailed list of changes](incompatibilities-4-2.md)
+
+## 4.1.0 (2020-01-31)
 
 ### Removed
 * `*.class` parameters for all entities were removed from the dependency injection container.
