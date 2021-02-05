@@ -15,9 +15,9 @@
     },
     "require": {
         "ext-curl": "*",
-        "oro/crm": "4.2.*",
+        "oro/crm": "5.0.*",
         "romanpitak/dotmailer-api-v2-client": "4.2.*",
-        "oro/marketing" : "4.2.*"
+        "oro/marketing" : "5.0.*"
     },
     "repositories": {
         "oro": {
@@ -29,7 +29,7 @@
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "4.2-dev"
+            "dev-master": "5.0-dev"
         }
     }
 }
