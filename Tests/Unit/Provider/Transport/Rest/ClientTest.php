@@ -3,6 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Rest;
 
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\Client;
+use Oro\Component\Testing\ReflectionUtil;
 
 class ClientTest extends \PHPUnit\Framework\TestCase
 {
@@ -39,10 +40,7 @@ class ClientTest extends \PHPUnit\Framework\TestCase
     {
         $restClient = $this->createMock('\RestClient\Client');
 
-        $class = new \ReflectionClass($this->client);
-        $prop  = $class->getProperty('restClient');
-        $prop->setAccessible(true);
-        $prop->setValue($this->client, $restClient);
+        ReflectionUtil::setPropertyValue($this->client, 'restClient', $restClient);
 
         $request = $this->createMock('\RestClient\Request');
 
@@ -136,13 +134,8 @@ class ClientTest extends \PHPUnit\Framework\TestCase
 
         $restClient = $this->createMock('RestClient\Client');
 
-        $class = new \ReflectionClass($this->client);
-        $prop  = $class->getProperty('restClient');
-        $prop->setAccessible(true);
-        $prop->setValue($this->client, $restClient);
-        $prop  = $class->getProperty('sleepBetweenAttempt');
-        $prop->setAccessible(true);
-        $prop->setValue($this->client, [0.1, 0.2, 0.3, 0.4]);
+        ReflectionUtil::setPropertyValue($this->client, 'restClient', $restClient);
+        ReflectionUtil::setPropertyValue($this->client, 'sleepBetweenAttempt', [0.1, 0.2, 0.3, 0.4]);
 
         $request = $this->createMock('RestClient\Request');
 
@@ -227,13 +220,8 @@ class ClientTest extends \PHPUnit\Framework\TestCase
     {
         $restClient = $this->createMock('RestClient\Client');
 
-        $class = new \ReflectionClass($this->client);
-        $prop  = $class->getProperty('restClient');
-        $prop->setAccessible(true);
-        $prop->setValue($this->client, $restClient);
-        $prop  = $class->getProperty('sleepBetweenAttempt');
-        $prop->setAccessible(true);
-        $prop->setValue($this->client, [0.1, 0.2, 0.3, 0.4]);
+        ReflectionUtil::setPropertyValue($this->client, 'restClient', $restClient);
+        ReflectionUtil::setPropertyValue($this->client, 'sleepBetweenAttempt', [0.1, 0.2, 0.3, 0.4]);
 
         $request = $this->createMock('RestClient\Request');
 
