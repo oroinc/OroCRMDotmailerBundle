@@ -23,7 +23,7 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
 {
     use EntityTrait;
 
-    /** @var  DataFieldMappingType $type */
+    /** @var DataFieldMappingType $type */
     protected $formType;
 
     /**

@@ -13,7 +13,7 @@ class NavigationListenerTest extends \PHPUnit\Framework\TestCase
     /** @var \PHPUnit\Framework\MockObject\MockObject */
     protected $registry;
 
-    /** @var  NavigationListener */
+    /** @var NavigationListener */
     protected $listener;
 
     protected function setUp(): void

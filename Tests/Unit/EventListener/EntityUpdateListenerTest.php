@@ -101,7 +101,7 @@ class EntityUpdateListenerTest extends \PHPUnit\Framework\TestCase
         $em->expects($this->once())->method('persist')->with($this->callback(
             function ($log) {
                 $this->assertInstanceOf(ChangedFieldLog::class, $log);
-                /** @var $log ChangedFieldLog */
+                /** @var ChangedFieldLog $log */
                 $this->assertEquals(1, $log->getChannelId());
                 $this->assertEquals('parentEntityClass', $log->getParentEntity());
                 $this->assertEquals('trackedFieldPath', $log->getRelatedFieldPath());
