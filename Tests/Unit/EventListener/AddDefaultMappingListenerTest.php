@@ -174,8 +174,8 @@ class AddDefaultMappingListenerTest extends \PHPUnit\Framework\TestCase
 
         $manager->expects($this->once())->method('persist')->with(
             $this->callback(function ($mapping) use ($channel) {
-                /** @var $mapping DataFieldMapping */
-                $this->assertTrue($mapping instanceof DataFieldMapping);
+                $this->assertInstanceOf(DataFieldMapping::class, $mapping);
+                /** @var DataFieldMapping $mapping */
                 $this->assertEquals('ContactClass', $mapping->getEntity());
                 $this->assertSame($channel, $mapping->getChannel());
                 $this->assertCount(3, $mapping->getConfigs());

@@ -8,17 +8,13 @@ use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 
 class AbstractDotmailerConnectorTest extends WebTestCase
 {
-    /** @var  AbstractDotmailerConnector */
+    /** @var AbstractDotmailerConnector */
     protected $target;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var \PHPUnit\Framework\MockObject\MockObject */
     protected $contextMediator;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var \PHPUnit\Framework\MockObject\MockObject */
     protected $context;
 
     protected function setUp(): void

@@ -24,7 +24,7 @@ class DataFieldTypeTest extends FormIntegrationTestCase
 {
     use EntityTrait;
 
-    /** @var DataFieldType $type */
+    /** @var DataFieldType */
     protected $formType;
 
     /** @var DataFieldFormSubscriber|\PHPUnit\Framework\MockObject\MockObject */
