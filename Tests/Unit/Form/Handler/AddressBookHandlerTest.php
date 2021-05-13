@@ -283,6 +283,10 @@ class AddressBookHandlerTest extends \PHPUnit\Framework\TestCase
             ->method('init')
             ->willThrowException($e);
 
+        $this->translator->expects(self::any())
+            ->method('trans')
+            ->willReturnCallback(static fn ($value) =>  $value . '_translated');
+
         $this->logger->expects($this->once())
             ->method('error')
             ->with('Unexpected exception occurred during creating Address Book', ['exception' => $e]);
