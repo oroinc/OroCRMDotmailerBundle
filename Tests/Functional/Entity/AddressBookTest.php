@@ -22,6 +22,7 @@ class AddressBookTest extends WebTestCase
 
         $this->initClient();
         $this->loadFixtures([LoadAddressBookData::class]);
+        $this->getOptionalListenerManager()->enableListener('oro_workflow.listener.event_trigger_collector');
     }
 
     public function testShouldScheduleSyncWhenMarketingListIsChanged()

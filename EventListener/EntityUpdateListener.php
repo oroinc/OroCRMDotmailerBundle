@@ -9,14 +9,14 @@ use Oro\Bundle\DotmailerBundle\Entity\Repository\ChangedFieldLogRepository;
 use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\PlatformBundle\EventListener\OptionalListenerInterface;
+use Oro\Bundle\PlatformBundle\EventListener\OptionalListenerTrait;
 
 /**
  * Tracks changes that done on fields of entities which are used in mapping configuration
  */
 class EntityUpdateListener implements OptionalListenerInterface
 {
-    /** @var bool  */
-    protected $enabled = true;
+    use OptionalListenerTrait;
 
     /** @var DoctrineHelper  */
     protected $doctrineHelper;
@@ -141,13 +141,5 @@ class EntityUpdateListener implements OptionalListenerInterface
         }
 
         $this->logs = [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setEnabled($enabled = true)
-    {
-        $this->enabled = $enabled;
     }
 }

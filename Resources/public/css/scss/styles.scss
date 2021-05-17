@@ -63,10 +63,12 @@
 .dotmailer-page .oro-subtitle,
 .dotmailer-sync-btn,
 .dotmailer-group a.btn {
+    // stylelint-disable-next-line declaration-no-important
     text-transform: none !important;
 }
 
 .nav .dotmailer .title,
 .dotmailer-page .breadcrumb li:nth-child(2) {
+    // stylelint-disable-next-line declaration-no-important
     text-transform: lowercase !important;
 }
