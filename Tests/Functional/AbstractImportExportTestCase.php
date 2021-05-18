@@ -32,6 +32,7 @@ abstract class AbstractImportExportTestCase extends WebTestCase
     protected function setUp()
     {
         $this->initClient();
+        $this->getOptionalListenerManager()->enableListener('oro_workflow.listener.event_trigger_collector');
 
         $this->stubResources();
 
