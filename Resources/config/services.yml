@@ -1062,8 +1062,8 @@ services:
             - "@oro_entity.doctrine_helper"
             - "@oro_dotmailer.provider.mapping"
         tags:
-            - { name: doctrine.event_listener, event: onFlush, method: onFlush }
-            - { name: doctrine.event_listener, event: postFlush, method: postFlush }
+            - { name: doctrine.event_listener, event: onFlush }
+            - { name: doctrine.event_listener, event: postFlush }
 
     oro_dotmailer.listener.entity_update:
         class: 'Oro\Bundle\DotmailerBundle\EventListener\EntityUpdateListener'
@@ -1071,8 +1071,8 @@ services:
             - "@oro_entity.doctrine_helper"
             - "@oro_dotmailer.provider.mapping"
         tags:
-            - { name: doctrine.event_listener, event: onFlush, method: onFlush }
-            - { name: doctrine.event_listener, event: postFlush, method: postFlush }
+            - { name: doctrine.event_listener, event: onFlush }
+            - { name: doctrine.event_listener, event: postFlush }
 
     oro_dotmailer.processor.mapped_fields_change:
         class: 'Oro\Bundle\DotmailerBundle\Processor\MappedFieldsChangeProcessor'
