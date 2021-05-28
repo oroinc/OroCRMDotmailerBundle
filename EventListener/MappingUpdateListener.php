@@ -11,13 +11,16 @@ use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactRepository;
 use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\PlatformBundle\EventListener\OptionalListenerInterface;
+use Oro\Bundle\PlatformBundle\EventListener\OptionalListenerTrait;
 
+/**
+ * Actualize DM mapping on entity changes
+ */
 class MappingUpdateListener implements OptionalListenerInterface
 {
-    const MAPPING_CONFIGS_FIELD = 'configs';
+    use OptionalListenerTrait;
 
-    /** @var bool  */
-    protected $enabled = true;
+    const MAPPING_CONFIGS_FIELD = 'configs';
 
     /** @var array  */
     protected $entityUpdateScheduled = [];
@@ -208,13 +211,5 @@ class MappingUpdateListener implements OptionalListenerInterface
             $repository->bulkUpdateScheduledForEntityFieldUpdateFlag($mapping->getEntity(), $mapping->getChannel());
             $this->entityFieldUpdateScheduled[$mapping->getEntity()] = true;
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setEnabled($enabled = true)
-    {
-        $this->enabled = $enabled;
     }
 }
