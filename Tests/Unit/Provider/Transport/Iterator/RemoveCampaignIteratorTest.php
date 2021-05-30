@@ -40,12 +40,9 @@ class RemoveCampaignIteratorTest extends \PHPUnit\Framework\TestCase
         $qb->expects($this->exactly(2))
             ->method('getQuery')
             ->will($this->returnValue($query));
-        $query->expects($this->at(0))
+        $query->expects($this->exactly(2))
             ->method('execute')
-            ->will($this->returnValue([$firstItem, $secondItem]));
-        $query->expects($this->at(1))
-            ->method('execute')
-            ->will($this->returnValue([$thirdItem]));
+            ->willReturnOnConsecutiveCalls([$firstItem, $secondItem], [$thirdItem]);
         $repository = $this->getMockBuilder('Oro\Bundle\DotmailerBundle\Entity\Repository\CampaignRepository')
             ->disableOriginalConstructor()
             ->getMock();

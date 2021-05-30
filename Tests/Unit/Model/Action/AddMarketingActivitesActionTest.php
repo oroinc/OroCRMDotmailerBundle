@@ -213,21 +213,20 @@ class AddMarketingActivitesActionTest extends \PHPUnit\Framework\TestCase
             ->with(Contact::class)
             ->will($this->returnValue($repository));
 
-        $marketingActivity = new MarketingActivity();
-        $this->activityFactory->expects($this->at(0))->method('create')->with(
-            $marketingCampaign,
-            'EntityClass',
-            11,
-            $activity->getUpdatedAt(),
-            MarketingActivity::TYPE_SEND,
-            $organization,
-            1
-        )->will($this->returnValue($marketingActivity));
-        $em->expects($this->at(0))->method('persist')->with($marketingActivity);
-
+        $createExpectations = [
+            [
+                $marketingCampaign,
+                'EntityClass',
+                11,
+                $activity->getUpdatedAt(),
+                MarketingActivity::TYPE_SEND,
+                $organization,
+                1
+            ]
+        ];
+        $createExpectationsResult = [new MarketingActivity()];
         if ($expectedType) {
-            $anotherMarketingActivity = new MarketingActivity();
-            $this->activityFactory->expects($this->at(1))->method('create')->with(
+            $createExpectations[] = [
                 $marketingCampaign,
                 'EntityClass',
                 11,
@@ -235,9 +234,21 @@ class AddMarketingActivitesActionTest extends \PHPUnit\Framework\TestCase
                 $expectedType,
                 $organization,
                 1
-            )->will($this->returnValue($anotherMarketingActivity));
-            $em->expects($this->at(1))->method('persist')->with($anotherMarketingActivity);
+            ];
+            $createExpectationsResult[] = new MarketingActivity();
         }
+        $this->activityFactory->expects($this->exactly(count($createExpectations)))
+            ->method('create')
+            ->withConsecutive(...$createExpectations)
+            ->willReturnOnConsecutiveCalls(...$createExpectationsResult);
+        $em->expects($this->exactly(count($createExpectations)))
+            ->method('persist')
+            ->withConsecutive(...array_map(
+                function ($item) {
+                    return [$item];
+                },
+                $createExpectationsResult
+            ));
 
         $options = [AddMarketingActivitesAction::OPTION_KEY_CHANGESET => $changeSet];
         $this->action->initialize($options);

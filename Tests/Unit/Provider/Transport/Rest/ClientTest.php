@@ -4,6 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Rest;
 
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\Client;
 use Oro\Component\Testing\ReflectionUtil;
+use PHPUnit\Framework\MockObject\Stub\ReturnCallback;
 
 class ClientTest extends \PHPUnit\Framework\TestCase
 {
@@ -89,7 +90,7 @@ class ClientTest extends \PHPUnit\Framework\TestCase
     {
         $this->initClient();
 
-        $this->response->expects($this->at(0))
+        $this->response->expects($this->once())
             ->method('getParsedResponse');
 
         $this->info->http_code = 204;
@@ -157,37 +158,18 @@ class ClientTest extends \PHPUnit\Framework\TestCase
             ->method('getParsedResponse')
             ->will($this->returnValue($responseBody));
 
-        $this->logger->expects($this->at(0))
+        $this->logger->expects($this->exactly(8))
             ->method('warning')
-            ->with('[Warning] Attempt failed. Error message:' . PHP_EOL . $exceptionMessage);
-
-        $this->logger->expects($this->at(1))
-            ->method('warning')
-            ->with('[Warning] Attempt number 1 with 0.1 sec delay.');
-
-        $this->logger->expects($this->at(2))
-            ->method('warning')
-            ->with('[Warning] Attempt failed. Error message:' . PHP_EOL . $exceptionMessage);
-
-        $this->logger->expects($this->at(3))
-            ->method('warning')
-            ->with('[Warning] Attempt number 2 with 0.2 sec delay.');
-
-        $this->logger->expects($this->at(4))
-            ->method('warning')
-            ->with('[Warning] Attempt failed. Error message:' . PHP_EOL . $exceptionMessage);
-
-        $this->logger->expects($this->at(5))
-            ->method('warning')
-            ->with('[Warning] Attempt number 3 with 0.3 sec delay.');
-
-        $this->logger->expects($this->at(6))
-            ->method('warning')
-            ->with('[Warning] Attempt failed. Error message:' . PHP_EOL . $exceptionMessage);
-
-        $this->logger->expects($this->at(7))
-            ->method('warning')
-            ->with('[Warning] Attempt number 4 with 0.4 sec delay.');
+            ->withConsecutive(
+                ['[Warning] Attempt failed. Error message:' . PHP_EOL . $exceptionMessage],
+                ['[Warning] Attempt number 1 with 0.1 sec delay.'],
+                ['[Warning] Attempt failed. Error message:' . PHP_EOL . $exceptionMessage],
+                ['[Warning] Attempt number 2 with 0.2 sec delay.'],
+                ['[Warning] Attempt failed. Error message:' . PHP_EOL . $exceptionMessage],
+                ['[Warning] Attempt number 3 with 0.3 sec delay.'],
+                ['[Warning] Attempt failed. Error message:' . PHP_EOL . $exceptionMessage],
+                ['[Warning] Attempt number 4 with 0.4 sec delay.']
+            );
 
         $this->client->execute('testCall');
     }
@@ -225,18 +207,6 @@ class ClientTest extends \PHPUnit\Framework\TestCase
 
         $request = $this->createMock('RestClient\Request');
 
-        $restClient->expects($this->at(0))
-            ->method('newRequest')
-            ->will($this->throwException(new \Exception('Exception A')));
-
-        $restClient->expects($this->at(1))
-            ->method('newRequest')
-            ->will($this->throwException(new \Exception('Exception B')));
-
-        $restClient->expects($this->at(2))
-            ->method('newRequest')
-            ->will($this->throwException(new \Exception('Exception C')));
-
         $exceptionMessagePattern = 'Dotmailer REST client exception:' . PHP_EOL .
             '[exception type] Exception' . PHP_EOL .
             '[exception message] %s' . PHP_EOL .
@@ -246,42 +216,40 @@ class ClientTest extends \PHPUnit\Framework\TestCase
             '[response code] ' . PHP_EOL .
             '[response body] ';
 
-        $this->logger->expects($this->at(0))
+        $this->logger->expects($this->exactly(6))
             ->method('warning')
-            ->with(
-                '[Warning] Attempt failed. Error message:' . PHP_EOL .
-                sprintf($exceptionMessagePattern, 'Exception A')
+            ->withConsecutive(
+                [
+                    '[Warning] Attempt failed. Error message:' . PHP_EOL .
+                    sprintf($exceptionMessagePattern, 'Exception A')
+                ],
+                ['[Warning] Attempt number 1 with 0.1 sec delay.'],
+                [
+                    '[Warning] Attempt failed. Error message:' . PHP_EOL .
+                    sprintf($exceptionMessagePattern, 'Exception B')
+                ],
+                ['[Warning] Attempt number 2 with 0.2 sec delay.'],
+                [
+                    '[Warning] Attempt failed. Error message:' . PHP_EOL .
+                    sprintf($exceptionMessagePattern, 'Exception C')
+                ],
+                ['[Warning] Attempt number 3 with 0.3 sec delay.']
             );
 
-        $this->logger->expects($this->at(1))
-            ->method('warning')
-            ->with('[Warning] Attempt number 1 with 0.1 sec delay.');
-
-        $this->logger->expects($this->at(2))
-            ->method('warning')
-            ->with(
-                '[Warning] Attempt failed. Error message:' . PHP_EOL .
-                sprintf($exceptionMessagePattern, 'Exception B')
-            );
-
-        $this->logger->expects($this->at(3))
-            ->method('warning')
-            ->with('[Warning] Attempt number 2 with 0.2 sec delay.');
-
-        $this->logger->expects($this->at(4))
-            ->method('warning')
-            ->with(
-                '[Warning] Attempt failed. Error message:' . PHP_EOL .
-                sprintf($exceptionMessagePattern, 'Exception C')
-            );
-
-        $this->logger->expects($this->at(5))
-            ->method('warning')
-            ->with('[Warning] Attempt number 3 with 0.3 sec delay.');
-
-        $restClient->expects($this->at(3))
+        $restClient->expects($this->exactly(4))
             ->method('newRequest')
-            ->will($this->returnValue($request));
+            ->willReturnOnConsecutiveCalls(
+                new ReturnCallback(function () {
+                    throw new \Exception('Exception A');
+                }),
+                new ReturnCallback(function () {
+                    throw new \Exception('Exception B');
+                }),
+                new ReturnCallback(function () {
+                    throw new \Exception('Exception C');
+                }),
+                $request
+            );
 
         $request->expects($this->once())
             ->method('getResponse')
