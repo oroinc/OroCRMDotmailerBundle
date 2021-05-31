@@ -52,17 +52,17 @@ class ContactExportQueryBuilderAdapterCompilerPathTest extends \PHPUnit\Framewor
             ->with(ContactExportQueryBuilderAdapterCompilerPath::REGISTRY)
             ->will($this->returnValue($definition));
 
-        $definition->expects($this->at(0))
+        $definition->expects($this->exactly(2))
             ->method('addMethodCall')
-            ->with(
-                ContactExportQueryBuilderAdapterCompilerPath::ADD_ADAPTER_METHOD,
-                [new Reference($firstAdapterId), 0]
-            );
-        $definition->expects($this->at(1))
-            ->method('addMethodCall')
-            ->with(
-                ContactExportQueryBuilderAdapterCompilerPath::ADD_ADAPTER_METHOD,
-                [new Reference($secondAdapterId), $secondAdapterPriority]
+            ->withConsecutive(
+                [
+                    ContactExportQueryBuilderAdapterCompilerPath::ADD_ADAPTER_METHOD,
+                    [new Reference($firstAdapterId), 0]
+                ],
+                [
+                    ContactExportQueryBuilderAdapterCompilerPath::ADD_ADAPTER_METHOD,
+                    [new Reference($secondAdapterId), $secondAdapterPriority]
+                ]
             );
 
         $this->target->process($container);

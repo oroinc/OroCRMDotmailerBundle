@@ -184,8 +184,9 @@ class AddDefaultMappingListenerTest extends \PHPUnit\Framework\TestCase
         );
         $manager->expects($this->once())->method('flush');
         $this->mappingProvider->expects($this->once())->method('clearCachedValues');
-        $this->mappingListener->expects($this->at(0))->method('setEnabled')->with(false);
-        $this->mappingListener->expects($this->at(1))->method('setEnabled')->with(true);
+        $this->mappingListener->expects($this->exactly(2))
+            ->method('setEnabled')
+            ->withConsecutive([false], [true]);
 
         $this->listener->afterSyncFinished($syncEvent);
     }

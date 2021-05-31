@@ -35,15 +35,10 @@ class CampaignClickImportTest extends AbstractImportExportTestCase
         $firstCampaignId = 15662;
         $secondCampaignId = 15666;
 
-        $this->resource->expects($this->at(0))
+        $this->resource->expects($this->exactly(2))
             ->method('GetCampaignClicks')
-            ->with($firstCampaignId)
-            ->will($this->returnValue(new ApiCampaignContactClickList()));
-
-        $this->resource->expects($this->at(1))
-            ->method('GetCampaignClicks')
-            ->with($secondCampaignId)
-            ->will($this->returnValue($entity));
+            ->withConsecutive([$firstCampaignId], [$secondCampaignId])
+            ->willReturnOnConsecutiveCalls(new ApiCampaignContactClickList(), $entity);
 
         $channel = $this->getReference('oro_dotmailer.channel.second');
 

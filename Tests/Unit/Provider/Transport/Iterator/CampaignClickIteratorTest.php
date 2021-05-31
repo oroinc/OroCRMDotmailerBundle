@@ -163,7 +163,7 @@ class CampaignClickIteratorTest extends \PHPUnit\Framework\TestCase
         $repository = $this->getMockBuilder(ContactRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $repository->expects($this->at(0))
+        $repository->expects($this->once())
             ->method('getEntitiesDataByOriginIds')
             ->with([$expectedData['originId']], $expectedData['addressBooks'])
             ->will($this->returnValue(

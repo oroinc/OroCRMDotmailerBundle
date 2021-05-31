@@ -383,11 +383,15 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
         $mappings[] = $mapping;
         $repository = $this->getRepositoryMock();
         $repository->expects($this->once())->method('findAll')->will($this->returnValue($mappings));
-        $this->cache->expects($this->at(0))->method('delete')->with('tracked_fields');
-        $this->cache->expects($this->at(1))->method('delete')->with('two_way_sync_entities_1');
-        $this->cache->expects($this->at(2))->method('delete')->with('prioritized_1');
-        $this->cache->expects($this->at(3))->method('delete')->with('export_MappingEntityClass_1');
-        $this->cache->expects($this->at(4))->method('delete')->with('two_way_sync_MappingEntityClass_1');
+        $this->cache->expects($this->exactly(5))
+            ->method('delete')
+            ->withConsecutive(
+                ['tracked_fields'],
+                ['two_way_sync_entities_1'],
+                ['prioritized_1'],
+                ['export_MappingEntityClass_1'],
+                ['two_way_sync_MappingEntityClass_1']
+            );
         $this->mappingProvider->clearCachedValues();
     }
 

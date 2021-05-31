@@ -97,6 +97,9 @@ class UpdateEntityFieldsFromContactIteratorTest extends \PHPUnit\Framework\TestC
         }
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function testIteratorWithCreateNewEntities()
     {
         $marketingListItemsQueryBuilderProvider = $this->getMockBuilder(
@@ -160,8 +163,16 @@ class UpdateEntityFieldsFromContactIteratorTest extends \PHPUnit\Framework\TestC
         $marketingListItemsQueryBuilderProvider->expects($this->exactly(3))->method('getFindEntityEmailsQB')
             ->with($addressBook)
             ->will($this->returnValue($emailQb));
-        $contactsToUpdateFromQB->expects($this->at(1))->method('setParameter')->with('newEntity', true);
-        $contactsToUpdateFromQB->expects($this->at(2))->method('setParameter')->with('organiztion', 1);
+        $contactsToUpdateFromQB->expects($this->exactly(6))
+            ->method('setParameter')
+            ->withConsecutive(
+                ['newEntity', true],
+                ['organiztion', 1],
+                ['newEntity', true],
+                ['organiztion', 1],
+                ['newEntity', true],
+                ['organiztion', 1],
+            );
         $contactsToUpdateFromQB->expects($this->exactly(3))
             ->method('setMaxResults')
             ->with(1);

@@ -343,12 +343,13 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
             ->with($expectedValueName = 'testValue', null);
         $contexts = [$previousStepContext];
         $currentContext = $this->createMock(ContextInterface::class);
-        $currentContext->expects($this->at(0))
+        $expectedValue = 23456;
+        $currentContext->expects($this->exactly(2))
             ->method('setValue')
-            ->with($expectedValueName, null);
-        $currentContext->expects($this->at(1))
-            ->method('setValue')
-            ->with($expectedValueName, $expectedValue = 23456);
+            ->withConsecutive(
+                [$expectedValueName, null],
+                [$expectedValueName, $expectedValue]
+            );
 
         $target = $this->initCompositeStubs($currentContext, $contexts);
 

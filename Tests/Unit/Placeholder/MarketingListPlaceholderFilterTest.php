@@ -40,16 +40,10 @@ class MarketingListPlaceholderFilterTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($actual);
 
         $entity = $this->createMock('Oro\Bundle\MarketingListBundle\Entity\MarketingList');
-        $this->repository
-            ->expects($this->at(0))
+        $this->repository->expects($this->exactly(2))
             ->method('findOneBy')
             ->with(['marketingList' => $entity])
-            ->will($this->returnValue(false));
-        $this->repository
-            ->expects($this->at(1))
-            ->method('findOneBy')
-            ->with(['marketingList' => $entity])
-            ->will($this->returnValue(true));
+            ->willReturnOnConsecutiveCalls(false, true);
 
         $actual = $this->target->isApplicableOnMarketingList($entity);
         $this->assertFalse($actual);

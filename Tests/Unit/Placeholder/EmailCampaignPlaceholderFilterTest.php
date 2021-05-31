@@ -52,16 +52,10 @@ class EmailCampaignPlaceholderFilterTest extends \PHPUnit\Framework\TestCase
             ->method('getTransport')
             ->will($this->returnValue(DotmailerEmailCampaignTransport::NAME));
 
-        $this->repository
-            ->expects($this->at(0))
+        $this->repository->expects($this->exactly(2))
             ->method('findOneBy')
             ->with(['emailCampaign' => $entity])
-            ->will($this->returnValue(false));
-        $this->repository
-            ->expects($this->at(1))
-            ->method('findOneBy')
-            ->with(['emailCampaign' => $entity])
-            ->will($this->returnValue(true));
+            ->willReturnOnConsecutiveCalls(false, true);
 
         $actual = $this->target->isApplicableOnEmailCampaign($entity);
         $this->assertFalse($actual);
