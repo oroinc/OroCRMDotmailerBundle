@@ -3,68 +3,47 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\DependencyInjection\CompilerPass;
 
 use Oro\Bundle\DotmailerBundle\DependencyInjection\CompilerPass\ContactExportQueryBuilderAdapterCompilerPath;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 class ContactExportQueryBuilderAdapterCompilerPathTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var ContactExportQueryBuilderAdapterCompilerPath
-     */
-    protected $target;
+    /** @var ContactExportQueryBuilderAdapterCompilerPath */
+    private $compiler;
 
     protected function setUp(): void
     {
-        $this->target = new ContactExportQueryBuilderAdapterCompilerPath();
+        $this->compiler = new ContactExportQueryBuilderAdapterCompilerPath();
     }
 
     public function testProcessDoNothingIfServicesNotFound()
     {
-        $container = $this->createMock('Symfony\Component\DependencyInjection\ContainerBuilder');
-        $container->expects($this->once())
-            ->method('findTaggedServiceIds')
-            ->with(ContactExportQueryBuilderAdapterCompilerPath::ADAPTERS_TAG)
-            ->will($this->returnValue([]));
-        $container->expects($this->never())
-            ->method('getDefinition');
+        $container = new ContainerBuilder();
 
-        $this->target->process($container);
+        $this->compiler->process($container);
     }
 
     public function testProcess()
     {
-        $firstAdapterId = 'firstAdapterId';
-        $secondAdapterId = 'secondAdapterId';
-        $secondAdapterPriority = 200;
+        $container = new ContainerBuilder();
+        $registryDef = $container->register('oro_dotmailer.contact.export.query_builder_adapter.registry');
 
-        $services = [
-            $firstAdapterId => [[]],
-            $secondAdapterId => [['priority' => $secondAdapterPriority]],
-        ];
+        $container->register('adapter_1')
+            ->addTag('oro_dotmailer.contact.export.query_builder_adapter', ['priority' => 100]);
+        $container->register('adapter_2')
+            ->addTag('oro_dotmailer.contact.export.query_builder_adapter');
+        $container->register('adapter_3')
+            ->addTag('oro_dotmailer.contact.export.query_builder_adapter', ['priority' => -100]);
 
-        $container = $this->createMock('Symfony\Component\DependencyInjection\ContainerBuilder');
-        $container->expects($this->once())
-            ->method('findTaggedServiceIds')
-            ->with(ContactExportQueryBuilderAdapterCompilerPath::ADAPTERS_TAG)
-            ->will($this->returnValue($services));
-        $definition = $this->createMock('Symfony\Component\DependencyInjection\Definition');
-        $container->expects($this->once())
-            ->method('getDefinition')
-            ->with(ContactExportQueryBuilderAdapterCompilerPath::REGISTRY)
-            ->will($this->returnValue($definition));
+        $this->compiler->process($container);
 
-        $definition->expects($this->exactly(2))
-            ->method('addMethodCall')
-            ->withConsecutive(
-                [
-                    ContactExportQueryBuilderAdapterCompilerPath::ADD_ADAPTER_METHOD,
-                    [new Reference($firstAdapterId), 0]
-                ],
-                [
-                    ContactExportQueryBuilderAdapterCompilerPath::ADD_ADAPTER_METHOD,
-                    [new Reference($secondAdapterId), $secondAdapterPriority]
-                ]
-            );
-
-        $this->target->process($container);
+        self::assertEquals(
+            [
+                ['addAdapter', [new Reference('adapter_1'), 100]],
+                ['addAdapter', [new Reference('adapter_2'), 0]],
+                ['addAdapter', [new Reference('adapter_3'), -100]]
+            ],
+            $registryDef->getMethodCalls()
+        );
     }
 }
