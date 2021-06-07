@@ -3,9 +3,11 @@
 namespace Oro\Bundle\DotmailerBundle\Model;
 
 use Doctrine\Persistence\ManagerRegistry;
+use DotMailer\Api\DataTypes\NullDataType;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactsExportRepository;
+use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
@@ -13,9 +15,16 @@ use Oro\Bundle\ImportExportBundle\Job\JobResult;
 use Oro\Bundle\ImportExportBundle\Processor\ProcessorRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\ImportExport\Job\Executor;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
-class QueueExportManager
+/**
+ * Manage sync export statuses
+ */
+class QueueExportManager implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @var ManagerRegistry
      */
@@ -37,6 +46,16 @@ class QueueExportManager
     protected $addressBookContactClassName;
 
     /**
+     * @var int
+     */
+    private $totalErroneousAttempts = 10;
+
+    /**
+     * @var int
+     */
+    private $totalNotFinishedAttempts = 30;
+
+    /**
      * @param ManagerRegistry    $managerRegistry
      * @param DotmailerTransport $dotmailerTransport
      * @param Executor           $executor
@@ -55,35 +74,96 @@ class QueueExportManager
     }
 
     /**
+     * @param int $attempts
+     */
+    public function setTotalErroneousAttempts(int $attempts)
+    {
+        $this->totalErroneousAttempts = $attempts;
+    }
+
+    /**
+     * @param int $attempts
+     */
+    public function setTotalNotFinishedAttempts(int $attempts)
+    {
+        $this->totalNotFinishedAttempts = $attempts;
+    }
+
+    /**
      * @param Channel $channel
      *
      * @return bool
      */
     public function updateExportResults(Channel $channel)
     {
-        $exportRepository = $this->getAddressBookContactsExportRepostiry();
+        $exportRepository = $this->getAddressBookContactsExportRepository();
 
-        $this->dotmailerTransport->init($channel->getTransport());
+        try {
+            $this->dotmailerTransport->init($channel->getTransport());
+        } catch (RestClientException $e) {
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
+
+            return false;
+        }
 
         $isExportFinished = true;
-
         foreach ($exportRepository->getNotFinishedExports($channel) as $export) {
-            $dotmailerStatus = $this->dotmailerTransport->getImportStatus($export->getImportId());
+            try {
+                $dotmailerStatus = $this->dotmailerTransport->getImportStatus($export->getImportId());
+            } catch (RestClientException $e) {
+                $isExportFinished = false;
+
+                $this->logger->error(
+                    \sprintf(
+                        '[EXPORT] Address book "%s" export report "%s" status failed: %s',
+                        $export->getAddressBook()->getName(),
+                        $export->getImportId(),
+                        $e->getMessage()
+                    ),
+                    ['exception' => $e]
+                );
+
+                $this->processAttempts($export);
+
+                continue;
+            }
+
+            if (!$dotmailerStatus->status || $dotmailerStatus->status instanceof NullDataType) {
+                $isExportFinished = false;
+
+                $this->logger->error(
+                    \sprintf(
+                        '[EXPORT] Address book "%s" export report "%s" status is empty',
+                        $export->getAddressBook()->getName(),
+                        $export->getImportId()
+                    )
+                );
+
+                $this->processAttempts($export);
+
+                continue;
+            }
+
+            $this->logger->info(
+                \sprintf(
+                    '[EXPORT] Address book "%s" export report "%s" status is "%s"',
+                    $export->getAddressBook()->getName(),
+                    $export->getImportId(),
+                    $dotmailerStatus->status
+                )
+            );
+
             $exportStatus = $exportRepository->getStatus($dotmailerStatus->status);
 
             $export->setStatus($exportStatus);
-            if ($exportRepository->isNotFinishedStatus($exportStatus)) {
+            if (!$exportRepository->isFinishedStatus($exportStatus)) {
                 $isExportFinished = false;
+
+                $this->processAttempts($export, $this->totalNotFinishedAttempts);
             }
         }
 
-        $this->managerRegistry->getManager()->flush();
-
-        if ($isExportFinished) {
-            $this->processExportFaults($channel);
-        }
-
-        return $isExportFinished;
+        return  $this->processExportFaults($channel) && $isExportFinished;
     }
 
     /**
@@ -95,10 +175,15 @@ class QueueExportManager
         if (!$jobResult) {
             throw new RuntimeException('Update skipped contacts failed.');
         }
+        if (!$jobResult->isSuccessful()) {
+            return false;
+        }
 
         $this->updateAddressBooksSyncStatus($channel);
 
         $this->managerRegistry->getManager()->flush();
+
+        return true;
     }
 
     /**
@@ -106,10 +191,10 @@ class QueueExportManager
      */
     public function updateAddressBooksSyncStatus(Channel $channel)
     {
-        $exportRepository = $this->getAddressBookContactsExportRepostiry();
+        $exportRepository = $this->getAddressBookContactsExportRepository();
 
         $addressBooks = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:AddressBook')
+            ->getRepository(AddressBook::class)
             ->findBy(['channel' => $channel]);
 
         foreach ($addressBooks as $addressBook) {
@@ -120,11 +205,15 @@ class QueueExportManager
             foreach ($addressBookExports as $addressBookExport) {
                 $status = $addressBookExport->getStatus();
 
-                if ($exportRepository->isErrorStatus($status) && !$lastErrorStatus) {
+                if ($exportRepository->isErrorStatus($status)) {
                     $lastErrorStatus = $status;
+                    $isExportFinished = false;
+                    break;
                 }
 
-                $isExportFinished = $isExportFinished && $exportRepository->isFinishedStatus($status);
+                if (!$exportRepository->isFinishedStatus($status)) {
+                    $isExportFinished = false;
+                }
             }
 
             if ($isExportFinished) {
@@ -151,6 +240,14 @@ class QueueExportManager
         if ($updateLastExportedAt) {
             $addressBook->setLastExportedAt(new \DateTime('now', new \DateTimeZone('UTC')));
         }
+
+        $this->logger->info(
+            \sprintf(
+                '[EXPORT] Address book "%s" export status changed to %s',
+                $addressBook->getName(),
+                $status->getId()
+            )
+        );
     }
 
     /**
@@ -178,8 +275,33 @@ class QueueExportManager
     /**
      * @return AddressBookContactsExportRepository
      */
-    private function getAddressBookContactsExportRepostiry()
+    private function getAddressBookContactsExportRepository()
     {
         return $this->managerRegistry->getRepository(AddressBookContactsExport::class);
+    }
+
+    /**
+     * @param AddressBookContactsExport $export
+     * @param int|null $numberOfAttempts
+     * @throws \Doctrine\ORM\EntityNotFoundException
+     */
+    private function processAttempts(
+        AddressBookContactsExport $export,
+        int $numberOfAttempts = null
+    ) {
+        if (null === $numberOfAttempts) {
+            $numberOfAttempts = $this->totalErroneousAttempts;
+        }
+
+        $exportRepository = $this->getAddressBookContactsExportRepository();
+        $attempts = (int)$export->getSyncAttempts() + 1;
+        $exportRepository->updateAddressBookContactsExportAttemptsCount($export, $attempts);
+
+        if ($attempts >= $numberOfAttempts) {
+            $status = $exportRepository->getStatus(AddressBookContactsExport::STATUS_UNKNOWN);
+            $exportRepository->updateAddressBookContactsStatus($export, $status);
+        }
+
+        $this->managerRegistry->getManagerForClass(AddressBookContactsExport::class)->refresh($export);
     }
 }
