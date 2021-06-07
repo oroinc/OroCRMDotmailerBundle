@@ -2,6 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider;
 
+/**
+ * Read string as CSV file.
+ */
 class CsvStringReader
 {
     /**
@@ -50,6 +53,13 @@ class CsvStringReader
 
         $this->setFilePath($tempFile);
         $this->initialize($options);
+    }
+
+    public function __destruct()
+    {
+        if ($this->fileInfo && $this->fileInfo->isFile()) {
+            @unlink($this->fileInfo->getRealPath());
+        }
     }
 
     /**
