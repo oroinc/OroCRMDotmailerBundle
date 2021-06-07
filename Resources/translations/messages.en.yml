@@ -234,6 +234,7 @@ oro:
             updated_at.label:                 Updated At
             channel.label:                    Integration
             faults_processed.label:           Faults Processed
+            sync_attempts.label:              Sync Attempts
 
         datafield:
             title:                            Data Field Information
