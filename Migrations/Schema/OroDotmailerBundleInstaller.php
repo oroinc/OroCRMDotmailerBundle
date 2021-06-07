@@ -23,7 +23,7 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
      */
     public function getMigrationVersion()
     {
-        return 'v1_7';
+        return 'v1_8';
     }
 
     /**
@@ -75,6 +75,9 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
         $migration->up($schema, $queries);
 
         $migration = new v1_3\OroDotmailerBundle();
+        $migration->up($schema, $queries);
+
+        $migration = new v1_8\AddSyncAttemptsToAbContactsExport();
         $migration->up($schema, $queries);
 
         $this->renameLastSyncedColumn($schema);

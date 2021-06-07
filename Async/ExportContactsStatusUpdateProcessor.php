@@ -91,42 +91,20 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
         $body = JSON::decode($message->getBody());
         $body = array_replace_recursive(['integrationId' => null], $body);
 
-        if (! $body['integrationId']) {
-            $this->logger->critical('The message invalid. It must have integrationId set');
-
+        $integration = $this->getIntegration($body);
+        if (!$integration) {
             return self::REJECT;
         }
 
-        /** @var EntityManagerInterface $em */
-        $em = $this->doctrineHelper->getEntityManagerForClass(Integration::class);
-
-        /** @var Integration $integration */
-        $integration = $em->find(Integration::class, $body['integrationId']);
-
-        if (! $integration) {
-            $this->logger->error(
-                sprintf('The integration not found: %s', $body['integrationId'])
-            );
-
-            return self::REJECT;
-        }
-        if (! $integration->isEnabled()) {
-            $this->logger->error(
-                sprintf('The integration is not enabled: %s', $body['integrationId'])
-            );
-
-            return self::REJECT;
-        }
-
+        $jobName = 'oro_dotmailer:export_contacts_status_update:' . $integration->getId();
         $existingJob = $this->jobProcessor->findRootJobByJobNameAndStatuses(
-            'oro_dotmailer:export_contacts_status_update:'.$integration->getId(),
+            $jobName,
             [Job::STATUS_NEW, Job::STATUS_RUNNING]
         );
         if ($existingJob) {
             return self::REJECT;
         }
 
-        $jobName = 'oro_dotmailer:export_contacts_status_update:'.$body['integrationId'];
         $ownerId = $message->getMessageId();
 
         $result = $this->jobRunner->runUnique($ownerId, $jobName, function () use ($body, $integration) {
@@ -142,15 +120,53 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
              * If finished we need to process export faults reports
              */
             if (!$this->exportManager->isExportFinished($integration)) {
-                $this->queueExportManager->updateExportResults($integration);
-            } elseif (!$this->exportManager->isExportFaultsProcessed($integration)) {
-                $this->queueExportManager->processExportFaults($integration);
+                return $this->queueExportManager->updateExportResults($integration);
+            }
+
+            if (!$this->exportManager->isExportFaultsProcessed($integration)) {
+                return $this->queueExportManager->processExportFaults($integration);
             }
 
             return true;
         });
 
         return $result ? self::ACK : self::REJECT;
+    }
+
+    /**
+     * @param array $body
+     * @return Integration|null
+     */
+    private function getIntegration(array $body)
+    {
+        if (!$body['integrationId']) {
+            $this->logger->critical('The message invalid. It must have integrationId set');
+
+            return null;
+        }
+
+        /** @var EntityManagerInterface $em */
+        $em = $this->doctrineHelper->getEntityManagerForClass(Integration::class);
+
+        /** @var Integration $integration */
+        $integration = $em->find(Integration::class, $body['integrationId']);
+
+        if (!$integration) {
+            $this->logger->error(
+                sprintf('The integration not found: %s', $body['integrationId'])
+            );
+
+            return null;
+        }
+        if (!$integration->isEnabled()) {
+            $this->logger->error(
+                sprintf('The integration is not enabled: %s', $body['integrationId'])
+            );
+
+            return null;
+        }
+
+        return $integration;
     }
 
     /**
