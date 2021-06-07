@@ -232,6 +232,8 @@ services:
             - "@oro_dotmailer.transport.integration_transport"
             - "@oro_integration.job_executor"
             - 'Oro\Bundle\DotmailerBundle\Entity\AddressBookContact'
+        calls:
+            - ['setLogger', ['@logger']]
 
     oro_dotmailer.datafield_manager:
         class: Oro\Bundle\DotmailerBundle\Model\DataFieldManager
