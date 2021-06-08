@@ -49,7 +49,7 @@ class DataFieldMappingController extends AbstractController
      *      permission="EDIT",
      *      class="OroDotmailerBundle:DataFieldMapping"
      * )
-     * @Template("OroDotmailerBundle:DataFieldMapping:update.html.twig")
+     * @Template("@OroDotmailer/DataFieldMapping/update.html.twig")
      */
     public function updateAction(DataFieldMapping $mapping)
     {
@@ -64,7 +64,7 @@ class DataFieldMappingController extends AbstractController
      *      permission="CREATE",
      *      class="OroDotmailerBundle:DataFieldMapping"
      * )
-     * @Template("OroDotmailerBundle:DataFieldMapping:update.html.twig")
+     * @Template("@OroDotmailer/DataFieldMapping/update.html.twig")
      */
     public function createAction()
     {
