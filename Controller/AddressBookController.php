@@ -3,19 +3,26 @@
 namespace Oro\Bundle\DotmailerBundle\Controller;
 
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler;
+use Oro\Bundle\DotmailerBundle\Form\Handler\ConnectionUpdateFormHandler;
 use Oro\Bundle\DotmailerBundle\Form\Type\MarketingListConnectionType;
 use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
+use Oro\Bundle\FormBundle\Model\UpdateHandler;
+use Oro\Bundle\IntegrationBundle\Manager\GenuineSyncScheduler;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Oro\Bundle\SecurityBundle\Annotation\CsrfProtection;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Dotmailer Address Book Controller
@@ -43,8 +50,10 @@ class AddressBookController extends AbstractController
      */
     public function synchronizeAddressBookAction(AddressBook $addressBook)
     {
+        $translator = $this->get(TranslatorInterface::class);
+
         try {
-            $this->get('oro_integration.genuine_sync_scheduler')->schedule(
+            $this->get(GenuineSyncScheduler::class)->schedule(
                 $addressBook->getChannel()->getId(),
                 null,
                 [AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION => $addressBook->getId()]
@@ -55,11 +64,11 @@ class AddressBookController extends AbstractController
                 'message' => str_replace(
                     '{{ job_view_link }}',
                     '',
-                    $this->get('translator')->trans('oro.dotmailer.addressbook.sync')
+                    $translator->trans('oro.dotmailer.addressbook.sync')
                 )
             ];
         } catch (\Exception $e) {
-            $this->get('logger')->error(
+            $this->get(LoggerInterface::class)->error(
                 sprintf(
                     'Failed to schedule address book synchronization. Address Book Id: %s.',
                     $addressBook->getId()
@@ -69,7 +78,7 @@ class AddressBookController extends AbstractController
 
             $status = Response::HTTP_BAD_REQUEST;
             $response = [
-                'message' => $this->get('translator')->trans('oro.integration.sync_error')
+                'message' => $translator->trans('oro.integration.sync_error')
             ];
         }
 
@@ -96,18 +105,20 @@ class AddressBookController extends AbstractController
      */
     public function synchronizeAddressBookDataFieldsAction(AddressBook $addressBook)
     {
+        $translator = $this->get(TranslatorInterface::class);
+
         try {
             $this->getDoctrine()->getRepository('OroDotmailerBundle:AddressBookContact')
                 ->bulkEntityUpdatedByAddressBook($addressBook);
 
             $status = Response::HTTP_OK;
             $response = [
-                'message' => $this->get('translator')->trans('oro.dotmailer.addressbook.sync_datafields_success')
+                'message' => $translator->trans('oro.dotmailer.addressbook.sync_datafields_success')
             ];
         } catch (\Exception $e) {
             $status = Response::HTTP_BAD_REQUEST;
             $response['message'] = sprintf(
-                $this->get('translator')->trans('oro.dotmailer.addressbook.sync_datafields_failed'),
+                $translator->trans('oro.dotmailer.addressbook.sync_datafields_failed'),
                 $e->getMessage()
             );
         }
@@ -173,7 +184,7 @@ class AddressBookController extends AbstractController
                 'createEntities'   => $addressBook->isCreateEntities()
             ]
             : [];
-        $savedId = $this->get('oro_dotmailer.form.handler.connection_update')->handle($form, $formData);
+        $savedId = $this->get(ConnectionUpdateFormHandler::class)->handle($form, $formData);
 
         return [
             'form'    => $form->createView(),
@@ -255,11 +266,30 @@ class AddressBookController extends AbstractController
      */
     protected function update(AddressBook $addressBook)
     {
-        return $this->get('oro_form.model.update_handler')->update(
+        return $this->get(UpdateHandler::class)->update(
             $addressBook,
             $this->get('oro_dotmailer.form.address_book'),
-            $this->get('translator')->trans('oro.dotmailer.addressbook.message.saved'),
-            $this->get('oro_dotmailer.form.handler.address_book_update')
+            $this->get(TranslatorInterface::class)->trans('oro.dotmailer.addressbook.message.saved'),
+            $this->get(AddressBookHandler::class)
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedServices()
+    {
+        return array_merge(
+            parent::getSubscribedServices(),
+            [
+                TranslatorInterface::class,
+                LoggerInterface::class,
+                GenuineSyncScheduler::class,
+                ConnectionUpdateFormHandler::class,
+                UpdateHandler::class,
+                AddressBookHandler::class,
+                'oro_dotmailer.form.address_book' => Form::class,
+            ]
         );
     }
 }
