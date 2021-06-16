@@ -11,6 +11,7 @@ Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport:
             - Length:
                 min: 8
                 max: 255
+                allowEmptyString: false
 
 Oro\Bundle\DotmailerBundle\Entity\AddressBook:
     constraints:
