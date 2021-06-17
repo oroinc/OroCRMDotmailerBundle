@@ -11,6 +11,9 @@ use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
+/**
+ * ORM repository for AddressBookContactsExport entity.
+ */
 class AddressBookContactsExportRepository extends EntityRepository
 {
     protected $rejectedExportStatuses = [
@@ -38,7 +41,8 @@ class AddressBookContactsExportRepository extends EntityRepository
             );
 
         $result = $qb->getQuery()->getOneOrNullResult();
-        return $result === null ? true : false;
+
+        return $result === null;
     }
 
     /**
@@ -165,7 +169,8 @@ class AddressBookContactsExportRepository extends EntityRepository
     public function isErrorStatus(AbstractEnumValue $status)
     {
         return $status->getId() !== AddressBookContactsExport::STATUS_FINISH &&
-            $status->getId() !== AddressBookContactsExport::STATUS_NOT_FINISHED;
+            $status->getId() !== AddressBookContactsExport::STATUS_NOT_FINISHED &&
+            $status->getId() !== AddressBookContactsExport::STATUS_UNKNOWN;
     }
 
     /**
@@ -217,6 +222,46 @@ class AddressBookContactsExportRepository extends EntityRepository
             ->set('addressBookContactExport.faultsProcessed', $qb->expr()->literal(true))
             ->getQuery()
             ->execute();
+    }
+
+    /**
+     * @param AddressBookContactsExport $export
+     * @param int $attempts
+     */
+    public function updateAddressBookContactsExportAttemptsCount(AddressBookContactsExport $export, int $attempts)
+    {
+        $qb = $this->createQueryBuilder('addressBookContactExport');
+        $qb->update();
+        $qb->set('addressBookContactExport.syncAttempts', ':attempts');
+        $qb->andWhere(
+            'addressBookContactExport.id = :id'
+        );
+
+        $qb->setParameter('attempts', $attempts);
+        $qb->setParameter('id', $export->getId());
+        $query = $qb->getQuery();
+        $query->execute();
+    }
+
+    /**
+     * @param AddressBookContactsExport $export
+     * @param AbstractEnumValue $status
+     */
+    public function updateAddressBookContactsStatus(
+        AddressBookContactsExport $export,
+        AbstractEnumValue $status
+    ) {
+        $qb = $this->createQueryBuilder('addressBookContactExport');
+        $qb->update();
+        $qb->set('addressBookContactExport.status', ':status');
+        $qb->set('addressBookContactExport.faultsProcessed', ':faultsProcessed');
+        $qb->andWhere('addressBookContactExport.id = :id');
+
+        $qb->setParameter('status', $status);
+        $qb->setParameter('faultsProcessed', true);
+        $qb->setParameter('id', $export->getId());
+        $query = $qb->getQuery();
+        $query->execute();
     }
 
     /**

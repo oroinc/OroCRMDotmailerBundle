@@ -8,6 +8,8 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 /**
+ * AddressBookContactsExport ORM entity.
+ *
  * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactsExportRepository")
  * @ORM\Table(
  *      name="orocrm_dm_ab_cnt_export",
@@ -52,7 +54,6 @@ class AddressBookContactsExport extends ExtendAddressBookContactsExport implemen
      */
     protected $createdAt;
 
-
     /**
      * @var \DateTime
      *
@@ -82,6 +83,13 @@ class AddressBookContactsExport extends ExtendAddressBookContactsExport implemen
      * @ORM\Column(name="faults_processed", type="boolean")
      */
     protected $faultsProcessed = false;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="sync_attempts", nullable=true, options={"unsigned"=true})
+     */
+    protected $syncAttempts;
 
     /**
      * @return int
@@ -207,6 +215,25 @@ class AddressBookContactsExport extends ExtendAddressBookContactsExport implemen
     public function setFaultsProcessed($faultsProcessed)
     {
         $this->faultsProcessed = $faultsProcessed;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSyncAttempts()
+    {
+        return $this->syncAttempts;
+    }
+
+    /**
+     * @param int $syncAttempts
+     * @return AddressBookContactsExport
+     */
+    public function setSyncAttempts(int $syncAttempts)
+    {
+        $this->syncAttempts = $syncAttempts;
 
         return $this;
     }
