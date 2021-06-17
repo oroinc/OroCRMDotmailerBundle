@@ -9,11 +9,15 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 use Oro\Bundle\DotmailerBundle\Model\QueueExportManager;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\AbstractImportExportTestCase;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookContactsExportData;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
+/**
+ * @dbIsolationPerTest
+ */
 class QueueExportManagerTest extends AbstractImportExportTestCase
 {
     /**
@@ -32,16 +36,20 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
         $this->target = $this->getContainer()->get('oro_dotmailer.queue_export_manager');
     }
 
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        // Rollback settings
+        $this->target->setTotalErroneousAttempts(10);
+        $this->target->setTotalNotFinishedAttempts(30);
+    }
+
     public function testUpdateExportResults()
     {
         /** @var Channel $channel */
         $channel = $this->getReference('oro_dotmailer.channel.fourth');
 
         $importWithFaultsId = $this->getReference('oro_dotmailer.address_book_contacts_export.first')
-            ->getImportId();
-
-        $importAddToAddressBook = $this
-            ->getReference('oro_dotmailer.address_book_contacts_export.add_to_address_book')
             ->getImportId();
 
         $scheduledForExport = $this->managerRegistry->getRepository(AddressBookContact::class)
@@ -66,11 +74,17 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
                 return '';
             });
 
-        $this->target->updateExportResults($channel);
+        $this->assertTrue($this->target->updateExportResults($channel));
 
         /** @var AddressBook $expectedAddressBook */
         $expectedAddressBook = $this->getReference('oro_dotmailer.address_book.fifth');
-        $this->assertExportStatusUpdated($channel, $importWithFaultsId, $expectedAddressBook);
+        $exportEntity = $this->getExportEntity($channel, $importWithFaultsId);
+        $this->assertEmpty($exportEntity->getSyncAttempts());
+        $exportStatus = $exportEntity->getStatus();
+        $this->assertEquals(AddressBookContactsExport::STATUS_FINISH, $exportStatus->getId());
+
+        $addressBookStatus = $expectedAddressBook->getSyncStatus();
+        $this->assertEquals(AddressBookContactsExport::STATUS_FINISH, $addressBookStatus->getId());
 
         /**
          * Check not exported contacts properly handled
@@ -92,24 +106,129 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
         $this->assertEquals(Contact::STATUS_SUPPRESSED, $addressBookContact->getStatus()->getId());
     }
 
+    public function testUpdateExportResultsWithUnknownStatus()
+    {
+        /** @var Channel $channel */
+        $channel = $this->getReference('oro_dotmailer.channel.fourth');
+
+        $importWithFaultsId = $this->getReference('oro_dotmailer.address_book_contacts_export.first')
+            ->getImportId();
+
+        $scheduledForExport = $this->managerRegistry->getRepository(AddressBookContact::class)
+            ->findBy(['scheduledForExport' => true]);
+        $this->assertCount(3, $scheduledForExport);
+
+        $apiContactImportStatus = new ApiContactImport();
+        $apiContactImportStatus->status = null;
+        $this->resource->expects($this->once())
+            ->method('GetContactsImportByImportId')
+            ->with($importWithFaultsId)
+            ->willReturn($apiContactImportStatus);
+
+        $this->resource->expects($this->exactly(2))
+            ->method('GetContactsImportReportFaults')
+            ->willReturnCallback(static function (Guid $id) use ($importWithFaultsId) {
+                if ((string)$id === $importWithFaultsId) {
+                    return file_get_contents(__DIR__ . '/Fixtures/importFaults.csv');
+                }
+
+                return '';
+            });
+
+        $this->assertFalse($this->target->updateExportResults($channel));
+
+        /** @var AddressBook $expectedAddressBook */
+        $expectedAddressBook = $this->getReference('oro_dotmailer.address_book.fifth');
+        $exportEntity = $this->getExportEntity($channel, $importWithFaultsId);
+        $this->assertEquals(1, $exportEntity->getSyncAttempts());
+        $this->assertTrue($exportEntity->isFaultsProcessed());
+        $exportStatus = $exportEntity->getStatus();
+        $this->assertEquals(AddressBookContactsExport::STATUS_NOT_FINISHED, $exportStatus->getId());
+
+        $addressBookStatus = $expectedAddressBook->getSyncStatus();
+        $this->assertEquals(AddressBookContactsExport::STATUS_NOT_FINISHED, $addressBookStatus->getId());
+
+        /**
+         * Check not exported contacts properly handled
+         */
+        $addressBookContacts = $this->managerRegistry
+            ->getRepository(AddressBookContact::class)
+            ->findBy(
+                [
+                    'contact' => $this->getReference('oro_dotmailer.contact.update_1'),
+                    'channel' => $channel,
+                    'addressBook' => $expectedAddressBook
+                ]
+            );
+
+        $this->assertCount(1, $addressBookContacts);
+        $addressBookContact = reset($addressBookContacts);
+
+        $this->assertEquals(Contact::STATUS_SUPPRESSED, $addressBookContact->getStatus()->getId());
+    }
+
+    public function testUpdateExportResultsWithErrorThrown()
+    {
+        $this->target->setTotalErroneousAttempts(1);
+        $this->target->setTotalNotFinishedAttempts(1);
+
+        /** @var Channel $channel */
+        $channel = $this->getReference('oro_dotmailer.channel.fourth');
+
+        $importWithFaultsId = $this->getReference('oro_dotmailer.address_book_contacts_export.first')
+            ->getImportId();
+
+        $scheduledForExport = $this->managerRegistry->getRepository(AddressBookContact::class)
+            ->findBy(['scheduledForExport' => true]);
+        $this->assertCount(3, $scheduledForExport);
+
+        $apiContactImportStatus = new ApiContactImport();
+        $apiContactImportStatus->status = null;
+        $this->resource->expects($this->once())
+            ->method('GetContactsImportByImportId')
+            ->with($importWithFaultsId)
+            ->willThrowException(new RestClientException());
+
+        $this->assertFalse($this->target->updateExportResults($channel));
+
+        /** @var AddressBook $expectedAddressBook */
+        $expectedAddressBook = $this->getReference('oro_dotmailer.address_book.fifth');
+        $exportEntity = $this->getExportEntity($channel, $importWithFaultsId);
+        $this->assertEquals(1, $exportEntity->getSyncAttempts());
+        $this->assertTrue($exportEntity->isFaultsProcessed());
+        $exportStatus = $exportEntity->getStatus();
+        $this->assertEquals(AddressBookContactsExport::STATUS_UNKNOWN, $exportStatus->getId());
+
+        /**
+         * Check not exported contacts properly handled
+         */
+        $addressBookContacts = $this->managerRegistry
+            ->getRepository(AddressBookContact::class)
+            ->findBy(
+                [
+                    'contact' => $this->getReference('oro_dotmailer.contact.update_1'),
+                    'channel' => $channel,
+                    'addressBook' => $expectedAddressBook
+                ]
+            );
+
+        $this->assertCount(1, $addressBookContacts);
+        $addressBookContact = reset($addressBookContacts);
+
+        $this->assertEquals(Contact::STATUS_SUBSCRIBED, $addressBookContact->getStatus()->getId());
+    }
+
     /**
      * @param Channel $channel
      * @param string $importId
-     * @param AddressBook $expectedAddressBook
+     * @return AddressBookContactsExport
      */
-    protected function assertExportStatusUpdated(Channel $channel, $importId, AddressBook $expectedAddressBook)
+    protected function getExportEntity(Channel $channel, string $importId): AddressBookContactsExport
     {
         $exportEntities = $this->managerRegistry->getRepository(AddressBookContactsExport::class)
             ->findBy(['channel' => $channel, 'importId' => $importId]);
         $this->assertCount(1, $exportEntities);
 
-        /** @var AddressBookContactsExport|bool $exportEntity */
-        $exportEntity = reset($exportEntities);
-
-        $exportStatus = $exportEntity->getStatus();
-        $this->assertEquals(AddressBookContactsExport::STATUS_FINISH, $exportStatus->getId());
-
-        $addressBookStatus = $expectedAddressBook->getSyncStatus();
-        $this->assertEquals(AddressBookContactsExport::STATUS_FINISH, $addressBookStatus->getId());
+        return reset($exportEntities);
     }
 }

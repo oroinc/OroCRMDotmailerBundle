@@ -2,14 +2,19 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\CampaignRepository;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemoveCampaignIterator;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 class RemoveCampaignIteratorTest extends \PHPUnit\Framework\TestCase
 {
     public function testIterator()
     {
-        $registry = $this->createMock('Doctrine\Persistence\ManagerRegistry');
-        $channel = $this->createMock('Oro\Bundle\IntegrationBundle\Entity\Channel');
+        $registry = $this->createMock(ManagerRegistry::class);
+        $channel = $this->createMock(Channel::class);
         $keepCampaigns = [
             42,
             53
@@ -23,37 +28,30 @@ class RemoveCampaignIteratorTest extends \PHPUnit\Framework\TestCase
             $thirdItem,
         ];
 
-        $qb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $qb = $this->createMock(QueryBuilder::class);
         $qb->expects($this->exactly(2))
             ->method('setMaxResults')
             ->with($batchSize = 2)
-            ->will($this->returnSelf());
+            ->willReturnSelf();
         $qb->expects($this->exactly(2))
             ->method('setFirstResult')
-            ->will($this->returnSelf());
-        $query = $this->getMockBuilder('Doctrine\ORM\AbstractQuery')
-            ->setMethods(['execute'])
-            ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->willReturnSelf();
+        $query = $this->createMock(AbstractQuery::class);
         $qb->expects($this->exactly(2))
             ->method('getQuery')
-            ->will($this->returnValue($query));
+            ->willReturn($query);
         $query->expects($this->exactly(2))
             ->method('execute')
             ->willReturnOnConsecutiveCalls([$firstItem, $secondItem], [$thirdItem]);
-        $repository = $this->getMockBuilder('Oro\Bundle\DotmailerBundle\Entity\Repository\CampaignRepository')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $repository = $this->createMock(CampaignRepository::class);
         $repository->expects($this->exactly(2))
             ->method('getCampaignsForRemoveQB')
             ->with($channel, $keepCampaigns)
-            ->will($this->returnValue($qb));
+            ->willReturn($qb);
 
         $registry->expects($this->any())
             ->method('getRepository')
-            ->will($this->returnValue($repository));
+            ->willReturn($repository);
 
         $iterator = new RemoveCampaignIterator($registry, $channel, $keepCampaigns);
         $iterator->setBatchSize($batchSize);
