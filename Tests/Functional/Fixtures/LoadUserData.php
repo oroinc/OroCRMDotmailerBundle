@@ -96,7 +96,7 @@ class LoadUserData extends AbstractFixture implements DependentFixtureInterface
         if (isset($data['role'])) {
             $role = $manager->getRepository('OroUserBundle:Role')->findOneByRole($data['role']);
             if ($role) {
-                $user->addRole($role);
+                $user->addUserRole($role);
             }
         }
     }
