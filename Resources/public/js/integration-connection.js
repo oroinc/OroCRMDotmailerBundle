@@ -43,7 +43,7 @@ define([
 
             _.extend(this.fieldsSets, options.fieldsSets);
 
-            $(options.channelSelector).on('change', _.bind(this.changeHandler, this));
+            $(options.channelSelector).on('change', this.changeHandler.bind(this));
         },
 
         /**

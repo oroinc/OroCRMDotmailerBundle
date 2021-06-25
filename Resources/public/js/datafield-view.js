@@ -48,7 +48,7 @@ define([
             }
             _.extend(this.fieldsSets, options.fieldsSets);
 
-            $(options.typeSelector).on('change', _.bind(this.processChange, this));
+            $(options.typeSelector).on('change', this.processChange.bind(this));
         },
 
         /**

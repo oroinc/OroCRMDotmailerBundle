@@ -160,12 +160,18 @@ services:
             - { name: form.type, alias: "oro_dotmailer_integration_connection" }
 
     #Form handlers
+    Oro\Bundle\DotmailerBundle\Form\Handler\ConnectionUpdateFormHandler:
+        alias: oro_dotmailer.form.handler.connection_update
+
     oro_dotmailer.form.handler.connection_update:
         class: Oro\Bundle\DotmailerBundle\Form\Handler\ConnectionUpdateFormHandler
         public: true
         arguments:
             - "@doctrine"
             - "@request_stack"
+
+    Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler:
+        alias: oro_dotmailer.form.handler.address_book_update
 
     oro_dotmailer.form.handler.address_book_update:
         class: Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler
