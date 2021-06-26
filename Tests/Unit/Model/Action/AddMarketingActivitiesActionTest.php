@@ -3,6 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Model\Action;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\CampaignBundle\Entity\Campaign as MarketingCampaign;
 use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 use Oro\Bundle\DotmailerBundle\Entity\Activity;
@@ -21,81 +22,61 @@ use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Bundle\WorkflowBundle\Model\EntityAwareInterface;
 use Oro\Component\ConfigExpression\ContextAccessor;
+use Oro\Component\Testing\ReflectionUtil;
 use Oro\Component\Testing\Unit\EntityTrait;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class AddMarketingActivitesActionTest extends \PHPUnit\Framework\TestCase
+class AddMarketingActivitiesActionTest extends \PHPUnit\Framework\TestCase
 {
     use EntityTrait;
 
-    /** @var MockObject|ContactInformationFieldsProvider */
-    protected $contactInformationFieldsProvider;
+    /** @var ContextAccessor|\PHPUnit\Framework\MockObject\MockObject */
+    private $contextAccessor;
 
-    /** @var MockObject|MarketingListItemsQueryBuilderProvider */
-    protected $marketingListItemsQueryBuilderProvider;
+    /** @var DoctrineHelper|\PHPUnit\Framework\MockObject\MockObject */
+    private $doctrineHelper;
 
-    /** @var MockObject|FieldHelper */
-    protected $fieldHelper;
-
-    /** @var MockObject|ContextAccessor */
-    protected $contextAccessor;
-
-    /** @var MockObject|DoctrineHelper */
-    protected $doctrineHelper;
-
-    /** @var MockObject|ActivityFactory */
-    protected $activityFactory;
+    /** @var ActivityFactory|\PHPUnit\Framework\MockObject\MockObject */
+    private $activityFactory;
 
     /** @var AddMarketingActivitesAction */
-    protected $action;
+    private $action;
 
     protected function setUp(): void
     {
         $this->contextAccessor = $this->createMock(ContextAccessor::class);
-        $this->contactInformationFieldsProvider = $this->getMockBuilder(ContactInformationFieldsProvider::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->marketingListItemsQueryBuilderProvider = $this
-            ->getMockBuilder(MarketingListItemsQueryBuilderProvider::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->fieldHelper = $this->getMockBuilder(FieldHelper::class)->disableOriginalConstructor()->getMock();
-        $this->doctrineHelper = $this->getMockBuilder(DoctrineHelper::class)->disableOriginalConstructor()->getMock();
-        $this->activityFactory = $this->getMockBuilder(ActivityFactory::class)->disableOriginalConstructor()->getMock();
+        $this->doctrineHelper = $this->createMock(DoctrineHelper::class);
+        $this->activityFactory = $this->createMock(ActivityFactory::class);
 
-        $this->action = new class(
+        $this->action = new AddMarketingActivitesAction(
             $this->contextAccessor,
-            $this->contactInformationFieldsProvider,
-            $this->marketingListItemsQueryBuilderProvider,
-            $this->fieldHelper
-        ) extends AddMarketingActivitesAction {
-            public function xgetOptions(): array
-            {
-                return $this->options;
-            }
-        };
+            $this->createMock(ContactInformationFieldsProvider::class),
+            $this->createMock(MarketingListItemsQueryBuilderProvider::class),
+            $this->createMock(FieldHelper::class)
+        );
 
         $this->action->setActivityFactory($this->activityFactory);
         $this->action->setDoctrineHelper($this->doctrineHelper);
 
-        /** @var EventDispatcher $dispatcher */
-        $dispatcher = $this->getMockBuilder(EventDispatcher::class)->disableOriginalConstructor()->getMock();
+        $dispatcher = $this->createMock(EventDispatcher::class);
         $this->action->setDispatcher($dispatcher);
     }
 
     public function testInitialize()
     {
         $options = ['options'];
-        static::assertSame($this->action, $this->action->initialize($options));
-        static::assertEquals($options, $this->action->xgetOptions());
+        self::assertSame($this->action, $this->action->initialize($options));
+        self::assertEquals($options, ReflectionUtil::getPropertyValue($this->action, 'options'));
     }
 
     public function testExecuteNotAllowedNotActivityEntity()
     {
         $context = $this->createMock(EntityAwareInterface::class);
-        $context->expects($this->once())->method('getEntity')->will($this->returnValue(''));
-        $this->contextAccessor->expects($this->never())->method('getValue');
+        $context->expects($this->once())
+            ->method('getEntity')
+            ->willReturn('');
+        $this->contextAccessor->expects($this->never())
+            ->method('getValue');
 
         $this->action->execute($context);
     }
@@ -104,8 +85,11 @@ class AddMarketingActivitesActionTest extends \PHPUnit\Framework\TestCase
     {
         $context = $this->createMock(EntityAwareInterface::class);
         $activity =  new Activity();
-        $context->expects($this->once())->method('getEntity')->will($this->returnValue($activity));
-        $this->contextAccessor->expects($this->never())->method('getValue');
+        $context->expects($this->once())
+            ->method('getEntity')
+            ->willReturn($activity);
+        $this->contextAccessor->expects($this->never())
+            ->method('getValue');
 
         $this->action->execute($context);
     }
@@ -116,8 +100,11 @@ class AddMarketingActivitesActionTest extends \PHPUnit\Framework\TestCase
         $campaign = new Campaign();
         $activity =  new Activity();
         $activity->setCampaign($campaign);
-        $context->expects($this->once())->method('getEntity')->will($this->returnValue($activity));
-        $this->contextAccessor->expects($this->never())->method('getValue');
+        $context->expects($this->once())
+            ->method('getEntity')
+            ->willReturn($activity);
+        $this->contextAccessor->expects($this->never())
+            ->method('getValue');
 
         $this->action->execute($context);
     }
@@ -130,25 +117,27 @@ class AddMarketingActivitesActionTest extends \PHPUnit\Framework\TestCase
         $campaign->setEmailCampaign($emailCampaign);
         $activity =  new Activity();
         $activity->setCampaign($campaign);
-        $context->expects($this->once())->method('getEntity')->will($this->returnValue($activity));
-        $this->contextAccessor->expects($this->never())->method('getValue');
+        $context->expects($this->once())
+            ->method('getEntity')
+            ->willReturn($activity);
+        $this->contextAccessor->expects($this->never())
+            ->method('getValue');
 
         $this->action->execute($context);
     }
 
     public function testExecuteNotAllowedFeatureDisabled()
     {
-        $featureChecker = $this->getMockBuilder(FeatureChecker::class)
-            ->setMethods(['isFeatureEnabled'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $featureChecker = $this->createMock(FeatureChecker::class);
         $featureChecker->expects($this->any())
             ->method('isFeatureEnabled')
             ->with('marketingactivity', null)
-            ->will($this->returnValue(false));
+            ->willReturn(false);
         $context = $this->createMock(EntityAwareInterface::class);
-        $context->expects($this->never())->method('getEntity');
-        $this->contextAccessor->expects($this->never())->method('getValue');
+        $context->expects($this->never())
+            ->method('getEntity');
+        $this->contextAccessor->expects($this->never())
+            ->method('getValue');
         $this->action->setFeatureChecker($featureChecker);
         $this->action->addFeature('marketingactivity');
 
@@ -157,15 +146,14 @@ class AddMarketingActivitesActionTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider activityDataProvider
-     *
-     * @param string $unsubscribe
-     * @param string $softBounce
-     * @param string $hardBounce
-     * @param array  $changeSet
-     * @param string $expectedType
      */
-    public function testExecute($unsubscribe, $softBounce, $hardBounce, $changeSet, $expectedType)
-    {
+    public function testExecute(
+        bool $unsubscribe,
+        bool $softBounce,
+        bool $hardBounce,
+        ?array $changeSet,
+        ?string $expectedType
+    ) {
         $context = $this->createMock(EntityAwareInterface::class);
         $campaign = new Campaign();
         $marketingCampaign = new MarketingCampaign();
@@ -188,30 +176,31 @@ class AddMarketingActivitesActionTest extends \PHPUnit\Framework\TestCase
         $contactOriginId = 123;
         $contact->setOriginId($contactOriginId);
         $activity->setContact($contact);
-        $context->expects($this->any())->method('getEntity')->will($this->returnValue($activity));
+        $context->expects($this->any())
+            ->method('getEntity')
+            ->willReturn($activity);
 
-        $em = $this->getMockBuilder('Doctrine\ORM\EntityManagerInterface')
-            ->getMock();
+        $em = $this->createMock(EntityManagerInterface::class);
         $this->doctrineHelper->expects($this->any())
             ->method('getEntityManagerForClass')
-            ->will($this->returnValue($em));
+            ->willReturn($em);
 
-        $repository = $this->getMockBuilder(ContactRepository::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $repository = $this->createMock(ContactRepository::class);
 
-        $repository->expects($this->once())->method('getEntitiesDataByOriginIds')->with([$contactOriginId], [1])
-            ->will($this->returnValue([
+        $repository->expects($this->once())
+            ->method('getEntitiesDataByOriginIds')
+            ->with([$contactOriginId], [1])
+            ->willReturn([
                 [
                     'entityClass' => 'EntityClass',
-                    'entityId' => 11
+                    'entityId'    => 11
                 ]
-            ]));
+            ]);
 
         $this->doctrineHelper->expects($this->once())
             ->method('getEntityRepositoryForClass')
             ->with(Contact::class)
-            ->will($this->returnValue($repository));
+            ->willReturn($repository);
 
         $createExpectations = [
             [
@@ -255,10 +244,7 @@ class AddMarketingActivitesActionTest extends \PHPUnit\Framework\TestCase
         $this->action->execute($context);
     }
 
-    /**
-     * @return array
-     */
-    public function activityDataProvider()
+    public function activityDataProvider(): array
     {
         return [
             'send new' => [
