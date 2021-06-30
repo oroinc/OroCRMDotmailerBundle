@@ -25,35 +25,24 @@ class DataFieldTypeTest extends FormIntegrationTestCase
     use EntityTrait;
 
     /** @var DataFieldType */
-    protected $formType;
+    private $formType;
 
-    /** @var DataFieldFormSubscriber|\PHPUnit\Framework\MockObject\MockObject */
-    protected $subscriber;
-
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
-        $this->subscriber = $this->createPartialMock(
-            DataFieldFormSubscriber::class,
-            ['preSet', 'preSubmit']
-        );
+        $subscriber = $this->getMockBuilder(DataFieldFormSubscriber::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['preSet', 'preSubmit'])
+            ->getMock();
 
         $this->formType = new DataFieldType(
             DataFieldStub::class,
-            $this->subscriber
+            $subscriber
         );
 
         parent::setUp();
     }
 
     /**
-     * @param bool $isValid
-     * @param mixed $defaultData
-     * @param array $submittedData
-     * @param mixed $expectedData
-     * @param array $options
      * @dataProvider submitProvider
      */
     public function testSubmit(bool $isValid, $defaultData, array $submittedData, $expectedData, array $options = [])
@@ -70,10 +59,7 @@ class DataFieldTypeTest extends FormIntegrationTestCase
         $this->assertEquals($expectedData, $form->getData());
     }
 
-    /**
-     * @return array
-     */
-    public function submitProvider()
+    public function submitProvider(): array
     {
         $expectedEntity = $this->getEntity(
             DataFieldStub::class,
@@ -86,6 +72,7 @@ class DataFieldTypeTest extends FormIntegrationTestCase
                 'notes' => ''
             ]
         );
+
         return [
             'datafield_valid' => [
                 'isValid'       => true,
@@ -104,15 +91,9 @@ class DataFieldTypeTest extends FormIntegrationTestCase
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getExtensions()
     {
-        /** @var ConfigProvider|\PHPUnit\Framework\MockObject\MockObject $configProvider */
         $configProvider = $this->createMock(ConfigProvider::class);
-
-        /** @var Translator|\PHPUnit\Framework\MockObject\MockObject $translator */
         $translator = $this->createMock(Translator::class);
 
         return [

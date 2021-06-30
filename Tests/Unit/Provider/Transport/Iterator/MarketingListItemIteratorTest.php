@@ -2,26 +2,28 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\QueryBuilder;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\MarketingListItemIterator;
+use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 
 class MarketingListItemIteratorTest extends \PHPUnit\Framework\TestCase
 {
     public function testIterator()
     {
-        $marketingListItemsQueryBuilderProvider = $this->getMockBuilder(
-            'Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider'
-        )
-            ->disableOriginalConstructor()
-            ->getMock();
-        $context = $this->createMock('Oro\Bundle\ImportExportBundle\Context\ContextInterface');
-        $addressBook = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
+        $marketingListItemsQueryBuilderProvider = $this->createMock(MarketingListItemsQueryBuilderProvider::class);
+        $context = $this->createMock(ContextInterface::class);
+        $addressBook = $this->createMock(AddressBook::class);
         $addressBook->expects($this->any())
             ->method('getOriginId')
-            ->will($this->returnValue($addressBookOriginId = 42));
+            ->willReturn($addressBookOriginId = 42);
         $firstItem = ['id' => 23];
         $secondItem = ['id' => 44];
 
-        $marketingListItemsQueryBuilderProvider->expects($this->any())->method('getAddressBook')
+        $marketingListItemsQueryBuilderProvider->expects($this->any())
+            ->method('getAddressBook')
             ->willReturn($addressBook);
 
         $expectedItems = [
@@ -36,20 +38,19 @@ class MarketingListItemIteratorTest extends \PHPUnit\Framework\TestCase
         );
         $iterator->setBatchSize(1);
 
-        $qb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $qb = $this->createMock(QueryBuilder::class);
         $qb->expects($this->exactly(3))
             ->method('setMaxResults')
             ->with(1);
-        $query = $this->getMockBuilder('Doctrine\ORM\AbstractQuery')
-            ->setMethods(['execute', 'useQueryCache'])
+        $query = $this->getMockBuilder(AbstractQuery::class)
+            ->onlyMethods(['execute'])
+            ->addMethods(['useQueryCache'])
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
 
         $query->expects($this->exactly(3))
             ->method('useQueryCache')
-            ->will($this->returnSelf());
+            ->willReturnSelf();
 
         $executeMap = [
             [$firstItem],
@@ -58,25 +59,21 @@ class MarketingListItemIteratorTest extends \PHPUnit\Framework\TestCase
         ];
         $query->expects($this->exactly(3))
             ->method('execute')
-            ->will(
-                $this->returnCallback(
-                    function () use (&$executeMap) {
-                        $result = current($executeMap);
-                        next($executeMap);
+            ->willReturnCallback(function () use (&$executeMap) {
+                $result = current($executeMap);
+                next($executeMap);
 
-                        return $result;
-                    }
-                )
-            );
+                return $result;
+            });
 
         $qb->expects($this->any())
             ->method('getQuery')
-            ->will($this->returnValue($query));
+            ->willReturn($query);
 
         $marketingListItemsQueryBuilderProvider->expects($this->exactly(3))
             ->method('getMarketingListItemsQB')
             ->with($addressBook)
-            ->will($this->returnValue($qb));
+            ->willReturn($qb);
 
         foreach ($iterator as $item) {
             $this->assertEquals(current($expectedItems), $item);

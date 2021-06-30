@@ -2,40 +2,30 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Provider\Connector;
 
-use Oro\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
+use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
+use Akeneo\Bundle\BatchBundle\Item\ExecutionContext;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData;
+use Oro\Bundle\IntegrationBundle\Provider\ConnectorContextMediator;
+use Oro\Bundle\IntegrationBundle\Provider\TransportInterface;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 
 class AbstractDotmailerConnectorTest extends WebTestCase
 {
-    /** @var AbstractDotmailerConnector */
-    protected $target;
-
-    /** @var \PHPUnit\Framework\MockObject\MockObject */
-    protected $contextMediator;
-
-    /** @var \PHPUnit\Framework\MockObject\MockObject */
-    protected $context;
-
     protected function setUp(): void
     {
         $this->initClient();
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData'
-            ]
-        );
+        $this->loadFixtures([LoadStatusData::class]);
     }
 
     public function testGetLastSyncDate()
     {
         $connector = $this->getConnector('oro_dotmailer.channel.second');
         $date = $connector->getLastSyncDate();
-        $this->assertInstanceOf('\DateTime', $date);
+        $this->assertInstanceOf(\DateTime::class, $date);
 
         $this->assertEquals('2015-10-10', $date->format('Y-m-d'));
     }
-
 
     public function testGetLastSyncDateReturnNullForFirstSync()
     {
@@ -44,52 +34,39 @@ class AbstractDotmailerConnectorTest extends WebTestCase
         $this->assertNull($date);
     }
 
-    /**
-     * @param string $channel
-     * @return CampaignConnector
-     */
-    protected function getConnector($channel)
+    private function getConnector(string $channel): CampaignConnector
     {
-        $this->contextMediator = $this->getMockBuilder(
-            'Oro\Bundle\IntegrationBundle\Provider\ConnectorContextMediator'
-        )
-            ->disableOriginalConstructor()
+        $contextMediator = $this->createMock(ConnectorContextMediator::class);
+        $transport = $this->getMockBuilder(TransportInterface::class)
+            ->onlyMethods(['init', 'getLabel', 'getSettingsFormType', 'getSettingsEntityFQCN'])
+            ->addMethods(['getCampaigns'])
             ->getMock();
-        $transport = $this->getMockBuilder('Oro\Bundle\IntegrationBundle\Provider\TransportInterface')
-            ->setMethods(['init', 'getLabel', 'getSettingsFormType', 'getSettingsEntityFQCN', 'getCampaigns'])
-            ->getMock();
-        $iterator = $this->createMock('\Iterator');
+        $iterator = $this->createMock(\Iterator::class);
         $transport->expects($this->any())
             ->method('getCampaigns')
-            ->will($this->returnValue($iterator));
-        $this->contextMediator->expects($this->any())
+            ->willReturn($iterator);
+        $contextMediator->expects($this->any())
             ->method('getTransport')
-            ->will($this->returnValue($transport));
+            ->willReturn($transport);
 
-        $stepExecution = $this->getMockBuilder(
-            'Akeneo\Bundle\BatchBundle\Entity\StepExecution'
-        )
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->contextMediator->expects($this->any())
+        $contextMediator->expects($this->any())
             ->method('getChannel')
-            ->will($this->returnValue($this->getReference($channel)));
+            ->willReturn($this->getReference($channel));
+
+        $stepExecution = $this->createMock(StepExecution::class);
+        $stepExecution->expects($this->any())
+            ->method('getExecutionContext')
+            ->willReturn($this->createMock(ExecutionContext::class));
 
         $connector = new CampaignConnector(
-            $this->getContainer()
-                ->get('oro_importexport.context_registry'),
-            $this->getContainer()
-                ->get('oro_integration.logger.strategy'),
-            $this->contextMediator
+            $this->getContainer()->get('oro_importexport.context_registry'),
+            $this->getContainer()->get('oro_integration.logger.strategy'),
+            $contextMediator
         );
         $connector->setManagerRegistry($this->getContainer()
             ->get('doctrine'));
-        $this->context = $this->createMock('Akeneo\Bundle\BatchBundle\Item\ExecutionContext');
-        $stepExecution->expects($this->any())
-            ->method('getExecutionContext')
-            ->will($this->returnValue($this->context));
         $connector->setStepExecution($stepExecution);
+
         return $connector;
     }
 }
