@@ -11,33 +11,30 @@ use Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\EnumValueStub;
 use Oro\Bundle\DotmailerBundle\Validator\Constraints\DataFieldMappingConfigConstraint;
 use Oro\Bundle\DotmailerBundle\Validator\DataFieldMappingConfigValidator;
 use Oro\Bundle\EntityBundle\DoctrineExtensions\DBAL\Types\DurationType;
+use Oro\Bundle\EntityBundle\Provider\EntityFieldProvider;
 use Oro\DBAL\Types\MoneyType;
 use Oro\DBAL\Types\PercentType;
+use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class DataFieldMappingConfigValidatorTest extends \PHPUnit\Framework\TestCase
+class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
 {
     /** @var \PHPUnit\Framework\MockObject\MockObject */
-    protected $entityFieldProvider;
+    private $entityFieldProvider;
 
     /** @var \PHPUnit\Framework\MockObject\MockObject */
-    protected $translator;
-
-    /** @var DataFieldMappingConfigValidator */
-    protected $validator;
-
-    /** @var \PHPUnit\Framework\MockObject\MockObject */
-    protected $context;
+    private $translator;
 
     protected function setUp(): void
     {
-        $this->entityFieldProvider = $this->getMockBuilder('Oro\Bundle\EntityBundle\Provider\EntityFieldProvider')
-            ->disableOriginalConstructor()->getMock();
-        $this->translator = $this->getMockBuilder('Symfony\Contracts\Translation\TranslatorInterface')
-            ->disableOriginalConstructor()->getMock();
-        $this->validator = new DataFieldMappingConfigValidator($this->entityFieldProvider, $this->translator);
-        $this->context = $this->getMockBuilder('Symfony\Component\Validator\Context\ExecutionContextInterface')
-            ->getMock();
-        $this->validator->initialize($this->context);
+        $this->entityFieldProvider = $this->createMock(EntityFieldProvider::class);
+        $this->translator = $this->createMock(TranslatorInterface::class);
+        parent::setUp();
+    }
+
+    protected function createValidator()
+    {
+        return new DataFieldMappingConfigValidator($this->entityFieldProvider, $this->translator);
     }
 
     public function testValidateNumericFailed()
@@ -51,27 +48,29 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit\Framework\TestCase
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
         $mappingConfig->setMapping($mapping);
-        $this->entityFieldProvider->expects($this->once())->method('getFields')
+        $this->entityFieldProvider->expects($this->once())
+            ->method('getFields')
             ->with('entityClass', false, true, false, false, false, false)
-            ->will($this->returnValue([
+            ->willReturn([
                 [
                     'name' => 'entityFieldName',
                     'type' => Types::STRING
                 ]
-            ]));
+            ]);
 
-        $this->translator->expects($this->once())->method('trans')
+        $this->translator->expects($this->once())
+            ->method('trans')
             ->with(
                 'oro.dotmailer.datafieldmappingconfig.validation.incompatible_types_numeric',
                 ['%datafield%' => 'dataFieldName']
             )
-            ->will($this->returnValue('translated error message'));
-        $violation = $this->createMock('Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface');
-        $this->context->expects($this->once())->method('buildViolation')->with('translated error message', [])
-            ->will($this->returnValue($violation));
+            ->willReturn('translated error message');
 
         $constraint = new DataFieldMappingConfigConstraint();
         $this->validator->validate($mappingConfig, $constraint);
+
+        $this->buildViolation('translated error message')
+            ->assertRaised();
     }
 
     public function testValidateBooleanFailed()
@@ -85,27 +84,29 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit\Framework\TestCase
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
         $mappingConfig->setMapping($mapping);
-        $this->entityFieldProvider->expects($this->once())->method('getFields')
+        $this->entityFieldProvider->expects($this->once())
+            ->method('getFields')
             ->with('entityClass', false, true, false, false, false, false)
-            ->will($this->returnValue([
+            ->willReturn([
                 [
                     'name' => 'entityFieldName',
                     'type' => Types::STRING
                 ]
-            ]));
+            ]);
 
-        $this->translator->expects($this->once())->method('trans')
+        $this->translator->expects($this->once())
+            ->method('trans')
             ->with(
                 'oro.dotmailer.datafieldmappingconfig.validation.incompatible_types_boolean',
                 ['%datafield%' => 'dataFieldName']
             )
-            ->will($this->returnValue('translated error message'));
-        $violation = $this->createMock('Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface');
-        $this->context->expects($this->once())->method('buildViolation')->with('translated error message', [])
-            ->will($this->returnValue($violation));
+            ->willReturn('translated error message');
 
         $constraint = new DataFieldMappingConfigConstraint();
         $this->validator->validate($mappingConfig, $constraint);
+
+        $this->buildViolation('translated error message')
+            ->assertRaised();
     }
 
     public function testValidateDateFailed()
@@ -119,27 +120,29 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit\Framework\TestCase
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
         $mappingConfig->setMapping($mapping);
-        $this->entityFieldProvider->expects($this->once())->method('getFields')
+        $this->entityFieldProvider->expects($this->once())
+            ->method('getFields')
             ->with('entityClass', false, true, false, false, false, false)
-            ->will($this->returnValue([
+            ->willReturn([
                 [
                     'name' => 'entityFieldName',
                     'type' => Types::STRING
                 ]
-            ]));
+            ]);
 
-        $this->translator->expects($this->once())->method('trans')
+        $this->translator->expects($this->once())
+            ->method('trans')
             ->with(
                 'oro.dotmailer.datafieldmappingconfig.validation.incompatible_types_date',
                 ['%datafield%' => 'dataFieldName']
             )
-            ->will($this->returnValue('translated error message'));
-        $violation = $this->createMock('Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface');
-        $this->context->expects($this->once())->method('buildViolation')->with('translated error message', [])
-            ->will($this->returnValue($violation));
+            ->willReturn('translated error message');
 
         $constraint = new DataFieldMappingConfigConstraint();
         $this->validator->validate($mappingConfig, $constraint);
+
+        $this->buildViolation('translated error message')
+            ->assertRaised();
     }
 
     public function testValidateMutlipleFieldsFailed()
@@ -151,24 +154,22 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit\Framework\TestCase
         $mappingConfig->setDataField($dataField);
         $mappingConfig->setEntityFields('entityFieldName,anotherEntityFieldName');
 
-        $this->translator->expects($this->once())->method('trans')
+        $this->translator->expects($this->once())
+            ->method('trans')
             ->with('oro.dotmailer.datafieldmappingconfig.validation.multiple')
-            ->will($this->returnValue('translated error message'));
-        $violation = $this->createMock('Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface');
-        $this->context->expects($this->once())->method('buildViolation')->with('translated error message', [])
-            ->will($this->returnValue($violation));
+            ->willReturn('translated error message');
 
         $constraint = new DataFieldMappingConfigConstraint();
         $this->validator->validate($mappingConfig, $constraint);
+
+        $this->buildViolation('translated error message')
+            ->assertRaised();
     }
 
     /**
-     * @param $dataFieldType
-     * @param $type
-     *
      * @dataProvider dataFieldDataProvider
      */
-    public function testValidatePassed($dataFieldType, $type)
+    public function testValidatePassed(string $dataFieldType, string $type)
     {
         $mappingConfig = new DataFieldMappingConfig();
         $dataField = new DataFieldStub();
@@ -179,26 +180,26 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit\Framework\TestCase
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
         $mappingConfig->setMapping($mapping);
-        $this->entityFieldProvider->expects($this->once())->method('getFields')
+        $this->entityFieldProvider->expects($this->once())
+            ->method('getFields')
             ->with('entityClass', false, true, false, false, false, false)
-            ->will($this->returnValue([
+            ->willReturn([
                 [
                     'name' => 'entityFieldName',
                     'type' => $type
                 ]
-            ]));
+            ]);
 
-        $this->translator->expects($this->never())->method('trans');
-        $this->context->expects($this->never())->method('buildViolation');
+        $this->translator->expects($this->never())
+            ->method('trans');
 
         $constraint = new DataFieldMappingConfigConstraint();
         $this->validator->validate($mappingConfig, $constraint);
+
+        $this->assertNoViolation();
     }
 
-    /**
-     * @return array
-     */
-    public function dataFieldDataProvider()
+    public function dataFieldDataProvider(): array
     {
         return [
             'string'    => [DataField::FIELD_TYPE_STRING, Types::STRING],
