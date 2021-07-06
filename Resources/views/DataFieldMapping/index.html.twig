@@ -1,10 +1,10 @@
-{% extends 'OroUIBundle:actions:index.html.twig' %}
-{% import 'OroUIBundle::macros.html.twig' as UI %}
+{% extends '@OroUI/actions/index.html.twig' %}
+{% import '@OroUI/macros.html.twig' as UI %}
 {% set gridName = 'oro_dotmailer_datafield_mapping_grid' %}
 {% set pageTitle = 'oro.dotmailer.datafieldmapping.entity_plural_label'|trans %}
 {% block bodyClass %}dotmailer-page{% endblock %}
 {% block navButtons %}
-    {% import 'OroUIBundle::macros.html.twig' as UI %}
+    {% import '@OroUI/macros.html.twig' as UI %}
 
     {% if is_granted('oro_dotmailer_datafield_mapping_create') %}
         <div class="btn-group">

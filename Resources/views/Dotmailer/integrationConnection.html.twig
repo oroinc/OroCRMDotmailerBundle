@@ -1,5 +1,5 @@
-{% extends 'OroUIBundle:actions:update.html.twig' %}
-{% form_theme form with ['OroFormBundle:Form:fields.html.twig'] %}
+{% extends '@OroUI/actions/update.html.twig' %}
+{% form_theme form with ['@OroForm/Form/fields.html.twig'] %}
 
 {% oro_title_set({params : {'%title%': 'oro.dotmailer.integration.connection.label'|trans} }) %}
 
@@ -10,11 +10,11 @@
 
 {% block pageHeader %}
     {% set title = 'oro.dotmailer.integration.connection.label'|trans %}
-    {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
+    {% include '@OroUI/page_title_block.html.twig' with { title: title } %}
 {% endblock pageHeader %}
 
 {% block content_data %}
-    {% import 'OroUIBundle::macros.html.twig' as UI %}
+    {% import '@OroUI/macros.html.twig' as UI %}
 
     {% set button %}
         {% if entity and entity.transport.clientId and entity.transport.clientKey %}

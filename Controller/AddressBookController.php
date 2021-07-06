@@ -163,7 +163,7 @@ class AddressBookController extends AbstractController
      * )
      * @AclAncestor("oro_marketing_list_update")
      *
-     * @Template("OroDotmailerBundle:AddressBook/widget:addressBookConnectionUpdate.html.twig")
+     * @Template("@OroDotmailer/AddressBook/widget/addressBookConnectionUpdate.html.twig")
      * @param MarketingList $marketingList
      *
      * @return array
@@ -250,7 +250,7 @@ class AddressBookController extends AbstractController
      *      permission="CREATE",
      *      class="OroDotmailerBundle:AddressBook"
      * )
-     * @Template("OroDotmailerBundle:AddressBook:update.html.twig")
+     * @Template("@OroDotmailer/AddressBook/update.html.twig")
      *
      * @return array
      */

@@ -119,7 +119,7 @@ class DotmailerController extends AbstractController
      *      defaults={"id" = "0"}
      * )
      *
-     * @Template("OroDotmailerBundle:Dotmailer:integrationConnection.html.twig")
+     * @Template("@OroDotmailer/Dotmailer/integrationConnection.html.twig")
      *
      * @param Request $request
      * @param Channel $channel
