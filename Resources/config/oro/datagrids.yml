@@ -147,7 +147,7 @@ datagrids:
             entity:
                 label: oro.dotmailer.datafieldmapping.entity.label
                 type: twig
-                template: 'OroEntityBundle:Datagrid:Property/entity.html.twig'
+                template: '@OroEntity/Datagrid/Property/entity.html.twig'
                 frontend_type: html
                 context:
                     entity_provider: "@oro_dotmailer.entity_provider"

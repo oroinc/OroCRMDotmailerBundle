@@ -85,7 +85,7 @@ class DataFieldController extends AbstractController
     /**
      * Create data field form
      * @Route("/create", name="oro_dotmailer_datafield_create")
-     * @Template("OroDotmailerBundle:DataField:update.html.twig")
+     * @Template("@OroDotmailer/DataField/update.html.twig")
      * @Acl(
      *      id="oro_dotmailer_datafield_create",
      *      type="entity",
