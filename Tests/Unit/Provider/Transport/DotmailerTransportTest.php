@@ -498,7 +498,6 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($settingsBag));
         $resource = $this->createMock('DotMailer\Api\Resources\IResources');
 
-
         $this->encoder->expects($this->once())
             ->method('decryptData')
             ->with($passwordEncoded)

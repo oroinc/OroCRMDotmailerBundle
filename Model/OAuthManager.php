@@ -34,11 +34,6 @@ class OAuthManager
     /** @var HttpMethodsClientInterface */
     protected $curlClient;
 
-    /**
-     * @param RouterInterface            $router
-     * @param SymmetricCrypterInterface  $encryptor
-     * @param HttpMethodsClientInterface $curlClient
-     */
     public function __construct(
         RouterInterface $router,
         SymmetricCrypterInterface $encryptor,

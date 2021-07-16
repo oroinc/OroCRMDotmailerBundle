@@ -39,12 +39,6 @@ abstract class AbstractReader extends IteratorBasedReader
      */
     protected $logger;
 
-    /**
-     * @param ContextRegistry          $contextRegistry
-     * @param ConnectorContextMediator $contextMediator
-     * @param ManagerRegistry          $managerRegistry
-     * @param LoggerInterface          $logger
-     */
     public function __construct(
         ContextRegistry $contextRegistry,
         ConnectorContextMediator $contextMediator,

@@ -9,9 +9,6 @@ trait CacheProviderAwareTrait
     /** @var CacheProvider */
     private $cache;
 
-    /**
-     * @param CacheProvider $cache
-     */
     public function setCache(CacheProvider $cache)
     {
         $this->cache = $cache;

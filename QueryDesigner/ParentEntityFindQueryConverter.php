@@ -13,12 +13,6 @@ class ParentEntityFindQueryConverter extends QueryBuilderGroupingOrmQueryConvert
 {
     public const PARENT_ENTITY_ID_ALIAS = 'entityId';
 
-    /**
-     * @param string $entity
-     * @param array  $columns
-     *
-     * @return QueryBuilder
-     */
     public function convert(string $entity, array $columns): QueryBuilder
     {
         $source = new QueryDesigner(

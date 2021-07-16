@@ -35,13 +35,6 @@ class DataFieldFormHandler
     /** @var DataFieldManager */
     protected $dataFieldManager;
 
-    /**
-     * @param FormInterface $form
-     * @param ManagerRegistry $managerRegistry
-     * @param LoggerInterface $logger
-     * @param TranslatorInterface $translator
-     * @param DataFieldManager $dataFieldManager
-     */
     public function __construct(
         FormInterface $form,
         ManagerRegistry $managerRegistry,
@@ -125,9 +118,6 @@ class DataFieldFormHandler
         return $originWasCreated;
     }
 
-    /**
-     * @param \Exception $e
-     */
     protected function handleGeneralException(\Exception $e)
     {
         $this->form->addError(
@@ -136,9 +126,6 @@ class DataFieldFormHandler
         $this->logger->error('Failed to create field in Dotmailer', ['exception' => $e]);
     }
 
-    /**
-     * @return FormInterface
-     */
     public function getForm(): FormInterface
     {
         return $this->form;

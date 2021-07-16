@@ -18,9 +18,6 @@ class IntegrationSettingsSubscriber implements EventSubscriberInterface
      */
     protected $encoder;
 
-    /**
-     * @param SymmetricCrypterInterface $encoder
-     */
     public function __construct(SymmetricCrypterInterface $encoder)
     {
         $this->encoder = $encoder;
@@ -39,8 +36,6 @@ class IntegrationSettingsSubscriber implements EventSubscriberInterface
 
     /**
      * Populate websites choices if exist in entity
-     *
-     * @param FormEvent $event
      */
     public function preSet(FormEvent $event)
     {
@@ -69,8 +64,6 @@ class IntegrationSettingsSubscriber implements EventSubscriberInterface
     /**
      * Pre submit event listener
      * Encrypt protected fields and populate if empty
-     *
-     * @param FormEvent $event
      */
     public function preSubmit(FormEvent $event)
     {

@@ -47,15 +47,6 @@ class AddressBookHandler
      */
     protected $logger;
 
-    /**
-     *
-     * @param FormInterface       $form
-     * @param RequestStack        $requestStack
-     * @param ObjectManager       $manager
-     * @param DotmailerTransport  $transport
-     * @param TranslatorInterface $translator
-     * @param LoggerInterface     $logger
-     */
     public function __construct(
         FormInterface $form,
         RequestStack $requestStack,

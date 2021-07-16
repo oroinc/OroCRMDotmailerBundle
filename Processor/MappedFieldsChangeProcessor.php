@@ -20,10 +20,6 @@ class MappedFieldsChangeProcessor
     /** @var LoggerInterface */
     protected $logger;
 
-    /**
-     * @param DoctrineHelper $doctrineHelper
-     * @param ParentEntityFindQueryConverter $queryConverter
-     */
     public function __construct(DoctrineHelper $doctrineHelper, ParentEntityFindQueryConverter $queryConverter)
     {
         $this->doctrineHelper = $doctrineHelper;

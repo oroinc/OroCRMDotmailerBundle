@@ -186,9 +186,6 @@ class AddressBookContactsExportRepository extends EntityRepository
             ->execute();
     }
 
-    /**
-     * @param Channel $channel
-     */
     public function setRejectedExportFaultsProcessed(Channel $channel)
     {
         $qb = $this->getRejectedExportRestrictionQB($channel);
@@ -212,9 +209,6 @@ class AddressBookContactsExportRepository extends EntityRepository
             ->execute();
     }
 
-    /**
-     * @param Channel $channel
-     */
     public function setNotRejectedExportFaultsProcessed(Channel $channel)
     {
         $qb = $this->getNotRejectedExportRestrictionsQB($channel);
@@ -224,10 +218,6 @@ class AddressBookContactsExportRepository extends EntityRepository
             ->execute();
     }
 
-    /**
-     * @param AddressBookContactsExport $export
-     * @param int $attempts
-     */
     public function updateAddressBookContactsExportAttemptsCount(AddressBookContactsExport $export, int $attempts)
     {
         $qb = $this->createQueryBuilder('addressBookContactExport');
@@ -243,10 +233,6 @@ class AddressBookContactsExportRepository extends EntityRepository
         $query->execute();
     }
 
-    /**
-     * @param AddressBookContactsExport $export
-     * @param AbstractEnumValue $status
-     */
     public function updateAddressBookContactsStatus(
         AddressBookContactsExport $export,
         AbstractEnumValue $status

@@ -24,10 +24,6 @@ class IntegrationSelectType extends AbstractType
      */
     protected $aclHelper;
 
-    /**
-     * @param ManagerRegistry $registry
-     * @param AclHelper $aclHelper
-     */
     public function __construct(ManagerRegistry $registry, AclHelper $aclHelper)
     {
         $this->registry = $registry;

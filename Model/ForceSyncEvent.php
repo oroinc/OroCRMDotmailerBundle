@@ -22,9 +22,6 @@ class ForceSyncEvent extends Event
      */
     protected $classes;
 
-    /**
-     * @param array $classes
-     */
     public function __construct(array $classes)
     {
         $this->classes = $classes;
@@ -38,9 +35,6 @@ class ForceSyncEvent extends Event
         return $this->classes;
     }
 
-    /**
-     * @param array $classes
-     */
     public function setClasses(array $classes)
     {
         $this->classes = $classes;

@@ -77,7 +77,6 @@ class CsvStringReader
     }
 
     /**
-     * @param array $options
      * @throws \InvalidArgumentException
      */
     protected function initialize(array $options)

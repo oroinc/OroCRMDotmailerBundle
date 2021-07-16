@@ -83,15 +83,6 @@ class MarketingListItemsQueryBuilderProvider
      */
     protected $cachedQueryBuilders = [];
 
-    /**
-     * @param MarketingListProvider $marketingListProvider
-     * @param ContactInformationFieldsProvider $contactInformationFieldsProvider
-     * @param OwnershipMetadataProviderInterface $ownershipMetadataProvider
-     * @param ManagerRegistry $registry
-     * @param FieldHelper $fieldHelper
-     * @param ContactExportQBAdapterRegistry $exportQBAdapterRegistry
-     * @param EmailProvider $emailProvider
-     */
     public function __construct(
         MarketingListProvider $marketingListProvider,
         ContactInformationFieldsProvider $contactInformationFieldsProvider,
@@ -409,10 +400,6 @@ class MarketingListItemsQueryBuilderProvider
         return $qb;
     }
 
-    /**
-     * @param AddressBook  $addressBook
-     * @param QueryBuilder $qb
-     */
     protected function applyOrganizationRestrictions(AddressBook $addressBook, QueryBuilder $qb)
     {
         $organization = $addressBook->getOwner();

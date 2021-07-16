@@ -340,7 +340,6 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
                 $item = $this->resolveAddressBookRelations($item, $contact, $manager);
             }
 
-
             if (!empty($item['createdAt'])) {
                 $item['createdAt'] = new \DateTime($item['createdAt']);
             }
