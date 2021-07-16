@@ -13,9 +13,6 @@ class DataFieldRemoveListener
     /** @var DataFieldManager */
     protected $dataFieldManager;
 
-    /**
-     * @param DataFieldManager $dataFieldManager
-     */
     public function __construct(DataFieldManager $dataFieldManager)
     {
         $this->dataFieldManager = $dataFieldManager;
@@ -25,8 +22,6 @@ class DataFieldRemoveListener
      * Remove origin data field.
      * If origin data field can't be remove, throw exception and don't allow to remove record
      *
-     * @param DataField          $entity
-     * @param LifecycleEventArgs $args
      * @throws RuntimeException
      */
     public function preRemove(DataField $entity, LifecycleEventArgs $args)

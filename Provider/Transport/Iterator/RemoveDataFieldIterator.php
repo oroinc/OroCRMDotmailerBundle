@@ -22,11 +22,6 @@ class RemoveDataFieldIterator extends AbstractIterator
      */
     protected $channel;
 
-    /**
-     * @param ManagerRegistry $registry
-     * @param Channel         $channel
-     * @param array           $keepDataFieldsNames
-     */
     public function __construct(ManagerRegistry $registry, Channel $channel, array $keepDataFieldsNames)
     {
         $this->registry = $registry;

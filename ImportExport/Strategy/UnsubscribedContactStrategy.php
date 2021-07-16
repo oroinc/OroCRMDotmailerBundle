@@ -91,10 +91,6 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
         return $addressBookContact;
     }
 
-    /**
-     * @param Contact $contact
-     * @param Channel $channel
-     */
     protected function updateNewContactFields(Contact $contact, Channel $channel)
     {
         $contact->setChannel($channel);
@@ -116,11 +112,6 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
         }
     }
 
-    /**
-     * @param AddressBookContact $entity
-     * @param Channel            $channel
-     * @param AddressBook        $addressBook
-     */
     protected function updateAddressBookContact(AddressBookContact $entity, Channel $channel, AddressBook $addressBook)
     {
         $entity->setChannel($channel);
@@ -205,9 +196,6 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
     /**
      * Update an email for case if Subscriber updates own email from Dotmailer or
      * Dotmailer administrator updates email from UI. In this case we need to synchronize emails
-     *
-     * @param AddressBookContact $entity
-     * @param Contact            $contact
      */
     protected function updateContactEmail(AddressBookContact $entity, Contact $contact)
     {

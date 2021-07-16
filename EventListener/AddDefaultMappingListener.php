@@ -39,14 +39,6 @@ class AddDefaultMappingListener extends AbstractImportExportListener
     /** @var MappingProvider */
     protected $mappingProvider;
 
-    /**
-     * @param ManagerRegistry $registry
-     * @param DoctrineHelper $doctrineHelper
-     * @param EntityProvider $entityProvider
-     * @param DefaultOwnerHelper $ownerHelper
-     * @param MappingUpdateListener $mappingListener
-     * @param MappingProvider $mappingProvider
-     */
     public function __construct(
         ManagerRegistry $registry,
         DoctrineHelper $doctrineHelper,
@@ -63,9 +55,6 @@ class AddDefaultMappingListener extends AbstractImportExportListener
         parent::__construct($registry);
     }
 
-    /**
-     * @param SyncEvent $syncEvent
-     */
     public function afterSyncFinished(SyncEvent $syncEvent)
     {
         if (!$this->isApplicable($syncEvent, DataFieldConnector::IMPORT_JOB)) {

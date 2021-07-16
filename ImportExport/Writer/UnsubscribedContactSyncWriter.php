@@ -6,9 +6,6 @@ use Oro\Bundle\DotmailerBundle\ImportExport\Processor\UnsubscribedContactSyncPro
 
 class UnsubscribedContactSyncWriter extends ImportWriter
 {
-    /**
-     * @param array            $items
-     */
     protected function logBatchInfo(array $items)
     {
         $itemsCount = count($items);

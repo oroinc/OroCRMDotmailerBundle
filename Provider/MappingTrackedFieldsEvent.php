@@ -37,9 +37,6 @@ class MappingTrackedFieldsEvent extends Event
      */
     protected $fields;
 
-    /**
-     * @param array $fields
-     */
     public function __construct(array $fields)
     {
         $this->fields = $fields;
@@ -53,9 +50,6 @@ class MappingTrackedFieldsEvent extends Event
         return $this->fields;
     }
 
-    /**
-     * @param array $fields
-     */
     public function setFields(array $fields)
     {
         $this->fields = $fields;

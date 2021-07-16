@@ -29,17 +29,13 @@ class MappingUpdateListener implements OptionalListenerInterface
     protected $entityFieldUpdateScheduled = [];
 
     protected $rebuildMappingCache = false;
-    
+
     /** @var DoctrineHelper  */
     protected $doctrineHelper;
 
     /** @var MappingProvider */
     protected $mappingProvider;
 
-    /**
-     * @param DoctrineHelper $doctrineHelper
-     * @param MappingProvider $mappingProvider
-     */
     public function __construct(DoctrineHelper $doctrineHelper, MappingProvider $mappingProvider)
     {
         $this->doctrineHelper = $doctrineHelper;
@@ -48,8 +44,6 @@ class MappingUpdateListener implements OptionalListenerInterface
 
     /**
      * Process changed done on mapping configurations and update corresponding flags for address book contacts
-     *
-     * @param OnFlushEventArgs $args
      */
     public function onFlush(OnFlushEventArgs $args)
     {
@@ -68,9 +62,6 @@ class MappingUpdateListener implements OptionalListenerInterface
         }
     }
 
-    /**
-     * @param PostFlushEventArgs $args
-     */
     public function postFlush(PostFlushEventArgs $args)
     {
         if ($this->rebuildMappingCache) {

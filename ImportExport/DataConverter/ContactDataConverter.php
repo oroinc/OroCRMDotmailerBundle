@@ -21,14 +21,11 @@ class ContactDataConverter extends AbstractDataConverter implements ContextAware
     /** @var ContextInterface */
     protected $context;
 
-    /**
-     * @param MappingProvider $mappingProvider
-     */
     public function setMappingProvider(MappingProvider $mappingProvider)
     {
         $this->mappingProvider = $mappingProvider;
     }
-    
+
     /**
      * {@inheritdoc}
      */

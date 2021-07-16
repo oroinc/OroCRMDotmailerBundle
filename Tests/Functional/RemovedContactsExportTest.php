@@ -78,7 +78,6 @@ class RemovedContactsExportTest extends AbstractImportExportTestCase
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-
         foreach ($expectedRemoved as $contact) {
             /**
              * Check removed from db

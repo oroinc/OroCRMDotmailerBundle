@@ -14,10 +14,6 @@ class ContactExportQBAdapter implements ContactExportQBAdapterInterface
     /** @var MappingQueryConverter */
     protected $mappingQueryConverter;
 
-    /**
-     * @param MappingProvider $mappingProvider
-     * @param MappingQueryConverter $mappingQueryConverter
-     */
     public function __construct(MappingProvider $mappingProvider, MappingQueryConverter $mappingQueryConverter)
     {
         $this->mappingProvider = $mappingProvider;
@@ -35,10 +31,6 @@ class ContactExportQBAdapter implements ContactExportQBAdapterInterface
         return $qb;
     }
 
-    /**
-     * @param QueryBuilder $qb
-     * @param AddressBook  $addressBook
-     */
     protected function addMappedFields(QueryBuilder $qb, AddressBook $addressBook)
     {
         $entity = $addressBook->getMarketingList()->getEntity();
@@ -66,10 +58,6 @@ class ContactExportQBAdapter implements ContactExportQBAdapterInterface
         }
     }
 
-    /**
-     * @param QueryBuilder $qb
-     * @param AddressBook  $addressBook
-     */
     protected function applyRestrictions(QueryBuilder $qb, AddressBook $addressBook)
     {
         $rootAliases = $qb->getRootAliases();

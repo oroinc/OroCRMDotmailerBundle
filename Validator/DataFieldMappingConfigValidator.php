@@ -38,10 +38,6 @@ class DataFieldMappingConfigValidator extends ConstraintValidator
      */
     protected $fieldTypes = [];
 
-    /**
-     * @param EntityFieldProvider $entityFieldProvider
-     * @param TranslatorInterface $translator
-     */
     public function __construct(
         EntityFieldProvider $entityFieldProvider,
         TranslatorInterface $translator

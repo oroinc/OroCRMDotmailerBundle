@@ -375,7 +375,6 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedValue, $actual);
     }
 
-
     public function testGetValueMergeArrayValues()
     {
         $expectedValue = [
@@ -479,7 +478,6 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $actual = $target->getOption($expectedOptionName);
         $this->assertEquals($expectedValue, $actual);
     }
-
 
     public function testGetOptionReturnCorrectDefaultValue()
     {

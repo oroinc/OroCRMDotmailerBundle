@@ -25,11 +25,6 @@ class MarketingListStateItemVoter extends AbstractEntityVoter implements Service
     /** @var string */
     private $contactClassName;
 
-    /**
-     * @param DoctrineHelper     $doctrineHelper
-     * @param ContainerInterface $container
-     * @param string             $contactClassName
-     */
     public function __construct(
         DoctrineHelper $doctrineHelper,
         ContainerInterface $container,

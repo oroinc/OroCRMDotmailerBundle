@@ -57,13 +57,6 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
      */
     protected $contextRegistry;
 
-    /**
-     * @param ManagerRegistry       $registry
-     * @param DotmailerTransport    $transport
-     * @param ContextRegistry       $contextRegistry
-     * @param LoggerInterface       $logger
-     * @param ImportExportLogHelper $logHelper
-     */
     public function __construct(
         ManagerRegistry $registry,
         DotmailerTransport $transport,
@@ -197,9 +190,6 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
         $this->logger->info($message);
     }
 
-    /**
-     * @param StepExecution $stepExecution
-     */
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;

@@ -28,9 +28,6 @@ abstract class AbstractDotmailerConnector extends AbstractConnector
      */
     protected $entityName;
 
-    /**
-     * @param ManagerRegistry $managerRegistry
-     */
     public function setManagerRegistry(ManagerRegistry $managerRegistry)
     {
         $this->managerRegistry = $managerRegistry;
@@ -89,9 +86,6 @@ abstract class AbstractDotmailerConnector extends AbstractConnector
         return $status;
     }
 
-    /**
-     * @param ContextInterface $context
-     */
     protected function initializeFromContext(ContextInterface $context)
     {
         if (!$this->contextMediator->getChannel($context)) {

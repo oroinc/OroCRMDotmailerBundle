@@ -54,9 +54,6 @@ class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
         $this->updateStatistics($context->getEntity());
     }
 
-    /**
-     * @param Activity $activity
-     */
     protected function updateStatistics(Activity $activity)
     {
         $dmCampaign = $activity->getCampaign();

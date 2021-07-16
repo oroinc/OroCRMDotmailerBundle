@@ -14,9 +14,6 @@ class DataFieldManager
      */
     protected $dotmailerTransport;
 
-    /**
-     * @param DotmailerTransport $dotmailerTransport
-     */
     public function __construct(DotmailerTransport $dotmailerTransport)
     {
         $this->dotmailerTransport = $dotmailerTransport;
@@ -24,8 +21,6 @@ class DataFieldManager
 
     /**
      * Create datafield in dotmailer
-     *
-     * @param DataField $field
      */
     public function createOriginDataField(DataField $field)
     {
@@ -48,9 +43,6 @@ class DataFieldManager
         return $result;
     }
 
-    /**
-     * @param DataField $field
-     */
     protected function initTransport(DataField $field)
     {
         $this->dotmailerTransport->init($field->getChannel()->getTransport());

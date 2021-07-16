@@ -16,9 +16,6 @@ class AddIndexToAbContact implements Migration
         $this->addIndexToAbContact($schema);
     }
 
-    /**
-     * @param Schema $schema
-     */
     protected function addIndexToAbContact(Schema $schema)
     {
         $table = $schema->getTable('orocrm_dm_ab_contact');

@@ -27,8 +27,6 @@ class AddressBookContactsExportRepositoryTest extends \PHPUnit\Framework\TestCas
 
     /**
      * @dataProvider errorStatusDataProvider
-     * @param AbstractEnumValue $status
-     * @param bool $expected
      */
     public function testIsErrorStatus(AbstractEnumValue $status, bool $expected)
     {

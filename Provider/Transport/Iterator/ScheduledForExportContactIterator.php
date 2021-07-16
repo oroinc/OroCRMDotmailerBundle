@@ -19,10 +19,6 @@ class ScheduledForExportContactIterator extends AbstractIterator
      */
     protected $addressBookId;
 
-    /**
-     * @param AddressBook     $addressBook
-     * @param ManagerRegistry $registry
-     */
     public function __construct(AddressBook $addressBook, ManagerRegistry $registry)
     {
         $this->registry = $registry;

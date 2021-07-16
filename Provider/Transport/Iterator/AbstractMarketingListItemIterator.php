@@ -31,11 +31,6 @@ abstract class AbstractMarketingListItemIterator extends AbstractIterator
      */
     protected $importExportContext;
 
-    /**
-     * @param AddressBook                            $addressBook
-     * @param MarketingListItemsQueryBuilderProvider $marketingListItemsQueryBuilderProvider
-     * @param ContextInterface                       $importExportContext
-     */
     public function __construct(
         AddressBook $addressBook,
         MarketingListItemsQueryBuilderProvider $marketingListItemsQueryBuilderProvider,

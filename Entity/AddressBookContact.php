@@ -82,7 +82,7 @@ class AddressBookContact extends ExtendAddressBookContact implements ChannelAwar
      * @ORM\Column(name="scheduled_for_export", type="boolean")
      */
     protected $scheduledForExport = false;
-    
+
     /**
      * @var bool
      *
@@ -246,7 +246,7 @@ class AddressBookContact extends ExtendAddressBookContact implements ChannelAwar
 
         return $this;
     }
-    
+
     /**
      * @return boolean
      */

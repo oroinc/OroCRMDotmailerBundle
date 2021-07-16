@@ -57,13 +57,6 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
      */
     protected $logHelper;
 
-    /**
-     * @param ManagerRegistry       $registry
-     * @param DotmailerTransport    $transport
-     * @param ContextRegistry       $contextRegistry
-     * @param LoggerInterface       $logger
-     * @param ImportExportLogHelper $logHelper
-     */
     public function __construct(
         ManagerRegistry $registry,
         DotmailerTransport $transport,
@@ -178,9 +171,6 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
             ->getOrLoadById($this->context->getOption('channel'));
     }
 
-    /**
-     * @param StepExecution $stepExecution
-     */
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;
@@ -189,10 +179,6 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
         $this->transport->init($this->getChannel()->getTransport());
     }
 
-    /**
-     * @param EntityRepository $repository
-     * @param array            $removingItemsIds
-     */
     protected function removeContacts(EntityRepository $repository, array $removingItemsIds)
     {
         $removingItemsIds = $this->prepareIds($removingItemsIds);

@@ -146,7 +146,6 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
      */
     protected $lastExportedAt;
 
-
     /**
      * @var \DateTime
      *

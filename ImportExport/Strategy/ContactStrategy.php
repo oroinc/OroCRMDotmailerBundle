@@ -19,9 +19,6 @@ class ContactStrategy extends AddOrReplaceStrategy
     /** @var array  */
     protected $entitiesQualifiedForTwoWaySync = [];
 
-    /**
-     * @param MappingProvider $mappingProvider
-     */
     public function setMappingProvider(MappingProvider $mappingProvider)
     {
         $this->mappingProvider = $mappingProvider;

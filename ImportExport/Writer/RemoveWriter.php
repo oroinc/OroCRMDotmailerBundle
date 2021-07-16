@@ -31,11 +31,6 @@ class RemoveWriter implements ItemWriterInterface, StepExecutionAwareInterface
      */
     protected $logHelper;
 
-    /**
-     * @param ManagerRegistry       $registry
-     * @param LoggerInterface       $logger
-     * @param ImportExportLogHelper $logHelper
-     */
     public function __construct(ManagerRegistry $registry, LoggerInterface $logger, ImportExportLogHelper $logHelper)
     {
         $this->registry = $registry;
@@ -71,9 +66,6 @@ class RemoveWriter implements ItemWriterInterface, StepExecutionAwareInterface
         }
     }
 
-    /**
-     * @param StepExecution $stepExecution
-     */
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;

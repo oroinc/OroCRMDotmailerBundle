@@ -32,11 +32,6 @@ class SyncManager
     /** @var EventDispatcherInterface */
     protected $dispatcher;
 
-    /**
-     * @param DoctrineHelper $doctrineHelper
-     * @param MappingProvider $mappingProvider
-     * @param ConfigManager $configManager
-     */
     public function __construct(
         DoctrineHelper $doctrineHelper,
         MappingProvider $mappingProvider,
@@ -47,9 +42,6 @@ class SyncManager
         $this->configManager = $configManager;
     }
 
-    /**
-     * @param EventDispatcherInterface $dispatcher
-     */
     public function setDispatcher(EventDispatcherInterface $dispatcher)
     {
         $this->dispatcher = $dispatcher;

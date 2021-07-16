@@ -32,10 +32,6 @@ class UnsubscribedContactSyncProcessor implements ItemProcessorInterface, StepEx
      */
     protected $contextRegistry;
 
-    /**
-     * @param ManagerRegistry $registry
-     * @param ContextRegistry $contextRegistry
-     */
     public function __construct(ManagerRegistry $registry, ContextRegistry $contextRegistry)
     {
         $this->registry = $registry;
@@ -63,9 +59,6 @@ class UnsubscribedContactSyncProcessor implements ItemProcessorInterface, StepEx
         return $marketingListUnsubscribedItem;
     }
 
-    /**
-     * @param StepExecution $stepExecution
-     */
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->context = $this->contextRegistry->getByStepExecution($stepExecution);
