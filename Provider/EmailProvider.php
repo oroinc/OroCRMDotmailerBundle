@@ -14,10 +14,6 @@ class EmailProvider
     /** @var VirtualFieldProviderInterface */
     protected $virtualFieldProvider;
 
-    /**
-     * @param ContactInformationFieldHelper $contactInformationFieldHelper
-     * @param VirtualFieldProviderInterface $virtualFieldProvider
-     */
     public function __construct(
         ContactInformationFieldHelper $contactInformationFieldHelper,
         VirtualFieldProviderInterface $virtualFieldProvider

@@ -28,11 +28,6 @@ class MappingProvider
     /** @var EventDispatcherInterface */
     protected $dispatcher;
 
-    /**
-     * @param DoctrineHelper $doctrineHelper
-     * @param DoctrineCacheProvider $cache
-     * @param VirtualFieldProviderInterface $virtualFieldsProvider
-     */
     public function __construct(
         DoctrineHelper $doctrineHelper,
         DoctrineCacheProvider $cache,
@@ -43,9 +38,6 @@ class MappingProvider
         $this->virtualFieldsProvider = $virtualFieldsProvider;
     }
 
-    /**
-     * @param EventDispatcherInterface $dispatcher
-     */
     public function setDispatcher(EventDispatcherInterface $dispatcher)
     {
         $this->dispatcher = $dispatcher;

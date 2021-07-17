@@ -111,9 +111,6 @@ class ContactRepository extends EntityRepository
         return $map;
     }
 
-    /**
-     * @param Channel $channel
-     */
     public function bulkRemoveNotExportedContacts(Channel $channel)
     {
         $qb = $this->createQueryBuilder('contact');

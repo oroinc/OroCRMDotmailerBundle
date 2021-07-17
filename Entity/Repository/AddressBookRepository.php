@@ -99,10 +99,6 @@ class AddressBookRepository extends EntityRepository
         return $qb->setParameters(['channel' => $channel]);
     }
 
-    /**
-     * @param \DateTime $importedAt
-     * @param array $addressBookIds
-     */
     public function bulkUpdateLastImportedAt(\DateTime $importedAt, array $addressBookIds)
     {
         if (count($addressBookIds)) {

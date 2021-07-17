@@ -69,10 +69,6 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
      */
     protected $encryptor;
 
-    /**
-     * @param DotmailerResourcesFactory $dotmailerResourcesFactory
-     * @param SymmetricCrypterInterface $encryptor
-     */
     public function __construct(
         DotmailerResourcesFactory $dotmailerResourcesFactory,
         SymmetricCrypterInterface $encryptor
@@ -334,9 +330,6 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
         return $this->dotmailerResources->DeleteDataField($name)->toArray();
     }
 
-    /**
-     * @param ApiDataField $data
-     */
     public function createDataField(ApiDataField $data)
     {
         $this->dotmailerResources->PostDataFields($data);

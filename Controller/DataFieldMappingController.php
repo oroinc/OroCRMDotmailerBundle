@@ -98,7 +98,6 @@ class DataFieldMappingController extends AbstractController
         return $response;
     }
 
-
     /**
      * {@inheritdoc}
      */

@@ -20,8 +20,6 @@ class OroDotmailerBundle implements Migration
 
     /**
      * Update oro_integration_transport table
-     *
-     * @param Schema $schema
      */
     protected function updateOroIntegrationTransportTable(Schema $schema)
     {
@@ -33,8 +31,6 @@ class OroDotmailerBundle implements Migration
 
     /**
      * Create orocrm_dm_oauth table
-     *
-     * @param Schema $schema
      */
     protected function createOroDotmailerOAuthTable(Schema $schema)
     {
@@ -51,8 +47,6 @@ class OroDotmailerBundle implements Migration
 
     /**
      * Add orocrm_dm_oauth foreign keys.
-     *
-     * @param Schema $schema
      */
     protected function addOroDotmailerOAuthForeignKeys(Schema $schema)
     {

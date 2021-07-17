@@ -22,9 +22,6 @@ class ImportWriter extends PersistentBatchWriter
         $this->logBatchInfo($items);
     }
 
-    /**
-     * @param array            $items
-     */
     protected function logBatchInfo(array $items)
     {
         $itemsCount = count($items);
@@ -42,9 +39,6 @@ class ImportWriter extends PersistentBatchWriter
         $this->logger->info($message);
     }
 
-    /**
-     * @param ImportExportLogHelper $logHelper
-     */
     public function setLogHelper(ImportExportLogHelper $logHelper)
     {
         $this->logHelper = $logHelper;

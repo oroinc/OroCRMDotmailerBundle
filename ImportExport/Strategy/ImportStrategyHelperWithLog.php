@@ -13,9 +13,6 @@ class ImportStrategyHelperWithLog extends ImportStrategyHelper
      */
     protected $logger;
 
-    /**
-     * @param LoggerInterface $logger
-     */
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;

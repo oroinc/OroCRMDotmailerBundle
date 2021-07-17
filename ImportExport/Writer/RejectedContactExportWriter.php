@@ -39,12 +39,6 @@ class RejectedContactExportWriter implements ItemWriterInterface, StepExecutionA
      */
     protected $logger;
 
-    /**
-     * @param ManagerRegistry       $registry
-     * @param ContextRegistry       $contextRegistry
-     * @param LoggerInterface       $logger
-     * @param ImportExportLogHelper $logHelper
-     */
     public function __construct(
         ManagerRegistry $registry,
         ContextRegistry $contextRegistry,

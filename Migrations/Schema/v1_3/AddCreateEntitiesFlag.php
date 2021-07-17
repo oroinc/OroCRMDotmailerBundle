@@ -19,8 +19,6 @@ class AddCreateEntitiesFlag implements Migration
 
     /**
      * Update orocrm_dm_ab_contact table
-     *
-     * @param Schema $schema
      */
     protected function updateOroDotmailerAddressBookTable(Schema $schema)
     {

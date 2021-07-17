@@ -74,25 +74,16 @@ abstract class AbstractImportStrategy implements StrategyInterface, ContextAware
         $this->context = $context;
     }
 
-    /**
-     * @param ManagerRegistry $registry
-     */
     public function setRegistry(ManagerRegistry $registry)
     {
         $this->registry = $registry;
     }
 
-    /**
-     * @param CacheProvider $cacheProvider
-     */
     public function setCacheProvider(CacheProvider $cacheProvider)
     {
         $this->cacheProvider = $cacheProvider;
     }
 
-    /**
-     * @param LoggerInterface $logger
-     */
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;

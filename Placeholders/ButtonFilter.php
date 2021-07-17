@@ -12,9 +12,6 @@ class ButtonFilter
      */
     protected $fieldsProvider;
 
-    /**
-     * @param ContactInformationFieldsProvider $fieldsProvider
-     */
     public function __construct(ContactInformationFieldsProvider $fieldsProvider)
     {
         $this->fieldsProvider = $fieldsProvider;

@@ -93,9 +93,6 @@ class AddressBookContactRepository extends EntityRepository
             ->execute();
     }
 
-    /**
-     * @param AddressBook $addressBook
-     */
     public function bulkEntityUpdatedByAddressBook(AddressBook $addressBook)
     {
         $qb = $this->createQueryBuilder('address_book_contact');
@@ -123,7 +120,7 @@ class AddressBookContactRepository extends EntityRepository
             ->distinct()
             ->where('address_book_contact.contact = :contact')
             ->setParameter('contact', $contact);
-        
+
         $result = $qb->getQuery()->getArrayResult();
         if ($result) {
             $result = array_column($result, 'entityClass');

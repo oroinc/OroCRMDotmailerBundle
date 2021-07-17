@@ -117,7 +117,6 @@ class Activity implements ChannelAwareInterface
      */
     protected $numReplies;
 
-
     /**
      * @var \DateTime
      *
@@ -573,7 +572,6 @@ class Activity implements ChannelAwareInterface
 
         return $this;
     }
-
 
     /**
      * @return \DateTime

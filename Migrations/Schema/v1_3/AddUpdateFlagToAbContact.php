@@ -16,9 +16,6 @@ class AddUpdateFlagToAbContact implements Migration
         $this->addUpdateFlagToAbContact($schema);
     }
 
-    /**
-     * @param Schema $schema
-     */
     protected function addUpdateFlagToAbContact(Schema $schema)
     {
         $table = $schema->getTable('orocrm_dm_ab_contact');

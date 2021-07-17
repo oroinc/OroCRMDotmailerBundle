@@ -13,11 +13,6 @@ class MappingQueryConverter extends QueryBuilderGroupingOrmQueryConverter
 {
     /**
      * Add mapping columns to the query builder
-     *
-     * @param QueryBuilder $qb
-     * @param string       $entity
-     * @param array        $columns
-     * @param array        $compositeColumns
      */
     public function addMappingColumns(QueryBuilder $qb, string $entity, array $columns, array $compositeColumns): void
     {

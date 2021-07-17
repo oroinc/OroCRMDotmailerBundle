@@ -25,8 +25,6 @@ class DataFieldFormSubscriber implements EventSubscriberInterface
 
     /**
      * Update defaultValue type based on chosen field type
-     *
-     * @param FormEvent $event
      */
     public function preSet(FormEvent $event)
     {
@@ -43,8 +41,6 @@ class DataFieldFormSubscriber implements EventSubscriberInterface
 
     /**
      * Update defaultValue type based on chosen field type
-     *
-     * @param FormEvent $event
      */
     public function preSubmit(FormEvent $event)
     {

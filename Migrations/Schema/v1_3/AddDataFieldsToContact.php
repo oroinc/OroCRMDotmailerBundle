@@ -16,9 +16,6 @@ class AddDataFieldsToContact implements Migration
         $this->addDataFieldsToContact($schema);
     }
 
-    /**
-     * @param Schema $schema
-     */
     protected function addDataFieldsToContact(Schema $schema)
     {
         $table = $schema->getTable('orocrm_dm_contact');

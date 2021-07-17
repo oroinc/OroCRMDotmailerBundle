@@ -14,9 +14,6 @@ class DataFieldConnector extends AbstractDotmailerConnector
     /** @var  ConfigManager */
     protected $configManager;
 
-    /**
-     * @param ConfigManager $configManager
-     */
     public function setConfigManager(ConfigManager $configManager)
     {
         $this->configManager = $configManager;
@@ -24,8 +21,6 @@ class DataFieldConnector extends AbstractDotmailerConnector
 
     /**
      * If no sync was running, keep previous sync date
-     *
-     * @param \DateTime|null $date
      */
     protected function updateContextLastSyncDate(\DateTime $date = null)
     {

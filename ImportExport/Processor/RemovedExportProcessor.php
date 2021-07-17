@@ -26,9 +26,6 @@ class RemovedExportProcessor implements StepExecutionAwareProcessor
      */
     protected $stepExecution;
 
-    /**
-     * @param ContextRegistry $contextRegistry
-     */
     public function __construct(ContextRegistry $contextRegistry)
     {
         $this->contextRegistry = $contextRegistry;
@@ -51,9 +48,6 @@ class RemovedExportProcessor implements StepExecutionAwareProcessor
         return $item;
     }
 
-    /**
-     * @param StepExecution $stepExecution
-     */
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;

@@ -46,7 +46,6 @@ class DataFieldMappingController extends RestController implements ClassResource
     /**
      * Get entities with fields
      *
-     *
      * @ApiDoc(
      *      description="Get entities with fields",
      *      resource=true

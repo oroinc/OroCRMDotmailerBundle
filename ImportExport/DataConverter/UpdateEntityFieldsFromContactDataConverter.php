@@ -41,17 +41,11 @@ class UpdateEntityFieldsFromContactDataConverter extends AbstractDataConverter i
         $this->context = $context;
     }
 
-    /**
-     * @param MappingProvider $mappingProvider
-     */
     public function setMappingProvider(MappingProvider $mappingProvider)
     {
         $this->mappingProvider = $mappingProvider;
     }
 
-    /**
-     * @param EmailProvider $emailProvider
-     */
     public function setEmailProvider(EmailProvider $emailProvider)
     {
         $this->emailProvider = $emailProvider;
@@ -69,7 +63,7 @@ class UpdateEntityFieldsFromContactDataConverter extends AbstractDataConverter i
         if ($this->context && $this->context->hasOption('channel')) {
             $channelId = $this->context->getOption('channel');
         }
-        
+
         if (!$this->entityName || !isset($channelId)) {
             throw new RuntimeException('Channel and entity name must be set');
         }

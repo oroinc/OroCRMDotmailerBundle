@@ -11,9 +11,6 @@ class DataFieldIterator extends AbstractIterator
      */
     protected $resources;
 
-    /**
-     * @param IResources $resources
-     */
     public function __construct(IResources $resources)
     {
         $this->resources = $resources;

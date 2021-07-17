@@ -14,9 +14,6 @@ trait StubIteratorTrait
      */
     protected $loadCount;
 
-    /**
-     * @param array $stubItems
-     */
     public function initStub(array $stubItems)
     {
         $this->stubItems = $stubItems;
