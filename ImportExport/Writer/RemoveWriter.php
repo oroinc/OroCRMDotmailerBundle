@@ -2,13 +2,16 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Writer;
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
-use Akeneo\Bundle\BatchBundle\Item\ItemWriterInterface;
-use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Oro\Bundle\BatchBundle\Entity\StepExecution;
+use Oro\Bundle\BatchBundle\Item\ItemWriterInterface;
+use Oro\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Batch job writer that is capable of removing items.
+ */
 class RemoveWriter implements ItemWriterInterface, StepExecutionAwareInterface
 {
     /**

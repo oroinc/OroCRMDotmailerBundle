@@ -2,6 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Model;
 
+use Oro\Bundle\BatchBundle\Entity\StepExecution;
 use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 
 class ImportExportLogHelperTest extends \PHPUnit\Framework\TestCase
@@ -23,7 +24,7 @@ class ImportExportLogHelperTest extends \PHPUnit\Framework\TestCase
 
     public function testGetStepExecutionTime()
     {
-        $stepExecution = $this->getMockBuilder('Akeneo\Bundle\BatchBundle\Entity\StepExecution')
+        $stepExecution = $this->getMockBuilder(StepExecution::class)
             ->disableOriginalConstructor()
             ->getMock();
 

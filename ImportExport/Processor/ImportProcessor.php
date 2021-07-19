@@ -2,11 +2,14 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Processor;
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
-use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
+use Oro\Bundle\BatchBundle\Entity\StepExecution;
+use Oro\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\ImportExportBundle\Processor\ImportProcessor as BaseImportProcessor;
 
+/**
+ * Base batch job processor for importing.
+ */
 class ImportProcessor extends BaseImportProcessor implements StepExecutionAwareInterface
 {
     const NOT_PROCESSED_ITEMS = 'notProcessedItems';
