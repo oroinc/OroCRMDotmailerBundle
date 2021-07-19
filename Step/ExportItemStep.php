@@ -2,13 +2,17 @@
 
 namespace Oro\Bundle\DotmailerBundle\Step;
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Oro\Bundle\BatchBundle\Entity\StepExecution;
 use Oro\Bundle\BatchBundle\Step\ItemStep;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
+/**
+ * Batch job item step for contacts export.
+ */
 class ExportItemStep extends ItemStep
 {
     /**
@@ -32,7 +36,7 @@ class ExportItemStep extends ItemStep
          * Clear old Address Book Export records
          */
         $this->registry
-            ->getRepository('OroDotmailerBundle:AddressBookContactsExport')
+            ->getRepository(AddressBookContactsExport::class)
             ->createQueryBuilder('abContactsExport')
             ->delete()
             ->where('abContactsExport.channel =:channel')

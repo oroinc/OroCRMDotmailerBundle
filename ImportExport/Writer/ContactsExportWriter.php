@@ -2,11 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Writer;
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
-use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
 use DotMailer\Api\Exception;
+use Oro\Bundle\BatchBundle\Entity\StepExecution;
+use Oro\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactDataConverter;
 use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
@@ -20,6 +20,9 @@ use Oro\Bundle\ImportExportBundle\Writer\CsvEchoWriter;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Batch job writer for contacts export.
+ */
 class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareInterface
 {
     /**

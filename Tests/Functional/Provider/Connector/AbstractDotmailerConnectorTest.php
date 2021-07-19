@@ -2,8 +2,8 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Provider\Connector;
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
-use Akeneo\Bundle\BatchBundle\Item\ExecutionContext;
+use Oro\Bundle\BatchBundle\Entity\StepExecution;
+use Oro\Bundle\BatchBundle\Item\ExecutionContext;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData;
 use Oro\Bundle\IntegrationBundle\Provider\ConnectorContextMediator;

@@ -2,10 +2,13 @@
 
 namespace Oro\Bundle\DotmailerBundle\Step;
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
+use Oro\Bundle\BatchBundle\Entity\StepExecution;
 use Oro\Bundle\BatchBundle\Step\ItemStep;
 use Oro\Bundle\WorkflowBundle\Model\ProcessLogger;
 
+/**
+ * Batch job item step for activity sync.
+ */
 class ActivityStep extends ItemStep
 {
     /**
@@ -33,8 +36,8 @@ class ActivityStep extends ItemStep
     }
 
     /**
-     * @param ProcessLogger $logger
-     * @return $this
+     * @param ProcessLogger|null $logger
+     * @return self
      */
     public function setProcessLogger(ProcessLogger $logger = null)
     {

@@ -2,8 +2,8 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Processor;
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 use Doctrine\Persistence\ManagerRegistry;
+use Oro\Bundle\BatchBundle\Entity\StepExecution;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;

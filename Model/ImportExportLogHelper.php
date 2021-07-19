@@ -2,8 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\Model;
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
+use Oro\Bundle\BatchBundle\Entity\StepExecution;
 
+/**
+ * Contains helper methods for logging during import/export.
+ */
 class ImportExportLogHelper
 {
     const MEGABYTE = 1048576;

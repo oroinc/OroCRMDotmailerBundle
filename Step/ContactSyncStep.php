@@ -2,9 +2,12 @@
 
 namespace Oro\Bundle\DotmailerBundle\Step;
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
+use Oro\Bundle\BatchBundle\Entity\StepExecution;
 use Oro\Bundle\BatchBundle\Step\ItemStep;
 
+/**
+ * Batch job item step for contacts sync.
+ */
 class ContactSyncStep extends ItemStep
 {
     /**
