@@ -50,12 +50,6 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
      */
     protected $cacheProvider;
 
-    /**
-     * @param ContextAccessor $contextAccessor
-     * @param ContactInformationFieldsProvider $contactInformationFieldsProvider
-     * @param MarketingListItemsQueryBuilderProvider $marketingListItemsQueryBuilderProvider
-     * @param FieldHelper $fieldHelper
-     */
     public function __construct(
         ContextAccessor $contextAccessor,
         ContactInformationFieldsProvider $contactInformationFieldsProvider,
@@ -77,9 +71,6 @@ abstract class AbstractMarketingListEntitiesAction extends AbstractAction
         $this->doctrineHelper = $doctrineHelper;
     }
 
-    /**
-     * @param CacheProvider $cacheProvider
-     */
     public function setCacheProvider(CacheProvider $cacheProvider)
     {
         $this->cacheProvider = $cacheProvider;

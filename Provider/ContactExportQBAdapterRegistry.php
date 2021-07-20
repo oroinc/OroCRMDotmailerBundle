@@ -85,9 +85,6 @@ class ContactExportQBAdapterRegistry
         return $this;
     }
 
-    /**
-     * @param array $adapters
-     */
     protected function validateAdapters(array $adapters)
     {
         foreach ($adapters as $adapter) {

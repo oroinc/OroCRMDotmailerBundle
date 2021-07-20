@@ -23,9 +23,6 @@ class IntegrationSettingsType extends AbstractType
      */
     protected $subscriber;
 
-    /**
-     * @param IntegrationSettingsSubscriber $subscriber
-     */
     public function __construct(IntegrationSettingsSubscriber $subscriber)
     {
         $this->subscriber = $subscriber;

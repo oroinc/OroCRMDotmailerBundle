@@ -22,11 +22,6 @@ class RemoveAddressBookIterator extends AbstractIterator
      */
     protected $channel;
 
-    /**
-     * @param ManagerRegistry $registry
-     * @param Channel         $channel
-     * @param array           $keepAddressBooks
-     */
     public function __construct(ManagerRegistry $registry, Channel $channel, array $keepAddressBooks)
     {
         $this->registry = $registry;

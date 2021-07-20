@@ -2,14 +2,19 @@
 
 namespace Oro\Bundle\DotmailerBundle\Step;
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Oro\Bundle\BatchBundle\Entity\StepExecution;
 use Oro\Bundle\BatchBundle\Step\ItemStep;
 use Oro\Bundle\DotmailerBundle\EventListener\EntityUpdateListener;
 use Oro\Bundle\DotmailerBundle\ImportExport\Processor\UpdateEntityFieldsFromContactProcessor;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 
+/**
+ * Batch job item step.
+ * Disables entity update listener during entities update from contacts to avoid re-exporting the same changes
+ * back to dotmailer.
+ */
 class UpdateEntityFieldsStep extends ItemStep
 {
     /**

@@ -27,8 +27,6 @@ class AddDotmailerDataField implements Migration, OrderedMigrationInterface
 
     /**
      * Create orocrm_dm_address_book table
-     *
-     * @param Schema $schema
      */
     public static function createOroDotmailerDataFieldTable(Schema $schema)
     {

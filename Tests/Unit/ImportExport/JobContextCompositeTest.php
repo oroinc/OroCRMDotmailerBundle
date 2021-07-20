@@ -2,8 +2,12 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\ImportExport;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Oro\Bundle\BatchBundle\Entity\JobExecution;
+use Oro\Bundle\BatchBundle\Entity\StepExecution;
 use Oro\Bundle\DotmailerBundle\ImportExport\JobContextComposite;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
+use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyMethods)
@@ -375,7 +379,6 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedValue, $actual);
     }
 
-
     public function testGetValueMergeArrayValues()
     {
         $expectedValue = [
@@ -480,7 +483,6 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedValue, $actual);
     }
 
-
     public function testGetOptionReturnCorrectDefaultValue()
     {
         $expectedOptionName = 'notExistOption';
@@ -503,12 +505,12 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
      */
     protected function initCompositeStubs(\PHPUnit\Framework\MockObject\MockObject $currentContext, array $contexts)
     {
-        $currentStepExecution = $this->getMockBuilder('Akeneo\Bundle\BatchBundle\Entity\StepExecution')
+        $currentStepExecution = $this->getMockBuilder(StepExecution::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $stepExecutions = [$currentStepExecution];
-        $jobExecution = $this->getMockBuilder('Akeneo\Bundle\BatchBundle\Entity\JobExecution')
+        $jobExecution = $this->getMockBuilder(JobExecution::class)
             ->disableOriginalConstructor()
             ->getMock();
         $currentStepExecution->expects($this->any())
@@ -519,7 +521,7 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
             [$currentStepExecution, $currentContext]
         ];
         foreach ($contexts as $context) {
-            $stepExecution = $this->getMockBuilder('Akeneo\Bundle\BatchBundle\Entity\StepExecution')
+            $stepExecution = $this->getMockBuilder(StepExecution::class)
                 ->disableOriginalConstructor()
                 ->getMock();
             $map[] = [$stepExecution, $context];
@@ -527,9 +529,9 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         }
         $jobExecution->expects($this->any())
             ->method('getStepExecutions')
-            ->will($this->returnValue($stepExecutions));
+            ->willReturn(new ArrayCollection($stepExecutions));
 
-        $registry = $this->getMockBuilder('Oro\Bundle\ImportExportBundle\Context\ContextRegistry')
+        $registry = $this->getMockBuilder(ContextRegistry::class)
             ->disableOriginalConstructor()
             ->getMock();
 

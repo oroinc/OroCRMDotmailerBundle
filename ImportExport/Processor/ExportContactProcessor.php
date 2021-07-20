@@ -2,11 +2,14 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Processor;
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
+use Oro\Bundle\BatchBundle\Entity\StepExecution;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\ImportExportBundle\Processor\ExportProcessor;
 use Oro\Bundle\ImportExportBundle\Processor\StepExecutionAwareProcessor;
 
+/**
+ * Batch job processor for exporting contacts.
+ */
 class ExportContactProcessor extends ExportProcessor implements StepExecutionAwareProcessor
 {
     /**
@@ -19,9 +22,6 @@ class ExportContactProcessor extends ExportProcessor implements StepExecutionAwa
      */
     protected $stepExecution;
 
-    /**
-     * @param StepExecution $stepExecution
-     */
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;

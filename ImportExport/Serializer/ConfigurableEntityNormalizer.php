@@ -17,9 +17,6 @@ class ConfigurableEntityNormalizer extends BaseNormalizer
      */
     protected $registry;
 
-    /**
-     * @param ManagerRegistry $registry
-     */
     public function setManagerRegistry(ManagerRegistry $registry)
     {
         $this->registry = $registry;

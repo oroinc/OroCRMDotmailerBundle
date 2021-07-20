@@ -2,12 +2,12 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Writer;
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
-use Akeneo\Bundle\BatchBundle\Item\ItemWriterInterface;
-use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Oro\Bundle\BatchBundle\Entity\StepExecution;
+use Oro\Bundle\BatchBundle\Item\ItemWriterInterface;
+use Oro\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 use Oro\Bundle\DotmailerBundle\ImportExport\Processor\RemovedExportProcessor;
 use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
@@ -57,13 +57,6 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
      */
     protected $logHelper;
 
-    /**
-     * @param ManagerRegistry       $registry
-     * @param DotmailerTransport    $transport
-     * @param ContextRegistry       $contextRegistry
-     * @param LoggerInterface       $logger
-     * @param ImportExportLogHelper $logHelper
-     */
     public function __construct(
         ManagerRegistry $registry,
         DotmailerTransport $transport,
@@ -178,9 +171,6 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
             ->getOrLoadById($this->context->getOption('channel'));
     }
 
-    /**
-     * @param StepExecution $stepExecution
-     */
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;
@@ -189,10 +179,6 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
         $this->transport->init($this->getChannel()->getTransport());
     }
 
-    /**
-     * @param EntityRepository $repository
-     * @param array            $removingItemsIds
-     */
     protected function removeContacts(EntityRepository $repository, array $removingItemsIds)
     {
         $removingItemsIds = $this->prepareIds($removingItemsIds);

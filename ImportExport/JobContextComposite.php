@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport;
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
+use Oro\Bundle\BatchBundle\Entity\StepExecution;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 
@@ -25,10 +25,6 @@ class JobContextComposite implements ContextInterface
      */
     protected $contexts;
 
-    /**
-     * @param StepExecution   $stepExecution
-     * @param ContextRegistry $contextRegistry
-     */
     public function __construct(StepExecution $stepExecution, ContextRegistry $contextRegistry)
     {
         $stepExecutions = $stepExecution

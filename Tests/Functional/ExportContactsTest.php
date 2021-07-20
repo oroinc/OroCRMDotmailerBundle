@@ -196,7 +196,6 @@ class ExportContactsTest extends AbstractImportExportTestCase
                 ]
             );
 
-
         $this->assertCount(1, $export);
         $this->assertEquals($status, $addressBook->getSyncStatus());
     }

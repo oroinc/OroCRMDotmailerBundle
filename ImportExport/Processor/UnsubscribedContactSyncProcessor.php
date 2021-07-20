@@ -2,10 +2,10 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Processor;
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
-use Akeneo\Bundle\BatchBundle\Item\ItemProcessorInterface;
-use Akeneo\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Oro\Bundle\BatchBundle\Entity\StepExecution;
+use Oro\Bundle\BatchBundle\Item\ItemProcessorInterface;
+use Oro\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\OutOfSyncMarketingListItemIterator;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
@@ -13,6 +13,9 @@ use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem;
 
+/**
+ * Batch job item processor for unsubscribed contacts.
+ */
 class UnsubscribedContactSyncProcessor implements ItemProcessorInterface, StepExecutionAwareInterface
 {
     const CURRENT_BATCH_READ_ITEMS = 'currentBatchReadItems';
@@ -32,10 +35,6 @@ class UnsubscribedContactSyncProcessor implements ItemProcessorInterface, StepEx
      */
     protected $contextRegistry;
 
-    /**
-     * @param ManagerRegistry $registry
-     * @param ContextRegistry $contextRegistry
-     */
     public function __construct(ManagerRegistry $registry, ContextRegistry $contextRegistry)
     {
         $this->registry = $registry;
@@ -63,9 +62,6 @@ class UnsubscribedContactSyncProcessor implements ItemProcessorInterface, StepEx
         return $marketingListUnsubscribedItem;
     }
 
-    /**
-     * @param StepExecution $stepExecution
-     */
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->context = $this->contextRegistry->getByStepExecution($stepExecution);

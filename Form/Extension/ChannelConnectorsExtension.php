@@ -49,8 +49,6 @@ class ChannelConnectorsExtension extends AbstractTypeExtension
     /**
      * Hide connectors for Dotmailer channel and
      * remove synchronizationSettings for Dotmailer channel
-     *
-     * @param FormEvent $event
      */
     public function onPostSetData(FormEvent $event)
     {
@@ -78,8 +76,6 @@ class ChannelConnectorsExtension extends AbstractTypeExtension
 
     /**
      * Set all connectors to Dotmailer channel
-     *
-     * @param FormEvent $event
      */
     public function onPostSubmit(FormEvent $event)
     {
@@ -94,8 +90,6 @@ class ChannelConnectorsExtension extends AbstractTypeExtension
 
     /**
      * Remove synchronizationSettings for Dotmailer channel
-     *
-     * @param FormEvent $event
      */
     public function onPreSubmit(FormEvent $event)
     {

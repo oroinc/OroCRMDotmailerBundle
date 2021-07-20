@@ -39,17 +39,11 @@ class ContactSyncDataConverter extends AbstractDataConverter implements ContextA
         $this->context = $context;
     }
 
-    /**
-     * @param DoctrineHelper $doctrineHelper
-     */
     public function setDoctrineHelper(DoctrineHelper $doctrineHelper)
     {
         $this->doctrineHelper = $doctrineHelper;
     }
-    
-    /**
-     * @param CacheProvider $cacheProvider
-     */
+
     public function setCacheProvider(CacheProvider $cacheProvider)
     {
         $this->cacheProvider = $cacheProvider;

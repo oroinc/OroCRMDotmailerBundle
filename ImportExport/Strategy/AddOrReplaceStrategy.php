@@ -42,17 +42,11 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
         $this->ownerHelper = $ownerHelper;
     }
 
-    /**
-     * @param CacheProvider $cacheProvider
-     */
     public function setCacheProvider(CacheProvider $cacheProvider)
     {
         $this->cacheProvider = $cacheProvider;
     }
 
-    /**
-     * @param LoggerInterface $logger
-     */
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;

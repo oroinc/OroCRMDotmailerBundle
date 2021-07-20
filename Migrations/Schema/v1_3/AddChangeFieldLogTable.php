@@ -16,9 +16,6 @@ class AddChangeFieldLogTable implements Migration
         $this->addChangeFieldLogTable($schema);
     }
 
-    /**
-     * @param Schema $schema
-     */
     protected function addChangeFieldLogTable(Schema $schema)
     {
         $table = $schema->createTable('orocrm_dm_change_field_log');

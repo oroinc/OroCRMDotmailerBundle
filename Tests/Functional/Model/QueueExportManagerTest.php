@@ -99,7 +99,6 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
                 ]
             );
 
-
         $this->assertCount(1, $addressBookContacts);
         $addressBookContact = reset($addressBookContacts);
 
@@ -218,11 +217,6 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
         $this->assertEquals(Contact::STATUS_SUBSCRIBED, $addressBookContact->getStatus()->getId());
     }
 
-    /**
-     * @param Channel $channel
-     * @param string $importId
-     * @return AddressBookContactsExport
-     */
     protected function getExportEntity(Channel $channel, string $importId): AddressBookContactsExport
     {
         $exportEntities = $this->managerRegistry->getRepository(AddressBookContactsExport::class)

@@ -40,10 +40,6 @@ class MarketingListItemGridListener implements ServiceSubscriberInterface
     /** @var array */
     private $addressBookByML = [];
 
-    /**
-     * @param ManagerRegistry    $doctrine
-     * @param ContainerInterface $container
-     */
     public function __construct(
         ManagerRegistry $doctrine,
         ContainerInterface $container
@@ -64,9 +60,6 @@ class MarketingListItemGridListener implements ServiceSubscriberInterface
         ];
     }
 
-    /**
-     * @param BuildAfter $event
-     */
     public function onBuildAfter(BuildAfter $event)
     {
         $datagrid = $event->getDatagrid();
@@ -140,9 +133,6 @@ class MarketingListItemGridListener implements ServiceSubscriberInterface
 
     /**
      * Join real subscriber status
-     *
-     * @param MarketingList $marketingList
-     * @param QueryBuilder  $queryBuilder
      */
     private function joinSubscriberStatus(MarketingList $marketingList, QueryBuilder $queryBuilder)
     {
@@ -194,9 +184,6 @@ class MarketingListItemGridListener implements ServiceSubscriberInterface
             ->addSelect('IDENTITY(dm_ab_contact.status) as addressBookSubscribedStatus');
     }
 
-    /**
-     * @param DatagridInterface $datagrid
-     */
     private function rewriteActionConfiguration(DatagridInterface $datagrid)
     {
         $config = $datagrid->getConfig();

@@ -18,9 +18,6 @@ abstract class AbstractEnumFixture extends AbstractFixture
      *   ],
      *   ...
      * ]
-     *
-     * @param array                  $enumData
-     * @param EntityManagerInterface $manager
      */
     public function loadEnumValues(array $enumData, EntityManagerInterface $manager)
     {

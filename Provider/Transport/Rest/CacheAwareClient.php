@@ -119,9 +119,6 @@ class CacheAwareClient implements DotmailerClientInterface
         return $this->namespace . md5($requestUrl);
     }
 
-    /**
-     * @param DotmailerClientInterface $client
-     */
     public function setClient(DotmailerClientInterface $client)
     {
         $this->client = $client;

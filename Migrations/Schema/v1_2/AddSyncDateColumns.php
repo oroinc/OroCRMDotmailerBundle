@@ -25,10 +25,6 @@ class AddSyncDateColumns implements Migration, OrderedMigrationInterface, Rename
         $this->addLastImportedAt($schema);
     }
 
-    /**
-     * @param Schema   $schema
-     * @param QueryBag $queries
-     */
     public function renameLastSyncDateColumn(Schema $schema, QueryBag $queries)
     {
         $table = $schema->getTable('orocrm_dm_address_book');
@@ -37,9 +33,6 @@ class AddSyncDateColumns implements Migration, OrderedMigrationInterface, Rename
         }
     }
 
-    /**
-     * @param Schema $schema
-     */
     public function addLastImportedAt(Schema $schema)
     {
         $table = $schema->getTable('orocrm_dm_address_book');
@@ -56,7 +49,6 @@ class AddSyncDateColumns implements Migration, OrderedMigrationInterface, Rename
     {
         $this->renameExtension = $renameExtension;
     }
-
 
     /**
      * {@inheritdoc}

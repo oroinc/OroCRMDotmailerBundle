@@ -28,7 +28,7 @@ class UpdateEntityFieldsFromContactStrategy extends AddOrReplaceStrategy
     {
         ConfigurableAddOrReplaceStrategy::assertEnvironment($entity);
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -44,9 +44,6 @@ class UpdateEntityFieldsFromContactStrategy extends AddOrReplaceStrategy
         return $isExcluded || $isSkipped;
     }
 
-    /**
-     * @param ImportStrategyHelperWithLog $strategyHelper
-     */
     public function setStategyHelper(ImportStrategyHelperWithLog $strategyHelper)
     {
         $this->strategyHelper = $strategyHelper;

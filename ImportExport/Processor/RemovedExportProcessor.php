@@ -2,11 +2,14 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Processor;
 
-use Akeneo\Bundle\BatchBundle\Entity\StepExecution;
+use Oro\Bundle\BatchBundle\Entity\StepExecution;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\ImportExportBundle\Processor\StepExecutionAwareProcessor;
 
+/**
+ * Batch item export processor.
+ */
 class RemovedExportProcessor implements StepExecutionAwareProcessor
 {
     const CURRENT_BATCH_READ_ITEMS = 'currentBatchReadItems';
@@ -26,9 +29,6 @@ class RemovedExportProcessor implements StepExecutionAwareProcessor
      */
     protected $stepExecution;
 
-    /**
-     * @param ContextRegistry $contextRegistry
-     */
     public function __construct(ContextRegistry $contextRegistry)
     {
         $this->contextRegistry = $contextRegistry;
@@ -51,9 +51,6 @@ class RemovedExportProcessor implements StepExecutionAwareProcessor
         return $item;
     }
 
-    /**
-     * @param StepExecution $stepExecution
-     */
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;

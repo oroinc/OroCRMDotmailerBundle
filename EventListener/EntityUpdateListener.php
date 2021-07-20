@@ -27,10 +27,6 @@ class EntityUpdateListener implements OptionalListenerInterface
     /** @var array */
     protected $logs;
 
-    /**
-     * @param DoctrineHelper $doctrineHelper
-     * @param MappingProvider $mappingProvider
-     */
     public function __construct(DoctrineHelper $doctrineHelper, MappingProvider $mappingProvider)
     {
         $this->doctrineHelper = $doctrineHelper;
@@ -40,8 +36,6 @@ class EntityUpdateListener implements OptionalListenerInterface
     /**
      * Track changes done on entities fields which are used in mapping configuration. If such field were updated,
      * log changes for further processing
-     *
-     * @param OnFlushEventArgs $args
      */
     public function onFlush(OnFlushEventArgs $args)
     {
@@ -121,8 +115,6 @@ class EntityUpdateListener implements OptionalListenerInterface
 
     /**
      * Update log entries with inserted related entity ids
-     *
-     * @param PostFlushEventArgs $args
      */
     public function postFlush(PostFlushEventArgs $args)
     {

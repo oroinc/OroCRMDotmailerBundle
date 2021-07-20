@@ -22,10 +22,6 @@ class UnsubscribedFromAccountContactIterator extends OverlapIterator
      */
     protected $lastSyncDate;
 
-    /**
-     * @param IResources $resources
-     * @param \DateTime  $lastSyncDate
-     */
     public function __construct(IResources $resources, \DateTime $lastSyncDate)
     {
         $this->resources = $resources;

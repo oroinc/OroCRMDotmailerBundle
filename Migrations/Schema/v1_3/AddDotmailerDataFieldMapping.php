@@ -28,8 +28,6 @@ class AddDotmailerDataFieldMapping implements Migration, OrderedMigrationInterfa
 
     /**
      * Create orocrm_dm_address_book table
-     *
-     * @param Schema $schema
      */
     public static function createOroDotmailerDataFieldMappingTable(Schema $schema)
     {
@@ -62,8 +60,6 @@ class AddDotmailerDataFieldMapping implements Migration, OrderedMigrationInterfa
 
     /**
      * Create orocrm_dm_address_book table
-     *
-     * @param Schema $schema
      */
     public static function createOroDotmailerDataFieldMappingConfigTable(Schema $schema)
     {

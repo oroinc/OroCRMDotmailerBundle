@@ -56,15 +56,6 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
      */
     private $jobProcessor;
 
-    /**
-     * @param DoctrineHelper $doctrineHelper
-     * @param ExportManager $exportManager
-     * @param QueueExportManager $queueExportManager
-     * @param JobRunner $jobRunner
-     * @param TokenStorageInterface $tokenStorage
-     * @param LoggerInterface $logger
-     * @param JobProcessor $jobProcessor
-     */
     public function __construct(
         DoctrineHelper $doctrineHelper,
         ExportManager $exportManager,
