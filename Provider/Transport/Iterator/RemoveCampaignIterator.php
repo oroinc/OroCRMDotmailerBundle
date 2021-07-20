@@ -22,11 +22,6 @@ class RemoveCampaignIterator extends AbstractIterator
      */
     protected $channel;
 
-    /**
-     * @param ManagerRegistry $registry
-     * @param Channel         $channel
-     * @param array           $keepCampaigns
-     */
     public function __construct(ManagerRegistry $registry, Channel $channel, array $keepCampaigns)
     {
         $this->registry = $registry;

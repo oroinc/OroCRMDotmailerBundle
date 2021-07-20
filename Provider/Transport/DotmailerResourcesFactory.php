@@ -77,10 +77,6 @@ class DotmailerResourcesFactory
         return $cacheClient;
     }
 
-    /**
-     * @param ApiAccount $account
-     * @param DotmailerClientInterface $restClient
-     */
     protected function updateBaseUrl(ApiAccount $account, DotmailerClientInterface $restClient)
     {
         $url = $this->getApiEndpoint($account);

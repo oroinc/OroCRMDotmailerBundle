@@ -163,9 +163,6 @@ class DataFieldMappingConfigValidatorTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @param $dataFieldType
-     * @param $type
-     *
      * @dataProvider dataFieldDataProvider
      */
     public function testValidatePassed($dataFieldType, $type)

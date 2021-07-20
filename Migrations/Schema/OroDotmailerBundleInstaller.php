@@ -67,7 +67,7 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
 
         $migration = new v1_3\AddUpdateFlagToAbContact();
         $migration->up($schema, $queries);
-        
+
         $migration = new v1_3\AddChangeFieldLogTable();
         $migration->up($schema, $queries);
 
@@ -91,9 +91,6 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
         $this->extendExtension = $extendExtension;
     }
 
-    /**
-     * @param Schema $schema
-     */
     protected function renameLastSyncedColumn(Schema $schema)
     {
         $table = $schema->getTable('orocrm_dm_address_book');

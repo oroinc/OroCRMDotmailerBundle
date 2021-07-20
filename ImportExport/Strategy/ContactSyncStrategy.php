@@ -37,9 +37,6 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
     /** @var bool  */
     protected $scheduleForExport = true;
 
-    /**
-     * @param MappingProvider $mappingProvider
-     */
     public function setMappingProvider(MappingProvider $mappingProvider)
     {
         $this->mappingProvider = $mappingProvider;
@@ -91,7 +88,6 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
                 $this->updateOperationType(AddressBookContact::EXPORT_NEW_CONTACT, $addressBookContact);
             }
 
-
             $addressBookContact->setMarketingListItemId(
                 $this->getMarketingListItemId()
             );
@@ -104,9 +100,6 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
         return parent::afterProcessEntity($entity);
     }
 
-    /**
-     * @param AddressBookContact $addressBookContact
-     */
     protected function processAbContactStateFlags(AddressBookContact $addressBookContact)
     {
         if ($this->scheduleForExport ||

@@ -73,17 +73,11 @@ class QueueExportManager implements LoggerAwareInterface
         $this->addressBookContactClassName = $addressBookContactClassName;
     }
 
-    /**
-     * @param int $attempts
-     */
     public function setTotalErroneousAttempts(int $attempts)
     {
         $this->totalErroneousAttempts = $attempts;
     }
 
-    /**
-     * @param int $attempts
-     */
     public function setTotalNotFinishedAttempts(int $attempts)
     {
         $this->totalNotFinishedAttempts = $attempts;
@@ -166,9 +160,6 @@ class QueueExportManager implements LoggerAwareInterface
         return  $this->processExportFaults($channel) && $isExportFinished;
     }
 
-    /**
-     * @param Channel $channel
-     */
     public function processExportFaults(Channel $channel)
     {
         $jobResult = $this->startUpdateSkippedContactsStatusJob($channel);
@@ -186,9 +177,6 @@ class QueueExportManager implements LoggerAwareInterface
         return true;
     }
 
-    /**
-     * @param Channel $channel
-     */
     public function updateAddressBooksSyncStatus(Channel $channel)
     {
         $exportRepository = $this->getAddressBookContactsExportRepository();
@@ -281,8 +269,6 @@ class QueueExportManager implements LoggerAwareInterface
     }
 
     /**
-     * @param AddressBookContactsExport $export
-     * @param int|null $numberOfAttempts
      * @throws \Doctrine\ORM\EntityNotFoundException
      */
     private function processAttempts(

@@ -97,7 +97,6 @@ class EntityUpdateListenerTest extends \PHPUnit\Framework\TestCase
             ->with(ChangedFieldLog::class)
             ->will($this->returnValue($metaData));
 
-
         $em->expects($this->once())->method('persist')->with($this->callback(
             function ($log) {
                 $this->assertInstanceOf(ChangedFieldLog::class, $log);

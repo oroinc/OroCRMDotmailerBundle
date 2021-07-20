@@ -40,7 +40,6 @@ class AbstractDotmailerConnectorTest extends WebTestCase
         $this->assertEquals('2015-10-10', $date->format('Y-m-d'));
     }
 
-
     public function testGetLastSyncDateReturnNullForFirstSync()
     {
         $connector = $this->getConnector('oro_dotmailer.channel.first');

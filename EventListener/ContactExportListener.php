@@ -20,10 +20,6 @@ class ContactExportListener extends AbstractImportExportListener
      */
     protected $exportManager;
 
-    /**
-     * @param ManagerRegistry $registry
-     * @param QueueExportManager $exportManager
-     */
     public function __construct(ManagerRegistry $registry, QueueExportManager $exportManager)
     {
         $this->exportManager = $exportManager;
@@ -41,9 +37,6 @@ class ContactExportListener extends AbstractImportExportListener
         );
     }
 
-    /**
-     * @param SyncEvent $syncEvent
-     */
     public function beforeSyncStarted(SyncEvent $syncEvent)
     {
         if (!$this->isApplicable($syncEvent, ExportContactConnector::EXPORT_JOB)) {
@@ -70,9 +63,6 @@ class ContactExportListener extends AbstractImportExportListener
         }
     }
 
-    /**
-     * @param SyncEvent $syncEvent
-     */
     public function afterSyncFinished(SyncEvent $syncEvent)
     {
         if (!$this->isApplicable($syncEvent, ExportContactConnector::EXPORT_JOB)) {

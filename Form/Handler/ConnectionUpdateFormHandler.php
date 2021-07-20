@@ -19,10 +19,6 @@ class ConnectionUpdateFormHandler
      */
     protected $requestStack;
 
-    /**
-     * @param ManagerRegistry $managerRegistry
-     * @param RequestStack $requestStack
-     */
     public function __construct(ManagerRegistry $managerRegistry, RequestStack $requestStack)
     {
         $this->managerRegistry = $managerRegistry;
@@ -46,7 +42,6 @@ class ConnectionUpdateFormHandler
 
         return null;
     }
-
 
     /**
      * "Success" form handler

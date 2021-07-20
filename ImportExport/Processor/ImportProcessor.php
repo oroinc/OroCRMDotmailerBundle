@@ -16,17 +16,11 @@ class ImportProcessor extends BaseImportProcessor implements StepExecutionAwareI
      */
     protected $contextRegistry;
 
-    /**
-     * @param ContextRegistry $contextRegistry
-     */
     public function __construct(ContextRegistry $contextRegistry)
     {
         $this->contextRegistry = $contextRegistry;
     }
 
-    /**
-     * @param StepExecution $stepExecution
-     */
     public function setStepExecution(StepExecution $stepExecution)
     {
         $context = $this->contextRegistry->getByStepExecution($stepExecution);

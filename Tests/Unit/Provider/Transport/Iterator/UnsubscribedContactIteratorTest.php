@@ -55,7 +55,6 @@ class UnsubscribedContactIteratorTest extends \PHPUnit\Framework\TestCase
         $iterator = new UnsubscribedContactIterator($resource, $expectedAddressBookOriginId, $expectedDate);
         $iterator->setBatchSize(200);
 
-
         $expectedItems = [];
         $firstBatch = new ApiContactSuppressionList();
         for ($itemNumber = 0; $itemNumber < 200; $itemNumber++) {

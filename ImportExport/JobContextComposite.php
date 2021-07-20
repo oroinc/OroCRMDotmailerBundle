@@ -25,10 +25,6 @@ class JobContextComposite implements ContextInterface
      */
     protected $contexts;
 
-    /**
-     * @param StepExecution   $stepExecution
-     * @param ContextRegistry $contextRegistry
-     */
     public function __construct(StepExecution $stepExecution, ContextRegistry $contextRegistry)
     {
         $stepExecutions = $stepExecution

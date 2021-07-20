@@ -51,10 +51,6 @@ class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTe
         $this->assertAddressBookContactsHandled($channel, $expectedAddressBook);
     }
 
-    /**
-     * @param $channel
-     * @param $expectedAddressBook
-     */
     protected function assertAddressBookContactsHandled($channel, $expectedAddressBook)
     {
         /**
@@ -113,11 +109,6 @@ class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTe
         $this->assertEquals($status, $addressBookContact->getStatus()->getId());
     }
 
-    /**
-     * @param Channel $channel
-     * @param Contact $contact
-     * @param AddressBook $expectedAddressBook
-     */
     protected function assertAddressBookContactNotExist(
         Channel $channel,
         Contact $contact,

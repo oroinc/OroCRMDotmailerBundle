@@ -52,8 +52,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Update oro_integration_transport table
-     *
-     * @param Schema $schema
      */
     protected function updateOroIntegrationTransportTable(Schema $schema)
     {
@@ -64,8 +62,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Create orocrm_dm_campaign table
-     *
-     * @param Schema $schema
      */
     protected function createOroDotmailerCampaignTable(Schema $schema)
     {
@@ -97,8 +93,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Create orocrm_dm_address_book table
-     *
-     * @param Schema $schema
      */
     protected function createOroDotmailerAddressBookTable(Schema $schema)
     {
@@ -122,8 +116,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Create orocrm_dm_contact table
-     *
-     * @param Schema $schema
      */
     protected function createOroDotmailerContactTable(Schema $schema)
     {
@@ -152,8 +144,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Create orocrm_dm_activity table
-     *
-     * @param Schema $schema
      */
     protected function createOroDotmailerActivityTable(Schema $schema)
     {
@@ -189,8 +179,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Update orocrm_cmpgn_transport_stngs table
-     *
-     * @param Schema $schema
      */
     protected function updateOroCmpgnTransportStngsTable(Schema $schema)
     {
@@ -200,8 +188,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Create orocrm_dm_campaign_summary table
-     *
-     * @param Schema $schema
      */
     protected function createOroDotmailerCampaignSummaryTable(Schema $schema)
     {
@@ -275,8 +261,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Create orocrm_dm_campaign_to_ab table
-     *
-     * @param Schema $schema
      */
     protected function createOroDotmailerCampaignToABTable(Schema $schema)
     {
@@ -290,8 +274,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Create orocrm_dm_ab_contact table
-     *
-     * @param Schema $schema
      */
     protected function createOrocrmDmAbContactTable(Schema $schema)
     {
@@ -313,8 +295,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Create orocrm_dm_ab_cnt_export table
-     *
-     * @param Schema $schema
      */
     protected function createOrocrmDmAbCntExportTable(Schema $schema)
     {
@@ -333,8 +313,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Add orocrm_dm_campaign foreign keys.
-     *
-     * @param Schema $schema
      */
     protected function addOroDotmailerCampaignForeignKeys(Schema $schema)
     {
@@ -367,8 +345,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Add orocrm_dm_address_book foreign keys.
-     *
-     * @param Schema $schema
      */
     protected function addOroDotmailerAddressBookForeignKeys(Schema $schema)
     {
@@ -395,8 +371,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Add orocrm_dm_contact foreign keys.
-     *
-     * @param Schema $schema
      */
     protected function addOroDotmailerContactForeignKeys(Schema $schema)
     {
@@ -417,8 +391,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Add orocrm_dm_activity foreign keys.
-     *
-     * @param Schema $schema
      */
     protected function addOroDotmailerActivityForeignKeys(Schema $schema)
     {
@@ -451,8 +423,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Add orocrm_cmpgn_transport_stngs foreign keys.
-     *
-     * @param Schema $schema
      */
     protected function addOroCmpgnTransportStngsForeignKeys(Schema $schema)
     {
@@ -467,8 +437,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Add orocrm_dm_campaign_summary foreign keys.
-     *
-     * @param Schema $schema
      */
     protected function addOroDotmailerCampaignSummaryForeignKeys(Schema $schema)
     {
@@ -495,8 +463,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Add orocrm_dm_campaign_to_ab foreign keys.
-     *
-     * @param Schema $schema
      */
     protected function addOroDotmailerCampaignToABForeignKeys(Schema $schema)
     {
@@ -517,8 +483,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Add orocrm_dm_ab_cnt_export foreign keys.
-     *
-     * @param Schema $schema
      */
     protected function addOrocrmDmAbCntExportForeignKeys(Schema $schema)
     {
@@ -539,8 +503,6 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * Add orocrm_dm_ab_contact foreign keys.
-     *
-     * @param Schema $schema
      */
     protected function addOrocrmDmAbContactForeignKeys(Schema $schema)
     {

@@ -8,9 +8,6 @@ use Oro\Bundle\IntegrationBundle\Event\SyncEvent;
 
 class UpdateAddressBookLastImportDateListener extends AbstractImportExportListener
 {
-    /**
-     * @param SyncEvent $syncEvent
-     */
     public function afterSyncFinished(SyncEvent $syncEvent)
     {
         if (!$this->isApplicable($syncEvent, ContactConnector::IMPORT_JOB)) {

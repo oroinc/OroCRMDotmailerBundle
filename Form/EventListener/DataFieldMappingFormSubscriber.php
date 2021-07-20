@@ -25,8 +25,6 @@ class DataFieldMappingFormSubscriber implements EventSubscriberInterface
 
     /**
      * Collect mapping data and update mapping config source element
-     *
-     * @param FormEvent $event
      */
     public function postSet(FormEvent $event)
     {
@@ -59,7 +57,6 @@ class DataFieldMappingFormSubscriber implements EventSubscriberInterface
     /**
      * Process submitted mapping data and add to mapping collection form
      *
-     * @param FormEvent $event
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function preSubmit(FormEvent $event)

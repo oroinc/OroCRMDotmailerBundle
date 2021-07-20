@@ -17,9 +17,6 @@ class AdditionalResource
     /** @var IClient */
     protected $restClient;
 
-    /**
-     * @param IClient $restClient
-     */
     public function __construct(IClient $restClient)
     {
         $this->restClient = $restClient;

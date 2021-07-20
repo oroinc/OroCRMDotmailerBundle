@@ -41,11 +41,6 @@ class RejectedContactExportProcessor implements StepExecutionAwareProcessor
      */
     protected $registry;
 
-    /**
-     * @param ContextRegistry $contextRegistry
-     * @param LoggerInterface $logger
-     * @param ManagerRegistry $registry
-     */
     public function __construct(ContextRegistry $contextRegistry, LoggerInterface $logger, ManagerRegistry $registry)
     {
         $this->contextRegistry = $contextRegistry;

@@ -17,12 +17,6 @@ class CampaignStatisticProvider
      */
     protected $cachingProvider;
 
-    /**
-     * @param EmailCampaignStatisticsConnector $connector
-     * @param ManagerRegistry                  $registry
-     * @param DoctrineHelper                   $doctrineHelper
-     * @param CacheProvider                    $cachingProvider
-     */
     public function __construct(
         EmailCampaignStatisticsConnector $connector,
         ManagerRegistry $registry,
