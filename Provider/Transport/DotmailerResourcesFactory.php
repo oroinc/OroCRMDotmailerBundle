@@ -111,7 +111,7 @@ class DotmailerResourcesFactory
         $url = $apiEndpoint['value'];
         // Added '/v2' to the url if its not present
         if (substr($url, -3) !== '/v2') {
-            if (substr($url, -1) !== '/') {
+            if (!str_ends_with($url, '/')) {
                 $url .= '/';
             }
             $url .= 'v2';
