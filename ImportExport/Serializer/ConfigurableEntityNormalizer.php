@@ -25,16 +25,16 @@ class ConfigurableEntityNormalizer extends BaseNormalizer
     /**
      * {@inheritdoc}
      */
-    public function denormalize($data, $class, $format = null, array $context = [])
+    public function denormalize($data, string $type, string $format = null, array $context = [])
     {
-        $object = parent::denormalize($data, $class, $format, $context);
+        $object = parent::denormalize($data, $type, $format, $context);
 
-        $fields = $this->fieldHelper->getFields($class, true);
+        $fields = $this->fieldHelper->getFields($type, true);
         $allFields = [];
         foreach ($fields as $field) {
             $fieldName = $field['name'];
             $allFields[] = $field['name'];
-            $hasConfig = $this->fieldHelper->hasConfig($class, $fieldName);
+            $hasConfig = $this->fieldHelper->hasConfig($type, $fieldName);
 
             // denormalize boolean fields
             if (isset($data[$fieldName]) && $hasConfig && $field['type'] == 'boolean') {
@@ -62,7 +62,7 @@ class ConfigurableEntityNormalizer extends BaseNormalizer
     /**
      * {@inheritdoc}
      */
-    public function supportsDenormalization($data, $type, $format = null, array $context = [])
+    public function supportsDenormalization($data, string $type, string $format = null, array $context = []): bool
     {
         $channelType = empty($context['channelType']) ? null : $context['channelType'];
 
@@ -72,7 +72,7 @@ class ConfigurableEntityNormalizer extends BaseNormalizer
     /**
      * {@inheritdoc}
      */
-    public function supportsNormalization($data, $format = null, array $context = [])
+    public function supportsNormalization($data, string $format = null, array $context = []): bool
     {
         return false;
     }

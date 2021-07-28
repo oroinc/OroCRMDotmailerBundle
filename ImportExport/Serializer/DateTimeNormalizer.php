@@ -3,16 +3,16 @@
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Serializer;
 
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
-use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\DenormalizerInterface;
-use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Exception\RuntimeException;
+use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 
-class DateTimeNormalizer implements NormalizerInterface, DenormalizerInterface
+class DateTimeNormalizer implements ContextAwareNormalizerInterface, ContextAwareDenormalizerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function denormalize($data, $class, $format = null, array $context = [])
+    public function denormalize($data, string $type, string $format = null, array $context = [])
     {
         if (empty($data)) {
             return null;
@@ -30,7 +30,7 @@ class DateTimeNormalizer implements NormalizerInterface, DenormalizerInterface
     /**
      * {@inheritdoc}
      */
-    public function normalize($object, $format = null, array $context = array())
+    public function normalize($object, string $format = null, array $context = array())
     {
         throw new RuntimeException('Do not support normalization.');
     }
@@ -38,16 +38,16 @@ class DateTimeNormalizer implements NormalizerInterface, DenormalizerInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsDenormalization($data, $type, $format = null, array $context = [])
+    public function supportsDenormalization($data, string $type, string $format = null, array $context = []): bool
     {
         return is_string($data) && $type === 'DateTime' && !empty($context['channelType'])
-            && $context['channelType'] == ChannelType::TYPE;
+            && $context['channelType'] === ChannelType::TYPE;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supportsNormalization($data, $format = null, array $context = [])
+    public function supportsNormalization($data, string $format = null, array $context = []): bool
     {
         return false;
     }
