@@ -28,7 +28,7 @@ class UpdateEntityFieldsFromContactDataConverter extends AbstractDataConverter i
     /**
      * {@inheritdoc}
      */
-    public function setEntityName($entityName)
+    public function setEntityName(string $entityName): void
     {
         $this->entityName = $entityName;
     }

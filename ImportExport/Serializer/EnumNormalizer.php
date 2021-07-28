@@ -4,40 +4,43 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Serializer;
 
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
-use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\DenormalizerInterface;
-use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 
-class EnumNormalizer implements NormalizerInterface, DenormalizerInterface
+/**
+ * Normalizes/denormalizes enum values.
+ */
+class EnumNormalizer implements ContextAwareNormalizerInterface, ContextAwareDenormalizerInterface
 {
     /**
      * @param AbstractEnumValue $object
-     * @param null|string       $format
-     * @param array             $context
+     * @param null|string $format
+     * @param array $context
      *
      * @return array
      */
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($object, string $format = null, array $context = [])
     {
         return [
-            'id'         => $object->getId(),
-            'name'       => $object->getName(),
-            'priority'   => (int)$object->getPriority(),
-            'is_default' => (bool)$object->isDefault()
+            'id' => $object->getId(),
+            'name' => $object->getName(),
+            'priority' => (int)$object->getPriority(),
+            'is_default' => (bool)$object->isDefault(),
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function denormalize($data, $class, $format = null, array $context = [])
+    public function denormalize($data, string $type, string $format = null, array $context = [])
     {
-        $reflection = new \ReflectionClass($class);
+        $reflection = new \ReflectionClass($type);
 
         $args = [
-            'id'       => empty($data['id']) ? null : $data['id'],
-            'name'     => empty($data['name']) ? '' : $data['name'],
+            'id' => empty($data['id']) ? null : $data['id'],
+            'name' => empty($data['name']) ? '' : $data['name'],
             'priority' => empty($data['priority']) ? 0 : $data['priority'],
-            'default'  => !empty($data['default'])
+            'default' => !empty($data['default']),
         ];
 
         return $reflection->newInstanceArgs($args);
@@ -46,18 +49,18 @@ class EnumNormalizer implements NormalizerInterface, DenormalizerInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsDenormalization($data, $type, $format = null, array $context = [])
+    public function supportsDenormalization($data, string $type, string $format = null, array $context = []): bool
     {
         $channelType = empty($context['channelType']) ? null : $context['channelType'];
 
-        return is_a($type, 'Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue', true)
-            && $channelType == ChannelType::TYPE;
+        return is_a($type, AbstractEnumValue::class, true)
+            && $channelType === ChannelType::TYPE;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supportsNormalization($data, $format = null, array $context = [])
+    public function supportsNormalization($data, string $format = null, array $context = []): bool
     {
         return $data instanceof AbstractEnumValue;
     }
