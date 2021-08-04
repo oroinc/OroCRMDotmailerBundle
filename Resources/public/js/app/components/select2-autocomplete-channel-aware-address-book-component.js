@@ -8,14 +8,14 @@ define(function(require) {
         marketingListId: '',
 
         /**
-         * @inheritDoc
+         * @inheritdoc
          */
         constructor: function Select2AutoCompleteChannelComponent(options) {
             Select2AutoCompleteChannelComponent.__super__.constructor.call(this, options);
         },
 
         /**
-         * @inheritDoc
+         * @inheritdoc
          */
         initialize: function(options) {
             this.marketingListId = _.result(options, 'marketing_list_id') || this.marketingListId;

@@ -13,13 +13,13 @@ define(function(require) {
         removable: true,
         fieldChoiceOptions: null,
         /**
-         * @inheritDoc
+         * @inheritdoc
          */
         constructor: function FieldChoiceItem(options) {
             FieldChoiceItem.__super__.constructor.call(this, options);
         },
         /**
-         * @inheritDoc
+         * @inheritdoc
          */
         initialize: function(options) {
             _.extend(this, _.pick(options, 'fieldChoiceOptions'));

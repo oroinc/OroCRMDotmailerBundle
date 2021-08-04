@@ -29,7 +29,7 @@ define([
         requiredOptions: ['typeSelector', 'fieldsSets', 'formSelector'],
 
         /**
-         * @inheritDoc
+         * @inheritdoc
          */
         constructor: function DataFieldCiew(options) {
             DataFieldCiew.__super__.constructor.call(this, options);
