@@ -23,7 +23,7 @@ define([
         requiredOptions: ['channelSelector', 'fieldsSets', 'formSelector'],
 
         /**
-         * @inheritDoc
+         * @inheritdoc
          */
         constructor: function IntegrationConnection(...args) {
             IntegrationConnection.__super__.constructor.apply(this, args);

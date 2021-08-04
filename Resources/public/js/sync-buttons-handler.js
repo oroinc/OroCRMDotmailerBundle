@@ -54,7 +54,7 @@ define([
                 },
 
                 /**
-                 * @inheritDoc
+                 * @inheritdoc
                  */
                 constructor: function StatelessWidgetComponent(options) {
                     StatelessWidgetComponent.__super__.constructor.call(this, options);
