@@ -4,9 +4,14 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Serializer;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\EntityBundle\Provider\EntityFieldProvider;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendDbIdentifierNameGenerator;
 use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\ConfigurableEntityNormalizer as BaseNormalizer;
 
+/**
+ * Extends import/export ConfigurableEntityNormalizer taking into account dotmailer specifics.
+ * Denormalizes boolean fields as needed by dotmailer.
+ */
 class ConfigurableEntityNormalizer extends BaseNormalizer
 {
     const XS_BOOLEAN_TRUE = 'true';
@@ -29,7 +34,7 @@ class ConfigurableEntityNormalizer extends BaseNormalizer
     {
         $object = parent::denormalize($data, $type, $format, $context);
 
-        $fields = $this->fieldHelper->getFields($type, true);
+        $fields = $this->fieldHelper->getEntityFields($type, EntityFieldProvider::OPTION_WITH_RELATIONS);
         $allFields = [];
         foreach ($fields as $field) {
             $fieldName = $field['name'];

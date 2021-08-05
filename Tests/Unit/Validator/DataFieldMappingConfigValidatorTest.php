@@ -19,11 +19,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
 {
-    /** @var \PHPUnit\Framework\MockObject\MockObject */
-    private $entityFieldProvider;
+    private EntityFieldProvider|\PHPUnit\Framework\MockObject\MockObject $entityFieldProvider;
 
-    /** @var \PHPUnit\Framework\MockObject\MockObject */
-    private $translator;
+    private TranslatorInterface|\PHPUnit\Framework\MockObject\MockObject $translator;
 
     protected function setUp(): void
     {
@@ -37,7 +35,7 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
         return new DataFieldMappingConfigValidator($this->entityFieldProvider, $this->translator);
     }
 
-    public function testValidateNumericFailed()
+    public function testValidateNumericFailed(): void
     {
         $mappingConfig = new DataFieldMappingConfig();
         $dataField = new DataFieldStub();
@@ -48,9 +46,9 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
         $mappingConfig->setMapping($mapping);
-        $this->entityFieldProvider->expects($this->once())
-            ->method('getFields')
-            ->with('entityClass', false, true, false, false, false, false)
+        $this->entityFieldProvider->expects(self::once())
+            ->method('getEntityFields')
+            ->with('entityClass', EntityFieldProvider::OPTION_WITH_VIRTUAL_FIELDS)
             ->willReturn([
                 [
                     'name' => 'entityFieldName',
@@ -58,7 +56,7 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
                 ]
             ]);
 
-        $this->translator->expects($this->once())
+        $this->translator->expects(self::once())
             ->method('trans')
             ->with(
                 'oro.dotmailer.datafieldmappingconfig.validation.incompatible_types_numeric',
@@ -73,7 +71,7 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
             ->assertRaised();
     }
 
-    public function testValidateBooleanFailed()
+    public function testValidateBooleanFailed(): void
     {
         $mappingConfig = new DataFieldMappingConfig();
         $dataField = new DataFieldStub();
@@ -84,9 +82,9 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
         $mappingConfig->setMapping($mapping);
-        $this->entityFieldProvider->expects($this->once())
-            ->method('getFields')
-            ->with('entityClass', false, true, false, false, false, false)
+        $this->entityFieldProvider->expects(self::once())
+            ->method('getEntityFields')
+            ->with('entityClass', EntityFieldProvider::OPTION_WITH_VIRTUAL_FIELDS)
             ->willReturn([
                 [
                     'name' => 'entityFieldName',
@@ -94,7 +92,7 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
                 ]
             ]);
 
-        $this->translator->expects($this->once())
+        $this->translator->expects(self::once())
             ->method('trans')
             ->with(
                 'oro.dotmailer.datafieldmappingconfig.validation.incompatible_types_boolean',
@@ -109,7 +107,7 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
             ->assertRaised();
     }
 
-    public function testValidateDateFailed()
+    public function testValidateDateFailed(): void
     {
         $mappingConfig = new DataFieldMappingConfig();
         $dataField = new DataFieldStub();
@@ -120,9 +118,9 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
         $mappingConfig->setMapping($mapping);
-        $this->entityFieldProvider->expects($this->once())
-            ->method('getFields')
-            ->with('entityClass', false, true, false, false, false, false)
+        $this->entityFieldProvider->expects(self::once())
+            ->method('getEntityFields')
+            ->with('entityClass', EntityFieldProvider::OPTION_WITH_VIRTUAL_FIELDS)
             ->willReturn([
                 [
                     'name' => 'entityFieldName',
@@ -130,7 +128,7 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
                 ]
             ]);
 
-        $this->translator->expects($this->once())
+        $this->translator->expects(self::once())
             ->method('trans')
             ->with(
                 'oro.dotmailer.datafieldmappingconfig.validation.incompatible_types_date',
@@ -145,7 +143,7 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
             ->assertRaised();
     }
 
-    public function testValidateMutlipleFieldsFailed()
+    public function testValidateMutlipleFieldsFailed(): void
     {
         $mappingConfig = new DataFieldMappingConfig();
         $dataField = new DataFieldStub();
@@ -154,7 +152,7 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
         $mappingConfig->setDataField($dataField);
         $mappingConfig->setEntityFields('entityFieldName,anotherEntityFieldName');
 
-        $this->translator->expects($this->once())
+        $this->translator->expects(self::once())
             ->method('trans')
             ->with('oro.dotmailer.datafieldmappingconfig.validation.multiple')
             ->willReturn('translated error message');
@@ -169,7 +167,7 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
     /**
      * @dataProvider dataFieldDataProvider
      */
-    public function testValidatePassed(string $dataFieldType, string $type)
+    public function testValidatePassed(string $dataFieldType, string $type): void
     {
         $mappingConfig = new DataFieldMappingConfig();
         $dataField = new DataFieldStub();
@@ -180,9 +178,9 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
         $mappingConfig->setMapping($mapping);
-        $this->entityFieldProvider->expects($this->once())
-            ->method('getFields')
-            ->with('entityClass', false, true, false, false, false, false)
+        $this->entityFieldProvider->expects(self::once())
+            ->method('getEntityFields')
+            ->with('entityClass', EntityFieldProvider::OPTION_WITH_VIRTUAL_FIELDS)
             ->willReturn([
                 [
                     'name' => 'entityFieldName',
@@ -190,7 +188,7 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
                 ]
             ]);
 
-        $this->translator->expects($this->never())
+        $this->translator->expects(self::never())
             ->method('trans');
 
         $constraint = new DataFieldMappingConfigConstraint();
