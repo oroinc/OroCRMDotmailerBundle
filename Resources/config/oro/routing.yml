@@ -8,11 +8,69 @@ oro_dotmailer_oauth_callback:
     defaults:     { _controller: Oro\Bundle\DotmailerBundle\Controller\OauthController::callbackAction }
     schemes:      [https]
 
-oro_dotmailer_bundle_api:
-    resource: "@OroDotmailerBundle/Resources/config/oro/routing_api.yml"
-    type: rest
-    prefix: api/rest/{version}
-    requirements:
-        version:  latest|v1
+
+#
+# DEPRECATED OLD REST API ROUTES
+#
+
+oro_api_options_dotmailer_datafields:
+    path: '/api/rest/{version}/dotmailer/datafields.{_format}'
+    methods: [OPTIONS]
     defaults:
-        version:  latest
+        _controller: 'Oro\Bundle\DotmailerBundle\Controller\Api\Rest\DataFieldController::optionsAction'
+        _format: json
+        version: latest
+    requirements:
+        _format: json|html
+        version: latest|v1
+
+oro_api_options_dotmailer_datafield_mappings:
+    path: '/api/rest/{version}/dotmailer/datafield/mappings.{_format}'
+    methods: [OPTIONS]
+    defaults:
+        _controller: 'Oro\Bundle\DotmailerBundle\Controller\Api\Rest\DataFieldMappingController::optionsAction'
+        _format: json
+        version: latest
+    requirements:
+        _format: json|html
+        version: latest|v1
+
+
+#
+# OLD REST API ROUTES
+#
+
+oro_api_delete_dotmailer_datafield:
+    path: '/api/rest/{version}/dotmailers/{id}/datafield.{_format}'
+    methods: [DELETE]
+    defaults:
+        _controller: 'Oro\Bundle\DotmailerBundle\Controller\Api\Rest\DataFieldController::deleteAction'
+        _format: json
+        version: latest
+    requirements:
+        id: \d+
+        _format: json|html
+        version: latest|v1
+
+oro_api_fields_dotmailer_datafield_mapping:
+    path: '/api/rest/{version}/dotmailers/datafields/mappings/fields.{_format}'
+    methods: [GET]
+    defaults:
+        _controller: 'Oro\Bundle\DotmailerBundle\Controller\Api\Rest\DataFieldMappingController::fieldsAction'
+        _format: json
+        version: latest
+    requirements:
+        _format: json|html
+        version: latest|v1
+
+oro_api_delete_dotmailer_datafield_mapping:
+    path: '/api/rest/{version}/dotmailers/{id}/datafield/mapping.{_format}'
+    methods: [DELETE]
+    defaults:
+        _controller: 'Oro\Bundle\DotmailerBundle\Controller\Api\Rest\DataFieldMappingController::deleteAction'
+        _format: json
+        version: latest
+    requirements:
+        id: \d+
+        _format: json|html
+        version: latest|v1

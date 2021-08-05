@@ -2,10 +2,6 @@
 
 namespace Oro\Bundle\DotmailerBundle\Controller\Api\Rest;
 
-use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\RouteResource;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Oro\Bundle\EntityBundle\Exception\InvalidEntityException;
 use Oro\Bundle\EntityBundle\Provider\EntityWithFieldsProvider;
@@ -14,16 +10,11 @@ use Oro\Bundle\SoapBundle\Controller\Api\Rest\RestController;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * API CRUD controller for DataFieldMapping entity.
- *
- * @RouteResource("dotmailer_datafield_mapping")
- * @NamePrefix("oro_api_")
+ * REST API CRUD controller for DataFieldMapping entity.
  */
-class DataFieldMappingController extends RestController implements ClassResourceInterface
+class DataFieldMappingController extends RestController
 {
     /**
-     * @Rest\Delete(requirements={"id"="\d+"})
-     *
      * @ApiDoc(
      *      description="Delete dotmailer data field mapping",
      *      resource=true
