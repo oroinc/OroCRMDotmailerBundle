@@ -133,7 +133,10 @@ class DataFieldMappingConfigValidator extends ConstraintValidator
     protected function getFieldTypes($class)
     {
         if (!isset($this->fieldTypes[$class])) {
-            $fields = $this->entityFieldProvider->getFields($class, false, true, false, false, false, false);
+            $fields = $this->entityFieldProvider->getEntityFields(
+                $class,
+                EntityFieldProvider::OPTION_WITH_VIRTUAL_FIELDS
+            );
             $this->fieldTypes[$class] = array_column($fields, 'type', 'name');
         }
 
