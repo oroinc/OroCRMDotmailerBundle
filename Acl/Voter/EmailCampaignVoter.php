@@ -10,13 +10,11 @@ use Oro\Bundle\SecurityBundle\Acl\Voter\AbstractEntityVoter;
  */
 class EmailCampaignVoter extends AbstractEntityVoter
 {
-    /**
-     * @var array
-     */
+    /** {@inheritDoc} */
     protected $supportedAttributes = [BasicPermission::EDIT];
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function getPermissionForAttribute($class, $identifier, $attribute)
     {
@@ -27,11 +25,7 @@ class EmailCampaignVoter extends AbstractEntityVoter
         return self::ACCESS_ABSTAIN;
     }
 
-    /**
-     * @param int $entityId
-     * @return bool
-     */
-    protected function isEmailCampaignSent($entityId)
+    private function isEmailCampaignSent(int $entityId): bool
     {
         $emailCampaign = $this->doctrineHelper
             ->getEntityRepository($this->className)

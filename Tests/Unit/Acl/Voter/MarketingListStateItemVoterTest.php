@@ -12,17 +12,18 @@ use Oro\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 use Oro\Component\Testing\Unit\TestContainerBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class MarketingListStateItemVoterTest extends \PHPUnit\Framework\TestCase
 {
-    /** @var MarketingListStateItemVoter */
-    private $voter;
-
-    /** @var \PHPUnit\Framework\MockObject\MockObject|DoctrineHelper */
+    /** @var DoctrineHelper|\PHPUnit\Framework\MockObject\MockObject */
     private $doctrineHelper;
 
-    /** @var \PHPUnit\Framework\MockObject\MockObject|ContactInformationFieldsProvider */
+    /** @var ContactInformationFieldsProvider|\PHPUnit\Framework\MockObject\MockObject */
     private $contactInformationFieldsProvider;
+
+    /** @var MarketingListStateItemVoter */
+    private $voter;
 
     protected function setUp(): void
     {
@@ -33,21 +34,23 @@ class MarketingListStateItemVoterTest extends \PHPUnit\Framework\TestCase
             ->add('oro_marketing_list.provider.contact_information_fields', $this->contactInformationFieldsProvider)
             ->getContainer($this);
 
-        $this->voter = new MarketingListStateItemVoter(
-            $this->doctrineHelper,
-            $container,
-            Contact::class
-        );
+        $this->voter = new MarketingListStateItemVoter($this->doctrineHelper, $container);
     }
 
     /**
      * @dataProvider attributesDataProvider
      */
-    public function testVote($identifier, $object, $entity, $expected, $attributes, $queryResult = false)
-    {
+    public function testVote(
+        $identifier,
+        mixed $object,
+        ?Contact $entity,
+        int $expected,
+        array $attributes,
+        bool $queryResult = false
+    ) {
         $this->doctrineHelper->expects($this->any())
             ->method('getSingleEntityIdentifier')
-            ->will($this->returnValue($identifier));
+            ->willReturn($identifier);
 
         $repository = $this->createMock(EntityRepository::class);
         $contactRepository = $this->createMock(ContactRepository::class);
@@ -70,15 +73,15 @@ class MarketingListStateItemVoterTest extends \PHPUnit\Framework\TestCase
 
         $this->contactInformationFieldsProvider->expects($this->any())
             ->method('getEntityTypedFields')
-            ->will($this->returnValue(['email']));
+            ->willReturn(['email']);
 
         $this->contactInformationFieldsProvider->expects($this->any())
             ->method('getTypedFieldsValues')
-            ->will($this->returnValue(['email']));
+            ->willReturn(['email']);
 
         $contactRepository->expects($this->any())
             ->method('isUnsubscribedFromAddressBookByMarketingList')
-            ->will($this->returnValue($queryResult));
+            ->willReturn($queryResult);
 
         $this->voter->setClassName(MarketingListUnsubscribedItem::class);
 
@@ -89,29 +92,23 @@ class MarketingListStateItemVoterTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @return array
-     */
-    public function attributesDataProvider()
+    public function attributesDataProvider(): array
     {
         $item = $this->getItem();
         $entity = new Contact();
 
         return [
-            [null, [], null, MarketingListStateItemVoter::ACCESS_ABSTAIN, []],
-            [null, $item, $entity, MarketingListStateItemVoter::ACCESS_ABSTAIN, []],
-            [1, $item, $entity, MarketingListStateItemVoter::ACCESS_ABSTAIN, ['VIEW']],
-            [1, $item, $entity, MarketingListStateItemVoter::ACCESS_ABSTAIN, ['DELETE']],
-            [1, $item, $entity, MarketingListStateItemVoter::ACCESS_ABSTAIN, ['DELETE']],
-            [1, $item, $entity, MarketingListStateItemVoter::ACCESS_DENIED, ['DELETE'], true],
-            [1, $item, null, MarketingListStateItemVoter::ACCESS_ABSTAIN, ['DELETE'], true],
+            [null, [], null, VoterInterface::ACCESS_ABSTAIN, []],
+            [null, $item, $entity, VoterInterface::ACCESS_ABSTAIN, []],
+            [1, $item, $entity, VoterInterface::ACCESS_ABSTAIN, ['VIEW']],
+            [1, $item, $entity, VoterInterface::ACCESS_ABSTAIN, ['DELETE']],
+            [1, $item, $entity, VoterInterface::ACCESS_ABSTAIN, ['DELETE']],
+            [1, $item, $entity, VoterInterface::ACCESS_DENIED, ['DELETE'], true],
+            [1, $item, null, VoterInterface::ACCESS_ABSTAIN, ['DELETE'], true],
         ];
     }
 
-    /**
-     * @return MarketingListUnsubscribedItem
-     */
-    private function getItem()
+    private function getItem(): MarketingListUnsubscribedItem
     {
         $item = new MarketingListUnsubscribedItem();
         $marketingList = new MarketingList();

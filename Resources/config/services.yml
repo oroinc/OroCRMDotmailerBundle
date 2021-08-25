@@ -963,7 +963,6 @@ services:
         arguments:
             - '@oro_entity.doctrine_helper'
             - '@Psr\Container\ContainerInterface'
-            - 'Oro\Bundle\DotmailerBundle\Entity\Contact'
         calls:
             - [setClassName, ['Oro\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem']]
         tags:
