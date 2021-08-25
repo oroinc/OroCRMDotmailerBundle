@@ -2,6 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Acl\Voter;
 
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface;
@@ -16,23 +17,15 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
  */
 class MarketingListStateItemVoter extends AbstractEntityVoter implements ServiceSubscriberInterface
 {
-    /** @var array */
+    /** {@inheritDoc} */
     protected $supportedAttributes = [BasicPermission::DELETE];
 
-    /** @var ContainerInterface */
-    private $container;
+    private ContainerInterface $container;
 
-    /** @var string */
-    private $contactClassName;
-
-    public function __construct(
-        DoctrineHelper $doctrineHelper,
-        ContainerInterface $container,
-        string $contactClassName
-    ) {
+    public function __construct(DoctrineHelper $doctrineHelper, ContainerInterface $container)
+    {
         parent::__construct($doctrineHelper);
         $this->container = $container;
-        $this->contactClassName = $contactClassName;
     }
 
     /**
@@ -46,7 +39,7 @@ class MarketingListStateItemVoter extends AbstractEntityVoter implements Service
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function getPermissionForAttribute($class, $identifier, $attribute)
     {
@@ -60,7 +53,7 @@ class MarketingListStateItemVoter extends AbstractEntityVoter implements Service
         }
 
         /** @var ContactRepository $contactRepository */
-        $contactRepository = $this->doctrineHelper->getEntityRepositoryForClass($this->contactClassName);
+        $contactRepository = $this->doctrineHelper->getEntityRepositoryForClass(Contact::class);
         $unsubscribed = $contactRepository->isUnsubscribedFromAddressBookByMarketingList(
             $this->getContactInformationValues($entityClass, $entity),
             $item->getMarketingList()
@@ -71,27 +64,14 @@ class MarketingListStateItemVoter extends AbstractEntityVoter implements Service
             : self::ACCESS_ABSTAIN;
     }
 
-    /**
-     * @param string $entityClass
-     * @param mixed  $entityId
-     *
-     * @return object|null
-     */
-    private function findEntity(string $entityClass, $entityId)
+    private function findEntity(string $entityClass, mixed $entityId): ?object
     {
         return $this->doctrineHelper->getEntityRepositoryForClass($entityClass)->find($entityId);
     }
 
-    /**
-     * @param string $entityClass
-     * @param object $entity
-     *
-     * @return array
-     */
-    private function getContactInformationValues(string $entityClass, $entity): array
+    private function getContactInformationValues(string $entityClass, object $entity): array
     {
-        /** @var ContactInformationFieldsProvider $fieldsProvider */
-        $fieldsProvider = $this->container->get('oro_marketing_list.provider.contact_information_fields');
+        $fieldsProvider = $this->getContactInformationFieldsProvider();
 
         return $fieldsProvider->getTypedFieldsValues(
             $fieldsProvider->getEntityTypedFields(
@@ -100,5 +80,10 @@ class MarketingListStateItemVoter extends AbstractEntityVoter implements Service
             ),
             $entity
         );
+    }
+
+    private function getContactInformationFieldsProvider(): ContactInformationFieldsProvider
+    {
+        return $this->container->get('oro_marketing_list.provider.contact_information_fields');
     }
 }

@@ -7,10 +7,11 @@ use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 use Oro\Bundle\DotmailerBundle\Acl\Voter\EmailCampaignVoter;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class EmailCampaignVoterTest extends \PHPUnit\Framework\TestCase
 {
-    /** @var \PHPUnit\Framework\MockObject\MockObject|DoctrineHelper */
+    /** @var DoctrineHelper|\PHPUnit\Framework\MockObject\MockObject */
     private $doctrineHelper;
 
     /** @var EmailCampaignVoter */
@@ -26,7 +27,7 @@ class EmailCampaignVoterTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider attributesDataProvider
      */
-    public function testVote($attributes, $emailCampaign, $expected)
+    public function testVote(array $attributes, EmailCampaign $emailCampaign, int $expected)
     {
         $object = new EmailCampaign();
 
@@ -40,38 +41,35 @@ class EmailCampaignVoterTest extends \PHPUnit\Framework\TestCase
         $repository = $this->createMock(EntityRepository::class);
         $this->doctrineHelper->expects($this->any())
             ->method('getEntityRepository')
-            ->will($this->returnValue($repository));
+            ->willReturn($repository);
         $repository->expects($this->any())
             ->method('find')
-            ->will($this->returnValue($emailCampaign));
+            ->willReturn($emailCampaign);
 
         $token = $this->createMock(TokenInterface::class);
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             $this->voter->vote($token, $object, $attributes)
         );
     }
 
-    /**
-     * @return array
-     */
-    public function attributesDataProvider()
+    public function attributesDataProvider(): array
     {
         $emailCampaignNew = new EmailCampaign();
         $emailCampaignSent = new EmailCampaign();
         $emailCampaignSent->setSent(true);
 
         return [
-            [['VIEW'], $emailCampaignNew, EmailCampaignVoter::ACCESS_ABSTAIN],
-            [['CREATE'], $emailCampaignNew, EmailCampaignVoter::ACCESS_ABSTAIN],
-            [['EDIT'], $emailCampaignNew, EmailCampaignVoter::ACCESS_ABSTAIN],
-            [['DELETE'], $emailCampaignNew, EmailCampaignVoter::ACCESS_ABSTAIN],
-            [['ASSIGN'], $emailCampaignNew, EmailCampaignVoter::ACCESS_ABSTAIN],
-            [['VIEW'], $emailCampaignSent, EmailCampaignVoter::ACCESS_ABSTAIN],
-            [['CREATE'], $emailCampaignSent, EmailCampaignVoter::ACCESS_ABSTAIN],
-            [['EDIT'], $emailCampaignSent, EmailCampaignVoter::ACCESS_DENIED],
-            [['DELETE'], $emailCampaignSent, EmailCampaignVoter::ACCESS_ABSTAIN],
-            [['ASSIGN'], $emailCampaignSent, EmailCampaignVoter::ACCESS_ABSTAIN],
+            [['VIEW'], $emailCampaignNew, VoterInterface::ACCESS_ABSTAIN],
+            [['CREATE'], $emailCampaignNew, VoterInterface::ACCESS_ABSTAIN],
+            [['EDIT'], $emailCampaignNew, VoterInterface::ACCESS_ABSTAIN],
+            [['DELETE'], $emailCampaignNew, VoterInterface::ACCESS_ABSTAIN],
+            [['ASSIGN'], $emailCampaignNew, VoterInterface::ACCESS_ABSTAIN],
+            [['VIEW'], $emailCampaignSent, VoterInterface::ACCESS_ABSTAIN],
+            [['CREATE'], $emailCampaignSent, VoterInterface::ACCESS_ABSTAIN],
+            [['EDIT'], $emailCampaignSent, VoterInterface::ACCESS_DENIED],
+            [['DELETE'], $emailCampaignSent, VoterInterface::ACCESS_ABSTAIN],
+            [['ASSIGN'], $emailCampaignSent, VoterInterface::ACCESS_ABSTAIN],
         ];
     }
 }
