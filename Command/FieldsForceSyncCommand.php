@@ -73,6 +73,8 @@ HELP
         $output->writeln('Start update of address book contacts');
         $this->syncManager->forceMarkEntityUpdate();
         $output->writeln('Completed');
+
+        return 0;
     }
 
     protected function getIntegrationRepository(): ChannelRepository

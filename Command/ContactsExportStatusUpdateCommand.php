@@ -142,6 +142,8 @@ HELP
         }
 
         $output->writeln('Completed');
+
+        return 0;
     }
 
     protected function getIntegrationRepository(): ChannelRepository
