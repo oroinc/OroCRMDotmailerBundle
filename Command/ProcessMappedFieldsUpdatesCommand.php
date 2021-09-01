@@ -71,5 +71,7 @@ class ProcessMappedFieldsUpdatesCommand extends Command implements CronCommandIn
         $this->processor->processFieldChangesQueue();
 
         $output->writeln('Completed');
+
+        return 0;
     }
 }
