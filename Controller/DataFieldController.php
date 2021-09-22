@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -32,23 +31,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class DataFieldController extends AbstractController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSubscribedServices()
-    {
-        return array_merge(parent::getSubscribedServices(), [
-            DataFieldFormHandler::class,
-            SessionInterface::class,
-            TranslatorInterface::class,
-            Router::class,
-            FormFactoryInterface::class,
-            ManagerRegistry::class,
-            GenuineSyncScheduler::class,
-            LoggerInterface::class
-        ]);
-    }
-
     /**
      * @Route("/view/{id}", name="oro_dotmailer_datafield_view", requirements={"id"="\d+"})
      * @Template
@@ -100,7 +82,7 @@ class DataFieldController extends AbstractController
         $formHandler = $this->get(DataFieldFormHandler::class);
         $form = $formHandler->getForm();
         if ($formHandler->process($request)) {
-            $this->get(SessionInterface::class)->getFlashBag()->add(
+            $request->getSession()->getFlashBag()->add(
                 'success',
                 $this->get(TranslatorInterface::class)->trans('oro.dotmailer.controller.datafield.saved.message')
             );
@@ -188,5 +170,21 @@ class DataFieldController extends AbstractController
         }
 
         return new JsonResponse($response, $status);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedServices()
+    {
+        return array_merge(parent::getSubscribedServices(), [
+            DataFieldFormHandler::class,
+            TranslatorInterface::class,
+            Router::class,
+            FormFactoryInterface::class,
+            ManagerRegistry::class,
+            GenuineSyncScheduler::class,
+            LoggerInterface::class
+        ]);
     }
 }

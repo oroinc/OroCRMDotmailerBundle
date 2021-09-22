@@ -17,7 +17,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -147,14 +146,14 @@ class DotmailerController extends AbstractController
                 if ($oauth) {
                     try {
                         $loginUserUrl = $oauthHelper->generateLoginUserUrl($transport, $oauth->getRefreshToken());
-                        $this->get(SessionInterface::class)->set(self::CHANNEL_SESSION_KEY, $channel->getId());
+                        $request->getSession()->set(self::CHANNEL_SESSION_KEY, $channel->getId());
                     } catch (RuntimeException $e) {
-                        $this->get(SessionInterface::class)->getFlashBag()->add(
+                        $request->getSession()->getFlashBag()->add(
                             'error',
                             $e->getMessage()
                         );
                     } catch (\Exception $e) {
-                        $this->get(SessionInterface::class)->getFlashBag()->add(
+                        $request->getSession()->getFlashBag()->add(
                             'error',
                             $this->get(TranslatorInterface::class)
                                 ->trans('oro.dotmailer.integration.messsage.unable_to_connect')
@@ -163,7 +162,7 @@ class DotmailerController extends AbstractController
                 }
                 $connectUrl = $oauthHelper->generateAuthorizeUrl($transport, $channel->getId());
             } else {
-                $this->get(SessionInterface::class)->getFlashBag()->add(
+                $request->getSession()->getFlashBag()->add(
                     'error',
                     $this->get(TranslatorInterface::class)->trans(
                         'oro.dotmailer.integration.messsage.enter_client_id_client_key',
@@ -187,9 +186,8 @@ class DotmailerController extends AbstractController
      */
     protected function getCurrentChannel(Request $request)
     {
-        $session = $this->get(SessionInterface::class);
         $data = $request->get('oro_dotmailer_integration_connection');
-        $channelId = isset($data['channel']) ? $data['channel'] : $session->get(self::CHANNEL_SESSION_KEY);
+        $channelId = $data['channel'] ?? $request->getSession()->get(self::CHANNEL_SESSION_KEY);
         $channel = null;
         if ($channelId) {
             $channel = $this->get(ManagerRegistry::class)
@@ -208,7 +206,6 @@ class DotmailerController extends AbstractController
         return array_merge(
             parent::getSubscribedServices(),
             [
-                SessionInterface::class,
                 ManagerRegistry::class,
                 DotmailerResourcesFactory::class,
                 TranslatorInterface::class,

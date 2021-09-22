@@ -2,6 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
+/**
+ * Address book Connector
+ */
 class AddressBookConnector extends AbstractDotmailerConnector
 {
     const TYPE = 'address_book';
@@ -20,7 +23,7 @@ class AddressBookConnector extends AbstractDotmailerConnector
     /**
      * {@inheritdoc}
      */
-    public function getLabel()
+    public function getLabel(): string
     {
         return 'oro.dotmailer.connector.address_book.label';
     }

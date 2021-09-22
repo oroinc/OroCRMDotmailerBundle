@@ -4,6 +4,9 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 
+/**
+ * Contact Connector
+ */
 class ContactConnector extends AbstractDotmailerConnector
 {
     const TYPE = 'contact';
@@ -30,7 +33,7 @@ class ContactConnector extends AbstractDotmailerConnector
     /**
      * {@inheritdoc}
      */
-    public function getLabel()
+    public function getLabel(): string
     {
         return 'oro.dotmailer.connector.contact.label';
     }

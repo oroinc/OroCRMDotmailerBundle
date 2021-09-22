@@ -14,189 +14,172 @@ use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Component\Testing\Unit\EntityTrait;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SyncManagerTest extends \PHPUnit\Framework\TestCase
 {
     use EntityTrait;
 
-    /**
-     * @var DoctrineHelper|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $doctrineHelper;
+    private DoctrineHelper|\PHPUnit\Framework\MockObject\MockObject $doctrineHelper;
 
-    /**
-     * @var MappingProvider|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $mappingProvider;
+    private MappingProvider|\PHPUnit\Framework\MockObject\MockObject $mappingProvider;
 
-    /**
-     * @var ConfigManager|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $configManager;
+    private ConfigManager|\PHPUnit\Framework\MockObject\MockObject $configManager;
 
-    /**
-     * @var SyncManager
-     */
-    protected $syncManager;
+    private SyncManager $syncManager;
 
     protected function setUp(): void
     {
-        $this->doctrineHelper = $this->getMockBuilder(DoctrineHelper::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->mappingProvider = $this->getMockBuilder(MappingProvider::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->configManager = $this->getMockBuilder(ConfigManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->doctrineHelper = $this->createMock(DoctrineHelper::class);
+        $this->mappingProvider = $this->createMock(MappingProvider::class);
+        $this->configManager = $this->createMock(ConfigManager::class);
         $this->syncManager = new SyncManager($this->doctrineHelper, $this->mappingProvider, $this->configManager);
     }
 
-    public function testForceMarkEntityUpdateNone()
+    public function testForceMarkEntityUpdateNone(): void
     {
-        $this->configManager->expects($this->once())->method('get')
+        $this->configManager->expects($this->once())
+            ->method('get')
             ->with('oro_dotmailer.force_sync_for_virtual_fields')
-            ->will($this->returnValue(SyncManager::FORCE_SYNC_NONE));
-        $this->doctrineHelper->expects($this->never())->method('getEntityRepositoryForClass');
+            ->willReturn(SyncManager::FORCE_SYNC_NONE);
+        $this->doctrineHelper->expects($this->never())
+            ->method('getEntityRepositoryForClass');
 
         $this->syncManager->forceMarkEntityUpdate();
     }
 
-    public function testForceMarkEntityUpdateVirtualOnly()
+    public function testForceMarkEntityUpdateVirtualOnly(): void
     {
-        $this->configManager->expects($this->once())->method('get')
+        $this->configManager->expects($this->once())
+            ->method('get')
             ->with('oro_dotmailer.force_sync_for_virtual_fields')
-            ->will($this->returnValue(SyncManager::FORCE_SYNC_VIRTUALS_ONLY));
-        $addressBookRepository = $this->getMockBuilder(AddressBookRepository::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+            ->willReturn(SyncManager::FORCE_SYNC_VIRTUALS_ONLY);
+        $addressBookRepository = $this->createMock(AddressBookRepository::class);
         $channelId = 1;
-        $channel = $this->getEntity('Oro\Bundle\IntegrationBundle\Entity\Channel', ['id' => $channelId]);
+        /** @var Channel $channel */
+        $channel = $this->getEntity(Channel::class, ['id' => $channelId]);
         $addressBook = $this->createAddressBook($channel, 'EntityClass');
-        $addressBookRepository->expects($this->once())->method('getAddressBooksWithML')->will(
-            $this->returnValue([$addressBook])
-        );
+        $addressBookRepository->expects($this->once())
+            ->method('getAddressBooksWithML')
+            ->willReturn([$addressBook]);
 
-        $addressBookContactRepository = $this->getMockBuilder(AddressBookContactRepository::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->doctrineHelper->expects($this->any())->method('getEntityRepositoryForClass')->will(
-            $this->returnValueMap(
+        $addressBookContactRepository = $this->createMock(AddressBookContactRepository::class);
+        $this->doctrineHelper->expects($this->any())
+            ->method('getEntityRepositoryForClass')
+            ->willReturnMap(
                 [
                     [AddressBook::class, $addressBookRepository],
                     [AddressBookContact::class, $addressBookContactRepository],
                 ]
-            )
-        );
+            );
 
-        $this->mappingProvider->expects($this->once())->method('entityHasVirutalFieldsMapped')
+        $this->mappingProvider->expects($this->once())
+            ->method('entityHasVirutalFieldsMapped')
             ->with($channelId, 'EntityClass')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
-        $addressBookContactRepository->expects($this->once())->method('bulkUpdateEntityUpdatedFlag')
+        $addressBookContactRepository->expects($this->once())
+            ->method('bulkUpdateEntityUpdatedFlag')
             ->with(['EntityClass'], $channel);
 
         $this->syncManager->forceMarkEntityUpdate();
     }
 
-    public function testForceMarkEntityUpdateAlways()
+    public function testForceMarkEntityUpdateAlways(): void
     {
-        $this->configManager->expects($this->once())->method('get')
+        $this->configManager->expects($this->once())
+            ->method('get')
             ->with('oro_dotmailer.force_sync_for_virtual_fields')
-            ->will($this->returnValue(SyncManager::FORCE_SYNC_ALWAYS));
-        $addressBookRepository = $this->getMockBuilder(AddressBookRepository::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+            ->willReturn(SyncManager::FORCE_SYNC_ALWAYS);
+        $addressBookRepository = $this->createMock(AddressBookRepository::class);
         $addressBooks = [];
         $channelId = 1;
-        $channel = $this->getEntity('Oro\Bundle\IntegrationBundle\Entity\Channel', ['id' => $channelId]);
+        /** @var Channel $channel */
+        $channel = $this->getEntity(Channel::class, ['id' => $channelId]);
         $addressBooks[] = $this->createAddressBook($channel, 'EntityClass');
         $addressBooks[] = $this->createAddressBook($channel, 'AnotherEntityClass');
-        $addressBookRepository->expects($this->once())->method('getAddressBooksWithML')->will(
-            $this->returnValue($addressBooks)
-        );
+        $addressBookRepository->expects($this->once())
+            ->method('getAddressBooksWithML')
+            ->willReturn($addressBooks);
 
-        $addressBookContactRepository = $this->getMockBuilder(AddressBookContactRepository::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->doctrineHelper->expects($this->any())->method('getEntityRepositoryForClass')->will(
-            $this->returnValueMap(
+        $addressBookContactRepository = $this->createMock(AddressBookContactRepository::class);
+        $this->doctrineHelper->expects($this->any())
+            ->method('getEntityRepositoryForClass')
+            ->willReturnMap(
                 [
                     [AddressBook::class, $addressBookRepository],
                     [AddressBookContact::class, $addressBookContactRepository],
                 ]
-            )
-        );
-        $this->mappingProvider->expects($this->any())->method('getExportMappingConfigForEntity')
-            ->will($this->returnValueMap([
+            );
+        $this->mappingProvider->expects($this->any())
+            ->method('getExportMappingConfigForEntity')
+            ->willReturnMap([
                 ['EntityClass', 1, true],
                 ['AnotherEntityClass', 1, false],
-            ]));
+            ]);
 
-        $addressBookContactRepository->expects($this->once())->method('bulkUpdateEntityUpdatedFlag')
+        $addressBookContactRepository->expects($this->once())
+            ->method('bulkUpdateEntityUpdatedFlag')
             ->with(['EntityClass'], $channel);
 
         $this->syncManager->forceMarkEntityUpdate();
     }
 
-    public function testForceMarkEntityUpdateAlwaysWithEvent()
+    public function testForceMarkEntityUpdateAlwaysWithEvent(): void
     {
-        $this->configManager->expects($this->once())->method('get')
+        $this->configManager->expects($this->once())
+            ->method('get')
             ->with('oro_dotmailer.force_sync_for_virtual_fields')
-            ->will($this->returnValue(SyncManager::FORCE_SYNC_ALWAYS));
-        $addressBookRepository = $this->getMockBuilder(AddressBookRepository::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+            ->willReturn(SyncManager::FORCE_SYNC_ALWAYS);
+        $addressBookRepository = $this->createMock(AddressBookRepository::class);
         $addressBooks = [];
         $channelId = 1;
-        $channel = $this->getEntity('Oro\Bundle\IntegrationBundle\Entity\Channel', ['id' => $channelId]);
+        /** @var Channel $channel */
+        $channel = $this->getEntity(Channel::class, ['id' => $channelId]);
         $addressBooks[] = $this->createAddressBook($channel, 'EntityClass');
         $addressBooks[] = $this->createAddressBook($channel, 'AnotherEntityClass');
-        $addressBookRepository->expects($this->once())->method('getAddressBooksWithML')->will(
-            $this->returnValue($addressBooks)
-        );
+        $addressBookRepository->expects($this->once())
+            ->method('getAddressBooksWithML')
+            ->willReturn($addressBooks);
 
-        $addressBookContactRepository = $this->getMockBuilder(AddressBookContactRepository::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->doctrineHelper->expects($this->any())->method('getEntityRepositoryForClass')->will(
-            $this->returnValueMap(
+        $addressBookContactRepository = $this->createMock(AddressBookContactRepository::class);
+        $this->doctrineHelper->expects($this->any())
+            ->method('getEntityRepositoryForClass')
+            ->willReturnMap(
                 [
                     [AddressBook::class, $addressBookRepository],
                     [AddressBookContact::class, $addressBookContactRepository],
                 ]
-            )
-        );
-        $event = new ForceSyncEvent([]);
+            );
         $eventData = [
             1 => ['EntityClass']
         ];
-        $dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')
-            ->disableArgumentCloning()
-            ->getMock();
-        $dispatcher->expects($this->once())->method('hasListeners')->with(ForceSyncEvent::NAME)
-            ->will($this->returnValue(true));
-        $dispatcher->expects($this->once())->method('dispatch')->with(
-            $this->isInstanceOf(ForceSyncEvent::class),
-            ForceSyncEvent::NAME
-        )->will($this->returnCallback(function (ForceSyncEvent $event, $name) use ($eventData) {
-            $event->setClasses($eventData);
-        }));
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher->expects($this->once())
+            ->method('hasListeners')
+            ->with(ForceSyncEvent::NAME)
+            ->willReturn(true);
+        $dispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->isInstanceOf(ForceSyncEvent::class),
+                ForceSyncEvent::NAME
+            )
+            ->willReturnCallback(function (ForceSyncEvent $event) use ($eventData) {
+                $event->setClasses($eventData);
+
+                return $event;
+            });
         $this->syncManager->setDispatcher($dispatcher);
 
-        $addressBookContactRepository->expects($this->once())->method('bulkUpdateEntityUpdatedFlag')
+        $addressBookContactRepository->expects($this->once())
+            ->method('bulkUpdateEntityUpdatedFlag')
             ->with(['EntityClass'], $channel);
 
         $this->syncManager->forceMarkEntityUpdate();
     }
 
-    /**
-     * @param Channel $channel
-     * @param string $entityClass
-     * @return AddressBook
-     */
-    protected function createAddressBook(Channel $channel, $entityClass)
+    private function createAddressBook(Channel $channel, string $entityClass): AddressBook
     {
         $marketingList = new MarketingList();
         $marketingList->setEntity($entityClass);

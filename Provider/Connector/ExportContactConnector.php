@@ -66,7 +66,7 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
     /**
      * {@inheritdoc}
      */
-    public function getLabel()
+    public function getLabel(): string
     {
         return 'oro.dotmailer.connector.contact_export.label';
     }
