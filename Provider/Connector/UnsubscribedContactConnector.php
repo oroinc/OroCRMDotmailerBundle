@@ -2,6 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
+/**
+ * Contacts unsubscribed from Address book Connector
+ */
 class UnsubscribedContactConnector extends AbstractDotmailerConnector
 {
     const TYPE = 'unsubscribed_contact';
@@ -22,7 +25,7 @@ class UnsubscribedContactConnector extends AbstractDotmailerConnector
     /**
      * {@inheritdoc}
      */
-    public function getLabel()
+    public function getLabel(): string
     {
         return 'oro.dotmailer.connector.unsubscribed_contact.label';
     }

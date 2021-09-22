@@ -4,6 +4,9 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 
+/**
+ * Data Field Connector
+ */
 class DataFieldConnector extends AbstractDotmailerConnector
 {
     const TYPE = 'datafield';
@@ -68,7 +71,7 @@ class DataFieldConnector extends AbstractDotmailerConnector
     /**
      * {@inheritdoc}
      */
-    public function getLabel()
+    public function getLabel(): string
     {
         return 'oro.dotmailer.connector.data_field.label';
     }

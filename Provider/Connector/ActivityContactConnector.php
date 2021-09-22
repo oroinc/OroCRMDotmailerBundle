@@ -2,6 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
+/**
+ * Contact Activities Connector
+ */
 class ActivityContactConnector extends AbstractDotmailerConnector
 {
     const TYPE = 'activity_contact';
@@ -33,7 +36,7 @@ class ActivityContactConnector extends AbstractDotmailerConnector
     /**
      * {@inheritdoc}
      */
-    public function getLabel()
+    public function getLabel(): string
     {
         return 'oro.dotmailer.connector.activity_contact.label';
     }

@@ -109,7 +109,7 @@ HELP
                     sprintf(
                         'Skip "%s" integration because such job already exists with "%s" status',
                         $integration->getName(),
-                        $this->translator->trans($existingJob->getStatus())
+                        $this->translator->trans((string) $existingJob->getStatus())
                     )
                 );
 
@@ -125,7 +125,7 @@ HELP
                     sprintf(
                         'Skip "%s" integration because integration job already exists with "%s" status',
                         $integration->getName(),
-                        $this->translator->trans($existingJob->getStatus())
+                        $this->translator->trans((string) $existingJob->getStatus())
                     )
                 );
 

@@ -49,12 +49,12 @@ class OauthController extends AbstractController
             try {
                 $refreshToken = $this->get(OAuthManager::class)->generateRefreshToken($transport, $code);
             } catch (RuntimeException $e) {
-                $this->get('session')->getFlashBag()->add(
+                $request->getSession()->getFlashBag()->add(
                     'error',
                     $e->getMessage()
                 );
             } catch (\Exception $e) {
-                $this->get('session')->getFlashBag()->add(
+                $request->getSession()->getFlashBag()->add(
                     'error',
                     $translator->trans('oro.dotmailer.integration.messsage.unable_to_connect')
                 );
@@ -77,7 +77,7 @@ class OauthController extends AbstractController
 
             return $this->redirectToRoute('oro_dotmailer_integration_connection', ['id' => $channel->getId()]);
         } else {
-            $this->get('session')->getFlashBag()->add(
+            $request->getSession()->getFlashBag()->add(
                 'error',
                 $translator->trans('oro.dotmailer.integration.messsage.incorrect_callback_url')
             );

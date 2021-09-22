@@ -2,6 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
+/**
+ * Campaign Connector
+ */
 class CampaignConnector extends AbstractDotmailerConnector
 {
     const TYPE = 'campaign';
@@ -23,7 +26,7 @@ class CampaignConnector extends AbstractDotmailerConnector
     /**
      * {@inheritdoc}
      */
-    public function getLabel()
+    public function getLabel(): string
     {
         return 'oro.dotmailer.connector.campaign.label';
     }
