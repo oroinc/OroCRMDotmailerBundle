@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block _oro_dotmailer_datafield_mapping_form_config_entityFields_row %}
-    {% spaceless %}
+    {% apply spaceless %}
         <div class="control-group entity-field-control">
             {% if label is not same as(false) %}
                 <div class="control-label wrap">
@@ -34,5 +34,5 @@
                 <a class="btn add-field" href="#"><i class="icon-plus"></i>{{ 'Add'|trans }}</a>
             </div>
         </div>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock %}
