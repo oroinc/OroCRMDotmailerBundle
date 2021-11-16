@@ -190,7 +190,7 @@
             <td class="datafield-cell"><%- dataField %></td>
             <td class="twowaysync-cell"><%= isTwoWaySync %></td>
             <td class="action-cell">
-                {% spaceless %}
+                {% apply spaceless %}
                 <a href="#" class="btn btn-icon btn-lighter action no-hash edit-button"
                         title="{{ 'oro.dotmailer.datafieldmappingconfig.update_mapping'|trans }}"
                         role="button"
@@ -204,7 +204,7 @@
                         data-message="{{ 'oro.dotmailer.datafieldmappingconfig.delete_mapping_confirmation'|trans }}">
                     <span class="fa-trash" aria-hidden="true"></span>
                 </a>
-                {% endspaceless %}
+                {% endapply %}
             </td>
         </tr>
     </script>
