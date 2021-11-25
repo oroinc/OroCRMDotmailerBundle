@@ -185,7 +185,7 @@
 {% endmacro %}
 {% macro mapping_template(id) %}
     <script type="text/html" id="{{ id }}">
-        <tr data-cid="<%= cid %>">
+        <tr data-cid="<%- cid %>">
             <td class="field-cell<% if (obj.deleted) { %> deleted-field<% } %>"><%= entityFields %></td>
             <td class="datafield-cell"><%- dataField %></td>
             <td class="twowaysync-cell"><%= isTwoWaySync %></td>
