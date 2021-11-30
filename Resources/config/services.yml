@@ -61,6 +61,7 @@ services:
         calls:
             - [initDoctrinePropertiesByManagerRegistry, ["@doctrine"]]
             - [setAclHelper,["@oro_security.acl_helper"]]
+            - [setPropertyAccessor, ['@property_accessor']]
 
     oro_dotmailer.form.autocomplete.list.search_handler:
         class: Oro\Bundle\DotmailerBundle\Autocomplete\AddressBooksSearchHandler
