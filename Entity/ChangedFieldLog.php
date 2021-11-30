@@ -6,14 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 
 /**
+ * Changed field log entity
  * @ORM\Table(
  *      name="orocrm_dm_change_field_log",
  * )
  * @Config(
  *      defaultValues={
- *          "note"={
- *              "immutable"=true
- *          },
  *          "activity"={
  *              "immutable"=true
  *          },
