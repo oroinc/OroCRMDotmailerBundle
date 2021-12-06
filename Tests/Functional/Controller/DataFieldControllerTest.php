@@ -4,22 +4,17 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Controller;
 
 use Oro\Bundle\DataGridBundle\Tests\Functional\AbstractDatagridTestCase;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDataFieldData;
 
 class DataFieldControllerTest extends AbstractDatagridTestCase
 {
-    /** @var bool */
-    protected $isRealGridRequest = false;
+    protected bool $isRealGridRequest = false;
 
     protected function setUp(): void
     {
         parent::setUp();
-
         $this->client->useHashNavigation(true);
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDataFieldData',
-            ]
-        );
+        $this->loadFixtures([LoadDataFieldData::class]);
     }
 
     public function testIndex()
@@ -29,10 +24,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
         $this->assertHtmlResponseStatusCodeEquals($result, 200);
     }
 
-    /**
-     * @return string
-     */
-    public function testView()
+    public function testView(): array
     {
         $name = $this->getReference('oro_dotmailer.datafield.first')->getName();
         $response = $this->client->requestGrid(
@@ -50,7 +42,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
 
         $result = $this->client->getResponse();
         $this->assertHtmlResponseStatusCodeEquals($result, 200);
-        static::assertStringContainsString(
+        self::assertStringContainsString(
             "{$returnValue['name']} - Data Fields - dotmailer - Marketing",
             $crawler->html()
         );
@@ -59,12 +51,9 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
     }
 
     /**
-     * @param array $returnValue
      * @depends testView
-     *
-     * @return string
      */
-    public function testInfo($returnValue)
+    public function testInfo(array $returnValue)
     {
         $crawler = $this->client->request(
             'GET',
@@ -76,13 +65,13 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
 
         $result = $this->client->getResponse();
         $this->assertHtmlResponseStatusCodeEquals($result, 200);
-        static::assertStringContainsString($returnValue['name'], $crawler->html());
+        self::assertStringContainsString($returnValue['name'], $crawler->html());
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
-    public function gridProvider()
+    public function gridProvider(): array
     {
         return [
             'Data Fields grid'                => [
@@ -147,7 +136,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
 
         $result = $this->client->getResponse();
         $this->assertHtmlResponseStatusCodeEquals($result, 200);
-        static::assertStringContainsString('Data Field Saved', $crawler->html());
+        self::assertStringContainsString('Data Field Saved', $crawler->html());
         $em = $this->getContainer()->get('doctrine')->getManagerForClass(DataField::class);
         /** @var DataField $dataField */
         $dataField = $em->getRepository(DataField::class)->findOneBy(['name' => 'test_name']);

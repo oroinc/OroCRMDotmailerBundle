@@ -28,16 +28,16 @@ class ContactsExportStatusUpdateCommandTest extends WebTestCase
     {
         $result = $this->runCommand('oro:cron:dotmailer:export-status:update', ['--help']);
 
-        static::assertStringContainsString("Usage:", $result);
-        static::assertStringContainsString("oro:cron:dotmailer:export-status:update", $result);
+        self::assertStringContainsString('Usage:', $result);
+        self::assertStringContainsString('oro:cron:dotmailer:export-status:update', $result);
     }
 
     public function testShouldSendExportContactStatusUpdatesToMessageQueue()
     {
         $result = $this->runCommand('oro:cron:dotmailer:export-status:update');
 
-        static::assertStringContainsString('Send export contacts status update for integration:', $result);
-        static::assertStringContainsString('Completed', $result);
+        self::assertStringContainsString('Send export contacts status update for integration:', $result);
+        self::assertStringContainsString('Completed', $result);
 
         self::assertMessagesCount(Topics::EXPORT_CONTACTS_STATUS_UPDATE, 4);
     }
@@ -59,12 +59,12 @@ class ContactsExportStatusUpdateCommandTest extends WebTestCase
 
         $result = $this->runCommand('oro:cron:dotmailer:export-status:update');
 
-        static::assertStringContainsString('Send export contacts status update for integration:', $result);
-        static::assertStringContainsString(
+        self::assertStringContainsString('Send export contacts status update for integration:', $result);
+        self::assertStringContainsString(
             sprintf('Skip "%s" integration because integration job already exists', $integration->getName()),
             $result
         );
-        static::assertStringContainsString('Completed', $result);
+        self::assertStringContainsString('Completed', $result);
 
         self::assertMessagesCount(Topics::EXPORT_CONTACTS_STATUS_UPDATE, 3);
     }

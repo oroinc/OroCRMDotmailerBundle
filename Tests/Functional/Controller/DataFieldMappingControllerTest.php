@@ -2,23 +2,19 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Controller;
 
+use Oro\Bundle\ContactBundle\Entity\Contact;
 use Oro\Bundle\DataGridBundle\Tests\Functional\AbstractDatagridTestCase;
-use Symfony\Component\DomCrawler\Form;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDataFieldMappingData;
 
 class DataFieldMappingControllerTest extends AbstractDatagridTestCase
 {
-    /** @var bool */
-    protected $isRealGridRequest = false;
+    protected bool $isRealGridRequest = false;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->client->useHashNavigation(true);
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDataFieldMappingData',
-            ]
-        );
+        $this->loadFixtures([LoadDataFieldMappingData::class]);
     }
 
     public function testIndex()
@@ -31,9 +27,8 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
     public function testCreate()
     {
         $crawler = $this->client->request('GET', $this->getUrl('oro_dotmailer_datafield_mapping_create'));
-        /** @var Form $form */
         $form = $crawler->selectButton('Save')->form();
-        $entityClass = 'Oro\Bundle\ContactBundle\Entity\Contact';
+        $entityClass = Contact::class;
         $form['oro_dotmailer_datafield_mapping_form[entity]'] = $entityClass;
         $form['oro_dotmailer_datafield_mapping_form[syncPriority]'] = 100;
         $form['oro_dotmailer_datafield_mapping_form[channel]'] =
@@ -49,22 +44,20 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
                     'isTwoWaySync' => true
                 ]
             ]
-        ]);
+        ], JSON_THROW_ON_ERROR);
         $form['oro_dotmailer_datafield_mapping_form[config_source]'] = $mapping;
         $this->client->followRedirects(true);
         $crawler = $this->client->submit($form);
 
         $result = $this->client->getResponse();
         $this->assertHtmlResponseStatusCodeEquals($result, 200);
-        static::assertStringContainsString("Data Field Mapping Saved", $crawler->html());
+        self::assertStringContainsString('Data Field Mapping Saved', $crawler->html());
     }
 
     /**
      * @depends testCreate
-     *
-     * @return string
      */
-    public function testUpdate()
+    public function testUpdate(): array
     {
         $response = $this->client->requestGrid(
             'oro_dotmailer_datafield_mapping_grid',
@@ -82,7 +75,6 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
             $this->getUrl('oro_dotmailer_datafield_mapping_update', ['id' => $result['id']])
         );
 
-        /** @var Form $form */
         $form = $crawler->selectButton('Save')->form();
         $form['oro_dotmailer_datafield_mapping_form[syncPriority]'] = 200;
 
@@ -91,16 +83,15 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
 
         $result = $this->client->getResponse();
         $this->assertHtmlResponseStatusCodeEquals($result, 200);
-        static::assertStringContainsString("Data Field Mapping Saved", $crawler->html());
+        self::assertStringContainsString('Data Field Mapping Saved', $crawler->html());
 
         return $returnValue;
     }
 
     /**
-     * @param array $returnValue
      * @depends testUpdate
      */
-    public function testDelete($returnValue)
+    public function testDelete(array $returnValue)
     {
         $this->ajaxRequest(
             'DELETE',
@@ -120,9 +111,9 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
-    public function gridProvider()
+    public function gridProvider(): array
     {
         return [
             'Data Fields Mapping grid' => [
