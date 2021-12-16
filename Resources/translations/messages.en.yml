@@ -1,9 +1,9 @@
 oro:
     dotmailer:
-        channel_type.label: dotmailer
+        channel_type.label: dotdigital
 
         integration:
-            select.placeholder: Choose dotmailer integration
+            select.placeholder: Choose dotdigital integration
             label: Integration
             check_connection.label: Check Connection
             connection_successful.label: Connection successful!
@@ -12,12 +12,12 @@ oro:
             connect.label: Connect
             disconnect.label: Disconnect
             messsage:
-                unable_to_connect: Unable to connect to dotmailer
+                unable_to_connect: Unable to connect to dotdigital
                 incorrect_callback_url: Incorrect callback URL
                 enter_client_id_client_key: Please enter Client ID and Client Key for your <a href="%update_url%">integration</a>
 
         integration_transport:
-            label: dotmailer
+            label: dotdigital
             username:
                 label: Username
             password:
@@ -33,8 +33,8 @@ oro:
 
         addressbook:
             select.placeholder:                   Select Address Book
-            entity_label:                         dotmailer Address Book
-            entity_plural_label:                  dotmailer Address Books
+            entity_label:                         dotdigital Address Book
+            entity_plural_label:                  dotdigital Address Books
             entity_grid_all_view_label: All %entity_plural_label%
             campaigns.label:                      Campaign
             channel.label:                        Channel
@@ -69,8 +69,8 @@ oro:
                 entity_hint: Address Books
 
         activity:
-            entity_label:                 dotmailer Activity
-            entity_plural_label:          dotmailer Activities
+            entity_label:                 dotdigital Activity
+            entity_plural_label:          dotdigital Activities
             entity_grid_all_view_label: All %entity_plural_label%
             campaign.label:               Campaign
             channel.label:                Channel
@@ -93,8 +93,8 @@ oro:
             unsubscribed.label:           Unsubscribed
 
         contact:
-            entity_label:                 dotmailer Contact
-            entity_plural_label:          dotmailer Contacts
+            entity_label:                 dotdigital Contact
+            entity_plural_label:          dotdigital Contacts
             entity_grid_all_view_label: All %entity_plural_label%
             activities.label:             Activities
             address_books.label:          Address Books
@@ -118,8 +118,8 @@ oro:
             unsubscribed_date.label:      Unsubscribed Date
 
         campaign:
-            entity_label:             dotmailer Campaign
-            entity_plural_label:      dotmailer Campaigns
+            entity_label:             dotdigital Campaign
+            entity_plural_label:      dotdigital Campaigns
             entity_grid_all_view_label: All %entity_plural_label%
             activities.label:         Activities
             address_books.label:      Address Books
@@ -140,7 +140,7 @@ oro:
             campaign_summary.label:   Campaign Summary
             email_campaign.label:     Email Campaign
             deleted.label:            Is Deleted
-            new_marketing_campaign:   'Campaign was added automatically for "campaign_name" dotmailer campaign'
+            new_marketing_campaign:   'Campaign was added automatically for "campaign_name" dotdigital campaign'
 
         campaignsummary:
             entity_label:                       Campaign summary
@@ -216,7 +216,7 @@ oro:
             marketing_list_item_class.label:   Marketing List Item Class Name
             marketing_list_item_id.label:      Marketing List Item Id
             scheduled_for_export.label:        Scheduled for Export
-            export_id.label:                   dotmailer Export Id
+            export_id.label:                   dotdigital Export Id
             export_operation_type.label:       Export Operation Type
             entity_updated.label:              Related Entity Updated Flag
             scheduled_for_fields_update.label: Scheduled for Entities Field Updates
@@ -239,7 +239,7 @@ oro:
         datafield:
             title:                            Data Field Information
             select.placeholder:               Select Data Field
-            entity_label:                     dotmailer Data Field
+            entity_label:                     dotdigital Data Field
             entity_plural_label:              Data Fields
             entity_grid_all_view_label: All %entity_plural_label%
             channel.label:                    Channel
@@ -255,10 +255,10 @@ oro:
             notes.label:                      Notes
             synced.label:                     Is Synchronized
             synchronize:                      Synchronize
-            syncronize_scheduled:             Data fields scheduled to synchronize with dotmailer
+            syncronize_scheduled:             Data fields scheduled to synchronize with dotdigital
 
         datafieldmapping:
-            entity_label:                     dotmailer Data Field Mapping
+            entity_label:                     dotdigital Data Field Mapping
             entity_plural_label:              Data Field Mappings
             entity_grid_all_view_label: All %entity_plural_label%
             channel.label:                    Channel
@@ -267,7 +267,7 @@ oro:
             id.label:                         Id
             entity.label:                     Entity
             sync_priority.label:              Sync Priority
-            sync_priority.tooltip:            If two or more entities are linked to 1 dotmailer contact, sync priority will be used to identify master record
+            sync_priority.tooltip:            If two or more entities are linked to 1 dotdigital contact, sync priority will be used to identify master record
             owner.label:                      Owner
 
         datafieldmappingconfig:
@@ -279,7 +279,7 @@ oro:
             entity_fields.label:              Fields
             entityField.placeholder:          Select Field
             is_two_way_sync.label:            Two Way Sync
-            is_two_way_sync.tooltip:          Perform data synchronization from dotmailer. Can be applied to the single main entity fields only
+            is_two_way_sync.tooltip:          Perform data synchronization from dotdigital. Can be applied to the single main entity fields only
             data_field.label:                 Data Field
             update_mapping:                   Update mapping
             delete_mapping:                   Delete mapping
@@ -305,10 +305,10 @@ oro:
         connector:
             campaign:
                 label:  Campaign Connector
-                job:    Import campaigns from dotmailer
+                job:    Import campaigns from dotdigital
             address_book:
                 label:  Address book Connector
-                job:    Import Address books from dotmailer
+                job:    Import Address books from dotdigital
             unsubscribed_contact:
                 label:  Contacts unsubscribed from Address book Connector
                 job:    Contacts unsubscribed from Address book
@@ -317,34 +317,34 @@ oro:
                 job: Import Contacts unsubscribed from Account
             contact:
                 label:  Contact Connector
-                job:    Import new Contacts from dotmailer
+                job:    Import new Contacts from dotdigital
             activity_contact:
                 label: Contact Activities Connector
-                job: Import contact activities from dotmailer
+                job: Import contact activities from dotdigital
             campaign_summary:
                 label: Campaign Summary Connector
-                job: Import campaigns summary from dotmailer
+                job: Import campaigns summary from dotdigital
             contact_export:
                 label: Export Contact Connector
-                job: Export Contacts to dotmailer
+                job: Export Contacts to dotdigital
             data_field:
                 label:  Data Field Connector
-                job:    Import Data Fields from dotmailer
+                job:    Import Data Fields from dotdigital
             campaign_click:
                 label: Campaign Clicks Connector
-                job:   Import campaign clicks from dotmailer
+                job:   Import campaign clicks from dotdigital
             campaign_open:
                 label: Campaign Open Connector
-                job:   Import campaign opens from dotmailer
+                job:   Import campaign opens from dotdigital
 
         import_not_exported_contact:
-            job: Import Export faults from dotmailer
+            job: Import Export faults from dotdigital
 
         emailcampaign:
-            transport.dotmailer: dotmailer
+            transport.dotmailer: dotdigital
             integration:
-                label: dotmailer Integration
-            statistics.label: dotmailer Statistics
+                label: dotdigital Integration
+            statistics.label: dotdigital Statistics
             positive.label: Positive
             negative.label: Negative
             emailsSent.label: Emails Sent
@@ -399,46 +399,46 @@ oro:
             isp_complaints.tooltip: "Number of contacts who've submitted spam complaints via their internet service provider."
 
         connection:
-            name: dotmailer Connection
-            sync_message: Marketing List scheduled for sync with dotmailer AddressBook "%address_book%"
+            name: dotdigital Connection
+            sync_message: Marketing List scheduled for sync with dotdigital AddressBook "%address_book%"
             message:
-                update:                     Updated dotmailer connection settings
-                connect:                    Connected to dotmailer
-                disconnect:                 Marketing List disconnected from dotmailer
-                syncronize_scheduled:       Marketing List scheduled to synchronize with dotmailer
-                syncronize_schedule_failed: Marketing List synchronization with dotmailer schedule failed
+                update:                     Updated dotdigital connection settings
+                connect:                    Connected to dotdigital
+                disconnect:                 Marketing List disconnected from dotdigital
+                syncronize_scheduled:       Marketing List scheduled to synchronize with dotdigital
+                syncronize_schedule_failed: Marketing List synchronization with dotdigital schedule failed
             dialog:
                 button:
                     update: Update
                     connect: Connect
                     cancel: Cancel
                 title:
-                    connect: Connect to dotmailer
-                    update: dotmailer Connection Settings
+                    connect: Connect to dotdigital
+                    update: dotdigital Connection Settings
             button:
-                group_name:         dotmailer
-                connect:            Connect to dotmailer
+                group_name:         dotdigital
+                connect:            Connect to dotdigital
                 manage_connection:  Connection Settings
                 synchronize:        Synchronize
                 disconnect:         Disconnect
             confirmation:
-                disconnect:         Are you sure you want to unlink this Marketing List from dotmailer
+                disconnect:         Are you sure you want to unlink this Marketing List from dotdigital
 
         syncstatus:
             Finished: Up to date
             RejectedByWatchdog: Sync Rejected
             InvalidFileFormat: Not Synced
             Failed: Sync failed
-            ExceedsAllowedContactLimit: dotmailer Contacts Limit Exceeds
+            ExceedsAllowedContactLimit: dotdigital Contacts Limit Exceeds
             NotAvailableInThisVersion: Not Synced
             NotFinished: In Progress
-            list_is_connected.label: 'This list is linked to "%address_book%" dotmailer address book. Last synchronization date: %synced%. Synchronization status: %status%.'
+            list_is_connected.label: 'This list is linked to "%address_book%" dotdigital address book. Last synchronization date: %synced%. Synchronization status: %status%.'
 
         acl:
             action:
                 general:
-                    label: Access dotmailer statistics
-                    description: See statistics collected from dotmailer for a campaign
+                    label: Access dotdigital statistics
+                    description: See statistics collected from dotdigital for a campaign
 
         form:
             username:
@@ -446,12 +446,12 @@ oro:
             password:
                 tooltip: API User Password.
             client_id:
-                tooltip: To register to use OAuth you will need to be on an dotmailer Enterprise licence and to contact your dotmailer account manager.
+                tooltip: To register to use OAuth you will need to be on an dotdigital Enterprise licence and to contact your dotdigital account manager.
             custom_domain:
                 tooltip: https://r1-app.dotmailer.com/ is used by default
 
         handler:
-            unable_to_create_field: Failed to create field in dotmailer.
+            unable_to_create_field: Failed to create field in dotdigital.
             default_value_not_match: Default value doesn't match the field's type.
 
         controller:
@@ -459,13 +459,13 @@ oro:
             datafield_mapping.saved.message: Data Field Mapping Saved
 
         configuration:
-            dotmailer_settings: Dotmailer Settings
+            dotmailer_settings: Dotdigital Settings
             dotmailer_synchronization: Synchronization settings
             datafields_sync_interval: Data Fields Sync Interval
-            datafields_sync_interval.tooltip: This interval will be used to update data fields from dotmailer
+            datafields_sync_interval.tooltip: This interval will be used to update data fields from dotdigital
             force_sync_for_virtual_fields:
                 label: Enable daily force synchronization of mapped data fields
-                tooltip: Once a day, trigger data fields check. All contacts from entity's marketing lists will be automatically checked for updated fields and scheduled for sync with dotmailer if needed.
+                tooltip: Once a day, trigger data fields check. All contacts from entity's marketing lists will be automatically checked for updated fields and scheduled for sync with dotdigital if needed.
                 choices:
                     none: None
                     virtual_only: For mappings with virtual fields only

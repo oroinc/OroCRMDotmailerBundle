@@ -4,13 +4,13 @@
 
 ### get
 
-Retrieve a specific Dotmailer campaign reply action record.
+Retrieve a specific dotdigital campaign reply action record.
 
 Defines what to do when a contact replies to the campaign: whether to store replies, or also send them to the specified email.
 
 ### get_list
 
-Retrieve a collection of Dotmailer campaign reply action records.
+Retrieve a collection of dotdigital campaign reply action records.
 
 Defines what to do when a contact replies to the campaign: whether to store replies, or also send them to the specified email.
 
@@ -21,12 +21,12 @@ Defines what to do when a contact replies to the campaign: whether to store repl
 
 ### get
 
-Retrieve a specific Dotmailer campaign status record.
+Retrieve a specific dotdigital campaign status record.
 
-Describes the progress of sending a Dotmailer campaign.
+Describes the progress of sending a dotdigital campaign.
 
 ### get_list
 
-Retrieve a collection of Dotmailer campaign status records.
+Retrieve a collection of dotdigital campaign status records.
 
-Describes the progress of sending a Dotmailer campaign.
+Describes the progress of sending a dotdigital campaign.
