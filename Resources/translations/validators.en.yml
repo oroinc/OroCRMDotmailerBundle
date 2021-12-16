@@ -4,4 +4,4 @@ oro:
             address_book:
                 unique_entity.message: 'Integration has duplication of address books. Field "Name" should be unique.'
             data_field_mapping:
-                unique_entity.message: 'Mapping for this entity already exists in this Dotmailer integration'
+                unique_entity.message: 'Mapping for this entity already exists in this dotdigital integration'

@@ -4,13 +4,13 @@
 
 ### get
 
-Retrieve a specific Dotmailer contact email type record.
+Retrieve a specific dotdigital contact email type record.
 
 Defines which email format a contact prefers.
 
 ### get_list
 
-Retrieve a collection of Dotmailer contact email type records.
+Retrieve a collection of dotdigital contact email type records.
 
 Defines which email format a contact prefers.
 
@@ -21,15 +21,15 @@ Defines which email format a contact prefers.
 
 ### get
 
-Retrieve a specific Dotmailer contact option type record.
+Retrieve a specific dotdigital contact option type record.
 
-Defines how a contact opted in a Dotmailer address book: unknown, via a sign-up form (or similar), with confirmation via email, with confirmation via email sent by a Dotmailer.
+Defines how a contact opted in a dotdigital address book: unknown, via a sign-up form (or similar), with confirmation via email, with confirmation via email sent by a dotdigital.
 
 ### get_list
 
-Retrieve a collection of Dotmailer contact option type records.
+Retrieve a collection of dotdigital contact option type records.
 
-Defines how a contact opted in a Dotmailer address book: unknown, via a sign-up form (or similar), with confirmation via email, with confirmation via email sent by a Dotmailer.
+Defines how a contact opted in a dotdigital address book: unknown, via a sign-up form (or similar), with confirmation via email, with confirmation via email sent by a dotdigital.
 
 
 # Extend\Entity\EV_Dm_Cnt_Status
@@ -38,15 +38,15 @@ Defines how a contact opted in a Dotmailer address book: unknown, via a sign-up 
 
 ### get
 
-Retrieve a specific Dotmailer contact status record.
+Retrieve a specific dotdigital contact status record.
 
-Defines what status a Dotmailer contact currently has.
+Defines what status a dotdigital contact currently has.
 
 ### get_list
 
-Retrieve a collection of Dotmailer contact status records.
+Retrieve a collection of dotdigital contact status records.
 
-Defines what status a Dotmailer contact currently has.
+Defines what status a dotdigital contact currently has.
 
 
 # Extend\Entity\EV_Dm_Import_Status
@@ -55,12 +55,12 @@ Defines what status a Dotmailer contact currently has.
 
 ### get
 
-Retrieve a specific Dotmailer import status record.
+Retrieve a specific dotdigital import status record.
 
 Describes the progress of a contact import.
 
 ### get_list
 
-Retrieve a collection of Dotmailer import status records.
+Retrieve a collection of dotdigital import status records.
 
 Describes the progress of a contact import.

@@ -85,7 +85,7 @@ Oro\Bundle\DotmailerBundle\Entity\DataField:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
             fields: [channel, name]
             errorPath: name
-            message: "Field with such name already exists in this Dotmailer integration"
+            message: "Field with such name already exists in this dotdigital integration"
     properties:
         channel:
             - NotBlank: ~
