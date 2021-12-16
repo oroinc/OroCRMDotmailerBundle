@@ -15,7 +15,7 @@ class DataFieldController extends RestController
 {
     /**
      * @ApiDoc(
-     *      description="Delete dotmailer data field",
+     *      description="Delete dotdigital data field",
      *      resource=true
      * )
      * @Acl(

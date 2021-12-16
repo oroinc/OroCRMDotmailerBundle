@@ -1,7 +1,7 @@
 processes:
     definitions:
         dotmailer_email_campaign_creation:
-            label:   'Create Email Campaign for Dotmailer Campaign'
+            label:   'Create Email Campaign for dotdigital Campaign'
             enabled: true
             order:   10
             entity:  Oro\Bundle\DotmailerBundle\Entity\Campaign
@@ -85,7 +85,7 @@ processes:
                               method_parameters: [$name, $emailCampaign.campaign.code]
 
         dotmailer_contact_activity_update:
-            label:   'Synchronizes Oro Marketing List Item with Dotmailer Contact Activity'
+            label:   'Synchronizes Oro Marketing List Item with dotdigital Contact Activity'
             enabled: true
             order:   20
             entity:  Oro\Bundle\DotmailerBundle\Entity\Activity
@@ -94,7 +94,7 @@ processes:
                 - '@update_email_campaign_dm_statistics': ~
 
         dotmailer_collect_marketing_activities:
-            label:   'Add Marketing Activities Based on dotmailer Activities'
+            label:   'Add Marketing Activities Based on dotdigital Activities'
             enabled: true
             order:   20
             entity:  Oro\Bundle\DotmailerBundle\Entity\Activity
@@ -103,7 +103,7 @@ processes:
                       changeSet: $.changeSet
 
         dotmailer_handle_contact_state:
-            label:   Check MarketingListItem State for Dotmailer Contact
+            label:   'Check MarketingListItem State for dotdigital Contact'
             enabled: true
             entity:  Oro\Bundle\DotmailerBundle\Entity\AddressBookContact
             exclude_definitions: [dotmailer_handle_contact_state]
@@ -131,7 +131,7 @@ processes:
                             - '@not_equal': [$status, $.statusSoftBounced]
 
         schedule_dotmailer_address_book_synchronization:
-            label:   Schedule Dotmailer Address Book synchronization
+            label:   'Schedule dotdigital Address Book synchronization'
             enabled: true
             entity:  Oro\Bundle\DotmailerBundle\Entity\AddressBook
             actions_configuration:
@@ -150,7 +150,7 @@ processes:
                                 - { address-book: $id }
 
         dotmailer_handle_removed_address_book_contact:
-            label:   Update MarketingListItem State in case of Dotmailer contact export was rejected
+            label:   'Update MarketingListItem State in case of dotdigital contact export was rejected'
             enabled: true
             entity:  Oro\Bundle\DotmailerBundle\Entity\AddressBookContact
             actions_configuration:
