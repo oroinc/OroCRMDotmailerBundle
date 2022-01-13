@@ -11,6 +11,7 @@ use Oro\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\DotmailerBundle\Model\QueueExportManager;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
+use Oro\Bundle\IntegrationBundle\Tests\Unit\Authentication\Token\IntegrationTokenAwareTestTrait;
 use Oro\Bundle\MessageQueueBundle\Entity\Job;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Component\MessageQueue\Client\TopicSubscriberInterface;
@@ -32,6 +33,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
 {
     use ClassExtensionTrait;
     use EntityTrait;
+    use IntegrationTokenAwareTestTrait;
 
     public function testShouldImplementMessageProcessorInterface()
     {
@@ -58,7 +60,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createExportManagerMock(),
             $this->createQueueExportManagerMock(),
             new JobRunner(),
-            $this->createTokenStorageMock(),
+            $this->createMock(TokenStorageInterface::class),
             $this->createLoggerMock(),
             $this->createJobProcessorMock()
         );
@@ -80,7 +82,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createExportManagerMock(),
             $this->createQueueExportManagerMock(),
             new JobRunner(),
-            $this->createTokenStorageMock(),
+            $this->createMock(TokenStorageInterface::class),
             $logger,
             $this->createJobProcessorMock()
         );
@@ -94,15 +96,14 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
 
     public function testThrowIfMessageBodyInvalidJson()
     {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('The malformed json given.');
+        $this->expectException(\JsonException::class);
 
         $processor = new ExportContactsStatusUpdateProcessor(
             $this->createDoctrineHelperStub(),
             $this->createExportManagerMock(),
             $this->createQueueExportManagerMock(),
             new JobRunner(),
-            $this->createTokenStorageMock(),
+            $this->createMock(TokenStorageInterface::class),
             $this->createLoggerMock(),
             $this->createJobProcessorMock()
         );
@@ -140,7 +141,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createExportManagerMock(),
             $this->createQueueExportManagerMock(),
             new JobRunner(),
-            $this->createTokenStorageMock(),
+            $this->createMock(TokenStorageInterface::class),
             $logger,
             $this->createJobProcessorMock()
         );
@@ -180,7 +181,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createExportManagerMock(),
             $this->createQueueExportManagerMock(),
             new JobRunner(),
-            $this->createTokenStorageMock(),
+            $this->createMock(TokenStorageInterface::class),
             $logger,
             $this->createJobProcessorMock()
         );
@@ -229,7 +230,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $exportManagerMock,
             $queueExportManagerMock,
             new JobRunner(),
-            $this->createTokenStorageMock(),
+            $this->getTokenStorageMock(),
             $this->createLoggerMock(),
             $this->createJobProcessorMock()
         );
@@ -287,7 +288,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $exportManagerMock,
             $queueExportManagerMock,
             new JobRunner(),
-            $this->createTokenStorageMock(),
+            $this->getTokenStorageMock(),
             $this->createLoggerMock(),
             $this->createJobProcessorMock()
         );
@@ -345,7 +346,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $exportManagerMock,
             $queueExportManagerMock,
             new JobRunner(),
-            $this->createTokenStorageMock(),
+            $this->getTokenStorageMock(),
             $this->createLoggerMock(),
             $this->createJobProcessorMock()
         );
@@ -399,7 +400,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $exportManagerMock,
             $queueExportManagerMock,
             new JobRunner(),
-            $this->createTokenStorageMock(),
+            $this->createMock(TokenStorageInterface::class),
             $this->createLoggerMock(),
             $jobProcessor
         );
@@ -436,7 +437,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
             $this->createExportManagerMock(),
             $this->createQueueExportManagerMock(),
             $jobRunner,
-            $this->createTokenStorageMock(),
+            $this->getTokenStorageMock(),
             $this->createLoggerMock(),
             $this->createJobProcessorMock()
         );
@@ -505,14 +506,6 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
     private function createQueueExportManagerMock()
     {
         return $this->createMock(QueueExportManager::class);
-    }
-
-    /**
-     * @return \PHPUnit\Framework\MockObject\MockObject|TokenStorageInterface
-     */
-    private function createTokenStorageMock()
-    {
-        return $this->createMock(TokenStorageInterface::class);
     }
 
     /**
