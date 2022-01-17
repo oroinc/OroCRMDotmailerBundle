@@ -6,6 +6,9 @@ use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\ImportExport\Processor\UnsubscribedContactSyncProcessor;
 
+/**
+ * Iterates over marketing lists that are out of sync
+ */
 class OutOfSyncMarketingListItemIterator extends AbstractMarketingListItemIterator
 {
     const MARKETING_LIST = 'marketingList';
@@ -40,7 +43,7 @@ class OutOfSyncMarketingListItemIterator extends AbstractMarketingListItemIterat
     /**
      * Clear cache after Append Iterator starts to iterate new iterator with different Address Book
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->importExportContext
             ->setValue(UnsubscribedContactSyncProcessor::CURRENT_BATCH_READ_ITEMS, []);
