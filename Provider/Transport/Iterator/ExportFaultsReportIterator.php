@@ -6,6 +6,9 @@ use DotMailer\Api\DataTypes\Guid;
 use DotMailer\Api\Resources\IResources;
 use Oro\Bundle\DotmailerBundle\Provider\CsvStringReader;
 
+/**
+ * Iterates over contacts report faults
+ */
 class ExportFaultsReportIterator implements \Iterator
 {
     const ADDRESS_BOOK_ID = 'address_book_id';
@@ -63,7 +66,7 @@ class ExportFaultsReportIterator implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->offset  = -1;
         $this->current = null;
@@ -74,7 +77,7 @@ class ExportFaultsReportIterator implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function current()
+    public function current(): mixed
     {
         $item = $this->current;
 
@@ -87,7 +90,7 @@ class ExportFaultsReportIterator implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function next()
+    public function next(): void
     {
         $this->current = $this->getReader()->read();
         if ($this->valid()) {
@@ -98,7 +101,7 @@ class ExportFaultsReportIterator implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->offset;
     }
@@ -106,7 +109,7 @@ class ExportFaultsReportIterator implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function valid()
+    public function valid(): bool
     {
         return !is_null($this->current);
     }

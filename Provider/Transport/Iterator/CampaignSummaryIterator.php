@@ -6,6 +6,9 @@ use Doctrine\Common\Collections\Collection;
 use DotMailer\Api\Resources\IResources;
 use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 
+/**
+ * Iterates over campaigns summaries
+ */
 class CampaignSummaryIterator implements \Iterator
 {
     const CAMPAIGN_KEY = 'related_campaign';
@@ -66,7 +69,7 @@ class CampaignSummaryIterator implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function current()
+    public function current(): mixed
     {
         return current($this->items);
     }
@@ -74,7 +77,7 @@ class CampaignSummaryIterator implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function next()
+    public function next(): void
     {
         if (next($this->items) !== false) {
             $this->currentItemIndex++;
@@ -84,7 +87,7 @@ class CampaignSummaryIterator implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function key()
+    public function key(): int
     {
         return $this->currentItemIndex;
     }
@@ -92,7 +95,7 @@ class CampaignSummaryIterator implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function valid()
+    public function valid(): bool
     {
         $isValid = $this->isValid && current($this->items) !== false;
         return $isValid;
@@ -101,7 +104,7 @@ class CampaignSummaryIterator implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->items = $this->getItems();
         reset($this->items);
