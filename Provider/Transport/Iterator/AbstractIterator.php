@@ -2,6 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
+/**
+ * Iterates over items per page
+ */
 abstract class AbstractIterator implements \Iterator
 {
     const DEFAULT_BATCH_SIZE = 1000;
@@ -34,7 +37,7 @@ abstract class AbstractIterator implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function current()
+    public function current(): mixed
     {
         return current($this->items);
     }
@@ -42,7 +45,7 @@ abstract class AbstractIterator implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function next()
+    public function next(): void
     {
         if (next($this->items) !== false || $this->tryToLoadItems($this->currentItemIndex + 1)) {
             $this->currentItemIndex++;
@@ -78,7 +81,7 @@ abstract class AbstractIterator implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function key()
+    public function key(): int
     {
         return $this->currentItemIndex;
     }
@@ -86,7 +89,7 @@ abstract class AbstractIterator implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function valid()
+    public function valid(): bool
     {
         $isValid = $this->isValid && current($this->items) !== false;
         return $isValid;
@@ -95,7 +98,7 @@ abstract class AbstractIterator implements \Iterator
     /**
      * {@inheritdoc}
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->lastPage = false;
         $this->items = [];
