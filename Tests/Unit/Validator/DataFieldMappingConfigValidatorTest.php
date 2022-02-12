@@ -1,11 +1,11 @@
 <?php
 
-namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Validator;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Validators;
 
 use Doctrine\DBAL\Types\Types;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
-use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
+use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig as DataFieldMappingConfigEntity;
 use Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\DataFieldStub;
 use Oro\Bundle\DotmailerBundle\Tests\Unit\Stub\EnumValueStub;
 use Oro\Bundle\DotmailerBundle\Validator\Constraints\DataFieldMappingConfigConstraint;
@@ -30,22 +30,25 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
         parent::setUp();
     }
 
-    protected function createValidator()
+    protected function createValidator(): DataFieldMappingConfigValidator
     {
         return new DataFieldMappingConfigValidator($this->entityFieldProvider, $this->translator);
     }
 
     public function testValidateNumericFailed(): void
     {
-        $mappingConfig = new DataFieldMappingConfig();
         $dataField = new DataFieldStub();
         $dataField->setType(new EnumValueStub(DataField::FIELD_TYPE_NUMERIC));
         $dataField->setName('dataFieldName');
-        $mappingConfig->setDataField($dataField);
-        $mappingConfig->setEntityFields('entityFieldName');
+
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
+
+        $mappingConfig = new DataFieldMappingConfigEntity();
+        $mappingConfig->setDataField($dataField);
+        $mappingConfig->setEntityFields('entityFieldName');
         $mappingConfig->setMapping($mapping);
+
         $this->entityFieldProvider->expects(self::once())
             ->method('getEntityFields')
             ->with('entityClass', EntityFieldProvider::OPTION_WITH_VIRTUAL_FIELDS)
@@ -73,15 +76,18 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
 
     public function testValidateBooleanFailed(): void
     {
-        $mappingConfig = new DataFieldMappingConfig();
         $dataField = new DataFieldStub();
         $dataField->setType(new EnumValueStub(DataField::FIELD_TYPE_BOOLEAN));
         $dataField->setName('dataFieldName');
-        $mappingConfig->setDataField($dataField);
-        $mappingConfig->setEntityFields('entityFieldName');
+
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
+
+        $mappingConfig = new DataFieldMappingConfigEntity();
+        $mappingConfig->setDataField($dataField);
+        $mappingConfig->setEntityFields('entityFieldName');
         $mappingConfig->setMapping($mapping);
+
         $this->entityFieldProvider->expects(self::once())
             ->method('getEntityFields')
             ->with('entityClass', EntityFieldProvider::OPTION_WITH_VIRTUAL_FIELDS)
@@ -109,15 +115,18 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
 
     public function testValidateDateFailed(): void
     {
-        $mappingConfig = new DataFieldMappingConfig();
         $dataField = new DataFieldStub();
         $dataField->setType(new EnumValueStub(DataField::FIELD_TYPE_DATE));
         $dataField->setName('dataFieldName');
-        $mappingConfig->setDataField($dataField);
-        $mappingConfig->setEntityFields('entityFieldName');
+
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
+
+        $mappingConfig = new DataFieldMappingConfigEntity();
+        $mappingConfig->setDataField($dataField);
+        $mappingConfig->setEntityFields('entityFieldName');
         $mappingConfig->setMapping($mapping);
+
         $this->entityFieldProvider->expects(self::once())
             ->method('getEntityFields')
             ->with('entityClass', EntityFieldProvider::OPTION_WITH_VIRTUAL_FIELDS)
@@ -143,12 +152,13 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
             ->assertRaised();
     }
 
-    public function testValidateMutlipleFieldsFailed(): void
+    public function testValidateMultipleFieldsFailed(): void
     {
-        $mappingConfig = new DataFieldMappingConfig();
         $dataField = new DataFieldStub();
         $dataField->setType(new EnumValueStub(DataField::FIELD_TYPE_BOOLEAN));
         $dataField->setName('dataFieldName');
+
+        $mappingConfig = new DataFieldMappingConfigEntity();
         $mappingConfig->setDataField($dataField);
         $mappingConfig->setEntityFields('entityFieldName,anotherEntityFieldName');
 
@@ -169,15 +179,18 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
      */
     public function testValidatePassed(string $dataFieldType, string $type): void
     {
-        $mappingConfig = new DataFieldMappingConfig();
         $dataField = new DataFieldStub();
         $dataField->setType(new EnumValueStub($dataFieldType));
         $dataField->setName('dataFieldName');
-        $mappingConfig->setDataField($dataField);
-        $mappingConfig->setEntityFields('entityFieldName');
+
         $mapping = new DataFieldMapping();
         $mapping->setEntity('entityClass');
+
+        $mappingConfig = new DataFieldMappingConfigEntity();
+        $mappingConfig->setDataField($dataField);
+        $mappingConfig->setEntityFields('entityFieldName');
         $mappingConfig->setMapping($mapping);
+
         $this->entityFieldProvider->expects(self::once())
             ->method('getEntityFields')
             ->with('entityClass', EntityFieldProvider::OPTION_WITH_VIRTUAL_FIELDS)
