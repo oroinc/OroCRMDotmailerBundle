@@ -114,8 +114,8 @@ class SyncManagerTest extends \PHPUnit\Framework\TestCase
         $this->mappingProvider->expects($this->any())
             ->method('getExportMappingConfigForEntity')
             ->willReturnMap([
-                ['EntityClass', 1, true],
-                ['AnotherEntityClass', 1, false],
+                ['EntityClass', 1, ['EntityClass' => 1]],
+                ['AnotherEntityClass', 1, []],
             ]);
 
         $addressBookContactRepository->expects($this->once())

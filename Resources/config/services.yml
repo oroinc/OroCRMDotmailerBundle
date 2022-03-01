@@ -204,10 +204,10 @@ services:
             - { name: oro_integration.channel, type: dotmailer }
 
     oro_dotmailer.transport.cache:
-        parent: oro.cache.abstract
+        parent: oro.data.cache
         public: false
-        calls:
-            - [ setNamespace, [ 'oro_dotmailer_rest' ] ]
+        tags:
+            - { name: 'cache.pool', namespace: 'oro_dotmailer_rest' }
 
     oro_dotmailer.transport.integration_transport:
         class: Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport
@@ -299,9 +299,9 @@ services:
 
     oro_dotmailer.cache:
         public: false
-        parent: oro.cache.abstract
-        calls:
-            - [setNamespace, [ 'oro_dotmailer' ] ]
+        parent: oro.data.cache
+        tags:
+            - { name: 'cache.pool', namespace: 'oro_dotmailer' }
 
     oro_dotmailer.provider.email:
         class: 'Oro\Bundle\DotmailerBundle\Provider\EmailProvider'

@@ -2,11 +2,12 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Rest;
 
-use Doctrine\Common\Cache\CacheProvider;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\CacheAwareClient;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\DotmailerClientInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Cache\Adapter\AbstractAdapter;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
 {
@@ -23,7 +24,7 @@ class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('DotmailerClientInterface is not injected');
 
-        $cache = $this->createMock(CacheProvider::class);
+        $cache = $this->createMock(AbstractAdapter::class);
         $this->client->setCache($cache);
 
         $this->client->execute([]);
@@ -49,13 +50,12 @@ class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
     public function testExecuteUnknownMethodActsLikeUnsafe()
     {
         $client = $this->createMock(DotmailerClientInterface::class);
-        $cache = $this->createMock(CacheProvider::class);
+        $cache = $this->createMock(AbstractAdapter::class);
 
         $this->client->setClient($client);
         $this->client->setCache($cache);
 
-        $cache->expects($this->never())->method('save');
-        $cache->expects($this->once())->method('deleteAll');
+        $cache->expects($this->once())->method('clear');
 
         $client->expects($this->once())->method('execute');
 
@@ -65,13 +65,12 @@ class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
     public function testExecuteUnsafeMethod()
     {
         $client = $this->createMock(DotmailerClientInterface::class);
-        $cache = $this->createMock(CacheProvider::class);
+        $cache = $this->createMock(AbstractAdapter::class);
 
         $this->client->setClient($client);
         $this->client->setCache($cache);
 
-        $cache->expects($this->never())->method('save');
-        $cache->expects($this->once())->method('deleteAll');
+        $cache->expects($this->once())->method('clear');
 
         $client->expects($this->once())->method('execute');
 
@@ -81,12 +80,18 @@ class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
     public function testNonEmptyLogger()
     {
         $client = $this->createMock(DotmailerClientInterface::class);
-        $cache = $this->createMock(CacheProvider::class);
+        $cache = $this->createMock(AbstractAdapter::class);
         $logger = $this->createMock(LoggerInterface::class);
 
         $this->client->setClient($client);
         $this->client->setCache($cache);
         $this->client->setLogger($logger);
+        $cache->expects($this->once())
+            ->method('get')
+            ->willReturnCallback(function ($cacheKey, $callback) {
+                $item = $this->createMock(ItemInterface::class);
+                return $callback($item);
+            });
 
         $logger->expects($this->once())->method('debug');
 
@@ -96,22 +101,21 @@ class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
     public function testExecuteSafeMethodNew()
     {
         $client = $this->createMock(DotmailerClientInterface::class);
-        $cache = $this->createMock(CacheProvider::class);
+        $cache = $this->createMock(AbstractAdapter::class);
 
         $this->client->setClient($client);
         $this->client->setCache($cache);
 
-        $data = ['array with data'];
+        $data = 'response data';
         $params = ['url', Request::METHOD_GET];
 
-        $cache->expects($this->once())->method('fetch')->willReturn(false);
         $client->expects($this->once())->method('execute')->with($params)->willReturn($data);
-        $cache->expects($this->once())->method('save')
-            ->with(
-                $this->isType('string'),
-                $data,
-                $this->isType('integer')
-            );
+        $cache->expects($this->once())
+            ->method('get')
+            ->willReturnCallback(function ($cacheKey, $callback) {
+                $item = $this->createMock(ItemInterface::class);
+                return $callback($item);
+            });
 
         $this->client->execute($params);
     }
@@ -119,17 +123,15 @@ class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
     public function testExecuteSafeMethodFromCache()
     {
         $client = $this->createMock(DotmailerClientInterface::class);
-        $cache = $this->createMock(CacheProvider::class);
+        $cache = $this->createMock(AbstractAdapter::class);
 
         $this->client->setClient($client);
         $this->client->setCache($cache);
 
-        $data = ['array with data'];
+        $data = 'response data';
         $params = ['url', Request::METHOD_GET];
 
-        $cache->expects($this->once())->method('fetch')->willReturn($data);
-        $client->expects($this->never())->method('execute');
-        $cache->expects($this->never())->method('save');
+        $cache->expects($this->once())->method('get')->willReturn($data);
 
         $this->client->execute($params);
     }

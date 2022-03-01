@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider;
 
-use Doctrine\Common\Cache\CacheProvider as DoctrineCacheProvider;
+use Oro\Bundle\CacheBundle\Generator\UniversalCacheKeyGenerator;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\DataFieldMappingRepository;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
@@ -10,27 +10,21 @@ use Oro\Bundle\EntityBundle\Provider\VirtualFieldProviderInterface;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\QueryDesignerBundle\QueryDesigner\JoinIdentifierHelper;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\Cache\CacheInterface;
 
 /**
  * The provider for different kind mappings used by Dotmailer integration.
  */
 class MappingProvider
 {
-    /** @var DoctrineHelper  */
-    protected $doctrineHelper;
-
-    /** @var DoctrineCacheProvider */
-    protected $cache;
-
-    /** @var VirtualFieldProviderInterface */
-    protected $virtualFieldsProvider;
-
-    /** @var EventDispatcherInterface */
-    protected $dispatcher;
+    private DoctrineHelper $doctrineHelper;
+    private CacheInterface $cache;
+    private VirtualFieldProviderInterface $virtualFieldsProvider;
+    private ?EventDispatcherInterface $dispatcher = null;
 
     public function __construct(
         DoctrineHelper $doctrineHelper,
-        DoctrineCacheProvider $cache,
+        CacheInterface $cache,
         VirtualFieldProviderInterface $virtualFieldsProvider
     ) {
         $this->doctrineHelper = $doctrineHelper;
@@ -38,95 +32,64 @@ class MappingProvider
         $this->virtualFieldsProvider = $virtualFieldsProvider;
     }
 
-    public function setDispatcher(EventDispatcherInterface $dispatcher)
+    public function setDispatcher(EventDispatcherInterface $dispatcher): void
     {
         $this->dispatcher = $dispatcher;
     }
 
     /**
-     * Prepare mapping array list in format dataField=>entityField, configured for two way sync from DM
-     *
-     * @param string $entityClass
-     * @param int $channelId
-     * @return array
+     * Prepare mapping array list in format dataField=>entityField, configured for two ways sync from DM
      */
-    public function getTwoWaySyncFieldsForEntity($entityClass, $channelId)
+    public function getTwoWaySyncFieldsForEntity(string $entityClass, int $channelId): array
     {
-        $cacheKey = sprintf('two_way_sync_%s_%s', $entityClass, $channelId);
-        $twoWayMappings = $this->cache->fetch($cacheKey);
-        if (false === $twoWayMappings) {
+        $cacheKey = $this->getCacheKey(sprintf('two_way_sync_%s_%s', $entityClass, $channelId));
+        return $this->cache->get($cacheKey, function () use ($entityClass, $channelId) {
             $mapping = $this->getMappingRepository()->getTwoWaySyncFieldsForEntity($entityClass, $channelId);
             if ($mapping) {
                 $idField = $this->doctrineHelper->getSingleEntityIdentifierFieldName($entityClass);
                 //add mapping for entityId got from marketing list and entity's id field name
                 $mapping['entityId'] = $idField;
             }
-            $twoWayMappings = $mapping;
-            $this->cache->save($cacheKey, $twoWayMappings);
-        }
-
-        return $twoWayMappings;
+            return $mapping;
+        });
     }
 
     /**
      * Prepare mapping array list in format dataField=>entityFields
-     *
-     * @param string $entityClass
-     * @param int $channelId
-     * @return mixed
      */
-    public function getExportMappingConfigForEntity($entityClass, $channelId)
+    public function getExportMappingConfigForEntity(string $entityClass, int $channelId): array
     {
-        $cacheKey = sprintf('export_%s_%s', $entityClass, $channelId);
-        $exportMappings = $this->cache->fetch($cacheKey);
-        if (false === $exportMappings) {
-            $exportMappings = $this->getMappingRepository()->getMappingConfigForEntity($entityClass, $channelId);
-            $this->cache->save($cacheKey, $exportMappings);
-        }
-
-        return $exportMappings;
+        $cacheKey = $this->getCacheKey(sprintf('export_%s_%s', $entityClass, $channelId));
+        return $this->cache->get($cacheKey, function () use ($entityClass, $channelId) {
+            return $this->getMappingRepository()->getMappingConfigForEntity($entityClass, $channelId);
+        });
     }
 
     /**
      * Prepare array list of datafields with sync priority set for mapped entity
      * in format [dataField][entityClass] => priority
-     *
-     * @param Channel $channel
-     * @return array
      */
-    public function getDataFieldMappingBySyncPriority(Channel $channel)
+    public function getDataFieldMappingBySyncPriority(Channel $channel): array
     {
         $channelId = $channel->getId();
-        $cacheKey = sprintf('prioritized_%s', $channelId);
-        $prioritizedMappings = $this->cache->fetch($cacheKey);
-        if (false === $prioritizedMappings) {
+        $cacheKey = $this->getCacheKey(sprintf('prioritized_%s', $channelId));
+        return $this->cache->get($cacheKey, function () use ($channel) {
             $channelMappings = $this->getMappingRepository()->getMappingBySyncPriority($channel);
             $mappings = [];
             foreach ($channelMappings as $mappingData) {
                 $mappings[$mappingData['dataFieldName']][$mappingData['entity']] = $mappingData['syncPriority'];
             }
-            $prioritizedMappings = $mappings;
-            $this->cache->save($cacheKey, $prioritizedMappings);
-        }
-
-        return $prioritizedMappings;
+            return $mappings;
+        });
     }
 
-    /**
-     * @param Channel $channel
-     * @return array
-     */
-    public function getEntitiesQualifiedForTwoWaySync(Channel $channel)
+    public function getEntitiesQualifiedForTwoWaySync(Channel $channel): array
     {
         $channelId = $channel->getId();
-        $cacheKey = sprintf('two_way_sync_entities_%s', $channelId);
-        $entities = $this->cache->fetch($cacheKey);
-        if (false === $entities) {
-            $entities = $this->getMappingRepository()->getEntitiesQualifiedForTwoWaySync($channel);
-            $this->cache->save($cacheKey, $entities);
-        }
-
-        return $entities;
+        $cacheKey = $this->getCacheKey(sprintf('two_way_sync_entities_%s', $channelId));
+        return $this->cache->get($cacheKey, function () use ($channel) {
+            return $this->getMappingRepository()->getEntitiesQualifiedForTwoWaySync($channel);
+        });
     }
 
     /**
@@ -150,17 +113,13 @@ class MappingProvider
      *      ...
      *   ]
      * ]
-     *
-     * @return array
      */
-    public function getTrackedFieldsConfig()
+    public function getTrackedFieldsConfig(): array
     {
         $cacheKey = 'tracked_fields';
-        $trackedFields = $this->cache->fetch($cacheKey);
-        if (false === $trackedFields) {
+        return $this->cache->get($cacheKey, function () {
             $trackedFields = [];
             $mappings = $this->getMappingRepository()->findAll();
-            /** @var DataFieldMapping $mapping */
             foreach ($mappings as $mapping) {
                 $parentEntity = $mapping->getEntity();
                 $channelId = $mapping->getChannel()->getId();
@@ -191,18 +150,11 @@ class MappingProvider
                 $this->dispatcher->dispatch($event, MappingTrackedFieldsEvent::NAME);
                 $trackedFields = $event->getFields();
             }
-            $this->cache->save($cacheKey, $trackedFields);
-        }
-
-        return $trackedFields;
+            return $trackedFields;
+        });
     }
 
-    /**
-     * @param int $channelId
-     * @param string $entityClass
-     * @return bool
-     */
-    public function entityHasVirutalFieldsMapped($channelId, $entityClass)
+    public function entityHasVirutalFieldsMapped(int $channelId, string $entityClass): bool
     {
         $trackedFields = $this->getTrackedFieldsConfig();
 
@@ -222,21 +174,23 @@ class MappingProvider
         foreach ($mappings as $mapping) {
             $entityClass = $mapping->getEntity();
             $channelId = $mapping->getChannel()->getId();
-            $cacheKeys[] = sprintf('two_way_sync_entities_%s', $channelId);
-            $cacheKeys[] = sprintf('prioritized_%s', $channelId);
-            $cacheKeys[] = sprintf('export_%s_%s', $entityClass, $channelId);
-            $cacheKeys[] = sprintf('two_way_sync_%s_%s', $entityClass, $channelId);
+            $cacheKeys[] = $this->getCacheKey(sprintf('two_way_sync_entities_%s', $channelId));
+            $cacheKeys[] = $this->getCacheKey(sprintf('prioritized_%s', $channelId));
+            $cacheKeys[] = $this->getCacheKey(sprintf('export_%s_%s', $entityClass, $channelId));
+            $cacheKeys[] = $this->getCacheKey(sprintf('two_way_sync_%s_%s', $entityClass, $channelId));
         }
         foreach ($cacheKeys as $cacheKey) {
             $this->cache->delete($cacheKey);
         }
     }
 
-    /**
-     * @return DataFieldMappingRepository
-     */
-    protected function getMappingRepository()
+    protected function getMappingRepository(): DataFieldMappingRepository
     {
         return $this->doctrineHelper->getEntityRepository(DataFieldMapping::class);
+    }
+
+    private function getCacheKey(string $key): string
+    {
+        return UniversalCacheKeyGenerator::normalizeCacheKey($key);
     }
 }

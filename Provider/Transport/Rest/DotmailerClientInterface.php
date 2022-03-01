@@ -5,10 +5,10 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Rest;
 use DotMailer\Api\Rest\IClient;
 use Psr\Log\LoggerAwareInterface;
 
+/**
+ * Client interface wrapper for dotmailer client and logger awere interfaces
+ */
 interface DotmailerClientInterface extends IClient, LoggerAwareInterface
 {
-    /**
-     * @param string $url
-     */
-    public function setBaseUrl($url);
+    public function setBaseUrl(string $url): void;
 }

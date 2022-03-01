@@ -54,10 +54,7 @@ class Client implements DotmailerClientInterface
         );
     }
 
-    /**
-     * @param string $url
-     */
-    public function setBaseUrl($url)
+    public function setBaseUrl(string $url): void
     {
         $this->restClient->setOption(Request::BASE_URL_KEY, $url);
     }
