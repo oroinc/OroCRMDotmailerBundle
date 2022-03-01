@@ -2,22 +2,21 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport;
 
-use Doctrine\Common\Cache\CacheProvider;
+use Symfony\Contracts\Cache\CacheInterface;
 
+/**
+ * Trait for cache provider
+ */
 trait CacheProviderAwareTrait
 {
-    /** @var CacheProvider */
-    private $cache;
+    private ?CacheInterface $cache = null;
 
-    public function setCache(CacheProvider $cache)
+    public function setCache(CacheInterface $cache): void
     {
         $this->cache = $cache;
     }
 
-    /**
-     * @return CacheProvider
-     */
-    public function getCache()
+    public function getCache(): CacheInterface
     {
         if (!$this->cache) {
             throw new \RuntimeException('CacheProvider not injected');

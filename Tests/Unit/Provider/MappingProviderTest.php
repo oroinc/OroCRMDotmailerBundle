@@ -2,7 +2,6 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider;
 
-use Doctrine\Common\Cache\CacheProvider;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\DataFieldMappingRepository;
@@ -12,7 +11,9 @@ use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\EntityBundle\Provider\VirtualFieldProviderInterface;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Component\Testing\Unit\EntityTrait;
+use Symfony\Component\Cache\Adapter\AbstractAdapter;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
@@ -23,7 +24,7 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
 
     private DoctrineHelper|\PHPUnit\Framework\MockObject\MockObject $doctrineHelper;
 
-    private CacheProvider|\PHPUnit\Framework\MockObject\MockObject $cache;
+    private AbstractAdapter|\PHPUnit\Framework\MockObject\MockObject $cache;
 
     private VirtualFieldProviderInterface|\PHPUnit\Framework\MockObject\MockObject $virtualFieldsProvider;
 
@@ -32,7 +33,7 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         $this->doctrineHelper = $this->createMock(DoctrineHelper::class);
-        $this->cache = $this->createMock(CacheProvider::class);
+        $this->cache = $this->createMock(AbstractAdapter::class);
         $this->virtualFieldsProvider = $this->createMock(VirtualFieldProviderInterface::class);
 
         $this->mappingProvider = new MappingProvider(
@@ -45,10 +46,6 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
     public function testGetTwoWaySyncFieldsForEntityNoCache(): void
     {
         $cacheKey = 'two_way_sync_entity_1';
-        $this->cache->expects($this->once())
-            ->method('fetch')
-            ->with($cacheKey)
-            ->willReturn(false);
         $repository = $this->getRepositoryMock();
         $mapping = ['field' => 'datafield'];
         $repository->expects($this->once())
@@ -61,14 +58,12 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
             ->willReturn('id');
 
         $this->cache->expects($this->once())
-            ->method('save')
-            ->with(
-                $cacheKey,
-                [
-                    'field' => 'datafield',
-                    'entityId' => 'id'
-                ]
-            );
+            ->method('get')
+            ->with($cacheKey)
+            ->willReturnCallback(function ($cacheKey, $callback) {
+                $item = $this->createMock(ItemInterface::class);
+                return $callback($item);
+            });
 
         $result = $this->mappingProvider->getTwoWaySyncFieldsForEntity('entity', 1);
 
@@ -85,7 +80,7 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
     {
         $cacheKey = 'two_way_sync_entity_1';
         $this->cache->expects($this->once())
-            ->method('fetch')
+            ->method('get')
             ->with($cacheKey)
             ->willReturn(['field' => 'datafield']);
         $this->doctrineHelper->expects($this->never())
@@ -98,22 +93,19 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
     public function testGetExportMappingConfigForEntityNoCache(): void
     {
         $cacheKey = 'export_entity_1';
-        $this->cache->expects($this->once())
-            ->method('fetch')
-            ->with($cacheKey)
-            ->willReturn(false);
         $repository = $this->getRepositoryMock();
         $mapping = ['field' => 'datafield'];
         $repository->expects($this->once())
             ->method('getMappingConfigForEntity')
             ->with('entity', 1)
             ->willReturn($mapping);
-        $this->cache->expects($this->once())->method('save')->with(
-            $cacheKey,
-            [
-                'field' => 'datafield',
-            ]
-        );
+        $this->cache->expects($this->once())
+            ->method('get')
+            ->with($cacheKey)
+            ->willReturnCallback(function ($cacheKey, $callback) {
+                $item = $this->createMock(ItemInterface::class);
+                return $callback($item);
+            });
 
         $result = $this->mappingProvider->getExportMappingConfigForEntity('entity', 1);
 
@@ -129,7 +121,7 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
     {
         $cacheKey = 'export_entity_1';
         $this->cache->expects($this->once())
-            ->method('fetch')
+            ->method('get')
             ->with($cacheKey)
             ->willReturn(['field' => 'datafield']);
 
@@ -140,10 +132,6 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
     public function testGetDataFieldMappingBySyncPriorityNoCache(): void
     {
         $cacheKey = 'prioritized_1';
-        $this->cache->expects($this->once())
-            ->method('fetch')
-            ->with($cacheKey)
-            ->willReturn(false);
         $repository = $this->getRepositoryMock();
         $mappings = [
             [
@@ -177,11 +165,12 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
             ]
         ];
         $this->cache->expects($this->once())
-            ->method('save')
-            ->with(
-                $cacheKey,
-                $expected
-            );
+            ->method('get')
+            ->with($cacheKey)
+            ->willReturnCallback(function ($cacheKey, $callback) {
+                $item = $this->createMock(ItemInterface::class);
+                return $callback($item);
+            });
 
         $result = $this->mappingProvider->getDataFieldMappingBySyncPriority($channel);
 
@@ -192,7 +181,7 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
     {
         $cacheKey = 'prioritized_1';
         $this->cache->expects($this->once())
-            ->method('fetch')
+            ->method('get')
             ->with($cacheKey)
             ->willReturn(['field' => 'datafield']);
         $channel = $this->getEntity(Channel::class, ['id' => 1]);
@@ -203,8 +192,6 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
     public function testGetEntitiesQualifiedForTwoWaySyncNoCache(): void
     {
         $cacheKey = 'two_way_sync_entities_1';
-        $this->cache->expects($this->once())->method('fetch')->with($cacheKey)
-            ->willReturn(false);
         $repository = $this->getRepositoryMock();
         $entities = ['testEntity'];
         $channel = $this->getEntity(Channel::class, ['id' => 1]);
@@ -212,10 +199,13 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
             ->method('getEntitiesQualifiedForTwoWaySync')
             ->with($channel)
             ->willReturn($entities);
-        $this->cache->expects($this->once())->method('save')->with(
-            $cacheKey,
-            ['testEntity']
-        );
+        $this->cache->expects($this->once())
+            ->method('get')
+            ->with($cacheKey)
+            ->willReturnCallback(function ($cacheKey, $callback) {
+                $item = $this->createMock(ItemInterface::class);
+                return $callback($item);
+            });
 
         $result = $this->mappingProvider->getEntitiesQualifiedForTwoWaySync($channel);
 
@@ -229,7 +219,7 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
     {
         $cacheKey = 'two_way_sync_entities_1';
         $this->cache->expects($this->once())
-            ->method('fetch')
+            ->method('get')
             ->with($cacheKey)
             ->willReturn(['field' => 'datafield']);
         $channel = $this->getEntity(Channel::class, ['id' => 1]);
@@ -240,10 +230,6 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
     public function testGetTrackedFieldsConfigNoCache(): void
     {
         $cacheKey = 'tracked_fields';
-        $this->cache->expects($this->once())
-            ->method('fetch')
-            ->with($cacheKey)
-            ->willReturn(false);
         $repository = $this->getRepositoryMock();
         $mappings = [];
         $channel = $this->getEntity(Channel::class, ['id' => 1]);
@@ -289,10 +275,13 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
                 ],
             ]
         ];
-        $this->cache->expects($this->once())->method('save')->with(
-            $cacheKey,
-            $expected
-        );
+        $this->cache->expects($this->once())
+            ->method('get')
+            ->with($cacheKey)
+            ->willReturnCallback(function ($cacheKey, $callback) {
+                $item = $this->createMock(ItemInterface::class);
+                return $callback($item);
+            });
 
         $result = $this->mappingProvider->getTrackedFieldsConfig();
 
@@ -302,10 +291,6 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
     public function testGetTrackedFieldsConfigModifiedInEvent(): void
     {
         $cacheKey = 'tracked_fields';
-        $this->cache->expects($this->once())
-            ->method('fetch')
-            ->with($cacheKey)
-            ->willReturn(false);
         $repository = $this->getRepositoryMock();
         $mappings = [];
         $channel = $this->getEntity(Channel::class, ['id' => 1]);
@@ -358,11 +343,12 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
         $this->mappingProvider->setDispatcher($dispatcher);
 
         $this->cache->expects($this->once())
-            ->method('save')
-            ->with(
-                $cacheKey,
-                $eventData
-            );
+            ->method('get')
+            ->with($cacheKey)
+            ->willReturnCallback(function ($cacheKey, $callback) {
+                $item = $this->createMock(ItemInterface::class);
+                return $callback($item);
+            });
 
         $result = $this->mappingProvider->getTrackedFieldsConfig();
 
@@ -372,10 +358,6 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
     public function testEntityHasVirutalFieldsMapped(): void
     {
         $cacheKey = 'tracked_fields';
-        $this->cache->expects($this->once())
-            ->method('fetch')
-            ->with($cacheKey)
-            ->willReturn(false);
         $repository = $this->getRepositoryMock();
         $mappings = [];
         $channel = $this->getEntity(Channel::class, ['id' => 1]);
@@ -396,6 +378,13 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
                 'primaryPhone'
             )
             ->willReturn(true);
+        $this->cache->expects($this->once())
+            ->method('get')
+            ->with($cacheKey)
+            ->willReturnCallback(function ($cacheKey, $callback) {
+                $item = $this->createMock(ItemInterface::class);
+                return $callback($item);
+            });
 
         $this->assertTrue($this->mappingProvider->entityHasVirutalFieldsMapped(1, 'MappingEntityClass'));
     }
@@ -403,7 +392,7 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
     public function testGetTrackedFieldsConfigCached(): void
     {
         $cacheKey = 'tracked_fields';
-        $this->cache->expects($this->once())->method('fetch')->with($cacheKey)
+        $this->cache->expects($this->once())->method('get')->with($cacheKey)
             ->willReturn(['array']);
         $result = $this->mappingProvider->getTrackedFieldsConfig();
         $this->assertEquals(['array'], $result);
