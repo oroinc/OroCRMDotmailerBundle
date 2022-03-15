@@ -10,12 +10,10 @@ use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldMappingConfigType;
 use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldMappingType;
 use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldSelectType;
 use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType;
-use Oro\Bundle\EntityConfigBundle\Provider\ConfigProvider;
-use Oro\Bundle\FormBundle\Form\Extension\TooltipFormExtension;
 use Oro\Bundle\FormBundle\Form\Type\CollectionType;
+use Oro\Bundle\FormBundle\Tests\Unit\Stub\TooltipFormExtensionStub;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\MarketingListBundle\Form\Type\ContactInformationEntityChoiceType;
-use Oro\Bundle\TranslationBundle\Translation\Translator;
 use Oro\Component\Testing\Unit\EntityTrait;
 use Oro\Component\Testing\Unit\Form\Extension\Stub\FormTypeValidatorExtensionStub;
 use Oro\Component\Testing\Unit\Form\Type\Stub\EntityType;
@@ -38,50 +36,40 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
             ->disableOriginalConstructor()
             ->onlyMethods(['postSet', 'preSubmit'])
             ->getMock();
-        $this->formType = new DataFieldMappingType(
-            DataFieldMapping::class,
-            $subscriber
-        );
+
+        $this->formType = new DataFieldMappingType(DataFieldMapping::class, $subscriber);
+
         parent::setUp();
     }
 
-    protected function getExtensions()
+    /**
+     * {@inheritDoc}
+     */
+    protected function getExtensions(): array
     {
-        $configProvider = $this->createMock(ConfigProvider::class);
-        $translator = $this->createMock(Translator::class);
-
         return [
             new PreloadedExtension(
                 [
-                    DataFieldMappingType::class => $this->formType,
+                    $this->formType,
                     IntegrationSelectType::class => new EntityType(
-                        [
-                            '1' => $this->getEntity(Channel::class, ['id' => 1])
-                        ],
+                        ['1' => $this->getEntity(Channel::class, ['id' => 1])],
                         IntegrationSelectType::NAME
                     ),
                     ContactInformationEntityChoiceType::class => new EntityType(
-                        [
-                            'lead' => 'leadClass'
-                        ],
+                        ['lead' => 'leadClass'],
                         ContactInformationEntityChoiceType::NAME
                     ),
                     DataFieldSelectType::class => new EntityType(
-                        [
-                            '1' => $this->getEntity(DataField::class, ['id' => 1])
-                        ],
+                        ['1' => $this->getEntity(DataField::class, ['id' => 1])],
                         DataFieldSelectType::NAME,
-                        [
-                            'channel_field' => ''
-                        ]
+                        ['channel_field' => '']
                     ),
-                    DataFieldMappingConfigType::class =>
-                        new DataFieldMappingConfigType(DataFieldMappingConfig::class),
-                    CollectionType::class => new CollectionType()
+                    new DataFieldMappingConfigType(DataFieldMappingConfig::class),
+                    new CollectionType()
                 ],
                 [
                     FormType::class => [
-                        new TooltipFormExtension($configProvider, $translator),
+                        new TooltipFormExtensionStub($this),
                         new FormTypeValidatorExtensionStub()
                     ]
                 ]
@@ -89,21 +77,18 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
         ];
     }
 
-    /**
-     * @dataProvider submitProvider
-     */
-    public function testSubmit(bool $isValid, $defaultData, array $submittedData, $expectedData, array $options = [])
+    public function testSubmit()
     {
-        $form = $this->factory->create(DataFieldMappingType::class, $defaultData, $options);
-        $this->assertEquals($defaultData, $form->getData());
-        $form->submit($submittedData);
-        $this->assertEquals($isValid, $form->isValid());
-        $this->assertTrue($form->isSynchronized());
-        $this->assertEquals($expectedData, $form->getData());
-    }
+        $submittedData = [
+            'channel' => 1,
+            'entity'  => 'lead',
+            'syncPriority' => 100,
+            'owner' => 1,
+            'configs' => [
+                ['entityFields' => 'field', 'dataField' => 1, 'isTwoWaySync' => 1]
+            ]
+        ];
 
-    public function submitProvider(): array
-    {
         $expectedEntity = new DataFieldMapping();
         $expectedEntity->setChannel($this->getEntity(Channel::class, ['id' => 1]));
         $expectedEntity->setSyncPriority(100);
@@ -114,26 +99,12 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
         $config->setIsTwoWaySync(true);
         $expectedEntity->addConfig($config);
 
-        return [
-            'datafield_valid' => [
-                'isValid'       => true,
-                'defaultData'   => null,
-                'submittedData' => [
-                    'channel' => 1,
-                    'entity'  => 'lead',
-                    'syncPriority' => 100,
-                    'owner' => 1,
-                    'configs' => [
-                        [
-                            'entityFields' => 'field',
-                            'dataField' => 1,
-                            'isTwoWaySync' => 1
-                        ]
-                    ]
-                ],
-                'expectedData'  => $expectedEntity
-            ]
-        ];
+        $form = $this->factory->create(DataFieldMappingType::class);
+        $form->submit($submittedData);
+
+        $this->assertTrue($form->isValid());
+        $this->assertTrue($form->isSynchronized());
+        $this->assertEquals($expectedEntity, $form->getData());
     }
 
     public function testDefaultOptions()
@@ -153,7 +124,6 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
         $formView->children['configs'] = $mappingConfigsView;
 
         $form = $this->createMock(FormInterface::class);
-
         $this->formType->finishView($formView, $form, []);
 
         $this->assertTrue($mappingConfigsView->isRendered());
