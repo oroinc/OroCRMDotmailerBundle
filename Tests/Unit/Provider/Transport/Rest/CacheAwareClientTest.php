@@ -2,6 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Rest;
 
+use Oro\Bundle\CacheBundle\Generator\UniversalCacheKeyGenerator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\CacheAwareClient;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\DotmailerClientInterface;
 use Psr\Log\LoggerInterface;
@@ -110,8 +111,10 @@ class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
         $params = ['url', Request::METHOD_GET];
 
         $client->expects($this->once())->method('execute')->with($params)->willReturn($data);
+        $cacheKey = $this->getCacheKey($params);
         $cache->expects($this->once())
             ->method('get')
+            ->with($cacheKey)
             ->willReturnCallback(function ($cacheKey, $callback) {
                 $item = $this->createMock(ItemInterface::class);
                 return $callback($item);
@@ -131,8 +134,15 @@ class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
         $data = 'response data';
         $params = ['url', Request::METHOD_GET];
 
-        $cache->expects($this->once())->method('get')->willReturn($data);
+        $cacheKey = $this->getCacheKey($params);
+        $cache->expects($this->once())->method('get')->with($cacheKey)->willReturn($data);
 
         $this->client->execute($params);
+    }
+
+    private function getCacheKey(array $paramArr = []): string
+    {
+        list($requestUrl) = array_pad(array_values($paramArr), 1, null);
+        return UniversalCacheKeyGenerator::normalizeCacheKey('namespace' . md5($requestUrl));
     }
 }
