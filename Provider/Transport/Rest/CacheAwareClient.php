@@ -2,6 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Rest;
 
+use Oro\Bundle\CacheBundle\Generator\UniversalCacheKeyGenerator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\CacheProviderAwareTrait;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
@@ -87,7 +88,7 @@ class CacheAwareClient implements DotmailerClientInterface
     private function getCacheKey(array $paramArr = []): string
     {
         list($requestUrl) = array_pad(array_values($paramArr), 1, null);
-        return $this->namespace . md5($requestUrl);
+        return UniversalCacheKeyGenerator::normalizeCacheKey($this->namespace . md5($requestUrl));
     }
 
     public function setClient(DotmailerClientInterface $client): void
