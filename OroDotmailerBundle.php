@@ -6,15 +6,12 @@ use Oro\Bundle\DotmailerBundle\DependencyInjection\CompilerPass\ContactExportQue
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-/**
- * The DotmailerBundle bundle class.
- */
 class OroDotmailerBundle extends Bundle
 {
     /**
      * {@inheritdoc}
      */
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         parent::build($container);
 
