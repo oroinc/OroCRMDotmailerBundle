@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Oro\Bundle\DotmailerBundle\Command;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\CronBundle\Command\CronCommandInterface;
 use Oro\Bundle\DotmailerBundle\Async\Topics;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
@@ -13,7 +14,6 @@ use Oro\Component\MessageQueue\Client\MessagePriority;
 use Oro\Component\MessageQueue\Client\MessageProducerInterface;
 use Oro\Component\MessageQueue\Job\Job;
 use Oro\Component\MessageQueue\Job\JobProcessor;
-use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
