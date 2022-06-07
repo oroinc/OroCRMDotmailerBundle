@@ -4,6 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Oro\Bundle\UserBundle\Entity\Role;
 use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\UserBundle\Entity\UserManager;
 
@@ -94,7 +95,7 @@ class LoadUserData extends AbstractFixture implements DependentFixtureInterface
     protected function assignUserRole(ObjectManager $manager, $data, $user)
     {
         if (isset($data['role'])) {
-            $role = $manager->getRepository('OroUserBundle:Role')->findOneByRole($data['role']);
+            $role = $manager->getRepository(Role::class)->findOneByRole($data['role']);
             if ($role) {
                 $user->addUserRole($role);
             }

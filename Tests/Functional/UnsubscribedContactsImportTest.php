@@ -8,6 +8,8 @@ use DotMailer\Api\DataTypes\ApiContactSuppressionList;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
@@ -15,22 +17,13 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData',
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData'
-            ]
-        );
+        $this->loadFixtures([LoadDotmailerContactData::class, LoadStatusData::class]);
     }
 
     /**
      * @dataProvider importUnsubscribedContactsDataProvider
-     *
-     * @param array $expected
-     * @param array $apiContactSuppressionLists
      */
-    public function testUnsubscribedContactsImport($expected, $apiContactSuppressionLists)
+    public function testUnsubscribedContactsImport(array $expected, array $apiContactSuppressionLists)
     {
         $entityMap = [];
         foreach ($apiContactSuppressionLists as $addressBookId => $apiContactSuppressionList) {
@@ -42,13 +35,13 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
         }
         $this->resource->expects($this->any())
             ->method('GetAddressBookContactsUnsubscribedSinceDate')
-            ->will($this->returnCallback(function ($entityId) use ($entityMap) {
+            ->willReturnCallback(function ($entityId) use ($entityMap) {
                 return $entityMap[$entityId];
-            }));
+            });
 
         $this->resource->expects($this->any())
             ->method('GetContactsSuppressedSinceDate')
-            ->will($this->returnValue(new ApiContactSuppressionList()));
+            ->willReturn(new ApiContactSuppressionList());
         $channel = $this->getReference('oro_dotmailer.channel.third');
 
         $result = $this->runImportExportConnectorsJob(
@@ -61,7 +54,7 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-        $contactRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:Contact');
+        $contactRepository = $this->managerRegistry->getRepository(Contact::class);
         $statusRepository = $this->managerRegistry->getRepository(
             ExtendHelper::buildEnumValueClassName('dm_cnt_status')
         );
@@ -89,7 +82,7 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
             $actualAddressBooks = [];
             /** @var AddressBookContact $addressBookContact */
             foreach ($actualContact->getAddressBookContacts()->toArray() as $addressBookContact) {
-                if ($addressBookContact->getStatus()->getId() == Contact::STATUS_SUBSCRIBED) {
+                if ($addressBookContact->getStatus()->getId() === Contact::STATUS_SUBSCRIBED) {
                     $actualAddressBooks[] = $addressBookContact->getAddressBook();
                 } elseif (!empty($expectedUsubscribedDates[$addressBookContact->getAddressBook()->getId()])) {
                     $this->assertEquals(
@@ -98,7 +91,7 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
                     );
                 }
             }
-            static::assertEqualsCanonicalizing(
+            self::assertEqualsCanonicalizing(
                 $expectedContact['subscribedAddressBooks'],
                 $actualAddressBooks,
                 'Subscribed Address Book Contacts is not equal',
@@ -106,7 +99,7 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
         }
     }
 
-    public function importUnsubscribedContactsDataProvider()
+    public function importUnsubscribedContactsDataProvider(): array
     {
         return [
             [

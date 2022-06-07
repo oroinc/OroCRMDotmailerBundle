@@ -4,20 +4,18 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\Int32List;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadMarketingListRemovedData;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadMarketingListUnsubscribedData;
 
 class RemovedContactsExportTest extends AbstractImportExportTestCase
 {
     protected function setUp(): void
     {
         parent::setUp();
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadMarketingListUnsubscribedData',
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadMarketingListRemovedData',
-            ]
-        );
+        $this->loadFixtures([LoadMarketingListUnsubscribedData::class, LoadMarketingListRemovedData::class]);
     }
 
     public function testRemove()
@@ -36,22 +34,17 @@ class RemovedContactsExportTest extends AbstractImportExportTestCase
              * Check fixtures loaded correctly
              */
             $addressBookContact = $this->managerRegistry
-                ->getRepository('OroDotmailerBundle:AddressBookContact')
-                ->findOneBy(
-                    [
-                        'addressBook' => $addressBook,
-                        'contact' => $contact
-                    ]
-                );
+                ->getRepository(AddressBookContact::class)
+                ->findOneBy(['addressBook' => $addressBook, 'contact' => $contact]);
             $this->assertNotNull($addressBookContact);
         }
 
-        $import         = new ApiContactImport();
-        $import->id     = '391da8d7-70f0-405b-98d4-02faa41d499d';
+        $import = new ApiContactImport();
+        $import->id = '391da8d7-70f0-405b-98d4-02faa41d499d';
         $import->status = AddressBookContactsExport::STATUS_NOT_FINISHED;
 
-        $import2         = new ApiContactImport();
-        $import2->id     = '451da8d7-70f0-405b-98d4-02faa41d499d';
+        $import2 = new ApiContactImport();
+        $import2->id = '451da8d7-70f0-405b-98d4-02faa41d499d';
         $import2->status = AddressBookContactsExport::STATUS_NOT_FINISHED;
 
         $this->resource->expects($this->exactly(2))
@@ -83,24 +76,14 @@ class RemovedContactsExportTest extends AbstractImportExportTestCase
              * Check removed from db
              */
             $addressBookContact = $this->managerRegistry
-                ->getRepository('OroDotmailerBundle:AddressBookContact')
-                ->findOneBy(
-                    [
-                        'addressBook' => $addressBook,
-                        'contact' => $contact
-                    ]
-                );
+                ->getRepository(AddressBookContact::class)
+                ->findOneBy(['addressBook' => $addressBook, 'contact' => $contact]);
             $this->assertNull($addressBookContact);
         }
 
         $addressBookContact = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:AddressBookContact')
-            ->findOneBy(
-                [
-                    'addressBook' => $addressBook,
-                    'contact' => $expectedNotRemoveContact
-                ]
-            );
+            ->getRepository(AddressBookContact::class)
+            ->findOneBy(['addressBook' => $addressBook, 'contact' => $expectedNotRemoveContact]);
         $this->assertNotNull($addressBookContact);
     }
 }

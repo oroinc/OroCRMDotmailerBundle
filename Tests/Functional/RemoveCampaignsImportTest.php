@@ -4,19 +4,17 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiCampaign;
 use DotMailer\Api\DataTypes\ApiCampaignList;
+use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadCampaignData;
 
 class RemoveCampaignsImportTest extends AbstractImportExportTestCase
 {
     protected function setUp(): void
     {
         parent::setUp();
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData',
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadCampaignData'
-            ]
-        );
+        $this->loadFixtures([LoadAddressBookData::class, LoadCampaignData::class]);
     }
 
     public function testImport()
@@ -43,7 +41,7 @@ class RemoveCampaignsImportTest extends AbstractImportExportTestCase
 
         $this->resource->expects($this->any())
             ->method('GetAddressBookCampaigns')
-            ->will($this->returnValue($entity));
+            ->willReturn($entity);
 
         $channel = $this->getReference('oro_dotmailer.channel.first');
 
@@ -57,11 +55,11 @@ class RemoveCampaignsImportTest extends AbstractImportExportTestCase
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-        $campaign = $this->managerRegistry->getRepository('OroDotmailerBundle:Campaign')
+        $campaign = $this->managerRegistry->getRepository(Campaign::class)
             ->findOneBy(['originId' => '15663', 'channel' => $channel]);
         $this->assertFalse($campaign->isDeleted());
 
-        $campaign = $this->managerRegistry->getRepository('OroDotmailerBundle:Campaign')
+        $campaign = $this->managerRegistry->getRepository(Campaign::class)
             ->findOneBy(['originId' => '15664', 'channel' => $channel]);
         $this->assertTrue($campaign->isDeleted());
     }

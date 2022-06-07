@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingListType;
 use Oro\Bundle\SalesBundle\Entity\B2bCustomer;
 
 class LoadMarketingListData extends AbstractFixture implements DependentFixtureInterface
@@ -92,7 +93,7 @@ class LoadMarketingListData extends AbstractFixture implements DependentFixtureI
      */
     public function load(ObjectManager $manager)
     {
-        $listTypeRepository = $manager->getRepository('OroMarketingListBundle:MarketingListType');
+        $listTypeRepository = $manager->getRepository(MarketingListType::class);
 
         foreach ($this->data as $data) {
             $entity = new MarketingList();

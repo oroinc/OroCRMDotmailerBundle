@@ -3,9 +3,12 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiDataFieldList;
+use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\AbstractDotmailerConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
+use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
 use Oro\Bundle\IntegrationBundle\Entity\Status;
 
 class DataFieldImportTest extends AbstractImportExportTestCase
@@ -13,20 +16,13 @@ class DataFieldImportTest extends AbstractImportExportTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData'
-            ]
-        );
+        $this->loadFixtures([LoadChannelData::class]);
     }
 
     /**
      * @dataProvider importDataProvider
-     *
-     * @param array $expected
-     * @param array $dataFieldList
      */
-    public function testImport($expected, $dataFieldList)
+    public function testImport(array $expected, array $dataFieldList)
     {
         $entity = new ApiDataFieldList();
         foreach ($dataFieldList as $listItem) {
@@ -35,7 +31,7 @@ class DataFieldImportTest extends AbstractImportExportTestCase
 
         $this->resource->expects($this->any())
             ->method('GetDataFields')
-            ->will($this->returnValue($entity));
+            ->willReturn($entity);
         $channel = $this->getReference('oro_dotmailer.channel.first');
 
         $result = $this->runImportExportConnectorsJob(
@@ -48,7 +44,7 @@ class DataFieldImportTest extends AbstractImportExportTestCase
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-        $dataFieldRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:DataField');
+        $dataFieldRepository = $this->managerRegistry->getRepository(DataField::class);
         $visibilityRepository = $this->managerRegistry->getRepository(
             ExtendHelper::buildEnumValueClassName('dm_df_visibility')
         );
@@ -70,7 +66,7 @@ class DataFieldImportTest extends AbstractImportExportTestCase
         }
         //check that connector was skipped during second import and last sync date was not updated
         $lastSyncDate = $this->getLastSyncDate($channel);
-        $result = $this->runImportExportConnectorsJob(
+        $this->runImportExportConnectorsJob(
             self::SYNC_PROCESSOR,
             $channel,
             DataFieldConnector::TYPE,
@@ -82,10 +78,7 @@ class DataFieldImportTest extends AbstractImportExportTestCase
         $this->assertTrue($lastSyncDate == $lastSyncDateAfter);
     }
 
-    /**
-     * @return array
-     */
-    public function importDataProvider()
+    public function importDataProvider(): array
     {
         return [
             [
@@ -153,15 +146,11 @@ class DataFieldImportTest extends AbstractImportExportTestCase
         ];
     }
 
-    /**
-     * @param $channel
-     * @return \DateTime
-     */
-    protected function getLastSyncDate($channel)
+    private function getLastSyncDate(Integration $channel): \DateTime
     {
-        $status = $this->managerRegistry->getRepository('OroIntegrationBundle:Channel')
-            ->getLastStatusForConnector($channel, DataFieldConnector::TYPE, Status::STATUS_COMPLETED);
         $date = null;
+        $status = $this->managerRegistry->getRepository(Integration::class)
+            ->getLastStatusForConnector($channel, DataFieldConnector::TYPE, Status::STATUS_COMPLETED);
         if ($status) {
             $statusData = $status->getData();
             $date = new \DateTime(

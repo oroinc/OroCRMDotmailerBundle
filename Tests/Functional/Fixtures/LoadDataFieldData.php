@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
+use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 class LoadDataFieldData extends AbstractFixture implements DependentFixtureInterface
 {
@@ -51,7 +52,7 @@ class LoadDataFieldData extends AbstractFixture implements DependentFixtureInter
      */
     public function load(ObjectManager $manager)
     {
-        $organization = $manager->getRepository('OroOrganizationBundle:Organization')->getFirst();
+        $organization = $manager->getRepository(Organization::class)->getFirst();
         foreach ($this->data as $data) {
             $entity = new DataField();
             $data['visibility'] = $this->findEnum('dm_df_visibility', $data['visibility']);

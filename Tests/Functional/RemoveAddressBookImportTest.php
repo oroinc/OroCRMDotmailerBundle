@@ -4,18 +4,16 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiAddressBook;
 use DotMailer\Api\DataTypes\ApiAddressBookList;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData;
 
 class RemoveAddressBookImportTest extends AbstractImportExportTestCase
 {
     protected function setUp(): void
     {
         parent::setUp();
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData'
-            ]
-        );
+        $this->loadFixtures([LoadAddressBookData::class]);
     }
 
     public function testImport()
@@ -26,7 +24,7 @@ class RemoveAddressBookImportTest extends AbstractImportExportTestCase
         $entity[] = new ApiAddressBook(['Id' => $expectedPresentedAddressBookId, 'Name' => 'test1']);
         $this->resource->expects($this->any())
             ->method('GetAddressBooks')
-            ->will($this->returnValue($entity));
+            ->willReturn($entity);
         $channel = $this->getReference('oro_dotmailer.channel.first');
 
         $result = $this->runImportExportConnectorsJob(
@@ -40,13 +38,13 @@ class RemoveAddressBookImportTest extends AbstractImportExportTestCase
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $addressBook = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:AddressBook')
+            ->getRepository(AddressBook::class)
             ->findBy(['originId' => $expectedPresentedAddressBookId]);
 
         $this->assertCount(1, $addressBook, 'Address Book must be presented');
 
         $addressBook = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:AddressBook')
+            ->getRepository(AddressBook::class)
             ->findBy(['originId' => $expectedRemovedAddressBookId]);
 
         $this->assertCount(0, $addressBook, 'Address Book must be removed');
