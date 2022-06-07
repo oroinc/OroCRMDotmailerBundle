@@ -3,20 +3,18 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiContactImport;
-use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData;
+use Oro\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem;
 
 class ExportSyncsUnsubscribedDMContactsWithMarketingListTest extends AbstractImportExportTestCase
 {
     protected function setUp(): void
     {
         parent::setUp();
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData'
-            ]
-        );
+        $this->loadFixtures([LoadDotmailerContactData::class]);
     }
 
     public function testSync()
@@ -24,30 +22,28 @@ class ExportSyncsUnsubscribedDMContactsWithMarketingListTest extends AbstractImp
         $channel = $this->getReference('oro_dotmailer.channel.fourth');
 
         $unsubscribedItem = $this->managerRegistry
-            ->getRepository('OroMarketingListBundle:MarketingListUnsubscribedItem')
-            ->findOneBy(
-                [
-                    'marketingList' => $this->getReference('oro_dotmailer.marketing_list.fifth')->getId(),
-                    'entityId' => $this->getReference('oro_dotmailer.orocrm_contact.daniel.case')->getId()
-                ]
-            );
+            ->getRepository(MarketingListUnsubscribedItem::class)
+            ->findOneBy([
+                'marketingList' => $this->getReference('oro_dotmailer.marketing_list.fifth')->getId(),
+                'entityId' => $this->getReference('oro_dotmailer.orocrm_contact.daniel.case')->getId()
+            ]);
         $this->managerRegistry->getManager()->remove($unsubscribedItem);
         $this->managerRegistry->getManager()->flush();
 
         $previousNotExportedContact = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:Contact')
+            ->getRepository(Contact::class)
             ->findOneBy(['email' => 'test2@ex.com']);
         $this->assertNotNull($previousNotExportedContact);
 
         $firstAddressBook = $this->getReference('oro_dotmailer.address_book.fifth');
         $firstAddressBookImportStatus = $this->getImportStatus(
-            $firstAddressBookId = '391da8d7-70f0-405b-98d4-02faa41d499d',
+            '391da8d7-70f0-405b-98d4-02faa41d499d',
             AddressBookContactsExport::STATUS_NOT_FINISHED
         );
 
         $secondAddressBook = $this->getReference('oro_dotmailer.address_book.six');
         $secondAddressBookImportStatus = $this->getImportStatus(
-            $secondAddressBookId = '451da8d7-70f0-405b-98d4-02faa41d499d',
+            '451da8d7-70f0-405b-98d4-02faa41d499d',
             AddressBookContactsExport::STATUS_FINISH
         );
 
@@ -80,37 +76,21 @@ class ExportSyncsUnsubscribedDMContactsWithMarketingListTest extends AbstractImp
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $unsubscribedItem = $this->managerRegistry
-            ->getRepository('OroMarketingListBundle:MarketingListUnsubscribedItem')
-            ->findOneBy(
-                [
-                    'marketingList' => $this->getReference('oro_dotmailer.marketing_list.fifth')->getId(),
-                    'entityId' => $this->getReference('oro_dotmailer.orocrm_contact.daniel.case')->getId()
-                ]
-            );
+            ->getRepository(MarketingListUnsubscribedItem::class)
+            ->findOneBy([
+                'marketingList' => $this->getReference('oro_dotmailer.marketing_list.fifth')->getId(),
+                'entityId' => $this->getReference('oro_dotmailer.orocrm_contact.daniel.case')->getId()
+            ]);
 
         $this->assertNotNull($unsubscribedItem);
     }
 
-    /**
-     * @param string $id GUID
-     * @param string $status
-     *
-     * @return ApiContactImport
-     */
-    protected function getImportStatus($id, $status)
+    private function getImportStatus(string $id, string $status): ApiContactImport
     {
         $addressBookImportStatus = new ApiContactImport();
         $addressBookImportStatus->id = $id;
         $addressBookImportStatus->status = $status;
 
         return $addressBookImportStatus;
-    }
-
-    protected function refreshAddressBook(AddressBook $addressBook)
-    {
-        return $this->getContainer()
-            ->get('doctrine')
-            ->getRepository('OroDotmailerBundle:AddressBook')
-            ->find($addressBook->getId());
     }
 }

@@ -3,35 +3,27 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiContactList;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 class ContactImportTest extends AbstractImportExportTestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData'
-            ]
-        );
+        $this->loadFixtures([LoadDotmailerContactData::class]);
     }
 
     /**
      * @dataProvider importDataProvider
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     *
-     * @param array $expected
-     * @param array $contactList
      */
-    public function testImport($expected, $contactList)
+    public function testImport(array $expected, array $contactList)
     {
         $entity = new ApiContactList();
         foreach ($contactList as $listItem) {
@@ -40,7 +32,7 @@ class ContactImportTest extends AbstractImportExportTestCase
 
         $this->resource->expects($this->any())
             ->method('GetAddressBookContacts')
-            ->will($this->returnValue($entity));
+            ->willReturn($entity);
 
         $channel = $this->getReference('oro_dotmailer.channel.first');
         $result = $this->runImportExportConnectorsJob(
@@ -53,8 +45,8 @@ class ContactImportTest extends AbstractImportExportTestCase
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-        $contactRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:Contact');
-        $addressBookRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:AddressBook');
+        $contactRepository = $this->managerRegistry->getRepository(Contact::class);
+        $addressBookRepository = $this->managerRegistry->getRepository(AddressBook::class);
         $optInTypeRepository = $this->managerRegistry->getRepository(
             ExtendHelper::buildEnumValueClassName('dm_cnt_opt_in_type')
         );
@@ -128,7 +120,7 @@ class ContactImportTest extends AbstractImportExportTestCase
         );
     }
 
-    public function importDataProvider()
+    public function importDataProvider(): array
     {
         return [
             [

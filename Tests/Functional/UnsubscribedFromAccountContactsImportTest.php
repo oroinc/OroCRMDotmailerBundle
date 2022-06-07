@@ -7,6 +7,8 @@ use DotMailer\Api\DataTypes\ApiContactStatuses;
 use DotMailer\Api\DataTypes\ApiContactSuppressionList;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 class UnsubscribedFromAccountContactsImportTest extends AbstractImportExportTestCase
@@ -14,22 +16,13 @@ class UnsubscribedFromAccountContactsImportTest extends AbstractImportExportTest
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData',
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData'
-            ]
-        );
+        $this->loadFixtures([LoadDotmailerContactData::class, LoadStatusData::class]);
     }
 
     /**
      * @dataProvider importUnsubscribedFromAccountContactsDataProvider
-     *
-     * @param array $expected
-     * @param array $apiContactSuppressionList
      */
-    public function testUnsubscribedFromAccountContactsImport($expected, $apiContactSuppressionList)
+    public function testUnsubscribedFromAccountContactsImport(array $expected, array $apiContactSuppressionList)
     {
         $entity = new ApiContactSuppressionList();
         foreach ($apiContactSuppressionList as $listItem) {
@@ -37,11 +30,11 @@ class UnsubscribedFromAccountContactsImportTest extends AbstractImportExportTest
         }
         $this->resource->expects($this->any())
             ->method('GetContactsSuppressedSinceDate')
-            ->will($this->returnValue($entity));
+            ->willReturn($entity);
 
         $this->resource->expects($this->any())
             ->method('GetAddressBookContactsUnsubscribedSinceDate')
-            ->will($this->returnValue(new ApiContactSuppressionList()));
+            ->willReturn(new ApiContactSuppressionList());
 
         $channel = $this->getReference('oro_dotmailer.channel.third');
 
@@ -55,7 +48,7 @@ class UnsubscribedFromAccountContactsImportTest extends AbstractImportExportTest
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-        $contactRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:Contact');
+        $contactRepository = $this->managerRegistry->getRepository(Contact::class);
         $statusRepository = $this->managerRegistry->getRepository(
             ExtendHelper::buildEnumValueClassName('dm_cnt_status')
         );
@@ -82,7 +75,7 @@ class UnsubscribedFromAccountContactsImportTest extends AbstractImportExportTest
         }
     }
 
-    public function importUnsubscribedFromAccountContactsDataProvider()
+    public function importUnsubscribedFromAccountContactsDataProvider(): array
     {
         return [
             [

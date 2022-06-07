@@ -3,7 +3,9 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiAddressBookList;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\AddressBookConnector;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 class AddressBookImportTest extends AbstractImportExportTestCase
@@ -11,20 +13,13 @@ class AddressBookImportTest extends AbstractImportExportTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData'
-            ]
-        );
+        $this->loadFixtures([LoadChannelData::class]);
     }
 
     /**
      * @dataProvider importDataProvider
-     *
-     * @param array $expected
-     * @param array $addressBookList
      */
-    public function testImport($expected, $addressBookList)
+    public function testImport(array $expected, array $addressBookList)
     {
         $entity = new ApiAddressBookList();
         foreach ($addressBookList as $listItem) {
@@ -33,7 +28,7 @@ class AddressBookImportTest extends AbstractImportExportTestCase
 
         $this->resource->expects($this->any())
             ->method('GetAddressBooks')
-            ->will($this->returnValue($entity));
+            ->willReturn($entity);
         $channel = $this->getReference('oro_dotmailer.channel.first');
 
         $result = $this->runImportExportConnectorsJob(
@@ -47,7 +42,7 @@ class AddressBookImportTest extends AbstractImportExportTestCase
 
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-        $addressBookRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:AddressBook');
+        $addressBookRepository = $this->managerRegistry->getRepository(AddressBook::class);
         $visibilityRepository = $this->managerRegistry->getRepository(
             ExtendHelper::buildEnumValueClassName('dm_ab_visibility')
         );
@@ -67,7 +62,7 @@ class AddressBookImportTest extends AbstractImportExportTestCase
         }
     }
 
-    public function importDataProvider()
+    public function importDataProvider(): array
     {
         return [
             [

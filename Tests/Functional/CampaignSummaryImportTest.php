@@ -3,27 +3,22 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiCampaignSummary;
+use Oro\Bundle\DotmailerBundle\Entity\CampaignSummary;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignSummaryConnector;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadCampaignData;
 
 class CampaignSummaryImportTest extends AbstractImportExportTestCase
 {
     protected function setUp(): void
     {
         parent::setUp();
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadCampaignData',
-            ]
-        );
+        $this->loadFixtures([LoadCampaignData::class]);
     }
 
     /**
      * @dataProvider importDataProvider
-     *
-     * @param array $expected
-     * @param array $summary
      */
-    public function testImport($expected, $summary)
+    public function testImport(array $expected, array $summary)
     {
         $entity = new ApiCampaignSummary($summary);
 
@@ -34,14 +29,10 @@ class CampaignSummaryImportTest extends AbstractImportExportTestCase
         $secondCampaignOriginId = '15666';
         $this->resource->expects($this->exactly(2))
             ->method('GetCampaignSummary')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        [$expectedCampaignOriginId, $entity],
-                        [$secondCampaignOriginId, null],
-                    ]
-                )
-            );
+            ->willReturnMap([
+                [$expectedCampaignOriginId, $entity],
+                [$secondCampaignOriginId, null],
+            ]);
         $channel = $this->getReference('oro_dotmailer.channel.second');
 
         $result = $this->runImportExportConnectorsJob(
@@ -54,7 +45,7 @@ class CampaignSummaryImportTest extends AbstractImportExportTestCase
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-        $campaignSummaryRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:CampaignSummary');
+        $campaignSummaryRepository = $this->managerRegistry->getRepository(CampaignSummary::class);
 
         $searchCriteria = [
             'numUniqueOpens'      => $expected['numUniqueOpens'],
@@ -73,7 +64,7 @@ class CampaignSummaryImportTest extends AbstractImportExportTestCase
         $this->assertCount(1, $summaryEntities);
     }
 
-    public function importDataProvider()
+    public function importDataProvider(): array
     {
         return [
             [

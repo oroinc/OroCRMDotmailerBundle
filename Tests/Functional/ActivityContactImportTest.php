@@ -3,28 +3,23 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiCampaignContactSummaryList;
+use Oro\Bundle\DotmailerBundle\Entity\Activity;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadActivityData;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData;
 
 class ActivityContactImportTest extends AbstractImportExportTestCase
 {
     protected function setUp(): void
     {
         parent::setUp();
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadActivityData',
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData',
-            ]
-        );
+        $this->loadFixtures([LoadActivityData::class, LoadStatusData::class]);
     }
 
     /**
      * @dataProvider importDataProvider
-     *
-     * @param array $expected
-     * @param array $activityList
      */
-    public function testImport($expected, $activityList)
+    public function testImport(array $expected, array $activityList)
     {
         $entity = new ApiCampaignContactSummaryList();
         foreach ($activityList as $listItem) {
@@ -37,11 +32,11 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
         $this->resource->expects($this->once())
             ->method('GetCampaignActivitiesSinceDateByDate')
             ->with($firstCampaignId)
-            ->will($this->returnValue($entity));
+            ->willReturn($entity);
         $this->resource->expects($this->once())
             ->method('GetCampaignActivities')
             ->with($secondCampaignId)
-            ->will($this->returnValue($entity));
+            ->willReturn($entity);
         $channel = $this->getReference('oro_dotmailer.channel.second');
 
         $result = $this->runImportExportConnectorsJob(
@@ -54,7 +49,7 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-        $activityContactRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:Activity');
+        $activityContactRepository = $this->managerRegistry->getRepository(Activity::class);
 
         foreach ($expected as $activityExpected) {
             $searchCriteria = [
@@ -89,7 +84,7 @@ class ActivityContactImportTest extends AbstractImportExportTestCase
         }
     }
 
-    public function importDataProvider()
+    public function importDataProvider(): array
     {
         return [
             [

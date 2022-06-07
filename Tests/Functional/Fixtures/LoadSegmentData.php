@@ -7,6 +7,7 @@ use Doctrine\Persistence\ObjectManager;
 use Oro\Bundle\SalesBundle\Entity\B2bCustomer;
 use Oro\Bundle\SalesBundle\Tests\Functional\DataFixtures\LoadB2bCustomerEmailData;
 use Oro\Bundle\SegmentBundle\Entity\Segment;
+use Oro\Bundle\SegmentBundle\Entity\SegmentType;
 
 class LoadSegmentData extends AbstractFixture implements DependentFixtureInterface
 {
@@ -191,9 +192,7 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
             $this->resolveReferenceIfExist($data, 'owner');
             $this->resolveReferenceIfExist($data, 'organization');
             $data['definition'] = json_encode($data['definition']);
-            $data['type'] = $manager
-                ->getRepository('OroSegmentBundle:SegmentType')
-                ->find($data['type']);
+            $data['type'] = $manager->getRepository(SegmentType::class)->find($data['type']);
             $this->setEntityPropertyValues($entity, $data, ['reference']);
 
             $this->addReference($data['reference'], $entity);

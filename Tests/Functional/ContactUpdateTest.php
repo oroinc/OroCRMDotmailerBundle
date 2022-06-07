@@ -4,34 +4,26 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiContactList;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 class ContactUpdateTest extends AbstractImportExportTestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData',
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData'
-            ]
-        );
+        $this->loadFixtures([LoadDotmailerContactData::class, LoadStatusData::class]);
     }
 
     /**
      * @dataProvider importUpdatedDataProvider
-     *
-     * @param array $expected
-     * @param array $contactList
      */
-    public function testImportUpdate($expected, $contactList)
+    public function testImportUpdate(array $expected, array $contactList)
     {
         $this->preparePreconditions();
 
@@ -66,7 +58,7 @@ class ContactUpdateTest extends AbstractImportExportTestCase
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-        $contactRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:Contact');
+        $contactRepository = $this->managerRegistry->getRepository(Contact::class);
         $optInTypeRepository = $this->managerRegistry->getRepository(
             ExtendHelper::buildEnumValueClassName('dm_cnt_opt_in_type')
         );
@@ -118,10 +110,7 @@ class ContactUpdateTest extends AbstractImportExportTestCase
         }
     }
 
-    /**
-     * @return array
-     */
-    public function importUpdatedDataProvider()
+    public function importUpdatedDataProvider(): array
     {
         return [
             [
@@ -197,7 +186,7 @@ class ContactUpdateTest extends AbstractImportExportTestCase
         ];
     }
 
-    private function preparePreconditions()
+    private function preparePreconditions(): void
     {
         /** @var AddressBook $addressBook */
         $addressBook = $this->getReference('oro_dotmailer.address_book.fourth');

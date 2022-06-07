@@ -5,10 +5,12 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Model;
 use DotMailer\Api\DataTypes\ApiContactImport;
 use DotMailer\Api\DataTypes\ApiContactImportStatuses;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Model\QueueExportManager;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\AbstractImportExportTestCase;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookContactsExportData;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCase
@@ -21,11 +23,7 @@ class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTe
     protected function setUp(): void
     {
         parent::setUp();
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookContactsExportData',
-            ]
-        );
+        $this->loadFixtures([LoadAddressBookContactsExportData::class]);
         $this->target = $this->getContainer()->get('oro_dotmailer.queue_export_manager');
     }
 
@@ -37,7 +35,7 @@ class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTe
         $rejectedByWatchDogImportId = $this->getReference('oro_dotmailer.address_book_contacts_export.rejected')
             ->getImportId();
 
-        $scheduledForExport = $this->managerRegistry->getRepository('OroDotmailerBundle:AddressBookContact')
+        $scheduledForExport = $this->managerRegistry->getRepository(AddressBookContact::class)
             ->findBy(['scheduledForExport' => true]);
         $this->assertCount(3, $scheduledForExport);
 
@@ -100,7 +98,7 @@ class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTe
     protected function assertAddressBookContact(Channel $channel, Contact $contact, AddressBook $addressBook, $status)
     {
         $addressBookContact = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:AddressBookContact')
+            ->getRepository(AddressBookContact::class)
             ->findBy(['contact' => $contact, 'channel' => $channel, 'addressBook' => $addressBook]);
 
         $this->assertCount(1, $addressBookContact);
@@ -115,7 +113,7 @@ class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTe
         AddressBook $expectedAddressBook
     ) {
         $addressBookContact = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:AddressBookContact')
+            ->getRepository(AddressBookContact::class)
             ->findOneBy(['contact' => $contact, 'channel' => $channel, 'addressBook' => $expectedAddressBook]);
         $this->assertNull($addressBookContact);
     }
@@ -130,7 +128,7 @@ class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTe
     protected function assertExportStatusUpdated(Channel $channel, $importId, AddressBook $expectedAddressBook)
     {
         $status = AddressBookContactsExport::STATUS_REJECTED_BY_WATCHDOG;
-        $exportEntities = $this->managerRegistry->getRepository('OroDotmailerBundle:AddressBookContactsExport')
+        $exportEntities = $this->managerRegistry->getRepository(AddressBookContactsExport::class)
             ->findBy(['channel' => $channel, 'importId' => $importId]);
         $this->assertCount(1, $exportEntities);
 

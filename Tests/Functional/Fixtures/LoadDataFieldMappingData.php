@@ -6,6 +6,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
+use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 class LoadDataFieldMappingData extends AbstractFixture implements DependentFixtureInterface
 {
@@ -56,7 +57,7 @@ class LoadDataFieldMappingData extends AbstractFixture implements DependentFixtu
      */
     public function load(ObjectManager $manager)
     {
-        $organization = $manager->getRepository('OroOrganizationBundle:Organization')->getFirst();
+        $organization = $manager->getRepository(Organization::class)->getFirst();
         foreach ($this->data as $data) {
             $entity = new DataFieldMapping();
             $entity->setOwner($organization);

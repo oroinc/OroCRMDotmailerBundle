@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 use DotMailer\Api\DataTypes\ApiCampaignList;
 use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 class CampaignImportTest extends AbstractImportExportTestCase
@@ -12,20 +13,13 @@ class CampaignImportTest extends AbstractImportExportTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData',
-            ]
-        );
+        $this->loadFixtures([LoadAddressBookData::class]);
     }
 
     /**
      * @dataProvider importDataProvider
-     *
-     * @param array $expected
-     * @param array $campaignList
      */
-    public function testImport($expected, $campaignList)
+    public function testImport(array $expected, array $campaignList)
     {
         $entity = new ApiCampaignList();
         foreach ($campaignList as $listItem) {
@@ -34,7 +28,7 @@ class CampaignImportTest extends AbstractImportExportTestCase
 
         $this->resource->expects($this->any())
             ->method('GetAddressBookCampaigns')
-            ->will($this->returnValue($entity));
+            ->willReturn($entity);
         $channel = $this->getReference('oro_dotmailer.channel.first');
 
         $result = $this->runImportExportConnectorsJob(
@@ -47,7 +41,7 @@ class CampaignImportTest extends AbstractImportExportTestCase
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-        $campaignRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:Campaign');
+        $campaignRepository = $this->managerRegistry->getRepository(Campaign::class);
         $replyActionRepository = $this->managerRegistry->getRepository(
             ExtendHelper::buildEnumValueClassName('dm_cmp_reply_action')
         );
@@ -87,12 +81,12 @@ class CampaignImportTest extends AbstractImportExportTestCase
             $marketingCampaign = $emailCampaign->getCampaign();
             $this->assertNotNull($marketingCampaign, 'Marketing Campaign should be added automatically');
             $this->assertEquals($marketingCampaign->getName(), $campaign['name']);
-            static::assertStringContainsString($campaign['name'], $marketingCampaign->getDescription());
-            static::assertStringContainsString((string) $campaign['originId'], $marketingCampaign->getCode());
+            self::assertStringContainsString($campaign['name'], $marketingCampaign->getDescription());
+            self::assertStringContainsString((string) $campaign['originId'], $marketingCampaign->getCode());
         }
     }
 
-    public function importDataProvider()
+    public function importDataProvider(): array
     {
         return [
             [
