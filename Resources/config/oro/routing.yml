@@ -10,33 +10,6 @@ oro_dotmailer_oauth_callback:
 
 
 #
-# DEPRECATED OLD REST API ROUTES
-#
-
-oro_api_options_dotmailer_datafields:
-    path: '/api/rest/{version}/dotmailer/datafields.{_format}'
-    methods: [OPTIONS]
-    defaults:
-        _controller: 'Oro\Bundle\DotmailerBundle\Controller\Api\Rest\DataFieldController::optionsAction'
-        _format: json
-        version: latest
-    requirements:
-        _format: json|html
-        version: latest|v1
-
-oro_api_options_dotmailer_datafield_mappings:
-    path: '/api/rest/{version}/dotmailer/datafield/mappings.{_format}'
-    methods: [OPTIONS]
-    defaults:
-        _controller: 'Oro\Bundle\DotmailerBundle\Controller\Api\Rest\DataFieldMappingController::optionsAction'
-        _format: json
-        version: latest
-    requirements:
-        _format: json|html
-        version: latest|v1
-
-
-#
 # OLD REST API ROUTES
 #
 
