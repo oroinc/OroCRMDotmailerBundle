@@ -76,13 +76,6 @@ class MarketingListItemsQueryBuilderProvider
     /** @var EmailProvider */
     protected $emailProvider;
 
-    /**
-     * @var QueryBuilder[]
-     *
-     * @deprecated use getMarketingListItemsQB instead
-     */
-    protected $cachedQueryBuilders = [];
-
     public function __construct(
         MarketingListProvider $marketingListProvider,
         ContactInformationFieldsProvider $contactInformationFieldsProvider,

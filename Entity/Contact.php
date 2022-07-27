@@ -9,8 +9,6 @@ use Oro\Bundle\DotmailerBundle\Model\ExtendContact;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Oro\Bundle\LocaleBundle\Model\FirstNameInterface;
-use Oro\Bundle\LocaleBundle\Model\LastNameInterface;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 /**
@@ -43,7 +41,7 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  * )
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
-class Contact extends ExtendContact implements OriginAwareInterface, FirstNameInterface, LastNameInterface
+class Contact extends ExtendContact implements OriginAwareInterface
 {
     use OriginTrait;
 
@@ -113,54 +111,6 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
      * )
      */
     protected $email;
-
-    /**
-     * @deprecated since 1.10. Use $dataFields data to get necessary data field
-     * @var string
-     *
-     * @ORM\Column(name="first_name", type="string", length=50, nullable=true)
-     */
-    protected $firstName;
-
-    /**
-     * @deprecated since 1.10. Use $dataFields data to get necessary data field
-     * @var string
-     *
-     * @ORM\Column(name="last_name", type="string", length=50, nullable=true)
-     */
-    protected $lastName;
-
-    /**
-     * @deprecated since 1.10. Use $dataFields data to get necessary data field
-     * @var string
-     *
-     * @ORM\Column(name="full_name", type="string", length=255, nullable=true)
-     */
-    protected $fullName;
-
-    /**
-     * @deprecated since 1.10. Use $dataFields data to get necessary data field
-     * @var string
-     *
-     * @ORM\Column(name="gender", type="string", length=6, nullable=true)
-     */
-    protected $gender;
-
-    /**
-     * @deprecated since 1.10. Use $dataFields data to get necessary data field
-     * @var string
-     *
-     * @ORM\Column(name="postcode", type="string", length=12, nullable=true)
-     */
-    protected $postcode;
-
-    /**
-     * @deprecated since 1.10.
-     * @var array
-     *
-     * @ORM\Column(name="merge_var_values", type="json_array", nullable=true)
-     */
-    protected $mergeVarValues;
 
     /**
      * @var Collection|AddressBookContact[]
@@ -316,137 +266,6 @@ class Contact extends ExtendContact implements OriginAwareInterface, FirstNameIn
     public function getEmail()
     {
         return $this->email;
-    }
-
-    /**
-     * @deprecated since 1.10. Use getDataFields() data to get necessary data field
-     * @return string
-     */
-    public function getFirstName()
-    {
-        return $this->firstName;
-    }
-
-    /**
-     * @deprecated since 1.10. update $dataFields array to update data field
-     * @param string $firstName
-     *
-     * @return Contact
-     */
-    public function setFirstName($firstName)
-    {
-        $this->firstName = $firstName;
-
-        return $this;
-    }
-
-    /**
-     * @deprecated since 1.10. Use getDataFields() data to get necessary data field
-     * @return string
-     */
-    public function getLastName()
-    {
-        return $this->lastName;
-    }
-
-    /**
-     * @deprecated since 1.10. update $dataFields array to update data field
-     * @param string $lastName
-     *
-     * @return Contact
-     */
-    public function setLastName($lastName)
-    {
-        $this->lastName = $lastName;
-
-        return $this;
-    }
-
-    /**
-     * @deprecated since 1.10. Use getDataFields() data to get necessary data field
-     * @return string
-     */
-    public function getFullName()
-    {
-        return $this->fullName;
-    }
-
-    /**
-     * @deprecated since 1.10. update $dataFields array to update data field
-     * @param string $fullName
-     *
-     * @return Contact
-     */
-    public function setFullName($fullName)
-    {
-        $this->fullName = $fullName;
-
-        return $this;
-    }
-
-    /**
-     * @deprecated since 1.10. Use getDataFields() data to get necessary data field
-     * @return string
-     */
-    public function getGender()
-    {
-        return $this->gender;
-    }
-
-    /**
-     * @deprecated since 1.10. update $dataFields array to update data field
-     * @param string $gender
-     *
-     * @return Contact
-     */
-    public function setGender($gender)
-    {
-        $this->gender = $gender;
-
-        return $this;
-    }
-
-    /**
-     * @deprecated since 1.10. Use getDataFields() data to get necessary data field
-     * @return string
-     */
-    public function getPostcode()
-    {
-        return $this->postcode;
-    }
-
-    /**
-     * @deprecated since 1.10. update $dataFields array to update data field
-     * @param string $postcode
-     *
-     * @return Contact
-     */
-    public function setPostcode($postcode)
-    {
-        $this->postcode = $postcode;
-
-        return $this;
-    }
-
-    /**
-     * @deprecated since 1.10.
-     * @return array
-     */
-    public function getMergeVarValues()
-    {
-        return $this->mergeVarValues;
-    }
-    /**
-     * @deprecated since 1.10.
-     * @param array|null $data
-     *
-     * @return Contact
-     */
-    public function setMergeVarValues(array $data = null)
-    {
-        $this->mergeVarValues = $data;
-
-        return $this;
     }
 
     /**

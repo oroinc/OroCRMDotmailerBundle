@@ -47,9 +47,6 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
         [
             'originId'    => 147,
             'email'       => 'alex.case@example.com',
-            'firstName'   => 'Test147',
-            'lastName'    => 'Test147',
-            'gender'      => 'male',
             'channel'     => 'oro_dotmailer.channel.second',
             'reference'   => 'oro_dotmailer.contact.alex_case.second_channel',
             'status'      => ApiContactStatuses::SUBSCRIBED,
@@ -161,9 +158,6 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
         [
             'originId'     => null,
             'email'        => 'test2@ex.com',
-            'firstName'    => 'Test2',
-            'lastName'     => 'Test2',
-            'gender'       => 'female',
             'channel'      => 'oro_dotmailer.channel.fourth',
             'reference'    => 'oro_dotmailer.contact.update_2',
             'createdAt'    => 'first day of January 2008',
@@ -180,9 +174,6 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
         [
             'originId'     => 144,
             'email'        => 'daniel.case@example.com',
-            'firstName'    => 'Test144',
-            'lastName'     => 'Test144',
-            'gender'       => 'male',
             'channel'      => 'oro_dotmailer.channel.fourth',
             'reference'    => 'oro_dotmailer.contact.unsubscribed_from_ab',
             'status'       => ApiContactStatuses::SUBSCRIBED,
@@ -197,9 +188,6 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
         [
             'originId'     => 145,
             'email'        => 'john.smith@example.com',
-            'firstName'    => 'Test145',
-            'lastName'     => 'Test145',
-            'gender'       => 'male',
             'channel'      => 'oro_dotmailer.channel.fourth',
             'reference'    => 'oro_dotmailer.contact.removed',
             'status'       => ApiContactStatuses::SUBSCRIBED,
@@ -214,9 +202,6 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
         [
             'originId'     => 146,
             'email'        => 'john.case@example.com',
-            'firstName'    => 'Test146',
-            'lastName'     => 'Test146',
-            'gender'       => 'male',
             'channel'      => 'oro_dotmailer.channel.fourth',
             'reference'    => 'oro_dotmailer.contact.synced',
             'status'       => ApiContactStatuses::SUBSCRIBED,
@@ -234,9 +219,6 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
         [
             'originId'    => 147,
             'email'       => 'alex.case@example.com',
-            'firstName'   => 'Test147',
-            'lastName'    => 'Test147',
-            'gender'      => 'male',
             'channel'     => 'oro_dotmailer.channel.fourth',
             'reference'   => 'oro_dotmailer.contact.alex_case',
             'status'      => ApiContactStatuses::SUBSCRIBED,
@@ -246,9 +228,6 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
         [
             'originId'     => 148,
             'email'        => 'allen.case@example.com',
-            'firstName'    => 'Test148',
-            'lastName'     => 'Test148',
-            'gender'       => 'male',
             'channel'      => 'oro_dotmailer.channel.fourth',
             'reference'    => 'oro_dotmailer.contact.allen_case',
             'status'       => ApiContactStatuses::SUBSCRIBED,
@@ -269,9 +248,6 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
         [
             'originId'     => 149,
             'email'        => 'nick.case@example.com',
-            'firstName'    => 'Test149',
-            'lastName'     => 'Test149',
-            'gender'       => 'male',
             'channel'      => 'oro_dotmailer.channel.fourth',
             'reference'    => 'oro_dotmailer.contact.removed_as_unsubscribed',
             'status'       => ApiContactStatuses::SUBSCRIBED,
@@ -286,9 +262,6 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
         [
             'originId'     => 150,
             'email'        => 'mike.case@example.com',
-            'firstName'    => 'Test150',
-            'lastName'     => 'Test150',
-            'gender'       => 'male',
             'channel'      => 'oro_dotmailer.channel.fourth',
             'reference'    => 'oro_dotmailer.contact.removed_from_marketing_list',
             'status'       => ApiContactStatuses::SUBSCRIBED,
@@ -303,8 +276,6 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
         [
             'originId'     => null,
             'email'        => 'new@emailsim.io',
-            'firstName'    => 'new',
-            'lastName'     => 'new',
             'channel'      => 'oro_dotmailer.channel.fourth',
             'reference'    => 'oro_dotmailer.contact.new',
             'status'       => ApiContactStatuses::SUBSCRIBED,
