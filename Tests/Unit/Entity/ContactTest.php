@@ -41,12 +41,6 @@ class ContactTest extends \PHPUnit\Framework\TestCase
         return array(
             'channel' => array('channel', $channel, $channel),
             'email' => array('email', 'TEST@from.com', 'test@from.com'),
-            'firstName' => array('firstName', 'John', 'John'),
-            'lastName' => array('lastName', 'Doe', 'Doe'),
-            'fullName' => array('fullName', 'John Doe', 'John Doe'),
-            'gender' => array('gender', 'male', 'male'),
-            'postcode' => array('postcode', '30350', '30350'),
-            'mergeVarValues' => array('mergeVarValues', $dataFields, $dataFields),
             'createdAt' => array('createdAt', $now, $now),
             'updatedAt' => array('updatedAt', $now, $now),
             'dataFields' => array('dataFields', $dataFields, $dataFields),

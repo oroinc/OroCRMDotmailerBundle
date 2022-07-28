@@ -101,17 +101,11 @@ oro:
             channel.label:                Channel
             email.label:                  Email
             email_type.label:             Email Type
-            first_name.label:             First Name
-            full_name.label:              Full Name
-            gender.label:                 Gender
             id.label:                     Id
-            last_name.label:              Last Name
-            data_fields.label:              Data Fields
-            merge_var_values.label:       Merge Variable Values
+            data_fields.label:            Data Fields
             opt_in_type.label:            Opt In Type
             origin_id.label:              Origin Id
             owner.label:                  Owner
-            postcode.label:               Postal Code
             status.label:                 Status
             address_book_contacts.label:  Address Book Contacts
             last_subscribed_date.label:   Last Subscribed Date
