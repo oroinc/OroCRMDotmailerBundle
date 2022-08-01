@@ -4,7 +4,8 @@ declare(strict_types=1);
 namespace Oro\Bundle\DotmailerBundle\Command;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Oro\Bundle\CronBundle\Command\CronCommandInterface;
+use Oro\Bundle\CronBundle\Command\CronCommandActivationInterface;
+use Oro\Bundle\CronBundle\Command\CronCommandScheduleDefinitionInterface;
 use Oro\Bundle\DotmailerBundle\Model\SyncManager;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
@@ -16,28 +17,35 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Marks address book contacts as updated to ensure that updated virtual field values are synced to dotdigital.
  */
-class FieldsForceSyncCommand extends Command implements CronCommandInterface
+class FieldsForceSyncCommand extends Command implements
+    CronCommandScheduleDefinitionInterface,
+    CronCommandActivationInterface
 {
     /** @var string */
     protected static $defaultName = 'oro:cron:dotmailer:force-fields-sync';
 
-    private ManagerRegistry $registry;
+    private ManagerRegistry $doctrine;
     private SyncManager $syncManager;
 
-    public function __construct(ManagerRegistry $registry, SyncManager $syncManager)
+    public function __construct(ManagerRegistry $doctrine, SyncManager $syncManager)
     {
         parent::__construct();
-
-        $this->registry = $registry;
+        $this->doctrine = $doctrine;
         $this->syncManager = $syncManager;
     }
 
-    public function getDefaultDefinition()
+    /**
+     * {@inheritDoc}
+     */
+    public function getDefaultDefinition(): string
     {
         return '0 1 * * *';
     }
 
-    public function isActive()
+    /**
+     * {@inheritDoc}
+     */
+    public function isActive(): bool
     {
         $count = $this->getIntegrationRepository()->countActiveIntegrations(ChannelType::TYPE);
 
@@ -79,6 +87,6 @@ HELP
 
     protected function getIntegrationRepository(): ChannelRepository
     {
-        return $this->registry->getRepository(Integration::class);
+        return $this->doctrine->getRepository(Integration::class);
     }
 }
