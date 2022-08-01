@@ -4,7 +4,8 @@ declare(strict_types=1);
 namespace Oro\Bundle\DotmailerBundle\Command;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Oro\Bundle\CronBundle\Command\CronCommandInterface;
+use Oro\Bundle\CronBundle\Command\CronCommandActivationInterface;
+use Oro\Bundle\CronBundle\Command\CronCommandScheduleDefinitionInterface;
 use Oro\Bundle\DotmailerBundle\Async\Topics;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
@@ -22,7 +23,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Schedules status updates of dotdigital contact export operations.
  */
-class ContactsExportStatusUpdateCommand extends Command implements CronCommandInterface
+class ContactsExportStatusUpdateCommand extends Command implements
+    CronCommandScheduleDefinitionInterface,
+    CronCommandActivationInterface
 {
     /** @var string */
     protected static $defaultName = 'oro:cron:dotmailer:export-status:update';
@@ -45,15 +48,18 @@ class ContactsExportStatusUpdateCommand extends Command implements CronCommandIn
         parent::__construct();
     }
 
-    public function getDefaultDefinition()
+    /**
+     * {@inheritDoc}
+     */
+    public function getDefaultDefinition(): string
     {
         return '*/5 * * * *';
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
-    public function isActive()
+    public function isActive(): bool
     {
         $count = $this->getIntegrationRepository()->countActiveIntegrations(ChannelType::TYPE);
 
