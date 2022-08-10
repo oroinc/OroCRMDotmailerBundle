@@ -456,10 +456,10 @@ oro:
             dotmailer_settings: Dotdigital Settings
             dotmailer_synchronization: Synchronization settings
             datafields_sync_interval: Data Fields Sync Interval
-            datafields_sync_interval.tooltip: This interval will be used to update data fields from dotdigital
+            datafields_sync_interval.tooltip: Set the interval for updating data fields from Dotdigital.
             force_sync_for_virtual_fields:
                 label: Enable daily force synchronization of mapped data fields
-                tooltip: Once a day, trigger data fields check. All contacts from entity's marketing lists will be automatically checked for updated fields and scheduled for sync with dotdigital if needed.
+                tooltip: The setting triggers a check of mapped data fields once a day. All contacts from the entity's marketing lists are automatically checked for updated fields and are scheduled for sync with Dotdigital when necessary.
                 choices:
                     none: None
                     virtual_only: For mappings with virtual fields only
