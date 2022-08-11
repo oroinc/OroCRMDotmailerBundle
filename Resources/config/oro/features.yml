@@ -1,0 +1,62 @@
+features:
+    manage_integrations:
+        routes:
+            - oro_dotmailer_email_campaign_status
+            - oro_dotmailer_sync_status
+            - oro_dotmailer_ping
+            - oro_dotmailer_integration_connection
+            - oro_dotmailer_oauth_callback
+            - oro_dotmailer_oauth_disconnect
+            - oro_dotmailer_synchronize_adddress_book
+            - oro_dotmailer_synchronize_adddress_book_datafields
+            - oro_dotmailer_marketing_list_disconnect
+            - oro_dotmailer_marketing_list_connect
+            - oro_dotmailer_marketing_list_buttons
+            - oro_dotmailer_address_book_create
+            - oro_dotmailer_datafield_index
+            - oro_dotmailer_datafield_view
+            - oro_dotmailer_datafield_info
+            - oro_dotmailer_datafield_create
+            - oro_dotmailer_datafield_synchronize
+            - oro_dotmailer_datafield_mapping_index
+            - oro_dotmailer_datafield_mapping_update
+            - oro_dotmailer_datafield_mapping_create
+            - oro_api_delete_dotmailer_datafield
+            - oro_api_fields_dotmailer_datafield_mapping
+            - oro_api_delete_dotmailer_datafield_mapping
+        entities:
+            - Oro\Bundle\DotmailerBundle\Entity\Activity
+            - Oro\Bundle\DotmailerBundle\Entity\AddressBook
+            - Oro\Bundle\DotmailerBundle\Entity\AddressBookContact
+            - Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport
+            - Oro\Bundle\DotmailerBundle\Entity\Campaign
+            - Oro\Bundle\DotmailerBundle\Entity\CampaignSummary
+            - Oro\Bundle\DotmailerBundle\Entity\Contact
+            - Oro\Bundle\DotmailerBundle\Entity\DataField
+            - Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping
+            - Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig
+            - Oro\Bundle\DotmailerBundle\Entity\ChangedFieldLog
+            - Oro\Bundle\DotmailerBundle\Entity\OAuth
+            - Extend\Entity\EV_Dm_Cnt_Status
+            - Extend\Entity\EV_Dm_Cnt_Email_Type
+            - Extend\Entity\EV_Dm_Cnt_Opt_In_Type
+            - Extend\Entity\EV_Dm_Cmp_Status
+            - Extend\Entity\EV_Dm_Cmp_Reply_Action
+            - Extend\Entity\EV_Dm_Ab_Cnt_Exp_Type
+            - Extend\Entity\EV_Dm_Ab_Visibility
+            - Extend\Entity\EV_Dm_Import_Status
+            - Extend\Entity\EV_Dm_Df_Type
+            - Extend\Entity\EV_Dm_Df_Visibility
+        api_resources:
+            - Extend\Entity\EV_Dm_Cnt_Status
+            - Extend\Entity\EV_Dm_Cnt_Email_Type
+            - Extend\Entity\EV_Dm_Cnt_Opt_In_Type
+            - Extend\Entity\EV_Dm_Cmp_Status
+            - Extend\Entity\EV_Dm_Cmp_Reply_Action
+            - Extend\Entity\EV_Dm_Ab_Cnt_Exp_Type
+            - Extend\Entity\EV_Dm_Ab_Visibility
+            - Extend\Entity\EV_Dm_Import_Status
+            - Extend\Entity\EV_Dm_Df_Type
+            - Extend\Entity\EV_Dm_Df_Visibility
+        configuration:
+            - dotmailer_settings
