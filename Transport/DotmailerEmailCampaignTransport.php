@@ -7,6 +7,9 @@ use Oro\Bundle\CampaignBundle\Transport\TransportInterface;
 use Oro\Bundle\CampaignBundle\Transport\VisibilityTransportInterface;
 use Oro\Bundle\DotmailerBundle\Form\Type\DotmailerTransportSettingsType;
 
+/**
+ * Implements the transport to send dotmailer campaigns emails.
+ */
 class DotmailerEmailCampaignTransport implements TransportInterface, VisibilityTransportInterface
 {
     const NAME = 'dotmailer';
@@ -14,7 +17,7 @@ class DotmailerEmailCampaignTransport implements TransportInterface, VisibilityT
     /**
      * {@inheritdoc}
      */
-    public function send(EmailCampaign $campaign, $entity, array $from, array $to)
+    public function send(EmailCampaign $campaign, object $entity, array $from, array $to)
     {
         //CBORO-10 do not required realization of this method
     }
