@@ -68,17 +68,17 @@ services:
         parent: oro_dotmailer.form.autocomplete.channel_aware.search_handler
         arguments:
             - 'Oro\Bundle\DotmailerBundle\Entity\AddressBook'
-            - ["name"]
+            - ['name']
         tags:
-            - { name: oro_form.autocomplete.search_handler, alias: "dotmailer_address_books" }
+            - { name: oro_form.autocomplete.search_handler, alias: dotmailer_address_books }
 
     oro_dotmailer.form.autocomplete.datafield_list.search_handler:
         parent: oro_dotmailer.form.autocomplete.channel_aware.search_handler
         arguments:
             - 'Oro\Bundle\DotmailerBundle\Entity\DataField'
-            - ["name"]
+            - ['name']
         tags:
-            - { name: oro_form.autocomplete.search_handler, alias: "dotmailer_data_fields" }
+            - { name: oro_form.autocomplete.search_handler, alias: dotmailer_data_fields }
 
     oro_dotmailer.form.extension.channel_connectors:
         class: Oro\Bundle\DotmailerBundle\Form\Extension\ChannelConnectorsExtension
