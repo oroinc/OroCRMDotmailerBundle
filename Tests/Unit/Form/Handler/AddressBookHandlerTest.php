@@ -74,14 +74,7 @@ class AddressBookHandlerTest extends \PHPUnit\Framework\TestCase
         $this->translator = $this->getMockBuilder(TranslatorInterface::class)->getMock();
         $this->logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
         $this->entity = $this->getMockBuilder(AddressBook::class)->getMock();
-        $this->handler = new AddressBookHandler(
-            $this->form,
-            $requestStack,
-            $this->manager,
-            $this->transport,
-            $this->translator,
-            $this->logger
-        );
+        $this->handler = new AddressBookHandler($this->manager, $this->transport, $this->translator, $this->logger);
     }
 
     protected function tearDown(): void
@@ -107,7 +100,7 @@ class AddressBookHandlerTest extends \PHPUnit\Framework\TestCase
         $this->form->expects($this->never())
             ->method('submit');
 
-        $this->assertFalse($this->handler->process($this->entity));
+        $this->assertFalse($this->handler->process($this->entity, $this->form, $this->request));
     }
 
     /**
@@ -126,7 +119,7 @@ class AddressBookHandlerTest extends \PHPUnit\Framework\TestCase
             ->method('submit')
             ->with(self::FORM_DATA);
 
-        $this->assertFalse($this->handler->process($this->entity));
+        $this->assertFalse($this->handler->process($this->entity, $this->form, $this->request));
     }
 
     public function supportedMethods()
@@ -198,7 +191,7 @@ class AddressBookHandlerTest extends \PHPUnit\Framework\TestCase
         $this->manager->expects($this->once())
             ->method('flush');
 
-        $this->assertTrue($this->handler->process($this->entity));
+        $this->assertTrue($this->handler->process($this->entity, $this->form, $this->request));
     }
 
     public function testProcessRestClientException()
@@ -249,7 +242,7 @@ class AddressBookHandlerTest extends \PHPUnit\Framework\TestCase
             ->method('addError')
             ->with($this->isInstanceOf(FormError::class));
 
-        $this->assertFalse($this->handler->process($this->entity));
+        $this->assertFalse($this->handler->process($this->entity, $this->form, $this->request));
     }
 
     public function testProcessException()
@@ -293,6 +286,6 @@ class AddressBookHandlerTest extends \PHPUnit\Framework\TestCase
             ->method('addError')
             ->with($this->isInstanceOf(FormError::class));
 
-        $this->assertFalse($this->handler->process($this->entity));
+        $this->assertFalse($this->handler->process($this->entity, $this->form, $this->request));
     }
 }

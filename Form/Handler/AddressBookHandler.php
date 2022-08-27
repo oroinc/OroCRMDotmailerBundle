@@ -6,57 +6,32 @@ use Doctrine\Persistence\ObjectManager;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
+use Oro\Bundle\FormBundle\Form\Handler\FormHandlerInterface;
 use Oro\Bundle\FormBundle\Form\Handler\RequestHandlerTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
 
-class AddressBookHandler
+/**
+ * The handler for AddressBook form.
+ */
+class AddressBookHandler implements FormHandlerInterface
 {
     use RequestHandlerTrait;
 
-    /**
-     * @var FormInterface
-     */
-    protected $form;
-
-    /**
-     * @var RequestStack
-     */
-    protected $requestStack;
-
-    /**
-     * @var ObjectManager
-     */
-    protected $manager;
-
-    /**
-     * @var DotmailerTransport
-     */
-    protected $transport;
-
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
+    protected ObjectManager $manager;
+    protected DotmailerTransport $transport;
+    protected TranslatorInterface $translator;
+    protected LoggerInterface $logger;
 
     public function __construct(
-        FormInterface $form,
-        RequestStack $requestStack,
         ObjectManager $manager,
         DotmailerTransport $transport,
         TranslatorInterface $translator,
         LoggerInterface $logger
     ) {
-        $this->form       = $form;
-        $this->requestStack = $requestStack;
         $this->manager    = $manager;
         $this->transport  = $transport;
         $this->translator = $translator;
@@ -64,24 +39,19 @@ class AddressBookHandler
     }
 
     /**
-     * Process form
-     *
-     * @param  AddressBook $entity
-     * @return bool
+     * {@inheritDoc}
      */
-    public function process(AddressBook $entity)
+    public function process($entity, FormInterface $form, Request $request)
     {
-        $this->form->setData($entity);
-
-        $request = $this->requestStack->getCurrentRequest();
-        if (in_array($request->getMethod(), ['POST', 'PUT'], true)) {
-            $this->submitPostPutRequest($this->form, $request);
-            if ($this->form->isValid()) {
+        $form->setData($entity);
+        if (\in_array($request->getMethod(), ['POST', 'PUT'], true)) {
+            $this->submitPostPutRequest($form, $request);
+            if ($form->isValid()) {
                 try {
                     $this->transport->init($entity->getChannel()->getTransport());
                     $apiAddressBook = $this->transport->createAddressBook(
                         $entity->getName(),
-                        $this->form->get('visibility')->getData()
+                        $form->get('visibility')->getData()
                     );
 
                     $entity->setOriginId((string)$apiAddressBook->offsetGet('id'));
@@ -95,14 +65,14 @@ class AddressBookHandler
                     } else {
                         $message = $e->getMessage();
                     }
-                    $this->form->addError(new FormError($message));
+                    $form->addError(new FormError($message));
                 } catch (\Exception $e) {
                     $this->logger->error(
                         'Unexpected exception occurred during creating Address Book',
                         ['exception' => $e]
                     );
 
-                    $this->form->addError(
+                    $form->addError(
                         new FormError($this->translator->trans('oro.dotmailer.addressbook.message.failed'))
                     );
                 }

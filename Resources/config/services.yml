@@ -178,8 +178,6 @@ services:
         class: Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler
         public: true
         arguments:
-            - "@oro_dotmailer.form.address_book"
-            - "@request_stack"
             - "@doctrine.orm.entity_manager"
             - "@oro_dotmailer.transport.integration_transport"
             - "@translator"
