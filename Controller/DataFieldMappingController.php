@@ -11,6 +11,7 @@ use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -31,7 +32,7 @@ class DataFieldMappingController extends AbstractController
      * @Template
      * @AclAncestor("oro_dotmailer_datafield_mapping_update")
      */
-    public function indexAction()
+    public function indexAction(): array
     {
         return [
             'entity_class' => DataFieldMapping::class
@@ -39,9 +40,6 @@ class DataFieldMappingController extends AbstractController
     }
 
     /**
-     * @param DataFieldMapping $mapping
-     * @return array
-     *
      * @Route("/update/{id}", name="oro_dotmailer_datafield_mapping_update", requirements={"id"="\d+"}))
      * @Acl(
      *      id="oro_dotmailer_datafield_mapping_update",
@@ -51,7 +49,7 @@ class DataFieldMappingController extends AbstractController
      * )
      * @Template("@OroDotmailer/DataFieldMapping/update.html.twig")
      */
-    public function updateAction(DataFieldMapping $mapping)
+    public function updateAction(DataFieldMapping $mapping): array|RedirectResponse
     {
         return $this->update($mapping);
     }
@@ -66,16 +64,12 @@ class DataFieldMappingController extends AbstractController
      * )
      * @Template("@OroDotmailer/DataFieldMapping/update.html.twig")
      */
-    public function createAction()
+    public function createAction(): array|RedirectResponse
     {
         return $this->update(new DataFieldMapping());
     }
 
-    /**
-     * @param DataFieldMapping $mapping
-     * @return array
-     */
-    protected function update(DataFieldMapping $mapping)
+    protected function update(DataFieldMapping $mapping): array|RedirectResponse
     {
         $form = $this->get(FormFactoryInterface::class)
             ->createNamed('oro_dotmailer_datafield_mapping_form', DataFieldMappingType::class);
@@ -86,7 +80,7 @@ class DataFieldMappingController extends AbstractController
             $this->get(TranslatorInterface::class)->trans('oro.dotmailer.controller.datafield_mapping.saved.message')
         );
 
-        if (is_array($response)) {
+        if (\is_array($response)) {
             $response = array_merge(
                 $response,
                 [
@@ -99,7 +93,7 @@ class DataFieldMappingController extends AbstractController
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public static function getSubscribedServices()
     {
@@ -110,6 +104,7 @@ class DataFieldMappingController extends AbstractController
                 TranslatorInterface::class,
                 FormFactoryInterface::class,
                 UpdateHandlerFacade::class,
+                UpdateHandlerFacade::class
             ]
         );
     }

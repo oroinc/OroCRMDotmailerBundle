@@ -7,7 +7,7 @@ use Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler;
 use Oro\Bundle\DotmailerBundle\Form\Handler\ConnectionUpdateFormHandler;
 use Oro\Bundle\DotmailerBundle\Form\Type\MarketingListConnectionType;
 use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
-use Oro\Bundle\FormBundle\Model\UpdateHandler;
+use Oro\Bundle\FormBundle\Model\UpdateHandlerFacade;
 use Oro\Bundle\IntegrationBundle\Manager\GenuineSyncScheduler;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
@@ -19,6 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -44,11 +45,8 @@ class AddressBookController extends AbstractController
      *      class="OroDotmailerBundle:AddressBook"
      * )
      * @CsrfProtection()
-     *
-     * @param AddressBook $addressBook
-     * @return JsonResponse
      */
-    public function synchronizeAddressBookAction(AddressBook $addressBook)
+    public function synchronizeAddressBookAction(AddressBook $addressBook): JsonResponse
     {
         $translator = $this->get(TranslatorInterface::class);
 
@@ -99,11 +97,8 @@ class AddressBookController extends AbstractController
      *      class="OroDotmailerBundle:AddressBook"
      * )
      * @CsrfProtection()
-     *
-     * @param AddressBook $addressBook
-     * @return JsonResponse
      */
-    public function synchronizeAddressBookDataFieldsAction(AddressBook $addressBook)
+    public function synchronizeAddressBookDataFieldsAction(AddressBook $addressBook): JsonResponse
     {
         $translator = $this->get(TranslatorInterface::class);
 
@@ -140,11 +135,8 @@ class AddressBookController extends AbstractController
      *      class="OroDotmailerBundle:AddressBook"
      * )
      * @CsrfProtection()
-     *
-     * @param AddressBook $addressBook
-     * @return JsonResponse
      */
-    public function disconnectMarketingListAction(AddressBook $addressBook)
+    public function disconnectMarketingListAction(AddressBook $addressBook): JsonResponse
     {
         $em = $this->get('doctrine')
             ->getManager();
@@ -162,13 +154,9 @@ class AddressBookController extends AbstractController
      *      requirements={"id"="\d+"}
      * )
      * @AclAncestor("oro_marketing_list_update")
-     *
      * @Template("@OroDotmailer/AddressBook/widget/addressBookConnectionUpdate.html.twig")
-     * @param MarketingList $marketingList
-     *
-     * @return array
      */
-    public function addressBookConnectionUpdateAction(MarketingList $marketingList)
+    public function addressBookConnectionUpdateAction(MarketingList $marketingList): array
     {
         $form = $this->createForm(
             MarketingListConnectionType::class,
@@ -205,12 +193,8 @@ class AddressBookController extends AbstractController
      *      options={"id" = "entity"}
      * )
      * @Template()
-     *
-     * @param MarketingList $marketingList
-     *
-     * @return array
      */
-    public function connectionButtonsAction(MarketingList $marketingList)
+    public function connectionButtonsAction(MarketingList $marketingList): array
     {
         if (!$this->isGranted('orocrm_marketing_list_update') ||
             !$this->isGranted('orocrm_dotmailer_address_book_update')
@@ -225,12 +209,7 @@ class AddressBookController extends AbstractController
         ];
     }
 
-    /**
-     * @param MarketingList $marketingList
-     *
-     * @return AddressBook
-     */
-    protected function getAddressBook(MarketingList $marketingList)
+    protected function getAddressBook(MarketingList $marketingList):? AddressBook
     {
         $addressBook = $this->get('doctrine')
             ->getRepository('OroDotmailerBundle:AddressBook')
@@ -251,31 +230,25 @@ class AddressBookController extends AbstractController
      *      class="OroDotmailerBundle:AddressBook"
      * )
      * @Template("@OroDotmailer/AddressBook/update.html.twig")
-     *
-     * @return array
      */
-    public function createAction()
+    public function createAction(): array|RedirectResponse
     {
         return $this->update(new AddressBook());
     }
 
-    /**
-     * @param AddressBook $addressBook
-     *
-     * @return array
-     */
-    protected function update(AddressBook $addressBook)
+    protected function update(AddressBook $addressBook): array|RedirectResponse
     {
-        return $this->get(UpdateHandler::class)->update(
+        return $this->get(UpdateHandlerFacade::class)->update(
             $addressBook,
             $this->get('oro_dotmailer.form.address_book'),
             $this->get(TranslatorInterface::class)->trans('oro.dotmailer.addressbook.message.saved'),
+            null,
             $this->get(AddressBookHandler::class)
         );
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public static function getSubscribedServices()
     {
@@ -286,9 +259,9 @@ class AddressBookController extends AbstractController
                 LoggerInterface::class,
                 GenuineSyncScheduler::class,
                 ConnectionUpdateFormHandler::class,
-                UpdateHandler::class,
                 AddressBookHandler::class,
                 'oro_dotmailer.form.address_book' => Form::class,
+                UpdateHandlerFacade::class
             ]
         );
     }
