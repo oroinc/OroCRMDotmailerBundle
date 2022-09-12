@@ -4,10 +4,12 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData;
-use Oro\Bundle\IntegrationBundle\Async\Topics;
+use Oro\Bundle\IntegrationBundle\Async\Topic\SyncIntegrationTopic;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MessageQueueBundle\Test\Functional\MessageQueueExtension;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
+use Oro\Component\MessageQueue\Client\Message;
+use Oro\Component\MessageQueue\Client\MessagePriority;
 
 /**
  * @dbIsolationPerTest
@@ -25,7 +27,7 @@ class AddressBookTest extends WebTestCase
         $this->getOptionalListenerManager()->enableListener('oro_workflow.listener.event_trigger_collector');
     }
 
-    public function testShouldScheduleSyncWhenMarketingListIsChanged()
+    public function testShouldScheduleSyncWhenMarketingListIsChanged(): void
     {
         /** @var AddressBook $addressBook */
         $addressBook = $this->getReference('oro_dotmailer.address_book.first');
@@ -41,23 +43,23 @@ class AddressBookTest extends WebTestCase
         $this->getEntityManager()->persist($addressBook);
         $this->getEntityManager()->flush();
 
-        $traces = self::getMessageCollector()->getTopicSentMessages(Topics::SYNC_INTEGRATION);
-
-        self::assertCount(1, $traces);
-        self::assertEquals([
-            'integration_id' => $addressBook->getChannel()->getId(),
-            'connector' => null,
-            'connector_parameters' => [
-                'address-book' => $addressBook->getId()
-            ],
-            'transport_batch_size' => 100,
-        ], $traces[0]['message']->getBody());
+        self::assertMessageSent(
+            SyncIntegrationTopic::getName(),
+            new Message(
+                [
+                    'integration_id' => $addressBook->getChannel()->getId(),
+                    'connector' => null,
+                    'connector_parameters' => [
+                        'address-book' => $addressBook->getId()
+                    ],
+                    'transport_batch_size' => 100,
+                ],
+                MessagePriority::VERY_LOW
+            )
+        );
     }
 
-    /**
-     * @return EntityManagerInterface
-     */
-    private function getEntityManager()
+    private function getEntityManager(): EntityManagerInterface
     {
         return self::getContainer()->get('doctrine.orm.entity_manager');
     }
