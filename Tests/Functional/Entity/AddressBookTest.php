@@ -8,7 +8,6 @@ use Oro\Bundle\IntegrationBundle\Async\Topic\SyncIntegrationTopic;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MessageQueueBundle\Test\Functional\MessageQueueExtension;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
-use Oro\Component\MessageQueue\Client\Message;
 use Oro\Component\MessageQueue\Client\MessagePriority;
 
 /**
@@ -43,20 +42,15 @@ class AddressBookTest extends WebTestCase
         $this->getEntityManager()->persist($addressBook);
         $this->getEntityManager()->flush();
 
-        self::assertMessageSent(
-            SyncIntegrationTopic::getName(),
-            new Message(
-                [
-                    'integration_id' => $addressBook->getChannel()->getId(),
-                    'connector' => null,
-                    'connector_parameters' => [
-                        'address-book' => $addressBook->getId()
-                    ],
-                    'transport_batch_size' => 100,
-                ],
-                MessagePriority::VERY_LOW
-            )
-        );
+        self::assertMessageSent(SyncIntegrationTopic::getName(), [
+            'integration_id' => $addressBook->getChannel()->getId(),
+            'connector' => null,
+            'connector_parameters' => [
+                'address-book' => $addressBook->getId(),
+            ],
+            'transport_batch_size' => 100,
+        ]);
+        self::assertMessageSentWithPriority(SyncIntegrationTopic::getName(), MessagePriority::VERY_LOW);
     }
 
     private function getEntityManager(): EntityManagerInterface
