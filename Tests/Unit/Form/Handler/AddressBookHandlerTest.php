@@ -14,81 +14,48 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AddressBookHandlerTest extends \PHPUnit\Framework\TestCase
 {
-    const FORM_DATA = ['field' => 'value'];
+    private const FORM_DATA = ['field' => 'value'];
 
-    /**
-     * @var FormInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $form;
+    /** @var ObjectManager|\PHPUnit\Framework\MockObject\MockObject */
+    private $manager;
 
-    /**
-     * @var Request|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $request;
+    /** @var DotmailerTransport|\PHPUnit\Framework\MockObject\MockObject */
+    private $transport;
 
-    /**
-     * @var ObjectManager|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $manager;
+    /** @var TranslatorInterface|\PHPUnit\Framework\MockObject\MockObject */
+    private $translator;
 
-    /**
-     * @var DotmailerTransport|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $transport;
+    /** @var LoggerInterface|\PHPUnit\Framework\MockObject\MockObject */
+    private $logger;
 
-    /**
-     * @var TranslatorInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $translator;
+    /** @var FormInterface|\PHPUnit\Framework\MockObject\MockObject */
+    private $form;
 
-    /**
-     * @var LoggerInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $logger;
+    /** @var Request|\PHPUnit\Framework\MockObject\MockObject */
+    private $request;
 
-    /**
-     * @var AddressBook|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $entity;
+    /** @var AddressBook|\PHPUnit\Framework\MockObject\MockObject */
+    private $entity;
 
-    /**
-     * @var AddressBookHandler
-     */
-    protected $handler;
+    /** @var AddressBookHandler */
+    private $handler;
 
     protected function setUp(): void
     {
-        $this->form = $this->getMockBuilder(FormInterface::class)->getMock();
-        $this->request = new Request();
-        $requestStack = new RequestStack();
-        $requestStack->push($this->request);
-        $this->manager = $this->getMockBuilder(ObjectManager::class)->getMock();
-        $this->transport = $this->getMockBuilder(DotmailerTransport::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->translator = $this->getMockBuilder(TranslatorInterface::class)->getMock();
-        $this->logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
-        $this->entity = $this->getMockBuilder(AddressBook::class)->getMock();
-        $this->handler = new AddressBookHandler($this->manager, $this->transport, $this->translator, $this->logger);
-    }
+        $this->manager = $this->createMock(ObjectManager::class);
+        $this->transport = $this->createMock(DotmailerTransport::class);
+        $this->translator = $this->createMock(TranslatorInterface::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
 
-    protected function tearDown(): void
-    {
-        unset(
-            $this->form,
-            $this->request,
-            $this->manager,
-            $this->transport,
-            $this->translator,
-            $this->logger,
-            $this->entity,
-            $this->handler
-        );
+        $this->form = $this->createMock(FormInterface::class);
+        $this->request = new Request();
+        $this->entity = $this->createMock(AddressBook::class);
+
+        $this->handler = new AddressBookHandler($this->manager, $this->transport, $this->translator, $this->logger);
     }
 
     public function testProcessUnsupportedRequest()
@@ -122,7 +89,7 @@ class AddressBookHandlerTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->handler->process($this->entity, $this->form, $this->request));
     }
 
-    public function supportedMethods()
+    public function supportedMethods(): array
     {
         return [
             ['POST'],
@@ -142,49 +109,44 @@ class AddressBookHandlerTest extends \PHPUnit\Framework\TestCase
             ->with(self::FORM_DATA);
         $this->form->expects($this->once())
             ->method('isValid')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
-        /** @var Channel|\PHPUnit\Framework\MockObject\MockObject $channel **/
-        $channel = $this->getMockBuilder(Channel::class)->getMock();
-        /** @var Transport|\PHPUnit\Framework\MockObject\MockObject $transport **/
-        $transport = $this->getMockBuilder(Transport::class)->getMock();
+        $channel = $this->createMock(Channel::class);
+        $transport = $this->createMock(Transport::class);
         $this->entity->expects($this->once())
             ->method('getChannel')
-            ->will($this->returnValue($channel));
+            ->willReturn($channel);
         $channel->expects($this->once())
             ->method('getTransport')
-            ->will($this->returnValue($transport));
+            ->willReturn($transport);
         $this->transport->expects($this->once())
             ->method('init')
             ->with($transport);
 
         $this->entity->expects($this->once())
             ->method('getName')
-            ->will($this->returnValue('Test address book'));
-        $visibilityForm = $this->getMockBuilder(FormInterface::class)->getMock();
+            ->willReturn('Test address book');
+        $visibilityForm = $this->createMock(FormInterface::class);
         $visibilityForm->expects($this->once())
             ->method('getData')
-            ->will($this->returnValue('Public'));
+            ->willReturn('Public');
         $this->form->expects($this->any())
             ->method('get')
             ->willReturnMap([
                 ['visibility', $visibilityForm]
             ]);
-        /** @var JsonObject|\PHPUnit\Framework\MockObject\MockObject $apiAddressBook **/
-        $apiAddressBook = $this->getMockBuilder(JsonObject::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $apiAddressBook = $this->createMock(JsonObject::class);
         $this->transport->expects($this->once())
             ->method('createAddressBook')
-            ->will($this->returnValue($apiAddressBook));
+            ->willReturn($apiAddressBook);
 
         $apiAddressBook->expects($this->once())
             ->method('offsetGet')
             ->with('id')
-            ->will($this->returnValue(1));
+            ->willReturn(1);
         $this->entity->expects($this->once())
             ->method('setOriginId')
-            ->will($this->returnValue(1));
+            ->willReturn(1);
         $this->manager->expects($this->once())
             ->method('persist')
             ->with($this->entity);
@@ -206,29 +168,27 @@ class AddressBookHandlerTest extends \PHPUnit\Framework\TestCase
             ->with(self::FORM_DATA);
         $this->form->expects($this->once())
             ->method('isValid')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
-        /** @var Channel|\PHPUnit\Framework\MockObject\MockObject $channel **/
-        $channel = $this->getMockBuilder(Channel::class)->getMock();
-        /** @var Transport|\PHPUnit\Framework\MockObject\MockObject $transport **/
-        $transport = $this->getMockBuilder(Transport::class)->getMock();
+        $channel = $this->createMock(Channel::class);
+        $transport = $this->createMock(Transport::class);
         $this->entity->expects($this->once())
             ->method('getChannel')
-            ->will($this->returnValue($channel));
+            ->willReturn($channel);
         $channel->expects($this->once())
             ->method('getTransport')
-            ->will($this->returnValue($transport));
+            ->willReturn($transport);
         $this->transport->expects($this->once())
             ->method('init')
             ->with($transport);
 
         $this->entity->expects($this->once())
             ->method('getName')
-            ->will($this->returnValue('Test address book'));
-        $visibilityForm = $this->getMockBuilder(FormInterface::class)->getMock();
+            ->willReturn('Test address book');
+        $visibilityForm = $this->createMock(FormInterface::class);
         $visibilityForm->expects($this->once())
             ->method('getData')
-            ->will($this->returnValue('Public'));
+            ->willReturn('Public');
         $this->form->expects($this->any())
             ->method('get')
             ->willReturnMap([
@@ -257,19 +217,16 @@ class AddressBookHandlerTest extends \PHPUnit\Framework\TestCase
             ->with(self::FORM_DATA);
         $this->form->expects($this->once())
             ->method('isValid')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
-        /** @var Channel|\PHPUnit\Framework\MockObject\MockObject $channel **/
-        $channel = $this->getMockBuilder(Channel::class)->getMock();
-        /** @var Transport|\PHPUnit\Framework\MockObject\MockObject $transport **/
-        $transport = $this->getMockBuilder(Transport::class)->getMock();
+        $channel = $this->createMock(Channel::class);
+        $transport = $this->createMock(Transport::class);
         $this->entity->expects($this->once())
             ->method('getChannel')
-            ->will($this->returnValue($channel));
+            ->willReturn($channel);
         $channel->expects($this->once())
             ->method('getTransport')
-            ->will($this->returnValue($transport));
-        /** @var \Exception $e **/
+            ->willReturn($transport);
         $e = new \Exception('Test exception');
         $this->transport->expects($this->once())
             ->method('init')
