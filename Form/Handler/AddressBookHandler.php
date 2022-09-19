@@ -3,7 +3,6 @@
 namespace Oro\Bundle\DotmailerBundle\Form\Handler;
 
 use Doctrine\Persistence\ObjectManager;
-use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 use Oro\Bundle\FormBundle\Form\Handler\FormHandlerInterface;
@@ -12,7 +11,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * The handler for AddressBook form.
@@ -21,10 +20,10 @@ class AddressBookHandler implements FormHandlerInterface
 {
     use RequestHandlerTrait;
 
-    protected ObjectManager $manager;
-    protected DotmailerTransport $transport;
-    protected TranslatorInterface $translator;
-    protected LoggerInterface $logger;
+    private ObjectManager $manager;
+    private DotmailerTransport $transport;
+    private TranslatorInterface $translator;
+    private LoggerInterface $logger;
 
     public function __construct(
         ObjectManager $manager,
@@ -32,10 +31,10 @@ class AddressBookHandler implements FormHandlerInterface
         TranslatorInterface $translator,
         LoggerInterface $logger
     ) {
-        $this->manager    = $manager;
-        $this->transport  = $transport;
+        $this->manager = $manager;
+        $this->transport = $transport;
         $this->translator = $translator;
-        $this->logger     = $logger;
+        $this->logger = $logger;
     }
 
     /**
