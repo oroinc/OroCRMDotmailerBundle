@@ -1,0 +1,35 @@
+DotmailerBundle
+---------------
+* The `DotmailerEmailCampaignTransport::send(EmailCampaign $campaign, $entity, $from, $to)`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Transport/DotmailerEmailCampaignTransport.php#L17 "Oro\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport")</sup> method was changed to `DotmailerEmailCampaignTransport::send(EmailCampaign $campaign, $entity, $from, $to)`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.1.0-beta.1/Transport/DotmailerEmailCampaignTransport.php#L20 "Oro\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport")</sup>
+* The following methods in class `AddressBookHandler`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.1.0-beta.1/Form/Handler/AddressBookHandler.php#L28 "Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler")</sup> were changed:
+  > - `__construct(FormInterface $form, RequestStack $requestStack, ObjectManager $manager, DotmailerTransport $transport, TranslatorInterface $translator, LoggerInterface $logger)`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Form/Handler/AddressBookHandler.php#L50 "Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler")</sup>
+  > - `__construct(ObjectManager $manager, DotmailerTransport $transport, TranslatorInterface $translator, LoggerInterface $logger)`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.1.0-beta.1/Form/Handler/AddressBookHandler.php#L28 "Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler")</sup>
+
+  > - `process(AddressBook $entity)`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Form/Handler/AddressBookHandler.php#L72 "Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler")</sup>
+  > - `process($entity, FormInterface $form, Request $request)`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.1.0-beta.1/Form/Handler/AddressBookHandler.php#L43 "Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler")</sup>
+
+* The `MarketingListItemsQueryBuilderProvider::$cachedQueryBuilders`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Provider/MarketingListItemsQueryBuilderProvider.php#L84 "Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider::$cachedQueryBuilders")</sup> property was removed.
+* The following properties in class `AddressBookHandler`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Form/Handler/AddressBookHandler.php#L23 "Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler")</sup> were removed:
+   - `$form`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Form/Handler/AddressBookHandler.php#L23 "Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler::$form")</sup>
+   - `$requestStack`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Form/Handler/AddressBookHandler.php#L28 "Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler::$requestStack")</sup>
+* The following properties in class `Contact`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L123 "Oro\Bundle\DotmailerBundle\Entity\Contact")</sup> were removed:
+   - `$firstName`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L123 "Oro\Bundle\DotmailerBundle\Entity\Contact::$firstName")</sup>
+   - `$lastName`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L131 "Oro\Bundle\DotmailerBundle\Entity\Contact::$lastName")</sup>
+   - `$fullName`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L139 "Oro\Bundle\DotmailerBundle\Entity\Contact::$fullName")</sup>
+   - `$gender`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L147 "Oro\Bundle\DotmailerBundle\Entity\Contact::$gender")</sup>
+   - `$postcode`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L155 "Oro\Bundle\DotmailerBundle\Entity\Contact::$postcode")</sup>
+   - `$mergeVarValues`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L163 "Oro\Bundle\DotmailerBundle\Entity\Contact::$mergeVarValues")</sup>
+* The `OroDotmailerBundleInstaller::renameLastSyncedColumn`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Migrations/Schema/OroDotmailerBundleInstaller.php#L94 "Oro\Bundle\DotmailerBundle\Migrations\Schema\OroDotmailerBundleInstaller::renameLastSyncedColumn")</sup> method was removed.
+* The following methods in class `Contact`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L325 "Oro\Bundle\DotmailerBundle\Entity\Contact")</sup> were removed:
+   - `getFirstName`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L325 "Oro\Bundle\DotmailerBundle\Entity\Contact::getFirstName")</sup>
+   - `setFirstName`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L336 "Oro\Bundle\DotmailerBundle\Entity\Contact::setFirstName")</sup>
+   - `getLastName`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L347 "Oro\Bundle\DotmailerBundle\Entity\Contact::getLastName")</sup>
+   - `setLastName`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L358 "Oro\Bundle\DotmailerBundle\Entity\Contact::setLastName")</sup>
+   - `getFullName`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L369 "Oro\Bundle\DotmailerBundle\Entity\Contact::getFullName")</sup>
+   - `setFullName`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L380 "Oro\Bundle\DotmailerBundle\Entity\Contact::setFullName")</sup>
+   - `getGender`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L391 "Oro\Bundle\DotmailerBundle\Entity\Contact::getGender")</sup>
+   - `setGender`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L402 "Oro\Bundle\DotmailerBundle\Entity\Contact::setGender")</sup>
+   - `getPostcode`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L413 "Oro\Bundle\DotmailerBundle\Entity\Contact::getPostcode")</sup>
+   - `setPostcode`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L424 "Oro\Bundle\DotmailerBundle\Entity\Contact::setPostcode")</sup>
+   - `getMergeVarValues`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L435 "Oro\Bundle\DotmailerBundle\Entity\Contact::getMergeVarValues")</sup>
+   - `setMergeVarValues`<sup>[[?]](https://github.com/oroinc/OroCRMDotmailerBundle/tree/5.0.0-alpha.2/Entity/Contact.php#L445 "Oro\Bundle\DotmailerBundle\Entity\Contact::setMergeVarValues")</sup>
