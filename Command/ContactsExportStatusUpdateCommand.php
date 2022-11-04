@@ -4,12 +4,10 @@ declare(strict_types=1);
 namespace Oro\Bundle\DotmailerBundle\Command;
 
 use Oro\Bundle\CronBundle\Command\CronCommandInterface;
-use Oro\Bundle\DotmailerBundle\Async\Topics;
+use Oro\Bundle\DotmailerBundle\Async\Topic\ExportContactsStatusUpdateTopic;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
 use Oro\Bundle\IntegrationBundle\Entity\Repository\ChannelRepository;
-use Oro\Component\MessageQueue\Client\Message;
-use Oro\Component\MessageQueue\Client\MessagePriority;
 use Oro\Component\MessageQueue\Client\MessageProducerInterface;
 use Oro\Component\MessageQueue\Job\Job;
 use Oro\Component\MessageQueue\Job\JobProcessor;
@@ -133,11 +131,8 @@ HELP
             }
 
             $this->messageProducer->send(
-                Topics::EXPORT_CONTACTS_STATUS_UPDATE,
-                new Message(
-                    ['integrationId' => $integration->getId()],
-                    MessagePriority::VERY_LOW
-                )
+                ExportContactsStatusUpdateTopic::getName(),
+                ['integrationId' => $integration->getId()]
             );
         }
 

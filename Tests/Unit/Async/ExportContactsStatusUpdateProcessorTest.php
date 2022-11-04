@@ -6,7 +6,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\DotmailerBundle\Async\ExportContactsStatusUpdateProcessor;
-use Oro\Bundle\DotmailerBundle\Async\Topics;
+use Oro\Bundle\DotmailerBundle\Async\Topic\ExportContactsStatusUpdateTopic;
 use Oro\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\DotmailerBundle\Model\QueueExportManager;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
@@ -20,7 +20,6 @@ use Oro\Component\MessageQueue\Job\JobProcessor;
 use Oro\Component\MessageQueue\Test\JobRunner;
 use Oro\Component\MessageQueue\Transport\Message;
 use Oro\Component\MessageQueue\Transport\SessionInterface;
-use Oro\Component\MessageQueue\Util\JSON;
 use Oro\Component\Testing\ClassExtensionTrait;
 use Oro\Component\Testing\Unit\EntityTrait;
 use Psr\Log\LoggerInterface;
@@ -35,25 +34,25 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
     use EntityTrait;
     use IntegrationTokenAwareTestTrait;
 
-    public function testShouldImplementMessageProcessorInterface()
+    public function testShouldImplementMessageProcessorInterface(): void
     {
         $this->assertClassImplements(MessageProcessorInterface::class, ExportContactsStatusUpdateProcessor::class);
     }
 
-    public function testShouldImplementTopicSubscriberInterface()
+    public function testShouldImplementTopicSubscriberInterface(): void
     {
         $this->assertClassImplements(TopicSubscriberInterface::class, ExportContactsStatusUpdateProcessor::class);
     }
 
-    public function testShouldSubscribeOnExportContactsStatusUpdateTopic()
+    public function testShouldSubscribeOnExportContactsStatusUpdateTopic(): void
     {
-        $this->assertEquals(
-            [Topics::EXPORT_CONTACTS_STATUS_UPDATE],
+        self::assertEquals(
+            [ExportContactsStatusUpdateTopic::getName()],
             ExportContactsStatusUpdateProcessor::getSubscribedTopics()
         );
     }
 
-    public function testCouldBeConstructedWithExpectedArguments()
+    public function testCouldBeConstructedWithExpectedArguments(): void
     {
         new ExportContactsStatusUpdateProcessor(
             $this->createDoctrineHelperStub(),
@@ -66,75 +65,25 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
         );
     }
 
-    public function testShouldLogAndRejectIfMessageBodyMissIntegrationId()
-    {
-        $message = new Message();
-        $message->setBody('[]');
-
-        $logger = $this->createLoggerMock();
-        $logger
-            ->expects($this->once())
-            ->method('critical')
-            ->with('The message invalid. It must have integrationId set');
-
-        $processor = new ExportContactsStatusUpdateProcessor(
-            $this->createDoctrineHelperStub(),
-            $this->createExportManagerMock(),
-            $this->createQueueExportManagerMock(),
-            new JobRunner(),
-            $this->createMock(TokenStorageInterface::class),
-            $logger,
-            $this->createJobProcessorMock()
-        );
-
-        /** @var SessionInterface|\PHPUnit\Framework\MockObject\MockObject $session */
-        $session = $this->createMock(SessionInterface::class);
-        $status = $processor->process($message, $session);
-
-        $this->assertEquals(MessageProcessorInterface::REJECT, $status);
-    }
-
-    public function testThrowIfMessageBodyInvalidJson()
-    {
-        $this->expectException(\JsonException::class);
-
-        $processor = new ExportContactsStatusUpdateProcessor(
-            $this->createDoctrineHelperStub(),
-            $this->createExportManagerMock(),
-            $this->createQueueExportManagerMock(),
-            new JobRunner(),
-            $this->createMock(TokenStorageInterface::class),
-            $this->createLoggerMock(),
-            $this->createJobProcessorMock()
-        );
-
-        $message = new Message();
-        $message->setBody('[}');
-
-        /** @var SessionInterface|\PHPUnit\Framework\MockObject\MockObject $session */
-        $session = $this->createMock(SessionInterface::class);
-        $processor->process($message, $session);
-    }
-
-    public function testShouldRejectMessageIfIntegrationNotExist()
+    public function testShouldRejectMessageIfIntegrationNotExist(): void
     {
         $entityManagerMock = $this->createEntityManagerStub();
         $entityManagerMock
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('find')
-            ->with(Integration::class, 'theIntegrationId')
+            ->with(Integration::class, PHP_INT_MAX)
             ->willReturn(null);
 
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
 
         $message = new Message();
-        $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
+        $message->setBody(['integrationId' => PHP_INT_MAX]);
 
         $logger = $this->createLoggerMock();
         $logger
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('error')
-            ->with('The integration not found: theIntegrationId');
+            ->with('The integration not found: ' . PHP_INT_MAX);
 
         $processor = new ExportContactsStatusUpdateProcessor(
             $doctrineHelperStub,
@@ -150,29 +99,29 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
         $session = $this->createMock(SessionInterface::class);
         $status = $processor->process($message, $session);
 
-        $this->assertEquals(MessageProcessorInterface::REJECT, $status);
+        self::assertEquals(MessageProcessorInterface::REJECT, $status);
     }
 
-    public function testShouldRejectMessageIfIntegrationIsNotEnabled()
+    public function testShouldRejectMessageIfIntegrationIsNotEnabled(): void
     {
         $integration = new Integration();
         $integration->setEnabled(false);
 
         $entityManagerMock = $this->createEntityManagerStub();
         $entityManagerMock
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('find')
-            ->with(Integration::class, 'theIntegrationId')
+            ->with(Integration::class, 1)
             ->willReturn($integration);
 
         $message = new Message();
-        $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
+        $message->setBody(['integrationId' => 1]);
 
         $logger = $this->createLoggerMock();
         $logger
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('error')
-            ->with('The integration is not enabled: theIntegrationId');
+            ->with('The integration is not enabled: 1');
 
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
 
@@ -190,10 +139,10 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
         $session = $this->createMock(SessionInterface::class);
         $status = $processor->process($message, $session);
 
-        $this->assertEquals(MessageProcessorInterface::REJECT, $status);
+        self::assertEquals(MessageProcessorInterface::REJECT, $status);
     }
 
-    public function testShouldDoNothingIfExportFinishedAndErrorsProcessed()
+    public function testShouldDoNothingIfExportFinishedAndErrorsProcessed(): void
     {
         $integration = new Integration();
         $integration->setEnabled(true);
@@ -201,9 +150,9 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
 
         $entityManagerMock = $this->createEntityManagerStub();
         $entityManagerMock
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('find')
-            ->with(Integration::class, 'theIntegrationId')
+            ->with(Integration::class, 1)
             ->willReturn($integration);
 
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
@@ -236,13 +185,13 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
         );
 
         $message = new Message();
-        $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
+        $message->setBody(['integrationId' => 1]);
 
         /** @var SessionInterface|\PHPUnit\Framework\MockObject\MockObject $session */
         $session = $this->createMock(SessionInterface::class);
         $status = $processor->process($message, $session);
 
-        $this->assertEquals(MessageProcessorInterface::ACK, $status);
+        self::assertEquals(MessageProcessorInterface::ACK, $status);
     }
 
     /**
@@ -250,7 +199,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
      * @param bool $processResult
      * @param string $expectedConsumptionStatus
      */
-    public function testShouldUpdateExportResultsIfExportIsNotFinished($processResult, $expectedConsumptionStatus)
+    public function testShouldUpdateExportResultsIfExportIsNotFinished($processResult, $expectedConsumptionStatus): void
     {
         $integration = new Integration();
         $integration->setEnabled(true);
@@ -258,9 +207,9 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
 
         $entityManagerMock = $this->createEntityManagerStub();
         $entityManagerMock
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('find')
-            ->with(Integration::class, 'theIntegrationId')
+            ->with(Integration::class, 1)
             ->willReturn($integration);
 
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
@@ -294,13 +243,13 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
         );
 
         $message = new Message();
-        $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
+        $message->setBody(['integrationId' => 1]);
 
         /** @var SessionInterface|\PHPUnit\Framework\MockObject\MockObject $session */
         $session = $this->createMock(SessionInterface::class);
         $status = $processor->process($message, $session);
 
-        $this->assertEquals($expectedConsumptionStatus, $status);
+        self::assertEquals($expectedConsumptionStatus, $status);
     }
 
     /**
@@ -308,7 +257,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
      * @param bool $processResult
      * @param string $expectedConsumptionStatus
      */
-    public function testShouldProcessExportFaultsIfExportFinished($processResult, $expectedConsumptionStatus)
+    public function testShouldProcessExportFaultsIfExportFinished($processResult, $expectedConsumptionStatus): void
     {
         $integration = new Integration();
         $integration->setEnabled(true);
@@ -316,9 +265,9 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
 
         $entityManagerMock = $this->createEntityManagerStub();
         $entityManagerMock
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('find')
-            ->with(Integration::class, 'theIntegrationId')
+            ->with(Integration::class, 1)
             ->willReturn($integration);
 
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
@@ -352,13 +301,13 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
         );
 
         $message = new Message();
-        $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
+        $message->setBody(['integrationId' => 1]);
 
         /** @var SessionInterface|\PHPUnit\Framework\MockObject\MockObject $session */
         $session = $this->createMock(SessionInterface::class);
         $status = $processor->process($message, $session);
 
-        $this->assertEquals($expectedConsumptionStatus, $status);
+        self::assertEquals($expectedConsumptionStatus, $status);
     }
 
     public function statusDataProvider()
@@ -367,7 +316,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
         yield 'fail' => [false, MessageProcessorInterface::REJECT];
     }
 
-    public function testShouldRejectMessageIfIntegrationIsInProgress()
+    public function testShouldRejectMessageIfIntegrationIsInProgress(): void
     {
         $integration = new Integration();
         $integration->setEnabled(true);
@@ -375,9 +324,9 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
 
         $entityManagerMock = $this->createEntityManagerStub();
         $entityManagerMock
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('find')
-            ->with(Integration::class, 'theIntegrationId')
+            ->with(Integration::class, 1)
             ->willReturn($integration);
 
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
@@ -406,26 +355,26 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
         );
 
         $message = new Message();
-        $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
+        $message->setBody(['integrationId' => 1]);
 
         /** @var SessionInterface|\PHPUnit\Framework\MockObject\MockObject $session */
         $session = $this->createMock(SessionInterface::class);
         $status = $processor->process($message, $session);
 
-        $this->assertEquals(MessageProcessorInterface::REJECT, $status);
+        self::assertEquals(MessageProcessorInterface::REJECT, $status);
     }
 
-    public function testShouldRunExportAsUniqueJob()
+    public function testShouldRunExportAsUniqueJob(): void
     {
-        $integration = $this->getEntity(Integration::class, ['id' => 'theIntegrationId']);
+        $integration = $this->getEntity(Integration::class, ['id' => 1]);
         $integration->setEnabled(true);
         $integration->setOrganization(new Organization());
 
         $entityManagerMock = $this->createEntityManagerStub();
         $entityManagerMock
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('find')
-            ->with(Integration::class, 'theIntegrationId')
+            ->with(Integration::class, 1)
             ->willReturn($integration);
 
         $doctrineHelperStub = $this->createDoctrineHelperStub($entityManagerMock);
@@ -443,7 +392,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
         );
 
         $message = new Message();
-        $message->setBody(JSON::encode(['integrationId' => 'theIntegrationId']));
+        $message->setBody(['integrationId' => 1]);
         $message->setMessageId('theMessageId');
 
         /** @var SessionInterface|\PHPUnit\Framework\MockObject\MockObject $session */
@@ -452,7 +401,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
 
         $uniqueJobs = $jobRunner->getRunUniqueJobs();
         self::assertCount(1, $uniqueJobs);
-        self::assertEquals('oro_dotmailer:export_contacts_status_update:theIntegrationId', $uniqueJobs[0]['jobName']);
+        self::assertEquals('oro_dotmailer:export_contacts_status_update:1', $uniqueJobs[0]['jobName']);
         self::assertEquals('theMessageId', $uniqueJobs[0]['ownerId']);
     }
 
@@ -465,13 +414,13 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
 
         $connectionMock = $this->createMock(Connection::class);
         $connectionMock
-            ->expects($this->any())
+            ->expects(self::any())
             ->method('getConfiguration')
             ->willReturn($configuration);
 
         $entityManagerMock = $this->createMock(EntityManagerInterface::class);
         $entityManagerMock
-            ->expects($this->any())
+            ->expects(self::any())
             ->method('getConnection')
             ->willReturn($connectionMock);
 
@@ -485,7 +434,7 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
     {
         $helperMock = $this->createMock(DoctrineHelper::class);
         $helperMock
-            ->expects($this->any())
+            ->expects(self::any())
             ->method('getEntityManagerForClass')
             ->willReturn($entityManager);
 
