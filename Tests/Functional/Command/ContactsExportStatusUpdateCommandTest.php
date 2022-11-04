@@ -2,7 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Command;
 
-use Oro\Bundle\DotmailerBundle\Async\Topics;
+use Oro\Bundle\DotmailerBundle\Async\Topic\ExportContactsStatusUpdateTopic;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\MessageQueueBundle\Test\Functional\MessageQueueExtension;
@@ -24,31 +24,31 @@ class ContactsExportStatusUpdateCommandTest extends WebTestCase
         $this->loadFixtures([LoadChannelData::class]);
     }
 
-    public function testShouldOutputHelpForTheCommand()
+    public function testShouldOutputHelpForTheCommand(): void
     {
-        $result = $this->runCommand('oro:cron:dotmailer:export-status:update', ['--help']);
+        $result = self::runCommand('oro:cron:dotmailer:export-status:update', ['--help']);
 
         self::assertStringContainsString('Usage:', $result);
         self::assertStringContainsString('oro:cron:dotmailer:export-status:update', $result);
     }
 
-    public function testShouldSendExportContactStatusUpdatesToMessageQueue()
+    public function testShouldSendExportContactStatusUpdatesToMessageQueue(): void
     {
-        $result = $this->runCommand('oro:cron:dotmailer:export-status:update');
+        $result = self::runCommand('oro:cron:dotmailer:export-status:update');
 
         self::assertStringContainsString('Send export contacts status update for integration:', $result);
         self::assertStringContainsString('Completed', $result);
 
-        self::assertMessagesCount(Topics::EXPORT_CONTACTS_STATUS_UPDATE, 4);
+        self::assertMessagesCount(ExportContactsStatusUpdateTopic::getName(), 4);
     }
 
-    public function testShouldSkipWhenIntegrationSyncInProgress()
+    public function testShouldSkipWhenIntegrationSyncInProgress(): void
     {
         /** @var Channel $integration */
         $integration = $this->getReference('oro_dotmailer.channel.first');
 
         /** @var JobProcessor $jobProcessor */
-        $jobProcessor = $this->getContainer()->get('oro_message_queue.job.processor');
+        $jobProcessor = self::getContainer()->get('oro_message_queue.job.processor');
         $job = $jobProcessor->findOrCreateRootJob(
             uniqid('dm', true),
             'oro_integration:sync_integration:'.$integration->getId(),
@@ -57,7 +57,7 @@ class ContactsExportStatusUpdateCommandTest extends WebTestCase
 
         self::assertNotNull($job->getId());
 
-        $result = $this->runCommand('oro:cron:dotmailer:export-status:update');
+        $result = self::runCommand('oro:cron:dotmailer:export-status:update');
 
         self::assertStringContainsString('Send export contacts status update for integration:', $result);
         self::assertStringContainsString(
@@ -66,6 +66,6 @@ class ContactsExportStatusUpdateCommandTest extends WebTestCase
         );
         self::assertStringContainsString('Completed', $result);
 
-        self::assertMessagesCount(Topics::EXPORT_CONTACTS_STATUS_UPDATE, 3);
+        self::assertMessagesCount(ExportContactsStatusUpdateTopic::getName(), 3);
     }
 }

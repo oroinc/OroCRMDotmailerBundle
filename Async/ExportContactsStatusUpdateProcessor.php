@@ -3,6 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\Async;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Oro\Bundle\DotmailerBundle\Async\Topic\ExportContactsStatusUpdateTopic;
 use Oro\Bundle\DotmailerBundle\Model\ExportManager;
 use Oro\Bundle\DotmailerBundle\Model\QueueExportManager;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
@@ -15,7 +16,6 @@ use Oro\Component\MessageQueue\Job\JobProcessor;
 use Oro\Component\MessageQueue\Job\JobRunner;
 use Oro\Component\MessageQueue\Transport\MessageInterface;
 use Oro\Component\MessageQueue\Transport\SessionInterface;
-use Oro\Component\MessageQueue\Util\JSON;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -79,10 +79,9 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
      */
     public function process(MessageInterface $message, SessionInterface $session)
     {
-        $body = JSON::decode($message->getBody());
-        $body = array_replace_recursive(['integrationId' => null], $body);
+        $messageBody = $message->getBody();
 
-        $integration = $this->getIntegration($body);
+        $integration = $this->getIntegration($messageBody);
         if (!$integration) {
             return self::REJECT;
         }
@@ -98,7 +97,7 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
 
         $ownerId = $message->getMessageId();
 
-        $result = $this->jobRunner->runUnique($ownerId, $jobName, function () use ($body, $integration) {
+        $result = $this->jobRunner->runUnique($ownerId, $jobName, function () use ($integration) {
             /** @var EntityManagerInterface $em */
             $em = $this->doctrineHelper->getEntityManagerForClass(Integration::class);
 
@@ -130,12 +129,6 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
      */
     private function getIntegration(array $body)
     {
-        if (!$body['integrationId']) {
-            $this->logger->critical('The message invalid. It must have integrationId set');
-
-            return null;
-        }
-
         /** @var EntityManagerInterface $em */
         $em = $this->doctrineHelper->getEntityManagerForClass(Integration::class);
 
@@ -165,6 +158,6 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
      */
     public static function getSubscribedTopics()
     {
-        return [Topics::EXPORT_CONTACTS_STATUS_UPDATE];
+        return [ExportContactsStatusUpdateTopic::getName()];
     }
 }
