@@ -17,16 +17,9 @@ use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class LoadChannelData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
+class LoadChannelData extends AbstractFixture implements DependentFixtureInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
     /**
      * @var array
      */
@@ -43,6 +36,7 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
                 ExportContactConnector::TYPE,
                 DataFieldConnector::TYPE,
             ],
+            'enabled' => true,
             'transport' => 'oro_dotmailer.transport.first',
             'reference' => 'oro_dotmailer.channel.first'
         ],
@@ -59,6 +53,7 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
                 CampaignClickConnector::TYPE,
                 CampaignOpenConnector::TYPE
             ],
+            'enabled' => true,
             'transport' => 'oro_dotmailer.transport.second',
             'reference' => 'oro_dotmailer.channel.second'
         ],
@@ -73,6 +68,7 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
                 ContactConnector::TYPE,
                 ExportContactConnector::TYPE
             ],
+            'enabled' => true,
             'transport' => 'oro_dotmailer.transport.third',
             'reference' => 'oro_dotmailer.channel.third'
         ],
@@ -87,8 +83,24 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
                 ContactConnector::TYPE,
                 ExportContactConnector::TYPE
             ],
+            'enabled' => true,
             'transport' => 'oro_dotmailer.transport.fourth',
             'reference' => 'oro_dotmailer.channel.fourth'
+        ],
+        [
+            'name' => 'disabled channel 1',
+            'connectors' => [
+                CampaignConnector::TYPE,
+                AddressBookConnector::TYPE,
+                UnsubscribedContactConnector::TYPE,
+                ActivityContactConnector::TYPE,
+                CampaignSummaryConnector::TYPE,
+                ContactConnector::TYPE,
+                ExportContactConnector::TYPE
+            ],
+            'enabled' => false,
+            'transport' => 'oro_dotmailer.transport.fifth',
+            'reference' => 'oro_dotmailer.channel.disabled.first'
         ]
     ];
 
@@ -107,7 +119,7 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
             $channel->setType(ChannelType::TYPE);
             $channel->setName($item['name']);
             $channel->setConnectors($item['connectors']);
-            $channel->setEnabled(true);
+            $channel->setEnabled($item['enabled'] ?? true);
             $channel->setTransport($this->getReference($item['transport']));
 
             $manager->persist($channel);
@@ -121,18 +133,10 @@ class LoadChannelData extends AbstractFixture implements ContainerAwareInterface
     /**
      * {@inheritdoc}
      */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getDependencies()
     {
         return [
-            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadTransportData'
+            LoadTransportData::class,
         ];
     }
 }
