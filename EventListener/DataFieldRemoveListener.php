@@ -2,12 +2,15 @@
 
 namespace Oro\Bundle\DotmailerBundle\EventListener;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Model\DataFieldManager;
 
+/**
+ * Listens to DataField Entity pre-remove event and deletes info in the Dotmailer
+ */
 class DataFieldRemoveListener
 {
     /** @var DataFieldManager */
