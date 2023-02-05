@@ -8,20 +8,18 @@ use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationSelectType;
 use Oro\Bundle\EntityExtendBundle\Form\Type\EnumSelectType;
 use Oro\Bundle\EntityExtendBundle\Tests\Unit\Fixtures\TestEnumValue;
 use Oro\Bundle\EntityExtendBundle\Tests\Unit\Form\Extension\Stub\DynamicFieldsExtensionStub;
+use Oro\Bundle\EntityExtendBundle\Tests\Unit\Form\Type\Stub\EnumSelectTypeStub;
 use Oro\Bundle\FormBundle\Tests\Unit\Stub\TooltipFormExtensionStub;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Oro\Component\Testing\Unit\EntityTrait;
+use Oro\Component\Testing\ReflectionUtil;
 use Oro\Component\Testing\Unit\Form\Extension\Stub\FormTypeValidatorExtensionStub;
-use Oro\Component\Testing\Unit\Form\Type\Stub\EntityType;
-use Oro\Component\Testing\Unit\Form\Type\Stub\EnumSelectType as EnumSelectTypeStub;
+use Oro\Component\Testing\Unit\Form\Type\Stub\EntityTypeStub;
 use Oro\Component\Testing\Unit\FormIntegrationTestCase;
 use Oro\Component\Testing\Unit\PreloadedExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 
 class AddressBookTypeTest extends FormIntegrationTestCase
 {
-    use EntityTrait;
-
     /**
      * {@inheritDoc}
      */
@@ -31,10 +29,7 @@ class AddressBookTypeTest extends FormIntegrationTestCase
             new PreloadedExtension(
                 [
 
-                    IntegrationSelectType::class => new EntityType(
-                        ['1' => $this->getEntity(Channel::class, ['id' => 1])],
-                        IntegrationSelectType::NAME
-                    ),
+                    IntegrationSelectType::class => new EntityTypeStub(['1' => $this->getChannel(1)]),
                     EnumSelectType::class => new EnumSelectTypeStub([
                         new TestEnumValue('Public', 'Public'),
                         new TestEnumValue('Private', 'Private')
@@ -53,6 +48,14 @@ class AddressBookTypeTest extends FormIntegrationTestCase
                 ]
             )
         ];
+    }
+
+    private function getChannel(int $id): Channel
+    {
+        $channel = new Channel();
+        ReflectionUtil::setId($channel, $id);
+
+        return $channel;
     }
 
     public function testBuildForm()

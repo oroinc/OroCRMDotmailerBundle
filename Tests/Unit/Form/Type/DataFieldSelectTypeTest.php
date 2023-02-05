@@ -4,24 +4,23 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\Type;
 
 use Oro\Bundle\ChannelBundle\Form\Type\CreateOrSelectInlineChannelAwareType;
 use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldSelectType;
-use Oro\Component\Testing\Unit\Form\Type\Stub\EntityType;
+use Oro\Component\Testing\Unit\Form\Type\Stub\EntityTypeStub;
 use Oro\Component\Testing\Unit\FormIntegrationTestCase;
 use Oro\Component\Testing\Unit\PreloadedExtension;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 
 class DataFieldSelectTypeTest extends FormIntegrationTestCase
 {
     /**
-     * @return array
+     * {@inheritDoc}
      */
-    protected function getExtensions()
+    protected function getExtensions(): array
     {
-        $entityType = new EntityType([], CreateOrSelectInlineChannelAwareType::NAME);
-
         return [
             new PreloadedExtension(
                 [
-                    CreateOrSelectInlineChannelAwareType::class => $entityType
+                    CreateOrSelectInlineChannelAwareType::class => new EntityTypeStub()
                 ],
                 []
             )
@@ -49,7 +48,7 @@ class DataFieldSelectTypeTest extends FormIntegrationTestCase
         $fieldNameView->vars['full_name'] = 'full_channel_field_name';
         $formView->parent->parent->children['channel_field_name'] = $fieldNameView;
 
-        $form = $this->createMock('Symfony\Component\Form\FormInterface');
+        $form = $this->createMock(FormInterface::class);
 
         $formType = new DataFieldSelectType();
         $formType->buildView(

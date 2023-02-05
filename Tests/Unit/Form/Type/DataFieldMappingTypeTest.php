@@ -14,9 +14,9 @@ use Oro\Bundle\FormBundle\Form\Type\CollectionType;
 use Oro\Bundle\FormBundle\Tests\Unit\Stub\TooltipFormExtensionStub;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\MarketingListBundle\Form\Type\ContactInformationEntityChoiceType;
-use Oro\Component\Testing\Unit\EntityTrait;
+use Oro\Component\Testing\ReflectionUtil;
 use Oro\Component\Testing\Unit\Form\Extension\Stub\FormTypeValidatorExtensionStub;
-use Oro\Component\Testing\Unit\Form\Type\Stub\EntityType;
+use Oro\Component\Testing\Unit\Form\Type\Stub\EntityTypeStub;
 use Oro\Component\Testing\Unit\FormIntegrationTestCase;
 use Oro\Component\Testing\Unit\PreloadedExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -25,10 +25,7 @@ use Symfony\Component\Form\FormView;
 
 class DataFieldMappingTypeTest extends FormIntegrationTestCase
 {
-    use EntityTrait;
-
-    /** @var DataFieldMappingType */
-    private $formType;
+    private DataFieldMappingType $formType;
 
     protected function setUp(): void
     {
@@ -51,17 +48,12 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
             new PreloadedExtension(
                 [
                     $this->formType,
-                    IntegrationSelectType::class => new EntityType(
-                        ['1' => $this->getEntity(Channel::class, ['id' => 1])],
-                        IntegrationSelectType::NAME
-                    ),
-                    ContactInformationEntityChoiceType::class => new EntityType(
-                        ['lead' => 'leadClass'],
-                        ContactInformationEntityChoiceType::NAME
-                    ),
-                    DataFieldSelectType::class => new EntityType(
-                        ['1' => $this->getEntity(DataField::class, ['id' => 1])],
-                        DataFieldSelectType::NAME,
+                    IntegrationSelectType::class => new EntityTypeStub([
+                        '1' => $this->getChannel(1)
+                    ]),
+                    ContactInformationEntityChoiceType::class => new EntityTypeStub(['lead' => 'leadClass']),
+                    DataFieldSelectType::class => new EntityTypeStub(
+                        ['1' => $this->getDataField(1)],
                         ['channel_field' => '']
                     ),
                     new DataFieldMappingConfigType(DataFieldMappingConfig::class),
@@ -77,6 +69,22 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
         ];
     }
 
+    private function getChannel(int $id): Channel
+    {
+        $channel = new Channel();
+        ReflectionUtil::setId($channel, $id);
+
+        return $channel;
+    }
+
+    private function getDataField(int $id): DataField
+    {
+        $dataField = new DataField();
+        ReflectionUtil::setId($dataField, $id);
+
+        return $dataField;
+    }
+
     public function testSubmit()
     {
         $submittedData = [
@@ -90,12 +98,12 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
         ];
 
         $expectedEntity = new DataFieldMapping();
-        $expectedEntity->setChannel($this->getEntity(Channel::class, ['id' => 1]));
+        $expectedEntity->setChannel($this->getChannel(1));
         $expectedEntity->setSyncPriority(100);
         $expectedEntity->setEntity('leadClass');
         $config = new DataFieldMappingConfig();
         $config->setEntityFields('field');
-        $config->setDataField($this->getEntity(DataField::class, ['id' => 1]));
+        $config->setDataField($this->getDataField(1));
         $config->setIsTwoWaySync(true);
         $expectedEntity->addConfig($config);
 
