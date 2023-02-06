@@ -3,53 +3,33 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Stub;
 
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
+use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 
 class DataFieldStub extends DataField
 {
-    /**
-     * @var object
-     */
-    protected $type;
+    private ?AbstractEnumValue $type = null;
+    private ?AbstractEnumValue $visibility = null;
 
-    /**
-     * @var object
-     */
-    protected $visibility;
-
-    /**
-     * @return object
-     */
-    public function getType()
+    public function getType(): ?AbstractEnumValue
     {
         return $this->type;
     }
 
-    /**
-     * @param object $type
-     * @return DataFieldStub
-     */
-    public function setType($type)
+    public function setType(AbstractEnumValue $enumValue): self
     {
-        $this->type = $type;
+        $this->type = $enumValue;
 
         return $this;
     }
 
-    /**
-     * @return object
-     */
-    public function getVisibility()
+    public function getVisibility(): ?AbstractEnumValue
     {
         return $this->visibility;
     }
 
-    /**
-     * @param object $visibility
-     * @return DataFieldStub
-     */
-    public function setVisibility($visibility)
+    public function setVisibility(AbstractEnumValue $enumValue): self
     {
-        $this->visibility = $visibility;
+        $this->visibility = $enumValue;
 
         return $this;
     }
