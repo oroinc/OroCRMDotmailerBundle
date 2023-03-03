@@ -5,14 +5,18 @@ namespace Oro\Bundle\DotmailerBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Oro\Bundle\DotmailerBundle\Model\ExtendAddressBook;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
+use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
+use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityTrait;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 /**
+ * Address book entity.
+ *
  * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookRepository")
  * @ORM\Table(
  *      name="orocrm_dm_address_book",
@@ -41,10 +45,15 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  *      }
  *  }
  * )
+ * @method AbstractEnumValue getVisibility()
+ * @method AddressBook       setVisibility(AbstractEnumValue $enumValue)
+ * @method AbstractEnumValue getSyncStatus()
+ * @method AddressBook       setSyncStatus(AbstractEnumValue $enumValue)
  */
-class AddressBook extends ExtendAddressBook implements OriginAwareInterface
+class AddressBook implements OriginAwareInterface, ExtendEntityInterface
 {
     use OriginTrait;
+    use ExtendEntityTrait;
 
     /** constant for enum dm_ab_visibility */
     const VISIBILITY_PRIVATE                    = 'Private';
@@ -237,7 +246,6 @@ class AddressBook extends ExtendAddressBook implements OriginAwareInterface
      */
     public function __construct()
     {
-        parent::__construct();
         $this->campaigns = new ArrayCollection();
         $this->addressBookContacts = new ArrayCollection();
         $this->addressBookContactsExports = new ArrayCollection();

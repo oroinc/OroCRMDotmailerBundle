@@ -5,9 +5,11 @@ namespace Oro\Bundle\DotmailerBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Oro\Bundle\DotmailerBundle\Model\ExtendContact;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
+use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
+use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityTrait;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
@@ -40,10 +42,18 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  *  }
  * )
  * @SuppressWarnings(PHPMD.TooManyFields)
+ *
+ * @method AbstractEnumValue getOptInType()
+ * @method Contact setOptInType(AbstractEnumValue $enumValue)
+ * @method AbstractEnumValue getEmailType()
+ * @method Contact setEmailType(AbstractEnumValue $enumValue)
+ * @method AbstractEnumValue getStatus()
+ * @method Contact setStatus(AbstractEnumValue $enumValue)
  */
-class Contact extends ExtendContact implements OriginAwareInterface
+class Contact implements OriginAwareInterface, ExtendEntityInterface
 {
     use OriginTrait;
+    use ExtendEntityTrait;
 
     /** constant for enum dm_cnt_opt_in_type */
     const OPT_IN_TYPE_UNKNOWN                       = 'Unknown';
@@ -215,7 +225,6 @@ class Contact extends ExtendContact implements OriginAwareInterface
      */
     public function __construct()
     {
-        parent::__construct();
         $this->activities = new ArrayCollection();
         $this->addressBookContacts = new ArrayCollection();
     }
