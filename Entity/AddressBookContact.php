@@ -3,11 +3,15 @@
 namespace Oro\Bundle\DotmailerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Oro\Bundle\DotmailerBundle\Model\ExtendAddressBookContact;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
+use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityTrait;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 /**
+ * Address book contact entity.
+ *
  * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactRepository")
  * @ORM\Table(
  *      name="orocrm_dm_ab_contact",
@@ -23,9 +27,15 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
  *     }
  * )
  * @Config()
+ * @method AbstractEnumValue getStatus()
+ * @method AddressBookContact setStatus(AbstractEnumValue $enumValue)
+ * @method AbstractEnumValue getExportOperationType()
+ * @method AddressBookContact setExportOperationType(AbstractEnumValue $enumValue)
  */
-class AddressBookContact extends ExtendAddressBookContact implements ChannelAwareInterface
+class AddressBookContact implements ChannelAwareInterface, ExtendEntityInterface
 {
+    use ExtendEntityTrait;
+
     const EXPORT_NEW_CONTACT = 'new';
     const EXPORT_ADD_TO_ADDRESS_BOOK = 'add';
     const EXPORT_UPDATE_CONTACT = 'update';

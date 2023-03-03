@@ -5,13 +5,16 @@ namespace Oro\Bundle\DotmailerBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Oro\Bundle\DotmailerBundle\Model\ExtendDataFieldMapping;
 use Oro\Bundle\EntityBundle\EntityProperty\DatesAwareTrait;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
+use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityTrait;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 /**
+ * Store data field mapping in a database.
+ *
  * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\DataFieldMappingRepository")
  * @ORM\Table(
  *      name="orocrm_dm_df_mapping",
@@ -38,9 +41,10 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  *  }
  * )
  */
-class DataFieldMapping extends ExtendDataFieldMapping
+class DataFieldMapping implements ExtendEntityInterface
 {
     use DatesAwareTrait;
+    use ExtendEntityTrait;
 
     /**
      * @var int
@@ -95,8 +99,6 @@ class DataFieldMapping extends ExtendDataFieldMapping
      */
     public function __construct()
     {
-        parent::__construct();
-
         $this->configs  = new ArrayCollection();
     }
 

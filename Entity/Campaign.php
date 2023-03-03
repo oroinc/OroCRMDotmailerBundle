@@ -6,9 +6,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
-use Oro\Bundle\DotmailerBundle\Model\ExtendCampaign;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
+use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
+use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityTrait;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
@@ -42,10 +44,16 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  * )
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.TooManyFields)
+ *
+ * @method AbstractEnumValue getReplyAction()
+ * @method Campaign setReplyAction(AbstractEnumValue $enumValue)
+ * @method AbstractEnumValue getStatus()
+ * @method Campaign setStatus(AbstractEnumValue $enumValue)
  */
-class Campaign extends ExtendCampaign implements OriginAwareInterface
+class Campaign implements OriginAwareInterface, ExtendEntityInterface
 {
     use OriginTrait;
+    use ExtendEntityTrait;
 
     /** constant for enum dm_cmp_reply_action */
     const REPLY_ACTION_UNSET                        = 'Unset';
@@ -268,7 +276,6 @@ class Campaign extends ExtendCampaign implements OriginAwareInterface
      */
     public function __construct()
     {
-        parent::__construct();
         $this->addressBooks = new ArrayCollection();
         $this->activities = new ArrayCollection();
     }

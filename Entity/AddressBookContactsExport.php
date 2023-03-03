@@ -3,8 +3,10 @@
 namespace Oro\Bundle\DotmailerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Oro\Bundle\DotmailerBundle\Model\ExtendAddressBookContactsExport;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
+use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityTrait;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 /**
@@ -19,9 +21,14 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
  * )
  * @ORM\HasLifecycleCallbacks()
  * @Config()
+ *
+ * @method AbstractEnumValue getStatus()
+ * @method AddressBookContactsExport setStatus(AbstractEnumValue $enumValue)
  */
-class AddressBookContactsExport extends ExtendAddressBookContactsExport implements ChannelAwareInterface
+class AddressBookContactsExport implements ChannelAwareInterface, ExtendEntityInterface
 {
+    use ExtendEntityTrait;
+
     const STATUS_NOT_FINISHED = 'NotFinished';
     const STATUS_FINISH = 'Finished';
     const STATUS_REJECTED_BY_WATCHDOG = 'RejectedByWatchdog';
