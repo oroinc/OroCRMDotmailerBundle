@@ -2,22 +2,31 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\DependencyInjection;
 
-use Oro\Bundle\DotmailerBundle\Controller\Api\Rest\DataFieldController;
-use Oro\Bundle\DotmailerBundle\Controller\Api\Rest\DataFieldMappingController;
 use Oro\Bundle\DotmailerBundle\DependencyInjection\OroDotmailerExtension;
-use Oro\Bundle\TestFrameworkBundle\Test\DependencyInjection\ExtensionTestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class OroDotmailerExtensionTest extends ExtensionTestCase
+class OroDotmailerExtensionTest extends \PHPUnit\Framework\TestCase
 {
     public function testLoad(): void
     {
-        $this->loadExtension(new OroDotmailerExtension());
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.environment', 'prod');
 
-        $expectedDefinitions = [
-            DataFieldController::class,
-            DataFieldMappingController::class,
-        ];
+        $extension = new OroDotmailerExtension();
+        $extension->load([], $container);
 
-        $this->assertDefinitionsLoaded($expectedDefinitions);
+        self::assertNotEmpty($container->getDefinitions());
+        self::assertSame(
+            [
+                [
+                    'settings' => [
+                        'resolved' => true,
+                        'datafields_sync_interval' => ['value' => '1 day', 'scope' => 'app'],
+                        'force_sync_for_virtual_fields' => ['value' => 'VirtualOnly', 'scope' => 'app'],
+                    ]
+                ]
+            ],
+            $container->getExtensionConfig('oro_dotmailer')
+        );
     }
 }
