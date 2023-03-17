@@ -23,13 +23,10 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Bundle\WorkflowBundle\Model\EntityAwareInterface;
 use Oro\Component\ConfigExpression\ContextAccessor;
 use Oro\Component\Testing\ReflectionUtil;
-use Oro\Component\Testing\Unit\EntityTrait;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class AddMarketingActivitiesActionTest extends \PHPUnit\Framework\TestCase
 {
-    use EntityTrait;
-
     /** @var ContextAccessor|\PHPUnit\Framework\MockObject\MockObject */
     private $contextAccessor;
 
@@ -157,10 +154,12 @@ class AddMarketingActivitiesActionTest extends \PHPUnit\Framework\TestCase
         $context = $this->createMock(EntityAwareInterface::class);
         $campaign = new Campaign();
         $marketingCampaign = new MarketingCampaign();
-        $emailCampaign = $this->getEntity(EmailCampaign::class, ['id' => 1]);
+        $emailCampaign = new EmailCampaign();
+        ReflectionUtil::setId($emailCampaign, 1);
         $emailCampaign->setCampaign($marketingCampaign);
         $campaign->setEmailCampaign($emailCampaign);
-        $addressBook = $this->getEntity(AddressBook::class, ['id' => 1]);
+        $addressBook = new AddressBook();
+        ReflectionUtil::setId($addressBook, 1);
         $campaign->setAddressBooks(new ArrayCollection([$addressBook]));
         $updatedAt = new \DateTime();
         $activity =  new Activity();

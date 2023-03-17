@@ -19,9 +19,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
 {
-    private EntityFieldProvider|\PHPUnit\Framework\MockObject\MockObject $entityFieldProvider;
+    /** @var EntityFieldProvider|\PHPUnit\Framework\MockObject\MockObject */
+    private $entityFieldProvider;
 
-    private TranslatorInterface|\PHPUnit\Framework\MockObject\MockObject $translator;
+    /** @var TranslatorInterface|\PHPUnit\Framework\MockObject\MockObject */
+    private $translator;
 
     protected function setUp(): void
     {
@@ -30,6 +32,9 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
         parent::setUp();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function createValidator(): DataFieldMappingConfigValidator
     {
         return new DataFieldMappingConfigValidator($this->entityFieldProvider, $this->translator);
@@ -53,10 +58,7 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
             ->method('getEntityFields')
             ->with('entityClass', EntityFieldProvider::OPTION_WITH_VIRTUAL_FIELDS)
             ->willReturn([
-                [
-                    'name' => 'entityFieldName',
-                    'type' => Types::STRING
-                ]
+                ['name' => 'entityFieldName', 'type' => Types::STRING]
             ]);
 
         $this->translator->expects(self::once())
@@ -92,10 +94,7 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
             ->method('getEntityFields')
             ->with('entityClass', EntityFieldProvider::OPTION_WITH_VIRTUAL_FIELDS)
             ->willReturn([
-                [
-                    'name' => 'entityFieldName',
-                    'type' => Types::STRING
-                ]
+                ['name' => 'entityFieldName', 'type' => Types::STRING]
             ]);
 
         $this->translator->expects(self::once())
@@ -131,10 +130,7 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
             ->method('getEntityFields')
             ->with('entityClass', EntityFieldProvider::OPTION_WITH_VIRTUAL_FIELDS)
             ->willReturn([
-                [
-                    'name' => 'entityFieldName',
-                    'type' => Types::STRING
-                ]
+                ['name' => 'entityFieldName', 'type' => Types::STRING]
             ]);
 
         $this->translator->expects(self::once())
@@ -195,10 +191,7 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
             ->method('getEntityFields')
             ->with('entityClass', EntityFieldProvider::OPTION_WITH_VIRTUAL_FIELDS)
             ->willReturn([
-                [
-                    'name' => 'entityFieldName',
-                    'type' => $type
-                ]
+                ['name' => 'entityFieldName', 'type' => $type]
             ]);
 
         $this->translator->expects(self::never())

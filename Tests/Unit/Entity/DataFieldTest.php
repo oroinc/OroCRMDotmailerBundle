@@ -4,20 +4,15 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Entity;
 
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Component\Testing\Unit\EntityTestCaseTrait;
 
 class DataFieldTest extends \PHPUnit\Framework\TestCase
 {
     use EntityTestCaseTrait;
 
-    /**
-     * @var DataField
-     */
-    protected $entity;
+    private DataField $entity;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         $this->entity = new DataField();
@@ -27,7 +22,7 @@ class DataFieldTest extends \PHPUnit\Framework\TestCase
     {
         $now = new \DateTime();
         $channel = new Channel();
-        $organization = $this->createMock('Oro\Bundle\OrganizationBundle\Entity\Organization');
+        $organization = $this->createMock(Organization::class);
         $properties = [
             ['id', 1],
             ['channel', $channel],

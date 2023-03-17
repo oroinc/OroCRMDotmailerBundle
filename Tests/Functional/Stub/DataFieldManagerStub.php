@@ -12,14 +12,14 @@ class DataFieldManagerStub extends DataFieldManager
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function createOriginDataField(DataField $field)
     {
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function removeOriginDataField(DataField $field)
     {

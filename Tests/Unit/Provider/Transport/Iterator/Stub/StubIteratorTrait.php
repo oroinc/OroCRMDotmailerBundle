@@ -4,15 +4,8 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator\Stub
 
 trait StubIteratorTrait
 {
-    /**
-     * @var array
-     */
-    protected $stubItems;
-
-    /**
-     * @var int
-     */
-    protected $loadCount;
+    protected array $stubItems;
+    protected int $loadCount;
 
     public function initStub(array $stubItems)
     {
@@ -20,10 +13,7 @@ trait StubIteratorTrait
         $this->loadCount = 0;
     }
 
-    /**
-     * @return int
-     */
-    public function getLoadCount()
+    public function getLoadCount(): int
     {
         return $this->loadCount;
     }
@@ -33,7 +23,8 @@ trait StubIteratorTrait
      */
     protected function getItems($take, $skip)
     {
-        $this->loadCount += 1;
-        return array_slice($this->stubItems, $skip, $take);
+        ++$this->loadCount;
+
+        return \array_slice($this->stubItems, $skip, $take);
     }
 }

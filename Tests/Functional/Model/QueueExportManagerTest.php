@@ -20,19 +20,13 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
  */
 class QueueExportManagerTest extends AbstractImportExportTestCase
 {
-    /**
-     * @var QueueExportManager
-     */
-    protected $target;
+    private QueueExportManager $target;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->loadFixtures(
-            [
-                LoadAddressBookContactsExportData::class
-            ]
-        );
+        $this->loadFixtures([LoadAddressBookContactsExportData::class]);
+
         $this->target = $this->getContainer()->get('oro_dotmailer.queue_export_manager');
     }
 

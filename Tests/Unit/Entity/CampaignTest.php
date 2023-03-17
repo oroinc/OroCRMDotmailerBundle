@@ -8,6 +8,7 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 use Oro\Bundle\DotmailerBundle\Entity\CampaignSummary;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 /**
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
@@ -15,14 +16,8 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
  */
 class CampaignTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var Campaign
-     */
-    protected $entity;
+    private Campaign $entity;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         $this->entity = new Campaign();
@@ -31,34 +26,34 @@ class CampaignTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider flatPropertiesDataProvider
      */
-    public function testGetSet($property, $value, $expected)
+    public function testGetSet(string $property, mixed $value, mixed $expected)
     {
-        call_user_func_array(array($this->entity, 'set' . ucfirst($property)), array($value));
-        $this->assertEquals($expected, call_user_func_array(array($this->entity, 'get' . ucfirst($property)), array()));
+        call_user_func([$this->entity, 'set' . ucfirst($property)], $value);
+        $this->assertEquals($expected, call_user_func_array([$this->entity, 'get' . ucfirst($property)], []));
     }
 
-    public function flatPropertiesDataProvider()
+    public function flatPropertiesDataProvider(): array
     {
         $now = new \DateTime('now');
         $channel = new Channel();
         $summary = new CampaignSummary();
-        $organization = $this->createMock('Oro\Bundle\OrganizationBundle\Entity\Organization');
+        $organization = $this->createMock(Organization::class);
 
-        return array(
-            'channel' => array('channel', $channel, $channel),
-            'name' => array('name', 'testName', 'testName'),
-            'subject' => array('subject', 'testSubject', 'testSubject'),
-            'fromName' => array('fromName', 'testFrom', 'testFrom'),
-            'fromAddress' => array('fromAddress', 'test@from.com', 'test@from.com'),
-            'htmlContent' => array('htmlContent', 'content', 'content'),
-            'plainTextContent' => array('plainTextContent', 'content', 'content'),
-            'replyToAddress' => array('replyToAddress', 'test@reply.com', 'test@reply.com'),
-            'isSplitTest' => array('isSplitTest', false, false),
-            'createdAt' => array('createdAt', $now, $now),
-            'updatedAt' => array('updatedAt', $now, $now),
-            'owner' => array('owner', $organization, $organization),
-            'campaignSummary' => array('campaignSummary', $summary, $summary),
-        );
+        return [
+            'channel' => ['channel', $channel, $channel],
+            'name' => ['name', 'testName', 'testName'],
+            'subject' => ['subject', 'testSubject', 'testSubject'],
+            'fromName' => ['fromName', 'testFrom', 'testFrom'],
+            'fromAddress' => ['fromAddress', 'test@from.com', 'test@from.com'],
+            'htmlContent' => ['htmlContent', 'content', 'content'],
+            'plainTextContent' => ['plainTextContent', 'content', 'content'],
+            'replyToAddress' => ['replyToAddress', 'test@reply.com', 'test@reply.com'],
+            'isSplitTest' => ['isSplitTest', false, false],
+            'createdAt' => ['createdAt', $now, $now],
+            'updatedAt' => ['updatedAt', $now, $now],
+            'owner' => ['owner', $organization, $organization],
+            'campaignSummary' => ['campaignSummary', $summary, $summary],
+        ];
     }
 
     public function testOriginIdWorks()

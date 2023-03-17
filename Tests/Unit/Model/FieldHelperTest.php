@@ -2,6 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Model;
 
+use Doctrine\ORM\Query\Expr\From;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
@@ -9,21 +10,15 @@ use Oro\Bundle\EntityBundle\Provider\VirtualFieldProviderInterface;
 
 class FieldHelperTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|VirtualFieldProviderInterface
-     */
-    protected $virtualFieldProvider;
+    /** @var VirtualFieldProviderInterface|\PHPUnit\Framework\MockObject\MockObject */
+    private $virtualFieldProvider;
 
-    /**
-     * @var FieldHelper
-     */
-    protected $helper;
+    /** @var FieldHelper */
+    private $helper;
 
     protected function setUp(): void
     {
-        $this->virtualFieldProvider = $this
-            ->getMockBuilder('Oro\Bundle\EntityBundle\Provider\VirtualFieldProviderInterface')
-            ->getMock();
+        $this->virtualFieldProvider = $this->createMock(VirtualFieldProviderInterface::class);
 
         $this->helper = new FieldHelper($this->virtualFieldProvider);
     }
@@ -34,86 +29,62 @@ class FieldHelperTest extends \PHPUnit\Framework\TestCase
         $fieldName = 'some';
         $alias = 'alias1';
 
-        $from = $this->getMockBuilder('Doctrine\ORM\Query\Expr\From')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $from = $this->createMock(From::class);
         $from->expects($this->once())
             ->method('getAlias')
-            ->will($this->returnValue($alias));
+            ->willReturn($alias);
 
-        /** @var \PHPUnit\Framework\MockObject\MockObject|QueryBuilder $qb */
-        $qb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $qb = $this->createMock(QueryBuilder::class);
         $qb->expects($this->once())
             ->method('getDQLPart')
             ->with('from')
-            ->will($this->returnValue([$from]));
+            ->willReturn([$from]);
 
         $this->virtualFieldProvider->expects($this->once())
             ->method('isVirtualField')
             ->with($entityClass, $fieldName)
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $this->assertEquals('alias1.some', $this->helper->getFieldExpr($entityClass, $qb, $fieldName));
     }
 
     /**
-     * @param string $entityClass
-     * @param string $fieldName
-     * @param string $alias
-     * @param array $fieldConfig
-     * @param array $joins
-     * @param string $expected
-     *
      * @dataProvider virtualFieldsProvider
      */
     public function testGetFieldExprVirtual(
-        $entityClass,
-        $fieldName,
-        $alias,
+        string $entityClass,
+        string $fieldName,
+        string $alias,
         array $fieldConfig,
         array $joins,
-        $expected
+        string $expected
     ) {
-        $from = $this->getMockBuilder('Doctrine\ORM\Query\Expr\From')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $from = $this->createMock(From::class);
         $from->expects($this->atLeastOnce())
             ->method('getAlias')
-            ->will($this->returnValue($alias));
+            ->willReturn($alias);
 
-        /** @var \PHPUnit\Framework\MockObject\MockObject|QueryBuilder $qb */
-        $qb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $qb = $this->createMock(QueryBuilder::class);
         $qb->expects($this->atLeastOnce())
             ->method('getDQLPart')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        ['from', [$from]],
-                        ['join', $joins]
-                    ]
-                )
-            );
+            ->willReturnMap([
+                ['from', [$from]],
+                ['join', $joins]
+            ]);
 
         $this->virtualFieldProvider->expects($this->once())
             ->method('isVirtualField')
             ->with($entityClass, $fieldName)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $this->virtualFieldProvider->expects($this->once())
             ->method('getVirtualFieldQuery')
             ->with($entityClass, $fieldName)
-            ->will($this->returnValue($fieldConfig));
+            ->willReturn($fieldConfig);
 
         $this->assertEquals($expected, $this->helper->getFieldExpr($entityClass, $qb, $fieldName));
     }
 
-    /**
-     * @return array
-     */
-    public function virtualFieldsProvider()
+    public function virtualFieldsProvider(): array
     {
         return [
             'has_join' => [

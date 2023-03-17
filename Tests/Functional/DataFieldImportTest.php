@@ -75,7 +75,7 @@ class DataFieldImportTest extends AbstractImportExportTestCase
         );
         $lastSyncDateAfter = $this->getLastSyncDate($channel);
 
-        $this->assertTrue($lastSyncDate == $lastSyncDateAfter);
+        $this->assertEquals($lastSyncDate, $lastSyncDateAfter);
     }
 
     public function importDataProvider(): array

@@ -3,35 +3,24 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider;
 
 use Oro\Bundle\DotmailerBundle\Provider\EmailProvider;
-use Oro\Component\Testing\Unit\EntityTrait;
+use Oro\Bundle\EntityBundle\Provider\VirtualFieldProviderInterface;
+use Oro\Bundle\MarketingListBundle\Model\ContactInformationFieldHelper;
 
 class EmailProviderTest extends \PHPUnit\Framework\TestCase
 {
-    use EntityTrait;
+    /** @var ContactInformationFieldHelper|\PHPUnit\Framework\MockObject\MockObject */
+    private $contactInformationFieldHelper;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $contactInformationFieldHelper;
+    /** @var VirtualFieldProviderInterface|\PHPUnit\Framework\MockObject\MockObject */
+    private $virtualFieldProvider;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $virtualFieldProvider;
-
-    /**
-     * @var EmailProvider
-     */
-    protected $emailProvider;
+    /** @var EmailProvider */
+    private $emailProvider;
 
     protected function setUp(): void
     {
-        $this->contactInformationFieldHelper = $this
-            ->getMockBuilder('Oro\Bundle\MarketingListBundle\Model\ContactInformationFieldHelper')
-            ->disableOriginalConstructor()->getMock();
-        $this->virtualFieldProvider = $this
-            ->getMockBuilder('Oro\Bundle\EntityBundle\Provider\VirtualFieldProviderInterface')
-            ->getMock();
+        $this->contactInformationFieldHelper = $this->createMock(ContactInformationFieldHelper::class);
+        $this->virtualFieldProvider = $this->createMock(VirtualFieldProviderInterface::class);
 
         $this->emailProvider = new EmailProvider(
             $this->contactInformationFieldHelper,
@@ -55,11 +44,13 @@ class EmailProviderTest extends \PHPUnit\Framework\TestCase
                 'contact_information_type' => 'phone'
             ]
         ];
-        $this->contactInformationFieldHelper->expects($this->once())->method('getEntityContactInformationFieldsInfo')->
-            will($this->returnValue($contactInfoFields));
-        $this->virtualFieldProvider->expects($this->once())->method('isVirtualField')
+        $this->contactInformationFieldHelper->expects($this->once())
+            ->method('getEntityContactInformationFieldsInfo')
+            ->willReturn($contactInfoFields);
+        $this->virtualFieldProvider->expects($this->once())
+            ->method('isVirtualField')
             ->with('entityClass', 'email')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $result = $this->emailProvider->getEntityEmailField('entityClass');
         $this->assertEquals('email', $result);
@@ -81,11 +72,13 @@ class EmailProviderTest extends \PHPUnit\Framework\TestCase
                 'contact_information_type' => 'phone'
             ]
         ];
-        $this->contactInformationFieldHelper->expects($this->once())->method('getEntityContactInformationFieldsInfo')->
-            will($this->returnValue($contactInfoFields));
-        $this->virtualFieldProvider->expects($this->once())->method('isVirtualField')
+        $this->contactInformationFieldHelper->expects($this->once())
+            ->method('getEntityContactInformationFieldsInfo')
+            ->willReturn($contactInfoFields);
+        $this->virtualFieldProvider->expects($this->once())
+            ->method('isVirtualField')
             ->with('entityClass', 'primaryEmail')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $fieldConfig = [
             'select' => [
                 'expr' => 'emails.email',
@@ -102,9 +95,10 @@ class EmailProviderTest extends \PHPUnit\Framework\TestCase
                 ]
             ]
         ];
-        $this->virtualFieldProvider->expects($this->once())->method('getVirtualFieldQuery')
+        $this->virtualFieldProvider->expects($this->once())
+            ->method('getVirtualFieldQuery')
             ->with('entityClass', 'primaryEmail')
-            ->will($this->returnValue($fieldConfig));
+            ->willReturn($fieldConfig);
 
         $result = $this->emailProvider->getEntityEmailField('entityClass');
         $expected = [

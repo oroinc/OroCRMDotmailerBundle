@@ -2,14 +2,14 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider;
 
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterInterface;
 use Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterRegistry;
 
 class ContactExportQBAdapterRegistryTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var ContactExportQBAdapterRegistry
-     */
-    protected $target;
+    private ContactExportQBAdapterRegistry $target;
 
     protected function setUp(): void
     {
@@ -18,25 +18,25 @@ class ContactExportQBAdapterRegistryTest extends \PHPUnit\Framework\TestCase
 
     public function testSetAdaptersValidateAdaptersFormat()
     {
-        $this->expectException(\Oro\Bundle\DotmailerBundle\Exception\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Incorrect adapter format.');
 
-        $this->target->setAdapters([['test' => new \StdClass()]]);
+        $this->target->setAdapters([['test' => new \stdClass()]]);
     }
 
     public function testSetAdaptersValidateAdaptersImplementCorrectInterface()
     {
-        $this->expectException(\Oro\Bundle\DotmailerBundle\Exception\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(\sprintf(
             'Instance of %s required. Instance of stdClass given.',
-            \Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterInterface::class
+            ContactExportQBAdapterInterface::class
         ));
 
         $this->target->setAdapters(
             [
                 [
                     ContactExportQBAdapterRegistry::ADAPTER_PRIORITY_KEY => 100,
-                    ContactExportQBAdapterRegistry::ADAPTER_SERVICE_KEY  => new \StdClass()
+                    ContactExportQBAdapterRegistry::ADAPTER_SERVICE_KEY  => new \stdClass()
                 ]
             ]
         );
@@ -44,7 +44,7 @@ class ContactExportQBAdapterRegistryTest extends \PHPUnit\Framework\TestCase
 
     public function testSetAdapters()
     {
-        $adapter = $this->createMock('Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterInterface');
+        $adapter = $this->createMock(ContactExportQBAdapterInterface::class);
         $expectedAdapters = [
             [
                 ContactExportQBAdapterRegistry::ADAPTER_PRIORITY_KEY => 100,
@@ -60,7 +60,7 @@ class ContactExportQBAdapterRegistryTest extends \PHPUnit\Framework\TestCase
 
     public function testAddAdapter()
     {
-        $adapter = $this->createMock('Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterInterface');
+        $adapter = $this->createMock(ContactExportQBAdapterInterface::class);
         $expectedAdapters = [
             [
                 ContactExportQBAdapterRegistry::ADAPTER_PRIORITY_KEY => $priority = 150,
@@ -77,36 +77,36 @@ class ContactExportQBAdapterRegistryTest extends \PHPUnit\Framework\TestCase
 
     public function testGetAdapterByAddressBookThrowAnExceptionIfHasNoAdapters()
     {
-        $this->expectException(\Oro\Bundle\DotmailerBundle\Exception\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage("Provider for Address Book '21' not exist");
 
-        $addressBook = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
+        $addressBook = $this->createMock(AddressBook::class);
         $addressBook->expects($this->once())
             ->method('getId')
-            ->will($this->returnValue(21));
+            ->willReturn(21);
         $this->target->getAdapterByAddressBook($addressBook);
     }
 
     public function testGetAdapterByAddressBookThrowAnExceptionIfHasApplicableAdapters()
     {
-        $this->expectException(\Oro\Bundle\DotmailerBundle\Exception\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage("Provider for Address Book '21' not exist");
 
-        $addressBook = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
+        $addressBook = $this->createMock(AddressBook::class);
         $addressBook->expects($this->once())
             ->method('getId')
-            ->will($this->returnValue(21));
-        $firstAdapter = $this->createMock('Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterInterface');
+            ->willReturn(21);
+        $firstAdapter = $this->createMock(ContactExportQBAdapterInterface::class);
         $firstAdapter->expects($this->any())
             ->method('isApplicable')
             ->with($addressBook)
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
-        $secondAdapter = clone $this->createMock('Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterInterface');
+        $secondAdapter = clone $this->createMock(ContactExportQBAdapterInterface::class);
         $secondAdapter->expects($this->once())
             ->method('isApplicable')
             ->with($addressBook)
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $expectedAdapters = [
             [
@@ -125,18 +125,18 @@ class ContactExportQBAdapterRegistryTest extends \PHPUnit\Framework\TestCase
 
     public function testGetAdapterByAddressBookReturnAdapterWithMaxPriority()
     {
-        $addressBook = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
-        $firstAdapter = $this->createMock('Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterInterface');
+        $addressBook = $this->createMock(AddressBook::class);
+        $firstAdapter = $this->createMock(ContactExportQBAdapterInterface::class);
         $firstAdapter->expects($this->any())
             ->method('isApplicable')
             ->with($addressBook)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
-        $secondAdapter = clone $this->createMock('Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterInterface');
+        $secondAdapter = clone $this->createMock(ContactExportQBAdapterInterface::class);
         $secondAdapter->expects($this->once())
             ->method('isApplicable')
             ->with($addressBook)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $expectedAdapters = [
             [
@@ -157,18 +157,18 @@ class ContactExportQBAdapterRegistryTest extends \PHPUnit\Framework\TestCase
 
     public function testGetAdapterByAddressBookReturnApplicableAdapter()
     {
-        $addressBook = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
-        $firstAdapter = $this->createMock('Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterInterface');
+        $addressBook = $this->createMock(AddressBook::class);
+        $firstAdapter = $this->createMock(ContactExportQBAdapterInterface::class);
         $firstAdapter->expects($this->any())
             ->method('isApplicable')
             ->with($addressBook)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
-        $secondAdapter = $this->createMock('Oro\Bundle\DotmailerBundle\Provider\ContactExportQBAdapterInterface');
+        $secondAdapter = $this->createMock(ContactExportQBAdapterInterface::class);
         $secondAdapter->expects($this->once())
             ->method('isApplicable')
             ->with($addressBook)
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $expectedAdapters = [
             [

@@ -72,6 +72,7 @@ class CampaignImportTest extends AbstractImportExportTestCase
             foreach ($campaign['addressBooks'] as &$expectedAddressBook) {
                 $expectedAddressBook = $this->getReference($expectedAddressBook);
             }
+            unset($expectedAddressBook);
             $this->assertEquals($campaign['addressBooks'], $actualAddressBooks);
 
             $emailCampaign = $actualCampaign->getEmailCampaign();

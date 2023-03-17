@@ -15,15 +15,13 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTestCase
 {
-    /**
-     * @var QueueExportManager
-     */
-    protected $target;
+    private QueueExportManager $target;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->loadFixtures([LoadAddressBookContactsExportData::class]);
+
         $this->target = $this->getContainer()->get('oro_dotmailer.queue_export_manager');
     }
 
@@ -49,7 +47,7 @@ class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTe
         $this->assertAddressBookContactsHandled($channel, $expectedAddressBook);
     }
 
-    protected function assertAddressBookContactsHandled($channel, $expectedAddressBook)
+    private function assertAddressBookContactsHandled(Channel $channel, AddressBook $expectedAddressBook): void
     {
         /**
          * Check New Address Book Contact removed
@@ -89,14 +87,12 @@ class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTe
         $this->assertAddressBookContact($channel, $contact, $expectedAddressBook, Contact::STATUS_SUBSCRIBED);
     }
 
-    /**
-     * @param Channel     $channel
-     * @param Contact     $contact
-     * @param AddressBook $addressBook
-     * @param string      $status
-     */
-    protected function assertAddressBookContact(Channel $channel, Contact $contact, AddressBook $addressBook, $status)
-    {
+    private function assertAddressBookContact(
+        Channel $channel,
+        Contact $contact,
+        AddressBook $addressBook,
+        string $status
+    ): void {
         $addressBookContact = $this->managerRegistry
             ->getRepository(AddressBookContact::class)
             ->findBy(['contact' => $contact, 'channel' => $channel, 'addressBook' => $addressBook]);
@@ -107,26 +103,22 @@ class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTe
         $this->assertEquals($status, $addressBookContact->getStatus()->getId());
     }
 
-    protected function assertAddressBookContactNotExist(
+    private function assertAddressBookContactNotExist(
         Channel $channel,
         Contact $contact,
         AddressBook $expectedAddressBook
-    ) {
+    ): void {
         $addressBookContact = $this->managerRegistry
             ->getRepository(AddressBookContact::class)
             ->findOneBy(['contact' => $contact, 'channel' => $channel, 'addressBook' => $expectedAddressBook]);
         $this->assertNull($addressBookContact);
     }
 
-    /**
-     * @param Channel $channel
-     * @param $importId
-     * @param AddressBook $expectedAddressBook
-     *
-     * @return AddressBook
-     */
-    protected function assertExportStatusUpdated(Channel $channel, $importId, AddressBook $expectedAddressBook)
-    {
+    private function assertExportStatusUpdated(
+        Channel $channel,
+        string $importId,
+        AddressBook $expectedAddressBook
+    ): void {
         $status = AddressBookContactsExport::STATUS_REJECTED_BY_WATCHDOG;
         $exportEntities = $this->managerRegistry->getRepository(AddressBookContactsExport::class)
             ->findBy(['channel' => $channel, 'importId' => $importId]);
@@ -142,7 +134,7 @@ class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTe
         $this->assertEquals($status, $addressBookStatus->getId());
     }
 
-    protected function stubResource()
+    private function stubResource(): void
     {
         $apiContactImportStatus = new ApiContactImport();
         $apiContactImportStatus->status = ApiContactImportStatuses::FINISHED;

@@ -10,14 +10,8 @@ use Oro\Bundle\OrganizationBundle\Tests\Unit\Fixture\Entity\Organization;
 
 class ActivityTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var Activity
-     */
-    protected $entity;
+    private Activity $entity;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         $this->entity = new Activity();
@@ -26,13 +20,13 @@ class ActivityTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider flatPropertiesDataProvider
      */
-    public function testGetSet($property, $value, $expected)
+    public function testGetSet(string $property, mixed $value, mixed $expected)
     {
-        call_user_func_array(array($this->entity, 'set' . ucfirst($property)), array($value));
-        $this->assertEquals($expected, call_user_func_array(array($this->entity, 'get' . ucfirst($property)), array()));
+        call_user_func([$this->entity, 'set' . ucfirst($property)], $value);
+        $this->assertEquals($expected, call_user_func_array([$this->entity, 'get' . ucfirst($property)], []));
     }
 
-    public function flatPropertiesDataProvider()
+    public function flatPropertiesDataProvider(): array
     {
         $now = new \DateTime('now');
         $channel = new Channel();
@@ -40,25 +34,25 @@ class ActivityTest extends \PHPUnit\Framework\TestCase
         $campaign = new Campaign();
         $contact = new Contact();
 
-        return array(
-            'channel' => array('channel', $channel, $channel),
-            'campaign' => array('campaign', $campaign, $campaign),
-            'contact' => array('contact', $contact, $contact),
-            'email' => array('email', 'test@from.com', 'test@from.com'),
-            'numOpens' => array('numOpens', 5, 5),
-            'numPageViews' => array('numPageViews', 3, 3),
-            'numClicks' => array('numClicks', 15, 15),
-            'numForwards' => array('numForwards', 2, 2),
-            'numEstimatedForwards' => array('numEstimatedForwards', 5, 5),
-            'numReplies' => array('numReplies', 5, 5),
-            'dateSent' => array('dateSent', $now, $now),
-            'dateFirstOpened' => array('dateFirstOpened', $now, $now),
-            'dateLastOpened' => array('dateLastOpened', $now, $now),
-            'firstOpenIp' => array('firstOpenIp', '127.0.0.1', '127.0.0.1'),
-            'createdAt' => array('createdAt', $now, $now),
-            'updatedAt' => array('updatedAt', $now, $now),
-            'owner' => array('owner', $organization, $organization),
-        );
+        return [
+            'channel' => ['channel', $channel, $channel],
+            'campaign' => ['campaign', $campaign, $campaign],
+            'contact' => ['contact', $contact, $contact],
+            'email' => ['email', 'test@from.com', 'test@from.com'],
+            'numOpens' => ['numOpens', 5, 5],
+            'numPageViews' => ['numPageViews', 3, 3],
+            'numClicks' => ['numClicks', 15, 15],
+            'numForwards' => ['numForwards', 2, 2],
+            'numEstimatedForwards' => ['numEstimatedForwards', 5, 5],
+            'numReplies' => ['numReplies', 5, 5],
+            'dateSent' => ['dateSent', $now, $now],
+            'dateFirstOpened' => ['dateFirstOpened', $now, $now],
+            'dateLastOpened' => ['dateLastOpened', $now, $now],
+            'firstOpenIp' => ['firstOpenIp', '127.0.0.1', '127.0.0.1'],
+            'createdAt' => ['createdAt', $now, $now],
+            'updatedAt' => ['updatedAt', $now, $now],
+            'owner' => ['owner', $organization, $organization],
+        ];
     }
 
     public function testIdWorks()

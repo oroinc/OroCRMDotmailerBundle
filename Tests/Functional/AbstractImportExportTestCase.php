@@ -13,22 +13,16 @@ use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 
 abstract class AbstractImportExportTestCase extends WebTestCase
 {
-    const RESOURCES_FACTORY_ID = 'oro_dotmailer.transport.resources_factory.stub';
-    const SYNC_PROCESSOR = 'oro_integration.sync.processor';
+    protected const RESOURCES_FACTORY_ID = 'oro_dotmailer.transport.resources_factory.stub';
+    protected const SYNC_PROCESSOR = 'oro_integration.sync.processor';
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var IResources|\PHPUnit\Framework\MockObject\MockObject */
     protected $resource;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var DotmailerResourcesFactory|\PHPUnit\Framework\MockObject\MockObject */
     protected $resourceFactory;
 
-    /**
-     * @var ManagerRegistry
-     */
+    /** @var ManagerRegistry */
     protected $managerRegistry;
 
     protected function setUp(): void
@@ -42,23 +36,13 @@ abstract class AbstractImportExportTestCase extends WebTestCase
             ->get('doctrine');
     }
 
-    /**
-     * @param string  $processorId
-     *
-     * @param Channel $channel
-     * @param string  $connector
-     * @param array   $parameters
-     * @param array   $jobLog
-     *
-     * @return bool
-     */
-    public function runImportExportConnectorsJob(
-        $processorId,
+    protected function runImportExportConnectorsJob(
+        string $processorId,
         Channel $channel,
-        $connector,
+        string $connector,
         array $parameters = [],
-        &$jobLog = []
-    ) {
+        ?array &$jobLog = []
+    ): bool {
         /** @var SyncProcessor $processor */
         $processor = $this->getContainer()->get($processorId);
         $testLoggerHandler = new TestHandler(Logger::WARNING);
@@ -71,14 +55,9 @@ abstract class AbstractImportExportTestCase extends WebTestCase
         return $result;
     }
 
-    /**
-     * @param array $jobLog
-     *
-     * @return string
-     */
-    public function formatImportExportJobLog(array $jobLog)
+    protected function formatImportExportJobLog(array $jobLog): ?string
     {
-        $output = array_reduce(
+        return array_reduce(
             $jobLog,
             function ($carry, $record) {
                 return $carry . sprintf(
@@ -89,8 +68,6 @@ abstract class AbstractImportExportTestCase extends WebTestCase
                 );
             }
         );
-
-        return $output;
     }
 
     protected function stubResources()

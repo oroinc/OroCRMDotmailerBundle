@@ -73,10 +73,11 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
             foreach ($expectedContact['subscribedAddressBooks'] as &$addressBook) {
                 $addressBook = $this->getReference($addressBook);
             }
+            unset($addressBook);
 
-            $expectedUsubscribedDates = [];
+            $expectedUnsubscribedDates = [];
             foreach ($expectedContact['unsubscribedDate'] as $addressBookRef => $date) {
-                $expectedUsubscribedDates[$this->getReference($addressBookRef)->getId()] = $date;
+                $expectedUnsubscribedDates[$this->getReference($addressBookRef)->getId()] = $date;
             }
 
             $actualAddressBooks = [];
@@ -84,9 +85,9 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
             foreach ($actualContact->getAddressBookContacts()->toArray() as $addressBookContact) {
                 if ($addressBookContact->getStatus()->getId() === Contact::STATUS_SUBSCRIBED) {
                     $actualAddressBooks[] = $addressBookContact->getAddressBook();
-                } elseif (!empty($expectedUsubscribedDates[$addressBookContact->getAddressBook()->getId()])) {
+                } elseif (!empty($expectedUnsubscribedDates[$addressBookContact->getAddressBook()->getId()])) {
                     $this->assertEquals(
-                        $expectedUsubscribedDates[$addressBookContact->getAddressBook()->getId()],
+                        $expectedUnsubscribedDates[$addressBookContact->getAddressBook()->getId()],
                         $addressBookContact->getUnsubscribedDate()
                     );
                 }

@@ -57,8 +57,7 @@ class RemovedContactsExportTest extends AbstractImportExportTestCase
             }, $expectedRemoved)
         );
         $expectedAddressBook = $addressBook->getOriginId();
-        $this->resource
-            ->expects($this->once())
+        $this->resource->expects($this->once())
             ->method('PostAddressBookContactsDelete')
             ->with($expectedAddressBook, $expectedApiContact);
         $result = $this->runImportExportConnectorsJob(

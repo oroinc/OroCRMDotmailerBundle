@@ -20,7 +20,6 @@ class AddressBookTest extends WebTestCase
     protected function setUp(): void
     {
         parent::setUp();
-
         $this->initClient();
         $this->loadFixtures([LoadAddressBookData::class]);
         $this->getOptionalListenerManager()->enableListener('oro_workflow.listener.event_trigger_collector');

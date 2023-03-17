@@ -8,29 +8,21 @@ use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 
 class ContactSyncDataConverterTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var ContactSyncDataConverter
-     */
-    private $contactSyncDataConverter;
-
-    /**
-     * @var ContextInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var ContextInterface|\PHPUnit\Framework\MockObject\MockObject */
     private $context;
 
-    /**
-     * @var CacheProvider|\PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var CacheProvider|\PHPUnit\Framework\MockObject\MockObject */
     private $cacheProvider;
 
-    /**
-     * {@inheritdoc}
-     */
+    /** @var ContactSyncDataConverter */
+    private $contactSyncDataConverter;
+
     protected function setUp(): void
     {
         $this->context = $this->createMock(ContextInterface::class);
-        $this->contactSyncDataConverter = new ContactSyncDataConverter();
         $this->cacheProvider = $this->createMock(CacheProvider::class);
+
+        $this->contactSyncDataConverter = new ContactSyncDataConverter();
         $this->contactSyncDataConverter->setCacheProvider($this->cacheProvider);
         $this->contactSyncDataConverter->setImportExportContext($this->context);
     }

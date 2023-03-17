@@ -14,20 +14,14 @@ use Psr\Log\NullLogger;
 
 class SyncProcessorTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var SyncProcessor
-     */
-    private $syncProcessor;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|JobProcessor
-     */
+    /** @var JobProcessor|\PHPUnit\Framework\MockObject\MockObject */
     private $jobProcessor;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|AbstractSyncProcessor
-     */
+    /** @var AbstractSyncProcessor|\PHPUnit\Framework\MockObject\MockObject */
     private $decoratedSyncProcessor;
+
+    /** @var SyncProcessor */
+    private $syncProcessor;
 
     protected function setUp(): void
     {
@@ -45,8 +39,10 @@ class SyncProcessorTest extends \PHPUnit\Framework\TestCase
         $integration = new Channel();
         $integration->setType('other');
 
-        $this->jobProcessor->expects($this->never())->method('findRootJobByJobNameAndStatuses');
-        $this->decoratedSyncProcessor->expects($this->never())->method('process');
+        $this->jobProcessor->expects($this->never())
+            ->method('findRootJobByJobNameAndStatuses');
+        $this->decoratedSyncProcessor->expects($this->never())
+            ->method('process');
 
         $this->syncProcessor->process($integration, 'connector');
     }
@@ -56,9 +52,12 @@ class SyncProcessorTest extends \PHPUnit\Framework\TestCase
         $integration = new Channel();
         $integration->setType(ChannelType::TYPE);
 
-        $this->jobProcessor->expects($this->once())->method('findRootJobByJobNameAndStatuses')->willReturn(new Job());
+        $this->jobProcessor->expects($this->once())
+            ->method('findRootJobByJobNameAndStatuses')
+            ->willReturn(new Job());
 
-        $this->decoratedSyncProcessor->expects($this->never())->method('process');
+        $this->decoratedSyncProcessor->expects($this->never())
+            ->method('process');
 
         $this->assertTrue(
             $this->syncProcessor->process($integration, 'connector')
@@ -70,9 +69,13 @@ class SyncProcessorTest extends \PHPUnit\Framework\TestCase
         $integration = new Channel();
         $integration->setType(ChannelType::TYPE);
 
-        $this->jobProcessor->expects($this->once())->method('findRootJobByJobNameAndStatuses')->willReturn(null);
+        $this->jobProcessor->expects($this->once())
+            ->method('findRootJobByJobNameAndStatuses')
+            ->willReturn(null);
 
-        $this->decoratedSyncProcessor->expects($this->once())->method('process')->willReturn(true);
+        $this->decoratedSyncProcessor->expects($this->once())
+            ->method('process')
+            ->willReturn(true);
 
         $this->assertTrue(
             $this->syncProcessor->process($integration, 'connector')
@@ -82,7 +85,9 @@ class SyncProcessorTest extends \PHPUnit\Framework\TestCase
     public function testGetLoggerStrategy()
     {
         $loggerStrategy = new LoggerStrategy();
-        $this->decoratedSyncProcessor->expects($this->once())->method('getLoggerStrategy')->willReturn($loggerStrategy);
+        $this->decoratedSyncProcessor->expects($this->once())
+            ->method('getLoggerStrategy')
+            ->willReturn($loggerStrategy);
 
         $this->assertSame(
             $loggerStrategy,

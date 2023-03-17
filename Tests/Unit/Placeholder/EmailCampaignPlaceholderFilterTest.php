@@ -2,55 +2,51 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Placeholder;
 
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectRepository;
+use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 use Oro\Bundle\DotmailerBundle\Placeholders\EmailCampaignPlaceholderFilter;
 use Oro\Bundle\DotmailerBundle\Transport\DotmailerEmailCampaignTransport;
 
 class EmailCampaignPlaceholderFilterTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var EmailCampaignPlaceholderFilter
-     */
-    protected $target;
+    /** @var ManagerRegistry|\PHPUnit\Framework\MockObject\MockObject */
+    private $registry;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $registry;
+    /** @var ObjectRepository|\PHPUnit\Framework\MockObject\MockObject */
+    private $repository;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $repository;
+    /** @var EmailCampaignPlaceholderFilter */
+    private $target;
 
     protected function setUp(): void
     {
-        $this->registry = $this->createMock('Doctrine\Persistence\ManagerRegistry');
-        $this->repository = $this->createMock('Doctrine\Persistence\ObjectRepository');
+        $this->registry = $this->createMock(ManagerRegistry::class);
+        $this->repository = $this->createMock(ObjectRepository::class);
 
-        $this->registry
-            ->expects($this->any())
+        $this->registry->expects($this->any())
             ->method('getRepository')
-            ->will($this->returnValue($this->repository));
+            ->willReturn($this->repository);
 
         $this->target = new EmailCampaignPlaceholderFilter($this->registry);
     }
 
     public function testIsApplicableOnEmailCampaign()
     {
-        $actual = $this->target->isApplicableOnEmailCampaign(new \StdClass());
+        $actual = $this->target->isApplicableOnEmailCampaign(new \stdClass());
         $this->assertFalse($actual);
 
-        $entity = $this->createMock('Oro\Bundle\CampaignBundle\Entity\EmailCampaign');
+        $entity = $this->createMock(EmailCampaign::class);
         $entity->expects($this->once())
             ->method('getTransport')
-            ->will($this->returnValue('OtherTransport'));
+            ->willReturn('OtherTransport');
         $actual = $this->target->isApplicableOnEmailCampaign($entity);
         $this->assertFalse($actual);
 
-        $entity = $this->createMock('Oro\Bundle\CampaignBundle\Entity\EmailCampaign');
+        $entity = $this->createMock(EmailCampaign::class);
         $entity->expects($this->any())
             ->method('getTransport')
-            ->will($this->returnValue(DotmailerEmailCampaignTransport::NAME));
+            ->willReturn(DotmailerEmailCampaignTransport::NAME);
 
         $this->repository->expects($this->exactly(2))
             ->method('findOneBy')

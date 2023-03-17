@@ -23,19 +23,13 @@ class EmailUtilsTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider emailDataProvider
-     *
-     * @param string $email
-     * @param string $expectedEmail
      */
-    public function testGetLowerCaseEmail($email, $expectedEmail)
+    public function testGetLowerCaseEmail(string $email, string $expectedEmail)
     {
         $this->assertEquals($expectedEmail, EmailUtils::getLowerCaseEmail($email));
     }
 
-    /**
-     * @return array
-     */
-    public function emailDataProvider()
+    public function emailDataProvider(): array
     {
         return [
             'camelcase' => [

@@ -11,14 +11,8 @@ class DataFieldMappingConfigTest extends \PHPUnit\Framework\TestCase
 {
     use EntityTestCaseTrait;
 
-    /**
-     * @var DataFieldMappingConfig
-     */
-    protected $entity;
+    private DataFieldMappingConfig $entity;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         $this->entity = new DataFieldMappingConfig();

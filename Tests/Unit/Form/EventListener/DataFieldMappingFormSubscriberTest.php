@@ -2,21 +2,18 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Form\EventListener;
 
+use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
 use Oro\Bundle\DotmailerBundle\Form\EventListener\DataFieldMappingFormSubscriber;
-use Oro\Component\Testing\Unit\EntityTrait;
+use Oro\Component\Testing\ReflectionUtil;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\Test\FormInterface;
 
 class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
 {
-    use EntityTrait;
-
-    /**
-     * @var DataFieldMappingFormSubscriber
-     */
-    protected $subscriber;
+    private DataFieldMappingFormSubscriber $subscriber;
 
     protected function setUp(): void
     {
@@ -27,9 +24,10 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
     {
         $events = $this->subscriber->getSubscribedEvents();
         $this->assertArrayHasKey(FormEvents::POST_SET_DATA, $events);
-        $this->assertEquals($events[FormEvents::POST_SET_DATA], 'postSet');
-        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
-        $form->expects($this->never())->method('get');
+        $this->assertEquals('postSet', $events[FormEvents::POST_SET_DATA]);
+        $form = $this->createMock(FormInterface::class);
+        $form->expects($this->never())
+            ->method('get');
         $event = new FormEvent($form, null);
 
         $this->subscriber->postSet($event);
@@ -37,7 +35,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
 
     public function testPostSetWithMappingData()
     {
-        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock(FormInterface::class);
         $mapping = new DataFieldMapping();
         $config = $this->getMappingConfigEntityMock(
             [
@@ -61,11 +59,15 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
                     'isTwoWaySync' => true
                 ]
             ]
-        ]);
-        $configSourceForm = $this->createMock('Symfony\Component\Form\Test\FormInterface');
-        $configSourceForm->expects($this->once())->method('setData')->with($expected);
-        $form->expects($this->once())->method('get')->with('config_source')
-            ->will($this->returnValue($configSourceForm));
+        ], JSON_THROW_ON_ERROR);
+        $configSourceForm = $this->createMock(FormInterface::class);
+        $configSourceForm->expects($this->once())
+            ->method('setData')
+            ->with($expected);
+        $form->expects($this->once())
+            ->method('get')
+            ->with('config_source')
+            ->willReturn($configSourceForm);
         $event = new FormEvent($form, $mapping);
 
         $this->subscriber->postSet($event);
@@ -75,8 +77,8 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
     {
         $events = $this->subscriber->getSubscribedEvents();
         $this->assertArrayHasKey(FormEvents::PRE_SUBMIT, $events);
-        $this->assertEquals($events[FormEvents::PRE_SUBMIT], 'preSubmit');
-        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
+        $this->assertEquals('preSubmit', $events[FormEvents::PRE_SUBMIT]);
+        $form = $this->createMock(FormInterface::class);
         $event = new FormEvent($form, null);
 
         $this->subscriber->preSubmit($event);
@@ -85,7 +87,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
 
     public function testPreSubmitForExistingMapping()
     {
-        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock(FormInterface::class);
         $data = [];
         $data['config_source'] = json_encode([
             'mapping' => [
@@ -116,7 +118,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
                     'isTwoWaySync' => 0
                 ]
             ]
-        ]);
+        ], JSON_THROW_ON_ERROR);
         $event = new FormEvent($form, $data);
 
         $this->subscriber->preSubmit($event);
@@ -142,7 +144,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
 
     public function testPreSubmitForExistingMappingWithConfigRemoved()
     {
-        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock(FormInterface::class);
         $data = [];
         $data['config_source'] = json_encode([
             'mapping' => [
@@ -164,7 +166,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
                     'isTwoWaySync' => 0
                 ]
             ]
-        ]);
+        ], JSON_THROW_ON_ERROR);
         $mapping = new DataFieldMapping();
         $mapping->addConfig($this->getMappingConfigEntityMock(
             [
@@ -182,7 +184,9 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
                 'isTwoWaySync' => false
             ]
         ));
-        $form->expects($this->once())->method('getData')->will($this->returnValue($mapping));
+        $form->expects($this->once())
+            ->method('getData')
+            ->willReturn($mapping);
         $event = new FormEvent($form, $data);
 
         $this->subscriber->preSubmit($event);
@@ -204,7 +208,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
 
     public function testPreSubmitForExistingMappingWithTheSameDataFieldRemovedAndAdded()
     {
-        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock(FormInterface::class);
         $data = [];
         $data['config_source'] = json_encode([
             'mapping' => [
@@ -226,7 +230,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
                     'isTwoWaySync' => 0
                 ]
             ]
-        ]);
+        ], JSON_THROW_ON_ERROR);
         $mapping = new DataFieldMapping();
         $mapping->addConfig($this->getMappingConfigEntityMock(
             [
@@ -244,7 +248,9 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
                 'isTwoWaySync' => false
             ]
         ));
-        $form->expects($this->once())->method('getData')->will($this->returnValue($mapping));
+        $form->expects($this->once())
+            ->method('getData')
+            ->willReturn($mapping);
         $event = new FormEvent($form, $data);
 
         $this->subscriber->preSubmit($event);
@@ -266,7 +272,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
 
     public function testPreSubmitTwoWaySyncUnsetWithSeveralEntityFields()
     {
-        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock(FormInterface::class);
         $data = [];
         $data['config_source'] =  json_encode([
             'mapping' => [
@@ -280,7 +286,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
                     'isTwoWaySync' => 1
                 ]
             ]
-        ]);
+        ], JSON_THROW_ON_ERROR);
         $event = new FormEvent($form, $data);
 
         $this->subscriber->preSubmit($event);
@@ -297,7 +303,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
 
     public function testPreSubmitTwoWaySyncUnsetWithRelationEntityFields()
     {
-        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock(FormInterface::class);
         $data = [];
         $data['config_source'] =  json_encode([
             'mapping' => [
@@ -311,7 +317,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
                     'isTwoWaySync' => 1
                 ]
             ]
-        ]);
+        ], JSON_THROW_ON_ERROR);
         $event = new FormEvent($form, $data);
 
         $this->subscriber->preSubmit($event);
@@ -326,26 +332,18 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $eventData['configs']);
     }
 
-    /**
-     * @param $data
-     * @return DataFieldMappingConfig
-     */
-    protected function getMappingConfigEntityMock($data)
+    private function getMappingConfigEntityMock(array $data): DataFieldMappingConfig
     {
-        return $this->getEntity(
-            'Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig',
-            [
-                'id' => $data['id'],
-                'entityFields' => $data['entityFields'],
-                'dataField' => $this->getEntity(
-                    'Oro\Bundle\DotmailerBundle\Entity\DataField',
-                    [
-                        'id' => $data['dataFieldId'],
-                        'name' => isset($data['dataFieldName']) ? $data['dataFieldName'] : ''
-                    ]
-                ),
-                'isTwoWaySync' => $data['isTwoWaySync']
-            ]
-        );
+        $field = new DataField();
+        ReflectionUtil::setId($field, $data['dataFieldId']);
+        $field->setName($data['dataFieldName'] ?? '');
+
+        $fieldMappingConfig = new DataFieldMappingConfig();
+        ReflectionUtil::setId($fieldMappingConfig, $data['id']);
+        $fieldMappingConfig->setEntityFields($data['entityFields']);
+        $fieldMappingConfig->setDataField($field);
+        $fieldMappingConfig->setIsTwoWaySync($data['isTwoWaySync']);
+
+        return $fieldMappingConfig;
     }
 }
