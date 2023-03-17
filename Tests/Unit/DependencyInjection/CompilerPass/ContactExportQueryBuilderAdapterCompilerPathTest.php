@@ -8,8 +8,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class ContactExportQueryBuilderAdapterCompilerPathTest extends \PHPUnit\Framework\TestCase
 {
-    /** @var ContactExportQueryBuilderAdapterCompilerPath */
-    private $compiler;
+    private ContactExportQueryBuilderAdapterCompilerPath $compiler;
 
     protected function setUp(): void
     {

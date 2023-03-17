@@ -4,13 +4,14 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
 use DotMailer\Api\DataTypes\ApiContactSuppression;
 use DotMailer\Api\DataTypes\ApiContactSuppressionList;
+use DotMailer\Api\Resources\IResources;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIterator;
 
 class UnsubscribedContactIteratorTest extends \PHPUnit\Framework\TestCase
 {
     public function testIterator()
     {
-        $resource = $this->createMock('DotMailer\Api\Resources\IResources');
+        $resource = $this->createMock(IResources::class);
         $expectedAddressBookOriginId = 42;
         $expectedDate = new \DateTime();
         $iterator = new UnsubscribedContactIterator($resource, $expectedAddressBookOriginId, $expectedDate);
@@ -22,24 +23,22 @@ class UnsubscribedContactIteratorTest extends \PHPUnit\Framework\TestCase
         $resource->expects($this->exactly(2))
             ->method('GetAddressBookContactsUnsubscribedSinceDate')
             ->with($expectedAddressBookOriginId, $expectedDate->format(\DateTime::ISO8601))
-            ->will($this->returnValueMap(
+            ->willReturnMap([
                 [
-                    [
-                        $expectedAddressBookOriginId,
-                        $expectedDate->format(\DateTime::ISO8601),
-                        1,
-                        0,
-                        $items
-                    ],
-                    [
-                        $expectedAddressBookOriginId,
-                        $expectedDate->format(\DateTime::ISO8601),
-                        1,
-                        1,
-                        new ApiContactSuppressionList()
-                    ],
-                ]
-            ));
+                    $expectedAddressBookOriginId,
+                    $expectedDate->format(\DateTime::ISO8601),
+                    1,
+                    0,
+                    $items
+                ],
+                [
+                    $expectedAddressBookOriginId,
+                    $expectedDate->format(\DateTime::ISO8601),
+                    1,
+                    1,
+                    new ApiContactSuppressionList()
+                ],
+            ]);
         foreach ($iterator as $item) {
             $expectedCampaignArray = $expectedContactSuppression->toArray();
             $expectedCampaignArray[UnsubscribedContactIterator::ADDRESS_BOOK_KEY] = $expectedAddressBookOriginId;
@@ -49,7 +48,7 @@ class UnsubscribedContactIteratorTest extends \PHPUnit\Framework\TestCase
 
     public function testIteratorOverlap()
     {
-        $resource = $this->createMock('DotMailer\Api\Resources\IResources');
+        $resource = $this->createMock(IResources::class);
         $expectedAddressBookOriginId = 42;
         $expectedDate = new \DateTime();
         $iterator = new UnsubscribedContactIterator($resource, $expectedAddressBookOriginId, $expectedDate);

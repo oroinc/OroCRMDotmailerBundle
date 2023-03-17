@@ -7,17 +7,12 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
+use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 class AddressBookTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var AddressBook
-     */
-    protected $entity;
+    private AddressBook $entity;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         $this->entity = new AddressBook();
@@ -26,28 +21,28 @@ class AddressBookTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider flatPropertiesDataProvider
      */
-    public function testGetSet($property, $value, $expected)
+    public function testGetSet(string $property, mixed $value, mixed $expected)
     {
-        call_user_func_array(array($this->entity, 'set' . ucfirst($property)), array($value));
-        $this->assertEquals($expected, call_user_func_array(array($this->entity, 'get' . ucfirst($property)), array()));
+        call_user_func([$this->entity, 'set' . ucfirst($property)], $value);
+        $this->assertEquals($expected, call_user_func_array([$this->entity, 'get' . ucfirst($property)], []));
     }
 
-    public function flatPropertiesDataProvider()
+    public function flatPropertiesDataProvider(): array
     {
         $now = new \DateTime('now');
         $channel = new Channel();
-        $organization = $this->createMock('Oro\Bundle\OrganizationBundle\Entity\Organization');
+        $organization = $this->createMock(Organization::class);
         $marketingList = new MarketingList();
 
-        return array(
-            'channel' => array('channel', $channel, $channel),
-            'marketingList' => array('marketingList', $marketingList, $marketingList),
-            'name' => array('name', 'testName', 'testName'),
-            'contactCount' => array('contactCount', 10, 10),
-            'createdAt' => array('createdAt', $now, $now),
-            'updatedAt' => array('updatedAt', $now, $now),
-            'owner' => array('owner', $organization, $organization),
-        );
+        return [
+            'channel' => ['channel', $channel, $channel],
+            'marketingList' => ['marketingList', $marketingList, $marketingList],
+            'name' => ['name', 'testName', 'testName'],
+            'contactCount' => ['contactCount', 10, 10],
+            'createdAt' => ['createdAt', $now, $now],
+            'updatedAt' => ['updatedAt', $now, $now],
+            'owner' => ['owner', $organization, $organization],
+        ];
     }
 
     public function testOriginIdWorks()

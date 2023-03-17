@@ -2,7 +2,6 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Entity;
 
-use Oro\Bundle\DotmailerBundle\Entity\Activity;
 use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 use Oro\Bundle\DotmailerBundle\Entity\CampaignSummary;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
@@ -10,14 +9,8 @@ use Oro\Bundle\OrganizationBundle\Tests\Unit\Fixture\Entity\Organization;
 
 class CampaignSummaryTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var Activity
-     */
-    protected $entity;
+    private CampaignSummary $entity;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         $this->entity = new CampaignSummary();
@@ -26,78 +19,78 @@ class CampaignSummaryTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider flatPropertiesDataProvider
      */
-    public function testGetSet($property, $value, $expected)
+    public function testGetSet(string $property, mixed $value, mixed $expected)
     {
-        call_user_func_array(array($this->entity, 'set' . ucfirst($property)), array($value));
-        $this->assertEquals($expected, call_user_func_array(array($this->entity, 'get' . ucfirst($property)), array()));
+        call_user_func([$this->entity, 'set' . ucfirst($property)], $value);
+        $this->assertEquals($expected, call_user_func_array([$this->entity, 'get' . ucfirst($property)], []));
     }
 
-    public function flatPropertiesDataProvider()
+    public function flatPropertiesDataProvider(): array
     {
         $now = new \DateTime('now');
         $channel = new Channel();
         $organization = new Organization();
         $campaign = new Campaign();
 
-        return array(
-            'channel' => array('channel', $channel, $channel),
-            'campaign' => array('campaign', $campaign, $campaign),
-            'dateSent' => array('dateSent', $now, $now),
-            'numUniqueOpens' => array('numUniqueOpens', 5, 5),
-            'numUniqueTextOpens' => array('numUniqueTextOpens', 5, 5),
-            'numTotalUniqueOpens' => array('numTotalUniqueOpens', 5, 5),
-            'numOpens' => array('numOpens', 5, 5),
-            'numTextOpens' => array('numTextOpens', 5, 5),
-            'numTotalOpens' => array('numTotalOpens', 5, 5),
-            'numClicks' => array('numClicks', 5, 5),
-            'numTextClicks' => array('numTextClicks', 5, 5),
-            'numTotalClicks' => array('numTotalClicks', 5, 5),
-            'numPageViews' => array('numPageViews', 5, 5),
-            'numTotalPageViews' => array('numTotalPageViews', 5, 5),
-            'numTextPageViews' => array('numTextPageViews', 5, 5),
-            'numForwards' => array('numForwards', 5, 5),
-            'numTextForwards' => array('numTextForwards', 5, 5),
-            'numEstimatedForwards' => array('numEstimatedForwards', 5, 5),
-            'numTextEstimatedForwards' => array('numTextEstimatedForwards', 5, 5),
-            'numTotalEstimatedForwards' => array('numTotalEstimatedForwards', 5, 5),
-            'numReplies' => array('numReplies', 5, 5),
-            'numTextReplies' => array('numTextReplies', 5, 5),
-            'numTotalReplies' => array('numTotalReplies', 5, 5),
-            'numHardBounces' => array('numHardBounces', 5, 5),
-            'numTextHardBounces' => array('numTextHardBounces', 5, 5),
-            'numTotalHardBounces' => array('numTotalHardBounces', 5, 5),
-            'numSoftBounces' => array('numSoftBounces', 5, 5),
-            'numTextSoftBounces' => array('numTextSoftBounces', 5, 5),
-            'numTotalSoftBounces' => array('numTotalSoftBounces', 5, 5),
-            'numUnsubscribes' => array('numUnsubscribes', 5, 5),
-            'numTextUnsubscribes' => array('numTextUnsubscribes', 5, 5),
-            'numTotalUnsubscribes' => array('numTotalUnsubscribes', 5, 5),
-            'numIspComplaints' => array('numIspComplaints', 5, 5),
-            'numTextIspComplaints' => array('numTextIspComplaints', 5, 5),
-            'numTotalIspComplaints' => array('numTotalIspComplaints', 5, 5),
-            'numMailBlocks' => array('numMailBlocks', 5, 5),
-            'numTextMailBlocks' => array('numTextMailBlocks', 5, 5),
-            'numTotalMailBlocks' => array('numTotalMailBlocks', 5, 5),
-            'numSent' => array('numSent', 5, 5),
-            'numTextSent' => array('numTextSent', 5, 5),
-            'numTotalSent' => array('numTotalSent', 5, 5),
-            'numRecipientsClicked' => array('numRecipientsClicked', 5, 5),
-            'numDelivered' => array('numDelivered', 5, 5),
-            'numTextDelivered' => array('numTextDelivered', 5, 5),
-            'numTotalDelivered' => array('numTotalDelivered', 5, 5),
-            'percentageDelivered' => array('percentageDelivered', 5.5, 5.5),
-            'percentageUniqueOpens' => array('percentageUniqueOpens', 5.5, 5.5),
-            'percentageOpens' => array('percentageOpens', 5.5, 5.5),
-            'percentageUnsubscribes' => array('percentageUnsubscribes', 5.5, 5.5),
-            'percentageReplies' => array('percentageReplies', 5.5, 5.5),
-            'percentageHardBounces' => array('percentageHardBounces', 5.5, 5.5),
-            'percentageSoftBounces' => array('percentageSoftBounces', 5.5, 5.5),
-            'percentageUsersClicked' => array('percentageUsersClicked', 5.5, 5.5),
-            'percentageClicksToOpens' => array('percentageClicksToOpens', 5.5, 5.5),
-            'createdAt' => array('createdAt', $now, $now),
-            'updatedAt' => array('updatedAt', $now, $now),
-            'owner' => array('owner', $organization, $organization),
-        );
+        return [
+            'channel' => ['channel', $channel, $channel],
+            'campaign' => ['campaign', $campaign, $campaign],
+            'dateSent' => ['dateSent', $now, $now],
+            'numUniqueOpens' => ['numUniqueOpens', 5, 5],
+            'numUniqueTextOpens' => ['numUniqueTextOpens', 5, 5],
+            'numTotalUniqueOpens' => ['numTotalUniqueOpens', 5, 5],
+            'numOpens' => ['numOpens', 5, 5],
+            'numTextOpens' => ['numTextOpens', 5, 5],
+            'numTotalOpens' => ['numTotalOpens', 5, 5],
+            'numClicks' => ['numClicks', 5, 5],
+            'numTextClicks' => ['numTextClicks', 5, 5],
+            'numTotalClicks' => ['numTotalClicks', 5, 5],
+            'numPageViews' => ['numPageViews', 5, 5],
+            'numTotalPageViews' => ['numTotalPageViews', 5, 5],
+            'numTextPageViews' => ['numTextPageViews', 5, 5],
+            'numForwards' => ['numForwards', 5, 5],
+            'numTextForwards' => ['numTextForwards', 5, 5],
+            'numEstimatedForwards' => ['numEstimatedForwards', 5, 5],
+            'numTextEstimatedForwards' => ['numTextEstimatedForwards', 5, 5],
+            'numTotalEstimatedForwards' => ['numTotalEstimatedForwards', 5, 5],
+            'numReplies' => ['numReplies', 5, 5],
+            'numTextReplies' => ['numTextReplies', 5, 5],
+            'numTotalReplies' => ['numTotalReplies', 5, 5],
+            'numHardBounces' => ['numHardBounces', 5, 5],
+            'numTextHardBounces' => ['numTextHardBounces', 5, 5],
+            'numTotalHardBounces' => ['numTotalHardBounces', 5, 5],
+            'numSoftBounces' => ['numSoftBounces', 5, 5],
+            'numTextSoftBounces' => ['numTextSoftBounces', 5, 5],
+            'numTotalSoftBounces' => ['numTotalSoftBounces', 5, 5],
+            'numUnsubscribes' => ['numUnsubscribes', 5, 5],
+            'numTextUnsubscribes' => ['numTextUnsubscribes', 5, 5],
+            'numTotalUnsubscribes' => ['numTotalUnsubscribes', 5, 5],
+            'numIspComplaints' => ['numIspComplaints', 5, 5],
+            'numTextIspComplaints' => ['numTextIspComplaints', 5, 5],
+            'numTotalIspComplaints' => ['numTotalIspComplaints', 5, 5],
+            'numMailBlocks' => ['numMailBlocks', 5, 5],
+            'numTextMailBlocks' => ['numTextMailBlocks', 5, 5],
+            'numTotalMailBlocks' => ['numTotalMailBlocks', 5, 5],
+            'numSent' => ['numSent', 5, 5],
+            'numTextSent' => ['numTextSent', 5, 5],
+            'numTotalSent' => ['numTotalSent', 5, 5],
+            'numRecipientsClicked' => ['numRecipientsClicked', 5, 5],
+            'numDelivered' => ['numDelivered', 5, 5],
+            'numTextDelivered' => ['numTextDelivered', 5, 5],
+            'numTotalDelivered' => ['numTotalDelivered', 5, 5],
+            'percentageDelivered' => ['percentageDelivered', 5.5, 5.5],
+            'percentageUniqueOpens' => ['percentageUniqueOpens', 5.5, 5.5],
+            'percentageOpens' => ['percentageOpens', 5.5, 5.5],
+            'percentageUnsubscribes' => ['percentageUnsubscribes', 5.5, 5.5],
+            'percentageReplies' => ['percentageReplies', 5.5, 5.5],
+            'percentageHardBounces' => ['percentageHardBounces', 5.5, 5.5],
+            'percentageSoftBounces' => ['percentageSoftBounces', 5.5, 5.5],
+            'percentageUsersClicked' => ['percentageUsersClicked', 5.5, 5.5],
+            'percentageClicksToOpens' => ['percentageClicksToOpens', 5.5, 5.5],
+            'createdAt' => ['createdAt', $now, $now],
+            'updatedAt' => ['updatedAt', $now, $now],
+            'owner' => ['owner', $organization, $organization],
+        ];
     }
 
     public function testIdWorks()

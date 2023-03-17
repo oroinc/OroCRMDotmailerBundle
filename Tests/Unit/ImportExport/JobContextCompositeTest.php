@@ -88,12 +88,12 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getFailureExceptions')
-            ->will($this->returnValue([['message' => 'first exception']]));
+            ->willReturn([['message' => 'first exception']]);
         $contexts = [$previousStepContext];
         $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getFailureExceptions')
-            ->will($this->returnValue([['message' => 'second exception']]));
+            ->willReturn([['message' => 'second exception']]);
 
         $target = $this->initCompositeStubs($currentContext, $contexts);
 
@@ -121,12 +121,12 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getReadCount')
-            ->will($this->returnValue($previousStepContextReadCount = 21));
+            ->willReturn($previousStepContextReadCount = 21);
         $contexts = [$previousStepContext];
         $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getReadCount')
-            ->will($this->returnValue($currentStepContextReadCount = 45));
+            ->willReturn($currentStepContextReadCount = 45);
 
         $target = $this->initCompositeStubs($currentContext, $contexts);
 
@@ -155,12 +155,12 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getReadOffset')
-            ->will($this->returnValue($previousStepContextReadOffset = 21));
+            ->willReturn($previousStepContextReadOffset = 21);
         $contexts = [$previousStepContext];
         $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getReadOffset')
-            ->will($this->returnValue($currentStepContextReadOffset = 45));
+            ->willReturn($currentStepContextReadOffset = 45);
 
         $target = $this->initCompositeStubs($currentContext, $contexts);
 
@@ -189,12 +189,12 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getAddCount')
-            ->will($this->returnValue($previousStepContextAddCount = 21));
+            ->willReturn($previousStepContextAddCount = 21);
         $contexts = [$previousStepContext];
         $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getAddCount')
-            ->will($this->returnValue($currentStepContextAddCount = 45));
+            ->willReturn($currentStepContextAddCount = 45);
 
         $target = $this->initCompositeStubs($currentContext, $contexts);
 
@@ -223,12 +223,12 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getUpdateCount')
-            ->will($this->returnValue($previousStepContextUpdateCount = 21));
+            ->willReturn($previousStepContextUpdateCount = 21);
         $contexts = [$previousStepContext];
         $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getUpdateCount')
-            ->will($this->returnValue($currentStepContextUpdateCount = 45));
+            ->willReturn($currentStepContextUpdateCount = 45);
 
         $target = $this->initCompositeStubs($currentContext, $contexts);
 
@@ -257,12 +257,12 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getReplaceCount')
-            ->will($this->returnValue($previousStepContextReplaceCount = 21));
+            ->willReturn($previousStepContextReplaceCount = 21);
         $contexts = [$previousStepContext];
         $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getReplaceCount')
-            ->will($this->returnValue($currentStepContextReplaceCount = 45));
+            ->willReturn($currentStepContextReplaceCount = 45);
 
         $target = $this->initCompositeStubs($currentContext, $contexts);
 
@@ -291,12 +291,12 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getDeleteCount')
-            ->will($this->returnValue($previousStepContextDeleteCount = 21));
+            ->willReturn($previousStepContextDeleteCount = 21);
         $contexts = [$previousStepContext];
         $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getDeleteCount')
-            ->will($this->returnValue($currentStepContextDeleteCount = 45));
+            ->willReturn($currentStepContextDeleteCount = 45);
 
         $target = $this->initCompositeStubs($currentContext, $contexts);
 
@@ -325,12 +325,12 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('getErrorEntriesCount')
-            ->will($this->returnValue($previousStepContextErrorEntriesCount = 21));
+            ->willReturn($previousStepContextErrorEntriesCount = 21);
         $contexts = [$previousStepContext];
         $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getErrorEntriesCount')
-            ->will($this->returnValue($currentStepContextErrorEntriesCount = 45));
+            ->willReturn($currentStepContextErrorEntriesCount = 45);
 
         $target = $this->initCompositeStubs($currentContext, $contexts);
 
@@ -366,12 +366,12 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $previousStepContext->expects($this->once())
             ->method('getValue')
             ->with($expectedValueName = 'testValue')
-            ->will($this->returnValue($expectedValue = 23456));
+            ->willReturn($expectedValue = 23456);
         $contexts = [$previousStepContext];
         $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getValue')
-            ->will($this->returnValue(null));
+            ->willReturn(null);
 
         $target = $this->initCompositeStubs($currentContext, $contexts);
 
@@ -390,12 +390,12 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $previousStepContext->expects($this->once())
             ->method('getValue')
             ->with($expectedValueName = 'testValue')
-            ->will($this->returnValue([$expectedValue[1]]));
+            ->willReturn([$expectedValue[1]]);
         $contexts = [$previousStepContext];
         $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getValue')
-            ->will($this->returnValue([$expectedValue[0]]));
+            ->willReturn([$expectedValue[0]]);
 
         $target = $this->initCompositeStubs($currentContext, $contexts);
 
@@ -412,7 +412,7 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getConfiguration')
-            ->will($this->returnValue($expectedConfiguration = 'test configuration'));
+            ->willReturn($expectedConfiguration = 'test configuration');
 
         $target = $this->initCompositeStubs($currentContext, $contexts);
 
@@ -425,14 +425,14 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $previousStepContext = $this->createMock(ContextInterface::class);
         $previousStepContext->expects($this->once())
             ->method('hasOption')
-            ->with($option = 'testOption')
-            ->will($this->returnValue(true));
+            ->with('testOption')
+            ->willReturn(true);
         $contexts = [$previousStepContext];
         $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('hasOption')
             ->with($option = 'testOption')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $target = $this->initCompositeStubs($currentContext, $contexts);
 
@@ -446,12 +446,12 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $previousStepContext->expects($this->once())
             ->method('getOption')
             ->with($expectedOptionName = 'testOption')
-            ->will($this->returnValue($expectedValue = 23456));
+            ->willReturn($expectedValue = 23456);
         $contexts = [$previousStepContext];
         $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getOption')
-            ->will($this->returnValue(null));
+            ->willReturn(null);
 
         $target = $this->initCompositeStubs($currentContext, $contexts);
 
@@ -470,12 +470,12 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $previousStepContext->expects($this->once())
             ->method('getOption')
             ->with($expectedOptionName = 'testOption')
-            ->will($this->returnValue([$expectedValue[1]]));
+            ->willReturn([$expectedValue[1]]);
         $contexts = [$previousStepContext];
         $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getOption')
-            ->will($this->returnValue([$expectedValue[0]]));
+            ->willReturn([$expectedValue[0]]);
 
         $target = $this->initCompositeStubs($currentContext, $contexts);
 
@@ -489,7 +489,7 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $currentContext = $this->createMock(ContextInterface::class);
         $currentContext->expects($this->once())
             ->method('getOption')
-            ->will($this->returnValue(null));
+            ->willReturn(null);
 
         $target = $this->initCompositeStubs($currentContext, []);
 
@@ -497,33 +497,24 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedValue, $actual);
     }
 
-    /**
-     * @param \PHPUnit\Framework\MockObject\MockObject   $currentContext
-     * @param \PHPUnit\Framework\MockObject\MockObject[] $contexts
-     *
-     * @return JobContextComposite
-     */
-    protected function initCompositeStubs(\PHPUnit\Framework\MockObject\MockObject $currentContext, array $contexts)
-    {
-        $currentStepExecution = $this->getMockBuilder(StepExecution::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+    private function initCompositeStubs(
+        ContextInterface|\PHPUnit\Framework\MockObject\MockObject $currentContext,
+        array $contexts
+    ): JobContextComposite {
+        $currentStepExecution = $this->createMock(StepExecution::class);
 
         $stepExecutions = [$currentStepExecution];
-        $jobExecution = $this->getMockBuilder(JobExecution::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $jobExecution = $this->createMock(JobExecution::class);
         $currentStepExecution->expects($this->any())
             ->method('getJobExecution')
-            ->will($this->returnValue($jobExecution));
+            ->willReturn($jobExecution);
 
         $map = [
             [$currentStepExecution, $currentContext]
         ];
+        /** @var ContextInterface $context */
         foreach ($contexts as $context) {
-            $stepExecution = $this->getMockBuilder(StepExecution::class)
-                ->disableOriginalConstructor()
-                ->getMock();
+            $stepExecution = $this->createMock(StepExecution::class);
             $map[] = [$stepExecution, $context];
             $stepExecutions[] = $stepExecution;
         }
@@ -531,19 +522,11 @@ class JobContextCompositeTest extends \PHPUnit\Framework\TestCase
             ->method('getStepExecutions')
             ->willReturn(new ArrayCollection($stepExecutions));
 
-        $registry = $this->getMockBuilder(ContextRegistry::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
+        $registry = $this->createMock(ContextRegistry::class);
         $registry->expects($this->any())
             ->method('getByStepExecution')
-            ->will(
-                $this->returnValueMap(
-                    $map
-                )
-            );
-        $target = new JobContextComposite($currentStepExecution, $registry);
+            ->willReturnMap($map);
 
-        return $target;
+        return new JobContextComposite($currentStepExecution, $registry);
     }
 }

@@ -6,14 +6,8 @@ use Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactDataConverter;
 
 class ContactDataConverterTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var ContactDataConverter
-     */
-    private $contactDataConverter;
+    private ContactDataConverter $contactDataConverter;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         $this->contactDataConverter = new ContactDataConverter();

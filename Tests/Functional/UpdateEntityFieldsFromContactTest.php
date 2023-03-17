@@ -3,23 +3,17 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiContactList;
+use Oro\Bundle\ContactBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDataFieldMappingData;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData;
 
 class UpdateEntityFieldsFromContactTest extends AbstractImportExportTestCase
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData',
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDataFieldMappingData'
-            ]
-        );
+        $this->loadFixtures([LoadDotmailerContactData::class, LoadDataFieldMappingData::class]);
     }
 
     public function testImport()
@@ -82,7 +76,7 @@ class UpdateEntityFieldsFromContactTest extends AbstractImportExportTestCase
 
         $this->resource->expects($this->any())
             ->method('GetAddressBookContacts')
-            ->will($this->returnValue($entity));
+            ->willReturn($entity);
 
         $channel = $this->getReference('oro_dotmailer.channel.first');
         $result = $this->runImportExportConnectorsJob(
@@ -95,7 +89,7 @@ class UpdateEntityFieldsFromContactTest extends AbstractImportExportTestCase
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
-        $repository = $this->managerRegistry->getRepository('Oro\Bundle\ContactBundle\Entity\Contact');
+        $repository = $this->managerRegistry->getRepository(Contact::class);
         $contact = $this->getReference('oro_dotmailer.orocrm_contact.john.doe');
         $updatedContact = $repository->find($contact->getId());
         //firstname left unchanged

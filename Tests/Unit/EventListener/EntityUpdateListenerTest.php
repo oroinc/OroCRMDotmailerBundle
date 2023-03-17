@@ -114,6 +114,7 @@ class EntityUpdateListenerTest extends \PHPUnit\Framework\TestCase
                 $this->assertEquals('parentEntityClass', $log->getParentEntity());
                 $this->assertEquals('trackedFieldPath', $log->getRelatedFieldPath());
                 $this->assertEquals(42, $log->getRelatedId());
+
                 return true;
             }));
         $unitOfWork->expects($this->once())
@@ -163,7 +164,7 @@ class EntityUpdateListenerTest extends \PHPUnit\Framework\TestCase
                             'parent_entity' => 'parentEntityClass',
                             'field_path'    => 'trackedFieldPath'
                         ]
-                    ],
+                    ]
                 ]
             ]);
 

@@ -2,8 +2,10 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
+use Doctrine\Persistence\ManagerRegistry;
 use DotMailer\Api\DataTypes\ApiCampaignContactClick;
 use DotMailer\Api\DataTypes\ApiCampaignContactClickList;
+use DotMailer\Api\Resources\IResources;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AbstractActivityIterator;
@@ -14,10 +16,9 @@ class CampaignClickIteratorTest extends \PHPUnit\Framework\TestCase
 {
     public function testIteratorInitTrue()
     {
-        $resource = $this->createMock('DotMailer\Api\Resources\IResources');
-        $registry = $this->createMock('Doctrine\Persistence\ManagerRegistry');
-        $additionalResource = $this->getMockBuilder(AdditionalResource::class)
-            ->disableOriginalConstructor()->getMock();
+        $resource = $this->createMock(IResources::class);
+        $registry = $this->createMock(ManagerRegistry::class);
+        $additionalResource = $this->createMock(AdditionalResource::class);
         $expectedCampaignOriginId = 15662;
         $expectedEmailCampaignId = 12;
         $expectedMarketingCampaignId = 1;
@@ -43,24 +44,22 @@ class CampaignClickIteratorTest extends \PHPUnit\Framework\TestCase
         $additionalResource->expects($this->any())
             ->method('getCampaignClicksSinceDateByDate')
             ->with($expectedCampaignOriginId, $expectedDate->format(\DateTime::ISO8601))
-            ->will($this->returnValueMap(
+            ->willReturnMap([
                 [
-                    [
-                        $expectedCampaignOriginId,
-                        $expectedDate->format(\DateTime::ISO8601),
-                        1,
-                        0,
-                        $items
-                    ],
-                    [
-                        $expectedCampaignOriginId,
-                        $expectedDate->format(\DateTime::ISO8601),
-                        1,
-                        1,
-                        new ApiCampaignContactClickList()
-                    ],
-                ]
-            ));
+                    $expectedCampaignOriginId,
+                    $expectedDate->format(\DateTime::ISO8601),
+                    1,
+                    0,
+                    $items
+                ],
+                [
+                    $expectedCampaignOriginId,
+                    $expectedDate->format(\DateTime::ISO8601),
+                    1,
+                    1,
+                    new ApiCampaignContactClickList()
+                ],
+            ]);
 
         $expectedData = [
             'originId' => '123',
@@ -68,7 +67,7 @@ class CampaignClickIteratorTest extends \PHPUnit\Framework\TestCase
             'entityId' => 12,
             'addressBooks' => $addressBooks
         ];
-        $this->prepareRepositoryMock($registry, $expectedData);
+        $this->prepareRepository($registry, $expectedData);
 
         foreach ($iterator as $item) {
             $expectedActivityContactArray = $expectedActivity->toArray();
@@ -86,10 +85,9 @@ class CampaignClickIteratorTest extends \PHPUnit\Framework\TestCase
 
     public function testIteratorInitFalse()
     {
-        $resource = $this->createMock('DotMailer\Api\Resources\IResources');
-        $registry = $this->createMock('Doctrine\Persistence\ManagerRegistry');
-        $additionalResource = $this->getMockBuilder(AdditionalResource::class)
-            ->disableOriginalConstructor()->getMock();
+        $resource = $this->createMock(IResources::class);
+        $registry = $this->createMock(ManagerRegistry::class);
+        $additionalResource = $this->createMock(AdditionalResource::class);
         $expectedCampaignOriginId = 15662;
         $expectedEmailCampaignId = 12;
         $expectedMarketingCampaignId = 1;
@@ -115,22 +113,20 @@ class CampaignClickIteratorTest extends \PHPUnit\Framework\TestCase
         $resource->expects($this->any())
             ->method('GetCampaignClicks')
             ->with($expectedCampaignOriginId)
-            ->will($this->returnValueMap(
+            ->willReturnMap([
                 [
-                    [
-                        $expectedCampaignOriginId,
-                        1,
-                        0,
-                        $items
-                    ],
-                    [
-                        $expectedCampaignOriginId,
-                        1,
-                        1,
-                        new ApiCampaignContactClickList()
-                    ],
-                ]
-            ));
+                    $expectedCampaignOriginId,
+                    1,
+                    0,
+                    $items
+                ],
+                [
+                    $expectedCampaignOriginId,
+                    1,
+                    1,
+                    new ApiCampaignContactClickList()
+                ],
+            ]);
 
         $expectedData = [
             'originId' => '123',
@@ -138,7 +134,7 @@ class CampaignClickIteratorTest extends \PHPUnit\Framework\TestCase
             'entityId' => 12,
             'addressBooks' => $addressBooks
         ];
-        $this->prepareRepositoryMock($registry, $expectedData);
+        $this->prepareRepository($registry, $expectedData);
 
         foreach ($iterator as $item) {
             $expectedActivityContactArray = $expectedActivity->toArray();
@@ -154,30 +150,24 @@ class CampaignClickIteratorTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    /**
-     * @param \PHPUnit\Framework\MockObject\MockObject $registry
-     * @param array $expectedData
-     */
-    protected function prepareRepositoryMock($registry, $expectedData)
-    {
-        $repository = $this->getMockBuilder(ContactRepository::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+    private function prepareRepository(
+        ManagerRegistry|\PHPUnit\Framework\MockObject\MockObject $registry,
+        array $expectedData
+    ): void {
+        $repository = $this->createMock(ContactRepository::class);
         $repository->expects($this->once())
             ->method('getEntitiesDataByOriginIds')
             ->with([$expectedData['originId']], $expectedData['addressBooks'])
-            ->will($this->returnValue(
+            ->willReturn([
                 [
-                    [
-                        'originId' => $expectedData['originId'],
-                        'entityClass' => $expectedData['entityClass'],
-                        'entityId' => $expectedData['entityId']
-                    ]
+                    'originId'    => $expectedData['originId'],
+                    'entityClass' => $expectedData['entityClass'],
+                    'entityId'    => $expectedData['entityId']
                 ]
-            ));
+            ]);
 
         $registry->expects($this->any())
             ->method('getRepository')
-            ->will($this->returnValue($repository));
+            ->willReturn($repository);
     }
 }

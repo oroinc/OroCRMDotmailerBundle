@@ -16,7 +16,6 @@ class ContactUpdateTest extends AbstractImportExportTestCase
     protected function setUp(): void
     {
         parent::setUp();
-
         $this->loadFixtures([LoadDotmailerContactData::class, LoadStatusData::class]);
     }
 

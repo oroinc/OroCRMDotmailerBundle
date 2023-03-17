@@ -21,39 +21,25 @@ use Psr\Log\LoggerInterface;
 
 class UnsubscribedFromAccountContactReaderTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var UnsubscribedFromAccountContactReader
-     */
-    protected $reader;
+    /** @var ContextRegistry|\PHPUnit\Framework\MockObject\MockObject */
+    private $contextRegistry;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $contextRegistry;
+    /** @var ConnectorContextMediator|\PHPUnit\Framework\MockObject\MockObject */
+    private $contextMediator;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $managerRegistry;
+    /** @var ManagerRegistry|\PHPUnit\Framework\MockObject\MockObject */
+    private $managerRegistry;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $logger;
+    /** @var LoggerInterface|\PHPUnit\Framework\MockObject\MockObject */
+    private $logger;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $contextMediator;
+    /** @var UnsubscribedFromAccountContactReader */
+    private $reader;
 
     protected function setUp(): void
     {
-        $this->contextRegistry = $this->getMockBuilder(ContextRegistry::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->contextMediator = $this->getMockBuilder(ConnectorContextMediator::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->contextRegistry = $this->createMock(ContextRegistry::class);
+        $this->contextMediator = $this->createMock(ConnectorContextMediator::class);
         $this->managerRegistry = $this->createMock(ManagerRegistry::class);
         $this->logger = $this->createMock(LoggerInterface::class);
 
@@ -67,19 +53,14 @@ class UnsubscribedFromAccountContactReaderTest extends \PHPUnit\Framework\TestCa
 
     /**
      * @dataProvider readerDataProvider
-     *
-     * @param array $data
-     * @param \DateTime|null $expectedDate
      */
-    public function testReader(array $data, $expectedDate)
+    public function testReader(array $data, ?\DateTime $expectedDate)
     {
         $channel = $this->createMock(Channel::class);
 
         $iterator = $this->createMock(\Iterator::class);
 
-        $transport = $this->getMockBuilder(DotmailerTransport::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $transport = $this->createMock(DotmailerTransport::class);
         $transport->expects($this->once())
             ->method('getUnsubscribedFromAccountsContacts')
             ->with($expectedDate)
@@ -91,7 +72,7 @@ class UnsubscribedFromAccountContactReaderTest extends \PHPUnit\Framework\TestCa
         $this->assertEquals($iterator, $this->reader->getSourceIterator());
     }
 
-    public function readerDataProvider()
+    public function readerDataProvider(): array
     {
         return [
             'initial sync' => [
@@ -147,17 +128,10 @@ class UnsubscribedFromAccountContactReaderTest extends \PHPUnit\Framework\TestCa
         ];
     }
 
-    /**
-     * @param array                                    $data
-     * @param \PHPUnit\Framework\MockObject\MockObject $channel
-     * @param \PHPUnit\Framework\MockObject\MockObject $transport
-     */
-    protected function setupReaderDependenciesStubs(array $data, $channel, $transport)
+    private function setupReaderDependenciesStubs(array $data, Channel $channel, DotmailerTransport $transport): void
     {
         $statusRepositoryMap = [];
-        $statusRepository = $this->getMockBuilder(EntityRepository::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $statusRepository = $this->createMock(EntityRepository::class);
         if (!empty($data['unsubscribedContactConnectorStatus'])) {
             $status = $this->createMock(Status::class);
 
@@ -201,11 +175,9 @@ class UnsubscribedFromAccountContactReaderTest extends \PHPUnit\Framework\TestCa
 
         $this->managerRegistry->expects($this->any())
             ->method('getRepository')
-            ->willReturnMap(
-                [
-                    ['OroIntegrationBundle:Status', null, $statusRepository]
-                ]
-            );
+            ->willReturnMap([
+                ['OroIntegrationBundle:Status', null, $statusRepository]
+            ]);
         $this->contextMediator->expects($this->any())
             ->method('getChannel')
             ->willReturn($channel);
@@ -214,15 +186,11 @@ class UnsubscribedFromAccountContactReaderTest extends \PHPUnit\Framework\TestCa
             ->method('getInitializedTransport')
             ->with($channel)
             ->willReturn($transport);
-        $jobExecution = $this->getMockBuilder(JobExecution::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $jobExecution = $this->createMock(JobExecution::class);
         $jobExecution->expects($this->any())
             ->method('getStepExecutions')
             ->willReturn(new ArrayCollection([]));
-        $stepExecution = $this->getMockBuilder(StepExecution::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $stepExecution = $this->createMock(StepExecution::class);
         $stepExecution->expects($this->any())
             ->method('getJobExecution')
             ->willReturn($jobExecution);

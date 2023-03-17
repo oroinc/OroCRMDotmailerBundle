@@ -9,8 +9,9 @@ class MappingTrackedFieldsEventTest extends \PHPUnit\Framework\TestCase
     public function testGetSet()
     {
         $event = new MappingTrackedFieldsEvent(['fields']);
-        $this->assertEquals($event->getFields(), ['fields']);
+        $this->assertEquals(['fields'], $event->getFields());
+
         $event->setFields(['new fields']);
-        $this->assertEquals($event->getFields(), ['new fields']);
+        $this->assertEquals(['new fields'], $event->getFields());
     }
 }

@@ -2,39 +2,44 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\EventListener;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Knp\Menu\MenuFactory;
 use Knp\Menu\MenuItem;
 use Oro\Bundle\DotmailerBundle\EventListener\NavigationListener;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\IntegrationBundle\Entity\Repository\ChannelRepository;
 use Oro\Bundle\NavigationBundle\Event\ConfigureMenuEvent;
 
 class NavigationListenerTest extends \PHPUnit\Framework\TestCase
 {
-    /** @var \PHPUnit\Framework\MockObject\MockObject */
-    protected $registry;
+    /** @var ManagerRegistry|\PHPUnit\Framework\MockObject\MockObject */
+    private $registry;
 
     /** @var NavigationListener */
-    protected $listener;
+    private $listener;
 
     protected function setUp(): void
     {
-        $this->registry = $this->getMockBuilder('Doctrine\Persistence\ManagerRegistry')
-            ->disableOriginalConstructor()->getMock();
+        $this->registry = $this->createMock(ManagerRegistry::class);
+
         $this->listener = new NavigationListener($this->registry);
     }
 
     public function testOnNavigationConfigureHasDMIntegrations()
     {
-        $channelRepository = $this->getMockBuilder('Oro\Bundle\IntegrationBundle\Entity\Repository\ChannelRepository')
-                    ->disableOriginalConstructor()->getMock();
-        $this->registry->expects($this->once())->method('getRepository')->with('OroIntegrationBundle:Channel')
-            ->will($this->returnValue($channelRepository));
-        $channelRepository->expects($this->once())->method('findBy')->with(['type' => ChannelType::TYPE])
-            ->will($this->returnValue(['integration']));
+        $channelRepository = $this->createMock(ChannelRepository::class);
+        $this->registry->expects($this->once())
+            ->method('getRepository')
+            ->with('OroIntegrationBundle:Channel')
+            ->willReturn($channelRepository);
+        $channelRepository->expects($this->once())
+            ->method('findBy')
+            ->with(['type' => ChannelType::TYPE])
+            ->willReturn(['integration']);
         $factory = new MenuFactory();
-        $menu         = new MenuItem('test_menu', $factory);
+        $menu = new MenuItem('test_menu', $factory);
         $marketingTab = new MenuItem('marketing_tab', $factory);
-        $dmTab        = new MenuItem('oro_dotmailer', $factory);
+        $dmTab = new MenuItem('oro_dotmailer', $factory);
         $marketingTab->addChild($dmTab)->setDisplay(true);
         $menu->addChild($marketingTab);
 
@@ -45,16 +50,19 @@ class NavigationListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testOnNavigationConfigureNoDMIntegrations()
     {
-        $channelRepository = $this->getMockBuilder('Oro\Bundle\IntegrationBundle\Entity\Repository\ChannelRepository')
-                    ->disableOriginalConstructor()->getMock();
-        $this->registry->expects($this->once())->method('getRepository')->with('OroIntegrationBundle:Channel')
-            ->will($this->returnValue($channelRepository));
-        $channelRepository->expects($this->once())->method('findBy')->with(['type' => ChannelType::TYPE])
-            ->will($this->returnValue([]));
+        $channelRepository = $this->createMock(ChannelRepository::class);
+        $this->registry->expects($this->once())
+            ->method('getRepository')
+            ->with('OroIntegrationBundle:Channel')
+            ->willReturn($channelRepository);
+        $channelRepository->expects($this->once())
+            ->method('findBy')
+            ->with(['type' => ChannelType::TYPE])
+            ->willReturn([]);
         $factory = new MenuFactory();
-        $menu         = new MenuItem('test_menu', $factory);
+        $menu = new MenuItem('test_menu', $factory);
         $marketingTab = new MenuItem('marketing_tab', $factory);
-        $dmTab        = new MenuItem('oro_dotmailer', $factory);
+        $dmTab = new MenuItem('oro_dotmailer', $factory);
         $marketingTab->addChild($dmTab)->setDisplay(true);
         $menu->addChild($marketingTab);
 

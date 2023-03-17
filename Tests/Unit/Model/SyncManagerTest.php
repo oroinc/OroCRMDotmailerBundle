@@ -13,26 +13,29 @@ use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
-use Oro\Component\Testing\Unit\EntityTrait;
+use Oro\Component\Testing\ReflectionUtil;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SyncManagerTest extends \PHPUnit\Framework\TestCase
 {
-    use EntityTrait;
+    /** @var DoctrineHelper|\PHPUnit\Framework\MockObject\MockObject */
+    private $doctrineHelper;
 
-    private DoctrineHelper|\PHPUnit\Framework\MockObject\MockObject $doctrineHelper;
+    /** @var MappingProvider|\PHPUnit\Framework\MockObject\MockObject */
+    private $mappingProvider;
 
-    private MappingProvider|\PHPUnit\Framework\MockObject\MockObject $mappingProvider;
+    /** @var ConfigManager|\PHPUnit\Framework\MockObject\MockObject */
+    private $configManager;
 
-    private ConfigManager|\PHPUnit\Framework\MockObject\MockObject $configManager;
-
-    private SyncManager $syncManager;
+    /** @var SyncManager */
+    private $syncManager;
 
     protected function setUp(): void
     {
         $this->doctrineHelper = $this->createMock(DoctrineHelper::class);
         $this->mappingProvider = $this->createMock(MappingProvider::class);
         $this->configManager = $this->createMock(ConfigManager::class);
+
         $this->syncManager = new SyncManager($this->doctrineHelper, $this->mappingProvider, $this->configManager);
     }
 
@@ -56,9 +59,8 @@ class SyncManagerTest extends \PHPUnit\Framework\TestCase
             ->willReturn(SyncManager::FORCE_SYNC_VIRTUALS_ONLY);
         $addressBookRepository = $this->createMock(AddressBookRepository::class);
         $channelId = 1;
-        /** @var Channel $channel */
-        $channel = $this->getEntity(Channel::class, ['id' => $channelId]);
-        $addressBook = $this->createAddressBook($channel, 'EntityClass');
+        $channel = $this->getChannel($channelId);
+        $addressBook = $this->getAddressBook($channel, 'EntityClass');
         $addressBookRepository->expects($this->once())
             ->method('getAddressBooksWithML')
             ->willReturn([$addressBook]);
@@ -66,12 +68,10 @@ class SyncManagerTest extends \PHPUnit\Framework\TestCase
         $addressBookContactRepository = $this->createMock(AddressBookContactRepository::class);
         $this->doctrineHelper->expects($this->any())
             ->method('getEntityRepositoryForClass')
-            ->willReturnMap(
-                [
-                    [AddressBook::class, $addressBookRepository],
-                    [AddressBookContact::class, $addressBookContactRepository],
-                ]
-            );
+            ->willReturnMap([
+                [AddressBook::class, $addressBookRepository],
+                [AddressBookContact::class, $addressBookContactRepository],
+            ]);
 
         $this->mappingProvider->expects($this->once())
             ->method('entityHasVirutalFieldsMapped')
@@ -94,10 +94,9 @@ class SyncManagerTest extends \PHPUnit\Framework\TestCase
         $addressBookRepository = $this->createMock(AddressBookRepository::class);
         $addressBooks = [];
         $channelId = 1;
-        /** @var Channel $channel */
-        $channel = $this->getEntity(Channel::class, ['id' => $channelId]);
-        $addressBooks[] = $this->createAddressBook($channel, 'EntityClass');
-        $addressBooks[] = $this->createAddressBook($channel, 'AnotherEntityClass');
+        $channel = $this->getChannel($channelId);
+        $addressBooks[] = $this->getAddressBook($channel, 'EntityClass');
+        $addressBooks[] = $this->getAddressBook($channel, 'AnotherEntityClass');
         $addressBookRepository->expects($this->once())
             ->method('getAddressBooksWithML')
             ->willReturn($addressBooks);
@@ -105,12 +104,10 @@ class SyncManagerTest extends \PHPUnit\Framework\TestCase
         $addressBookContactRepository = $this->createMock(AddressBookContactRepository::class);
         $this->doctrineHelper->expects($this->any())
             ->method('getEntityRepositoryForClass')
-            ->willReturnMap(
-                [
-                    [AddressBook::class, $addressBookRepository],
-                    [AddressBookContact::class, $addressBookContactRepository],
-                ]
-            );
+            ->willReturnMap([
+                [AddressBook::class, $addressBookRepository],
+                [AddressBookContact::class, $addressBookContactRepository],
+            ]);
         $this->mappingProvider->expects($this->any())
             ->method('getExportMappingConfigForEntity')
             ->willReturnMap([
@@ -134,10 +131,9 @@ class SyncManagerTest extends \PHPUnit\Framework\TestCase
         $addressBookRepository = $this->createMock(AddressBookRepository::class);
         $addressBooks = [];
         $channelId = 1;
-        /** @var Channel $channel */
-        $channel = $this->getEntity(Channel::class, ['id' => $channelId]);
-        $addressBooks[] = $this->createAddressBook($channel, 'EntityClass');
-        $addressBooks[] = $this->createAddressBook($channel, 'AnotherEntityClass');
+        $channel = $this->getChannel($channelId);
+        $addressBooks[] = $this->getAddressBook($channel, 'EntityClass');
+        $addressBooks[] = $this->getAddressBook($channel, 'AnotherEntityClass');
         $addressBookRepository->expects($this->once())
             ->method('getAddressBooksWithML')
             ->willReturn($addressBooks);
@@ -145,12 +141,10 @@ class SyncManagerTest extends \PHPUnit\Framework\TestCase
         $addressBookContactRepository = $this->createMock(AddressBookContactRepository::class);
         $this->doctrineHelper->expects($this->any())
             ->method('getEntityRepositoryForClass')
-            ->willReturnMap(
-                [
-                    [AddressBook::class, $addressBookRepository],
-                    [AddressBookContact::class, $addressBookContactRepository],
-                ]
-            );
+            ->willReturnMap([
+                [AddressBook::class, $addressBookRepository],
+                [AddressBookContact::class, $addressBookContactRepository],
+            ]);
         $eventData = [
             1 => ['EntityClass']
         ];
@@ -179,7 +173,7 @@ class SyncManagerTest extends \PHPUnit\Framework\TestCase
         $this->syncManager->forceMarkEntityUpdate();
     }
 
-    private function createAddressBook(Channel $channel, string $entityClass): AddressBook
+    private function getAddressBook(Channel $channel, string $entityClass): AddressBook
     {
         $marketingList = new MarketingList();
         $marketingList->setEntity($entityClass);
@@ -188,5 +182,13 @@ class SyncManagerTest extends \PHPUnit\Framework\TestCase
         $addressBook->setChannel($channel);
 
         return $addressBook;
+    }
+
+    private function getChannel(int $id): Channel
+    {
+        $channel = new Channel();
+        ReflectionUtil::setId($channel, $id);
+
+        return $channel;
     }
 }

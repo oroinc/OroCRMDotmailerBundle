@@ -2,58 +2,55 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Rest;
 
+use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\Client;
 use Oro\Component\Testing\ReflectionUtil;
 use PHPUnit\Framework\MockObject\Stub\ReturnCallback;
+use Psr\Log\LoggerInterface;
+use RestClient\Request;
+use RestClient\Response;
 
 class ClientTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var Client
-     */
-    protected $client;
+    /** @var Response|\PHPUnit\Framework\MockObject\MockObject */
+    private $response;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $response;
+    /** @var \stdClass */
+    private $info;
 
-    /**
-     * @var \stdClass
-     */
-    protected $info;
+    /** @var LoggerInterface|\PHPUnit\Framework\MockObject\MockObject */
+    private $logger;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $logger;
+    /** @var Client */
+    private $client;
 
     protected function setUp(): void
     {
-        $this->logger = $this->createMock('Psr\Log\LoggerInterface');
+        $this->response = $this->createMock(Response::class);
+        $this->info = new \stdClass();
+        $this->logger = $this->createMock(LoggerInterface::class);
+
         $this->client = new Client('username', 'password');
         $this->client->setLogger($this->logger);
-        $this->response = $this->getMockBuilder('\RestClient\Response')->disableOriginalConstructor()->getMock();
-        $this->info = new \stdClass();
     }
 
-    protected function initClient()
+    private function initClient(): void
     {
-        $restClient = $this->createMock('\RestClient\Client');
+        $restClient = $this->createMock(\RestClient\Client::class);
 
         ReflectionUtil::setPropertyValue($this->client, 'restClient', $restClient);
 
-        $request = $this->createMock('\RestClient\Request');
+        $request = $this->createMock(Request::class);
 
         $restClient->expects($this->once())
             ->method('newRequest')
-            ->will($this->returnValue($request));
+            ->willReturn($request);
         $request->expects($this->once())
             ->method('getResponse')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
         $this->response->expects($this->once())
             ->method('getInfo')
-            ->will($this->returnValue($this->info));
+            ->willReturn($this->info);
     }
 
     /**
@@ -66,17 +63,14 @@ class ClientTest extends \PHPUnit\Framework\TestCase
         $result = 'Ok';
         $this->response->expects($this->once())
             ->method('getParsedResponse')
-            ->will($this->returnValue($result));
+            ->willReturn($result);
 
         $this->info->http_code = $code;
 
         $this->assertEquals($result, $this->client->execute('testCall'));
     }
 
-    /**
-     * @return array
-     */
-    public function httpCodeDataProvider()
+    public function httpCodeDataProvider(): array
     {
         return [
             [200],
@@ -105,7 +99,7 @@ class ClientTest extends \PHPUnit\Framework\TestCase
         $result = 'Ok';
         $this->response->expects($this->exactly(2))
             ->method('getParsedResponse')
-            ->will($this->returnValue($result));
+            ->willReturn($result);
 
         $this->info->http_code = 301;
         $params = [301 => [$this->response, 'getParsedResponse']];
@@ -115,11 +109,8 @@ class ClientTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider executeAttemptsFailedDataProvider
-     * @param string $responseBody
-     * @param string $responseCode
-     * @param string $expectedMessage
      */
-    public function testExecuteAttemptsFailed($responseBody, $responseCode, $expectedMessage)
+    public function testExecuteAttemptsFailed(string $responseBody, int $responseCode, string $expectedMessage)
     {
         $exceptionMessage = 'Dotmailer REST client exception:' . PHP_EOL .
             '[exception type] Oro\Bundle\DotmailerBundle\Exception\RestClientAttemptException' . PHP_EOL .
@@ -130,33 +121,33 @@ class ClientTest extends \PHPUnit\Framework\TestCase
             '[response code] ' . $responseCode . PHP_EOL .
             '[response body] ' . $responseBody;
 
-        $this->expectException(\Oro\Bundle\DotmailerBundle\Exception\RestClientException::class);
+        $this->expectException(RestClientException::class);
         $this->expectExceptionMessage($exceptionMessage);
 
-        $restClient = $this->createMock('RestClient\Client');
+        $restClient = $this->createMock(\RestClient\Client::class);
 
         ReflectionUtil::setPropertyValue($this->client, 'restClient', $restClient);
         ReflectionUtil::setPropertyValue($this->client, 'sleepBetweenAttempt', [0.1, 0.2, 0.3, 0.4]);
 
-        $request = $this->createMock('RestClient\Request');
+        $request = $this->createMock(Request::class);
 
         $restClient->expects($this->exactly(5))
             ->method('newRequest')
-            ->will($this->returnValue($request));
+            ->willReturn($request);
 
         $request->expects($this->exactly(5))
             ->method('getResponse')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->response->expects($this->exactly(5))
             ->method('getInfo')
-            ->will($this->returnValue($this->info));
+            ->willReturn($this->info);
 
         $this->info->http_code = $responseCode;
 
         $this->response->expects($this->exactly(5))
             ->method('getParsedResponse')
-            ->will($this->returnValue($responseBody));
+            ->willReturn($responseBody);
 
         $this->logger->expects($this->exactly(8))
             ->method('warning')
@@ -174,10 +165,7 @@ class ClientTest extends \PHPUnit\Framework\TestCase
         $this->client->execute('testCall');
     }
 
-    /**
-     * @return array
-     */
-    public function executeAttemptsFailedDataProvider()
+    public function executeAttemptsFailedDataProvider(): array
     {
         return [
             [
@@ -200,12 +188,12 @@ class ClientTest extends \PHPUnit\Framework\TestCase
 
     public function testExecuteAttemptsPassed()
     {
-        $restClient = $this->createMock('RestClient\Client');
+        $restClient = $this->createMock(\RestClient\Client::class);
 
         ReflectionUtil::setPropertyValue($this->client, 'restClient', $restClient);
         ReflectionUtil::setPropertyValue($this->client, 'sleepBetweenAttempt', [0.1, 0.2, 0.3, 0.4]);
 
-        $request = $this->createMock('RestClient\Request');
+        $request = $this->createMock(Request::class);
 
         $exceptionMessagePattern = 'Dotmailer REST client exception:' . PHP_EOL .
             '[exception type] Exception' . PHP_EOL .
@@ -253,18 +241,18 @@ class ClientTest extends \PHPUnit\Framework\TestCase
 
         $request->expects($this->once())
             ->method('getResponse')
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $this->response->expects($this->once())
             ->method('getInfo')
-            ->will($this->returnValue($this->info));
+            ->willReturn($this->info);
 
         $this->info->http_code = 200;
 
         $expectedResult = 'Some result';
         $this->response->expects($this->once())
             ->method('getParsedResponse')
-            ->will($this->returnValue($expectedResult));
+            ->willReturn($expectedResult);
 
         $this->assertEquals($expectedResult, $this->client->execute('testCall'));
     }

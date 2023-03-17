@@ -6,17 +6,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\DotmailerBundle\Entity\Activity;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 class ContactTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var Contact
-     */
-    protected $entity;
+    private Contact $entity;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         $this->entity = new Contact();
@@ -25,27 +20,27 @@ class ContactTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider flatPropertiesDataProvider
      */
-    public function testGetSet($property, $value, $expected)
+    public function testGetSet(string $property, mixed $value, mixed $expected)
     {
-        call_user_func_array(array($this->entity, 'set' . ucfirst($property)), array($value));
-        $this->assertEquals($expected, call_user_func_array(array($this->entity, 'get' . ucfirst($property)), array()));
+        call_user_func([$this->entity, 'set' . ucfirst($property)], $value);
+        $this->assertEquals($expected, call_user_func_array([$this->entity, 'get' . ucfirst($property)], []));
     }
 
-    public function flatPropertiesDataProvider()
+    public function flatPropertiesDataProvider(): array
     {
         $now = new \DateTime('now');
         $channel = new Channel();
-        $organization = $this->createMock('Oro\Bundle\OrganizationBundle\Entity\Organization');
-        $dataFields = array('test_field' => 'test');
+        $organization = $this->createMock(Organization::class);
+        $dataFields = ['test_field' => 'test'];
 
-        return array(
-            'channel' => array('channel', $channel, $channel),
-            'email' => array('email', 'TEST@from.com', 'test@from.com'),
-            'createdAt' => array('createdAt', $now, $now),
-            'updatedAt' => array('updatedAt', $now, $now),
-            'dataFields' => array('dataFields', $dataFields, $dataFields),
-            'owner' => array('owner', $organization, $organization),
-        );
+        return [
+            'channel' => ['channel', $channel, $channel],
+            'email' => ['email', 'TEST@from.com', 'test@from.com'],
+            'createdAt' => ['createdAt', $now, $now],
+            'updatedAt' => ['updatedAt', $now, $now],
+            'dataFields' => ['dataFields', $dataFields, $dataFields],
+            'owner' => ['owner', $organization, $organization],
+        ];
     }
 
     public function testOriginIdWorks()

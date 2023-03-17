@@ -6,10 +6,7 @@ use Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator\Stub\StubO
 
 class OverlapIteratorTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var StubOverlapIterator
-     */
-    protected $iterator;
+    private StubOverlapIterator $iterator;
 
     protected function setUp(): void
     {
@@ -18,14 +15,14 @@ class OverlapIteratorTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider iteratorDataProvider
-     * @param int $batchSize
-     * @param int $overlap
-     * @param array $items
-     * @param array $expectedItems
-     * @param int $expectedLoadCount
      */
-    public function testIteratorWorks($batchSize, $overlap, array $items, array $expectedItems, $expectedLoadCount)
-    {
+    public function testIteratorWorks(
+        int $batchSize,
+        int $overlap,
+        array $items,
+        array $expectedItems,
+        int $expectedLoadCount
+    ) {
         $this->iterator->setBatchSize($batchSize);
         $this->iterator->setOverlapSize($overlap);
         $this->iterator->initStub($items);
@@ -40,9 +37,8 @@ class OverlapIteratorTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @return array
      */
-    public function iteratorDataProvider()
+    public function iteratorDataProvider(): array
     {
         $items = [
             0 => ['first expected item'],

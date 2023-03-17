@@ -3,28 +3,30 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator;
 
 use DotMailer\Api\DataTypes\ApiCampaignSummary;
+use DotMailer\Api\Resources\IResources;
+use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterator;
 
 class CampaignSummaryIteratorTest extends \PHPUnit\Framework\TestCase
 {
     public function testIterator()
     {
-        $resource = $this->createMock('DotMailer\Api\Resources\IResources');
-        $firstCampaign = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\Campaign');
+        $resource = $this->createMock(IResources::class);
+        $firstCampaign = $this->createMock(Campaign::class);
         $firstCampaign->expects($this->once())
             ->method('getOriginId')
-            ->will($this->returnValue($firstCampaignOriginId = 42));
+            ->willReturn($firstCampaignOriginId = 42);
         $firstCampaign->expects($this->once())
             ->method('getId')
-            ->will($this->returnValue($firstCampaignId = 1));
+            ->willReturn($firstCampaignId = 1);
 
-        $secondCampaign = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\Campaign');
+        $secondCampaign = $this->createMock(Campaign::class);
         $secondCampaign->expects($this->once())
             ->method('getOriginId')
-            ->will($this->returnValue($secondCampaignOriginId = 28));
+            ->willReturn($secondCampaignOriginId = 28);
         $secondCampaign->expects($this->once())
             ->method('getId')
-            ->will($this->returnValue($secondCampaignId = 2));
+            ->willReturn($secondCampaignId = 2);
 
         $iterator = new CampaignSummaryIterator(
             $resource,
@@ -41,14 +43,10 @@ class CampaignSummaryIteratorTest extends \PHPUnit\Framework\TestCase
 
         $resource->expects($this->exactly(2))
             ->method('GetCampaignSummary')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        [$firstCampaignOriginId, $expectedApiCampaigns[0]],
-                        [$secondCampaignOriginId, $expectedApiCampaigns[1]],
-                    ]
-                )
-            );
+            ->willReturnMap([
+                [$firstCampaignOriginId, $expectedApiCampaigns[0]],
+                [$secondCampaignOriginId, $expectedApiCampaigns[1]],
+            ]);
 
         $iterator->rewind();
 

@@ -19,7 +19,6 @@ class ContactsExportStatusUpdateCommandTest extends WebTestCase
     protected function setUp(): void
     {
         parent::setUp();
-
         $this->initClient();
         $this->loadFixtures([LoadChannelData::class]);
     }

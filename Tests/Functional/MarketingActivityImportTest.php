@@ -3,7 +3,10 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use DotMailer\Api\DataTypes\ApiCampaignContactSummaryList;
+use Oro\Bundle\ContactBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ActivityContactConnector;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadActivityData;
+use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 
 class MarketingActivityImportTest extends AbstractImportExportTestCase
@@ -11,21 +14,13 @@ class MarketingActivityImportTest extends AbstractImportExportTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->loadFixtures(
-            [
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadActivityData',
-                'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData',
-            ]
-        );
+        $this->loadFixtures([LoadActivityData::class, LoadStatusData::class]);
     }
 
     /**
      * @dataProvider importDataProvider
-     *
-     * @param array $expected
-     * @param array $activityList
      */
-    public function testImport($expected, $activityList)
+    public function testImport(array $expected, array $activityList)
     {
         $entity = new ApiCampaignContactSummaryList();
         foreach ($activityList as $listItem) {
@@ -38,11 +33,11 @@ class MarketingActivityImportTest extends AbstractImportExportTestCase
         $this->resource->expects($this->once())
             ->method('GetCampaignActivitiesSinceDateByDate')
             ->with($firstCampaignId)
-            ->will($this->returnValue($entity));
+            ->willReturn($entity);
         $this->resource->expects($this->once())
             ->method('GetCampaignActivities')
             ->with($secondCampaignId)
-            ->will($this->returnValue(new ApiCampaignContactSummaryList()));
+            ->willReturn(new ApiCampaignContactSummaryList());
 
         $channel = $this->getReference('oro_dotmailer.channel.second');
 
@@ -82,7 +77,7 @@ class MarketingActivityImportTest extends AbstractImportExportTestCase
                     $searchCriteria = [
                         'type' => $type,
                         'entityId' => $this->getReference($activityExpected['contact'])->getId(),
-                        'entityClass' => 'Oro\Bundle\ContactBundle\Entity\Contact',
+                        'entityClass' => Contact::class,
                         'campaign' => $this->getReference('oro_dotmailer.marketing_campaign.first'),
                         'relatedCampaignId' => $this->getReference('oro_dotmailer.email_campaign.first')->getId()
                     ];
@@ -93,33 +88,30 @@ class MarketingActivityImportTest extends AbstractImportExportTestCase
         }
     }
 
-    /**
-     * @return array
-     */
-    public function importDataProvider()
+    public function importDataProvider(): array
     {
         return [
             [
                 'expected'     => [
                     [
-                        'email'                => 'nick.case@example.com',
-                        'dateSent'             => new \DateTime('2015-04-15T13:48:33.013Z'),
-                        'send'                 => true,
-                        'unsubscribed'         => false,
-                        'softBounced'          => false,
-                        'hardBounced'          => true,
-                        'contactid'            => 'oro_dotmailer.contact.nick_case.second_channel',
-                        'contact'               => 'oro_dotmailer.orocrm_contact.nick.case'
+                        'email'        => 'nick.case@example.com',
+                        'dateSent'     => new \DateTime('2015-04-15T13:48:33.013Z'),
+                        'send'         => true,
+                        'unsubscribed' => false,
+                        'softBounced'  => false,
+                        'hardBounced'  => true,
+                        'contactid'    => 'oro_dotmailer.contact.nick_case.second_channel',
+                        'contact'      => 'oro_dotmailer.orocrm_contact.nick.case'
                     ],
                     [
-                        'email'                => 'mike.case@example.com',
-                        'dateSent'             => new \DateTime('2015-04-15T13:48:33.013Z'),
-                        'send'                 => true,
-                        'unsubscribed'         => true,
-                        'softBounced'          => false,
-                        'hardBounced'          => false,
-                        'contactid'            => 'oro_dotmailer.contact.mike_case.second_channel',
-                        'contact'              => 'oro_dotmailer.orocrm_contact.mike.case'
+                        'email'        => 'mike.case@example.com',
+                        'dateSent'     => new \DateTime('2015-04-15T13:48:33.013Z'),
+                        'send'         => true,
+                        'unsubscribed' => true,
+                        'softBounced'  => false,
+                        'hardBounced'  => false,
+                        'contactid'    => 'oro_dotmailer.contact.mike_case.second_channel',
+                        'contact'      => 'oro_dotmailer.orocrm_contact.mike.case'
                     ],
                 ],
                 'activityList' => [

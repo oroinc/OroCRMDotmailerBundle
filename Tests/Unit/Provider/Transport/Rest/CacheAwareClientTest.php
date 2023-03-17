@@ -12,8 +12,7 @@ use Symfony\Contracts\Cache\ItemInterface;
 
 class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
 {
-    /** @var CacheAwareClient */
-    protected $client;
+    private CacheAwareClient $client;
 
     protected function setUp(): void
     {
@@ -34,7 +33,9 @@ class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
     public function testSetBaseUrl()
     {
         $client = $this->createMock(DotmailerClientInterface::class);
-        $client->expects($this->once())->method('setBaseUrl')->with('test');
+        $client->expects($this->once())
+            ->method('setBaseUrl')
+            ->with('test');
         $this->client->setClient($client);
         $this->client->setBaseUrl('test');
     }
@@ -43,7 +44,9 @@ class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
     {
         $client = $this->createMock(DotmailerClientInterface::class);
         $logger = $this->createMock(LoggerInterface::class);
-        $client->expects($this->once())->method('setLogger')->with($logger);
+        $client->expects($this->once())
+            ->method('setLogger')
+            ->with($logger);
         $this->client->setClient($client);
         $this->client->setLogger($logger);
     }
@@ -56,9 +59,11 @@ class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
         $this->client->setClient($client);
         $this->client->setCache($cache);
 
-        $cache->expects($this->once())->method('clear');
+        $cache->expects($this->once())
+            ->method('clear');
 
-        $client->expects($this->once())->method('execute');
+        $client->expects($this->once())
+            ->method('execute');
 
         $this->client->execute([]);
     }
@@ -71,9 +76,11 @@ class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
         $this->client->setClient($client);
         $this->client->setCache($cache);
 
-        $cache->expects($this->once())->method('clear');
+        $cache->expects($this->once())
+            ->method('clear');
 
-        $client->expects($this->once())->method('execute');
+        $client->expects($this->once())
+            ->method('execute');
 
         $this->client->execute(['url', Request::METHOD_POST]);
     }
@@ -90,11 +97,11 @@ class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
         $cache->expects($this->once())
             ->method('get')
             ->willReturnCallback(function ($cacheKey, $callback) {
-                $item = $this->createMock(ItemInterface::class);
-                return $callback($item);
+                return $callback($this->createMock(ItemInterface::class));
             });
 
-        $logger->expects($this->once())->method('debug');
+        $logger->expects($this->once())
+            ->method('debug');
 
         $this->client->execute(['url', Request::METHOD_GET]);
     }
@@ -110,14 +117,16 @@ class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
         $data = 'response data';
         $params = ['url', Request::METHOD_GET];
 
-        $client->expects($this->once())->method('execute')->with($params)->willReturn($data);
+        $client->expects($this->once())
+            ->method('execute')
+            ->with($params)
+            ->willReturn($data);
         $cacheKey = $this->getCacheKey($params);
         $cache->expects($this->once())
             ->method('get')
             ->with($cacheKey)
             ->willReturnCallback(function ($cacheKey, $callback) {
-                $item = $this->createMock(ItemInterface::class);
-                return $callback($item);
+                return $callback($this->createMock(ItemInterface::class));
             });
 
         $this->client->execute($params);
@@ -135,14 +144,17 @@ class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
         $params = ['url', Request::METHOD_GET];
 
         $cacheKey = $this->getCacheKey($params);
-        $cache->expects($this->once())->method('get')->with($cacheKey)->willReturn($data);
+        $cache->expects($this->once())
+            ->method('get')
+            ->with($cacheKey)
+            ->willReturn($data);
 
         $this->client->execute($params);
     }
 
     private function getCacheKey(array $paramArr = []): string
     {
-        list($requestUrl) = array_pad(array_values($paramArr), 1, null);
+        [$requestUrl] = array_pad(array_values($paramArr), 1, null);
         return UniversalCacheKeyGenerator::normalizeCacheKey('namespace' . md5($requestUrl));
     }
 }

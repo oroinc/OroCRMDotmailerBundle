@@ -9,10 +9,7 @@ use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 
 class AddressBookContactsExportRepositoryTest extends WebTestCase
 {
-    /**
-     * @var AddressBookContactsExportRepository
-     */
-    private $repository;
+    private AddressBookContactsExportRepository $repository;
 
     protected function setUp(): void
     {

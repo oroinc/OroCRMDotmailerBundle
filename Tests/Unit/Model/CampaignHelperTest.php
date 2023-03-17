@@ -6,10 +6,7 @@ use Oro\Bundle\DotmailerBundle\Model\CampaignHelper;
 
 class CampaignHelperTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var CampaignHelper
-     */
-    protected $helper;
+    private CampaignHelper $helper;
 
     protected function setUp(): void
     {
@@ -18,19 +15,13 @@ class CampaignHelperTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider codesDataProvider
-     * @param string $name
-     * @param string $originId
-     * @param string $expectedCode
      */
-    public function testGenerateCode($name, $originId, $expectedCode)
+    public function testGenerateCode(string $name, string $originId, string $expectedCode)
     {
         $this->assertEquals($expectedCode, $this->helper->generateCode($name, $originId));
     }
 
-    /**
-     * @return array
-     */
-    public function codesDataProvider()
+    public function codesDataProvider(): array
     {
         return [
             [

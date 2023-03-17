@@ -9,14 +9,8 @@ class ChangedFieldLogTest extends \PHPUnit\Framework\TestCase
 {
     use EntityTestCaseTrait;
 
-    /**
-     * @var ChangedFieldLog
-     */
-    protected $entity;
+    private ChangedFieldLog $entity;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         $this->entity = new ChangedFieldLog();

@@ -6,10 +6,7 @@ use Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Iterator\Stub\StubA
 
 class AbstractIteratorTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var StubAbstractIterator
-     */
-    protected $iterator;
+    protected StubAbstractIterator $iterator;
 
     protected function setUp(): void
     {
@@ -18,12 +15,8 @@ class AbstractIteratorTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider iteratorDataProvider
-     * @param int $batchSize
-     * @param array $items
-     * @param array $expectedItems
-     * @param int $expectedLoadCount
      */
-    public function testIteratorWorks($batchSize, array $items, array $expectedItems, $expectedLoadCount)
+    public function testIteratorWorks(int $batchSize, array $items, array $expectedItems, int $expectedLoadCount)
     {
         $this->iterator->setBatchSize($batchSize);
         $this->iterator->initStub($items);
@@ -36,7 +29,7 @@ class AbstractIteratorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedLoadCount, $this->iterator->getLoadCount());
     }
 
-    public function iteratorDataProvider()
+    public function iteratorDataProvider(): array
     {
         $items = [
             0 => ['first expected item'],

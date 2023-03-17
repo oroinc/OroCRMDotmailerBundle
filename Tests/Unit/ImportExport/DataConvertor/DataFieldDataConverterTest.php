@@ -7,8 +7,7 @@ use Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\DataFieldDataConverter
 
 class DataFieldDataConverterTest extends \PHPUnit\Framework\TestCase
 {
-    /** @var DataFieldDataConverter */
-    protected $converter;
+    private DataFieldDataConverter $converter;
 
     protected function setUp(): void
     {

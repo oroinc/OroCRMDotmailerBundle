@@ -12,7 +12,6 @@ class FieldsForceSyncCommandTest extends WebTestCase
     protected function setUp(): void
     {
         parent::setUp();
-
         $this->initClient();
     }
 

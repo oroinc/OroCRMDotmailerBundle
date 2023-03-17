@@ -7,10 +7,7 @@ use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 
 class ImportExportLogHelperTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var ImportExportLogHelper
-     */
-    protected $target;
+    private ImportExportLogHelper $target;
 
     protected function setUp(): void
     {
@@ -24,9 +21,7 @@ class ImportExportLogHelperTest extends \PHPUnit\Framework\TestCase
 
     public function testGetStepExecutionTime()
     {
-        $stepExecution = $this->getMockBuilder(StepExecution::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $stepExecution = $this->createMock(StepExecution::class);
 
         $stepExecutionStartDate = date_create_from_format(
             'Y-m-d H:i:s',
@@ -39,7 +34,7 @@ class ImportExportLogHelperTest extends \PHPUnit\Framework\TestCase
 
         $stepExecution->expects($this->once())
             ->method('getStartTime')
-            ->will($this->returnValue($stepExecutionStartDate));
+            ->willReturn($stepExecutionStartDate);
 
         $stepExecutionTime = $this->target->getFormattedTimeOfStepExecution($stepExecution);
         $this->assertEquals($expectedTime, $stepExecutionTime);

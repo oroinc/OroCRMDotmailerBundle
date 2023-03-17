@@ -9,19 +9,12 @@ use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 
 class MarketingListItemsQueryBuilderProviderTest extends WebTestCase
 {
-    /** @var MarketingListItemsQueryBuilderProvider */
-    private $queryBuilderProvider;
+    private MarketingListItemsQueryBuilderProvider $queryBuilderProvider;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         $this->initClient();
-
-        $this->loadFixtures([
-            LoadDotmailerContactData::class
-        ]);
+        $this->loadFixtures([LoadDotmailerContactData::class]);
 
         $this->queryBuilderProvider = $this->getContainer()
             ->get('oro_dotmailer.provider.marketing_list_items.query_builder');

@@ -9,8 +9,9 @@ class ForceSyncEventTest extends \PHPUnit\Framework\TestCase
     public function testGetSet()
     {
         $event = new ForceSyncEvent(['classes']);
-        $this->assertEquals($event->getClasses(), ['classes']);
+        $this->assertEquals(['classes'], $event->getClasses());
+
         $event->setClasses(['new classes']);
-        $this->assertEquals($event->getClasses(), ['new classes']);
+        $this->assertEquals(['new classes'], $event->getClasses());
     }
 }

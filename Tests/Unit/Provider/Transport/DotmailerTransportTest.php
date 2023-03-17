@@ -8,8 +8,18 @@ use DotMailer\Api\DataTypes\ApiDataField;
 use DotMailer\Api\DataTypes\ApiFileMedia;
 use DotMailer\Api\DataTypes\ApiResubscribeResult;
 use DotMailer\Api\DataTypes\Int32List;
+use DotMailer\Api\Resources\IResources;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Exception\RequiredOptionException;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AppendIterator;
+use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\DataFieldIterator;
+use Oro\Bundle\IntegrationBundle\Entity\Transport;
+use Oro\Bundle\SecurityBundle\Encoder\SymmetricCrypterInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
@@ -17,42 +27,25 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AppendIterator;
  */
 class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var DotmailerTransport
-     */
-    protected $target;
+    /** @var DotmailerResourcesFactory|\PHPUnit\Framework\MockObject\MockObject */
+    private $factory;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $factory;
+    /** @var SymmetricCrypterInterface|\PHPUnit\Framework\MockObject\MockObject */
+    private $encoder;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $logger;
+    /** @var LoggerInterface|\PHPUnit\Framework\MockObject\MockObject */
+    private $logger;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $encoder;
+    /** @var DotmailerTransport */
+    private $target;
 
     protected function setUp(): void
     {
-        $this->factory = $this->createMock(
-            'Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory'
-        );
+        $this->factory = $this->createMock(DotmailerResourcesFactory::class);
+        $this->encoder = $this->createMock(SymmetricCrypterInterface::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
 
-        $this->logger = $this->createMock('Psr\Log\LoggerInterface');
-
-        $this->encoder = $this->getMockBuilder('Oro\Bundle\SecurityBundle\Encoder\SymmetricCrypterInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->target = new DotmailerTransport(
-            $this->factory,
-            $this->encoder
-        );
+        $this->target = new DotmailerTransport($this->factory, $this->encoder);
         $this->target->setLogger($this->logger);
     }
 
@@ -64,30 +57,24 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
         $clientId = uniqid();
         $clientKey = uniqid();
         $clientKeyEncoded = md5($clientKey);
-        $transport = $this->createMock(
-            'Oro\Bundle\IntegrationBundle\Entity\Transport'
-        );
-        $settingsBag = $this->createMock(
-            'Symfony\Component\HttpFoundation\ParameterBag'
-        );
+        $transport = $this->createMock(Transport::class);
+        $settingsBag = $this->createMock(ParameterBag::class);
         $settingsBag->expects($this->exactly(2))
             ->method('get')
-            ->will($this->returnValueMap(
-                [
-                    ['username', null, $username],
-                    ['password', null, $passwordEncoded],
-                    ['clientId', null, $clientId],
-                    ['clientKey', null, $clientKeyEncoded],
-                ]
-            ));
+            ->willReturnMap([
+                ['username', null, $username],
+                ['password', null, $passwordEncoded],
+                ['clientId', null, $clientId],
+                ['clientKey', null, $clientKeyEncoded],
+            ]);
         $transport->expects($this->once())
             ->method('getSettingsBag')
-            ->will($this->returnValue($settingsBag));
+            ->willReturn($settingsBag);
 
         $this->encoder->expects($this->once())
             ->method('decryptData')
             ->with($passwordEncoded)
-            ->will($this->returnValue($password));
+            ->willReturn($password);
 
         $this->factory->expects($this->once())
             ->method('createResources')
@@ -98,44 +85,34 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
 
     public function testInitThrowAnExceptionIfUsernameOptionsEmpty()
     {
-        $this->expectException(\Oro\Bundle\DotmailerBundle\Exception\RequiredOptionException::class);
+        $this->expectException(RequiredOptionException::class);
         $this->expectExceptionMessage('Option "password" is required');
 
-        $transport = $this->createMock(
-            'Oro\Bundle\IntegrationBundle\Entity\Transport'
-        );
-        $settingsBag = $this->createMock(
-            'Symfony\Component\HttpFoundation\ParameterBag'
-        );
+        $transport = $this->createMock(Transport::class);
+        $settingsBag = $this->createMock(ParameterBag::class);
         $transport->expects($this->any())
             ->method('getSettingsBag')
-            ->will($this->returnValue($settingsBag));
+            ->willReturn($settingsBag);
         $settingsBag->expects($this->any())
             ->method('get')
-            ->will($this->returnValueMap(
-                [
-                    ['username', null, 'any not empty username'],
-                    ['password', null, null],
-                ]
-            ));
+            ->willReturnMap([
+                ['username', null, 'any not empty username'],
+                ['password', null, null],
+            ]);
 
         $this->target->init($transport);
     }
 
     public function testInitThrowAnExceptionIfPasswordOptionsEmpty()
     {
-        $this->expectException(\Oro\Bundle\DotmailerBundle\Exception\RequiredOptionException::class);
+        $this->expectException(RequiredOptionException::class);
         $this->expectExceptionMessage('Option "username" is required');
 
-        $transport = $this->createMock(
-            'Oro\Bundle\IntegrationBundle\Entity\Transport'
-        );
-        $settingsBag = $this->createMock(
-            'Symfony\Component\HttpFoundation\ParameterBag'
-        );
+        $transport = $this->createMock(Transport::class);
+        $settingsBag = $this->createMock(ParameterBag::class);
         $transport->expects($this->any())
             ->method('getSettingsBag')
-            ->will($this->returnValue($settingsBag));
+            ->willReturn($settingsBag);
 
         $this->target->init($transport);
     }
@@ -143,7 +120,7 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
     public function testGetUnsubscribedFromAccountsContactsWithoutSyncDate()
     {
         $iterator = $this->target->getUnsubscribedFromAccountsContacts();
-        $this->assertInstanceOf('\EmptyIterator', $iterator);
+        $this->assertInstanceOf(\EmptyIterator::class, $iterator);
     }
 
     public function testGetUnsubscribedFromAccountsContacts()
@@ -160,11 +137,11 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
             ->getMock();
         $contactsList->expects($this->once())
             ->method('toArray')
-            ->will($this->returnValue([]));
+            ->willReturn([]);
         $resource->expects($this->once())
             ->method('GetContactsSuppressedSinceDate')
             ->with($expectedDate->format(\DateTime::ISO8601))
-            ->will($this->returnValue($contactsList));
+            ->willReturn($contactsList);
         $iterator->rewind();
     }
 
@@ -176,7 +153,7 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
         $resource = $this->initTransportStub();
 
         $expectedAddressBookOriginId = 15645;
-        $expectedAddressBook = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
+        $expectedAddressBook = $this->createMock(AddressBook::class);
         $expectedAddressBook->expects($this->any())
             ->method('getOriginId')
             ->willReturn($expectedAddressBookOriginId);
@@ -202,14 +179,14 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
             ->getMock();
         $contactsList->expects($this->once())
             ->method('toArray')
-            ->will($this->returnValue([]));
+            ->willReturn([]);
         $resource->expects($this->once())
             ->method('GetAddressBookContactsUnsubscribedSinceDate')
             ->with(
                 $expectedAddressBookOriginId,
                 $expectedDate->format(\DateTime::ISO8601)
             )
-            ->will($this->returnValue($contactsList));
+            ->willReturn($contactsList);
         $iterator->rewind();
     }
 
@@ -219,7 +196,7 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
 
         $expectedAddressBookOriginId = 15645;
         $expectedDate = new \DateTime();
-        $expectedAddressBook = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
+        $expectedAddressBook = $this->createMock(AddressBook::class);
         $expectedAddressBook->expects($this->any())
             ->method('getOriginId')
             ->willReturn($expectedAddressBookOriginId);
@@ -243,21 +220,21 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
             ->getMock();
         $contactsList->expects($this->once())
             ->method('toArray')
-            ->will($this->returnValue([]));
+            ->willReturn([]);
         $resource->expects($this->once())
             ->method('GetAddressBookContactsUnsubscribedSinceDate')
             ->with(
                 $expectedAddressBookOriginId,
                 $expectedDate->format(\DateTime::ISO8601)
             )
-            ->will($this->returnValue($contactsList));
+            ->willReturn($contactsList);
         $iterator->rewind();
     }
 
     public function testGetCampaignsWithoutAddressBooks()
     {
         $iterator = $this->target->getCampaigns([]);
-        $this->assertInstanceOf('\Iterator', $iterator);
+        $this->assertInstanceOf(\Iterator::class, $iterator);
 
         $this->assertEquals(0, iterator_count($iterator));
     }
@@ -281,11 +258,11 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
             ->getMock();
         $campaignsList->expects($this->once())
             ->method('toArray')
-            ->will($this->returnValue([]));
+            ->willReturn([]);
         $resource->expects($this->once())
             ->method('GetAddressBookCampaigns')
             ->with($expectedAddressBookOriginId)
-            ->will($this->returnValue($campaignsList));
+            ->willReturn($campaignsList);
         $iterator->rewind();
     }
 
@@ -299,14 +276,14 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
             ->getMock();
         $contactsList->expects($this->once())
             ->method('toArray')
-            ->will($this->returnValue([]));
+            ->willReturn([]);
 
         $resource->expects($this->once())
             ->method('GetAddressBookContacts')
             ->with($expectedAddressBookOriginId, true, 1000, 0)
-            ->will($this->returnValue($contactsList));
+            ->willReturn($contactsList);
 
-        $expectedAddressBook = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
+        $expectedAddressBook = $this->createMock(AddressBook::class);
         $expectedAddressBook->expects($this->any())
             ->method('getOriginId')
             ->willReturn($expectedAddressBookOriginId);
@@ -330,14 +307,14 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
             ->getMock();
         $contactsList->expects($this->once())
             ->method('toArray')
-            ->will($this->returnValue([['id' => 1, 'email' => 'test@test.com']]));
+            ->willReturn([['id' => 1, 'email' => 'test@test.com']]);
 
         $resource->expects($this->once())
             ->method('GetAddressBookContactsModifiedSinceDate')
             ->with($expectedAddressBookOriginId, $dateSince->format(\DateTime::ISO8601), true, 1000, 0)
-            ->will($this->returnValue($contactsList));
+            ->willReturn($contactsList);
 
-        $expectedAddressBook = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
+        $expectedAddressBook = $this->createMock(AddressBook::class);
         $expectedAddressBook->expects($this->any())
             ->method('getOriginId')
             ->willReturn($expectedAddressBookOriginId);
@@ -352,16 +329,16 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
     public function testResubscribeAddressBookContact()
     {
         $resource = $this->initTransportStub();
-        $contact = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\Contact');
-        $addressBook = $this->createMock('Oro\Bundle\DotmailerBundle\Entity\AddressBook');
+        $contact = $this->createMock(Contact::class);
+        $addressBook = $this->createMock(AddressBook::class);
         $expected = new ApiResubscribeResult();
         $addressBookId = 42;
         $addressBook->expects($this->once())
             ->method('getOriginId')
-            ->will($this->returnValue($addressBookId));
+            ->willReturn($addressBookId);
         $contact->expects($this->once())
             ->method('getEmail')
-            ->will($this->returnValue($email = 'test@mail.com'));
+            ->willReturn($email = 'test@mail.com');
 
         $resource->expects($this->once())
             ->method('PostAddressBookContactsResubscribe')
@@ -370,7 +347,7 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
 
                 return true;
             }))
-            ->will($this->returnValue($expected));
+            ->willReturn($expected);
 
         $actual = $this->target->resubscribeAddressBookContact($contact, $addressBook);
         $this->assertEquals($expected, $actual);
@@ -409,7 +386,7 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
 
                 return true;
             }))
-            ->will($this->returnValue($import));
+            ->willReturn($import);
 
         $actual = $this->target->exportAddressBookContacts($testCsv, $addressBookId);
         $this->assertSame($import, $actual);
@@ -422,7 +399,7 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
         $resource->expects($this->once())
             ->method('GetContactsImportByImportId')
             ->with($importId = '2d2cac85-e292-4f35-988c-ddb5ba40dda0')
-            ->will($this->returnValue($expected));
+            ->willReturn($expected);
 
         $actual = $this->target->getImportStatus($importId);
         $this->assertSame($expected, $actual);
@@ -430,9 +407,9 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
 
     public function testGetDataFields()
     {
-        $resource = $this->initTransportStub();
+        $this->initTransportStub();
         $actual = $this->target->getDataFields();
-        $this->assertInstanceOf('Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\DataFieldIterator', $actual);
+        $this->assertInstanceOf(DataFieldIterator::class, $actual);
     }
 
     public function testRemoveDataField()
@@ -444,11 +421,11 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
             ->getMock();
         $result->expects($this->once())
             ->method('toArray')
-            ->will($this->returnValue([]));
+            ->willReturn([]);
         $resource->expects($this->once())
             ->method('DeleteDataField')
             ->with($fieldName)
-            ->will($this->returnValue($result));
+            ->willReturn($result);
 
         $this->assertSame([], $this->target->removeDataField($fieldName));
     }
@@ -464,11 +441,7 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
         $this->target->createDataField($data);
     }
 
-    /**
-     * @return \PHPUnit\Framework\MockObject\MockObject
-     * @throws \Oro\Bundle\DotmailerBundle\Exception\RequiredOptionException
-     */
-    protected function initTransportStub()
+    private function initTransportStub(): IResources|\PHPUnit\Framework\MockObject\MockObject
     {
         $username = 'John';
         $password = '42';
@@ -476,37 +449,31 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
         $clientId = uniqid();
         $clientKey = uniqid();
         $clientKeyEncoded = md5($clientKey);
-        $transport = $this->createMock(
-            'Oro\Bundle\IntegrationBundle\Entity\Transport'
-        );
-        $settingsBag = $this->createMock(
-            'Symfony\Component\HttpFoundation\ParameterBag'
-        );
+        $transport = $this->createMock(Transport::class);
+        $settingsBag = $this->createMock(ParameterBag::class);
         $settingsBag->expects($this->any())
             ->method('get')
-            ->will($this->returnValueMap(
-                [
-                    ['username', null, $username],
-                    ['password', null, $passwordEncoded],
-                    ['clientId', null, $clientId],
-                    ['clientKey', null,$clientKeyEncoded],
-                ]
-            ));
+            ->willReturnMap([
+                ['username', null, $username],
+                ['password', null, $passwordEncoded],
+                ['clientId', null, $clientId],
+                ['clientKey', null, $clientKeyEncoded],
+            ]);
 
         $transport->expects($this->any())
             ->method('getSettingsBag')
-            ->will($this->returnValue($settingsBag));
-        $resource = $this->createMock('DotMailer\Api\Resources\IResources');
+            ->willReturn($settingsBag);
+        $resource = $this->createMock(IResources::class);
 
         $this->encoder->expects($this->once())
             ->method('decryptData')
             ->with($passwordEncoded)
-            ->will($this->returnValue($password));
+            ->willReturn($password);
 
         $this->factory->expects($this->any())
             ->method('createResources')
             ->with($username, $password, $this->logger)
-            ->will($this->returnValue($resource));
+            ->willReturn($resource);
 
         $this->target->init($transport);
 

@@ -10,15 +10,11 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
 
 class AdditionalResourceTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var IClient|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $restClient;
+    /** @var IClient|\PHPUnit\Framework\MockObject\MockObject */
+    private $restClient;
 
-    /**
-     * @var AdditionalResource
-     */
-    protected $additionalResource;
+    /** @var AdditionalResource */
+    private $additionalResource;
 
     protected function setUp(): void
     {
@@ -28,7 +24,9 @@ class AdditionalResourceTest extends \PHPUnit\Framework\TestCase
 
     public function testGetAccountInfo()
     {
-        $this->restClient->expects($this->once())->method('execute')->with(['account-info', 'GET', null]);
+        $this->restClient->expects($this->once())
+            ->method('execute')
+            ->with(['account-info', 'GET', null]);
         $result = $this->additionalResource->getAccountInfo();
         $this->assertInstanceOf(ApiAccount::class, $result);
     }
@@ -39,8 +37,10 @@ class AdditionalResourceTest extends \PHPUnit\Framework\TestCase
         $dateTime = '2016-01-01';
         $select = '100';
         $skip = '10';
-        $expectedRequest = "campaigns/1/clicks/since-date/2016-01-01?select=100&skip=10";
-        $this->restClient->expects($this->once())->method('execute')->with([$expectedRequest, 'GET', null]);
+        $expectedRequest = 'campaigns/1/clicks/since-date/2016-01-01?select=100&skip=10';
+        $this->restClient->expects($this->once())
+            ->method('execute')
+            ->with([$expectedRequest, 'GET', null]);
         $result = $this->additionalResource->getCampaignClicksSinceDateByDate($campaignId, $dateTime, $select, $skip);
         $this->assertInstanceOf(ApiCampaignContactClickList::class, $result);
     }
@@ -51,8 +51,10 @@ class AdditionalResourceTest extends \PHPUnit\Framework\TestCase
         $dateTime = '2016-01-01';
         $select = '100';
         $skip = '10';
-        $expectedRequest = "campaigns/1/opens/since-date/2016-01-01?select=100&skip=10";
-        $this->restClient->expects($this->once())->method('execute')->with([$expectedRequest, 'GET', null]);
+        $expectedRequest = 'campaigns/1/opens/since-date/2016-01-01?select=100&skip=10';
+        $this->restClient->expects($this->once())
+            ->method('execute')
+            ->with([$expectedRequest, 'GET', null]);
         $result = $this->additionalResource->getCampaignOpensSinceDateByDate($campaignId, $dateTime, $select, $skip);
         $this->assertInstanceOf(ApiCampaignContactOpenList::class, $result);
     }

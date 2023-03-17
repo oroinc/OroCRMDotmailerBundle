@@ -9,27 +9,27 @@ use Oro\Bundle\FormBundle\Form\Type\OroDateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\Test\FormInterface;
 
 class DataFieldFormSubscriberTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var DataFieldFormSubscriber
-     */
-    protected $subscriber;
+    private DataFieldFormSubscriber $subscriber;
 
     protected function setUp(): void
     {
         $this->subscriber = new DataFieldFormSubscriber();
     }
 
-    public function testPreSetWithEmtpyData()
+    public function testPreSetWithEmptyData()
     {
         $events = $this->subscriber->getSubscribedEvents();
         $this->assertArrayHasKey(FormEvents::PRE_SET_DATA, $events);
-        $this->assertEquals($events[FormEvents::PRE_SET_DATA], 'preSet');
-        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
-        $form->expects($this->never())->method('add');
-        $form->expects($this->never())->method('remove');
+        $this->assertEquals('preSet', $events[FormEvents::PRE_SET_DATA]);
+        $form = $this->createMock(FormInterface::class);
+        $form->expects($this->never())
+            ->method('add');
+        $form->expects($this->never())
+            ->method('remove');
 
         $event = new FormEvent($form, null);
         $this->subscriber->preSet($event);
@@ -37,7 +37,7 @@ class DataFieldFormSubscriberTest extends \PHPUnit\Framework\TestCase
 
     public function testPreSetWithDateFieldType()
     {
-        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock(FormInterface::class);
         $this->addAssertForDateType($form);
         $field = new DataFieldStub();
         $field->setType(new EnumValueStub(DataFieldStub::FIELD_TYPE_DATE));
@@ -47,7 +47,7 @@ class DataFieldFormSubscriberTest extends \PHPUnit\Framework\TestCase
 
     public function testPreSetWithBooleanFieldType()
     {
-        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock(FormInterface::class);
         $this->addAssertForBooleanType($form);
         $field = new DataFieldStub();
         $field->setType(new EnumValueStub(DataFieldStub::FIELD_TYPE_BOOLEAN));
@@ -59,10 +59,12 @@ class DataFieldFormSubscriberTest extends \PHPUnit\Framework\TestCase
     {
         $events = $this->subscriber->getSubscribedEvents();
         $this->assertArrayHasKey(FormEvents::PRE_SUBMIT, $events);
-        $this->assertEquals($events[FormEvents::PRE_SUBMIT], 'preSubmit');
-        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
-        $form->expects($this->never())->method('add');
-        $form->expects($this->never())->method('remove');
+        $this->assertEquals('preSubmit', $events[FormEvents::PRE_SUBMIT]);
+        $form = $this->createMock(FormInterface::class);
+        $form->expects($this->never())
+            ->method('add');
+        $form->expects($this->never())
+            ->method('remove');
 
         $event = new FormEvent($form, []);
         $this->subscriber->preSubmit($event);
@@ -70,7 +72,7 @@ class DataFieldFormSubscriberTest extends \PHPUnit\Framework\TestCase
 
     public function testPreSubmitWithDateFieldType()
     {
-        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock(FormInterface::class);
         $this->addAssertForDateType($form);
         $data = [];
         $data['type'] = DataFieldStub::FIELD_TYPE_DATE;
@@ -80,7 +82,7 @@ class DataFieldFormSubscriberTest extends \PHPUnit\Framework\TestCase
 
     public function testPreSubmitWithBooleanFieldType()
     {
-        $form = $this->createMock('Symfony\Component\Form\Test\FormInterface');
+        $form = $this->createMock(FormInterface::class);
         $this->addAssertForBooleanType($form);
         $data = [];
         $data['type'] = DataFieldStub::FIELD_TYPE_BOOLEAN;
@@ -88,9 +90,10 @@ class DataFieldFormSubscriberTest extends \PHPUnit\Framework\TestCase
         $this->subscriber->preSubmit($event);
     }
 
-    protected function addAssertForDateType($form)
+    private function addAssertForDateType(FormInterface|\PHPUnit\Framework\MockObject\MockObject $form): void
     {
-        $form->expects($this->once())->method('add')
+        $form->expects($this->once())
+            ->method('add')
             ->with(
                 'defaultValue',
                 OroDateTimeType::class,
@@ -99,12 +102,15 @@ class DataFieldFormSubscriberTest extends \PHPUnit\Framework\TestCase
                     'required' => false
                 ]
             );
-        $form->expects($this->once())->method('remove')->with('defaultValue');
+        $form->expects($this->once())
+            ->method('remove')
+            ->with('defaultValue');
     }
 
-    protected function addAssertForBooleanType($form)
+    private function addAssertForBooleanType(FormInterface|\PHPUnit\Framework\MockObject\MockObject $form): void
     {
-        $form->expects($this->once())->method('add')
+        $form->expects($this->once())
+            ->method('add')
             ->with(
                 'defaultValue',
                 ChoiceType::class,
@@ -117,6 +123,8 @@ class DataFieldFormSubscriberTest extends \PHPUnit\Framework\TestCase
                     ]
                 ]
             );
-        $form->expects($this->once())->method('remove')->with('defaultValue');
+        $form->expects($this->once())
+            ->method('remove')
+            ->with('defaultValue');
     }
 }
