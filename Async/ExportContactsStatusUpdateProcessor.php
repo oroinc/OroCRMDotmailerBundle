@@ -86,18 +86,17 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
             return self::REJECT;
         }
 
-        $jobName = 'oro_dotmailer:export_contacts_status_update:' . $integration->getId();
+        $topic = new ExportContactsStatusUpdateTopic();
         $existingJob = $this->jobProcessor->findRootJobByJobNameAndStatuses(
-            $jobName,
-            [Job::STATUS_NEW, Job::STATUS_RUNNING]
+            $topic->createJobName($messageBody),
+            [Job::STATUS_RUNNING]
         );
+
         if ($existingJob) {
             return self::REJECT;
         }
 
-        $ownerId = $message->getMessageId();
-
-        $result = $this->jobRunner->runUnique($ownerId, $jobName, function () use ($integration) {
+        $result = $this->jobRunner->runUniqueByMessage($message, function () use ($integration) {
             /** @var EntityManagerInterface $em */
             $em = $this->doctrineHelper->getEntityManagerForClass(Integration::class);
 
