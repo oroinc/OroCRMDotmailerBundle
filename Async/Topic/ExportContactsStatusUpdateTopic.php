@@ -4,12 +4,13 @@ namespace Oro\Bundle\DotmailerBundle\Async\Topic;
 
 use Oro\Component\MessageQueue\Client\MessagePriority;
 use Oro\Component\MessageQueue\Topic\AbstractTopic;
+use Oro\Component\MessageQueue\Topic\JobAwareTopicInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * A topic to load export statuses from Dotmailer
  */
-class ExportContactsStatusUpdateTopic extends AbstractTopic
+class ExportContactsStatusUpdateTopic extends AbstractTopic implements JobAwareTopicInterface
 {
     public static function getName(): string
     {
@@ -31,5 +32,10 @@ class ExportContactsStatusUpdateTopic extends AbstractTopic
         $resolver
             ->setRequired('integrationId')
             ->setAllowedTypes('integrationId', 'int');
+    }
+
+    public function createJobName($messageBody): string
+    {
+        return 'oro_dotmailer:export_contacts_status_update:' . $messageBody['integrationId'];
     }
 }

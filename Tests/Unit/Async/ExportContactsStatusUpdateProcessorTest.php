@@ -17,6 +17,7 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Component\MessageQueue\Consumption\MessageProcessorInterface;
 use Oro\Component\MessageQueue\Job\JobProcessor;
 use Oro\Component\MessageQueue\Test\JobRunner;
+use Oro\Component\MessageQueue\Topic\JobAwareTopicInterface;
 use Oro\Component\MessageQueue\Transport\Message;
 use Oro\Component\MessageQueue\Transport\SessionInterface;
 use Oro\Component\Testing\ReflectionUtil;
@@ -359,6 +360,9 @@ class ExportContactsStatusUpdateProcessorTest extends \PHPUnit\Framework\TestCas
         $message = new Message();
         $message->setBody(['integrationId' => 1]);
         $message->setMessageId('theMessageId');
+        $message->setProperties([
+            JobAwareTopicInterface::UNIQUE_JOB_NAME => 'oro_dotmailer:export_contacts_status_update:1'
+        ]);
 
         $session = $this->createMock(SessionInterface::class);
         $processor->process($message, $session);
