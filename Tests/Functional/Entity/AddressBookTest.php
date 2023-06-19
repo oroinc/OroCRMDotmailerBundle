@@ -1,4 +1,5 @@
 <?php
+
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
 
 use Doctrine\ORM\EntityManagerInterface;

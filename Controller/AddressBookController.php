@@ -209,7 +209,7 @@ class AddressBookController extends AbstractController
         ];
     }
 
-    protected function getAddressBook(MarketingList $marketingList):? AddressBook
+    protected function getAddressBook(MarketingList $marketingList): ?AddressBook
     {
         $addressBook = $this->get('doctrine')
             ->getRepository('OroDotmailerBundle:AddressBook')

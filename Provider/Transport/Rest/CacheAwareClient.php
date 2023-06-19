@@ -15,7 +15,8 @@ use Symfony\Contracts\Cache\ItemInterface;
  */
 class CacheAwareClient implements DotmailerClientInterface
 {
-    use LoggerAwareTrait, CacheProviderAwareTrait;
+    use LoggerAwareTrait;
+    use CacheProviderAwareTrait;
 
     /**
      * Should be more than
