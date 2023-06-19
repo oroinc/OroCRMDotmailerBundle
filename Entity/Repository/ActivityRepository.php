@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\Entity\Repository;
 use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 
+/**
+ * Dotmailer activity repository
+ */
 class ActivityRepository extends EntityRepository
 {
     /**
@@ -24,6 +27,6 @@ class ActivityRepository extends EntityRepository
             ->getQuery()
             ->getOneOrNullResult();
 
-        return $result != null ? : false;
+        return $result != null ?: false;
     }
 }
