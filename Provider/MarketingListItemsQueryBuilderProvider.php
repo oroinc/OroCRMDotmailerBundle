@@ -131,7 +131,8 @@ class MarketingListItemsQueryBuilderProvider
             $excludedItems = array_map(function ($item) {
                 return $item[self::MARKETING_LIST_ITEM_ID];
             }, $excludedItems);
-            $qb->andWhere($expr->notIn("$entityAlias.id", $excludedItems));
+            $qb->andWhere($expr->notIn("$entityAlias.id", ':excludedItems'))
+                ->setParameter('excludedItems', $excludedItems);
         }
 
         /**
@@ -223,7 +224,8 @@ class MarketingListItemsQueryBuilderProvider
             $excludedItems = array_map(function ($item) {
                 return $item['id'];
             }, $excludedItems);
-            $removedItemsQueryBuilder->andWhere($expr->notIn('addressBookContact.id', $excludedItems));
+            $removedItemsQueryBuilder->andWhere($expr->notIn('addressBookContact.id', ':excludedItems'))
+                ->setParameter('excludedItems', $excludedItems);
         }
 
         // revert union back to saved value
@@ -272,7 +274,8 @@ class MarketingListItemsQueryBuilderProvider
             $excludedItems = array_map(function ($item) {
                 return $item[self::MARKETING_LIST_ITEM_ID];
             }, $excludedItems);
-            $qb->andWhere($expr->notIn("$entityAlias.id", $excludedItems));
+            $qb->andWhere($expr->notIn("$entityAlias.id", ':excludedItems'))
+                ->setParameter('excludedItems', $excludedItems);
         }
 
         $qb->select("$entityAlias.id as " . self::MARKETING_LIST_ITEM_ID);
