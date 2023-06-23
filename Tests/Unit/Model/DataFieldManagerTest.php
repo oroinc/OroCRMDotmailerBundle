@@ -103,7 +103,7 @@ class DataFieldManagerTest extends \PHPUnit\Framework\TestCase
         $this->transport->expects(self::once())
             ->method('createDataField')
             ->with(self::callback(static function (ApiDataField $apiDataField) use ($now) {
-                return self::equalTo(\sprintf(
+                return self::equalTo(sprintf(
                     '{"Name":"test","Type":"Date","Visibility":"Private","DefaultValue":"%s"}',
                     $now->format('Y-m-d\TH:i:s')
                 ))->evaluate($apiDataField->toJson());
