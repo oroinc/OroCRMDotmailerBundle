@@ -27,7 +27,7 @@ class ContactExportQBAdapterRegistryTest extends \PHPUnit\Framework\TestCase
     public function testSetAdaptersValidateAdaptersImplementCorrectInterface()
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage(\sprintf(
+        $this->expectExceptionMessage(sprintf(
             'Instance of %s required. Instance of stdClass given.',
             ContactExportQBAdapterInterface::class
         ));
