@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Extend\Entity\Autocomplete\OroDotmailerBundle_Entity_AddressBook;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
@@ -49,6 +50,7 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  * @method AddressBook       setVisibility(AbstractEnumValue $enumValue)
  * @method AbstractEnumValue getSyncStatus()
  * @method AddressBook       setSyncStatus(AbstractEnumValue $enumValue)
+ * @mixin OroDotmailerBundle_Entity_AddressBook
  */
 class AddressBook implements OriginAwareInterface, ExtendEntityInterface
 {
