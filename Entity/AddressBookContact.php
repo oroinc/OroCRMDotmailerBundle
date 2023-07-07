@@ -3,6 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Extend\Entity\Autocomplete\OroDotmailerBundle_Entity_AddressBookContact;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
@@ -31,6 +32,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
  * @method AddressBookContact setStatus(AbstractEnumValue $enumValue)
  * @method AbstractEnumValue getExportOperationType()
  * @method AddressBookContact setExportOperationType(AbstractEnumValue $enumValue)
+ * @mixin OroDotmailerBundle_Entity_AddressBookContact
  */
 class AddressBookContact implements ChannelAwareInterface, ExtendEntityInterface
 {

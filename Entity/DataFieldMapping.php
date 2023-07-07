@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Extend\Entity\Autocomplete\OroDotmailerBundle_Entity_DataFieldMapping;
 use Oro\Bundle\EntityBundle\EntityProperty\DatesAwareTrait;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
@@ -40,6 +41,7 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  *      }
  *  }
  * )
+ * @mixin OroDotmailerBundle_Entity_DataFieldMapping
  */
 class DataFieldMapping implements ExtendEntityInterface
 {

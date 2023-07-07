@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Extend\Entity\Autocomplete\OroDotmailerBundle_Entity_Campaign;
 use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
@@ -49,6 +50,7 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  * @method Campaign setReplyAction(AbstractEnumValue $enumValue)
  * @method AbstractEnumValue getStatus()
  * @method Campaign setStatus(AbstractEnumValue $enumValue)
+ * @mixin OroDotmailerBundle_Entity_Campaign
  */
 class Campaign implements OriginAwareInterface, ExtendEntityInterface
 {

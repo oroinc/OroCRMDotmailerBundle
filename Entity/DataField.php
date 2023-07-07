@@ -3,6 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Extend\Entity\Autocomplete\OroDotmailerBundle_Entity_DataField;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
@@ -43,6 +44,7 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  * @method DataField setType(AbstractEnumValue $enumValue)
  * @method AbstractEnumValue getVisibility()
  * @method DataField setVisibility(AbstractEnumValue $enumValue)
+ * @mixin OroDotmailerBundle_Entity_DataField
  */
 class DataField implements ChannelAwareInterface, ExtendEntityInterface
 {

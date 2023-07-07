@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Extend\Entity\Autocomplete\OroDotmailerBundle_Entity_Contact;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
@@ -49,6 +50,7 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  * @method Contact setEmailType(AbstractEnumValue $enumValue)
  * @method AbstractEnumValue getStatus()
  * @method Contact setStatus(AbstractEnumValue $enumValue)
+ * @mixin OroDotmailerBundle_Entity_Contact
  */
 class Contact implements OriginAwareInterface, ExtendEntityInterface
 {
