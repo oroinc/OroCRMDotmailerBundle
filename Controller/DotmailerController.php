@@ -121,7 +121,7 @@ class DotmailerController extends AbstractController
      * @Template("@OroDotmailer/Dotmailer/integrationConnection.html.twig")
      *
      * @param Request $request
-     * @param Channel $channel
+     * @param Channel|null $channel
      * @return array
      */
     public function integrationConnectionAction(Request $request, Channel $channel = null)

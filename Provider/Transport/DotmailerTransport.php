@@ -176,7 +176,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     }
 
     /**
-     * @param \DateTime $lastSyncDate
+     * @param \DateTime|null $lastSyncDate
      *
      * @return UnsubscribedFromAccountContactIterator
      */
@@ -218,7 +218,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
 
     /**
      * @param array|ArrayCollection $campaignsToSynchronize
-     * @param \DateTime             $lastSyncDate = null
+     * @param \DateTime|null $lastSyncDate = null
      *
      * @return \Iterator
      */
@@ -241,8 +241,8 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
 
     /**
      * @param ManagerRegistry $registry
-     * @param array|ArrayCollection $campaignsToSynchronize
-     * @param \DateTime $lastSyncDate = null
+     * @param array $campaignsToSynchronize
+     * @param \DateTime|null $lastSyncDate = null
      *
      * @return \Iterator
      */
@@ -273,8 +273,8 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
 
     /**
      * @param ManagerRegistry $registry
-     * @param array|ArrayCollection $campaignsToSynchronize
-     * @param \DateTime $lastSyncDate = null
+     * @param array $campaignsToSynchronize
+     * @param \DateTime|null $lastSyncDate = null
      *
      * @return \Iterator
      */

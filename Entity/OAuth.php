@@ -69,7 +69,7 @@ class OAuth implements ChannelAwareInterface
     }
 
     /**
-     * @param Channel $channel
+     * @param Channel|null $channel
      *
      * @return OAuth
      */
@@ -89,7 +89,7 @@ class OAuth implements ChannelAwareInterface
     }
 
     /**
-     * @param User $user
+     * @param User|null $user
      *
      * @return OAuth
      */

@@ -80,8 +80,8 @@ abstract class AbstractActivityIterator extends AbstractIterator
      * @param int $campaignId
      * @param array $addressBooks
      * @param bool $isInit
-     * @param \DateTime $lastSyncDate
-     * @param AdditionalResource $additionalResource
+     * @param \DateTime|null $lastSyncDate
+     * @param AdditionalResource|null $additionalResource
      */
     public function __construct(
         IResources $dotmailerResources,

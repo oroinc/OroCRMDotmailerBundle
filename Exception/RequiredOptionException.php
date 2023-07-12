@@ -7,7 +7,7 @@ class RequiredOptionException extends \Exception implements DotmailerException
     /**
      * @param string     $optionName
      * @param int        $code
-     * @param \Exception $previous
+     * @param \Exception|null $previous
      */
     public function __construct($optionName, $code = 0, \Exception $previous = null)
     {

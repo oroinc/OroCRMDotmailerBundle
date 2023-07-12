@@ -100,8 +100,6 @@ abstract class AbstractDotmailerConnector extends AbstractConnector
 
     /**
      * Updates last sync date in execution context with current date and time (now)
-     *
-     * @param \DateTime $date
      */
     protected function updateContextLastSyncDate(\DateTime $date = null)
     {

@@ -188,7 +188,7 @@ class AddressBookContact implements ChannelAwareInterface, ExtendEntityInterface
     }
 
     /**
-     * @param \DateTime $unsubscribedDate
+     * @param \DateTime|null $unsubscribedDate
      *
      * @return AddressBookContact
      */
@@ -326,7 +326,7 @@ class AddressBookContact implements ChannelAwareInterface, ExtendEntityInterface
     }
 
     /**
-     * @param Channel $channel
+     * @param Channel|null $channel
      *
      * @return AddressBookContact
      */

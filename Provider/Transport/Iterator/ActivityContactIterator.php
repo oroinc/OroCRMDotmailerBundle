@@ -37,7 +37,7 @@ class ActivityContactIterator extends AbstractIterator
      * @param IResources $dotmailerResources
      * @param int        $campaignOriginId
      * @param bool       $isInit
-     * @param \DateTime  $lastSyncDate
+     * @param \DateTime|null $lastSyncDate
      */
     public function __construct(
         IResources $dotmailerResources,

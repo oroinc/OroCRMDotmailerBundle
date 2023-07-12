@@ -262,7 +262,7 @@ class Activity implements ChannelAwareInterface
     }
 
     /**
-     * @param Channel $channel
+     * @param Channel|null $channel
      *
      * @return Activity
      */
@@ -282,7 +282,7 @@ class Activity implements ChannelAwareInterface
     }
 
     /**
-     * @param Contact $contact
+     * @param Contact|null $contact
      *
      * @return Activity
      */
@@ -442,7 +442,7 @@ class Activity implements ChannelAwareInterface
     }
 
     /**
-     * @param \DateTime $dateSent
+     * @param \DateTime|null $dateSent
      *
      * @return Activity
      */
@@ -462,7 +462,7 @@ class Activity implements ChannelAwareInterface
     }
 
     /**
-     * @param \DateTime $dateFirstOpened
+     * @param \DateTime|null $dateFirstOpened
      *
      * @return Activity
      */
@@ -482,7 +482,7 @@ class Activity implements ChannelAwareInterface
     }
 
     /**
-     * @param \DateTime $dateLastOpened
+     * @param \DateTime|null $dateLastOpened
      *
      * @return Activity
      */
@@ -582,7 +582,7 @@ class Activity implements ChannelAwareInterface
     }
 
     /**
-     * @param \DateTime $createdAt
+     * @param \DateTime|null $createdAt
      *
      * @return Activity
      */
@@ -602,7 +602,7 @@ class Activity implements ChannelAwareInterface
     }
 
     /**
-     * @param \DateTime $updatedAt
+     * @param \DateTime|null $updatedAt
      *
      * @return Activity
      */
@@ -622,7 +622,7 @@ class Activity implements ChannelAwareInterface
     }
 
     /**
-     * @param Organization $owner
+     * @param Organization|null $owner
      *
      * @return Activity
      */
@@ -642,7 +642,7 @@ class Activity implements ChannelAwareInterface
     }
 
     /**
-     * @param Campaign $campaign
+     * @param Campaign|null $campaign
      *
      * @return Activity
      */
