@@ -37,7 +37,7 @@ class ImportExportErrorReportsStep extends ItemStep
     }
 
     /**
-     * @param ManagerRegistry $registry
+     * @param ManagerRegistry|null $registry
      *
      * @return ExportItemStep
      */
@@ -49,7 +49,7 @@ class ImportExportErrorReportsStep extends ItemStep
     }
 
     /**
-     * @param ContextRegistry $contextRegistry
+     * @param ContextRegistry|null $contextRegistry
      *
      * @return ExportItemStep
      */

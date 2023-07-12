@@ -510,7 +510,7 @@ class CampaignSummary implements ChannelAwareInterface
     }
 
     /**
-     * @param Channel $channel
+     * @param Channel|null $channel
      *
      * @return CampaignSummary
      */
@@ -1570,7 +1570,7 @@ class CampaignSummary implements ChannelAwareInterface
     }
 
     /**
-     * @param \DateTime $createdAt
+     * @param \DateTime|null $createdAt
      *
      * @return CampaignSummary
      */
@@ -1590,7 +1590,7 @@ class CampaignSummary implements ChannelAwareInterface
     }
 
     /**
-     * @param \DateTime $updatedAt
+     * @param \DateTime|null $updatedAt
      *
      * @return CampaignSummary
      */
@@ -1610,7 +1610,7 @@ class CampaignSummary implements ChannelAwareInterface
     }
 
     /**
-     * @param Organization $owner
+     * @param Organization|null $owner
      *
      * @return CampaignSummary
      */
@@ -1630,7 +1630,7 @@ class CampaignSummary implements ChannelAwareInterface
     }
 
     /**
-     * @param Campaign $campaign
+     * @param Campaign|null $campaign
      *
      * @return CampaignSummary
      */

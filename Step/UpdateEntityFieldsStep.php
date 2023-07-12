@@ -62,7 +62,7 @@ class UpdateEntityFieldsStep extends ItemStep
     }
 
     /**
-     * @param ManagerRegistry $registry
+     * @param ManagerRegistry|null $registry
      *
      * @return UpdateEntityFieldsStep
      */
@@ -74,7 +74,7 @@ class UpdateEntityFieldsStep extends ItemStep
     }
 
     /**
-     * @param ContextRegistry $contextRegistry
+     * @param ContextRegistry|null $contextRegistry
      *
      * @return UpdateEntityFieldsStep
      */
@@ -86,7 +86,7 @@ class UpdateEntityFieldsStep extends ItemStep
     }
 
     /**
-     * @param EntityUpdateListener $listener
+     * @param EntityUpdateListener|null $listener
      * @return UpdateEntityFieldsStep
      */
     public function setEntityListener(EntityUpdateListener $listener = null)
