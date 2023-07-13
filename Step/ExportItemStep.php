@@ -60,7 +60,7 @@ class ExportItemStep extends ItemStep
     }
 
     /**
-     * @param ManagerRegistry $registry
+     * @param ManagerRegistry|null $registry
      *
      * @return ExportItemStep
      */
@@ -72,7 +72,7 @@ class ExportItemStep extends ItemStep
     }
 
     /**
-     * @param ContextRegistry $contextRegistry
+     * @param ContextRegistry|null $contextRegistry
      *
      * @return ExportItemStep
      */

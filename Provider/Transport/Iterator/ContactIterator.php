@@ -21,7 +21,7 @@ class ContactIterator extends OverlapIterator
     /**
      * @param IResources $resources
      * @param int        $addressBookOriginId
-     * @param \DateTime  $dateSince
+     * @param \DateTime|null $dateSince
      */
     public function __construct(IResources $resources, $addressBookOriginId = null, \DateTime $dateSince = null)
     {

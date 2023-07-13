@@ -471,7 +471,7 @@ class Contact implements OriginAwareInterface, ExtendEntityInterface
     }
 
     /**
-     * @param \DateTime $unsubscribedDate
+     * @param \DateTime|null $unsubscribedDate
      *
      * @return Contact
      */
@@ -491,7 +491,7 @@ class Contact implements OriginAwareInterface, ExtendEntityInterface
     }
 
     /**
-     * @param \DateTime $lastSubscribedDate
+     * @param \DateTime|null $lastSubscribedDate
      *
      * @return Contact
      */

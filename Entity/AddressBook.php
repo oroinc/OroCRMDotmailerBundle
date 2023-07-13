@@ -328,7 +328,7 @@ class AddressBook implements OriginAwareInterface, ExtendEntityInterface
     }
 
     /**
-     * @param \DateTime $lastExportedAt
+     * @param \DateTime|null $lastExportedAt
      *
      * @return AddressBook
      */
@@ -348,7 +348,7 @@ class AddressBook implements OriginAwareInterface, ExtendEntityInterface
     }
 
     /**
-     * @param \DateTime $lastImportedAt
+     * @param \DateTime|null $lastImportedAt
      *
      * @return AddressBook
      */
@@ -496,7 +496,7 @@ class AddressBook implements OriginAwareInterface, ExtendEntityInterface
     }
 
     /**
-     * @param MarketingList $marketingList
+     * @param MarketingList|null $marketingList
      *
      * @return AddressBook
      */

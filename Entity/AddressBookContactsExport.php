@@ -135,7 +135,7 @@ class AddressBookContactsExport implements ChannelAwareInterface, ExtendEntityIn
     }
 
     /**
-     * @param \DateTime $createdAt
+     * @param \DateTime|null $createdAt
      *
      * @return AddressBookContactsExport
      */
@@ -155,7 +155,7 @@ class AddressBookContactsExport implements ChannelAwareInterface, ExtendEntityIn
     }
 
     /**
-     * @param AddressBook $addressBook
+     * @param AddressBook|null $addressBook
      *
      * @return AddressBookContactsExport
      */
@@ -175,7 +175,7 @@ class AddressBookContactsExport implements ChannelAwareInterface, ExtendEntityIn
     }
 
     /**
-     * @param \DateTime $updatedAt
+     * @param \DateTime|null $updatedAt
      *
      * @return AddressBookContactsExport
      */
@@ -195,7 +195,7 @@ class AddressBookContactsExport implements ChannelAwareInterface, ExtendEntityIn
     }
 
     /**
-     * @param Channel $channel
+     * @param Channel|null $channel
      *
      * @return AddressBookContactsExport
      */

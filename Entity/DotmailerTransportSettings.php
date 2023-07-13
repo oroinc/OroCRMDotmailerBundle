@@ -29,7 +29,7 @@ class DotmailerTransportSettings extends TransportSettings
     }
 
     /**
-     * @param Channel $channel
+     * @param Channel|null $channel
      *
      * @return DotmailerTransportSettings
      */

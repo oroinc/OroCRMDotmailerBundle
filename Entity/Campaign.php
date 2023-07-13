@@ -656,7 +656,7 @@ class Campaign implements OriginAwareInterface, ExtendEntityInterface
     }
 
     /**
-     * @param EmailCampaign $emailCampaign
+     * @param EmailCampaign|null $emailCampaign
      *
      * @return Campaign
      */
@@ -676,7 +676,7 @@ class Campaign implements OriginAwareInterface, ExtendEntityInterface
     }
 
     /**
-     * @param CampaignSummary $campaignSummary
+     * @param CampaignSummary|null $campaignSummary
      *
      * @return Campaign
      */
