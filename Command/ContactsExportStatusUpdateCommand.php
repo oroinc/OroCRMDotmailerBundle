@@ -88,7 +88,7 @@ HELP
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @noinspection PhpMissingParentCallCommonInspection
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($output->getVerbosity() < OutputInterface::VERBOSITY_VERBOSE) {
             $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
@@ -145,7 +145,7 @@ HELP
 
         $output->writeln('Completed');
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     protected function getIntegrationRepository(): ChannelRepository

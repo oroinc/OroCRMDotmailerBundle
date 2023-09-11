@@ -36,7 +36,7 @@ class UpdateAddressBookLastImportDateListener extends AbstractImportExportListen
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             SyncEvent::SYNC_AFTER => 'afterSyncFinished'
