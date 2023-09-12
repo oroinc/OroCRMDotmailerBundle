@@ -51,7 +51,7 @@ class DotmailerTransportSettingsType extends AbstractTransportSettingsType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return self::NAME;
     }

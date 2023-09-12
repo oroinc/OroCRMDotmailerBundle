@@ -29,7 +29,7 @@ class ContactExportListener extends AbstractImportExportListener
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             SyncEvent::SYNC_BEFORE => 'beforeSyncStarted',
