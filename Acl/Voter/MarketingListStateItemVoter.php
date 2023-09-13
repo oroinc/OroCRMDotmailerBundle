@@ -31,7 +31,7 @@ class MarketingListStateItemVoter extends AbstractEntityVoter implements Service
     /**
      * {@inheritDoc}
      */
-    public static function getSubscribedServices()
+    public static function getSubscribedServices(): array
     {
         return [
             'oro_marketing_list.provider.contact_information_fields' => ContactInformationFieldsProvider::class
