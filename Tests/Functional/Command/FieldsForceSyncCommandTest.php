@@ -2,6 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Command;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 
 /**
@@ -16,19 +19,35 @@ class FieldsForceSyncCommandTest extends WebTestCase
         $this->initClient();
     }
 
-    public function testShouldOutputHelpForTheCommand()
+    public function testShouldOutputHelpForTheCommand(): void
     {
-        $result = $this->runCommand('oro:cron:dotmailer:force-fields-sync', ['--help']);
+        $result = self::runCommand('oro:cron:dotmailer:force-fields-sync', ['--help']);
 
-        static::assertStringContainsString('Usage:', $result);
-        static::assertStringContainsString('oro:cron:dotmailer:force-fields-sync', $result);
+        self::assertStringContainsString('Usage:', $result);
+        self::assertStringContainsString('oro:cron:dotmailer:force-fields-sync', $result);
     }
 
-    public function testRunCommand()
+    public function testRunCommand(): void
     {
-        $result = $this->runCommand('oro:cron:dotmailer:force-fields-sync');
+        /** @var EntityManagerInterface $em */
+        $em = self::getContainer()->get('doctrine')->getManagerForClass(Channel::class);
+        $channel = new Channel();
+        $channel->setType(ChannelType::TYPE);
+        $channel->setEnabled(true);
+        $channel->setName('Test');
+        $em->persist($channel);
+        $em->flush();
 
-        static::assertStringContainsString('Start update of address book contacts', $result);
-        static::assertStringContainsString('Completed', $result);
+        $result = self::runCommand('oro:cron:dotmailer:force-fields-sync');
+
+        self::assertStringContainsString('Start update of address book contacts', $result);
+        self::assertStringContainsString('Completed', $result);
+    }
+
+    public function testShouldNotBeExecutedWhenCommandIsNotActive(): void
+    {
+        $result = self::runCommand('oro:cron:dotmailer:force-fields-sync');
+
+        self::assertStringContainsString('This CRON command is disabled.', $result);
     }
 }
