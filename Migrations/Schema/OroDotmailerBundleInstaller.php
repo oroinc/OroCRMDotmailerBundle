@@ -6,8 +6,8 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 use Oro\Bundle\DotmailerBundle\Migration\AddContactExportConnectorToExistedIntegrationsQuery;
 use Oro\Bundle\EntityExtendBundle\EntityConfig\ExtendScope;
-use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtension;
 use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareInterface;
+use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareTrait;
 use Oro\Bundle\MigrationBundle\Migration\Installation;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 
@@ -16,7 +16,7 @@ use Oro\Bundle\MigrationBundle\Migration\QueryBag;
  */
 class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareInterface
 {
-    private ExtendExtension $extendExtension;
+    use ExtendExtensionAwareTrait;
 
     /**
      * {@inheritdoc}
@@ -24,14 +24,6 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
     public function getMigrationVersion(): string
     {
         return 'v1_9';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setExtendExtension(ExtendExtension $extendExtension): void
-    {
-        $this->extendExtension = $extendExtension;
     }
 
     /**
