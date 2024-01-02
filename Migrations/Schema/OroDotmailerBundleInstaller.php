@@ -19,7 +19,7 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
     use ExtendExtensionAwareTrait;
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getMigrationVersion(): string
     {
@@ -27,7 +27,7 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function up(Schema $schema, QueryBag $queries): void
     {
@@ -101,10 +101,10 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
         $table->addColumn('is_split_test', 'boolean', ['notnull' => false]);
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->addColumn('updated_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
-        $table->addColumn('is_deleted', 'boolean', []);
+        $table->addColumn('is_deleted', 'boolean');
         $table->setPrimaryKey(['id']);
-        $table->addIndex(['owner_id'], 'IDX_3D36193A7E3C61F9', []);
-        $table->addIndex(['channel_id'], 'IDX_3D36193A72F5A1AA', []);
+        $table->addIndex(['owner_id'], 'IDX_3D36193A7E3C61F9');
+        $table->addIndex(['channel_id'], 'IDX_3D36193A72F5A1AA');
         $table->addUniqueIndex(['campaign_summary_id'], 'UNIQ_3D36193AEDD5F4F4');
         $table->addUniqueIndex(['origin_id', 'channel_id'], 'orocrm_dm_campaign_unq');
         $table->addUniqueIndex(['email_campaign_id'], 'UNIQ_3D36193AE0F98BC3');
@@ -132,9 +132,9 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
         $table->addColumn('last_imported_at', 'datetime', ['comment' => '(DC2Type:datetime)', 'notnull' => false]);
         $table->addColumn('create_entities', 'boolean', ['notnull' => false]);
         $table->setPrimaryKey(['id']);
-        $table->addIndex(['owner_id'], 'IDX_9A9DD33F7E3C61F9', []);
-        $table->addIndex(['channel_id'], 'IDX_9A9DD33F72F5A1AA', []);
-        $table->addIndex(['last_imported_at'], 'orocrm_dm_ab_imported_at_idx', []);
+        $table->addIndex(['owner_id'], 'IDX_9A9DD33F7E3C61F9');
+        $table->addIndex(['channel_id'], 'IDX_9A9DD33F72F5A1AA');
+        $table->addIndex(['last_imported_at'], 'orocrm_dm_ab_imported_at_idx');
         $table->addUniqueIndex(['origin_id', 'channel_id'], 'orocrm_dm_address_book_unq');
         $table->addUniqueIndex(['marketing_list_id'], 'UNIQ_9A9DD33F96434D04');
 
@@ -159,8 +159,8 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
         $table->addColumn('last_subscribed_date', 'datetime', ['notnull' => false]);
         $table->addColumn('data_fields', 'json_array', ['notnull' => false, 'comment' => '(DC2Type:json_array)']);
         $table->setPrimaryKey(['id']);
-        $table->addIndex(['owner_id'], 'IDX_6D7FB88E7E3C61F9', []);
-        $table->addIndex(['channel_id'], 'IDX_6D7FB88E72F5A1AA', []);
+        $table->addIndex(['owner_id'], 'IDX_6D7FB88E7E3C61F9');
+        $table->addIndex(['channel_id'], 'IDX_6D7FB88E72F5A1AA');
         $table->addUniqueIndex(['email', 'channel_id'], 'orocrm_dm_cnt_em_unq');
         $table->addUniqueIndex(['origin_id', 'channel_id'], 'orocrm_dm_contact_unq');
 
@@ -178,8 +178,8 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
         $table->addColumn('owner_id', 'integer', ['notnull' => false]);
         $table->addColumn('channel_id', 'integer', ['notnull' => false]);
-        $table->addColumn('campaign_id', 'integer', []);
-        $table->addColumn('contact_id', 'integer', []);
+        $table->addColumn('campaign_id', 'integer');
+        $table->addColumn('contact_id', 'integer');
         $table->addColumn('email', 'string', ['length' => 255]);
         $table->addColumn('num_opens', 'integer', ['notnull' => false]);
         $table->addColumn('num_page_views', 'integer', ['notnull' => false]);
@@ -197,12 +197,12 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->addColumn('updated_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->setPrimaryKey(['id']);
-        $table->addIndex(['channel_id'], 'IDX_8E5702BD72F5A1AA', []);
-        $table->addIndex(['owner_id'], 'IDX_8E5702BD7E3C61F9', []);
-        $table->addIndex(['campaign_id'], 'IDX_8E5702BDF639F774', []);
-        $table->addIndex(['contact_id'], 'IDX_8E5702BDE7A1254A', []);
-        $table->addIndex(['email'], 'orocrm_dm_activity_email_idx', []);
-        $table->addIndex(['date_sent'], 'orocrm_dm_activity_dt_sent_idx', []);
+        $table->addIndex(['channel_id'], 'IDX_8E5702BD72F5A1AA');
+        $table->addIndex(['owner_id'], 'IDX_8E5702BD7E3C61F9');
+        $table->addIndex(['campaign_id'], 'IDX_8E5702BDF639F774');
+        $table->addIndex(['contact_id'], 'IDX_8E5702BDE7A1254A');
+        $table->addIndex(['email'], 'orocrm_dm_activity_email_idx');
+        $table->addIndex(['date_sent'], 'orocrm_dm_activity_dt_sent_idx');
         $table->addUniqueIndex(['campaign_id', 'contact_id', 'channel_id'], 'orocrm_dm_activity_unq');
     }
 
@@ -224,7 +224,7 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
         $table->addColumn('owner_id', 'integer', ['notnull' => false]);
         $table->addColumn('channel_id', 'integer', ['notnull' => false]);
-        $table->addColumn('campaign_id', 'integer', []);
+        $table->addColumn('campaign_id', 'integer');
         $table->addColumn('date_sent', 'datetime', ['notnull' => false, 'comment' => '(DC2Type:datetime)']);
         $table->addColumn('num_unique_opens', 'integer', ['notnull' => false]);
         $table->addColumn('num_unique_text_opens', 'integer', ['notnull' => false]);
@@ -280,9 +280,9 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->addColumn('updated_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->setPrimaryKey(['id']);
-        $table->addIndex(['channel_id'], 'IDX_D7B9893172F5A1AA', []);
-        $table->addIndex(['owner_id'], 'IDX_D7B989317E3C61F9', []);
-        $table->addIndex(['date_sent'], 'orocrm_dm_camp_sum_dt_sent_idx', []);
+        $table->addIndex(['channel_id'], 'IDX_D7B9893172F5A1AA');
+        $table->addIndex(['owner_id'], 'IDX_D7B989317E3C61F9');
+        $table->addIndex(['date_sent'], 'orocrm_dm_camp_sum_dt_sent_idx');
         $table->addUniqueIndex(['campaign_id'], 'UNIQ_D7B98931F639F774');
     }
 
@@ -292,11 +292,11 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
     private function createOroDotmailerCampaignToABTable(Schema $schema): void
     {
         $table = $schema->createTable('orocrm_dm_campaign_to_ab');
-        $table->addColumn('campaign_id', 'integer', []);
-        $table->addColumn('address_book_id', 'integer', []);
+        $table->addColumn('campaign_id', 'integer');
+        $table->addColumn('address_book_id', 'integer');
         $table->setPrimaryKey(['campaign_id', 'address_book_id']);
-        $table->addIndex(['address_book_id'], 'IDX_AA5589424D474419', []);
-        $table->addIndex(['campaign_id'], 'IDX_AA558942F639F774', []);
+        $table->addIndex(['address_book_id'], 'IDX_AA5589424D474419');
+        $table->addIndex(['campaign_id'], 'IDX_AA558942F639F774');
     }
 
     /**
@@ -312,16 +312,16 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
         $table->addColumn('unsubscribed_date', 'datetime', ['notnull' => false]);
         $table->addColumn('marketing_list_item_id', 'integer', ['notnull' => false]);
         $table->addColumn('marketing_list_item_class', 'string', ['notnull' => false, 'length' => 255]);
-        $table->addColumn('scheduled_for_export', 'boolean', []);
+        $table->addColumn('scheduled_for_export', 'boolean');
         $table->addColumn('export_id', 'string', ['notnull' => false, 'length' => 36]);
         $table->addColumn('new_entity', 'boolean', ['notnull' => false]);
         $table->addColumn('entity_updated', 'boolean', ['notnull' => false]);
         $table->addColumn('scheduled_for_fields_update', 'boolean', ['notnull' => false]);
         $table->setPrimaryKey(['id']);
-        $table->addIndex(['address_book_id'], 'IDX_74DFE8B64D474419', []);
-        $table->addIndex(['contact_id'], 'IDX_74DFE8B6E7A1254A', []);
-        $table->addIndex(['channel_id'], 'IDX_74DFE8B672F5A1AA', []);
-        $table->addIndex(['export_id'], 'orocrm_dm_ab_cnt_export_id_idx', []);
+        $table->addIndex(['address_book_id'], 'IDX_74DFE8B64D474419');
+        $table->addIndex(['contact_id'], 'IDX_74DFE8B6E7A1254A');
+        $table->addIndex(['channel_id'], 'IDX_74DFE8B672F5A1AA');
+        $table->addIndex(['export_id'], 'orocrm_dm_ab_cnt_export_id_idx');
         $table->addIndex(['marketing_list_item_class', 'marketing_list_item_id'], 'IDX_MARKETING_LIST_ITEM_CLASS_ID');
         $table->addUniqueIndex(['address_book_id', 'contact_id'], 'orocrm_dm_ab_cnt_unq');
 
@@ -339,14 +339,14 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
         $table->addColumn('address_book_id', 'integer', ['notnull' => false]);
         $table->addColumn('channel_id', 'integer', ['notnull' => false]);
         $table->addColumn('import_id', 'string', ['length' => 100]);
-        $table->addColumn('created_at', 'datetime', []);
-        $table->addColumn('updated_at', 'datetime', []);
-        $table->addColumn('faults_processed', 'boolean', []);
+        $table->addColumn('created_at', 'datetime');
+        $table->addColumn('updated_at', 'datetime');
+        $table->addColumn('faults_processed', 'boolean');
         $table->addColumn('sync_attempts', 'smallint', ['notnull' => false, 'unsigned' => true]);
         $table->setPrimaryKey(['id']);
-        $table->addIndex(['address_book_id'], 'IDX_5C0830B44D474419', []);
-        $table->addIndex(['channel_id'], 'IDX_83CAE83D72F5A1AA', []);
-        $table->addIndex(['faults_processed'], 'orocrm_dm_ab_cnt_exp_fault_idx', []);
+        $table->addIndex(['address_book_id'], 'IDX_5C0830B44D474419');
+        $table->addIndex(['channel_id'], 'IDX_83CAE83D72F5A1AA');
+        $table->addIndex(['faults_processed'], 'orocrm_dm_ab_cnt_exp_fault_idx');
         $table->addUniqueIndex(['import_id'], 'UNIQ_5C0830B4B6A263D9');
 
         $this->addEnumField($schema, $table, 'status', 'dm_import_status');
@@ -355,7 +355,7 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
     /**
      * Create orocrm_dm_data_field table
      */
-    public function createOroDotmailerDataFieldTable(Schema $schema): void
+    private function createOroDotmailerDataFieldTable(Schema $schema): void
     {
         $table = $schema->createTable('orocrm_dm_data_field');
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
@@ -366,8 +366,8 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
         $table->addColumn('notes', 'text', ['notnull' => false]);
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->setPrimaryKey(['id']);
-        $table->addIndex(['owner_id'], 'orocrm_dm_data_field_owner', []);
-        $table->addIndex(['channel_id'], 'orocrm_dm_data_field_channel', []);
+        $table->addIndex(['owner_id'], 'orocrm_dm_data_field_owner');
+        $table->addIndex(['channel_id'], 'orocrm_dm_data_field_channel');
         $table->addUniqueIndex(['name', 'channel_id'], 'orocrm_dm_data_field_unq');
 
         $this->addEnumField($schema, $table, 'visibility', 'dm_df_visibility');
@@ -377,7 +377,7 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
     /**
      * Create orocrm_dm_address_book table
      */
-    public function createOroDotmailerDataFieldMappingTable(Schema $schema): void
+    private function createOroDotmailerDataFieldMappingTable(Schema $schema): void
     {
         $table = $schema->createTable('orocrm_dm_df_mapping');
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
@@ -388,15 +388,15 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->addColumn('updated_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->setPrimaryKey(['id']);
-        $table->addIndex(['owner_id'], 'orocrm_dm_data_field_mapping_owner', []);
-        $table->addIndex(['channel_id'], 'orocrm_dm_data_field_mapping_channel', []);
+        $table->addIndex(['owner_id'], 'orocrm_dm_data_field_mapping_owner');
+        $table->addIndex(['channel_id'], 'orocrm_dm_data_field_mapping_channel');
         $table->addUniqueIndex(['entity', 'channel_id'], 'orocrm_dm_data_field_mapping_unq');
     }
 
     /**
      * Create orocrm_dm_address_book table
      */
-    public function createOroDotmailerDataFieldMappingConfigTable(Schema $schema): void
+    private function createOroDotmailerDataFieldMappingConfigTable(Schema $schema): void
     {
         $table = $schema->createTable('orocrm_dm_df_mapping_config');
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
@@ -407,8 +407,8 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->addColumn('updated_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->setPrimaryKey(['id']);
-        $table->addIndex(['mapping_id'], 'orocrm_dm_data_field_mapping_config_mapping', []);
-        $table->addIndex(['datafield_id'], 'orocrm_dm_data_field_mapping_config_datafield', []);
+        $table->addIndex(['mapping_id'], 'orocrm_dm_data_field_mapping_config_mapping');
+        $table->addIndex(['datafield_id'], 'orocrm_dm_data_field_mapping_config_datafield');
         $table->addUniqueIndex(['datafield_id', 'mapping_id'], 'orocrm_dm_df_mapping_config_unq');
     }
 
@@ -437,8 +437,8 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
         $table->addColumn('user_id', 'integer', ['notnull' => false]);
         $table->addColumn('refresh_token', 'string', ['notnull' => false, 'length' => 255]);
         $table->setPrimaryKey(['id']);
-        $table->addIndex(['channel_id'], 'IDX_12771F2872F5A1AA', []);
-        $table->addIndex(['user_id'], 'IDX_12771F28A76ED395', []);
+        $table->addIndex(['channel_id'], 'IDX_12771F2872F5A1AA');
+        $table->addIndex(['user_id'], 'IDX_12771F28A76ED395');
         $table->addUniqueIndex(['channel_id', 'user_id'], 'orocrm_dm_oauth_unq');
     }
 
