@@ -5,8 +5,12 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 use Doctrine\Persistence\ManagerRegistry;
 use DotMailer\Api\DataTypes\JsonArray;
 use DotMailer\Api\Resources\IResources;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
 
+/**
+ * Abstract class for activity iterators
+ */
 abstract class AbstractActivityIterator extends AbstractIterator
 {
     const CAMPAIGN_KEY = 'related_campaign';
@@ -157,7 +161,7 @@ abstract class AbstractActivityIterator extends AbstractIterator
             $itemsByContactId[$item['contactid']][] = $item;
         }
         $contactOriginIds = array_keys($itemsByContactId);
-        $entitiesData = $this->registry->getRepository('OroDotmailerBundle:Contact')
+        $entitiesData = $this->registry->getRepository(Contact::class)
             ->getEntitiesDataByOriginIds($contactOriginIds, $this->addressBooks);
         $allItems = [];
         foreach ($entitiesData as $entityData) {

@@ -17,20 +17,22 @@ use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Entity\Status;
 use Oro\Bundle\IntegrationBundle\Provider\ConnectorContextMediator;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-class UnsubscribedFromAccountContactReaderTest extends \PHPUnit\Framework\TestCase
+class UnsubscribedFromAccountContactReaderTest extends TestCase
 {
-    /** @var ContextRegistry|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var ContextRegistry|MockObject */
     private $contextRegistry;
 
-    /** @var ConnectorContextMediator|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var ConnectorContextMediator|MockObject */
     private $contextMediator;
 
-    /** @var ManagerRegistry|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var ManagerRegistry|MockObject */
     private $managerRegistry;
 
-    /** @var LoggerInterface|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var LoggerInterface|MockObject */
     private $logger;
 
     /** @var UnsubscribedFromAccountContactReader */
@@ -176,7 +178,7 @@ class UnsubscribedFromAccountContactReaderTest extends \PHPUnit\Framework\TestCa
         $this->managerRegistry->expects($this->any())
             ->method('getRepository')
             ->willReturnMap([
-                ['OroIntegrationBundle:Status', null, $statusRepository]
+                [Status::class, null, $statusRepository]
             ]);
         $this->contextMediator->expects($this->any())
             ->method('getChannel')

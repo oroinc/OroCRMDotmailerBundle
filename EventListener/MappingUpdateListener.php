@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\EventListener;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\UnitOfWork;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactRepository;
@@ -50,7 +51,7 @@ class MappingUpdateListener implements OptionalListenerInterface
         if (!$this->enabled) {
             return;
         }
-        $em = $args->getEntityManager();
+        $em = $args->getObjectManager();
         $uow = $em->getUnitOfWork();
         $this->entityUpdateScheduled = [];
         $this->entityFieldUpdateScheduled = [];
@@ -185,7 +186,7 @@ class MappingUpdateListener implements OptionalListenerInterface
     {
         if (empty($this->entityUpdateScheduled[$mapping->getEntity()])) {
             /** @var AddressBookContactRepository $repository */
-            $repository = $this->doctrineHelper->getEntityRepositoryForClass('OroDotmailerBundle:AddressBookContact');
+            $repository = $this->doctrineHelper->getEntityRepositoryForClass(AddressBookContact::class);
             $repository->bulkUpdateEntityUpdatedFlag($mapping->getEntity(), $mapping->getChannel());
             $this->entityUpdateScheduled[$mapping->getEntity()] = true;
         }
@@ -198,7 +199,7 @@ class MappingUpdateListener implements OptionalListenerInterface
     {
         if (empty($this->entityFieldUpdateScheduled[$mapping->getEntity()])) {
             /** @var AddressBookContactRepository $repository */
-            $repository = $this->doctrineHelper->getEntityRepositoryForClass('OroDotmailerBundle:AddressBookContact');
+            $repository = $this->doctrineHelper->getEntityRepositoryForClass(AddressBookContact::class);
             $repository->bulkUpdateScheduledForEntityFieldUpdateFlag($mapping->getEntity(), $mapping->getChannel());
             $this->entityFieldUpdateScheduled[$mapping->getEntity()] = true;
         }

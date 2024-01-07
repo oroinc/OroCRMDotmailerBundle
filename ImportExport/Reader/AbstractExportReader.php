@@ -6,6 +6,9 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 use Oro\Bundle\ImportExportBundle\Exception\LogicException;
 
+/**
+ * Abstract class for export readers
+ */
 abstract class AbstractExportReader extends AbstractReader
 {
     const ADDRESS_BOOK_RESTRICTION_OPTION = 'address-book';
@@ -41,7 +44,7 @@ abstract class AbstractExportReader extends AbstractReader
         $addressBookId = $this->context->getOption(self::ADDRESS_BOOK_RESTRICTION_OPTION);
 
         return $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:AddressBook')
+            ->getRepository(AddressBook::class)
             ->getAddressBooksToSync($this->getChannel(), $addressBookId);
     }
 

@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\Step;
 use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\BatchBundle\Entity\StepExecution;
 use Oro\Bundle\BatchBundle\Step\ItemStep;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
@@ -32,7 +33,7 @@ class ImportExportErrorReportsStep extends ItemStep
 
         $channel = $this->getChannel($stepExecution);
         $this->registry
-            ->getRepository('OroDotmailerBundle:AddressBookContactsExport')
+            ->getRepository(AddressBookContactsExport::class)
             ->setNotRejectedExportFaultsProcessed($channel);
     }
 
@@ -69,7 +70,7 @@ class ImportExportErrorReportsStep extends ItemStep
     {
         $context = $this->contextRegistry->getByStepExecution($stepExecution);
         return $this->registry
-            ->getRepository('OroIntegrationBundle:Channel')
+            ->getRepository(Channel::class)
             ->getOrLoadById($context->getOption('channel'));
     }
 }

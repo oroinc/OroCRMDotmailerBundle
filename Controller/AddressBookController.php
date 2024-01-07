@@ -2,7 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\Controller;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Form\Handler\AddressBookHandler;
 use Oro\Bundle\DotmailerBundle\Form\Handler\ConnectionUpdateFormHandler;
 use Oro\Bundle\DotmailerBundle\Form\Type\MarketingListConnectionType;
@@ -42,16 +44,16 @@ class AddressBookController extends AbstractController
      *      id="oro_dotmailer_address_book_update",
      *      type="entity",
      *      permission="EDIT",
-     *      class="OroDotmailerBundle:AddressBook"
+     *      class="Oro\Bundle\DotmailerBundle\Entity\AddressBook"
      * )
      * @CsrfProtection()
      */
     public function synchronizeAddressBookAction(AddressBook $addressBook): JsonResponse
     {
-        $translator = $this->get(TranslatorInterface::class);
+        $translator = $this->container->get(TranslatorInterface::class);
 
         try {
-            $this->get(GenuineSyncScheduler::class)->schedule(
+            $this->container->get(GenuineSyncScheduler::class)->schedule(
                 $addressBook->getChannel()->getId(),
                 null,
                 [AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION => $addressBook->getId()]
@@ -66,7 +68,7 @@ class AddressBookController extends AbstractController
                 )
             ];
         } catch (\Exception $e) {
-            $this->get(LoggerInterface::class)->error(
+            $this->container->get(LoggerInterface::class)->error(
                 sprintf(
                     'Failed to schedule address book synchronization. Address Book Id: %s.',
                     $addressBook->getId()
@@ -94,16 +96,16 @@ class AddressBookController extends AbstractController
      *      id="oro_dotmailer_address_book_update",
      *      type="entity",
      *      permission="EDIT",
-     *      class="OroDotmailerBundle:AddressBook"
+     *      class="Oro\Bundle\DotmailerBundle\Entity\AddressBook"
      * )
      * @CsrfProtection()
      */
     public function synchronizeAddressBookDataFieldsAction(AddressBook $addressBook): JsonResponse
     {
-        $translator = $this->get(TranslatorInterface::class);
+        $translator = $this->container->get(TranslatorInterface::class);
 
         try {
-            $this->getDoctrine()->getRepository('OroDotmailerBundle:AddressBookContact')
+            $this->container->get('doctrine')->getRepository(AddressBookContact::class)
                 ->bulkEntityUpdatedByAddressBook($addressBook);
 
             $status = Response::HTTP_OK;
@@ -132,13 +134,13 @@ class AddressBookController extends AbstractController
      *      id="oro_dotmailer_address_book_update",
      *      type="entity",
      *      permission="EDIT",
-     *      class="OroDotmailerBundle:AddressBook"
+     *      class="Oro\Bundle\DotmailerBundle\Entity\AddressBook"
      * )
      * @CsrfProtection()
      */
     public function disconnectMarketingListAction(AddressBook $addressBook): JsonResponse
     {
-        $em = $this->get('doctrine')
+        $em = $this->container->get('doctrine')
             ->getManager();
         $addressBook->setMarketingList(null);
         $em->persist($addressBook);
@@ -172,7 +174,7 @@ class AddressBookController extends AbstractController
                 'createEntities'   => $addressBook->isCreateEntities()
             ]
             : [];
-        $savedId = $this->get(ConnectionUpdateFormHandler::class)->handle($form, $formData);
+        $savedId = $this->container->get(ConnectionUpdateFormHandler::class)->handle($form, $formData);
 
         return [
             'form'    => $form->createView(),
@@ -189,7 +191,7 @@ class AddressBookController extends AbstractController
      * )
      * @ParamConverter(
      *      "marketingList",
-     *      class="OroMarketingListBundle:MarketingList",
+     *      class="Oro\Bundle\MarketingListBundle\Entity\MarketingList",
      *      options={"id" = "entity"}
      * )
      * @Template()
@@ -211,8 +213,8 @@ class AddressBookController extends AbstractController
 
     protected function getAddressBook(MarketingList $marketingList): ?AddressBook
     {
-        $addressBook = $this->get('doctrine')
-            ->getRepository('OroDotmailerBundle:AddressBook')
+        $addressBook = $this->container->get('doctrine')
+            ->getRepository(AddressBook::class)
             ->findOneBy(['marketingList' => $marketingList]);
 
         return $addressBook;
@@ -227,7 +229,7 @@ class AddressBookController extends AbstractController
      *      id="oro_address_book_create",
      *      type="entity",
      *      permission="CREATE",
-     *      class="OroDotmailerBundle:AddressBook"
+     *      class="Oro\Bundle\DotmailerBundle\Entity\AddressBook"
      * )
      * @Template("@OroDotmailer/AddressBook/update.html.twig")
      */
@@ -238,12 +240,12 @@ class AddressBookController extends AbstractController
 
     protected function update(AddressBook $addressBook): array|RedirectResponse
     {
-        return $this->get(UpdateHandlerFacade::class)->update(
+        return $this->container->get(UpdateHandlerFacade::class)->update(
             $addressBook,
-            $this->get('oro_dotmailer.form.address_book'),
-            $this->get(TranslatorInterface::class)->trans('oro.dotmailer.addressbook.message.saved'),
+            $this->container->get('oro_dotmailer.form.address_book'),
+            $this->container->get(TranslatorInterface::class)->trans('oro.dotmailer.addressbook.message.saved'),
             null,
-            $this->get(AddressBookHandler::class)
+            $this->container->get(AddressBookHandler::class)
         );
     }
 
@@ -261,7 +263,8 @@ class AddressBookController extends AbstractController
                 ConnectionUpdateFormHandler::class,
                 AddressBookHandler::class,
                 'oro_dotmailer.form.address_book' => Form::class,
-                UpdateHandlerFacade::class
+                UpdateHandlerFacade::class,
+                'doctrine' => ManagerRegistry::class
             ]
         );
     }

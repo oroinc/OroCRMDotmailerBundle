@@ -9,6 +9,9 @@ use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignClickConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignOpenConnector;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
+/**
+ * Loods "campaign_click" and "campaign_open" connectors to Dotmailer channel.
+ */
 class AddClicksAndOpensConnectors extends AbstractFixture
 {
     /**
@@ -17,7 +20,7 @@ class AddClicksAndOpensConnectors extends AbstractFixture
     public function load(ObjectManager $manager)
     {
         /** @var Channel[] $channels */
-        $channels = $manager->getRepository('OroIntegrationBundle:Channel')->findBy(['type' => ChannelType::TYPE]);
+        $channels = $manager->getRepository(Channel::class)->findBy(['type' => ChannelType::TYPE]);
         $newConnectors = [CampaignClickConnector::TYPE, CampaignOpenConnector::TYPE];
         foreach ($channels as $channel) {
             $connectors = $channel->getConnectors();

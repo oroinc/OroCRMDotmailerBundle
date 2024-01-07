@@ -8,6 +8,9 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Event\SyncEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * Abstract class for import/export listeners
+ */
 abstract class AbstractImportExportListener implements EventSubscriberInterface
 {
     /**
@@ -44,7 +47,7 @@ abstract class AbstractImportExportListener implements EventSubscriberInterface
             throw new RuntimeException('Integration channel Id required');
         }
         $channel = $this->registry
-            ->getRepository('OroIntegrationBundle:Channel')
+            ->getRepository(Channel::class)
             ->getOrLoadById($configuration['import']['channel']);
         if (!$channel) {
             throw new RuntimeException('Integration channel is not exist');

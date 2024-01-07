@@ -3,6 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\EventListener;
 
 use Doctrine\Persistence\ManagerRegistry;
+use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
@@ -14,6 +15,9 @@ use Oro\Bundle\IntegrationBundle\Entity\Status;
 use Oro\Bundle\IntegrationBundle\Event\SyncEvent;
 use Oro\Bundle\IntegrationBundle\ImportExport\Helper\DefaultOwnerHelper;
 
+/**
+ * Listener for adding default mapping for data fields
+ */
 class AddDefaultMappingListener extends AbstractImportExportListener
 {
     /**
@@ -104,7 +108,7 @@ class AddDefaultMappingListener extends AbstractImportExportListener
      */
     protected function mappingExists(Channel $channel, $entity)
     {
-        $mapping = $this->registry->getRepository('OroDotmailerBundle:DataFieldMapping')->findOneBy(
+        $mapping = $this->registry->getRepository(DataFieldMapping::class)->findOneBy(
             [
                 'channel' => $channel,
                 'entity'  => $entity
@@ -215,7 +219,7 @@ class AddDefaultMappingListener extends AbstractImportExportListener
      */
     protected function isFirstDataFieldSyncJob(Channel $channel)
     {
-        $queryBuilder = $this->registry->getRepository('OroIntegrationBundle:Channel')
+        $queryBuilder = $this->registry->getRepository(Channel::class)
             ->getConnectorStatusesQueryBuilder($channel, DataFieldConnector::TYPE, Status::STATUS_COMPLETED);
         $queryBuilder->select('COUNT(status.id) as statusCount');
         $queryBuilder->resetDQLPart('orderBy');
@@ -233,7 +237,7 @@ class AddDefaultMappingListener extends AbstractImportExportListener
     {
         $mapping = $this->getDefaultMappingConfiguration();
         $names = array_values($mapping);
-        $fields = $this->registry->getRepository('OroDotmailerBundle:DataField')
+        $fields = $this->registry->getRepository(DataField::class)
             ->getChannelDataFieldByNames($names, $channel);
 
         return $fields;

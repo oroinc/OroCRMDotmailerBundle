@@ -8,6 +8,9 @@ use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
+/**
+ * Loads "data_field" connector to Dotmailer channel.
+ */
 class AddDataFieldConnector extends AbstractFixture
 {
     /**
@@ -16,7 +19,7 @@ class AddDataFieldConnector extends AbstractFixture
     public function load(ObjectManager $manager)
     {
         /** @var Channel[] $channels */
-        $channels = $manager->getRepository('OroIntegrationBundle:Channel')->findBy(['type' => ChannelType::TYPE]);
+        $channels = $manager->getRepository(Channel::class)->findBy(['type' => ChannelType::TYPE]);
 
         foreach ($channels as $channel) {
             $connectors = $channel->getConnectors();

@@ -2,6 +2,8 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+
 /**
  * Campaign Connector
  */
@@ -17,7 +19,7 @@ class CampaignConnector extends AbstractDotmailerConnector
     {
         $this->logger->info('Importing Campaigns.');
         $aBooksToSynchronize = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:AddressBook')
+            ->getRepository(AddressBook::class)
             ->getSyncedAddressBooksToSyncOriginIds($this->getChannel());
 
         return $this->transport->getCampaigns($aBooksToSynchronize);

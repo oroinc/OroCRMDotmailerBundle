@@ -2,6 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Reader;
 
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AppendIterator;
@@ -24,7 +25,7 @@ class NotExportedContactReader extends AbstractReader
         $addressBookExports = [];
 
         $exportEntities = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:AddressBookContactsExport')
+            ->getRepository(AddressBookContactsExport::class)
             ->getNotRejectedExports($channel);
         foreach ($exportEntities as $exportEntity) {
             $addressBookExports[$exportEntity->getAddressBook()->getId()][] = $exportEntity->getImportId();

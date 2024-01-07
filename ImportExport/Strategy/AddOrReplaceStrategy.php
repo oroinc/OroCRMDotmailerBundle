@@ -2,6 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
+use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\ChannelAwareInterface;
 use Oro\Bundle\DotmailerBundle\Entity\OriginAwareInterface;
@@ -13,6 +14,9 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\ImportExport\Helper\DefaultOwnerHelper;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Abstract class for add or replace strategies
+ */
 class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
 {
     const BATCH_ITEMS = 'batchItems';
@@ -167,7 +171,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
     /**
      * @param string $entityName "FQCN" or Doctrine entity alias
      *
-     * @return \Doctrine\ORM\EntityRepository
+     * @return EntityRepository
      */
     protected function getRepository($entityName)
     {
@@ -184,8 +188,8 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
         $channelId = $this->context->getOption('channel');
         $channel = $this->cacheProvider->getCachedItem(self::CACHED_CHANNEL, $channelId);
         if (!$channel) {
-            $channel = $this->strategyHelper->getEntityManager('OroIntegrationBundle:Channel')
-                ->getRepository('OroIntegrationBundle:Channel')
+            $channel = $this->strategyHelper->getEntityManager(Channel::class)
+                ->getRepository(Channel::class)
                 ->getOrLoadById($channelId);
 
             $this->cacheProvider->setCachedItem(self::CACHED_CHANNEL, $channelId, $channel);
@@ -217,7 +221,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
     {
         $addressBook = $this->cacheProvider->getCachedItem(self::CACHED_ADDRESS_BOOK, $addressBookOriginId);
         if (!$addressBook) {
-            $addressBook = $this->getRepository('OroDotmailerBundle:AddressBook')
+            $addressBook = $this->getRepository(AddressBook::class)
                 ->findOneBy(
                     [
                         'channel'  => $this->getChannel(),

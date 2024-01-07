@@ -2,6 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
+use Oro\Bundle\DotmailerBundle\Entity\Activity;
+use Oro\Bundle\DotmailerBundle\Entity\Campaign;
+
 /**
  * Contact Activities Connector
  */
@@ -17,10 +20,10 @@ class ActivityContactConnector extends AbstractDotmailerConnector
     {
         // Synchronize only campaign activities that are connected to marketing list.
         $campaigns = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:Campaign')
+            ->getRepository(Campaign::class)
             ->findBy(['channel' => $this->getChannel(), 'deleted' => false]);
 
-        $activityRepository = $this->managerRegistry->getRepository('OroDotmailerBundle:Activity');
+        $activityRepository = $this->managerRegistry->getRepository(Activity::class);
         $campaignsToSynchronize = [];
 
         foreach ($campaigns as $campaign) {

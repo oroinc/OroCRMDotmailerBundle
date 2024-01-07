@@ -38,7 +38,7 @@ class DataFieldController extends AbstractController
      *      id="oro_dotmailer_datafield_view",
      *      type="entity",
      *      permission="VIEW",
-     *      class="OroDotmailerBundle:DataField"
+     *      class="Oro\Bundle\DotmailerBundle\Entity\DataField"
      * )
      * @param DataField $field
      * @return array
@@ -72,22 +72,23 @@ class DataFieldController extends AbstractController
      *      id="oro_dotmailer_datafield_create",
      *      type="entity",
      *      permission="CREATE",
-     *      class="OroDotmailerBundle:DataField"
+     *      class="Oro\Bundle\DotmailerBundle\Entity\DataField"
      * )
      * @param Request $request
      * @return array|RedirectResponse
      */
     public function createAction(Request $request)
     {
-        $formHandler = $this->get(DataFieldFormHandler::class);
+        $formHandler = $this->container->get(DataFieldFormHandler::class);
         $form = $formHandler->getForm();
         if ($formHandler->process($request)) {
             $request->getSession()->getFlashBag()->add(
                 'success',
-                $this->get(TranslatorInterface::class)->trans('oro.dotmailer.controller.datafield.saved.message')
+                $this->container->get(TranslatorInterface::class)
+                    ->trans('oro.dotmailer.controller.datafield.saved.message')
             );
 
-            return $this->get(Router::class)->redirect(
+            return $this->container->get(Router::class)->redirect(
                 $form->getData()
             );
         }
@@ -96,7 +97,7 @@ class DataFieldController extends AbstractController
 
         if ($isTypeUpdate) {
             //take different form not to show JS validation on after type update only
-            $form = $this->get(FormFactoryInterface::class)
+            $form = $this->container->get(FormFactoryInterface::class)
                 ->createNamed('oro_dotmailer_data_field_form', DataFieldType::class, $form->getData());
         }
 
@@ -141,11 +142,11 @@ class DataFieldController extends AbstractController
     public function synchronizeAction()
     {
         try {
-            $repository = $this->get(ManagerRegistry::class)->getRepository('OroIntegrationBundle:Channel');
+            $repository = $this->container->get(ManagerRegistry::class)->getRepository(Channel::class);
             $channels = $repository->getConfiguredChannelsForSync(ChannelType::TYPE, true);
             /** @var Channel $channel */
             foreach ($channels as $channel) {
-                $this->get(GenuineSyncScheduler::class)->schedule(
+                $this->container->get(GenuineSyncScheduler::class)->schedule(
                     $channel->getId(),
                     DataFieldConnector::TYPE,
                     [DataFieldConnector::FORCE_SYNC_FLAG => 1]
@@ -154,18 +155,18 @@ class DataFieldController extends AbstractController
 
             $status = Response::HTTP_OK;
             $response = [
-                'message' => $this->get(TranslatorInterface::class)
+                'message' => $this->container->get(TranslatorInterface::class)
                     ->trans('oro.dotmailer.datafield.syncronize_scheduled')
             ];
         } catch (\Exception $e) {
-            $this->get(LoggerInterface::class)->error(
+            $this->container->get(LoggerInterface::class)->error(
                 'Failed to schedule data field synchronization.',
                 ['e' => $e]
             );
 
             $status = Response::HTTP_BAD_REQUEST;
             $response = [
-                'message' => $this->get(TranslatorInterface::class)->trans('oro.integration.sync_error')
+                'message' => $this->container->get(TranslatorInterface::class)->trans('oro.integration.sync_error')
             ];
         }
 

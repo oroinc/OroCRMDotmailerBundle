@@ -5,7 +5,11 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
 
+/**
+ * Iterator for contacts export.
+ */
 class ScheduledForExportContactIterator extends AbstractIterator
 {
     const ADDRESS_BOOK_KEY = 'related_address_book';
@@ -40,7 +44,7 @@ class ScheduledForExportContactIterator extends AbstractIterator
         $addressBook = $objectManager->getReference(AddressBook::class, $this->addressBookId);
 
         $contacts = $this->registry
-            ->getRepository('OroDotmailerBundle:Contact')
+            ->getRepository(Contact::class)
             ->getScheduledForExportByChannelQB($addressBook)
             ->setFirstResult($skip)
             ->setMaxResults($take)

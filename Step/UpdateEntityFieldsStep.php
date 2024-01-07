@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\BatchBundle\Entity\StepExecution;
 use Oro\Bundle\BatchBundle\Step\ItemStep;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\EventListener\EntityUpdateListener;
 use Oro\Bundle\DotmailerBundle\ImportExport\Processor\UpdateEntityFieldsFromContactProcessor;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
@@ -54,7 +55,7 @@ class UpdateEntityFieldsStep extends ItemStep
          * @var EntityRepository contactRepository
          */
         $contactRepository = $this->registry
-            ->getRepository('OroDotmailerBundle:AddressBookContact');
+            ->getRepository(AddressBookContact::class);
         $context = $this->contextRegistry->getByStepExecution($stepExecution);
         $contactRepository->resetScheduledForEntityFieldUpdateFlag(
             $context->getValue(UpdateEntityFieldsFromContactProcessor::PROCESSED_CONTACT_IDS)

@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\EventListener;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Menu\ItemInterface;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\NavigationBundle\Event\ConfigureMenuEvent;
 
 /**
@@ -25,7 +26,7 @@ class NavigationListener
     public function onNavigationConfigure(ConfigureMenuEvent $event)
     {
         $dotmailerIntegrations = $this->registry
-                ->getRepository('OroIntegrationBundle:Channel')
+                ->getRepository(Channel::class)
                 ->findBy(['type' => ChannelType::TYPE]);
         if (!count($dotmailerIntegrations)) {
             /** @var ItemInterface $marketingMenuItem */

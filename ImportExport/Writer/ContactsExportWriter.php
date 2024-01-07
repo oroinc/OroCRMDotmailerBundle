@@ -7,6 +7,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use DotMailer\Api\Exception;
 use Oro\Bundle\BatchBundle\Entity\StepExecution;
 use Oro\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactDataConverter;
 use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
@@ -158,7 +160,7 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
         $exportEntity->setImportId($importId);
 
         $channel = $this->getChannel();
-        $addressBook = $manager->getRepository('OroDotmailerBundle:AddressBook')
+        $addressBook = $manager->getRepository(AddressBook::class)
             ->findOneBy(['originId' => $addressBookOriginId, 'channel' => $channel]);
         $exportEntity->setAddressBook($addressBook);
 
@@ -168,7 +170,7 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
         $exportEntity->setStatus($status);
         $exportEntity->setChannel($channel);
 
-        $manager->getRepository('OroDotmailerBundle:AddressBookContact')
+        $manager->getRepository(AddressBookContact::class)
             ->bulkUpdateAddressBookContactsExportId($addressBookContactIds, $importId);
 
         $manager->persist($exportEntity);
@@ -207,7 +209,7 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
      */
     protected function getChannel()
     {
-        return $this->registry->getRepository('OroIntegrationBundle:Channel')
+        return $this->registry->getRepository(Channel::class)
             ->getOrLoadById($this->context->getOption('channel'));
     }
 }

@@ -12,6 +12,13 @@ use Oro\Bundle\IntegrationBundle\Provider\AbstractConnector;
 use Oro\Bundle\IntegrationBundle\Provider\ConnectorInterface;
 
 /**
+ * Abstract base connector for Dotmailer integration.
+ *
+ * This class provides common functionalities for Dotmailer connectors,
+ * handling synchronization processes including management of last synchronization date,
+ * accessing channel information, and initializing context for data synchronization.
+ * It extends from the AbstractConnector and implements necessary methods for Dotmailer integration.
+ *
  * @property DotmailerTransport $transport
  */
 abstract class AbstractDotmailerConnector extends AbstractConnector
@@ -73,7 +80,7 @@ abstract class AbstractDotmailerConnector extends AbstractConnector
         $code = $code ?: Status::STATUS_COMPLETED;
 
         /** @var Status $status */
-        $status = $this->managerRegistry->getRepository('OroIntegrationBundle:Status')
+        $status = $this->managerRegistry->getRepository(Status::class)
             ->findOneBy(
                 [
                     'code'      => $code,

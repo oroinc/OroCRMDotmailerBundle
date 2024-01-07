@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\UnitOfWork;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactRepository;
@@ -13,13 +14,15 @@ use Oro\Bundle\DotmailerBundle\EventListener\MappingUpdateListener;
 use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class MappingUpdateListenerTest extends \PHPUnit\Framework\TestCase
+class MappingUpdateListenerTest extends TestCase
 {
-    /** @var DoctrineHelper|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var DoctrineHelper|MockObject */
     private $doctrineHelper;
 
-    /** @var MappingProvider|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var MappingProvider|MockObject */
     private $mappingProvider;
 
     /** @var MappingUpdateListener */
@@ -63,7 +66,7 @@ class MappingUpdateListenerTest extends \PHPUnit\Framework\TestCase
         $addressBookContactRepository = $this->createMock(AddressBookContactRepository::class);
         $this->doctrineHelper->expects($this->any())
             ->method('getEntityRepositoryForClass')
-            ->with('OroDotmailerBundle:AddressBookContact')
+            ->with(AddressBookContact::class)
             ->willReturn($addressBookContactRepository);
 
         $addressBookContactRepository->expects($this->once())
@@ -111,7 +114,7 @@ class MappingUpdateListenerTest extends \PHPUnit\Framework\TestCase
         $addressBookContactRepository = $this->createMock(AddressBookContactRepository::class);
         $this->doctrineHelper->expects($this->any())
             ->method('getEntityRepositoryForClass')
-            ->with('OroDotmailerBundle:AddressBookContact')
+            ->with(AddressBookContact::class)
             ->willReturn($addressBookContactRepository);
 
         $addressBookContactRepository->expects($this->once())
@@ -155,7 +158,7 @@ class MappingUpdateListenerTest extends \PHPUnit\Framework\TestCase
         $addressBookContactRepository = $this->createMock(AddressBookContactRepository::class);
         $this->doctrineHelper->expects($this->any())
             ->method('getEntityRepositoryForClass')
-            ->with('OroDotmailerBundle:AddressBookContact')
+            ->with(AddressBookContact::class)
             ->willReturn($addressBookContactRepository);
 
         $addressBookContactRepository->expects($this->once())

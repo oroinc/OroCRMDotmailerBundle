@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\EventListener;
 use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Oro\Bundle\DotmailerBundle\Model\QueueExportManager;
@@ -13,6 +14,9 @@ use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Event\SyncEvent;
 
+/**
+ * Listener for updating address books sync status on sync started and finished
+ */
 class ContactExportListener extends AbstractImportExportListener
 {
     /**
@@ -50,7 +54,7 @@ class ContactExportListener extends AbstractImportExportListener
         /**
          * Remove contact drafts which was not fully exported to Dotmailer
          */
-        $this->registry->getRepository('OroDotmailerBundle:Contact')
+        $this->registry->getRepository(Contact::class)
             ->bulkRemoveNotExportedContacts($channel);
 
         /** @var AbstractEnumValue $inProgressStatus */
@@ -92,7 +96,7 @@ class ContactExportListener extends AbstractImportExportListener
     protected function getAddressBooksToSync(Channel $channel, array $configuration)
     {
         $repository = $this->registry
-            ->getRepository('OroDotmailerBundle:AddressBook');
+            ->getRepository(AddressBook::class);
 
         if (!empty($configuration['import'][AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION])) {
             $addressBook = $repository->find($configuration['import']['address-book']);

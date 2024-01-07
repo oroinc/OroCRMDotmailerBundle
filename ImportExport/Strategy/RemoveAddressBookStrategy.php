@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 
+/**
+ * Strategy for import AddressBook entities
+ */
 class RemoveAddressBookStrategy extends AbstractImportStrategy
 {
     /**
@@ -19,7 +22,7 @@ class RemoveAddressBookStrategy extends AbstractImportStrategy
 
             $existingEntity = $this->registry
                 ->getManager()
-                ->find('OroDotmailerBundle:AddressBook', $entity->getId());
+                ->find(AddressBook::class, $entity->getId());
 
             if (!$existingEntity) {
                 return null;

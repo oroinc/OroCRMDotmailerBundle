@@ -2,6 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\Controller;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\DotmailerBundle\Entity\OAuth;
 use Oro\Bundle\DotmailerBundle\Exception\BadRequestException;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
@@ -37,17 +38,17 @@ class OauthController extends AbstractController
             throw new BadRequestException('The request does not contain a state parameter.');
         }
 
-        $channel = $this->getDoctrine()
-            ->getRepository('OroIntegrationBundle:Channel')
+        $channel = $this->container->get('doctrine')
+            ->getRepository(Channel::class)
             ->getOrLoadById($state);
 
-        $translator = $this->get(TranslatorInterface::class);
+        $translator = $this->container->get(TranslatorInterface::class);
 
         if ($channel) {
             $transport = $channel->getTransport();
             $refreshToken = false;
             try {
-                $refreshToken = $this->get(OAuthManager::class)->generateRefreshToken($transport, $code);
+                $refreshToken = $this->container->get(OAuthManager::class)->generateRefreshToken($transport, $code);
             } catch (RuntimeException $e) {
                 $request->getSession()->getFlashBag()->add(
                     'error',
@@ -60,8 +61,8 @@ class OauthController extends AbstractController
                 );
             }
             if ($refreshToken) {
-                $oauth = $this->getDoctrine()
-                    ->getRepository('OroDotmailerBundle:OAuth')
+                $oauth = $this->container->get('doctrine')
+                    ->getRepository(OAuth::class)
                     ->findByChannelAndUser($channel, $this->getUser());
                 if (!$oauth) {
                     $oauth = new OAuth();
@@ -70,7 +71,7 @@ class OauthController extends AbstractController
                 }
                 $oauth->setRefreshToken($refreshToken);
 
-                $em = $this->get('doctrine')->getManager();
+                $em = $this->container->get('doctrine')->getManager();
                 $em->persist($oauth);
                 $em->flush();
             }
@@ -98,11 +99,11 @@ class OauthController extends AbstractController
      */
     public function disconnectAction(Channel $channel)
     {
-        $oauth = $this->getDoctrine()
-            ->getRepository('OroDotmailerBundle:OAuth')
+        $oauth = $this->container->get('doctrine')
+            ->getRepository(OAuth::class)
             ->findByChannelAndUser($channel, $this->getUser());
         if ($oauth) {
-            $em = $this->get('doctrine')->getManager();
+            $em = $this->container->get('doctrine')->getManager();
             $em->remove($oauth);
             $em->flush();
         }
@@ -120,6 +121,7 @@ class OauthController extends AbstractController
             [
                 TranslatorInterface::class,
                 OAuthManager::class,
+                'doctrine' => ManagerRegistry::class,
             ]
         );
     }

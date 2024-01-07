@@ -3,8 +3,12 @@
 namespace Oro\Bundle\DotmailerBundle\Placeholders;
 
 use Doctrine\Persistence\ManagerRegistry;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 
+/**
+ * Filters marketing list placeholders.
+ */
 class MarketingListPlaceholderFilter
 {
     /**
@@ -27,7 +31,7 @@ class MarketingListPlaceholderFilter
     {
         if ($marketingList instanceof MarketingList) {
             return (bool)$this->registry
-                ->getRepository('OroDotmailerBundle:AddressBook')
+                ->getRepository(AddressBook::class)
                 ->findOneBy(['marketingList' => $marketingList]);
         }
 

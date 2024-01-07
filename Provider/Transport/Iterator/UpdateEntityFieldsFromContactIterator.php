@@ -4,7 +4,11 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
 
+/**
+ * Iterator for updating entity fields from contact.
+ */
 class UpdateEntityFieldsFromContactIterator extends AbstractMarketingListItemIterator
 {
     /**
@@ -26,7 +30,7 @@ class UpdateEntityFieldsFromContactIterator extends AbstractMarketingListItemIte
     protected function getIteratorQueryBuilder(AddressBook $addressBook)
     {
         $contactsToUpdateFromQB = $this->registry
-            ->getRepository('OroDotmailerBundle:Contact')
+            ->getRepository(Contact::class)
             ->getScheduledForEntityFieldsUpdateQB($addressBook);
         if ($addressBook->isCreateEntities()) {
             //if new entities can be added, add subquery to check that no entity with email alreay exists

@@ -124,7 +124,7 @@ class ContactSyncDataConverter extends AbstractDataConverter implements ContextA
         $dataFields = $this->cacheProvider->getCachedItem(self::CACHED_DATAFIELDS, $channelId);
         if (!$dataFields) {
             /** @var DataFieldRepository $repository */
-            $repository = $this->doctrineHelper->getEntityRepository('OroDotmailerBundle:DataField');
+            $repository = $this->doctrineHelper->getEntityRepository(DataField::class);
             $fields = $repository->findBy(['channel' => $channelId]);
             $dataFields = [];
             /** @var DataField $dataField */
