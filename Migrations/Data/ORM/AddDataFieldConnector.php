@@ -16,22 +16,18 @@ class AddDataFieldConnector extends AbstractFixture
     /**
      * {@inheritDoc}
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         /** @var Channel[] $channels */
         $channels = $manager->getRepository(Channel::class)->findBy(['type' => ChannelType::TYPE]);
-
         foreach ($channels as $channel) {
             $connectors = $channel->getConnectors();
             $key = array_search(DataFieldConnector::TYPE, $connectors, true);
-
             if ($key === false) {
                 $connectors[] = DataFieldConnector::TYPE;
             }
-
             $channel->setConnectors($connectors);
         }
-
         $manager->flush($channels);
     }
 }

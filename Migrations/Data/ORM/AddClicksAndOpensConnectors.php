@@ -17,7 +17,7 @@ class AddClicksAndOpensConnectors extends AbstractFixture
     /**
      * {@inheritDoc}
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         /** @var Channel[] $channels */
         $channels = $manager->getRepository(Channel::class)->findBy(['type' => ChannelType::TYPE]);
