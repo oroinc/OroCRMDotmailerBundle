@@ -4,48 +4,46 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Oro\Bundle\ContactBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Entity\DataFieldMappingConfig;
-use Oro\Bundle\OrganizationBundle\Entity\Organization;
+use Oro\Bundle\TestFrameworkBundle\Tests\Functional\DataFixtures\LoadOrganization;
 
 class LoadDataFieldMappingData extends AbstractFixture implements DependentFixtureInterface
 {
-    /**
-     * @var array
-     */
-    protected $data = [
+    private array $data = [
         [
-            'entity'        => 'Oro\Bundle\ContactBundle\Entity\Contact',
-            'syncPriority'  => 100,
-            'channel'       => 'oro_dotmailer.channel.first',
-            'reference'     => 'oro_dotmailer.datafield_mapping.first',
-            'configs'        => [
+            'entity'       => Contact::class,
+            'syncPriority' => 100,
+            'channel'      => 'oro_dotmailer.channel.first',
+            'reference'    => 'oro_dotmailer.datafield_mapping.first',
+            'configs'      => [
                 [
-                    'dataField' => 'oro_dotmailer.datafield.first',
-                    'entityField' => 'firstName',
+                    'dataField'    => 'oro_dotmailer.datafield.first',
+                    'entityField'  => 'firstName',
                     'isTwoWaySync' => false
                 ],
                 [
-                    'dataField' => 'oro_dotmailer.datafield.second',
-                    'entityField' => 'lastName',
+                    'dataField'    => 'oro_dotmailer.datafield.second',
+                    'entityField'  => 'lastName',
                     'isTwoWaySync' => true
                 ],
             ]
         ],
         [
-            'entity'        => 'Oro\Bundle\ContactBundle\Entity\Contact',
-            'syncPriority'  => 100,
-            'channel'       => 'oro_dotmailer.channel.fourth',
-            'reference'     => 'oro_dotmailer.datafield_mapping.second',
-            'configs'        => [
+            'entity'       => Contact::class,
+            'syncPriority' => 100,
+            'channel'      => 'oro_dotmailer.channel.fourth',
+            'reference'    => 'oro_dotmailer.datafield_mapping.second',
+            'configs'      => [
                 [
-                    'dataField' => 'oro_dotmailer.datafield.third',
-                    'entityField' => 'firstName',
+                    'dataField'    => 'oro_dotmailer.datafield.third',
+                    'entityField'  => 'firstName',
                     'isTwoWaySync' => false
                 ],
                 [
-                    'dataField' => 'oro_dotmailer.datafield.fourth',
-                    'entityField' => 'lastName',
+                    'dataField'    => 'oro_dotmailer.datafield.fourth',
+                    'entityField'  => 'lastName',
                     'isTwoWaySync' => false
                 ],
             ]
@@ -53,14 +51,21 @@ class LoadDataFieldMappingData extends AbstractFixture implements DependentFixtu
     ];
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function load(ObjectManager $manager)
+    public function getDependencies(): array
     {
-        $organization = $manager->getRepository(Organization::class)->getFirst();
+        return [LoadDataFieldData::class, LoadOrganization::class];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function load(ObjectManager $manager): void
+    {
         foreach ($this->data as $data) {
             $entity = new DataFieldMapping();
-            $entity->setOwner($organization);
+            $entity->setOwner($this->getReference(LoadOrganization::ORGANIZATION));
             $this->resolveReferenceIfExist($data, 'channel');
             $this->setEntityPropertyValues($entity, $data, ['reference', 'configs']);
             if (!empty($data['configs'])) {
@@ -75,17 +80,6 @@ class LoadDataFieldMappingData extends AbstractFixture implements DependentFixtu
             $this->addReference($data['reference'], $entity);
             $manager->persist($entity);
         }
-
         $manager->flush();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDependencies()
-    {
-        return [
-            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDataFieldData',
-        ];
     }
 }

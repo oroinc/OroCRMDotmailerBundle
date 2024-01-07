@@ -5,14 +5,11 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
-use Oro\Bundle\OrganizationBundle\Entity\Organization;
+use Oro\Bundle\TestFrameworkBundle\Tests\Functional\DataFixtures\LoadOrganization;
 
 class LoadDataFieldData extends AbstractFixture implements DependentFixtureInterface
 {
-    /**
-     * @var array
-     */
-    protected $data = [
+    private array $data = [
         [
             'name'          => 'FIRSTNAME',
             'type'          => 'String',
@@ -48,33 +45,28 @@ class LoadDataFieldData extends AbstractFixture implements DependentFixtureInter
     ];
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function load(ObjectManager $manager)
+    public function getDependencies(): array
     {
-        $organization = $manager->getRepository(Organization::class)->getFirst();
+        return [LoadChannelData::class, LoadOrganizationData::class, LoadOrganization::class];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function load(ObjectManager $manager): void
+    {
         foreach ($this->data as $data) {
             $entity = new DataField();
             $data['visibility'] = $this->findEnum('dm_df_visibility', $data['visibility']);
             $data['type'] = $this->findEnum('dm_df_type', $data['type']);
-            $entity->setOwner($organization);
+            $entity->setOwner($this->getReference(LoadOrganization::ORGANIZATION));
             $this->resolveReferenceIfExist($data, 'channel');
             $this->setEntityPropertyValues($entity, $data, ['reference']);
             $this->addReference($data['reference'], $entity);
             $manager->persist($entity);
         }
-
         $manager->flush();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDependencies()
-    {
-        return [
-            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData',
-            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadOrganizationData'
-        ];
     }
 }
