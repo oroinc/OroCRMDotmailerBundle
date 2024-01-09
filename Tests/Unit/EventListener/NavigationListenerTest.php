@@ -7,12 +7,15 @@ use Knp\Menu\MenuFactory;
 use Knp\Menu\MenuItem;
 use Oro\Bundle\DotmailerBundle\EventListener\NavigationListener;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
+use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Entity\Repository\ChannelRepository;
 use Oro\Bundle\NavigationBundle\Event\ConfigureMenuEvent;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class NavigationListenerTest extends \PHPUnit\Framework\TestCase
+class NavigationListenerTest extends TestCase
 {
-    /** @var ManagerRegistry|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var ManagerRegistry|MockObject */
     private $registry;
 
     /** @var NavigationListener */
@@ -30,7 +33,7 @@ class NavigationListenerTest extends \PHPUnit\Framework\TestCase
         $channelRepository = $this->createMock(ChannelRepository::class);
         $this->registry->expects($this->once())
             ->method('getRepository')
-            ->with('OroIntegrationBundle:Channel')
+            ->with(Channel::class)
             ->willReturn($channelRepository);
         $channelRepository->expects($this->once())
             ->method('findBy')
@@ -53,7 +56,7 @@ class NavigationListenerTest extends \PHPUnit\Framework\TestCase
         $channelRepository = $this->createMock(ChannelRepository::class);
         $this->registry->expects($this->once())
             ->method('getRepository')
-            ->with('OroIntegrationBundle:Channel')
+            ->with(Channel::class)
             ->willReturn($channelRepository);
         $channelRepository->expects($this->once())
             ->method('findBy')

@@ -3,8 +3,12 @@
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use Doctrine\Persistence\ManagerRegistry;
+use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
+/**
+ * Iterator for data fields remove.
+ */
 class RemoveDataFieldIterator extends AbstractIterator
 {
     /**
@@ -40,7 +44,7 @@ class RemoveDataFieldIterator extends AbstractIterator
         }
 
         $dataFieldsForRemoveQB = $this->registry
-            ->getRepository('OroDotmailerBundle:DataField')
+            ->getRepository(DataField::class)
             ->getDataFieldsForRemoveQB($this->channel, $this->keepDataFieldsNames)
             ->setFirstResult($skip)
             ->setMaxResults($take);

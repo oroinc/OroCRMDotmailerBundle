@@ -9,6 +9,9 @@ use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
 
+/**
+ * Strategy for import Contact entities
+ */
 class ContactStrategy extends AddOrReplaceStrategy
 {
     const CACHED_ADDRESS_BOOK_ENTITIES = 'cachedAddressBookEntities';
@@ -57,7 +60,7 @@ class ContactStrategy extends AddOrReplaceStrategy
                         $addressBookContact->setNewEntity(true);
                     }
                     $this->strategyHelper
-                        ->getEntityManager('OroDotmailerBundle:AddressBookContact')
+                        ->getEntityManager(AddressBookContact::class)
                         ->persist($addressBookContact);
 
                     $entity->addAddressBookContact($addressBookContact);
@@ -138,7 +141,7 @@ class ContactStrategy extends AddOrReplaceStrategy
         /**
          * Two separated query used because of performance issue
          */
-        $contact = $this->getRepository('OroDotmailerBundle:Contact')
+        $contact = $this->getRepository(Contact::class)
             ->createQueryBuilder('contact')
             ->addSelect('addressBookContacts')
             ->addSelect('addressBook')
@@ -155,7 +158,7 @@ class ContactStrategy extends AddOrReplaceStrategy
             return $contact;
         }
 
-        $contact = $this->getRepository('OroDotmailerBundle:Contact')
+        $contact = $this->getRepository(Contact::class)
             ->createQueryBuilder('contact')
             ->addSelect('addressBookContacts')
             ->addSelect('addressBook')

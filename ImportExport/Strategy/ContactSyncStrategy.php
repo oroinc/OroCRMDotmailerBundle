@@ -10,6 +10,9 @@ use Oro\Bundle\DotmailerBundle\Provider\MappingProvider;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\MarketingListItemIterator;
 
+/**
+ * Strategy for import Contact entities
+ */
 class ContactSyncStrategy extends AddOrReplaceStrategy
 {
     /**
@@ -73,7 +76,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
                 $status = $this->getEnumValue('dm_cnt_status', Contact::STATUS_SUBSCRIBED);
                 $addressBookContact->setStatus($status);
                 $this->strategyHelper
-                    ->getEntityManager('OroDotmailerBundle:AddressBookContact')
+                    ->getEntityManager(AddressBookContact::class)
                     ->persist($addressBookContact);
 
                 $entity->addAddressBookContact($addressBookContact);
@@ -209,7 +212,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
          * Fix case if this contact already imported on this batch  but for different address book
          */
         if (!$contact = $this->cacheProvider->getCachedItem(self::BATCH_ITEMS, $entity->getEmail())) {
-            $contact = $this->getRepository('OroDotmailerBundle:Contact')
+            $contact = $this->getRepository(Contact::class)
                 ->createQueryBuilder('contact')
                 ->addSelect('addressBookContacts')
                 ->addSelect('addressBook')

@@ -12,6 +12,9 @@ use Oro\Bundle\ImportExportBundle\Strategy\StrategyInterface;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Abstract class for import strategies
+ */
 abstract class AbstractImportStrategy implements StrategyInterface, ContextAwareInterface
 {
     const CACHED_CHANNEL = 'cachedChannel';
@@ -44,7 +47,7 @@ abstract class AbstractImportStrategy implements StrategyInterface, ContextAware
         $channel = $this->cacheProvider->getCachedItem(self::CACHED_CHANNEL, $channelId);
         if (!$channel) {
             $channel = $this->registry
-                ->getRepository('OroIntegrationBundle:Channel')
+                ->getRepository(Channel::class)
                 ->getOrLoadById($channelId);
 
             $this->cacheProvider->setCachedItem(self::CACHED_CHANNEL, $channelId, $channel);

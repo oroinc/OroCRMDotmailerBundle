@@ -2,6 +2,8 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
 
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+
 /**
  * Contacts unsubscribed from Address book Connector
  */
@@ -16,7 +18,7 @@ class UnsubscribedContactConnector extends AbstractDotmailerConnector
     protected function getConnectorSource()
     {
         $this->logger->info('Importing Unsubscribed from Address Book Contacts.');
-        $addressBooks = $this->managerRegistry->getRepository('OroDotmailerBundle:AddressBook')
+        $addressBooks = $this->managerRegistry->getRepository(AddressBook::class)
             ->getAddressBooksToSync($this->getChannel());
 
         return $this->transport->getUnsubscribedContacts($addressBooks);

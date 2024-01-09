@@ -5,17 +5,15 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use DotMailer\Api\DataTypes\ApiContactStatuses;
+use Oro\Bundle\ContactBundle\Entity\Contact as CrmContact;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
-use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Oro\Bundle\TestFrameworkBundle\Tests\Functional\DataFixtures\LoadUser;
+use Oro\Bundle\UserBundle\Entity\User;
 
 class LoadDotmailerContactData extends AbstractFixture implements DependentFixtureInterface
 {
-    /**
-     * @var array
-     */
-    protected $data = [
+    private array $data = [
         [
             'originId'     => 200,
             'email'        => 'john.doe@example.com',
@@ -121,9 +119,9 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
                 'oro_dotmailer.address_book.third',
                 'oro_dotmailer.address_book.fourth',
                 [
-                    'addressBook'           =>  'oro_dotmailer.address_book.six',
-                    'status'                =>  Contact::STATUS_SUBSCRIBED,
-                    'exportOperationType'   =>  AddressBookContact::EXPORT_NEW_CONTACT
+                    'addressBook'         => 'oro_dotmailer.address_book.six',
+                    'status'              => Contact::STATUS_SUBSCRIBED,
+                    'exportOperationType' => AddressBookContact::EXPORT_NEW_CONTACT
                 ]
             ],
             'reference'    => 'oro_dotmailer.contact.add_contact_rejected',
@@ -137,9 +135,9 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
                 'oro_dotmailer.address_book.third',
                 'oro_dotmailer.address_book.fourth',
                 [
-                    'addressBook'           =>  'oro_dotmailer.address_book.six',
-                    'status'                =>  Contact::STATUS_SUBSCRIBED,
-                    'exportOperationType'   =>  AddressBookContact::EXPORT_UPDATE_CONTACT
+                    'addressBook'         => 'oro_dotmailer.address_book.six',
+                    'status'              => Contact::STATUS_SUBSCRIBED,
+                    'exportOperationType' => AddressBookContact::EXPORT_UPDATE_CONTACT
                 ]
             ],
             'lastSubscribedDate' => '2015-10-11',
@@ -165,9 +163,9 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'addressBooks' => [
                 'oro_dotmailer.address_book.fourth',
                 [
-                    'addressBook'           =>  'oro_dotmailer.address_book.six',
-                    'status'                =>  Contact::STATUS_SUBSCRIBED,
-                    'exportOperationType'   =>  AddressBookContact::EXPORT_ADD_TO_ADDRESS_BOOK
+                    'addressBook'         => 'oro_dotmailer.address_book.six',
+                    'status'              => Contact::STATUS_SUBSCRIBED,
+                    'exportOperationType' => AddressBookContact::EXPORT_ADD_TO_ADDRESS_BOOK
                 ]
             ],
         ],
@@ -235,9 +233,9 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             'email_type'   => Contact::EMAIL_TYPE_PLAINTEXT,
             'addressBooks' => [
                 [
-                    'addressBook'           =>  'oro_dotmailer.address_book.six',
-                    'status'                =>  Contact::STATUS_SUBSCRIBED,
-                    'exportOperationType'   =>  AddressBookContact::EXPORT_UPDATE_CONTACT
+                    'addressBook'         => 'oro_dotmailer.address_book.six',
+                    'status'              => Contact::STATUS_SUBSCRIBED,
+                    'exportOperationType' => AddressBookContact::EXPORT_UPDATE_CONTACT
                 ],
                 [
                     'addressBook' => 'oro_dotmailer.address_book.fifth',
@@ -290,34 +288,39 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
     ];
 
     /**
-     * @var ContainerInterface
+     * {@inheritDoc}
      */
-    protected $container;
+    public function getDependencies(): array
+    {
+        return [
+            LoadChannelData::class,
+            LoadAddressBookData::class,
+            LoadContactData::class,
+            LoadUser::class
+        ];
+    }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
-        $userManager = $this->container->get('oro_user.manager');
-        $admin = $userManager->findUserByEmail(LoadAdminUserData::DEFAULT_ADMIN_EMAIL);
-
+        /** @var User $user */
+        $user = $this->getReference(LoadUser::USER);
         foreach ($this->data as $item) {
             $contact = new Contact();
-            $contact->setOwner($admin->getOrganization());
+            $contact->setOwner($user->getOrganization());
             $this->resolveReferenceIfExist($item, 'channel');
 
             if (!empty($item['addressBooks'])) {
                 $item = $this->resolveAddressBookRelations($item, $contact, $manager);
             }
-
             if (!empty($item['createdAt'])) {
                 $item['createdAt'] = new \DateTime($item['createdAt']);
             }
             if (!empty($item['lastSubscribedDate'])) {
                 $item['lastSubscribedDate'] = new \DateTime($item['lastSubscribedDate']);
             }
-
             $item['status'] = $this->findEnum('dm_cnt_status', $item['status']);
             if (isset($item['opt_in_type'])) {
                 $item['opt_in_type'] = $this->findEnum('dm_cnt_opt_in_type', $item['opt_in_type']);
@@ -325,43 +328,15 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
             if (isset($item['email_type'])) {
                 $item['email_type'] = $this->findEnum('dm_cnt_email_type', $item['email_type']);
             }
-            $this->setEntityPropertyValues(
-                $contact,
-                $item,
-                [
-                    'addressBooks',
-                    'reference'
-                ]
-            );
+            $this->setEntityPropertyValues($contact, $item, ['addressBooks', 'reference']);
 
             $manager->persist($contact);
-
             $this->setReference($item['reference'], $contact);
         }
-
         $manager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getDependencies()
-    {
-        return [
-            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData',
-            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData',
-            'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadContactData',
-        ];
-    }
-
-    /**
-     * @param array         $item
-     * @param Contact       $contact
-     * @param ObjectManager $manager
-     *
-     * @return mixed
-     */
-    protected function resolveAddressBookRelations(array $item, Contact $contact, ObjectManager $manager)
+    private function resolveAddressBookRelations(array $item, Contact $contact, ObjectManager $manager): array
     {
         foreach ($item['addressBooks'] as $data) {
             $addressBookContact = new AddressBookContact();
@@ -370,15 +345,12 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
                 $addressBook = $this->getReference($data);
             } else {
                 $addressBook = $this->getReference($data['addressBook']);
-
                 if (isset($data['marketing_list_item'])) {
-                    $marketingListItem = $this->getReference($data['marketing_list_item']);
-                    $addressBookContact->setMarketingListItemId($marketingListItem->getId());
-                    $addressBookContact->setMarketingListItemClass(
-                        'Oro\Bundle\ContactBundle\Entity\Contact'
+                    $addressBookContact->setMarketingListItemId(
+                        $this->getReference($data['marketing_list_item'])->getId()
                     );
+                    $addressBookContact->setMarketingListItemClass(CrmContact::class);
                 }
-
                 if (isset($data['status'])) {
                     $status = $this->findEnum('dm_cnt_status', $data['status']);
                 }
@@ -391,8 +363,9 @@ class LoadDotmailerContactData extends AbstractFixture implements DependentFixtu
                 $addressBookContact->setScheduledForExport(true);
             }
             if (!empty($data['exportOperationType'])) {
-                $operationType = $this->findEnum('dm_ab_cnt_exp_type', $data['exportOperationType']);
-                $addressBookContact->setExportOperationType($operationType);
+                $addressBookContact->setExportOperationType(
+                    $this->findEnum('dm_ab_cnt_exp_type', $data['exportOperationType'])
+                );
             }
             $contact->addAddressBookContact($addressBookContact);
 

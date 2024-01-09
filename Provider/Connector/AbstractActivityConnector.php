@@ -7,6 +7,9 @@ use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 use Oro\Bundle\FeatureToggleBundle\Checker\FeatureCheckerHolderTrait;
 use Oro\Bundle\FeatureToggleBundle\Checker\FeatureToggleableInterface;
 
+/**
+ * Abstract class for activity connectors
+ */
 abstract class AbstractActivityConnector extends AbstractDotmailerConnector implements FeatureToggleableInterface
 {
     use FeatureCheckerHolderTrait;
@@ -17,7 +20,7 @@ abstract class AbstractActivityConnector extends AbstractDotmailerConnector impl
     protected function getCampaignToSyncrhonize()
     {
         $campaigns = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:Campaign')
+            ->getRepository(Campaign::class)
             ->getCampaignsToSynchronize($this->getChannel());
 
         $campaignsToSynchronize = [];

@@ -8,6 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\BatchBundle\Entity\StepExecution;
 use Oro\Bundle\BatchBundle\Item\ItemWriterInterface;
 use Oro\Bundle\BatchBundle\Step\StepExecutionAwareInterface;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\ImportExport\Processor\RemovedExportProcessor;
 use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
@@ -81,7 +82,7 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
          */
         $this->context->setValue(RemovedExportProcessor::CURRENT_BATCH_READ_ITEMS, []);
 
-        $repository = $this->registry->getRepository('OroDotmailerBundle:AddressBookContact');
+        $repository = $this->registry->getRepository(AddressBookContact::class);
 
         $addressBookItems = [];
         foreach ($items as $item) {
@@ -167,7 +168,7 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
      */
     protected function getChannel()
     {
-        return $this->registry->getRepository('OroIntegrationBundle:Channel')
+        return $this->registry->getRepository(Channel::class)
             ->getOrLoadById($this->context->getOption('channel'));
     }
 

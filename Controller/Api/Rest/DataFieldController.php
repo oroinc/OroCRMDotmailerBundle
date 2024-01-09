@@ -21,7 +21,7 @@ class DataFieldController extends RestController
      * @Acl(
      *      id="oro_dotmailer_datafield_delete",
      *      type="entity",
-     *      class="OroDotmailerBundle:DataField",
+     *      class="Oro\Bundle\DotmailerBundle\Entity\DataField",
      *      permission="DELETE"
      * )
      *
@@ -54,7 +54,7 @@ class DataFieldController extends RestController
      */
     public function getManager()
     {
-        return $this->get('oro_dotmailer.datafield.manager.api');
+        return $this->container->get('oro_dotmailer.datafield.manager.api');
     }
 
     /**

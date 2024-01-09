@@ -2,6 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
@@ -42,7 +43,7 @@ class NotExportedContactStrategy extends AbstractImportStrategy
         }
 
         $contact = $this->registry
-            ->getRepository('OroDotmailerBundle:Contact')
+            ->getRepository(Contact::class)
             ->findOneBy(['email' => $email, 'channel' => $this->getChannel()]);
 
         if (!$contact) {
@@ -52,7 +53,7 @@ class NotExportedContactStrategy extends AbstractImportStrategy
         }
 
         $addressBook = $this->registry
-            ->getRepository('OroDotmailerBundle:AddressBook')
+            ->getRepository(AddressBook::class)
             ->find($entity->getAddressBook()->getId());
 
         if (!$addressBook) {
@@ -62,7 +63,7 @@ class NotExportedContactStrategy extends AbstractImportStrategy
         }
 
         $addressBookContact = $this->registry
-            ->getRepository('OroDotmailerBundle:AddressBookContact')
+            ->getRepository(AddressBookContact::class)
             ->findOneBy(['contact' => $contact, 'addressBook' => $addressBook]);
 
         if (!$addressBookContact) {

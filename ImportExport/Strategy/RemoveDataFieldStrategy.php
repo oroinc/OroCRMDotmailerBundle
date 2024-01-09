@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 
+/**
+ * Strategy for import DataField entities
+ */
 class RemoveDataFieldStrategy extends AbstractImportStrategy
 {
     /**
@@ -19,7 +22,7 @@ class RemoveDataFieldStrategy extends AbstractImportStrategy
 
             $existingEntity = $this->registry
                 ->getManager()
-                ->find('OroDotmailerBundle:DataField', $entity->getId());
+                ->find(DataField::class, $entity->getId());
 
             if (!$existingEntity) {
                 return null;

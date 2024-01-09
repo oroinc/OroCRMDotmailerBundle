@@ -4,6 +4,9 @@ namespace Oro\Bundle\DotmailerBundle\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\CampaignSummary;
+use Oro\Bundle\DotmailerBundle\Entity\OAuth;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Form\Type\IntegrationConnectionType;
@@ -35,7 +38,7 @@ class DotmailerController extends AbstractController
      *      name="oro_dotmailer_email_campaign_status",
      *      requirements={"entity"="\d+"})
      * @ParamConverter("emailCampaign",
-     *      class="OroCampaignBundle:EmailCampaign",
+     *      class="Oro\Bundle\CampaignBundle\Entity\EmailCampaign",
      *      options={"id" = "entity"})
      * @AclAncestor("oro_email_campaign_view")
      *
@@ -46,8 +49,8 @@ class DotmailerController extends AbstractController
      */
     public function emailCampaignStatsAction(EmailCampaign $emailCampaign)
     {
-        $campaign = $this->getDoctrine()
-            ->getRepository('OroDotmailerBundle:CampaignSummary')
+        $campaign = $this->container->get('doctrine')
+            ->getRepository(CampaignSummary::class)
             ->getSummaryByEmailCampaign($emailCampaign);
         return ['campaignStats' => $campaign];
     }
@@ -57,7 +60,7 @@ class DotmailerController extends AbstractController
      *      name="oro_dotmailer_sync_status",
      *      requirements={"marketingList"="\d+"})
      * @ParamConverter("marketingList",
-     *      class="OroMarketingListBundle:MarketingList",
+     *      class="Oro\Bundle\MarketingListBundle\Entity\MarketingList",
      *      options={"id" = "marketingList"})
      * @AclAncestor("oro_marketing_list_view")
      *
@@ -68,7 +71,7 @@ class DotmailerController extends AbstractController
      */
     public function marketingListSyncStatusAction(MarketingList $marketingList)
     {
-        $addressBook = $this->getDoctrine()->getRepository('OroDotmailerBundle:AddressBook')
+        $addressBook = $this->container->get('doctrine')->getRepository(AddressBook::class)
             ->findOneBy(['marketingList' => $marketingList]);
 
         return ['address_book' => $addressBook];
@@ -88,11 +91,11 @@ class DotmailerController extends AbstractController
         $username = $request->get('username');
         $password = $request->get('password');
 
-        $dotmailerResourceFactory = $this->get(DotmailerResourcesFactory::class);
+        $dotmailerResourceFactory = $this->container->get(DotmailerResourcesFactory::class);
         try {
             $dotmailerResourceFactory->createResources($username, $password);
             $result = [
-                'msg' => $this->get(TranslatorInterface::class)
+                'msg' => $this->container->get(TranslatorInterface::class)
                     ->trans('oro.dotmailer.integration.connection_successful.label')
             ];
         } catch (\Exception $exception) {
@@ -139,9 +142,9 @@ class DotmailerController extends AbstractController
         if ($channel) {
             $transport = $channel->getTransport();
             if ($transport->getClientId() && $transport->getClientKey()) {
-                $oauthHelper = $this->get(OAuthManager::class);
-                $oauth = $this->getDoctrine()
-                    ->getRepository('OroDotmailerBundle:OAuth')
+                $oauthHelper = $this->container->get(OAuthManager::class);
+                $oauth = $this->container->get('doctrine')
+                    ->getRepository(OAuth::class)
                     ->findByChannelAndUser($channel, $this->getUser());
                 if ($oauth) {
                     try {
@@ -155,7 +158,7 @@ class DotmailerController extends AbstractController
                     } catch (\Exception $e) {
                         $request->getSession()->getFlashBag()->add(
                             'error',
-                            $this->get(TranslatorInterface::class)
+                            $this->container->get(TranslatorInterface::class)
                                 ->trans('oro.dotmailer.integration.messsage.unable_to_connect')
                         );
                     }
@@ -164,7 +167,7 @@ class DotmailerController extends AbstractController
             } else {
                 $request->getSession()->getFlashBag()->add(
                     'error',
-                    $this->get(TranslatorInterface::class)->trans(
+                    $this->container->get(TranslatorInterface::class)->trans(
                         'oro.dotmailer.integration.messsage.enter_client_id_client_key',
                         ['%update_url%' => $this->generateUrl('oro_integration_update', ['id' => $channel->getId()])]
                     )
@@ -190,7 +193,7 @@ class DotmailerController extends AbstractController
         $channelId = $data['channel'] ?? $request->getSession()->get(self::CHANNEL_SESSION_KEY);
         $channel = null;
         if ($channelId) {
-            $channel = $this->get(ManagerRegistry::class)
+            $channel = $this->container->get(ManagerRegistry::class)
                 ->getRepository(Channel::class)
                 ->getOrLoadById($channelId);
         }
@@ -209,7 +212,8 @@ class DotmailerController extends AbstractController
                 ManagerRegistry::class,
                 DotmailerResourcesFactory::class,
                 TranslatorInterface::class,
-                OAuthManager::class
+                OAuthManager::class,
+                'doctrine' => ManagerRegistry::class
             ]
         );
     }

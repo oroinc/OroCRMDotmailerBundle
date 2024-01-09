@@ -9,6 +9,9 @@ use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ActivityContactIterator;
 use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
 
+/**
+ * Strategy for import ActivityContact entities
+ */
 class ActivityContactStrategy extends AddOrReplaceStrategy
 {
     const CACHED_CAMPAIGN_ENTITIES = 'cachedCampaignEntities';
@@ -77,7 +80,7 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
 
         $campaign = $this->cacheProvider->getCachedItem(self::CACHED_CAMPAIGN_ENTITIES, $campaignOriginId);
         if (!$campaign) {
-            $campaign = $this->getRepository('OroDotmailerBundle:Campaign')
+            $campaign = $this->getRepository(Campaign::class)
                 ->createQueryBuilder('dmCampaign')
                 ->addSelect('addressBooks')
                 ->addSelect('emailCampaign')
@@ -109,8 +112,8 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
     protected function findExistingContact(Contact $contact)
     {
         $existing = $this->strategyHelper
-            ->getEntityManager('OroDotmailerBundle:Contact')
-            ->getRepository('OroDotmailerBundle:Contact')
+            ->getEntityManager(Contact::class)
+            ->getRepository(Contact::class)
             ->findOneBy(
                 [
                     'channel'  => $contact->getChannel(),

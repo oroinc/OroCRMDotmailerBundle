@@ -9,6 +9,9 @@ use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIterator;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
+/**
+ * Strategy for import Unsubscribed contact entities
+ */
 class UnsubscribedContactStrategy extends AbstractImportStrategy
 {
     const CACHED_ADDRESS_BOOK = 'cachedAddressBook';
@@ -85,7 +88,7 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
     protected function getExistingAddressBookContact(AddressBook $addressBook, Contact $contact)
     {
         $addressBookContact = $this->registry
-            ->getRepository('OroDotmailerBundle:AddressBookContact')
+            ->getRepository(AddressBookContact::class)
             ->findOneBy(['addressBook' => $addressBook, 'contact' => $contact]);
 
         return $addressBookContact;
@@ -137,7 +140,7 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
              * Two separated query used because of performance issue
              */
             $contact = $this->registry
-                ->getRepository('OroDotmailerBundle:Contact')
+                ->getRepository(Contact::class)
                 ->createQueryBuilder('contact')
                 ->addSelect('addressBookContacts')
                 ->where('contact.channel = :channel')
@@ -150,7 +153,7 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
 
             if (!$contact) {
                 $contact = $this->registry
-                    ->getRepository('OroDotmailerBundle:Contact')
+                    ->getRepository(Contact::class)
                     ->createQueryBuilder('contact')
                     ->addSelect('addressBookContacts')
                     ->where('contact.channel = :channel')
@@ -179,7 +182,7 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
         $addressBookOriginId = $originalValue[UnsubscribedContactIterator::ADDRESS_BOOK_KEY];
         $addressBook = $this->cacheProvider->getCachedItem(self::CACHED_ADDRESS_BOOK, $addressBookOriginId);
         if (!$addressBook) {
-            $addressBook = $this->registry->getRepository('OroDotmailerBundle:AddressBook')
+            $addressBook = $this->registry->getRepository(AddressBook::class)
                 ->findOneBy(
                     [
                         'channel'  => $this->getChannel(),

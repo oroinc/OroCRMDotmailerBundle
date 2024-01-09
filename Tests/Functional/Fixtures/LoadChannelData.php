@@ -16,14 +16,12 @@ use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
-use Oro\Bundle\UserBundle\Migrations\Data\ORM\LoadAdminUserData;
+use Oro\Bundle\TestFrameworkBundle\Tests\Functional\DataFixtures\LoadUser;
+use Oro\Bundle\UserBundle\Entity\User;
 
 class LoadChannelData extends AbstractFixture implements DependentFixtureInterface
 {
-    /**
-     * @var array
-     */
-    protected $data = [
+    private array $data = [
         [
             'name' => 'first channel',
             'connectors' => [
@@ -105,38 +103,32 @@ class LoadChannelData extends AbstractFixture implements DependentFixtureInterfa
     ];
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function load(ObjectManager $manager)
+    public function getDependencies(): array
     {
-        $userManager = $this->container->get('oro_user.manager');
-        $admin = $userManager->findUserByEmail(LoadAdminUserData::DEFAULT_ADMIN_EMAIL);
+        return [LoadTransportData::class, LoadUser::class];
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function load(ObjectManager $manager): void
+    {
+        /** @var User $user */
+        $user = $this->getReference(LoadUser::USER);
         foreach ($this->data as $item) {
             $channel = new Channel();
-            $channel->setOrganization($admin->getOrganization());
-            $channel->setDefaultUserOwner($admin);
+            $channel->setOrganization($user->getOrganization());
+            $channel->setDefaultUserOwner($user);
             $channel->setType(ChannelType::TYPE);
             $channel->setName($item['name']);
             $channel->setConnectors($item['connectors']);
             $channel->setEnabled($item['enabled'] ?? true);
             $channel->setTransport($this->getReference($item['transport']));
-
             $manager->persist($channel);
-
             $this->setReference($item['reference'], $channel);
         }
-
         $manager->flush();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDependencies()
-    {
-        return [
-            LoadTransportData::class,
-        ];
     }
 }

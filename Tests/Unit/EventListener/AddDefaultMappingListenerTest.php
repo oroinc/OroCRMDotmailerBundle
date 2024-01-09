@@ -23,25 +23,27 @@ use Oro\Bundle\IntegrationBundle\Entity\Repository\ChannelRepository;
 use Oro\Bundle\IntegrationBundle\Entity\Status;
 use Oro\Bundle\IntegrationBundle\Event\SyncEvent;
 use Oro\Bundle\IntegrationBundle\ImportExport\Helper\DefaultOwnerHelper;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class AddDefaultMappingListenerTest extends \PHPUnit\Framework\TestCase
+class AddDefaultMappingListenerTest extends TestCase
 {
-    /** @var ManagerRegistry|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var ManagerRegistry|MockObject */
     private $registry;
 
-    /** @var DoctrineHelper|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var DoctrineHelper|MockObject */
     private $doctrineHelper;
 
-    /** @var EntityProvider|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var EntityProvider|MockObject */
     private $entityProvider;
 
-    /** @var DefaultOwnerHelper|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var DefaultOwnerHelper|MockObject */
     private $ownerHelper;
 
-    /** @var MappingUpdateListener|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var MappingUpdateListener|MockObject */
     private $mappingListener;
 
-    /** @var MappingProvider|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var MappingProvider|MockObject */
     private $mappingProvider;
 
     /** @var AddDefaultMappingListener */
@@ -84,9 +86,9 @@ class AddDefaultMappingListenerTest extends \PHPUnit\Framework\TestCase
         $this->registry->expects($this->any())
             ->method('getRepository')
             ->willReturnMap([
-                ['OroIntegrationBundle:Channel', null, $channelRepository],
-                ['OroDotmailerBundle:DataField', null, $dataFieldRepository],
-                ['OroDotmailerBundle:DataFieldMapping', null, $dataFieldMappingRepository]
+                [Channel::class, null, $channelRepository],
+                [DataField::class, null, $dataFieldRepository],
+                [DataFieldMapping::class, null, $dataFieldMappingRepository]
             ]);
         $channel = new Channel();
         $channelRepository->expects($this->any())
@@ -208,7 +210,7 @@ class AddDefaultMappingListenerTest extends \PHPUnit\Framework\TestCase
         $this->registry->expects($this->any())
             ->method('getRepository')
             ->willReturnMap([
-                ['OroIntegrationBundle:Channel', null, $channelRepository],
+                [Channel::class, null, $channelRepository],
             ]);
         $channel = new Channel();
         $channelRepository->expects($this->any())

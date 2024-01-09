@@ -22,7 +22,7 @@ class DataFieldMappingController extends RestController
      * @Acl(
      *      id="oro_dotmailer_datafield_mapping_delete",
      *      type="entity",
-     *      class="OroDotmailerBundle:DataFieldMapping",
+     *      class="Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping",
      *      permission="DELETE"
      * )
      *
@@ -47,7 +47,7 @@ class DataFieldMappingController extends RestController
     public function fieldsAction()
     {
         /** @var EntityWithFieldsProvider $provider */
-        $provider = $this->get('oro_dotmailer.entity_field_list_provider');
+        $provider = $this->container->get('oro_dotmailer.entity_field_list_provider');
         $statusCode = Response::HTTP_OK;
         try {
             $result = $provider->getFields(true, true);
@@ -64,7 +64,7 @@ class DataFieldMappingController extends RestController
      */
     public function getManager()
     {
-        return $this->get('oro_dotmailer.datafield_mapping.manager.api');
+        return $this->container->get('oro_dotmailer.datafield_mapping.manager.api');
     }
 
     /**

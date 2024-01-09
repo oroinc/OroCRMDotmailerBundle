@@ -3,7 +3,11 @@
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use Doctrine\Persistence\ManagerRegistry;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 
+/**
+ * Iterator for rejected contacts export.
+ */
 class RejectedContactExportIterator extends AbstractIterator
 {
     /**
@@ -32,7 +36,7 @@ class RejectedContactExportIterator extends AbstractIterator
     protected function getItems($take, $skip)
     {
         $items = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:AddressBookContact')
+            ->getRepository(AddressBookContact::class)
             ->getAddressBookContactsByExportId($this->exportId, $take, $skip);
 
         return $items;

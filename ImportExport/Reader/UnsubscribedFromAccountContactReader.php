@@ -10,6 +10,9 @@ use Oro\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 use Oro\Bundle\IntegrationBundle\Entity\Status;
 
+/**
+ * Reader for unsubscribed from account contacts
+ */
 class UnsubscribedFromAccountContactReader extends AbstractReader
 {
     protected function initializeReader()
@@ -34,7 +37,7 @@ class UnsubscribedFromAccountContactReader extends AbstractReader
     protected function getLastSyncDate()
     {
         /** @var EntityRepository $repository */
-        $repository = $this->managerRegistry->getRepository('OroIntegrationBundle:Status');
+        $repository = $this->managerRegistry->getRepository(Status::class);
 
         if ($lastSyncDate = $this->getConnectorLastSyncDate($repository, UnsubscribedContactConnector::TYPE)) {
             return $lastSyncDate;

@@ -43,7 +43,7 @@ class EntityUpdateListener implements OptionalListenerInterface
             return;
         }
 
-        $em = $args->getEntityManager();
+        $em = $args->getObjectManager();
         $uow = $em->getUnitOfWork();
         $entities = array_merge($uow->getScheduledEntityUpdates(), $uow->getScheduledEntityInsertions());
 

@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\BatchBundle\Entity\StepExecution;
 use Oro\Bundle\BatchBundle\Step\ItemStep;
+use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
@@ -49,7 +50,7 @@ class ExportItemStep extends ItemStep
          * @var EntityRepository $addressBookContactRepository
          */
         $addressBookContactRepository = $this->registry
-            ->getRepository('OroDotmailerBundle:AddressBookContact');
+            ->getRepository(AddressBookContact::class);
 
         $addressBookContactRepository->createQueryBuilder('addressBookContact')
             ->update()
@@ -92,7 +93,7 @@ class ExportItemStep extends ItemStep
     {
         $context = $this->contextRegistry->getByStepExecution($stepExecution);
         return $this->registry
-            ->getRepository('OroIntegrationBundle:Channel')
+            ->getRepository(Channel::class)
             ->getOrLoadById($context->getOption('channel'));
     }
 }

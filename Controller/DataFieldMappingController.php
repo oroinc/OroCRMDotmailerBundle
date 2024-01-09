@@ -45,7 +45,7 @@ class DataFieldMappingController extends AbstractController
      *      id="oro_dotmailer_datafield_mapping_update",
      *      type="entity",
      *      permission="EDIT",
-     *      class="OroDotmailerBundle:DataFieldMapping"
+     *      class="Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping"
      * )
      * @Template("@OroDotmailer/DataFieldMapping/update.html.twig")
      */
@@ -60,7 +60,7 @@ class DataFieldMappingController extends AbstractController
      *      id="oro_dotmailer_datafield_mapping_create",
      *      type="entity",
      *      permission="CREATE",
-     *      class="OroDotmailerBundle:DataFieldMapping"
+     *      class="Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping"
      * )
      * @Template("@OroDotmailer/DataFieldMapping/update.html.twig")
      */
@@ -71,20 +71,21 @@ class DataFieldMappingController extends AbstractController
 
     protected function update(DataFieldMapping $mapping): array|RedirectResponse
     {
-        $form = $this->get(FormFactoryInterface::class)
+        $form = $this->container->get(FormFactoryInterface::class)
             ->createNamed('oro_dotmailer_datafield_mapping_form', DataFieldMappingType::class);
 
-        $response = $this->get(UpdateHandlerFacade::class)->update(
+        $response = $this->container->get(UpdateHandlerFacade::class)->update(
             $mapping,
             $form,
-            $this->get(TranslatorInterface::class)->trans('oro.dotmailer.controller.datafield_mapping.saved.message')
+            $this->container->get(TranslatorInterface::class)
+                ->trans('oro.dotmailer.controller.datafield_mapping.saved.message')
         );
 
         if (\is_array($response)) {
             $response = array_merge(
                 $response,
                 [
-                    'entities' => $this->get('oro_dotmailer.entity_provider')->getEntities()
+                    'entities' => $this->container->get('oro_dotmailer.entity_provider')->getEntities()
                 ]
             );
         }

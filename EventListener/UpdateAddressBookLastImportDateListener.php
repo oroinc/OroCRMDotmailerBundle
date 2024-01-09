@@ -2,10 +2,14 @@
 
 namespace Oro\Bundle\DotmailerBundle\EventListener;
 
+use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 use Oro\Bundle\IntegrationBundle\Event\SyncEvent;
 
+/**
+ * Listener for updating address books last imported date on sync finished
+ */
 class UpdateAddressBookLastImportDateListener extends AbstractImportExportListener
 {
     public function afterSyncFinished(SyncEvent $syncEvent)
@@ -29,7 +33,7 @@ class UpdateAddressBookLastImportDateListener extends AbstractImportExportListen
         );
 
         $this->registry
-            ->getRepository('OroDotmailerBundle:AddressBook')
+            ->getRepository(AddressBook::class)
             ->bulkUpdateLastImportedAt($contactConnectorLastSyncDate, $addressBookIds);
     }
 

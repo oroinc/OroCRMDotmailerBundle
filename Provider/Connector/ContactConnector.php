@@ -19,7 +19,7 @@ class ContactConnector extends AbstractDotmailerConnector
     protected function getConnectorSource()
     {
         $addressBooksToSynchronize = $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:AddressBook')
+            ->getRepository(AddressBook::class)
             ->getAddressBooksToSync($this->getChannel());
 
         $this->getContext()

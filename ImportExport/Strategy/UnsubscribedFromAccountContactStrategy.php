@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 
+/**
+ * Strategy for import Contact entities
+ */
 class UnsubscribedFromAccountContactStrategy extends AbstractImportStrategy
 {
     /**
@@ -26,7 +29,7 @@ class UnsubscribedFromAccountContactStrategy extends AbstractImportStrategy
             throw new RuntimeException('Channel not found');
         }
 
-        $contact = $this->registry->getRepository('OroDotmailerBundle:Contact')
+        $contact = $this->registry->getRepository(Contact::class)
             ->findOneBy(['email' => $entity->getEmail(), 'channel' => $this->getChannel()]);
         if (!$contact) {
             $this->context->addError("Contact {$entity->getOriginId()} not found.");

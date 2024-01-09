@@ -59,7 +59,7 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
         $addressBookId = $this->getContext()->getOption(AbstractExportReader::ADDRESS_BOOK_RESTRICTION_OPTION);
 
         return $this->managerRegistry
-            ->getRepository('OroDotmailerBundle:AddressBook')
+            ->getRepository(AddressBook::class)
             ->getAddressBooksToSync($this->getChannel(), $addressBookId);
     }
 

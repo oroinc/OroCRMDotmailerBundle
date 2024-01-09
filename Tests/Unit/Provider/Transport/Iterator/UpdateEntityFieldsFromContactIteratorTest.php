@@ -9,16 +9,18 @@ use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
+use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AbstractMarketingListItemIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UpdateEntityFieldsFromContactIterator;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Prepares dotmailer QB contacts for iteration
  */
-class UpdateEntityFieldsFromContactIteratorTest extends \PHPUnit\Framework\TestCase
+class UpdateEntityFieldsFromContactIteratorTest extends TestCase
 {
     public function testIterator()
     {
@@ -54,7 +56,7 @@ class UpdateEntityFieldsFromContactIteratorTest extends \PHPUnit\Framework\TestC
         $registry = $this->createMock(ManagerRegistry::class);
         $registry->expects($this->any())
             ->method('getRepository')
-            ->with('OroDotmailerBundle:Contact')
+            ->with(Contact::class)
             ->willReturn($repository);
 
         $iterator->setRegistry($registry);
@@ -136,7 +138,7 @@ class UpdateEntityFieldsFromContactIteratorTest extends \PHPUnit\Framework\TestC
         $registry = $this->createMock(ManagerRegistry::class);
         $registry->expects($this->any())
             ->method('getRepository')
-            ->with('OroDotmailerBundle:Contact')
+            ->with(Contact::class)
             ->willReturn($repository);
         $iterator->setRegistry($registry);
         $iterator->setBatchSize(1);
