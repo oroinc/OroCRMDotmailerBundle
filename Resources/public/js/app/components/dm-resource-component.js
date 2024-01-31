@@ -38,7 +38,7 @@ define(function(require) {
 
         $btn.on('click', function() {
             if ($username.valid() && $password.valid()) {
-                $.getJSON(
+                $.post(
                     options.pingUrl,
                     {username: $username.val(), password: $password.val()},
                     function(response) {

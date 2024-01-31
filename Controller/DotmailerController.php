@@ -12,6 +12,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
+use Oro\Bundle\SecurityBundle\Annotation\CsrfProtection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -75,7 +76,8 @@ class DotmailerController extends AbstractController
     }
 
     /**
-     * @Route("/ping", name="oro_dotmailer_ping")
+     * @Route("/ping", name="oro_dotmailer_ping", methods={"POST"})
+     * @CsrfProtection()
      * @param Request $request
      * @return JsonResponse
      */
