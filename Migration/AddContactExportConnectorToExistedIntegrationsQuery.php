@@ -67,7 +67,7 @@ SQL;
         $parameters = ['type' => ChannelType::TYPE];
 
         $integrations = $this->connection
-            ->fetchAll(
+            ->fetchAllAssociative(
                 'SELECT * FROM oro_integration_channel as integration_channel WHERE integration_channel.type = :type',
                 $parameters
             );
