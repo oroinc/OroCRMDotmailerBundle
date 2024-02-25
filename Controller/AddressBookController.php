@@ -12,9 +12,9 @@ use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Oro\Bundle\FormBundle\Model\UpdateHandlerFacade;
 use Oro\Bundle\IntegrationBundle\Manager\GenuineSyncScheduler;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
-use Oro\Bundle\SecurityBundle\Annotation\Acl;
-use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
-use Oro\Bundle\SecurityBundle\Annotation\CsrfProtection;
+use Oro\Bundle\SecurityBundle\Attribute\Acl;
+use Oro\Bundle\SecurityBundle\Attribute\AclAncestor;
+use Oro\Bundle\SecurityBundle\Attribute\CsrfProtection;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -29,25 +29,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Dotmailer Address Book Controller
- * @Route("/address-book")
  */
+#[Route(path: '/address-book')]
 class AddressBookController extends AbstractController
 {
-    /**
-     * @Route(
-     *      "/synchronize/{id}",
-     *      name="oro_dotmailer_synchronize_adddress_book",
-     *      requirements={"id"="\d+"},
-     *      methods={"POST"}
-     * )
-     * @Acl(
-     *      id="oro_dotmailer_address_book_update",
-     *      type="entity",
-     *      permission="EDIT",
-     *      class="Oro\Bundle\DotmailerBundle\Entity\AddressBook"
-     * )
-     * @CsrfProtection()
-     */
+    #[Route(
+        path: '/synchronize/{id}',
+        name: 'oro_dotmailer_synchronize_adddress_book',
+        requirements: ['id' => '\d+'],
+        methods: ['POST']
+    )]
+    #[Acl(id: 'oro_dotmailer_address_book_update', type: 'entity', class: AddressBook::class, permission: 'EDIT')]
+    #[CsrfProtection()]
     public function synchronizeAddressBookAction(AddressBook $addressBook): JsonResponse
     {
         $translator = $this->container->get(TranslatorInterface::class);
@@ -85,21 +78,14 @@ class AddressBookController extends AbstractController
         return new JsonResponse($response, $status);
     }
 
-    /**
-     * @Route(
-     *      "/synchronize_datafields/{id}",
-     *      name="oro_dotmailer_synchronize_adddress_book_datafields",
-     *      requirements={"id"="\d+"},
-     *      methods={"POST"}
-     * )
-     * @Acl(
-     *      id="oro_dotmailer_address_book_update",
-     *      type="entity",
-     *      permission="EDIT",
-     *      class="Oro\Bundle\DotmailerBundle\Entity\AddressBook"
-     * )
-     * @CsrfProtection()
-     */
+    #[Route(
+        path: '/synchronize_datafields/{id}',
+        name: 'oro_dotmailer_synchronize_adddress_book_datafields',
+        requirements: ['id' => '\d+'],
+        methods: ['POST']
+    )]
+    #[Acl(id: 'oro_dotmailer_address_book_update', type: 'entity', class: AddressBook::class, permission: 'EDIT')]
+    #[CsrfProtection()]
     public function synchronizeAddressBookDataFieldsAction(AddressBook $addressBook): JsonResponse
     {
         $translator = $this->container->get(TranslatorInterface::class);
@@ -123,21 +109,14 @@ class AddressBookController extends AbstractController
         return new JsonResponse($response, $status);
     }
 
-    /**
-     * @Route(
-     *      "/marketing-list/disconnect/{id}",
-     *      name="oro_dotmailer_marketing_list_disconnect",
-     *      requirements={"id"="\d+"},
-     *      methods={"DELETE"}
-     * )
-     * @Acl(
-     *      id="oro_dotmailer_address_book_update",
-     *      type="entity",
-     *      permission="EDIT",
-     *      class="Oro\Bundle\DotmailerBundle\Entity\AddressBook"
-     * )
-     * @CsrfProtection()
-     */
+    #[Route(
+        path: '/marketing-list/disconnect/{id}',
+        name: 'oro_dotmailer_marketing_list_disconnect',
+        requirements: ['id' => '\d+'],
+        methods: ['DELETE']
+    )]
+    #[Acl(id: 'oro_dotmailer_address_book_update', type: 'entity', class: AddressBook::class, permission: 'EDIT')]
+    #[CsrfProtection()]
     public function disconnectMarketingListAction(AddressBook $addressBook): JsonResponse
     {
         $em = $this->container->get('doctrine')
@@ -149,15 +128,13 @@ class AddressBookController extends AbstractController
         return new JsonResponse();
     }
 
-    /**
-     * @Route(
-     *      "/widget/manage-connection/marketing-list/{id}",
-     *      name="oro_dotmailer_marketing_list_connect",
-     *      requirements={"id"="\d+"}
-     * )
-     * @AclAncestor("oro_marketing_list_update")
-     * @Template("@OroDotmailer/AddressBook/widget/addressBookConnectionUpdate.html.twig")
-     */
+    #[Route(
+        path: '/widget/manage-connection/marketing-list/{id}',
+        name: 'oro_dotmailer_marketing_list_connect',
+        requirements: ['id' => '\d+']
+    )]
+    #[Template('@OroDotmailer/AddressBook/widget/addressBookConnectionUpdate.html.twig')]
+    #[AclAncestor('oro_marketing_list_update')]
     public function addressBookConnectionUpdateAction(MarketingList $marketingList): array
     {
         $form = $this->createForm(
@@ -183,19 +160,13 @@ class AddressBookController extends AbstractController
         ];
     }
 
-    /**
-     * @Route(
-     *      "/marketing-list/buttons/{entity}",
-     *      name="oro_dotmailer_marketing_list_buttons",
-     *      requirements={"entity"="\d+"}
-     * )
-     * @ParamConverter(
-     *      "marketingList",
-     *      class="Oro\Bundle\MarketingListBundle\Entity\MarketingList",
-     *      options={"id" = "entity"}
-     * )
-     * @Template()
-     */
+    #[Route(
+        path: '/marketing-list/buttons/{entity}',
+        name: 'oro_dotmailer_marketing_list_buttons',
+        requirements: ['entity' => '\d+']
+    )]
+    #[ParamConverter('marketingList', class: MarketingList::class, options: ['id' => 'entity'])]
+    #[Template]
     public function connectionButtonsAction(MarketingList $marketingList): array
     {
         if (!$this->isGranted('orocrm_marketing_list_update') ||
@@ -220,19 +191,9 @@ class AddressBookController extends AbstractController
         return $addressBook;
     }
 
-    /**
-     * @Route(
-     *      "/create",
-     *      name="oro_dotmailer_address_book_create"
-     * )
-     * @Acl(
-     *      id="oro_address_book_create",
-     *      type="entity",
-     *      permission="CREATE",
-     *      class="Oro\Bundle\DotmailerBundle\Entity\AddressBook"
-     * )
-     * @Template("@OroDotmailer/AddressBook/update.html.twig")
-     */
+    #[Route(path: '/create', name: 'oro_dotmailer_address_book_create')]
+    #[Template('@OroDotmailer/AddressBook/update.html.twig')]
+    #[Acl(id: 'oro_address_book_create', type: 'entity', class: AddressBook::class, permission: 'CREATE')]
     public function createAction(): array|RedirectResponse
     {
         return $this->update(new AddressBook());

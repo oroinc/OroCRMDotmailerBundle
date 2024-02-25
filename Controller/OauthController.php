@@ -16,19 +16,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Serves dotmailer OAuth actions.
- * @Route("/oauth")
  */
+#[Route(path: '/oauth')]
 class OauthController extends AbstractController
 {
     /**
-     * @Route(
-     *      "/callback",
-     *      name="oro_dotmailer_oauth_callback"
-     * )
      *
      * @param Request $request
      * @return RedirectResponse
      */
+    #[Route(path: '/callback', name: 'oro_dotmailer_oauth_callback')]
     public function callbackAction(Request $request)
     {
         $code  = $request->get('code');
@@ -88,15 +85,11 @@ class OauthController extends AbstractController
     }
 
     /**
-     * @Route(
-     *      "/disconnect/{id}",
-     *      name="oro_dotmailer_oauth_disconnect",
-     *      requirements={"id"="\d+"}
-     * )
      *
      * @param Channel $channel
      * @return RedirectResponse
      */
+    #[Route(path: '/disconnect/{id}', name: 'oro_dotmailer_oauth_disconnect', requirements: ['id' => '\d+'])]
     public function disconnectAction(Channel $channel)
     {
         $oauth = $this->container->get('doctrine')

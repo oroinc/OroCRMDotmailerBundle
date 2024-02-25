@@ -14,8 +14,8 @@ use Oro\Bundle\DotmailerBundle\Model\OAuthManager;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerResourcesFactory;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
-use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
-use Oro\Bundle\SecurityBundle\Annotation\CsrfProtection;
+use Oro\Bundle\SecurityBundle\Attribute\AclAncestor;
+use Oro\Bundle\SecurityBundle\Attribute\CsrfProtection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,27 +27,25 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Serves dotmailer actions.
- *
- * @Route("/dotmailer")
  */
+#[Route(path: '/dotmailer')]
 class DotmailerController extends AbstractController
 {
     const CHANNEL_SESSION_KEY = 'selected-integration-channel';
 
     /**
-     * @Route("/email-campaign-status/{entity}",
-     *      name="oro_dotmailer_email_campaign_status",
-     *      requirements={"entity"="\d+"})
-     * @ParamConverter("emailCampaign",
-     *      class="Oro\Bundle\CampaignBundle\Entity\EmailCampaign",
-     *      options={"id" = "entity"})
-     * @AclAncestor("oro_email_campaign_view")
-     *
-     * @Template
      *
      * @param EmailCampaign $emailCampaign
      * @return array
      */
+    #[Route(
+        path: '/email-campaign-status/{entity}',
+        name: 'oro_dotmailer_email_campaign_status',
+        requirements: ['entity' => '\d+']
+    )]
+    #[ParamConverter('emailCampaign', class: EmailCampaign::class, options: ['id' => 'entity'])]
+    #[Template]
+    #[AclAncestor('oro_email_campaign_view')]
     public function emailCampaignStatsAction(EmailCampaign $emailCampaign)
     {
         $campaign = $this->container->get('doctrine')
@@ -57,19 +55,18 @@ class DotmailerController extends AbstractController
     }
 
     /**
-     * @Route("/sync-status/{marketingList}",
-     *      name="oro_dotmailer_sync_status",
-     *      requirements={"marketingList"="\d+"})
-     * @ParamConverter("marketingList",
-     *      class="Oro\Bundle\MarketingListBundle\Entity\MarketingList",
-     *      options={"id" = "marketingList"})
-     * @AclAncestor("oro_marketing_list_view")
-     *
-     * @Template
      *
      * @param MarketingList $marketingList
      * @return array
      */
+    #[Route(
+        path: '/sync-status/{marketingList}',
+        name: 'oro_dotmailer_sync_status',
+        requirements: ['marketingList' => '\d+']
+    )]
+    #[ParamConverter('marketingList', class: MarketingList::class, options: ['id' => 'marketingList'])]
+    #[Template]
+    #[AclAncestor('oro_marketing_list_view')]
     public function marketingListSyncStatusAction(MarketingList $marketingList)
     {
         $addressBook = $this->container->get('doctrine')->getRepository(AddressBook::class)
@@ -79,11 +76,11 @@ class DotmailerController extends AbstractController
     }
 
     /**
-     * @Route("/ping", name="oro_dotmailer_ping", methods={"POST"})
-     * @CsrfProtection()
      * @param Request $request
      * @return JsonResponse
      */
+    #[Route(path: '/ping', name: 'oro_dotmailer_ping')]
+    #[CsrfProtection]
     public function pingAction(Request $request)
     {
         if (!$this->isGranted('oro_integration_create') && !$this->isGranted('oro_integration_update')) {
@@ -117,18 +114,18 @@ class DotmailerController extends AbstractController
     }
 
     /**
-     * @Route("/integration-connection/{id}",
-     *      name="oro_dotmailer_integration_connection",
-     *      requirements={"id"="\d+"},
-     *      defaults={"id" = "0"}
-     * )
-     *
-     * @Template("@OroDotmailer/Dotmailer/integrationConnection.html.twig")
      *
      * @param Request $request
      * @param Channel|null $channel
      * @return array
      */
+    #[Route(
+        path: '/integration-connection/{id}',
+        name: 'oro_dotmailer_integration_connection',
+        requirements: ['id' => '\d+'],
+        defaults: ['id' => 0]
+    )]
+    #[Template('@OroDotmailer/Dotmailer/integrationConnection.html.twig')]
     public function integrationConnectionAction(Request $request, Channel $channel = null)
     {
         if (!$channel) {

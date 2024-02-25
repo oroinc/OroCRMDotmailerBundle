@@ -2,55 +2,36 @@
 
 namespace Oro\Bundle\DotmailerBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\OAuthRepository;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\UserBundle\Entity\User;
 
 /**
- * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\OAuthRepository")
- * @ORM\Table(
- *      name="orocrm_dm_oauth",
- *      uniqueConstraints={
- *          @ORM\UniqueConstraint(
- *              name="orocrm_dm_oauth_unq",
- *              columns={"channel_id", "user_id"}
- *          )
- *     }
- * )
- */
+* Entity that represents O Auth
+*
+*/
+#[ORM\Entity(repositoryClass: OAuthRepository::class)]
+#[ORM\Table(name: 'orocrm_dm_oauth')]
+#[ORM\UniqueConstraint(name: 'orocrm_dm_oauth_unq', columns: ['channel_id', 'user_id'])]
 class OAuth implements ChannelAwareInterface
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    protected ?int $id = null;
 
-    /**
-     * @var Channel
-     *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\IntegrationBundle\Entity\Channel")
-     * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    protected $channel;
+    #[ORM\ManyToOne(targetEntity: Channel::class)]
+    #[ORM\JoinColumn(name: 'channel_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    protected ?Channel $channel = null;
 
-    /**
-     * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\UserBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    protected $user;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    protected ?User $user = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="refresh_token", type="string", length=255, nullable=true)
-     */
-    protected $refreshToken;
+    #[ORM\Column(name: 'refresh_token', type: Types::STRING, length: 255, nullable: true)]
+    protected ?string $refreshToken = null;
 
     /**
      * @return int

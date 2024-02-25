@@ -28,7 +28,7 @@ class DataFieldMappingTest extends \PHPUnit\Framework\TestCase
             ['id', 1],
             ['channel', $channel],
             ['entity', 'Entity Class'],
-            ['syncPriority', '1'],
+            ['syncPriority', 1],
             ['createdAt', $now],
             ['updatedAt', $now],
             ['owner', $organization],

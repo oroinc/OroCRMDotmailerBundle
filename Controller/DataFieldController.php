@@ -10,9 +10,9 @@ use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\DataFieldConnector;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Manager\GenuineSyncScheduler;
-use Oro\Bundle\SecurityBundle\Annotation\Acl;
-use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
-use Oro\Bundle\SecurityBundle\Annotation\CsrfProtection;
+use Oro\Bundle\SecurityBundle\Attribute\Acl;
+use Oro\Bundle\SecurityBundle\Attribute\AclAncestor;
+use Oro\Bundle\SecurityBundle\Attribute\CsrfProtection;
 use Oro\Bundle\UIBundle\Route\Router;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -27,22 +27,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Dotmailer Data Field Controller
- * @Route("/data-field")
  */
+#[Route(path: '/data-field')]
 class DataFieldController extends AbstractController
 {
     /**
-     * @Route("/view/{id}", name="oro_dotmailer_datafield_view", requirements={"id"="\d+"})
-     * @Template
-     * @Acl(
-     *      id="oro_dotmailer_datafield_view",
-     *      type="entity",
-     *      permission="VIEW",
-     *      class="Oro\Bundle\DotmailerBundle\Entity\DataField"
-     * )
      * @param DataField $field
      * @return array
      */
+    #[Route(path: '/view/{id}', name: 'oro_dotmailer_datafield_view', requirements: ['id' => '\d+'])]
+    #[Template]
+    #[Acl(id: 'oro_dotmailer_datafield_view', type: 'entity', class: DataField::class, permission: 'VIEW')]
     public function viewAction(DataField $field)
     {
         return [
@@ -51,12 +46,12 @@ class DataFieldController extends AbstractController
     }
 
     /**
-     * @Route("/info/{id}", name="oro_dotmailer_datafield_info", requirements={"id"="\d+"})
-     * @AclAncestor("oro_dotmailer_datafield_view")
-     * @Template()
      * @param DataField $field
      * @return array
      */
+    #[Route(path: '/info/{id}', name: 'oro_dotmailer_datafield_info', requirements: ['id' => '\d+'])]
+    #[Template]
+    #[AclAncestor('oro_dotmailer_datafield_view')]
     public function infoAction(DataField $field)
     {
         return [
@@ -66,17 +61,12 @@ class DataFieldController extends AbstractController
 
     /**
      * Create data field form
-     * @Route("/create", name="oro_dotmailer_datafield_create")
-     * @Template("@OroDotmailer/DataField/update.html.twig")
-     * @Acl(
-     *      id="oro_dotmailer_datafield_create",
-     *      type="entity",
-     *      permission="CREATE",
-     *      class="Oro\Bundle\DotmailerBundle\Entity\DataField"
-     * )
      * @param Request $request
      * @return array|RedirectResponse
      */
+    #[Route(path: '/create', name: 'oro_dotmailer_datafield_create')]
+    #[Template('@OroDotmailer/DataField/update.html.twig')]
+    #[Acl(id: 'oro_dotmailer_datafield_create', type: 'entity', class: DataField::class, permission: 'CREATE')]
     public function createAction(Request $request)
     {
         $formHandler = $this->container->get(DataFieldFormHandler::class);
@@ -109,16 +99,14 @@ class DataFieldController extends AbstractController
         ];
     }
 
-    /**
-     * @Route(
-     *      "/{_format}",
-     *      name="oro_dotmailer_datafield_index",
-     *      requirements={"_format"="html|json"},
-     *      defaults={"_format" = "html"}
-     * )
-     * @Template
-     * @AclAncestor("oro_dotmailer_datafield_view")
-     */
+    #[Route(
+        path: '/{_format}',
+        name: 'oro_dotmailer_datafield_index',
+        requirements: ['_format' => 'html|json'],
+        defaults: ['_format' => 'html']
+    )]
+    #[Template]
+    #[AclAncestor('oro_dotmailer_datafield_view')]
     public function indexAction()
     {
         return [
@@ -129,16 +117,12 @@ class DataFieldController extends AbstractController
     /**
      * Run datafield force synchronization
      *
-     * @Route(
-     *      "/synchronize",
-     *      name="oro_dotmailer_datafield_synchronize",
-     *      methods={"POST"}
-     * )
-     * @AclAncestor("oro_dotmailer_datafield_create")
-     * @CsrfProtection()
      *
      * @return JsonResponse
      */
+    #[Route(path: '/synchronize', name: 'oro_dotmailer_datafield_synchronize', methods: ['POST'])]
+    #[AclAncestor('oro_dotmailer_datafield_create')]
+    #[CsrfProtection()]
     public function synchronizeAction()
     {
         try {

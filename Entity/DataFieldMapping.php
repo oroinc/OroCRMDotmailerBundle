@@ -4,10 +4,12 @@ namespace Oro\Bundle\DotmailerBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Extend\Entity\Autocomplete\OroDotmailerBundle_Entity_DataFieldMapping;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\DataFieldMappingRepository;
 use Oro\Bundle\EntityBundle\EntityProperty\DatesAwareTrait;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\Config;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityTrait;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
@@ -16,85 +18,57 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
 /**
  * Store data field mapping in a database.
  *
- * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\DataFieldMappingRepository")
- * @ORM\Table(
- *      name="orocrm_dm_df_mapping",
- *      uniqueConstraints={
- *          @ORM\UniqueConstraint(name="orocrm_dm_data_field_unq", columns={"entity", "channel_id"})
- *     }
-  * )
- * @ORM\HasLifecycleCallbacks()
- * @Config(
- *  defaultValues={
- *      "entity"={
- *          "icon"="icon-group"
- *      },
- *      "ownership"={
- *          "owner_type"="ORGANIZATION",
- *          "owner_field_name"="owner",
- *          "owner_column_name"="owner_id"
- *      },
- *      "security"={
- *          "type"="ACL",
- *          "group_name"="",
- *          "category"="marketing"
- *      }
- *  }
- * )
  * @mixin OroDotmailerBundle_Entity_DataFieldMapping
  */
+#[ORM\Entity(repositoryClass: DataFieldMappingRepository::class)]
+#[ORM\Table(name: 'orocrm_dm_df_mapping')]
+#[ORM\UniqueConstraint(name: 'orocrm_dm_data_field_unq', columns: ['entity', 'channel_id'])]
+#[ORM\HasLifecycleCallbacks]
+#[Config(
+    defaultValues: [
+        'entity' => ['icon' => 'icon-group'],
+        'ownership' => [
+            'owner_type' => 'ORGANIZATION',
+            'owner_field_name' => 'owner',
+            'owner_column_name' => 'owner_id'
+        ],
+        'security' => ['type' => 'ACL', 'group_name' => '', 'category' => 'marketing']
+    ]
+)]
 class DataFieldMapping implements ExtendEntityInterface
 {
     use DatesAwareTrait;
     use ExtendEntityTrait;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    protected ?int $id = null;
+
+    #[ORM\ManyToOne(targetEntity: Channel::class)]
+    #[ORM\JoinColumn(name: 'channel_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    protected ?Channel $channel = null;
+
+    #[ORM\Column(name: 'entity', type: Types::STRING, length: 255)]
+    protected ?string $entity = null;
+
+    #[ORM\Column(name: 'sync_priority', type: Types::INTEGER, nullable: true)]
+    protected ?int $syncPriority = null;
 
     /**
-     * @var Channel
-     *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\IntegrationBundle\Entity\Channel")
-     * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", onDelete="CASCADE")
+     * @var Collection<int, DataFieldMappingConfig>
      */
-    protected $channel;
+    #[ORM\OneToMany(
+        mappedBy: 'mapping',
+        targetEntity: DataFieldMappingConfig::class,
+        cascade: ['all'],
+        orphanRemoval: true
+    )]
+    protected ?Collection $configs = null;
 
-    /**
-     * @var string $entity
-     *
-     * @ORM\Column(name="entity", type="string", length=255)
-     */
-    protected $entity;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="sync_priority", type="integer", nullable=true)
-     */
-    protected $syncPriority;
-
-    /**
-     * @var Collection|DataFieldMappingConfig[]
-     *
-     * @ORM\OneToMany(targetEntity="DataFieldMappingConfig",
-     *     mappedBy="mapping", cascade={"all"}, orphanRemoval=true
-     * )
-     */
-    protected $configs;
-
-    /**
-     * @var Organization
-     *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\OrganizationBundle\Entity\Organization")
-     * @ORM\JoinColumn(name="owner_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    protected $owner;
+    #[ORM\ManyToOne(targetEntity: Organization::class)]
+    #[ORM\JoinColumn(name: 'owner_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    protected ?Organization $owner = null;
 
     /**
      * {@inheritdoc}
@@ -240,9 +214,8 @@ class DataFieldMapping implements ExtendEntityInterface
 
     /**
      * Pre persist event handler
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function prePersist()
     {
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
@@ -251,9 +224,8 @@ class DataFieldMapping implements ExtendEntityInterface
 
     /**
      * Pre update event handler
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function preUpdate()
     {
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
