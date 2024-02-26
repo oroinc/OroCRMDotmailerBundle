@@ -4,10 +4,12 @@ namespace Oro\Bundle\DotmailerBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Extend\Entity\Autocomplete\OroDotmailerBundle_Entity_AddressBook;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookRepository;
+use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\Config;
+use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\ConfigField;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityTrait;
@@ -18,40 +20,28 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
 /**
  * Address book entity.
  *
- * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookRepository")
- * @ORM\Table(
- *      name="orocrm_dm_address_book",
- *      uniqueConstraints={
- *          @ORM\UniqueConstraint(name="orocrm_dm_address_book_unq", columns={"origin_id", "channel_id"})
- *     },
- *     indexes={
- *          @ORM\Index(name="orocrm_dm_ab_imported_at_idx", columns={"last_imported_at"})
- *      },
- * )
- * @ORM\HasLifecycleCallbacks()
- * @Config(
- *  defaultValues={
- *      "entity"={
- *          "icon"="fa-users"
- *      },
- *      "ownership"={
- *          "owner_type"="ORGANIZATION",
- *          "owner_field_name"="owner",
- *          "owner_column_name"="owner_id"
- *      },
- *      "security"={
- *          "type"="ACL",
- *          "group_name"="",
- *          "category"="marketing"
- *      }
- *  }
- * )
  * @method AbstractEnumValue getVisibility()
  * @method AddressBook       setVisibility(AbstractEnumValue $enumValue)
  * @method AbstractEnumValue getSyncStatus()
  * @method AddressBook       setSyncStatus(AbstractEnumValue $enumValue)
  * @mixin OroDotmailerBundle_Entity_AddressBook
  */
+#[ORM\Entity(repositoryClass: AddressBookRepository::class)]
+#[ORM\Table(name: 'orocrm_dm_address_book')]
+#[ORM\Index(columns: ['last_imported_at'], name: 'orocrm_dm_ab_imported_at_idx')]
+#[ORM\UniqueConstraint(name: 'orocrm_dm_address_book_unq', columns: ['origin_id', 'channel_id'])]
+#[ORM\HasLifecycleCallbacks]
+#[Config(
+    defaultValues: [
+        'entity' => ['icon' => 'fa-users'],
+        'ownership' => [
+            'owner_type' => 'ORGANIZATION',
+            'owner_field_name' => 'owner',
+            'owner_column_name' => 'owner_id'
+        ],
+        'security' => ['type' => 'ACL', 'group_name' => '', 'category' => 'marketing']
+    ]
+)]
 class AddressBook implements OriginAwareInterface, ExtendEntityInterface
 {
     use OriginTrait;
@@ -62,186 +52,80 @@ class AddressBook implements OriginAwareInterface, ExtendEntityInterface
     const VISIBILITY_PUBLIC                     = 'Public';
     const VISIBILITY_NOTAVAILABLEINTHISVERSION  = 'NotAvailableInThisVersion';
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "excluded"=false
-     *          }
-     *      }
-     * )
-     */
-    protected $id;
+    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ConfigField(defaultValues: ['importexport' => ['excluded' => false]])]
+    protected ?int $id = null;
+
+    #[ORM\ManyToOne(targetEntity: Channel::class)]
+    #[ORM\JoinColumn(name: 'channel_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    protected ?Channel $channel = null;
 
     /**
-     * @var Channel
-     *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\IntegrationBundle\Entity\Channel")
-     * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", onDelete="SET NULL")
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "identity"=true
-     *          }
-     *      }
-     * )
+     * @var Collection<int, Campaign>
      */
-    protected $channel;
+    #[ORM\ManyToMany(targetEntity: Campaign::class, mappedBy: 'addressBooks')]
+    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    protected ?Collection $campaigns = null;
 
     /**
-     * @var Collection
-     *
-     * @ORM\ManyToMany(targetEntity="Oro\Bundle\DotmailerBundle\Entity\Campaign", mappedBy="addressBooks")
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
+     * @var Collection<int, AddressBookContact>
      */
-    protected $campaigns;
+    #[ORM\OneToMany(mappedBy: 'addressBook', targetEntity: AddressBookContact::class, cascade: ['remove'])]
+    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    protected ?Collection $addressBookContacts = null;
+
+    #[ORM\OneToOne(targetEntity: MarketingList::class)]
+    #[ORM\JoinColumn(name: 'marketing_list_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    protected ?MarketingList $marketingList = null;
+
+    #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
+    protected ?string $name = null;
+
+    #[ORM\Column(name: 'contact_count', type: Types::INTEGER, nullable: true)]
+    protected ?int $contactCount = null;
+
+    #[ORM\Column(name: 'last_exported_at', type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    protected ?\DateTimeInterface $lastExportedAt = null;
+
+    #[ORM\Column(name: 'last_imported_at', type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    protected ?\DateTimeInterface $lastImportedAt = null;
+
+    #[ORM\ManyToOne(targetEntity: Organization::class)]
+    #[ORM\JoinColumn(name: 'owner_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    protected ?Organization $owner = null;
+
+    #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE)]
+    #[ConfigField(
+        defaultValues: ['entity' => ['label' => 'oro.ui.created_at'], 'importexport' => ['excluded' => true]]
+    )]
+    protected ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE)]
+    #[ConfigField(
+        defaultValues: ['entity' => ['label' => 'oro.ui.updated_at'], 'importexport' => ['excluded' => true]]
+    )]
+    protected ?\DateTimeInterface $updatedAt = null;
 
     /**
-     * @var Collection|AddressBookContact[]
-     *
-     * @ORM\OneToMany(targetEntity="AddressBookContact", mappedBy="addressBook", cascade={"remove"})
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
+     * @var Collection<int, AddressBookContactsExport>
      */
-    protected $addressBookContacts;
-
-    /**
-     * @var MarketingList
-     *
-     * @ORM\OneToOne(targetEntity="Oro\Bundle\MarketingListBundle\Entity\MarketingList")
-     * @ORM\JoinColumn(name="marketing_list_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    protected $marketingList;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255, nullable=false)
-     */
-    protected $name;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="contact_count", type="integer", nullable=true)
-     */
-    protected $contactCount;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="last_exported_at", type="datetime", nullable=true)
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $lastExportedAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="last_imported_at", type="datetime", nullable=true)
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $lastImportedAt;
-
-    /**
-     * @var Organization
-     *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\OrganizationBundle\Entity\Organization")
-     * @ORM\JoinColumn(name="owner_id", referencedColumnName="id", onDelete="SET NULL")
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $owner;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime")
-     * @ConfigField(
-     *      defaultValues={
-     *          "entity"={
-     *              "label"="oro.ui.created_at"
-     *          },
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $createdAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime")
-     * @ConfigField(
-     *      defaultValues={
-     *          "entity"={
-     *              "label"="oro.ui.updated_at"
-     *          },
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $updatedAt;
-
-    /**
-     * @var Collection|AddressBookContactsExport[]
-     *
-     * @ORM\OneToMany(targetEntity="AddressBookContactsExport", mappedBy="addressBook")
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $addressBookContactsExports;
+    #[ORM\OneToMany(mappedBy: 'addressBook', targetEntity: AddressBookContactsExport::class)]
+    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    protected ?Collection $addressBookContactsExports = null;
 
     /**
      * Controls whether we need to create new entities when importing contacts from dotmailer
      *
      * @var boolean
-     *
-     * @ORM\Column(name="create_entities", type="boolean", nullable=true)
      */
-    protected $createEntities = false;
+    #[ORM\Column(name: 'create_entities', type: Types::BOOLEAN, nullable: true)]
+    protected ?bool $createEntities = false;
 
     /**
      * Initialize collections
@@ -627,9 +511,7 @@ class AddressBook implements OriginAwareInterface, ExtendEntityInterface
         return $this;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function prePersist()
     {
         if (!$this->createdAt) {
@@ -640,9 +522,7 @@ class AddressBook implements OriginAwareInterface, ExtendEntityInterface
             $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
         }
     }
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function preUpdate()
     {
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));

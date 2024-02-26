@@ -2,49 +2,32 @@
 
 namespace Oro\Bundle\DotmailerBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\IntegrationBundle\Entity\Transport;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * @ORM\Entity()
- */
+* Entity that represents Dotmailer Transport
+*
+*/
+#[ORM\Entity]
 class DotmailerTransport extends Transport
 {
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="orocrm_dm_api_username", type="string", length=255, nullable=false)
-     */
-    protected $username;
+    #[ORM\Column(name: 'orocrm_dm_api_username', type: Types::STRING, length: 255, nullable: false)]
+    protected ?string $username = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="orocrm_dm_api_password", type="string", length=255, nullable=false)
-     */
-    protected $password;
+    #[ORM\Column(name: 'orocrm_dm_api_password', type: Types::STRING, length: 255, nullable: false)]
+    protected ?string $password = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="orocrm_dm_api_client_id", type="string", length=255, nullable=true)
-     */
-    protected $clientId;
+    #[ORM\Column(name: 'orocrm_dm_api_client_id', type: Types::STRING, length: 255, nullable: true)]
+    protected ?string $clientId = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="orocrm_dm_api_client_key", type="string", length=255, nullable=true)
-     */
-    protected $clientKey;
+    #[ORM\Column(name: 'orocrm_dm_api_client_key', type: Types::STRING, length: 255, nullable: true)]
+    protected ?string $clientKey = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="orocrm_dm_api_custom_domain", type="string", length=255, nullable=true)
-     */
-    protected $customDomain;
+    #[ORM\Column(name: 'orocrm_dm_api_custom_domain', type: Types::STRING, length: 255, nullable: true)]
+    protected ?string $customDomain = null;
 
     /**
      * @var ParameterBag

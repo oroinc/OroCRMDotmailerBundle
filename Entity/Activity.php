@@ -2,248 +2,116 @@
 
 namespace Oro\Bundle\DotmailerBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\ActivityRepository;
+use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\Config;
+use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\ConfigField;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 /**
  * Stores dotdigital campaign activity stats.
  *
- * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\ActivityRepository")
- * @ORM\Table(
- *      name="orocrm_dm_activity",
- *      uniqueConstraints={
- *          @ORM\UniqueConstraint(name="orocrm_dm_activity_unq", columns={"campaign_id", "contact_id", "channel_id"})
- *     },
- *     indexes={
- *          @ORM\Index(name="orocrm_dm_activity_email_idx", columns={"email"}),
- *          @ORM\Index(name="orocrm_dm_activity_dt_sent_idx", columns={"date_sent"})
- *     }
- * )
- * @ORM\HasLifecycleCallbacks()
- * @Config(
- *  defaultValues={
- *      "entity"={
- *          "icon"="fa-user"
- *      },
- *      "ownership"={
- *          "owner_type"="ORGANIZATION",
- *          "owner_field_name"="owner",
- *          "owner_column_name"="owner_id"
- *      },
- *      "security"={
- *          "type"="ACL",
- *          "group_name"="",
- *          "category"="marketing"
- *      }
- *  }
- * )
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
+#[ORM\Entity(repositoryClass: ActivityRepository::class)]
+#[ORM\Table(name: 'orocrm_dm_activity')]
+#[ORM\Index(columns: ['email'], name: 'orocrm_dm_activity_email_idx')]
+#[ORM\Index(columns: ['date_sent'], name: 'orocrm_dm_activity_dt_sent_idx')]
+#[ORM\UniqueConstraint(name: 'orocrm_dm_activity_unq', columns: ['campaign_id', 'contact_id', 'channel_id'])]
+#[ORM\HasLifecycleCallbacks]
+#[Config(
+    defaultValues: [
+        'entity' => ['icon' => 'fa-user'],
+        'ownership' => [
+            'owner_type' => 'ORGANIZATION',
+            'owner_field_name' => 'owner',
+            'owner_column_name' => 'owner_id'
+        ],
+        'security' => ['type' => 'ACL', 'group_name' => '', 'category' => 'marketing']
+    ]
+)]
 class Activity implements ChannelAwareInterface
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    protected ?int $id = null;
 
-    /**
-     * @var Channel
-     *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\IntegrationBundle\Entity\Channel")
-     * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", onDelete="SET NULL")
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "identity"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $channel;
+    #[ORM\ManyToOne(targetEntity: Channel::class)]
+    #[ORM\JoinColumn(name: 'channel_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    protected ?Channel $channel = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="email", type="string", length=255)
-     */
-    protected $email;
+    #[ORM\Column(name: 'email', type: Types::STRING, length: 255)]
+    protected ?string $email = null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_opens", type="integer", nullable=true)
-     */
-    protected $numOpens;
+    #[ORM\Column(name: 'num_opens', type: Types::INTEGER, nullable: true)]
+    protected ?int $numOpens = null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_page_views", type="integer", nullable=true)
-     */
-    protected $numPageViews;
+    #[ORM\Column(name: 'num_page_views', type: Types::INTEGER, nullable: true)]
+    protected ?int $numPageViews = null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_clicks", type="integer", nullable=true)
-     */
-    protected $numClicks;
+    #[ORM\Column(name: 'num_clicks', type: Types::INTEGER, nullable: true)]
+    protected ?int $numClicks = null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_forwards", type="integer", nullable=true)
-     */
-    protected $numForwards;
+    #[ORM\Column(name: 'num_forwards', type: Types::INTEGER, nullable: true)]
+    protected ?int $numForwards = null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_estimated_forwards", type="integer", nullable=true)
-     */
-    protected $numEstimatedForwards;
+    #[ORM\Column(name: 'num_estimated_forwards', type: Types::INTEGER, nullable: true)]
+    protected ?int $numEstimatedForwards = null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_replies", type="integer", nullable=true)
-     */
-    protected $numReplies;
+    #[ORM\Column(name: 'num_replies', type: Types::INTEGER, nullable: true)]
+    protected ?int $numReplies = null;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_sent", type="datetime", nullable=true)
-     */
-    protected $dateSent;
+    #[ORM\Column(name: 'date_sent', type: Types::DATETIME_MUTABLE, nullable: true)]
+    protected ?\DateTimeInterface $dateSent = null;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_first_opened", type="datetime", nullable=true)
-     */
-    protected $dateFirstOpened;
+    #[ORM\Column(name: 'date_first_opened', type: Types::DATETIME_MUTABLE, nullable: true)]
+    protected ?\DateTimeInterface $dateFirstOpened = null;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_last_opened", type="datetime", nullable=true)
-     */
-    protected $dateLastOpened;
+    #[ORM\Column(name: 'date_last_opened', type: Types::DATETIME_MUTABLE, nullable: true)]
+    protected ?\DateTimeInterface $dateLastOpened = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="first_open_ip", type="string", length=255, nullable=true)
-     */
-    protected $firstOpenIp;
+    #[ORM\Column(name: 'first_open_ip', type: Types::STRING, length: 255, nullable: true)]
+    protected ?string $firstOpenIp = null;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="unsubscribed", type="boolean", nullable=true)
-     */
-    protected $unsubscribed;
+    #[ORM\Column(name: 'unsubscribed', type: Types::BOOLEAN, nullable: true)]
+    protected ?bool $unsubscribed = null;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="soft_bounced", type="boolean", nullable=true)
-     */
-    protected $softBounced;
+    #[ORM\Column(name: 'soft_bounced', type: Types::BOOLEAN, nullable: true)]
+    protected ?bool $softBounced = null;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="hard_bounced", type="boolean", nullable=true)
-     */
-    protected $hardBounced;
+    #[ORM\Column(name: 'hard_bounced', type: Types::BOOLEAN, nullable: true)]
+    protected ?bool $hardBounced = null;
 
-    /**
-     * @var Organization
-     *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\OrganizationBundle\Entity\Organization")
-     * @ORM\JoinColumn(name="owner_id", referencedColumnName="id", onDelete="SET NULL")
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $owner;
+    #[ORM\ManyToOne(targetEntity: Organization::class)]
+    #[ORM\JoinColumn(name: 'owner_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    protected ?Organization $owner = null;
 
-    /**
-     * @var Campaign
-     *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\DotmailerBundle\Entity\Campaign", inversedBy="activities")
-     * @ORM\JoinColumn(name="campaign_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "identity"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $campaign;
+    #[ORM\ManyToOne(targetEntity: Campaign::class, inversedBy: 'activities')]
+    #[ORM\JoinColumn(name: 'campaign_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    protected ?Campaign $campaign = null;
 
-    /**
-     * @var Contact
-     *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\DotmailerBundle\Entity\Contact", inversedBy="activities")
-     * @ORM\JoinColumn(name="contact_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "identity"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $contact;
+    #[ORM\ManyToOne(targetEntity: Contact::class, inversedBy: 'activities')]
+    #[ORM\JoinColumn(name: 'contact_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    protected ?Contact $contact = null;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime")
-     * @ConfigField(
-     *      defaultValues={
-     *          "entity"={
-     *              "label"="oro.ui.created_at"
-     *          },
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $createdAt;
+    #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE)]
+    #[ConfigField(
+        defaultValues: ['entity' => ['label' => 'oro.ui.created_at'], 'importexport' => ['excluded' => true]]
+    )]
+    protected ?\DateTimeInterface $createdAt = null;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime")
-     * @ConfigField(
-     *      defaultValues={
-     *          "entity"={
-     *              "label"="oro.ui.updated_at"
-     *          },
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $updatedAt;
+    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE)]
+    #[ConfigField(
+        defaultValues: ['entity' => ['label' => 'oro.ui.updated_at'], 'importexport' => ['excluded' => true]]
+    )]
+    protected ?\DateTimeInterface $updatedAt = null;
 
     /**
      * @return int
@@ -653,9 +521,7 @@ class Activity implements ChannelAwareInterface
         return $this;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function prePersist()
     {
         if (!$this->createdAt) {
@@ -667,9 +533,7 @@ class Activity implements ChannelAwareInterface
         }
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function preUpdate()
     {
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));

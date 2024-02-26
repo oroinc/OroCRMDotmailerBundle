@@ -2,9 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Extend\Entity\Autocomplete\OroDotmailerBundle_Entity_AddressBookContact;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactRepository;
+use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\Config;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityTrait;
@@ -13,27 +15,21 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 /**
  * Address book contact entity.
  *
- * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactRepository")
- * @ORM\Table(
- *      name="orocrm_dm_ab_contact",
- *      uniqueConstraints={
- *          @ORM\UniqueConstraint(name="orocrm_dm_ab_cnt_unq", columns={"address_book_id", "contact_id"})
- *     },
- *     indexes={
- *          @ORM\Index(name="orocrm_dm_ab_cnt_export_id_idx", columns={"export_id"}),
- *          @ORM\Index(
- *                  name="IDX_MARKETING_LIST_ITEM_CLASS_ID",
- *                  columns={"marketing_list_item_class", "marketing_list_item_id"}
- *          ),
- *     }
- * )
- * @Config()
  * @method AbstractEnumValue getStatus()
  * @method AddressBookContact setStatus(AbstractEnumValue $enumValue)
  * @method AbstractEnumValue getExportOperationType()
  * @method AddressBookContact setExportOperationType(AbstractEnumValue $enumValue)
  * @mixin OroDotmailerBundle_Entity_AddressBookContact
  */
+#[ORM\Entity(repositoryClass: AddressBookContactRepository::class)]
+#[ORM\Table(name: 'orocrm_dm_ab_contact')]
+#[ORM\Index(columns: ['export_id'], name: 'orocrm_dm_ab_cnt_export_id_idx')]
+#[ORM\Index(
+    columns: ['marketing_list_item_class', 'marketing_list_item_id'],
+    name: 'IDX_MARKETING_LIST_ITEM_CLASS_ID'
+)]
+#[ORM\UniqueConstraint(name: 'orocrm_dm_ab_cnt_unq', columns: ['address_book_id', 'contact_id'])]
+#[Config]
 class AddressBookContact implements ChannelAwareInterface, ExtendEntityInterface
 {
     use ExtendEntityTrait;
@@ -42,94 +38,49 @@ class AddressBookContact implements ChannelAwareInterface, ExtendEntityInterface
     const EXPORT_ADD_TO_ADDRESS_BOOK = 'add';
     const EXPORT_UPDATE_CONTACT = 'update';
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    protected ?int $id = null;
+
+    #[ORM\ManyToOne(targetEntity: AddressBook::class, inversedBy: 'addressBookContacts')]
+    #[ORM\JoinColumn(name: 'address_book_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    protected ?AddressBook $addressBook = null;
+
+    #[ORM\ManyToOne(targetEntity: Contact::class, inversedBy: 'addressBookContacts')]
+    #[ORM\JoinColumn(name: 'contact_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    protected ?Contact $contact = null;
+
+    #[ORM\Column(name: 'unsubscribed_date', type: Types::DATETIME_MUTABLE, nullable: true)]
+    protected ?\DateTimeInterface $unsubscribedDate = null;
+
+    #[ORM\Column(name: 'marketing_list_item_id', type: Types::INTEGER, nullable: true)]
+    protected ?int $marketingListItemId = null;
+
+    #[ORM\Column(name: 'marketing_list_item_class', type: Types::STRING, length: 255, unique: false, nullable: true)]
+    protected ?string $marketingListItemClass = null;
+
+    #[ORM\Column(name: 'scheduled_for_export', type: Types::BOOLEAN)]
+    protected ?bool $scheduledForExport = false;
+
+    #[ORM\Column(name: 'scheduled_for_fields_update', type: Types::BOOLEAN, nullable: true)]
+    protected ?bool $scheduledForFieldsUpdate = false;
+
+    #[ORM\Column(name: 'new_entity', type: Types::BOOLEAN, nullable: true)]
+    protected ?bool $newEntity = false;
+
+    #[ORM\Column(name: 'entity_updated', type: Types::BOOLEAN, nullable: true)]
+    protected ?bool $entityUpdated = false;
+
+    #[ORM\ManyToOne(targetEntity: Channel::class)]
+    #[ORM\JoinColumn(name: 'channel_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    protected ?Channel $channel = null;
 
     /**
-     * @var AddressBook
-     *
-     * @ORM\ManyToOne(targetEntity="AddressBook", inversedBy="addressBookContacts")
-     * @ORM\JoinColumn(name="address_book_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @var string|null Dotmailer import Id
      */
-    protected $addressBook;
-
-    /**
-     * @var Contact
-     *
-     * @ORM\ManyToOne(targetEntity="Contact", inversedBy="addressBookContacts")
-     * @ORM\JoinColumn(name="contact_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     */
-    protected $contact;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="unsubscribed_date", type="datetime", nullable=true)
-     */
-    protected $unsubscribedDate;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="marketing_list_item_id", type="integer", nullable=true)
-     */
-    protected $marketingListItemId;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="marketing_list_item_class", type="string", unique=false, length=255, nullable=true)
-     */
-    protected $marketingListItemClass;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="scheduled_for_export", type="boolean")
-     */
-    protected $scheduledForExport = false;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="scheduled_for_fields_update", type="boolean", nullable=true)
-     */
-    protected $scheduledForFieldsUpdate = false;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="new_entity", type="boolean", nullable=true)
-     */
-    protected $newEntity = false;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="entity_updated", type="boolean", nullable=true)
-     */
-    protected $entityUpdated = false;
-
-    /**
-     * @var Channel
-     *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\IntegrationBundle\Entity\Channel")
-     * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    protected $channel;
-
-    /**
-     * @var string Dotmailer import Id
-     *
-     * @ORM\Column(name="export_id", type="string", length=36, nullable=true)
-     */
-    protected $exportId;
+    #[ORM\Column(name: 'export_id', type: Types::STRING, length: 36, nullable: true)]
+    protected ?string $exportId = null;
 
     /**
      * @return int

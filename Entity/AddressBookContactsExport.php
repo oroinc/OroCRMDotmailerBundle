@@ -2,9 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Extend\Entity\Autocomplete\OroDotmailerBundle_Entity_AddressBookContactsExport;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactsExportRepository;
+use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\Config;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityTrait;
@@ -13,20 +15,16 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 /**
  * AddressBookContactsExport ORM entity.
  *
- * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactsExportRepository")
- * @ORM\Table(
- *      name="orocrm_dm_ab_cnt_export",
- *     indexes={
- *          @ORM\Index(name="orocrm_dm_ab_cnt_exp_fault_idx", columns={"faults_processed"}),
- *     }
- * )
- * @ORM\HasLifecycleCallbacks()
- * @Config()
  *
  * @method AbstractEnumValue getStatus()
  * @method AddressBookContactsExport setStatus(AbstractEnumValue $enumValue)
  * @mixin OroDotmailerBundle_Entity_AddressBookContactsExport
  */
+#[ORM\Entity(repositoryClass: AddressBookContactsExportRepository::class)]
+#[ORM\Table(name: 'orocrm_dm_ab_cnt_export')]
+#[ORM\Index(columns: ['faults_processed'], name: 'orocrm_dm_ab_cnt_exp_fault_idx')]
+#[ORM\HasLifecycleCallbacks]
+#[Config]
 class AddressBookContactsExport implements ChannelAwareInterface, ExtendEntityInterface
 {
     use ExtendEntityTrait;
@@ -40,65 +38,33 @@ class AddressBookContactsExport implements ChannelAwareInterface, ExtendEntityIn
     const STATUS_EXCEEDS_ALLOWED_CONTACT_LIMIT = 'ExceedsAllowedContactLimit';
     const STATUS_NOT_AVAILABLE_IN_THIS_VERSION = 'NotAvailableInThisVersion';
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    protected ?int $id = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="import_id", type="string", length=100, unique=true, nullable=false)
-     */
-    protected $importId;
+    #[ORM\Column(name: 'import_id', type: Types::STRING, length: 100, unique: true, nullable: false)]
+    protected ?string $importId = null;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime")
-     */
-    protected $createdAt;
+    #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE)]
+    protected ?\DateTimeInterface $createdAt = null;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime")
-     */
-    protected $updatedAt;
+    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE)]
+    protected ?\DateTimeInterface $updatedAt = null;
 
-    /**
-     * @var AddressBook
-     *
-     * @ORM\ManyToOne(targetEntity="AddressBook", inversedBy="addressBookContactsExports")
-     * @ORM\JoinColumn(name="address_book_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    protected $addressBook;
+    #[ORM\ManyToOne(targetEntity: AddressBook::class, inversedBy: 'addressBookContactsExports')]
+    #[ORM\JoinColumn(name: 'address_book_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    protected ?AddressBook $addressBook = null;
 
-    /**
-     * @var Channel
-     *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\IntegrationBundle\Entity\Channel")
-     * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    protected $channel;
+    #[ORM\ManyToOne(targetEntity: Channel::class)]
+    #[ORM\JoinColumn(name: 'channel_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    protected ?Channel $channel = null;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="faults_processed", type="boolean")
-     */
-    protected $faultsProcessed = false;
+    #[ORM\Column(name: 'faults_processed', type: Types::BOOLEAN)]
+    protected ?bool $faultsProcessed = false;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="smallint", name="sync_attempts", nullable=true, options={"unsigned"=true})
-     */
-    protected $syncAttempts;
+    #[ORM\Column(name: 'sync_attempts', type: Types::SMALLINT, nullable: true, options: ['unsigned' => true])]
+    protected ?int $syncAttempts = null;
 
     /**
      * @return int
@@ -247,9 +213,7 @@ class AddressBookContactsExport implements ChannelAwareInterface, ExtendEntityIn
         return $this;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function prePersist()
     {
         if (!$this->createdAt) {
@@ -261,9 +225,7 @@ class AddressBookContactsExport implements ChannelAwareInterface, ExtendEntityIn
         }
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function preUpdate()
     {
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));

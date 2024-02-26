@@ -2,75 +2,46 @@
 
 namespace Oro\Bundle\DotmailerBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\EntityBundle\EntityProperty\DatesAwareTrait;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\Config;
 
 /**
  * Data field mapping config entity
- * @ORM\Table(
- *      name="orocrm_dm_df_mapping_config",
- *      uniqueConstraints={
- *          @ORM\UniqueConstraint(name="orocrm_dm_df_mapping_config_unq", columns={"datafield_id", "mapping_id"})
- *     }
-  * )
- * @ORM\HasLifecycleCallbacks()
- * @Config(
- *      defaultValues={
- *          "activity"={
- *              "immutable"=true
- *          },
- *          "attachment"={
- *              "immutable"=true
- *          }
- *      }
- * )
- * @ORM\Entity
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'orocrm_dm_df_mapping_config')]
+#[ORM\UniqueConstraint(name: 'orocrm_dm_df_mapping_config_unq', columns: ['datafield_id', 'mapping_id'])]
+#[ORM\HasLifecycleCallbacks]
+#[Config(defaultValues: ['activity' => ['immutable' => true], 'attachment' => ['immutable' => true]])]
 class DataFieldMappingConfig
 {
     use DatesAwareTrait;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    protected ?int $id = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="entity_field", type="text")
-     */
-    protected $entityFields;
+    #[ORM\Column(name: 'entity_field', type: Types::TEXT)]
+    protected ?string $entityFields = null;
 
-    /**
-     * @var DataField
-     *
-     * @ORM\ManyToOne(targetEntity="DataField")
-     * @ORM\JoinColumn(name="datafield_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    protected $dataField;
+    #[ORM\ManyToOne(targetEntity: DataField::class)]
+    #[ORM\JoinColumn(name: 'datafield_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    protected ?DataField $dataField = null;
 
     /**
      * Controls whether we need to sync field values from Dotmailer into Oro
      *
      * @var bool
-     *
-     * @ORM\Column(name="is_two_way_sync", type="boolean", nullable=true)
      */
-    protected $isTwoWaySync;
+    #[ORM\Column(name: 'is_two_way_sync', type: Types::BOOLEAN, nullable: true)]
+    protected ?bool $isTwoWaySync = null;
 
-    /**
-     * @var DataFieldMapping
-     *
-     * @ORM\ManyToOne(targetEntity="DataFieldMapping", inversedBy="configs")
-     * @ORM\JoinColumn(name="mapping_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    protected $mapping;
+    #[ORM\ManyToOne(targetEntity: DataFieldMapping::class, inversedBy: 'configs')]
+    #[ORM\JoinColumn(name: 'mapping_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    protected ?DataFieldMapping $mapping = null;
 
     /**
      * @return int
@@ -158,9 +129,8 @@ class DataFieldMappingConfig
 
     /**
      * Pre persist event handler
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function prePersist()
     {
         $this->createdAt = new \DateTime('now', new \DateTimeZone('UTC'));
@@ -169,9 +139,8 @@ class DataFieldMappingConfig
 
     /**
      * Pre update event handler
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function preUpdate()
     {
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));

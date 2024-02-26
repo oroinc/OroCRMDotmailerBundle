@@ -2,24 +2,23 @@
 
 namespace Oro\Bundle\DotmailerBundle\Entity;
 
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\ConfigField;
 
+/**
+* Origin trait
+*
+*/
 trait OriginTrait
 {
     /**
      * Entity origin id
      *
-     * @var integer
-     *
-     * @ORM\Column(name="origin_id", type="bigint", nullable=true)
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "identity"=true
-     *          }
-     *      }
-     * )
+     * @var integer|null
      */
+    #[ORM\Column(name: 'origin_id', type: Types::BIGINT, nullable: true)]
+    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
     protected $originId;
 
     /**

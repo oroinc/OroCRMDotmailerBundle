@@ -8,17 +8,15 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * @ORM\Entity
- */
+* Entity that represents Dotmailer Transport Settings
+*
+*/
+#[ORM\Entity]
 class DotmailerTransportSettings extends TransportSettings
 {
-    /**
-     * @var Channel
-     *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\IntegrationBundle\Entity\Channel")
-     * @ORM\JoinColumn(name="dotmailer_channel_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    protected $channel;
+    #[ORM\ManyToOne(targetEntity: Channel::class)]
+    #[ORM\JoinColumn(name: 'dotmailer_channel_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    protected ?Channel $channel = null;
 
     /**
      * @return Channel

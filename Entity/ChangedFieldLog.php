@@ -2,70 +2,44 @@
 
 namespace Oro\Bundle\DotmailerBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\ChangedFieldLogRepository;
+use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\Config;
 
 /**
  * Changed field log entity
- * @ORM\Table(
- *      name="orocrm_dm_change_field_log",
- * )
- * @Config(
- *      defaultValues={
- *          "activity"={
- *              "immutable"=true
- *          },
- *          "attachment"={
- *              "immutable"=true
- *          }
- *      }
- * )
- * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\ChangedFieldLogRepository")
  */
+#[ORM\Entity(repositoryClass: ChangedFieldLogRepository::class)]
+#[ORM\Table(name: 'orocrm_dm_change_field_log')]
+#[Config(defaultValues: ['activity' => ['immutable' => true], 'attachment' => ['immutable' => true]])]
 class ChangedFieldLog
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    protected ?int $id = null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="channel_id", type="integer")
-     */
-    protected $channelId;
+    #[ORM\Column(name: 'channel_id', type: Types::INTEGER)]
+    protected ?int $channelId = null;
 
     /**
      * Entity, which was used in mapping configuration
-     *
-     * @var string
-     *
-     * @ORM\Column(name="parent_entity", type="string", length=255)
      */
-    protected $parentEntity;
+    #[ORM\Column(name: 'parent_entity', type: Types::STRING, length: 255)]
+    protected ?string $parentEntity = null;
 
     /**
      * Relation path to the modified field
-     *
-     * @var string
-     *
-     * @ORM\Column(name="related_field_path", type="text")
      */
-    protected $relatedFieldPath;
+    #[ORM\Column(name: 'related_field_path', type: Types::TEXT)]
+    protected ?string $relatedFieldPath = null;
 
     /**
      * Id of related entity which was changed
-     *
-     * @var int
-     *
-     * @ORM\Column(name="related_id", type="integer", nullable=true)
      */
-    protected $relatedId;
+    #[ORM\Column(name: 'related_id', type: Types::INTEGER, nullable: true)]
+    protected ?int $relatedId = null;
 
     /**
      * @return int

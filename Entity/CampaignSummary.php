@@ -2,496 +2,252 @@
 
 namespace Oro\Bundle\DotmailerBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\CampaignSummaryRepository;
+use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\Config;
+use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\ConfigField;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 /**
- * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\CampaignSummaryRepository")
- * @ORM\Table(
- *     name="orocrm_dm_campaign_summary",
- *     indexes={
- *          @ORM\Index(name="orocrm_dm_camp_sum_dt_sent_idx", columns={"date_sent"})
- *     }
- * )
- * @ORM\HasLifecycleCallbacks()
- * @Config(
- *  defaultValues={
- *      "entity"={
- *          "icon"="fa-user"
- *      },
- *      "ownership"={
- *          "owner_type"="ORGANIZATION",
- *          "owner_field_name"="owner",
- *          "owner_column_name"="owner_id"
- *      },
- *      "security"={
- *          "type"="ACL",
- *          "group_name"="",
- *          "category"="marketing"
- *      }
- *  }
- * )
+ * Dotmailer Campaign Summary entity
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.ExcessiveClassLength)
  */
+#[ORM\Entity(repositoryClass: CampaignSummaryRepository::class)]
+#[ORM\Table(name: 'orocrm_dm_campaign_summary')]
+#[ORM\Index(columns: ['date_sent'], name: 'orocrm_dm_camp_sum_dt_sent_idx')]
+#[ORM\HasLifecycleCallbacks]
+#[Config(
+    defaultValues: [
+        'entity' => ['icon' => 'fa-user'],
+        'ownership' => [
+            'owner_type' => 'ORGANIZATION',
+            'owner_field_name' => 'owner',
+            'owner_column_name' => 'owner_id'
+        ],
+        'security' => ['type' => 'ACL', 'group_name' => '', 'category' => 'marketing']
+    ]
+)]
 class CampaignSummary implements ChannelAwareInterface
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    protected ?int $id = null;
+
+    #[ORM\ManyToOne(targetEntity: Channel::class)]
+    #[ORM\JoinColumn(name: 'channel_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    protected ?Channel $channel = null;
+
+    #[ORM\OneToOne(inversedBy: 'campaignSummary', targetEntity: Campaign::class)]
+    #[ORM\JoinColumn(name: 'campaign_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    protected ?Campaign $campaign = null;
+
+    #[ORM\Column(name: 'date_sent', type: Types::DATETIME_MUTABLE, nullable: true)]
+    protected ?\DateTimeInterface $dateSent = null;
+
+    #[ORM\Column(name: 'num_unique_opens', type: Types::INTEGER, nullable: true)]
+    protected ?int $numUniqueOpens = null;
+
+    #[ORM\Column(name: 'num_unique_text_opens', type: Types::INTEGER, nullable: true)]
+    protected ?int $numUniqueTextOpens = null;
+
+    #[ORM\Column(name: 'num_total_unique_opens', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTotalUniqueOpens = null;
+
+    #[ORM\Column(name: 'num_opens', type: Types::INTEGER, nullable: true)]
+    protected ?int $numOpens = null;
+
+    #[ORM\Column(name: 'num_text_opens', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTextOpens = null;
+
+    #[ORM\Column(name: 'num_total_opens', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTotalOpens = null;
+
+    #[ORM\Column(name: 'num_clicks', type: Types::INTEGER, nullable: true)]
+    protected ?int $numClicks = null;
+
+    #[ORM\Column(name: 'num_text_clicks', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTextClicks = null;
+
+    #[ORM\Column(name: 'num_total_clicks', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTotalClicks = null;
+
+    #[ORM\Column(name: 'num_page_views', type: Types::INTEGER, nullable: true)]
+    protected ?int $numPageViews = null;
+
+    #[ORM\Column(name: 'num_total_page_views', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTotalPageViews = null;
+
+    #[ORM\Column(name: 'num_text_page_views', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTextPageViews = null;
+
+    #[ORM\Column(name: 'num_forwards', type: Types::INTEGER, nullable: true)]
+    protected ?int $numForwards = null;
+
+    #[ORM\Column(name: 'num_text_forwards', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTextForwards = null;
+
+    #[ORM\Column(name: 'num_estimated_forwards', type: Types::INTEGER, nullable: true)]
+    protected ?int $numEstimatedForwards = null;
+
+    #[ORM\Column(name: 'num_text_estimated_forwards', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTextEstimatedForwards = null;
+
+    #[ORM\Column(name: 'num_total_estimated_forwards', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTotalEstimatedForwards = null;
+
+    #[ORM\Column(name: 'num_replies', type: Types::INTEGER, nullable: true)]
+    protected ?int $numReplies = null;
+
+    #[ORM\Column(name: 'num_text_replies', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTextReplies = null;
+
+    #[ORM\Column(name: 'num_total_replies', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTotalReplies = null;
+
+    #[ORM\Column(name: 'num_hard_bounces', type: Types::INTEGER, nullable: true)]
+    protected ?int $numHardBounces = null;
+
+    #[ORM\Column(name: 'num_text_hard_bounces', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTextHardBounces = null;
+
+    #[ORM\Column(name: 'num_total_hard_bounces', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTotalHardBounces = null;
+
+    #[ORM\Column(name: 'num_soft_bounces', type: Types::INTEGER, nullable: true)]
+    protected ?int $numSoftBounces = null;
+
+    #[ORM\Column(name: 'num_text_soft_bounces', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTextSoftBounces = null;
+
+    #[ORM\Column(name: 'num_total_soft_bounces', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTotalSoftBounces = null;
+
+    #[ORM\Column(name: 'num_unsubscribes', type: Types::INTEGER, nullable: true)]
+    protected ?int $numUnsubscribes = null;
+
+    #[ORM\Column(name: 'num_text_unsubscribes', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTextUnsubscribes = null;
+
+    #[ORM\Column(name: 'num_total_unsubscribes', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTotalUnsubscribes = null;
+
+    #[ORM\Column(name: 'num_isp_complaints', type: Types::INTEGER, nullable: true)]
+    protected ?int $numIspComplaints = null;
+
+    #[ORM\Column(name: 'num_text_isp_complaints', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTextIspComplaints = null;
+
+    #[ORM\Column(name: 'num_total_isp_complaints', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTotalIspComplaints = null;
+
+    #[ORM\Column(name: 'num_mail_blocks', type: Types::INTEGER, nullable: true)]
+    protected ?int $numMailBlocks = null;
+
+    #[ORM\Column(name: 'num_text_mail_blocks', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTextMailBlocks = null;
+
+    #[ORM\Column(name: 'num_total_mail_blocks', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTotalMailBlocks = null;
+
+    #[ORM\Column(name: 'num_sent', type: Types::INTEGER, nullable: true)]
+    protected ?int $numSent = null;
+
+    #[ORM\Column(name: 'num_text_sent', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTextSent = null;
+
+    #[ORM\Column(name: 'num_total_sent', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTotalSent = null;
+
+    #[ORM\Column(name: 'num_recipients_clicked', type: Types::INTEGER, nullable: true)]
+    protected ?int $numRecipientsClicked = null;
+
+    #[ORM\Column(name: 'num_delivered', type: Types::INTEGER, nullable: true)]
+    protected ?int $numDelivered = null;
+
+    #[ORM\Column(name: 'num_text_delivered', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTextDelivered = null;
+
+    #[ORM\Column(name: 'num_total_delivered', type: Types::INTEGER, nullable: true)]
+    protected ?int $numTotalDelivered = null;
 
     /**
-     * @var Channel
-     *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\IntegrationBundle\Entity\Channel")
-     * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", onDelete="SET NULL")
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "identity"=true
-     *          }
-     *      }
-     * )
+     * @return float|null
      */
-    protected $channel;
-
-    /**
-     * @var Campaign
-     *
-     * @ORM\OneToOne(targetEntity="Oro\Bundle\DotmailerBundle\Entity\Campaign", inversedBy="campaignSummary")
-     * @ORM\JoinColumn(name="campaign_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "identity"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $campaign;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_sent", type="datetime", nullable=true)
-     */
-    protected $dateSent;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_unique_opens", type="integer", nullable=true)
-     */
-    protected $numUniqueOpens;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_unique_text_opens", type="integer", nullable=true)
-     */
-    protected $numUniqueTextOpens;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_total_unique_opens", type="integer", nullable=true)
-     */
-    protected $numTotalUniqueOpens;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_opens", type="integer", nullable=true)
-     */
-    protected $numOpens;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_text_opens", type="integer", nullable=true)
-     */
-    protected $numTextOpens;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_total_opens", type="integer", nullable=true)
-     */
-    protected $numTotalOpens;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_clicks", type="integer", nullable=true)
-     */
-    protected $numClicks;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_text_clicks", type="integer", nullable=true)
-     */
-    protected $numTextClicks;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_total_clicks", type="integer", nullable=true)
-     */
-    protected $numTotalClicks;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_page_views", type="integer", nullable=true)
-     */
-    protected $numPageViews;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_total_page_views", type="integer", nullable=true)
-     */
-    protected $numTotalPageViews;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_text_page_views", type="integer", nullable=true)
-     */
-    protected $numTextPageViews;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_forwards", type="integer", nullable=true)
-     */
-    protected $numForwards;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_text_forwards", type="integer", nullable=true)
-     */
-    protected $numTextForwards;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_estimated_forwards", type="integer", nullable=true)
-     */
-    protected $numEstimatedForwards;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_text_estimated_forwards", type="integer", nullable=true)
-     */
-    protected $numTextEstimatedForwards;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_total_estimated_forwards", type="integer", nullable=true)
-     */
-    protected $numTotalEstimatedForwards;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_replies", type="integer", nullable=true)
-     */
-    protected $numReplies;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_text_replies", type="integer", nullable=true)
-     */
-    protected $numTextReplies;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_total_replies", type="integer", nullable=true)
-     */
-    protected $numTotalReplies;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_hard_bounces", type="integer", nullable=true)
-     */
-    protected $numHardBounces;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_text_hard_bounces", type="integer", nullable=true)
-     */
-    protected $numTextHardBounces;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_total_hard_bounces", type="integer", nullable=true)
-     */
-    protected $numTotalHardBounces;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_soft_bounces", type="integer", nullable=true)
-     */
-    protected $numSoftBounces;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_text_soft_bounces", type="integer", nullable=true)
-     */
-    protected $numTextSoftBounces;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_total_soft_bounces", type="integer", nullable=true)
-     */
-    protected $numTotalSoftBounces;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_unsubscribes", type="integer", nullable=true)
-     */
-    protected $numUnsubscribes;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_text_unsubscribes", type="integer", nullable=true)
-     */
-    protected $numTextUnsubscribes;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_total_unsubscribes", type="integer", nullable=true)
-     */
-    protected $numTotalUnsubscribes;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_isp_complaints", type="integer", nullable=true)
-     */
-    protected $numIspComplaints;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_text_isp_complaints", type="integer", nullable=true)
-     */
-    protected $numTextIspComplaints;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_total_isp_complaints", type="integer", nullable=true)
-     */
-    protected $numTotalIspComplaints;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_mail_blocks", type="integer", nullable=true)
-     */
-    protected $numMailBlocks;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_text_mail_blocks", type="integer", nullable=true)
-     */
-    protected $numTextMailBlocks;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_total_mail_blocks", type="integer", nullable=true)
-     */
-    protected $numTotalMailBlocks;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_sent", type="integer", nullable=true)
-     */
-    protected $numSent;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_text_sent", type="integer", nullable=true)
-     */
-    protected $numTextSent;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_total_sent", type="integer", nullable=true)
-     */
-    protected $numTotalSent;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_recipients_clicked", type="integer", nullable=true)
-     */
-    protected $numRecipientsClicked;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_delivered", type="integer", nullable=true)
-     */
-    protected $numDelivered;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_text_delivered", type="integer", nullable=true)
-     */
-    protected $numTextDelivered;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="num_total_delivered", type="integer", nullable=true)
-     */
-    protected $numTotalDelivered;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="percentage_delivered", type="float", nullable=true)
-     */
+    #[ORM\Column(name: 'percentage_delivered', type: Types::FLOAT, nullable: true)]
     protected $percentageDelivered;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(name="percentage_unique_opens", type="float", nullable=true)
+     * @return float|null
      */
+    #[ORM\Column(name: 'percentage_unique_opens', type: Types::FLOAT, nullable: true)]
     protected $percentageUniqueOpens;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(name="percentage_opens", type="float", nullable=true)
+     * @return float|null
      */
+    #[ORM\Column(name: 'percentage_opens', type: Types::FLOAT, nullable: true)]
     protected $percentageOpens;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(name="percentage_unsubscribes", type="float", nullable=true)
+     * @return float|null
      */
+    #[ORM\Column(name: 'percentage_unsubscribes', type: Types::FLOAT, nullable: true)]
     protected $percentageUnsubscribes;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(name="percentage_replies", type="float", nullable=true)
+     * @return float|null
      */
+    #[ORM\Column(name: 'percentage_replies', type: Types::FLOAT, nullable: true)]
     protected $percentageReplies;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(name="percentage_hard_bounces", type="float", nullable=true)
+     * @return float|null
      */
+    #[ORM\Column(name: 'percentage_hard_bounces', type: Types::FLOAT, nullable: true)]
     protected $percentageHardBounces;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(name="percentage_soft_bounces", type="float", nullable=true)
+     * @return float|null
      */
+    #[ORM\Column(name: 'percentage_soft_bounces', type: Types::FLOAT, nullable: true)]
     protected $percentageSoftBounces;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(name="percentage_users_clicked", type="float", nullable=true)
+     * @return float|null
      */
+    #[ORM\Column(name: 'percentage_users_clicked', type: Types::FLOAT, nullable: true)]
     protected $percentageUsersClicked;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(name="percentage_clicks_to_opens", type="float", nullable=true)
+     * @return float|null
      */
+    #[ORM\Column(name: 'percentage_clicks_to_opens', type: Types::FLOAT, nullable: true)]
     protected $percentageClicksToOpens;
 
-    /**
-     * @var Organization
-     *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\OrganizationBundle\Entity\Organization")
-     * @ORM\JoinColumn(name="owner_id", referencedColumnName="id", onDelete="SET NULL")
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $owner;
+    #[ORM\ManyToOne(targetEntity: Organization::class)]
+    #[ORM\JoinColumn(name: 'owner_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    protected ?Organization $owner = null;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime")
-     * @ConfigField(
-     *      defaultValues={
-     *          "entity"={
-     *              "label"="oro.ui.created_at"
-     *          },
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $createdAt;
+    #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE)]
+    #[ConfigField(
+        defaultValues: ['entity' => ['label' => 'oro.ui.created_at'], 'importexport' => ['excluded' => true]]
+    )]
+    protected ?\DateTimeInterface $createdAt = null;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime")
-     * @ConfigField(
-     *      defaultValues={
-     *          "entity"={
-     *              "label"="oro.ui.updated_at"
-     *          },
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $updatedAt;
+    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE)]
+    #[ConfigField(
+        defaultValues: ['entity' => ['label' => 'oro.ui.updated_at'], 'importexport' => ['excluded' => true]]
+    )]
+    protected ?\DateTimeInterface $updatedAt = null;
 
     /**
      * @return int
@@ -1641,9 +1397,7 @@ class CampaignSummary implements ChannelAwareInterface
         return $this;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function prePersist()
     {
         if (!$this->createdAt) {
@@ -1655,9 +1409,7 @@ class CampaignSummary implements ChannelAwareInterface
         }
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function preUpdate()
     {
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));

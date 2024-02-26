@@ -3,9 +3,10 @@
 namespace Oro\Bundle\DotmailerBundle\Controller\Api\Rest;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\EntityBundle\Exception\InvalidEntityException;
 use Oro\Bundle\EntityBundle\Provider\EntityWithFieldsProvider;
-use Oro\Bundle\SecurityBundle\Annotation\Acl;
+use Oro\Bundle\SecurityBundle\Attribute\Acl;
 use Oro\Bundle\SoapBundle\Controller\Api\Rest\RestController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,16 +20,16 @@ class DataFieldMappingController extends RestController
      *      description="Delete dotdigital data field mapping",
      *      resource=true
      * )
-     * @Acl(
-     *      id="oro_dotmailer_datafield_mapping_delete",
-     *      type="entity",
-     *      class="Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping",
-     *      permission="DELETE"
-     * )
      *
      * @param int $id
      * @return Response
      */
+    #[Acl(
+        id: 'oro_dotmailer_datafield_mapping_delete',
+        type: 'entity',
+        class: DataFieldMapping::class,
+        permission: 'DELETE'
+    )]
     public function deleteAction(int $id)
     {
         return $this->handleDeleteRequest($id);

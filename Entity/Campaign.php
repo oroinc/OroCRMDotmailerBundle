@@ -4,11 +4,13 @@ namespace Oro\Bundle\DotmailerBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Extend\Entity\Autocomplete\OroDotmailerBundle_Entity_Campaign;
 use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\CampaignRepository;
+use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\Config;
+use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\ConfigField;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityTrait;
@@ -18,31 +20,6 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
 /**
  * Represents a dotdigital campaign.
  *
- * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\CampaignRepository")
- * @ORM\Table(
- *      name="orocrm_dm_campaign",
- *      uniqueConstraints={
- *          @ORM\UniqueConstraint(name="orocrm_dm_campaign_unq", columns={"origin_id", "channel_id"})
- *     }
- * )
- * @ORM\HasLifecycleCallbacks()
- * @Config(
- *  defaultValues={
- *      "entity"={
- *          "icon"="fa-envelope"
- *      },
- *      "ownership"={
- *          "owner_type"="ORGANIZATION",
- *          "owner_field_name"="owner",
- *          "owner_column_name"="owner_id"
- *      },
- *      "security"={
- *          "type"="ACL",
- *          "group_name"="",
- *          "category"="marketing"
- *      }
- *  }
- * )
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.TooManyFields)
  *
@@ -52,6 +29,21 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  * @method Campaign setStatus(AbstractEnumValue $enumValue)
  * @mixin OroDotmailerBundle_Entity_Campaign
  */
+#[ORM\Entity(repositoryClass: CampaignRepository::class)]
+#[ORM\Table(name: 'orocrm_dm_campaign')]
+#[ORM\UniqueConstraint(name: 'orocrm_dm_campaign_unq', columns: ['origin_id', 'channel_id'])]
+#[ORM\HasLifecycleCallbacks]
+#[Config(
+    defaultValues: [
+        'entity' => ['icon' => 'fa-envelope'],
+        'ownership' => [
+            'owner_type' => 'ORGANIZATION',
+            'owner_field_name' => 'owner',
+            'owner_column_name' => 'owner_id'
+        ],
+        'security' => ['type' => 'ACL', 'group_name' => '', 'category' => 'marketing']
+    ]
+)]
 class Campaign implements OriginAwareInterface, ExtendEntityInterface
 {
     use OriginTrait;
@@ -76,202 +68,85 @@ class Campaign implements OriginAwareInterface, ExtendEntityInterface
     const STATUS_TRIGGERED                          = 'Triggered';
     const STATUS_NOTAVAILABLEINTHISVERSION          = 'NotAvailableInThisVersion';
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $id;
+    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    protected ?int $id = null;
+
+    #[ORM\ManyToOne(targetEntity: Channel::class)]
+    #[ORM\JoinColumn(name: 'channel_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    protected ?Channel $channel = null;
+
+    #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
+    protected ?string $name = null;
+
+    #[ORM\Column(name: 'subject', type: Types::STRING, length: 255, nullable: true)]
+    protected ?string $subject = null;
+
+    #[ORM\Column(name: 'from_name', type: Types::STRING, length: 255, nullable: true)]
+    protected ?string $fromName = null;
+
+    #[ORM\Column(name: 'from_address', type: Types::STRING, length: 255, nullable: true)]
+    protected ?string $fromAddress = null;
+
+    #[ORM\Column(name: 'html_content', type: Types::TEXT, nullable: true)]
+    protected ?string $htmlContent = null;
+
+    #[ORM\Column(name: 'plain_text_content', type: Types::TEXT, nullable: true)]
+    protected ?string $plainTextContent = null;
+
+    #[ORM\Column(name: 'reply_to_address', type: Types::STRING, length: 255, nullable: true)]
+    protected ?string $replyToAddress = null;
+
+    #[ORM\Column(name: 'is_split_test', type: Types::BOOLEAN, nullable: true)]
+    protected ?bool $isSplitTest = null;
+
+    #[ORM\ManyToOne(targetEntity: Organization::class)]
+    #[ORM\JoinColumn(name: 'owner_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    protected ?Organization $owner = null;
+
+    #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE)]
+    #[ConfigField(
+        defaultValues: ['entity' => ['label' => 'oro.ui.created_at'], 'importexport' => ['excluded' => true]]
+    )]
+    protected ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE)]
+    #[ConfigField(
+        defaultValues: ['entity' => ['label' => 'oro.ui.updated_at'], 'importexport' => ['excluded' => true]]
+    )]
+    protected ?\DateTimeInterface $updatedAt = null;
 
     /**
-     * @var Channel
-     *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\IntegrationBundle\Entity\Channel")
-     * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", onDelete="SET NULL")
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "identity"=true
-     *          }
-     *      }
-     * )
+     * @var Collection<int, AddressBook>
      */
-    protected $channel;
+    #[ORM\ManyToMany(targetEntity: AddressBook::class, inversedBy: 'campaigns')]
+    #[ORM\JoinTable(name: 'orocrm_dm_campaign_to_ab')]
+    #[ORM\JoinColumn(name: 'campaign_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'address_book_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    protected ?Collection $addressBooks = null;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     * @var Collection<int, Activity>
      */
-    protected $name;
+    #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: Activity::class, cascade: ['all'])]
+    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    protected ?Collection $activities = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="subject", type="string", length=255, nullable=true)
-     */
-    protected $subject;
+    #[ORM\OneToOne(targetEntity: EmailCampaign::class)]
+    #[ORM\JoinColumn(name: 'email_campaign_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    protected ?EmailCampaign $emailCampaign = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="from_name", type="string", length=255, nullable=true)
-     */
-    protected $fromName;
+    #[ORM\OneToOne(mappedBy: 'campaign', targetEntity: CampaignSummary::class, cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'campaign_summary_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    protected ?CampaignSummary $campaignSummary = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="from_address", type="string", length=255, nullable=true)
-     */
-    protected $fromAddress;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="html_content", type="text", nullable=true)
-     */
-    protected $htmlContent;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="plain_text_content", type="text", nullable=true)
-     */
-    protected $plainTextContent;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="reply_to_address", type="string", length=255, nullable=true)
-     */
-    protected $replyToAddress;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="is_split_test", type="boolean", nullable=true)
-     */
-    protected $isSplitTest;
-
-    /**
-     * @var Organization
-     *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\OrganizationBundle\Entity\Organization")
-     * @ORM\JoinColumn(name="owner_id", referencedColumnName="id", onDelete="SET NULL")
-     *
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $owner;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime")
-     *
-     * @ConfigField(
-     *      defaultValues={
-     *          "entity"={
-     *              "label"="oro.ui.created_at"
-     *          },
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $createdAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime")
-     *
-     * @ConfigField(
-     *      defaultValues={
-     *          "entity"={
-     *              "label"="oro.ui.updated_at"
-     *          },
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $updatedAt;
-
-    /**
-     * @var Collection
-     *
-     * @ORM\ManyToMany(targetEntity="AddressBook", inversedBy="campaigns")
-     * @ORM\JoinTable(name="orocrm_dm_campaign_to_ab",
-     *      joinColumns={@ORM\JoinColumn(name="campaign_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="address_book_id", referencedColumnName="id", onDelete="CASCADE")}
-     * )
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $addressBooks;
-
-    /**
-     * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="Activity", mappedBy="campaign", cascade={"all"})
-     * @ConfigField(
-     *      defaultValues={
-     *          "importexport"={
-     *              "excluded"=true
-     *          }
-     *      }
-     * )
-     */
-    protected $activities;
-
-    /**
-     * @var EmailCampaign
-     *
-     * @ORM\OneToOne(targetEntity="Oro\Bundle\CampaignBundle\Entity\EmailCampaign")
-     * @ORM\JoinColumn(name="email_campaign_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    protected $emailCampaign;
-
-    /**
-     * @var CampaignSummary
-     *
-     * @ORM\OneToOne(
-     *     targetEntity="Oro\Bundle\DotmailerBundle\Entity\CampaignSummary",
-     *     cascade={"persist"}, mappedBy="campaign"
-     * )
-     * @ORM\JoinColumn(name="campaign_summary_id", referencedColumnName="id", onDelete="SET NULL", nullable=true)
-     */
-    protected $campaignSummary;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="is_deleted", type="boolean")
-     */
-    protected $deleted = false;
+    #[ORM\Column(name: 'is_deleted', type: Types::BOOLEAN)]
+    protected ?bool $deleted = false;
 
     /**
      * Initialize collections
@@ -709,9 +584,7 @@ class Campaign implements OriginAwareInterface, ExtendEntityInterface
         return $this;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function prePersist()
     {
         if (!$this->createdAt) {
@@ -723,9 +596,7 @@ class Campaign implements OriginAwareInterface, ExtendEntityInterface
         }
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function preUpdate()
     {
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));

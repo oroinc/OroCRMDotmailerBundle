@@ -6,8 +6,8 @@ use Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping;
 use Oro\Bundle\DotmailerBundle\Form\Type\DataFieldMappingType;
 use Oro\Bundle\EntityBundle\Provider\EntityProvider;
 use Oro\Bundle\FormBundle\Model\UpdateHandlerFacade;
-use Oro\Bundle\SecurityBundle\Annotation\Acl;
-use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
+use Oro\Bundle\SecurityBundle\Attribute\Acl;
+use Oro\Bundle\SecurityBundle\Attribute\AclAncestor;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -17,21 +17,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Serves CRUD of DataFieldMapping entity.
- *
- * @Route("/data-field-mapping")
  */
+#[Route(path: '/data-field-mapping')]
 class DataFieldMappingController extends AbstractController
 {
-    /**
-     * @Route(
-     *      "/{_format}",
-     *      name="oro_dotmailer_datafield_mapping_index",
-     *      requirements={"_format"="html|json"},
-     *      defaults={"_format" = "html"}
-     * )
-     * @Template
-     * @AclAncestor("oro_dotmailer_datafield_mapping_update")
-     */
+    #[Route(
+        path: '/{_format}',
+        name: 'oro_dotmailer_datafield_mapping_index',
+        requirements: ['_format' => 'html|json'],
+        defaults: ['_format' => 'html']
+    )]
+    #[Template]
+    #[AclAncestor('oro_dotmailer_datafield_mapping_update')]
     public function indexAction(): array
     {
         return [
@@ -39,31 +36,27 @@ class DataFieldMappingController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/update/{id}", name="oro_dotmailer_datafield_mapping_update", requirements={"id"="\d+"}))
-     * @Acl(
-     *      id="oro_dotmailer_datafield_mapping_update",
-     *      type="entity",
-     *      permission="EDIT",
-     *      class="Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping"
-     * )
-     * @Template("@OroDotmailer/DataFieldMapping/update.html.twig")
-     */
+    #[Route(path: '/update/{id}', name: 'oro_dotmailer_datafield_mapping_update', requirements: ['id' => '\d+'])]
+    #[Template('@OroDotmailer/DataFieldMapping/update.html.twig')]
+    #[Acl(
+        id: 'oro_dotmailer_datafield_mapping_update',
+        type: 'entity',
+        class: DataFieldMapping::class,
+        permission: 'EDIT'
+    )]
     public function updateAction(DataFieldMapping $mapping): array|RedirectResponse
     {
         return $this->update($mapping);
     }
 
-    /**
-     * @Route("/create", name="oro_dotmailer_datafield_mapping_create"))
-     * @Acl(
-     *      id="oro_dotmailer_datafield_mapping_create",
-     *      type="entity",
-     *      permission="CREATE",
-     *      class="Oro\Bundle\DotmailerBundle\Entity\DataFieldMapping"
-     * )
-     * @Template("@OroDotmailer/DataFieldMapping/update.html.twig")
-     */
+    #[Route(path: '/create', name: 'oro_dotmailer_datafield_mapping_create')]
+    #[Template('@OroDotmailer/DataFieldMapping/update.html.twig')]
+    #[Acl(
+        id: 'oro_dotmailer_datafield_mapping_create',
+        type: 'entity',
+        class: DataFieldMapping::class,
+        permission: 'CREATE'
+    )]
     public function createAction(): array|RedirectResponse
     {
         return $this->update(new DataFieldMapping());
