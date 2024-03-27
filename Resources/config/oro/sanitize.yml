@@ -1,0 +1,12 @@
+oro_sanitize:
+    entity:
+        oro_integration_transport:
+            fields:
+                orocrm_dm_api_username: md5
+                orocrm_dm_api_password: md5
+                orocrm_dm_api_client_id: md5
+                orocrm_dm_api_client_key: md5
+                orocrm_dm_api_custom_domain: md5
+        orocrm_dm_contact:
+            fields:
+                email: email
