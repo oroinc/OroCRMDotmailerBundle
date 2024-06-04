@@ -52,7 +52,7 @@ class AddressBookImportTest extends AbstractImportExportTestCase
                 'originId' => $addressBook['originId'],
                 'channel' => $channel,
                 'name' => $addressBook['name'],
-                'contactCount'=> $addressBook['contactCount'],
+                'contactCount' => $addressBook['contactCount'],
                 'visibility' => $visibilityRepository->find($addressBook['visibility'])
             ];
 
