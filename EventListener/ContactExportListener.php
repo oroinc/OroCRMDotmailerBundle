@@ -74,7 +74,7 @@ class ContactExportListener extends AbstractImportExportListener
         }
 
         $configuration = $syncEvent->getConfiguration();
-        $channel= $this->getChannel($configuration);
+        $channel = $this->getChannel($configuration);
         $this->exportManager->updateAddressBooksSyncStatus($channel);
     }
 
