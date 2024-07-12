@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\QueryDesigner;
 use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\QueryDesignerBundle\Model\QueryDesigner;
 use Oro\Bundle\QueryDesignerBundle\QueryDesigner\QueryBuilderGroupingOrmQueryConverter;
+use Oro\Component\DoctrineUtils\ORM\QueryBuilderUtil;
 
 /**
  * Adds mapping columns to an ORM query.
@@ -46,7 +47,9 @@ class MappingQueryConverter extends QueryBuilderGroupingOrmQueryConverter
             } else {
                 $columnExpression = current($columnExpressions);
             }
-            $context->getQueryBuilder()->addSelect(sprintf('%s as %s', $columnExpression, $compositeColumn['alias']));
+            $alias = $compositeColumn['alias'];
+            QueryBuilderUtil::checkIdentifier($alias);
+            $context->getQueryBuilder()->addSelect(sprintf('%s as %s', $columnExpression, $alias));
         }
     }
 
