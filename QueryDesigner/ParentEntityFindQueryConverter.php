@@ -5,6 +5,7 @@ namespace Oro\Bundle\DotmailerBundle\QueryDesigner;
 use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\QueryDesignerBundle\Model\QueryDesigner;
 use Oro\Bundle\QueryDesignerBundle\QueryDesigner\QueryBuilderGroupingOrmQueryConverter;
+use Oro\Component\DoctrineUtils\ORM\QueryBuilderUtil;
 
 /**
  * Converts column definitions to an ORM query.
@@ -32,7 +33,7 @@ class ParentEntityFindQueryConverter extends QueryBuilderGroupingOrmQueryConvert
      */
     protected function addSelectStatement(): void
     {
-        $this->context()->getQueryBuilder()->addSelect(sprintf(
+        $this->context()->getQueryBuilder()->addSelect(QueryBuilderUtil::sprintf(
             '%s.%s as %s',
             $this->context()->getRootTableAlias(),
             $this->doctrineHelper->getSingleEntityIdentifierFieldName($this->context()->getRootEntity()),
