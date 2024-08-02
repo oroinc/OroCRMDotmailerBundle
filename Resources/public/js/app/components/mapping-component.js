@@ -94,7 +94,7 @@ define(function(require) {
 
                 const cancel = function() {
                     const oldVal = $channelChoice.data('previous');
-                    $channelChoice.val(oldVal).change();
+                    $channelChoice.val(oldVal).trigger('change');
                 };
 
                 if (requiresConfirm) {
