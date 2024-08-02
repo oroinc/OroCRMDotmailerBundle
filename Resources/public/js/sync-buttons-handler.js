@@ -99,7 +99,7 @@ define([
         };
 
         this.bindElementsEvents = function() {
-            $(syncButtonsSelector).click(this.syncButtonsClickHandlerDelegate);
+            $(syncButtonsSelector).on('click', this.syncButtonsClickHandlerDelegate);
         };
 
         this.bindElementsEvents();
