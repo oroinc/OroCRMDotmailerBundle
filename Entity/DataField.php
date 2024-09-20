@@ -8,7 +8,7 @@ use Extend\Entity\Autocomplete\OroDotmailerBundle_Entity_DataField;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\DataFieldRepository;
 use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\ConfigField;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOptionInterface;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityTrait;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
@@ -17,10 +17,10 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
 /**
  * Dotmailer DataField entity.
  *
- * @method AbstractEnumValue getType()
- * @method DataField setType(AbstractEnumValue $enumValue)
- * @method AbstractEnumValue getVisibility()
- * @method DataField setVisibility(AbstractEnumValue $enumValue)
+ * @method EnumOptionInterface getType()
+ * @method DataField setType(EnumOptionInterface $enumOption)
+ * @method EnumOptionInterface getVisibility()
+ * @method DataField setVisibility(EnumOptionInterface $enumOption)
  * @mixin OroDotmailerBundle_Entity_DataField
  */
 #[ORM\Entity(repositoryClass: DataFieldRepository::class)]

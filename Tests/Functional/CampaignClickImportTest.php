@@ -48,24 +48,34 @@ class CampaignClickImportTest extends AbstractImportExportTestCase
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $marketingActivityRepository = $this->managerRegistry->getRepository(MarketingActivity::class);
-        $enumProvider = $this->getContainer()->get('oro_entity_extend.enum_value_provider');
-        $clickType = $enumProvider->getEnumValueByCode(
+        $enumProvider = $this->getContainer()->get('oro_entity_extend.enum_options_provider');
+        $clickType = $enumProvider->getEnumOptionByCode(
             MarketingActivity::TYPE_ENUM_CODE,
             MarketingActivity::TYPE_CLICK
         );
 
+        $queryBuilder = $marketingActivityRepository->createQueryBuilder('ma');
         foreach ($expected as $activityExpected) {
-            $searchCriteria = [
-                'details' => $activityExpected['details'],
-                'actionDate' => $activityExpected['actionDate'],
-                'type' => $clickType,
-                'entityId' => $this->getReference($activityExpected['contact'])->getId(),
-                'entityClass' => Contact::class,
-                'campaign' => $this->getReference('oro_dotmailer.marketing_campaign.second'),
-                'relatedCampaignId' => $this->getReference('oro_dotmailer.email_campaign.second')->getId()
-            ];
+            $queryBuilder
+                ->andWhere('ma.details = :details')
+                ->andWhere('ma.actionDate = :actionDate')
+                ->andWhere('ma.entityId = :entityId')
+                ->andWhere('ma.entityClass = :entityClass')
+                ->andWhere('ma.campaign = :campaign')
+                ->andWhere('ma.relatedCampaignId = :relatedCampaignId')
+                ->andWhere("JSON_EXTRACT(ma.serialized_data, 'type') = :clickType")
+                ->setParameter('clickType', $clickType->getId())
+                ->setParameter('details', $activityExpected['details'])
+                ->setParameter('actionDate', $activityExpected['actionDate'])
+                ->setParameter('entityId', $this->getReference($activityExpected['contact'])->getId())
+                ->setParameter('entityClass', Contact::class)
+                ->setParameter('campaign', $this->getReference('oro_dotmailer.marketing_campaign.second'))
+                ->setParameter(
+                    'relatedCampaignId',
+                    $this->getReference('oro_dotmailer.email_campaign.second')->getId()
+                );
 
-            $clickActivities = $marketingActivityRepository->findBy($searchCriteria);
+            $clickActivities = $queryBuilder->getQuery()->getResult();
 
             $this->assertCount(1, $clickActivities);
         }

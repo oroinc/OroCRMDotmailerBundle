@@ -10,7 +10,7 @@ use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\ImportExport\Reader\AbstractExportReader;
 use Oro\Bundle\DotmailerBundle\Model\QueueExportManager;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOptionInterface;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\IntegrationBundle\Event\SyncEvent;
 
@@ -57,7 +57,7 @@ class ContactExportListener extends AbstractImportExportListener
         $this->registry->getRepository(Contact::class)
             ->bulkRemoveNotExportedContacts($channel);
 
-        /** @var AbstractEnumValue $inProgressStatus */
+        /** @var EnumOptionInterface $inProgressStatus */
         $inProgressStatus = $this->registry
             ->getRepository(AddressBookContactsExport::class)
             ->getNotFinishedStatus();

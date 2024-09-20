@@ -3,33 +3,33 @@
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Stub;
 
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOptionInterface;
 
 class DataFieldStub extends DataField
 {
-    private ?AbstractEnumValue $type = null;
-    private ?AbstractEnumValue $visibility = null;
+    private ?EnumOptionInterface $type = null;
+    private ?EnumOptionInterface $visibility = null;
 
-    public function getType(): ?AbstractEnumValue
+    public function getType(): ?EnumOptionInterface
     {
         return $this->type;
     }
 
-    public function setType(AbstractEnumValue $enumValue): self
+    public function setType(EnumOptionInterface $enumOption): self
     {
-        $this->type = $enumValue;
+        $this->type = $enumOption;
 
         return $this;
     }
 
-    public function getVisibility(): ?AbstractEnumValue
+    public function getVisibility(): ?EnumOptionInterface
     {
         return $this->visibility;
     }
 
-    public function setVisibility(AbstractEnumValue $enumValue): self
+    public function setVisibility(EnumOptionInterface $enumOption): self
     {
-        $this->visibility = $enumValue;
+        $this->visibility = $enumOption;
 
         return $this;
     }

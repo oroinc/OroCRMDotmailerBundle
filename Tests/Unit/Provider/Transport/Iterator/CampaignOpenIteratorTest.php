@@ -10,6 +10,7 @@ use Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AbstractActivityIterator;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignOpenIterator;
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 
 class CampaignOpenIteratorTest extends \PHPUnit\Framework\TestCase
@@ -72,7 +73,10 @@ class CampaignOpenIteratorTest extends \PHPUnit\Framework\TestCase
             $expectedActivityContactArray = $expectedActivity->toArray();
             $expectedActivityContactArray[AbstractActivityIterator::CAMPAIGN_KEY] = $expectedCampaignOriginId;
             $expectedActivityContactArray[AbstractActivityIterator::MARKETING_ACTIVITY_TYPE_KEY] =
-                MarketingActivity::TYPE_OPEN;
+                ExtendHelper::buildEnumOptionId(
+                    MarketingActivity::TYPE_ENUM_CODE,
+                    MarketingActivity::TYPE_OPEN
+                );
             $expectedActivityContactArray[AbstractActivityIterator::EMAIL_CAMPAIGN_KEY] = $expectedEmailCampaignId;
             $expectedActivityContactArray[AbstractActivityIterator::MARKETING_CAMPAIGN_KEY] =
                 $expectedMarketingCampaignId;
@@ -138,7 +142,10 @@ class CampaignOpenIteratorTest extends \PHPUnit\Framework\TestCase
             $expectedActivityContactArray = $expectedActivity->toArray();
             $expectedActivityContactArray[AbstractActivityIterator::CAMPAIGN_KEY] = $expectedCampaignOriginId;
             $expectedActivityContactArray[AbstractActivityIterator::MARKETING_ACTIVITY_TYPE_KEY] =
-                MarketingActivity::TYPE_OPEN;
+                ExtendHelper::buildEnumOptionId(
+                    MarketingActivity::TYPE_ENUM_CODE,
+                    MarketingActivity::TYPE_OPEN
+                );
             $expectedActivityContactArray[AbstractActivityIterator::EMAIL_CAMPAIGN_KEY] = $expectedEmailCampaignId;
             $expectedActivityContactArray[AbstractActivityIterator::MARKETING_CAMPAIGN_KEY] =
                 $expectedMarketingCampaignId;

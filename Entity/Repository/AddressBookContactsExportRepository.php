@@ -2,12 +2,15 @@
 
 namespace Oro\Bundle\DotmailerBundle\Entity\Repository;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOption;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOptionInterface;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
@@ -16,10 +19,6 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
  */
 class AddressBookContactsExportRepository extends EntityRepository
 {
-    protected $rejectedExportStatuses = [
-        AddressBookContactsExport::STATUS_REJECTED_BY_WATCHDOG,
-    ];
-
     /**
      * @param Channel $channel
      *
@@ -29,14 +28,22 @@ class AddressBookContactsExportRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('addressBookContactExport');
         $qb->select('addressBookContactExport.id')
-            ->innerJoin('addressBookContactExport.status', 'status')
+            ->innerJoin(
+                EnumOption::class,
+                'status',
+                Join::WITH,
+                "JSON_EXTRACT(addressBookContactExport.serialized_data, 'status') = status.id"
+            )
             ->where('addressBookContactExport.channel =:channel')
             ->andWhere('status.id = :status')
             ->setMaxResults(1)
             ->setParameters(
                 [
                     'channel' => $channel,
-                    'status' => AddressBookContactsExport::STATUS_NOT_FINISHED
+                    'status' => ExtendHelper::buildEnumOptionId(
+                        AddressBookContactsExport::STATUS_ENUM_CODE,
+                        AddressBookContactsExport::STATUS_NOT_FINISHED
+                    )
                 ]
             );
 
@@ -71,7 +78,12 @@ class AddressBookContactsExportRepository extends EntityRepository
     public function getNotFinishedExports(Channel $channel)
     {
         $qb = $this->createQueryBuilder('addressBookContactExport');
-        $qb->innerJoin('addressBookContactExport.status', 'status')
+        $qb->innerJoin(
+            EnumOption::class,
+            'status',
+            Join::WITH,
+            "JSON_EXTRACT(addressBookContactExport.serialized_data, 'status') = status.id"
+        )
             ->where('addressBookContactExport.channel =:channel')
             ->andWhere('status.id =:status');
 
@@ -79,7 +91,10 @@ class AddressBookContactsExportRepository extends EntityRepository
             ->execute(
                 [
                     'channel' => $channel,
-                    'status' => AddressBookContactsExport::STATUS_NOT_FINISHED
+                    'status' => ExtendHelper::buildEnumOptionId(
+                        AddressBookContactsExport::STATUS_ENUM_CODE,
+                        AddressBookContactsExport::STATUS_NOT_FINISHED
+                    )
                 ]
             );
     }
@@ -94,8 +109,7 @@ class AddressBookContactsExportRepository extends EntityRepository
     public function getExportsByAddressBook(AddressBook $addressBook)
     {
         $qb = $this->createQueryBuilder('addressBookContactExport');
-        $qb->innerJoin('addressBookContactExport.status', 'status')
-            ->where('addressBookContactExport.addressBook =:addressBook')
+        $qb->where('addressBookContactExport.addressBook =:addressBook')
             ->orderBy('addressBookContactExport.updatedAt', 'desc');
 
         return $qb->getQuery()->execute(['addressBook' => $addressBook]);
@@ -105,16 +119,20 @@ class AddressBookContactsExportRepository extends EntityRepository
      * Get Dotmailer status object (enum "dm_import_status").
      *
      * @param string $statusCode
-     * @return AbstractEnumValue
+     * @return EnumOptionInterface
      * @throws EntityNotFoundException
      */
     public function getStatus($statusCode)
     {
-        $statusClassName = ExtendHelper::buildEnumValueClassName('dm_import_status');
-        $statusRepository = $this->getEntityManager()->getRepository($statusClassName);
+        $statusRepository = $this->getEntityManager()->getRepository(EnumOption::class);
 
-        /** @var AbstractEnumValue|null $result */
-        $result = $statusRepository->find($statusCode);
+        /** @var EnumOptionInterface|null $result */
+        $result = $statusRepository->find(
+            ExtendHelper::buildEnumOptionId(
+                AddressBookContactsExport::STATUS_ENUM_CODE,
+                $statusCode
+            )
+        );
 
         if (!$result) {
             throw new EntityNotFoundException(
@@ -128,49 +146,43 @@ class AddressBookContactsExportRepository extends EntityRepository
         return $result;
     }
 
-    /**
-     * @return AbstractEnumValue
-     */
     public function getFinishedStatus()
     {
         return $this->getStatus(AddressBookContactsExport::STATUS_FINISH);
     }
 
-    /**
-     * @return AbstractEnumValue
-     */
     public function getNotFinishedStatus()
     {
         return $this->getStatus(AddressBookContactsExport::STATUS_NOT_FINISHED);
     }
 
     /**
-     * @param AbstractEnumValue $status
+     * @param EnumOptionInterface $status
      * @return bool
      */
-    public function isFinishedStatus(AbstractEnumValue $status)
+    public function isFinishedStatus(EnumOptionInterface $status)
     {
-        return $status->getId() == AddressBookContactsExport::STATUS_FINISH;
+        return $status->getInternalId() == AddressBookContactsExport::STATUS_FINISH;
     }
 
     /**
-     * @param AbstractEnumValue $status
+     * @param EnumOptionInterface $status
      * @return bool
      */
-    public function isNotFinishedStatus(AbstractEnumValue $status)
+    public function isNotFinishedStatus(EnumOptionInterface $status)
     {
-        return $status->getId() == AddressBookContactsExport::STATUS_NOT_FINISHED;
+        return $status->getInternalId() == AddressBookContactsExport::STATUS_NOT_FINISHED;
     }
 
     /**
-     * @param AbstractEnumValue $status
+     * @param EnumOptionInterface $status
      * @return bool
      */
-    public function isErrorStatus(AbstractEnumValue $status)
+    public function isErrorStatus(EnumOptionInterface $status)
     {
-        return $status->getId() !== AddressBookContactsExport::STATUS_FINISH &&
-            $status->getId() !== AddressBookContactsExport::STATUS_NOT_FINISHED &&
-            $status->getId() !== AddressBookContactsExport::STATUS_UNKNOWN;
+        return $status->getInternalId() !== AddressBookContactsExport::STATUS_FINISH &&
+            $status->getInternalId() !== AddressBookContactsExport::STATUS_NOT_FINISHED &&
+            $status->getInternalId() !== AddressBookContactsExport::STATUS_UNKNOWN;
     }
 
     /**
@@ -235,15 +247,17 @@ class AddressBookContactsExportRepository extends EntityRepository
 
     public function updateAddressBookContactsStatus(
         AddressBookContactsExport $export,
-        AbstractEnumValue $status
+        EnumOptionInterface $status
     ) {
         $qb = $this->createQueryBuilder('addressBookContactExport');
         $qb->update();
-        $qb->set('addressBookContactExport.status', ':status');
+        $qb->set(
+            'addressBookContactExport.serialized_data',
+            "JSONB_SET(addressBookContactExport.serialized_data, '{status}', :status)"
+        );
         $qb->set('addressBookContactExport.faultsProcessed', ':faultsProcessed');
         $qb->andWhere('addressBookContactExport.id = :id');
-
-        $qb->setParameter('status', $status);
+        $qb->setParameter('status', $status->getId(), Types::JSON);
         $qb->setParameter('faultsProcessed', true);
         $qb->setParameter('id', $export->getId());
         $query = $qb->getQuery();
@@ -258,9 +272,14 @@ class AddressBookContactsExportRepository extends EntityRepository
     protected function getNotRejectedExportRestrictionsQB(Channel $channel)
     {
         $qb = $this->createQueryBuilder('addressBookContactExport');
-        $qb->innerJoin('addressBookContactExport.status', 'status')
-            ->where($qb->expr()->notIn('addressBookContactExport.status', $this->rejectedExportStatuses))
+        $qb->where(
+            $qb->expr()->notIn(
+                "JSON_EXTRACT(addressBookContactExport.serialized_data, 'status')",
+                ':rejectedExportStatuses'
+            )
+        )
             ->andWhere('addressBookContactExport.channel = :channel')
+            ->setParameter('rejectedExportStatuses', $this->getRejectedStatuses())
             ->setParameter('channel', $channel);
 
         return $qb;
@@ -274,12 +293,26 @@ class AddressBookContactsExportRepository extends EntityRepository
     protected function getRejectedExportRestrictionQB(Channel $channel)
     {
         $qb = $this->createQueryBuilder('addressBookContactExport');
-        $qb->innerJoin('addressBookContactExport.status', 'status')
-            ->where($qb->expr()->in('addressBookContactExport.status', ':rejectedExportStatuses'))
-            ->setParameter('rejectedExportStatuses', $this->rejectedExportStatuses)
+        $qb->where(
+            $qb->expr()->in(
+                "JSON_EXTRACT(addressBookContactExport.serialized_data, 'status')",
+                ':rejectedExportStatuses'
+            )
+        )
+            ->setParameter('rejectedExportStatuses', $this->getRejectedStatuses())
             ->andWhere('addressBookContactExport.channel = :channel')
             ->setParameter('channel', $channel);
 
         return $qb;
+    }
+
+    private function getRejectedStatuses(): array
+    {
+        return [
+            ExtendHelper::buildEnumOptionId(
+                AddressBookContactsExport::STATUS_ENUM_CODE,
+                AddressBookContactsExport::STATUS_REJECTED_BY_WATCHDOG,
+            )
+        ];
     }
 }

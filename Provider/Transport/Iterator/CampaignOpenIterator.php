@@ -3,8 +3,12 @@
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 
+/**
+ * CampaignOpenIterator class
+ */
 class CampaignOpenIterator extends AbstractActivityIterator
 {
     /**
@@ -38,8 +42,11 @@ class CampaignOpenIterator extends AbstractActivityIterator
     /**
      * {@inheritdoc}
      */
-    protected function getMarketingActivityType()
+    protected function getMarketingActivityType(): string
     {
-        return MarketingActivity::TYPE_OPEN;
+        return ExtendHelper::buildEnumOptionId(
+            MarketingActivity::TYPE_ENUM_CODE,
+            MarketingActivity::TYPE_OPEN
+        );
     }
 }

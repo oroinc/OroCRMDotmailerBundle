@@ -4,7 +4,8 @@ namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture as BaseFixture;
 use Doctrine\Persistence\ObjectManager;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOption;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOptionInterface;
 use Oro\Bundle\EntityExtendBundle\PropertyAccess;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -81,13 +82,12 @@ abstract class AbstractFixture extends BaseFixture implements ContainerAwareInte
     /**
      * @param string $enumCode
      * @param mixed $id
-     * @return AbstractEnumValue
+     * @return EnumOptionInterface
      */
     protected function findEnum($enumCode, $id)
     {
-        $enumClass = ExtendHelper::buildEnumValueClassName($enumCode);
-
-        return $this->manager->getRepository($enumClass)->find($id);
+        return $this->manager->getRepository(EnumOption::class)
+            ->find(ExtendHelper::buildEnumOptionId($enumCode, $id));
     }
 
     /**

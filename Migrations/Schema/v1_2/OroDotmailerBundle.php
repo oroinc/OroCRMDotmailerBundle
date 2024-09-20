@@ -5,15 +5,15 @@ namespace Oro\Bundle\DotmailerBundle\Migrations\Schema\v1_2;
 use Doctrine\DBAL\Schema\Schema;
 use Oro\Bundle\DotmailerBundle\Migration\AddContactExportConnectorToExistedIntegrationsQuery;
 use Oro\Bundle\EntityExtendBundle\EntityConfig\ExtendScope;
-use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareInterface;
-use Oro\Bundle\EntityExtendBundle\Migration\Extension\ExtendExtensionAwareTrait;
-use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
+use Oro\Bundle\EntityExtendBundle\Migration\Extension\OutdatedExtendExtension;
+use Oro\Bundle\EntityExtendBundle\Migration\Extension\OutdatedExtendExtensionAwareInterface;
+use Oro\Bundle\EntityExtendBundle\Migration\Extension\OutdatedExtendExtensionAwareTrait;
 use Oro\Bundle\MigrationBundle\Migration\Migration;
 use Oro\Bundle\MigrationBundle\Migration\QueryBag;
 
-class OroDotmailerBundle implements Migration, ExtendExtensionAwareInterface
+class OroDotmailerBundle implements Migration, OutdatedExtendExtensionAwareInterface
 {
-    use ExtendExtensionAwareTrait;
+    use OutdatedExtendExtensionAwareTrait;
 
     /**
      * {@inheritdoc}
@@ -32,11 +32,11 @@ class OroDotmailerBundle implements Migration, ExtendExtensionAwareInterface
             $table->addIndex(['export_id'], 'orocrm_dm_ab_cnt_export_id_idx', []);
         }
 
-        $tableName = $this->extendExtension->getTableNameByEntityClass(
-            ExtendHelper::buildEnumValueClassName('dm_ab_cnt_exp_type')
+        $tableName = $this->outdatedExtendExtension->getTableNameByEntityClass(
+            OutdatedExtendExtension::buildEnumValueClassName('dm_ab_cnt_exp_type')
         );
         if (!$tableName || !$schema->hasTable($tableName)) {
-            $this->extendExtension->addEnumField(
+            $this->outdatedExtendExtension->addOutdatedEnumField(
                 $schema,
                 $schema->getTable('orocrm_dm_ab_contact'),
                 'exportOperationType',

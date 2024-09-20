@@ -43,20 +43,25 @@ class AddressBookImportTest extends AbstractImportExportTestCase
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $addressBookRepository = $this->managerRegistry->getRepository(AddressBook::class);
-        $visibilityRepository = $this->managerRegistry->getRepository(
-            ExtendHelper::buildEnumValueClassName('dm_ab_visibility')
-        );
 
         foreach ($expected as $addressBook) {
-            $searchCriteria = [
-                'originId' => $addressBook['originId'],
-                'channel' => $channel,
-                'name' => $addressBook['name'],
-                'contactCount' => $addressBook['contactCount'],
-                'visibility' => $visibilityRepository->find($addressBook['visibility'])
-            ];
+            $queryBuilder = $addressBookRepository->createQueryBuilder('ab');
+            $queryBuilder
+                ->andWhere('ab.originId = :originId')
+                ->andWhere('ab.channel = :channel')
+                ->andWhere('ab.name = :name')
+                ->andWhere('ab.contactCount = :contactCount')
+                ->andWhere("JSON_EXTRACT(ab.serialized_data, 'visibility') = :visibility")
+                ->setParameter('originId', $addressBook['originId'])
+                ->setParameter('channel', $channel)
+                ->setParameter('name', $addressBook['name'])
+                ->setParameter('contactCount', $addressBook['contactCount'])
+                ->setParameter(
+                    'visibility',
+                    ExtendHelper::buildEnumOptionId('dm_ab_visibility', $addressBook['visibility'])
+                );
 
-            $addressBook = $addressBookRepository->findBy($searchCriteria);
+            $addressBook = $queryBuilder->getQuery()->getResult();
 
             $this->assertCount(1, $addressBook);
         }

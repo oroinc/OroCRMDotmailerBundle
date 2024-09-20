@@ -7,6 +7,9 @@ use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\DotmailerBundle\Exception\InvalidDefaultValueException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 
+/**
+ * Service that manage create/remove DataField.
+ */
 class DataFieldManager
 {
     /**
@@ -57,7 +60,7 @@ class DataFieldManager
     {
         $defaultValue = $field->getDefaultValue();
         if ($defaultValue) {
-            switch ($field->getType()->getId()) {
+            switch ($field->getType()->getInternalId()) {
                 case DataField::FIELD_TYPE_NUMERIC:
                     if (!is_numeric($defaultValue)) {
                         throw new InvalidDefaultValueException('Default value must be numeric.');
@@ -82,8 +85,8 @@ class DataFieldManager
         $result = new ApiDataField(
             [
                 'Name' => $field->getName(),
-                'Type' => $field->getType()->getId(),
-                'Visibility' => $field->getVisibility()->getId(),
+                'Type' => $field->getType()->getInternalId(),
+                'Visibility' => $field->getVisibility()->getInternalId(),
                 'DefaultValue' => $defaultValue
             ]
         );

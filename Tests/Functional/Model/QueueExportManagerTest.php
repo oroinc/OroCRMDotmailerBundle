@@ -75,10 +75,10 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
         $exportEntity = $this->getExportEntity($channel, $importWithFaultsId);
         $this->assertEmpty($exportEntity->getSyncAttempts());
         $exportStatus = $exportEntity->getStatus();
-        $this->assertEquals(AddressBookContactsExport::STATUS_FINISH, $exportStatus->getId());
+        $this->assertEquals(AddressBookContactsExport::STATUS_FINISH, $exportStatus->getInternalId());
 
         $addressBookStatus = $expectedAddressBook->getSyncStatus();
-        $this->assertEquals(AddressBookContactsExport::STATUS_FINISH, $addressBookStatus->getId());
+        $this->assertEquals(AddressBookContactsExport::STATUS_FINISH, $addressBookStatus->getInternalId());
 
         /**
          * Check not exported contacts properly handled
@@ -96,7 +96,7 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
         $this->assertCount(1, $addressBookContacts);
         $addressBookContact = reset($addressBookContacts);
 
-        $this->assertEquals(Contact::STATUS_SUPPRESSED, $addressBookContact->getStatus()->getId());
+        $this->assertEquals(Contact::STATUS_SUPPRESSED, $addressBookContact->getStatus()->getInternalId());
     }
 
     public function testUpdateExportResultsWithUnknownStatus()
@@ -136,10 +136,10 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
         $this->assertEquals(1, $exportEntity->getSyncAttempts());
         $this->assertTrue($exportEntity->isFaultsProcessed());
         $exportStatus = $exportEntity->getStatus();
-        $this->assertEquals(AddressBookContactsExport::STATUS_NOT_FINISHED, $exportStatus->getId());
+        $this->assertEquals(AddressBookContactsExport::STATUS_NOT_FINISHED, $exportStatus->getInternalId());
 
         $addressBookStatus = $expectedAddressBook->getSyncStatus();
-        $this->assertEquals(AddressBookContactsExport::STATUS_NOT_FINISHED, $addressBookStatus->getId());
+        $this->assertEquals(AddressBookContactsExport::STATUS_NOT_FINISHED, $addressBookStatus->getInternalId());
 
         /**
          * Check not exported contacts properly handled
@@ -157,7 +157,7 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
         $this->assertCount(1, $addressBookContacts);
         $addressBookContact = reset($addressBookContacts);
 
-        $this->assertEquals(Contact::STATUS_SUPPRESSED, $addressBookContact->getStatus()->getId());
+        $this->assertEquals(Contact::STATUS_SUPPRESSED, $addressBookContact->getStatus()->getInternalId());
     }
 
     public function testUpdateExportResultsWithErrorThrown()
@@ -190,7 +190,7 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
         $this->assertEquals(1, $exportEntity->getSyncAttempts());
         $this->assertTrue($exportEntity->isFaultsProcessed());
         $exportStatus = $exportEntity->getStatus();
-        $this->assertEquals(AddressBookContactsExport::STATUS_UNKNOWN, $exportStatus->getId());
+        $this->assertEquals(AddressBookContactsExport::STATUS_UNKNOWN, $exportStatus->getInternalId());
 
         /**
          * Check not exported contacts properly handled
@@ -208,7 +208,7 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
         $this->assertCount(1, $addressBookContacts);
         $addressBookContact = reset($addressBookContacts);
 
-        $this->assertEquals(Contact::STATUS_SUBSCRIBED, $addressBookContact->getStatus()->getId());
+        $this->assertEquals(Contact::STATUS_SUBSCRIBED, $addressBookContact->getStatus()->getInternalId());
     }
 
     protected function getExportEntity(Channel $channel, string $importId): AddressBookContactsExport

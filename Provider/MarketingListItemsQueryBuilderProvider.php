@@ -11,6 +11,8 @@ use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactSyncDataConverter;
 use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOption;
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 use Oro\Bundle\MarketingListBundle\Provider\MarketingListProvider;
 use Oro\Bundle\SecurityBundle\Owner\Metadata\OwnershipMetadataProviderInterface;
@@ -140,15 +142,25 @@ class MarketingListItemsQueryBuilderProvider
          * Get only subscribed to address book contacts because
          * of other type of address book contacts is already removed from address book.
          */
-        $qb->leftJoin(sprintf('%s.status', self::ADDRESS_BOOK_CONTACT_ALIAS), 'addressBookContactStatus')
-            ->andWhere(
-                $expr->orX()
-                    ->add($expr->isNull('addressBookContactStatus.id'))
-                    ->add($expr->in(
-                        'addressBookContactStatus.id',
-                        [Contact::STATUS_SUBSCRIBED, Contact::STATUS_SOFTBOUNCED]
-                    ))
-            );
+        $qb->leftJoin(
+            EnumOption::class,
+            'addressBookContactStatus',
+            Join::WITH,
+            sprintf(
+                "JSON_EXTRACT(%s.serialized_data, 'status') = addressBookContactStatus",
+                self::ADDRESS_BOOK_CONTACT_ALIAS
+            )
+        )->andWhere(
+            $expr->orX()
+                ->add($expr->isNull('addressBookContactStatus.id'))
+                ->add($expr->in(
+                    'addressBookContactStatus.id',
+                    [
+                        ExtendHelper::buildEnumOptionId(Contact::STATUS_ENUM_CODE, Contact::STATUS_SUBSCRIBED),
+                        ExtendHelper::buildEnumOptionId(Contact::STATUS_ENUM_CODE, Contact::STATUS_SOFTBOUNCED)
+                    ]
+                ))
+        );
 
         return $qb;
     }
@@ -194,7 +206,12 @@ class MarketingListItemsQueryBuilderProvider
             ->addSelect('contact.originId')
             ->from($this->addressBookContactClassName, 'addressBookContact')
             ->innerJoin('addressBookContact.contact', 'contact')
-            ->leftJoin('addressBookContact.status', 'status')
+            ->leftJoin(
+                EnumOption::class,
+                'status',
+                Join::WITH,
+                "JSON_EXTRACT(addressBookContact.serialized_data, 'status') = status"
+            )
             ->where('addressBookContact.addressBook =:addressBook')
             ->setParameter('addressBook', $addressBook)
             /**
@@ -205,7 +222,10 @@ class MarketingListItemsQueryBuilderProvider
                 $qb->expr()
                     ->in(
                         'status.id',
-                        [Contact::STATUS_SUBSCRIBED, Contact::STATUS_SOFTBOUNCED]
+                        [
+                            ExtendHelper::buildEnumOptionId(Contact::STATUS_ENUM_CODE, Contact::STATUS_SUBSCRIBED),
+                            ExtendHelper::buildEnumOptionId(Contact::STATUS_ENUM_CODE, Contact::STATUS_SOFTBOUNCED)
+                        ]
                     )
             )
             /**
@@ -259,14 +279,25 @@ class MarketingListItemsQueryBuilderProvider
         /**
          * Get only not subscribed to address book contacts for status synchronization
          */
-        $qb->innerJoin(sprintf('%s.status', self::ADDRESS_BOOK_CONTACT_ALIAS), 'addressBookContactStatus')
+        $qb->innerJoin(
+            EnumOption::class,
+            'addressBookContactStatus',
+            Join::WITH,
+            sprintf(
+                "JSON_EXTRACT(%s.serialized_data, 'status') = addressBookContactStatus",
+                self::ADDRESS_BOOK_CONTACT_ALIAS
+            )
+        )
             ->andWhere(
                 $expr->orX()
                     ->add($expr->isNull('addressBookContactStatus.id'))
                     ->add(
                         $expr->notIn(
                             'addressBookContactStatus.id',
-                            [Contact::STATUS_SUBSCRIBED, Contact::STATUS_SOFTBOUNCED]
+                            [
+                                ExtendHelper::buildEnumOptionId(Contact::STATUS_ENUM_CODE, Contact::STATUS_SUBSCRIBED),
+                                ExtendHelper::buildEnumOptionId(Contact::STATUS_ENUM_CODE, Contact::STATUS_SOFTBOUNCED)
+                            ]
                         )
                     )
             );

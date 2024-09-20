@@ -3,7 +3,7 @@
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Serializer;
 
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOptionInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 
@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 class EnumNormalizer implements ContextAwareNormalizerInterface, ContextAwareDenormalizerInterface
 {
     /**
-     * @param AbstractEnumValue $object
+     * @param EnumOptionInterface $object
      * @param null|string $format
      * @param array $context
      *
@@ -53,7 +53,7 @@ class EnumNormalizer implements ContextAwareNormalizerInterface, ContextAwareDen
     {
         $channelType = empty($context['channelType']) ? null : $context['channelType'];
 
-        return is_a($type, AbstractEnumValue::class, true)
+        return is_a($type, EnumOptionInterface::class, true)
             && $channelType === ChannelType::TYPE;
     }
 
@@ -62,6 +62,6 @@ class EnumNormalizer implements ContextAwareNormalizerInterface, ContextAwareDen
      */
     public function supportsNormalization($data, string $format = null, array $context = []): bool
     {
-        return $data instanceof AbstractEnumValue;
+        return $data instanceof EnumOptionInterface;
     }
 }

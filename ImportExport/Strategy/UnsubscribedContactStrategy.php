@@ -101,17 +101,17 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
 
         $status = $contact->getEmailType();
         if ($status && $status->getId()) {
-            $contact->setStatus($this->getEnumValue('dm_cnt_status', $status->getId()));
+            $contact->setStatus($this->getEnumValue($status->getId()));
         }
 
         $emailType = $contact->getEmailType();
         if ($emailType && $emailType->getId()) {
-            $contact->setEmailType($this->getEnumValue('dm_cnt_email_type', $emailType->getId()));
+            $contact->setEmailType($this->getEnumValue($emailType->getId()));
         }
 
         $optInType = $contact->getOptInType();
         if ($optInType && $optInType->getId()) {
-            $contact->setOptInType($this->getEnumValue('dm_cnt_opt_in_type', $optInType->getId()));
+            $contact->setOptInType($this->getEnumValue($optInType->getId()));
         }
     }
 
@@ -119,7 +119,7 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
     {
         $entity->setChannel($channel);
         $entity->setAddressBook($addressBook);
-        $status = $this->getEnumValue('dm_cnt_status', $entity->getStatus()->getId());
+        $status = $this->getEnumValue($entity->getStatus()->getId());
         $entity->setStatus($status);
     }
 

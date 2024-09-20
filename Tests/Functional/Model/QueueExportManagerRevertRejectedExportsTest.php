@@ -100,7 +100,7 @@ class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTe
         $this->assertCount(1, $addressBookContact);
         $addressBookContact = reset($addressBookContact);
 
-        $this->assertEquals($status, $addressBookContact->getStatus()->getId());
+        $this->assertEquals($status, $addressBookContact->getStatus()->getInternalId());
     }
 
     private function assertAddressBookContactNotExist(
@@ -128,10 +128,10 @@ class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTe
         $exportEntity = reset($exportEntities);
 
         $exportStatus = $exportEntity->getStatus();
-        $this->assertEquals($status, $exportStatus->getId());
+        $this->assertEquals($status, $exportStatus->getInternalId());
 
         $addressBookStatus = $expectedAddressBook->getSyncStatus();
-        $this->assertEquals($status, $addressBookStatus->getId());
+        $this->assertEquals($status, $addressBookStatus->getInternalId());
     }
 
     private function stubResource(): void

@@ -16,10 +16,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Status;
 
 class LoadStatusData extends BaseAbstractFixture implements DependentFixtureInterface
 {
-    /**
-     * @var array
-     */
-    protected $data = [
+    protected array $data = [
         [
             'channel' => 'oro_dotmailer.channel.first',
             'code' => Status::STATUS_FAILED,
@@ -91,7 +88,7 @@ class LoadStatusData extends BaseAbstractFixture implements DependentFixtureInte
     /**
      * {@inheritdoc}
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         foreach ($this->data as $item) {
             $status = new Status();
@@ -110,7 +107,7 @@ class LoadStatusData extends BaseAbstractFixture implements DependentFixtureInte
     /**
      * {@inheritdoc}
      */
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [
             'Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadChannelData'

@@ -11,7 +11,8 @@ use Oro\Bundle\DotmailerBundle\Entity\Contact as DotmailerContact;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ExportContactConnector;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDataFieldMappingData;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOption;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOptionInterface;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
@@ -23,6 +24,9 @@ class ExportContactsTest extends AbstractImportExportTestCase
         $this->loadFixtures([LoadDotmailerContactData::class, LoadDataFieldMappingData::class]);
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function testSync()
     {
         $channel = $this->getReference('oro_dotmailer.channel.fourth');
@@ -45,7 +49,7 @@ class ExportContactsTest extends AbstractImportExportTestCase
         );
 
         $expectedAddressBookMap = [
-            (int)$firstAddressBook->getOriginId()  => $firstAddressBookImportStatus,
+            (int)$firstAddressBook->getOriginId() => $firstAddressBookImportStatus,
             (int)$secondAddressBook->getOriginId() => $secondAddressBookImportStatus,
         ];
 
@@ -102,10 +106,15 @@ class ExportContactsTest extends AbstractImportExportTestCase
         $expectedContact = $this->getReference('oro_dotmailer.orocrm_contact.allen.case');
         $this->assertContactUpdated($channel, 'allen.case@example.com', $expectedContact, $firstAddressBook);
 
-        $statusClass = ExtendHelper::buildEnumValueClassName('dm_import_status');
-        $statusRepository = $this->managerRegistry->getRepository($statusClass);
-        $syncInProgressStatus = $statusRepository->find(AddressBookContactsExport::STATUS_NOT_FINISHED);
-        $syncFinishedStatus = $statusRepository->find(AddressBookContactsExport::STATUS_FINISH);
+        $statusRepository = $this->managerRegistry->getRepository(EnumOption::class);
+        $syncInProgressStatus = $statusRepository->find(ExtendHelper::buildEnumOptionId(
+            'dm_import_status',
+            AddressBookContactsExport::STATUS_NOT_FINISHED
+        ));
+        $syncFinishedStatus = $statusRepository->find(ExtendHelper::buildEnumOptionId(
+            'dm_import_status',
+            AddressBookContactsExport::STATUS_FINISH
+        ));
 
         $this->assertEquals($syncFinishedStatus, $upToDateAddressBook->getSyncStatus());
         $this->assertAddressBookExportStatus($firstAddressBook, $firstAddressBookId, $syncInProgressStatus);
@@ -165,11 +174,19 @@ class ExportContactsTest extends AbstractImportExportTestCase
     private function assertAddressBookExportStatus(
         AddressBook $addressBook,
         string $importId,
-        AbstractEnumValue $status
+        EnumOptionInterface $status
     ): void {
         $export = $this->managerRegistry
             ->getRepository(AddressBookContactsExport::class)
-            ->findBy(['addressBook' => $addressBook, 'importId' => $importId, 'status' => $status]);
+            ->createQueryBuilder('abe')
+            ->andWhere('abe.addressBook = :addressBook')
+            ->andWhere('abe.importId = :importId')
+            ->andWhere("JSON_EXTRACT(abe.serialized_data, 'status') = :status")
+            ->setParameter('addressBook', $addressBook)
+            ->setParameter('importId', $importId)
+            ->setParameter('status', $status)
+            ->getQuery()
+            ->getResult();
 
         $this->assertCount(1, $export);
         $this->assertEquals($status, $addressBook->getSyncStatus());

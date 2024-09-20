@@ -31,8 +31,8 @@ class AddressBookTypeTest extends FormIntegrationTestCase
 
                     IntegrationSelectType::class => new EntityTypeStub(['1' => $this->getChannel(1)]),
                     EnumSelectType::class => new EnumSelectTypeStub([
-                        new TestEnumValue('Public', 'Public'),
-                        new TestEnumValue('Private', 'Private')
+                        new TestEnumValue('Public', 'Public', 'Public', 0, 'Public'),
+                        new TestEnumValue('Private', 'Private', 'Private', 0, 'Private')
                     ])
                 ],
                 [

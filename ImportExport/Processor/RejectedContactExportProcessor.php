@@ -72,7 +72,7 @@ class RejectedContactExportProcessor implements StepExecutionAwareProcessor
             );
         }
 
-        $exportOperationType = $item->getExportOperationType()->getId();
+        $exportOperationType = $item->getExportOperationType()->getInternalId();
         if ($exportOperationType == AddressBookContact::EXPORT_UPDATE_CONTACT) {
             return null;
         }

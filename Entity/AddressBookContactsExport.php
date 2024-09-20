@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Extend\Entity\Autocomplete\OroDotmailerBundle_Entity_AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactsExportRepository;
 use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\Config;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOptionInterface;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityTrait;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
@@ -16,8 +16,8 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
  * AddressBookContactsExport ORM entity.
  *
  *
- * @method AbstractEnumValue getStatus()
- * @method AddressBookContactsExport setStatus(AbstractEnumValue $enumValue)
+ * @method EnumOptionInterface getStatus()
+ * @method AddressBookContactsExport setStatus(EnumOptionInterface $enumOption)
  * @mixin OroDotmailerBundle_Entity_AddressBookContactsExport
  */
 #[ORM\Entity(repositoryClass: AddressBookContactsExportRepository::class)]
@@ -29,14 +29,15 @@ class AddressBookContactsExport implements ChannelAwareInterface, ExtendEntityIn
 {
     use ExtendEntityTrait;
 
-    const STATUS_NOT_FINISHED = 'NotFinished';
-    const STATUS_FINISH = 'Finished';
-    const STATUS_REJECTED_BY_WATCHDOG = 'RejectedByWatchdog';
-    const STATUS_INVALID_FILE_FORMAT = 'InvalidFileFormat';
-    const STATUS_UNKNOWN = 'Unknown';
-    const STATUS_FAILED = 'Failed';
-    const STATUS_EXCEEDS_ALLOWED_CONTACT_LIMIT = 'ExceedsAllowedContactLimit';
-    const STATUS_NOT_AVAILABLE_IN_THIS_VERSION = 'NotAvailableInThisVersion';
+    public const STATUS_ENUM_CODE = 'dm_import_status';
+    public const STATUS_NOT_FINISHED = 'NotFinished';
+    public const STATUS_FINISH = 'Finished';
+    public const STATUS_REJECTED_BY_WATCHDOG = 'RejectedByWatchdog';
+    public const STATUS_INVALID_FILE_FORMAT = 'InvalidFileFormat';
+    public const STATUS_UNKNOWN = 'Unknown';
+    public const STATUS_FAILED = 'Failed';
+    public const STATUS_EXCEEDS_ALLOWED_CONTACT_LIMIT = 'ExceedsAllowedContactLimit';
+    public const STATUS_NOT_AVAILABLE_IN_THIS_VERSION = 'NotAvailableInThisVersion';
 
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]

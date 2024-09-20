@@ -6,6 +6,7 @@ use DotMailer\Api\DataTypes\ApiCampaignList;
 use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\CampaignConnector;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOption;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 class CampaignImportTest extends AbstractImportExportTestCase
@@ -42,27 +43,35 @@ class CampaignImportTest extends AbstractImportExportTestCase
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $campaignRepository = $this->managerRegistry->getRepository(Campaign::class);
-        $replyActionRepository = $this->managerRegistry->getRepository(
-            ExtendHelper::buildEnumValueClassName('dm_cmp_reply_action')
-        );
-        $statusRepository = $this->managerRegistry->getRepository(
-            ExtendHelper::buildEnumValueClassName('dm_cmp_status')
-        );
+        $enumOptionRepository = $this->managerRegistry->getRepository(EnumOption::class);
 
         foreach ($expected as $campaign) {
-            $searchCriteria = [
-                'originId'     => $campaign['originId'],
-                'channel'      => $channel,
-                'name'         => $campaign['name'],
-                'subject'      => $campaign['subject'],
-                'fromName'     => $campaign['fromName'],
-                'fromAddress'  => $campaign['fromAddress'],
-                'reply_action' => $replyActionRepository->find($campaign['reply_action']),
-                'isSplitTest'  => $campaign['isSplitTest'],
-                'status'       => $statusRepository->find($campaign['status']),
-            ];
+            $queryBuilder = $campaignRepository->createQueryBuilder('c');
+            $queryBuilder->select('c')
+                ->andWhere('c.originId = :originId')
+                ->andWhere('c.channel = :channel')
+                ->andWhere('c.name = :name')
+                ->andWhere('c.subject = :subject')
+                ->andWhere('c.fromName = :fromName')
+                ->andWhere('c.fromAddress = :fromAddress')
+                ->andWhere("JSON_EXTRACT(c.serialized_data, 'reply_action') = :replyAction")
+                ->andWhere("JSON_EXTRACT(c.serialized_data, 'status') = :status")
+                ->andWhere('c.isSplitTest = :isSplitTest')
+                ->setParameter('originId', $campaign['originId'])
+                ->setParameter('channel', $channel)
+                ->setParameter('name', $campaign['name'])
+                ->setParameter('subject', $campaign['subject'])
+                ->setParameter('fromName', $campaign['fromName'])
+                ->setParameter('fromAddress', $campaign['fromAddress'])
+                ->setParameter('replyAction', $enumOptionRepository->find(
+                    ExtendHelper::buildEnumOptionId('dm_cmp_reply_action', $campaign['reply_action'])
+                )->getId())
+                ->setParameter('isSplitTest', $campaign['isSplitTest'])
+                ->setParameter('status', $enumOptionRepository->find(
+                    ExtendHelper::buildEnumOptionId('dm_cmp_status', $campaign['status'])
+                )->getId());
 
-            $campaignEntities = $campaignRepository->findBy($searchCriteria);
+            $campaignEntities = $queryBuilder->getQuery()->getResult();
 
             $this->assertCount(1, $campaignEntities);
             /** @var Campaign $actualCampaign */

@@ -204,8 +204,6 @@ abstract class AbstractActivityIterator extends AbstractIterator
 
     /**
      * Get type of marketing activity
-     *
-     * @return string
      */
-    abstract protected function getMarketingActivityType();
+    abstract protected function getMarketingActivityType(): string;
 }

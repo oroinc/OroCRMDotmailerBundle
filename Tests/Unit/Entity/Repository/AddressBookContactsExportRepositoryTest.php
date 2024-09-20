@@ -6,7 +6,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactsExportRepository;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOptionInterface;
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 class AddressBookContactsExportRepositoryTest extends \PHPUnit\Framework\TestCase
 {
@@ -22,7 +23,7 @@ class AddressBookContactsExportRepositoryTest extends \PHPUnit\Framework\TestCas
     /**
      * @dataProvider errorStatusDataProvider
      */
-    public function testIsErrorStatus(AbstractEnumValue $status, bool $expected)
+    public function testIsErrorStatus(EnumOptionInterface $status, bool $expected)
     {
         $this->assertSame($expected, $this->repository->isErrorStatus($status));
     }
@@ -41,12 +42,15 @@ class AddressBookContactsExportRepositoryTest extends \PHPUnit\Framework\TestCas
         ];
     }
 
-    private function getEnumStatus(string $statusValue)
+    private function getEnumStatus(string $statusValue): EnumOptionInterface
     {
-        $status = $this->createMock(AbstractEnumValue::class);
+        $status = $this->createMock(EnumOptionInterface::class);
+        $status->expects($this->any())
+            ->method('getInternalId')
+            ->willReturn($statusValue);
         $status->expects($this->any())
             ->method('getId')
-            ->willReturn($statusValue);
+            ->willReturn(ExtendHelper::buildEnumOptionId(AddressBookContactsExport::STATUS_ENUM_CODE, $statusValue));
 
         return $status;
     }

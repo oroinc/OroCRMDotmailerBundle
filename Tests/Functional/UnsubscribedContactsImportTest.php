@@ -7,6 +7,7 @@ use DotMailer\Api\DataTypes\ApiContactStatuses;
 use DotMailer\Api\DataTypes\ApiContactSuppressionList;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
+use Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\UnsubscribedContactConnector;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData;
@@ -54,19 +55,19 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
         $log = $this->formatImportExportJobLog($jobLog);
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
+        /** @var ContactRepository $contactRepository */
         $contactRepository = $this->managerRegistry->getRepository(Contact::class);
-        $statusRepository = $this->managerRegistry->getRepository(
-            ExtendHelper::buildEnumValueClassName('dm_cnt_status')
-        );
 
         foreach ($expected as $expectedContact) {
-            $searchCriteria = [
-                'originId' => $expectedContact['originId'],
-                'status'   => $statusRepository->find($expectedContact['status']),
-                'channel'  => $this->getReference($expectedContact['channel'])
-            ];
-
-            $actualContacts = $contactRepository->findBy($searchCriteria);
+            $actualContacts = $contactRepository->createQueryBuilder('sc')
+                ->andWhere('sc.originId = :originId')
+                ->andWhere('sc.channel = :channel')
+                ->andWhere("JSON_EXTRACT(sc.serialized_data, 'status') = :status")
+                ->setParameter('status', ExtendHelper::buildEnumOptionId('dm_cnt_status', $expectedContact['status']))
+                ->setParameter('channel', $this->getReference($expectedContact['channel']))
+                ->setParameter('originId', $expectedContact['originId'])
+                ->getQuery()
+                ->execute();
             $this->assertCount(1, $actualContacts);
             /** @var Contact $actualContact */
             $actualContact = $actualContacts[0];
@@ -83,7 +84,7 @@ class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
             $actualAddressBooks = [];
             /** @var AddressBookContact $addressBookContact */
             foreach ($actualContact->getAddressBookContacts()->toArray() as $addressBookContact) {
-                if ($addressBookContact->getStatus()->getId() === Contact::STATUS_SUBSCRIBED) {
+                if ($addressBookContact->getStatus()->getInternalId() === Contact::STATUS_SUBSCRIBED) {
                     $actualAddressBooks[] = $addressBookContact->getAddressBook();
                 } elseif (!empty($expectedUnsubscribedDates[$addressBookContact->getAddressBook()->getId()])) {
                     $this->assertEquals(

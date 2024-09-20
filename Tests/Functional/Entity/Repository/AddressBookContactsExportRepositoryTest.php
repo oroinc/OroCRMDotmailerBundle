@@ -39,7 +39,7 @@ class AddressBookContactsExportRepositoryTest extends WebTestCase
         /** @var AddressBookContactsExport $export */
         $export = $this->getReference('oro_dotmailer.address_book_contacts_export.first');
 
-        $this->assertEquals(AddressBookContactsExport::STATUS_NOT_FINISHED, $export->getStatus()->getId());
+        $this->assertEquals(AddressBookContactsExport::STATUS_NOT_FINISHED, $export->getStatus()->getInternalId());
         $status = $this->repository->getStatus(AddressBookContactsExport::STATUS_UNKNOWN);
 
         $this->repository->updateAddressBookContactsStatus($export, $status);
@@ -47,6 +47,6 @@ class AddressBookContactsExportRepositoryTest extends WebTestCase
         $em = static::getContainer()->get('doctrine')->getManagerForClass(AddressBookContactsExport::class);
         $em->refresh($export);
 
-        $this->assertEquals(AddressBookContactsExport::STATUS_UNKNOWN, $export->getStatus()->getId());
+        $this->assertEquals(AddressBookContactsExport::STATUS_UNKNOWN, $export->getStatus()->getInternalId());
     }
 }
