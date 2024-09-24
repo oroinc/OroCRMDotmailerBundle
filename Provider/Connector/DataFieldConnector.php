@@ -25,6 +25,7 @@ class DataFieldConnector extends AbstractDotmailerConnector
     /**
      * If no sync was running, keep previous sync date
      */
+    #[\Override]
     protected function updateContextLastSyncDate(\DateTime $date = null)
     {
         if ($this->getSourceIterator() instanceof \EmptyIterator) {
@@ -34,9 +35,7 @@ class DataFieldConnector extends AbstractDotmailerConnector
         parent::updateContextLastSyncDate($date);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getConnectorSource()
     {
         $this->logger->info('Importing Data Fields.');
@@ -68,25 +67,19 @@ class DataFieldConnector extends AbstractDotmailerConnector
         return $this->transport->getDataFields();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getLabel(): string
     {
         return 'oro.dotmailer.connector.data_field.label';
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getImportJobName()
     {
         return self::IMPORT_JOB;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getType()
     {
         return self::TYPE;

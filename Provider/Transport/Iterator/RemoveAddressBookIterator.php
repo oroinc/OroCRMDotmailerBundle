@@ -33,9 +33,7 @@ class RemoveAddressBookIterator extends AbstractIterator
         $this->keepAddressBooks = $keepAddressBooks;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getItems($take, $skip)
     {
         $addressBookForRemoveQB = $this->registry

@@ -158,6 +158,7 @@ class AddressBookContactsExport implements ChannelAwareInterface, ExtendEntityIn
     /**
      * @return Channel
      */
+    #[\Override]
     public function getChannel()
     {
         return $this->channel;
@@ -168,6 +169,7 @@ class AddressBookContactsExport implements ChannelAwareInterface, ExtendEntityIn
      *
      * @return AddressBookContactsExport
      */
+    #[\Override]
     public function setChannel(Channel $channel = null)
     {
         $this->channel = $channel;

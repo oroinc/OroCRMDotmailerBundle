@@ -9,9 +9,7 @@ abstract class OverlapIterator extends AbstractIterator
      */
     protected $overlap = 100;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function tryToLoadItems($skip = 0)
     {
         $overlap = $this->getOverlapSize();

@@ -18,6 +18,7 @@ class DataFieldRemoveListenerTest extends \PHPUnit\Framework\TestCase
     /** @var DataFieldRemoveListener */
     private $listener;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dataFieldManager = $this->createMock(DataFieldManager::class);

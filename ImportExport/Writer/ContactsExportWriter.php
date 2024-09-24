@@ -79,9 +79,7 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
         $this->logHelper = $logHelper;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function write(array $items)
     {
         /** @var EntityManager $manager */
@@ -199,6 +197,7 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
         $this->logger->info($message);
     }
 
+    #[\Override]
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;

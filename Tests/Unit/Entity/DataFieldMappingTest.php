@@ -14,6 +14,7 @@ class DataFieldMappingTest extends \PHPUnit\Framework\TestCase
 
     private DataFieldMapping $entity;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->entity = new DataFieldMapping();

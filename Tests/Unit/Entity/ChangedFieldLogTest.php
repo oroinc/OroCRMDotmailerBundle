@@ -11,6 +11,7 @@ class ChangedFieldLogTest extends \PHPUnit\Framework\TestCase
 
     private ChangedFieldLog $entity;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->entity = new ChangedFieldLog();

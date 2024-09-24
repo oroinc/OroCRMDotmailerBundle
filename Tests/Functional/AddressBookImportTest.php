@@ -10,6 +10,7 @@ use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 class AddressBookImportTest extends AbstractImportExportTestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

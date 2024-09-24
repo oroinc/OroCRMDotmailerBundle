@@ -45,9 +45,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
         $this->mappingProvider = $mappingProvider;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function afterProcessEntity($entity)
     {
         /** @var Contact $entity */
@@ -115,9 +113,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
         $addressBookContact->setEntityUpdated(false);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function importExistingEntity(
         $entity,
         $existingEntity,
@@ -195,9 +191,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
         return $this->getAddressBookByOriginId($addressBookOriginId);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function findProcessedEntity($entity, array $searchContext = [])
     {
         if (!$entity instanceof Contact) {
@@ -244,9 +238,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function isFieldExcluded($entityName, $fieldName, $itemData = null)
     {
         if (in_array($fieldName, $this->alwaysAllowedFields, true)) {
@@ -279,9 +271,7 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
         $addressBookContact->setExportOperationType($operationType);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function assertEnvironment($entity)
     {
         if (!$this->mappingProvider) {

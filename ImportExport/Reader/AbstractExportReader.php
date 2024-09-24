@@ -48,9 +48,7 @@ abstract class AbstractExportReader extends AbstractReader
             ->getAddressBooksToSync($this->getChannel(), $addressBookId);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function read()
     {
         $iterator = $this->getSourceIterator();
@@ -83,9 +81,7 @@ abstract class AbstractExportReader extends AbstractReader
         return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function setSourceIterator(\Iterator $sourceIterator = null)
     {
         parent::setSourceIterator($sourceIterator);

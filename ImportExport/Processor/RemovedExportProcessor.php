@@ -34,9 +34,7 @@ class RemovedExportProcessor implements StepExecutionAwareProcessor
         $this->contextRegistry = $contextRegistry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function process($item)
     {
         if (is_array($item)) {
@@ -51,6 +49,7 @@ class RemovedExportProcessor implements StepExecutionAwareProcessor
         return $item;
     }
 
+    #[\Override]
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;

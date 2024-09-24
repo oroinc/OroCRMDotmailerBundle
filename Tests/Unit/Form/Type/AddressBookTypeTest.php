@@ -20,9 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 
 class AddressBookTypeTest extends FormIntegrationTestCase
 {
-    /**
-     * {@inheritDoc}
-     */
+    #[\Override]
     protected function getExtensions(): array
     {
         return [

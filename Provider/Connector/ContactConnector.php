@@ -13,9 +13,7 @@ class ContactConnector extends AbstractDotmailerConnector
     const IMPORT_JOB = 'dotmailer_new_contacts';
     const PROCESSED_ADDRESS_BOOK_IDS = 'processed_address_book_ids';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getConnectorSource()
     {
         $addressBooksToSynchronize = $this->managerRegistry
@@ -30,25 +28,19 @@ class ContactConnector extends AbstractDotmailerConnector
         return $this->transport->getAddressBookContacts($addressBooksToSynchronize);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getLabel(): string
     {
         return 'oro.dotmailer.connector.contact.label';
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getImportJobName()
     {
         return self::IMPORT_JOB;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getType()
     {
         return self::TYPE;

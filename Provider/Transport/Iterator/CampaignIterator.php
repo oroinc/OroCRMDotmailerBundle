@@ -13,9 +13,6 @@ class CampaignIterator extends AbstractIterator
      */
     protected $dotmailerResources;
 
-    /**
-     * {@inheritdoc}
-     */
     protected $batchSize = 100;
 
     /**
@@ -39,6 +36,7 @@ class CampaignIterator extends AbstractIterator
      *
      * @return array
      */
+    #[\Override]
     protected function getItems($take, $skip)
     {
         $items = $this->dotmailerResources

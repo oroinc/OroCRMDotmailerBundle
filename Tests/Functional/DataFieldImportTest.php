@@ -13,6 +13,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Status;
 
 class DataFieldImportTest extends AbstractImportExportTestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

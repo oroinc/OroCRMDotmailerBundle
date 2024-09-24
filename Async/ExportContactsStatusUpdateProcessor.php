@@ -74,9 +74,7 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
         $this->jobProcessor = $jobProcessor;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function process(MessageInterface $message, SessionInterface $session)
     {
         $messageBody = $message->getBody();
@@ -152,9 +150,7 @@ class ExportContactsStatusUpdateProcessor implements MessageProcessorInterface, 
         return $integration;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public static function getSubscribedTopics()
     {
         return [ExportContactsStatusUpdateTopic::getName()];

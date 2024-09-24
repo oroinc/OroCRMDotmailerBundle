@@ -80,9 +80,7 @@ class LoadEnumValues extends AbstractEnumFixture
         ]
     ];
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         /** @var EntityManagerInterface $manager */

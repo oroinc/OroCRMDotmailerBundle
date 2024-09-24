@@ -7,9 +7,7 @@ namespace Oro\Bundle\DotmailerBundle\Autocomplete;
  */
 class AddressBooksSearchHandler extends ChannelAwareSearchHandler
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function searchEntities($search, $firstResult, $maxResults)
     {
         list($searchTerm, $channelId, $marketingListId) = explode(';', $search);

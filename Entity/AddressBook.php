@@ -148,6 +148,7 @@ class AddressBook implements OriginAwareInterface, ExtendEntityInterface
     /**
      * @return Channel
      */
+    #[\Override]
     public function getChannel()
     {
         return $this->channel;
@@ -158,6 +159,7 @@ class AddressBook implements OriginAwareInterface, ExtendEntityInterface
      *
      * @return AddressBook
      */
+    #[\Override]
     public function setChannel(Channel $channel)
     {
         $this->channel = $channel;

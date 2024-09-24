@@ -4,6 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Writer;
 
 class RemoveCampaignWriter extends ImportWriter
 {
+    #[\Override]
     protected function logBatchInfo(array $items)
     {
         $itemsCount = count($items);

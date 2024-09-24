@@ -200,9 +200,7 @@ class DotmailerController extends AbstractController
         return $channel;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public static function getSubscribedServices(): array
     {
         return array_merge(

@@ -12,9 +12,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RejectedContactExport
  */
 class RejectedContactExportReader extends AbstractReader
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function initializeReader()
     {
         if (!$channel = $this->getChannel()) {

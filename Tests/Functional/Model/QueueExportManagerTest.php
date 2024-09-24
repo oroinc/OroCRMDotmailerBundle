@@ -22,6 +22,7 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
 {
     private QueueExportManager $target;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -30,6 +31,7 @@ class QueueExportManagerTest extends AbstractImportExportTestCase
         $this->target = $this->getContainer()->get('oro_dotmailer.queue_export_manager');
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

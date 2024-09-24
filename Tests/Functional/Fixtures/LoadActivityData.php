@@ -35,9 +35,7 @@ class LoadActivityData extends AbstractFixture implements DependentFixtureInterf
         ]
     ];
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function load(ObjectManager $manager)
     {
         foreach ($this->data as $item) {
@@ -60,9 +58,7 @@ class LoadActivityData extends AbstractFixture implements DependentFixtureInterf
         $manager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getDependencies()
     {
         return [

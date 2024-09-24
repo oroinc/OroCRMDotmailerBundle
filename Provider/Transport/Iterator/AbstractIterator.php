@@ -34,17 +34,13 @@ abstract class AbstractIterator implements \Iterator
      */
     protected $lastPage = false;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function current(): mixed
     {
         return current($this->items);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function next(): void
     {
         if (next($this->items) !== false || $this->tryToLoadItems($this->currentItemIndex + 1)) {
@@ -78,26 +74,20 @@ abstract class AbstractIterator implements \Iterator
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function key(): int
     {
         return $this->currentItemIndex;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function valid(): bool
     {
         $isValid = $this->isValid && current($this->items) !== false;
         return $isValid;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function rewind(): void
     {
         $this->lastPage = false;

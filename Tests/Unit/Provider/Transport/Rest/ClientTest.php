@@ -24,6 +24,7 @@ class ClientTest extends \PHPUnit\Framework\TestCase
     /** @var Client */
     private $client;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->response = $this->createMock(Response::class);

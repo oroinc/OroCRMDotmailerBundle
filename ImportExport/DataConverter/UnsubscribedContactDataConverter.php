@@ -7,9 +7,7 @@ use Oro\Bundle\ImportExportBundle\Converter\DataConverterInterface;
 
 class UnsubscribedContactDataConverter implements DataConverterInterface
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function convertToImportFormat(array $importedRecord, $skipNullValues = true)
     {
         $contact = $importedRecord['suppressedcontact'];
@@ -63,9 +61,7 @@ class UnsubscribedContactDataConverter implements DataConverterInterface
         $destination[$destinationFieldName] = isset($source[$sourceFieldName]) ? $source[$sourceFieldName] : null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function convertToExportFormat(array $exportedRecord, $skipNullValues = true)
     {
         throw new \Exception('Normalization is not implemented!');

@@ -11,6 +11,7 @@ class CampaignSummaryTest extends \PHPUnit\Framework\TestCase
 {
     private CampaignSummary $entity;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->entity = new CampaignSummary();

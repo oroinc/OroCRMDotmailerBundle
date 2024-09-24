@@ -13,9 +13,7 @@ class ActivityContactConnector extends AbstractDotmailerConnector
     const TYPE = 'activity_contact';
     const JOB_IMPORT = 'dotmailer_activity_contact_import';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getConnectorSource()
     {
         // Synchronize only campaign activities that are connected to marketing list.
@@ -36,25 +34,19 @@ class ActivityContactConnector extends AbstractDotmailerConnector
         return $this->transport->getActivityContacts($campaignsToSynchronize, $this->getLastSyncDate());
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getLabel(): string
     {
         return 'oro.dotmailer.connector.activity_contact.label';
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getImportJobName()
     {
         return self::JOB_IMPORT;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getType()
     {
         return self::TYPE;

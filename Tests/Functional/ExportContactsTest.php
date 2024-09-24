@@ -18,6 +18,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 class ExportContactsTest extends AbstractImportExportTestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

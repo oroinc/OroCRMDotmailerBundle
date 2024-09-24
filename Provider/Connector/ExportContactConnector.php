@@ -29,9 +29,7 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
      */
     protected $exportManager;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getConnectorSource()
     {
         $this->logger->info('Preparing Contacts for Export');
@@ -63,33 +61,25 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
             ->getAddressBooksToSync($this->getChannel(), $addressBookId);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getLabel(): string
     {
         return 'oro.dotmailer.connector.contact_export.label';
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getImportJobName()
     {
         return self::EXPORT_JOB;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getType()
     {
         return self::TYPE;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function isAllowed(Channel $integration, array $processedConnectorsStatuses)
     {
         return $this->exportManager->isExportFinished($integration)

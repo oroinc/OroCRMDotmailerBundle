@@ -10,6 +10,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemovedContactsExport
  */
 class RemovedContactExportReader extends AbstractExportReader
 {
+    #[\Override]
     protected function initializeReader()
     {
         $this->logger->info('Exporting Removed Contacts');

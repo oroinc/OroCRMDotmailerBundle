@@ -18,10 +18,7 @@ class ImportStrategyHelperWithLog extends ImportStrategyHelper
         $this->logger = $logger;
     }
 
-    /**
-     * @inheritdoc
-     * Log errors with logger directly. Add item's origin id, if possible, to help identify invalid record
-     */
+    #[\Override]
     public function addValidationErrors(array $validationErrors, ContextInterface $context, $errorPrefix = null)
     {
         if (null === $errorPrefix) {

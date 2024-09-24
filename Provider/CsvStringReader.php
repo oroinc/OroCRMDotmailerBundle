@@ -98,9 +98,6 @@ class CsvStringReader
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read()
     {
         if ($this->getFile()->eof()) {

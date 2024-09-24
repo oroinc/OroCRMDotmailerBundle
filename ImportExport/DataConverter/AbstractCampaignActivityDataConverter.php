@@ -6,9 +6,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AbstractActivityItera
 
 abstract class AbstractCampaignActivityDataConverter extends AbstractDataConverter
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getHeaderConversionRules()
     {
         $defaultMapping =  [
@@ -22,9 +20,7 @@ abstract class AbstractCampaignActivityDataConverter extends AbstractDataConvert
         return array_merge($defaultMapping, $this->getSpecificHeaderConversionRules());
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getBackendHeader()
     {
         throw new \Exception('Normalization is not implemented!');

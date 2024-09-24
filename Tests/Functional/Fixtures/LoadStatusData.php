@@ -85,9 +85,7 @@ class LoadStatusData extends BaseAbstractFixture implements DependentFixtureInte
         ],
     ];
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         foreach ($this->data as $item) {
@@ -104,9 +102,7 @@ class LoadStatusData extends BaseAbstractFixture implements DependentFixtureInte
         $manager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getDependencies(): array
     {
         return [

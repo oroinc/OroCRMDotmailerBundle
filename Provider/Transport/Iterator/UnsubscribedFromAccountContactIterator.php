@@ -28,9 +28,7 @@ class UnsubscribedFromAccountContactIterator extends OverlapIterator
         $this->lastSyncDate = $lastSyncDate;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getItems($take, $skip)
     {
         /** @var ApiContactSuppressionList $contacts */

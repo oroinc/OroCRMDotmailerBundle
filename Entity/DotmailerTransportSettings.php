@@ -38,9 +38,7 @@ class DotmailerTransportSettings extends TransportSettings
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getSettingsBag()
     {
         if (null === $this->settings) {

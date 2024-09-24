@@ -9,9 +9,7 @@ class AddressBookStrategy extends AddOrReplaceStrategy
 {
     const EXISTING_ADDRESS_BOOKS_ORIGIN_IDS = 'existingAddressBooksOriginIds';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function beforeProcessEntity($entity)
     {
         $entity = parent::beforeProcessEntity($entity);

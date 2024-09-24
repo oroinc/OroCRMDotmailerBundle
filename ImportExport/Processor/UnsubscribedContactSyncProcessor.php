@@ -41,9 +41,7 @@ class UnsubscribedContactSyncProcessor implements ItemProcessorInterface, StepEx
         $this->contextRegistry = $contextRegistry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function process($item)
     {
         $items = $this->context->getValue(self::CURRENT_BATCH_READ_ITEMS) ?: [];
@@ -62,6 +60,7 @@ class UnsubscribedContactSyncProcessor implements ItemProcessorInterface, StepEx
         return $marketingListUnsubscribedItem;
     }
 
+    #[\Override]
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->context = $this->contextRegistry->getByStepExecution($stepExecution);

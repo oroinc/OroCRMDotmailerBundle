@@ -35,9 +35,6 @@ abstract class AbstractActivityIterator extends AbstractIterator
      */
     protected $additionalResource;
 
-    /**
-     * {@inheritdoc}
-     */
     protected $batchSize = 1000;
 
     /**
@@ -115,6 +112,7 @@ abstract class AbstractActivityIterator extends AbstractIterator
      *
      * @return array
      */
+    #[\Override]
     protected function getItems($take, $skip)
     {
         if (!$this->isInit || is_null($this->lastSyncDate)) {

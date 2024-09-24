@@ -11,6 +11,7 @@ use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 class CampaignImportTest extends AbstractImportExportTestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

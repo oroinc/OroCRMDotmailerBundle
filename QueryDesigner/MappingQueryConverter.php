@@ -31,6 +31,7 @@ class MappingQueryConverter extends QueryBuilderGroupingOrmQueryConverter
     /**
      * Performs conversion of SELECT statement
      */
+    #[\Override]
     protected function addSelectStatement(): void
     {
         $context = $this->context();
@@ -53,17 +54,13 @@ class MappingQueryConverter extends QueryBuilderGroupingOrmQueryConverter
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function addTableAliasForRootEntity(): void
     {
         $this->context()->setRootTableAlias($this->context()->getRootEntityAlias());
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function addSelectColumn(
         string $entityClass,
         string $tableAlias,
@@ -78,81 +75,61 @@ class MappingQueryConverter extends QueryBuilderGroupingOrmQueryConverter
         //not used
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function addFromStatement(string $entityClass, string $tableAlias): void
     {
         // nothing to do
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function saveTableAliases(array $tableAliases): void
     {
         // nothing to do
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function saveColumnAliases(array $columnAliases): void
     {
         // nothing to do
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function addWhereStatement(): void
     {
         // do nothing, where is not used
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function addGroupByColumn(string $columnAlias): void
     {
         // do nothing, grouping is not allowed
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function addOrderByColumn(string $columnAlias, string $columnSorting): void
     {
         // do nothing, order could not change results
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function beginWhereGroup(): void
     {
         // do nothing, where is not used
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function endWhereGroup(): void
     {
         // do nothing, where is not used
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function addWhereOperator(string $operator): void
     {
         // do nothing, where is not used
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function addWhereCondition(
         string $entityClass,
         string $tableAlias,

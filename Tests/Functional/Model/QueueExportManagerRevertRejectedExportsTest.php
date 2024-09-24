@@ -17,6 +17,7 @@ class QueueExportManagerRevertRejectedExportsTest extends AbstractImportExportTe
 {
     private QueueExportManager $target;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

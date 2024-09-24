@@ -48,9 +48,7 @@ class RejectedContactExportProcessor implements StepExecutionAwareProcessor
         $this->registry = $registry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function process($item)
     {
         if (!$item instanceof AddressBookContact) {
@@ -88,9 +86,7 @@ class RejectedContactExportProcessor implements StepExecutionAwareProcessor
         return $item;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;

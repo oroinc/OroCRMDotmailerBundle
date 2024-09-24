@@ -11,6 +11,7 @@ use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 
 class MarketingActivityImportTest extends AbstractImportExportTestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

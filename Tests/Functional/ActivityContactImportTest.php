@@ -10,6 +10,7 @@ use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadStatusData;
 
 class ActivityContactImportTest extends AbstractImportExportTestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

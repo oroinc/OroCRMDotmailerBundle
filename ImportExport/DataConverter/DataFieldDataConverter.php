@@ -9,9 +9,7 @@ class DataFieldDataConverter extends AbstractTableDataConverter
 {
     const EMPTY_DEFAULT_VALUE = 'null';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getHeaderConversionRules()
     {
         return [
@@ -22,9 +20,7 @@ class DataFieldDataConverter extends AbstractTableDataConverter
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function convertToImportFormat(array $importedRecord, $skipNullValues = true)
     {
         if (isset($importedRecord['defaultvalue'])) {
@@ -48,6 +44,7 @@ class DataFieldDataConverter extends AbstractTableDataConverter
      *
      * @return array
      */
+    #[\Override]
     protected function getBackendHeader()
     {
         return ['name', 'visibility', 'type', 'defaultvalue'];

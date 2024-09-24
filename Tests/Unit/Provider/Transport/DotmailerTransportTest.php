@@ -39,6 +39,7 @@ class DotmailerTransportTest extends \PHPUnit\Framework\TestCase
     /** @var DotmailerTransport */
     private $target;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->factory = $this->createMock(DotmailerResourcesFactory::class);

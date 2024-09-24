@@ -50,9 +50,7 @@ class DataFieldTypeTest extends FormIntegrationTestCase
         $this->assertEquals($expectedData, $form->getData());
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    #[\Override]
     protected function getExtensions(): array
     {
         $subscriber = $this->getMockBuilder(DataFieldFormSubscriber::class)

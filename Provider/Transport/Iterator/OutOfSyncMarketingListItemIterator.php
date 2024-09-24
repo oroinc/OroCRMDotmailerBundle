@@ -13,9 +13,7 @@ class OutOfSyncMarketingListItemIterator extends AbstractMarketingListItemIterat
 {
     const MARKETING_LIST = 'marketingList';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getItems($take, $skip)
     {
         $items = parent::getItems($take, $skip);
@@ -31,6 +29,7 @@ class OutOfSyncMarketingListItemIterator extends AbstractMarketingListItemIterat
      *
      * @return QueryBuilder
      */
+    #[\Override]
     protected function getIteratorQueryBuilder(AddressBook $addressBook)
     {
         $currentItemsInBatch = $this->importExportContext
@@ -43,6 +42,7 @@ class OutOfSyncMarketingListItemIterator extends AbstractMarketingListItemIterat
     /**
      * Clear cache after Append Iterator starts to iterate new iterator with different Address Book
      */
+    #[\Override]
     public function rewind(): void
     {
         $this->importExportContext

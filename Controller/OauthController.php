@@ -104,9 +104,7 @@ class OauthController extends AbstractController
         return $this->redirectToRoute('oro_dotmailer_integration_connection', ['id' => $channel->getId()]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public static function getSubscribedServices(): array
     {
         return array_merge(

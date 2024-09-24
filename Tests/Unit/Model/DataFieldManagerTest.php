@@ -19,6 +19,7 @@ class DataFieldManagerTest extends \PHPUnit\Framework\TestCase
     /** @var DataFieldManager */
     private $manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->transport = $this->createMock(DotmailerTransport::class);

@@ -93,6 +93,7 @@ abstract class AbstractDotmailerConnector extends AbstractConnector
         return $status;
     }
 
+    #[\Override]
     protected function initializeFromContext(ContextInterface $context)
     {
         if (!$this->contextMediator->getChannel($context)) {
@@ -130,9 +131,7 @@ abstract class AbstractDotmailerConnector extends AbstractConnector
         return $this->contextMediator->getChannel($this->getContext());
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getImportEntityFQCN()
     {
         return $this->entityName;

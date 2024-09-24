@@ -50,8 +50,8 @@ class DataFieldMappingConfigValidator extends ConstraintValidator
      * @param DataFieldMappingConfig             $entity
      * @param DataFieldMappingConfigConstraint $constraint
      *
-     * {@inheritdoc}
      */
+    #[\Override]
     public function validate($entity, Constraint $constraint)
     {
         if (!$entity instanceof DataFieldMappingConfig) {

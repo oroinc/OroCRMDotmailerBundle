@@ -8,9 +8,7 @@ class DataFieldStrategy extends AddOrReplaceStrategy
 {
     const EXISTING_DATAFIELDS_NAMES = 'existingDataFieldsNames';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function findExistingEntity($entity, array $searchContext = [])
     {
         if ($entity instanceof $this->entityName) {

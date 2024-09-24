@@ -15,9 +15,7 @@ class OroDotmailerBundle implements Migration, OutdatedExtendExtensionAwareInter
 {
     use OutdatedExtendExtensionAwareTrait;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function up(Schema $schema, QueryBag $queries)
     {
         $table = $schema->getTable('orocrm_dm_ab_cnt_export');

@@ -14,6 +14,7 @@ class ButtonFilterTest extends \PHPUnit\Framework\TestCase
     /** @var ButtonFilter */
     private $target;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->fieldsProvider = $this->createMock(ContactInformationFieldsProvider::class);

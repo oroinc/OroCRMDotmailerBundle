@@ -8,9 +8,7 @@ abstract class AbstractDataConverter extends AbstractTableDataConverter
 {
     const NULL_VALUE = 'null';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function removeEmptyColumns(array $data, $skipNullValues)
     {
         $data = parent::removeEmptyColumns($data, $skipNullValues);

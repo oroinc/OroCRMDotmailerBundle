@@ -4,9 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
 class ActivityContactDataConverter extends AbstractDataConverter
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getHeaderConversionRules()
     {
         return [
@@ -28,9 +26,7 @@ class ActivityContactDataConverter extends AbstractDataConverter
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getBackendHeader()
     {
         return

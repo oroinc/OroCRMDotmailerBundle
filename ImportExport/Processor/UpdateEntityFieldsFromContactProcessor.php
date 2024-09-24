@@ -6,9 +6,7 @@ class UpdateEntityFieldsFromContactProcessor extends ImportProcessor
 {
     const PROCESSED_CONTACT_IDS = 'processedContactIds';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function process($item)
     {
         if ($item['entityClass']) {

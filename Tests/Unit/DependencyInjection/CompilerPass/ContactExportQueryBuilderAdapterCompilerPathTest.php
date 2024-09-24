@@ -10,6 +10,7 @@ class ContactExportQueryBuilderAdapterCompilerPathTest extends \PHPUnit\Framewor
 {
     private ContactExportQueryBuilderAdapterCompilerPath $compiler;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->compiler = new ContactExportQueryBuilderAdapterCompilerPath();

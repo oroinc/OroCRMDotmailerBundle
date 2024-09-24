@@ -12,6 +12,7 @@ use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadMarketingListUnsubs
 
 class RemovedContactsExportTest extends AbstractImportExportTestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -6,9 +6,7 @@ use Oro\Bundle\ImportExportBundle\Strategy\Import\ConfigurableAddOrReplaceStrate
 
 class UpdateEntityFieldsFromContactStrategy extends AddOrReplaceStrategy
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function beforeProcessEntity($entity)
     {
         //update owner for new entities
@@ -21,17 +19,13 @@ class UpdateEntityFieldsFromContactStrategy extends AddOrReplaceStrategy
         return ConfigurableAddOrReplaceStrategy::beforeProcessEntity($entity);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function assertEnvironment($entity)
     {
         ConfigurableAddOrReplaceStrategy::assertEnvironment($entity);
     }
 
-    /**
-     * @inheritdoc
-     */
+    #[\Override]
     protected function isFieldExcluded($entityName, $fieldName, $itemData = null)
     {
         /**

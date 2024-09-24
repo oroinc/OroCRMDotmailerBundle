@@ -10,9 +10,7 @@ use Oro\Bundle\FormBundle\Autocomplete\SearchHandler;
  */
 class ChannelAwareSearchHandler extends SearchHandler
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function checkAllDependenciesInjected()
     {
         if (!$this->entityRepository || !$this->idFieldName) {
@@ -42,9 +40,7 @@ class ChannelAwareSearchHandler extends SearchHandler
         return $queryBuilder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function searchEntities($search, $firstResult, $maxResults)
     {
         list($searchTerm, $channelId) = explode(';', $search);
@@ -54,9 +50,7 @@ class ChannelAwareSearchHandler extends SearchHandler
         return $query->getResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function findById($query)
     {
         $parts = explode(';', $query);

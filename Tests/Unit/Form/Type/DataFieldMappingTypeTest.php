@@ -27,6 +27,7 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
 {
     private DataFieldMappingType $formType;
 
+    #[\Override]
     protected function setUp(): void
     {
         $subscriber = $this->getMockBuilder(DataFieldMappingFormSubscriber::class)
@@ -39,9 +40,7 @@ class DataFieldMappingTypeTest extends FormIntegrationTestCase
         parent::setUp();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    #[\Override]
     protected function getExtensions(): array
     {
         return [

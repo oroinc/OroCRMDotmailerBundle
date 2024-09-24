@@ -19,9 +19,7 @@ use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
  */
 class NotExportedContactStrategy extends AbstractImportStrategy
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function process($entity)
     {
         if (!$entity instanceof AddressBookContact) {

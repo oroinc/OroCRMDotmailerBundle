@@ -31,9 +31,7 @@ class ContactSyncDataConverter extends AbstractDataConverter implements ContextA
     /** @var CacheProvider */
     protected $cacheProvider;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function setImportExportContext(ContextInterface $context)
     {
         $this->context = $context;
@@ -49,9 +47,7 @@ class ContactSyncDataConverter extends AbstractDataConverter implements ContextA
         $this->cacheProvider = $cacheProvider;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getHeaderConversionRules()
     {
         return [
@@ -62,9 +58,7 @@ class ContactSyncDataConverter extends AbstractDataConverter implements ContextA
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function convertToImportFormat(array $importedRecord, $skipNullValues = true)
     {
         $dataFields = $this->getChannelDataFields();
@@ -137,9 +131,7 @@ class ContactSyncDataConverter extends AbstractDataConverter implements ContextA
         return $dataFields;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getBackendHeader()
     {
         return [];

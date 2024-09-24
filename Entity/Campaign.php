@@ -168,6 +168,7 @@ class Campaign implements OriginAwareInterface, ExtendEntityInterface
     /**
      * @return Channel
      */
+    #[\Override]
     public function getChannel()
     {
         return $this->channel;
@@ -178,6 +179,7 @@ class Campaign implements OriginAwareInterface, ExtendEntityInterface
      *
      * @return Campaign
      */
+    #[\Override]
     public function setChannel(Channel $channel)
     {
         $this->channel = $channel;

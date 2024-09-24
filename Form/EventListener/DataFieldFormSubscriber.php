@@ -15,9 +15,7 @@ use Symfony\Component\Form\FormInterface;
  */
 class DataFieldFormSubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [

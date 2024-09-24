@@ -23,6 +23,7 @@ class SyncProcessorTest extends \PHPUnit\Framework\TestCase
     /** @var SyncProcessor */
     private $syncProcessor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->jobProcessor = $this->createMock(JobProcessor::class);

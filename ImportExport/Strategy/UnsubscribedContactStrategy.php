@@ -16,9 +16,7 @@ class UnsubscribedContactStrategy extends AbstractImportStrategy
 {
     const CACHED_ADDRESS_BOOK = 'cachedAddressBook';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function process($entity)
     {
         if (!$entity instanceof AddressBookContact) {

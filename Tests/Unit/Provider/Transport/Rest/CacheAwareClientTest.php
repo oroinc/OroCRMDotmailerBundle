@@ -14,6 +14,7 @@ class CacheAwareClientTest extends \PHPUnit\Framework\TestCase
 {
     private CacheAwareClient $client;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->client = new CacheAwareClient('namespace');

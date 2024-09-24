@@ -32,9 +32,6 @@ class DataFieldMappingConfigValidatorTest extends ConstraintValidatorTestCase
         parent::setUp();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function createValidator(): DataFieldMappingConfigValidator
     {
         return new DataFieldMappingConfigValidator($this->entityFieldProvider, $this->translator);

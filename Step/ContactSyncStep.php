@@ -10,9 +10,7 @@ use Oro\Bundle\BatchBundle\Step\ItemStep;
  */
 class ContactSyncStep extends ItemStep
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function doExecute(StepExecution $stepExecution)
     {
         parent::doExecute($stepExecution);

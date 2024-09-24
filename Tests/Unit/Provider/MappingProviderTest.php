@@ -32,6 +32,7 @@ class MappingProviderTest extends \PHPUnit\Framework\TestCase
     /** @var MappingProvider */
     private $mappingProvider;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->doctrineHelper = $this->createMock(DoctrineHelper::class);

@@ -11,9 +11,7 @@ class DataFieldSelectType extends CreateOrSelectInlineChannelAwareType
 {
     const NAME = 'oro_dotmailer_datafield_select';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
@@ -27,9 +25,7 @@ class DataFieldSelectType extends CreateOrSelectInlineChannelAwareType
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
@@ -41,25 +37,19 @@ class DataFieldSelectType extends CreateOrSelectInlineChannelAwareType
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getParent(): ?string
     {
         return CreateOrSelectInlineChannelAwareType::class;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getName()
     {
         return $this->getBlockPrefix();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return self::NAME;

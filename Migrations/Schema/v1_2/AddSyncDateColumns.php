@@ -13,9 +13,7 @@ class AddSyncDateColumns implements Migration, OrderedMigrationInterface, Rename
 {
     use RenameExtensionAwareTrait;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function up(Schema $schema, QueryBag $queries)
     {
         $this->renameLastSyncDateColumn($schema, $queries);
@@ -39,9 +37,7 @@ class AddSyncDateColumns implements Migration, OrderedMigrationInterface, Rename
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getOrder()
     {
         return 0;

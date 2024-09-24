@@ -4,9 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
 class CampaignDataConverter extends AbstractDataConverter
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getHeaderConversionRules()
     {
         return [
@@ -24,9 +22,7 @@ class CampaignDataConverter extends AbstractDataConverter
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function convertToImportFormat(array $importedRecord, $skipNullValues = true)
     {
         if (is_array($importedRecord['fromaddress'])) {
@@ -36,9 +32,7 @@ class CampaignDataConverter extends AbstractDataConverter
         return parent::convertToImportFormat($importedRecord, $skipNullValues);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getBackendHeader()
     {
         return

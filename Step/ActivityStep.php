@@ -16,9 +16,7 @@ class ActivityStep extends ItemStep
      */
     protected $processLogger;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function doExecute(StepExecution $stepExecution)
     {
         if ($this->processLogger) {

@@ -30,9 +30,7 @@ class ContactExportListener extends AbstractImportExportListener
         parent::__construct($registry);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return array(
@@ -78,9 +76,7 @@ class ContactExportListener extends AbstractImportExportListener
         $this->exportManager->updateAddressBooksSyncStatus($channel);
     }
 
-    /**
-     * @inheritdoc
-     */
+    #[\Override]
     protected function isApplicable(SyncEvent $syncEvent, $job)
     {
         return $syncEvent->getJobName() == $job;

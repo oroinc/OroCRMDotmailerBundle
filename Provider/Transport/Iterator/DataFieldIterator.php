@@ -16,9 +16,7 @@ class DataFieldIterator extends AbstractIterator
         $this->resources = $resources;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getItems($take, $skip)
     {
         $apiDataFieldsList = $this->resources->GetDataFields()->toArray();

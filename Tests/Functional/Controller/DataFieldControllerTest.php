@@ -10,6 +10,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
 {
     protected bool $isRealGridRequest = false;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -68,9 +69,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
         self::assertStringContainsString($returnValue['name'], $crawler->html());
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function gridProvider(): array
     {
         return [

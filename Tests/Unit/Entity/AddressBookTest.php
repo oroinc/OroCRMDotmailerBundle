@@ -13,6 +13,7 @@ class AddressBookTest extends \PHPUnit\Framework\TestCase
 {
     private AddressBook $entity;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->entity = new AddressBook();

@@ -24,9 +24,7 @@ class UpdateEntityFieldsFromContactIterator extends AbstractMarketingListItemIte
         $this->registry = $registry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getIteratorQueryBuilder(AddressBook $addressBook)
     {
         $contactsToUpdateFromQB = $this->registry

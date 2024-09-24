@@ -18,9 +18,6 @@ trait StubIteratorTrait
         return $this->loadCount;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getItems($take, $skip)
     {
         ++$this->loadCount;

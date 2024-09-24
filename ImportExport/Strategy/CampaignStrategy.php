@@ -11,9 +11,7 @@ class CampaignStrategy extends AddOrReplaceStrategy
 {
     const EXISTING_CAMPAIGNS_ORIGIN_IDS = 'existingCampaignsOriginIds';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function beforeProcessEntity($entity)
     {
         $entity = parent::beforeProcessEntity($entity);
@@ -30,9 +28,7 @@ class CampaignStrategy extends AddOrReplaceStrategy
         return $entity;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function afterProcessEntity($entity)
     {
         /** @var Campaign $entity */

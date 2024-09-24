@@ -12,9 +12,7 @@ class UnsubscribedContactConnector extends AbstractDotmailerConnector
     const TYPE = 'unsubscribed_contact';
     const IMPORT_JOB = 'dotmailer_unsubscribed_contact_import';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getConnectorSource()
     {
         $this->logger->info('Importing Unsubscribed from Address Book Contacts.');
@@ -24,25 +22,19 @@ class UnsubscribedContactConnector extends AbstractDotmailerConnector
         return $this->transport->getUnsubscribedContacts($addressBooks);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getLabel(): string
     {
         return 'oro.dotmailer.connector.unsubscribed_contact.label';
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getImportJobName()
     {
         return self::IMPORT_JOB;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getType()
     {
         return self::TYPE;

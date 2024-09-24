@@ -11,6 +11,7 @@ class MarketingListItemsQueryBuilderProviderTest extends WebTestCase
 {
     private MarketingListItemsQueryBuilderProvider $queryBuilderProvider;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->initClient();

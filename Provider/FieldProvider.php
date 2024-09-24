@@ -7,9 +7,7 @@ use Oro\Bundle\EntityBundle\Provider\EntityFieldProvider;
 
 class FieldProvider extends EntityFieldProvider
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function isIgnoredRelation(ClassMetadata $metadata, $associationName)
     {
         //do not allow non single associations to be used in the mapping

@@ -12,6 +12,7 @@ class ContactTest extends \PHPUnit\Framework\TestCase
 {
     private Contact $entity;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->entity = new Contact();

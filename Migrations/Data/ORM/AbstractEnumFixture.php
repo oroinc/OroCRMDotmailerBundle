@@ -48,12 +48,14 @@ abstract class AbstractEnumFixture extends BaseAbstractEnumFixture
         $manager->flush();
     }
 
+    #[\Override]
     protected function getData(): array
     {
         // method is not used
         return [];
     }
 
+    #[\Override]
     protected function getEnumCode(): string
     {
         // method is not used

@@ -10,6 +10,7 @@ use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadAddressBookData;
 
 class RemoveAddressBookImportTest extends AbstractImportExportTestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

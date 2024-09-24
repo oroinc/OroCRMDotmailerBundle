@@ -62,6 +62,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
      *
      * @return object
      */
+    #[\Override]
     protected function beforeProcessEntity($entity)
     {
         $entity = parent::beforeProcessEntity($entity);
@@ -74,9 +75,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
         return $entity;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function findExistingEntity($entity, array $searchContext = [])
     {
         $entityName = $this->entityName;
@@ -126,9 +125,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function validateAndUpdateContext($entity)
     {
         if (!$entity) {
@@ -157,9 +154,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function assertEnvironment($entity)
     {
         if ($entityName = $this->context->getOption('entityName')) {

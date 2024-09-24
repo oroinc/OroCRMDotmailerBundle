@@ -6,9 +6,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterat
 
 class CampaignSummaryDataConverter extends AbstractDataConverter
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getHeaderConversionRules()
     {
         return [
@@ -68,9 +66,7 @@ class CampaignSummaryDataConverter extends AbstractDataConverter
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getBackendHeader()
     {
         return

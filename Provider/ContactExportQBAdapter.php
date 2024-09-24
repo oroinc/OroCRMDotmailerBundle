@@ -20,9 +20,7 @@ class ContactExportQBAdapter implements ContactExportQBAdapterInterface
         $this->mappingQueryConverter = $mappingQueryConverter;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function prepareQueryBuilder(QueryBuilder $qb, AddressBook $addressBook)
     {
         $this->addMappedFields($qb, $addressBook);
@@ -96,9 +94,7 @@ class ContactExportQBAdapter implements ContactExportQBAdapterInterface
         $qb->orWhere($expr->eq($entityUpdateFieldExpression, ':isUpdated'))->setParameter('isUpdated', true);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function isApplicable(AddressBook $addressBook)
     {
         return true;

@@ -11,9 +11,7 @@ use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
  */
 class CampaignOpenIterator extends AbstractActivityIterator
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getAllActivities($take, $skip)
     {
         $items = $this->dotmailerResources->GetCampaignOpens($this->campaignOriginId, $take, $skip);
@@ -21,9 +19,7 @@ class CampaignOpenIterator extends AbstractActivityIterator
         return $items;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getActivitiesSinceDate($take, $skip)
     {
         if (!$this->additionalResource) {
@@ -39,9 +35,7 @@ class CampaignOpenIterator extends AbstractActivityIterator
         return $items;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getMarketingActivityType(): string
     {
         return ExtendHelper::buildEnumOptionId(

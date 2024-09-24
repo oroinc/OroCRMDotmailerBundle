@@ -11,6 +11,7 @@ class AddressBookContactsExportRepositoryTest extends WebTestCase
 {
     private AddressBookContactsExportRepository $repository;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->initClient([], static::generateBasicAuthHeader());

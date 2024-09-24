@@ -49,9 +49,7 @@ abstract class AbstractMarketingListItemIterator extends AbstractIterator
         return $this->marketingListItemsQueryBuilderProvider->getAddressBook($this->addressBookId);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getItems($take, $skip)
     {
         $qb = $this->getIteratorQueryBuilder($this->getAddressBook());

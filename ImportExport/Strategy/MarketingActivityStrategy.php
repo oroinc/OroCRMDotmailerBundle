@@ -21,9 +21,7 @@ class MarketingActivityStrategy extends AddOrReplaceStrategy
         $this->campaignClassName = $campaignClassName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function beforeProcessEntity($entity)
     {
         if (!$entity instanceof MarketingActivity) {

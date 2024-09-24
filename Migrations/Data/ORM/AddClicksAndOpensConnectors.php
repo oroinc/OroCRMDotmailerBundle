@@ -14,9 +14,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
  */
 class AddClicksAndOpensConnectors extends AbstractFixture
 {
-    /**
-     * {@inheritDoc}
-     */
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         /** @var Channel[] $channels */

@@ -9,6 +9,7 @@ use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadCampaignData;
 
 class CampaignSummaryImportTest extends AbstractImportExportTestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

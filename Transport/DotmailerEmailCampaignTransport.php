@@ -14,49 +14,37 @@ class DotmailerEmailCampaignTransport implements TransportInterface, VisibilityT
 {
     const NAME = 'dotmailer';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function send(EmailCampaign $campaign, object $entity, array $from, array $to)
     {
         //CBORO-10 do not required realization of this method
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getName()
     {
         return self::NAME;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getLabel()
     {
         return 'oro.dotmailer.emailcampaign.transport.' . self::NAME;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getSettingsFormType()
     {
         return DotmailerTransportSettingsType::class;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getSettingsEntityFQCN()
     {
         return 'Oro\Bundle\DotmailerBundle\Entity\DotmailerTransportSettings';
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function isVisibleInForm()
     {
         return false;

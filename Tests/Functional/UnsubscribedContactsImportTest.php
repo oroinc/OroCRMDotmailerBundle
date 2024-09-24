@@ -15,6 +15,7 @@ use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 class UnsubscribedContactsImportTest extends AbstractImportExportTestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

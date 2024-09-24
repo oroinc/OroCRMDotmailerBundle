@@ -109,6 +109,7 @@ class DataField implements ChannelAwareInterface, ExtendEntityInterface
     /**
      * @return Channel
      */
+    #[\Override]
     public function getChannel()
     {
         return $this->channel;
@@ -119,6 +120,7 @@ class DataField implements ChannelAwareInterface, ExtendEntityInterface
      *
      * @return DataField
      */
+    #[\Override]
     public function setChannel(Channel $channel)
     {
         $this->channel = $channel;

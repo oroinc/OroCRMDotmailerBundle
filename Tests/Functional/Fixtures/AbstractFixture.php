@@ -90,17 +90,13 @@ abstract class AbstractFixture extends BaseFixture implements ContainerAwareInte
             ->find(ExtendHelper::buildEnumOptionId($enumCode, $id));
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
         $this->manager = $container->get('doctrine')->getManager();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     abstract public function load(ObjectManager $manager);
 }

@@ -36,9 +36,7 @@ class SyncProcessor implements SyncProcessorInterface, LoggerStrategyAwareInterf
         $this->logger = new NullLogger();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function process(Integration $integration, $connector, array $connectorParameters = [])
     {
         if ($integration->getType() !== ChannelType::TYPE) {
@@ -58,9 +56,7 @@ class SyncProcessor implements SyncProcessorInterface, LoggerStrategyAwareInterf
         return $this->syncProcessor->process($integration, $connector, $connectorParameters);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getLoggerStrategy()
     {
         if ($this->syncProcessor instanceof LoggerStrategyAwareInterface) {

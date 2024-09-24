@@ -25,9 +25,7 @@ class ImportRejectedExportsStep extends ItemStep
      */
     protected $contextRegistry;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function doExecute(StepExecution $stepExecution)
     {
         parent::doExecute($stepExecution);

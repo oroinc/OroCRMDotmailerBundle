@@ -26,9 +26,7 @@ class ExportItemStep extends ItemStep
      */
     protected $contextRegistry;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function doExecute(StepExecution $stepExecution)
     {
         $channel = $this->getChannel($stepExecution);

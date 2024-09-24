@@ -13,6 +13,7 @@ class AddressBookContactsExportRepositoryTest extends \PHPUnit\Framework\TestCas
 {
     private AddressBookContactsExportRepository $repository;
 
+    #[\Override]
     protected function setUp(): void
     {
         $em = $this->createMock(EntityManagerInterface::class);

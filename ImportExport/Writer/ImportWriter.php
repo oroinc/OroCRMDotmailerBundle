@@ -12,9 +12,7 @@ class ImportWriter extends PersistentBatchWriter
      */
     protected $logHelper;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function write(array $items)
     {
         parent::write($items);

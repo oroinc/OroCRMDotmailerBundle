@@ -66,9 +66,7 @@ abstract class AbstractImportStrategy implements StrategyInterface, ContextAware
         return $this->registry->getRepository(EnumOption::class)->find($id);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function setImportExportContext(ContextInterface $context)
     {
         $this->context = $context;

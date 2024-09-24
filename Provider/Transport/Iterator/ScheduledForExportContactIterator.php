@@ -35,6 +35,7 @@ class ScheduledForExportContactIterator extends AbstractIterator
      *
      * @return array
      */
+    #[\Override]
     protected function getItems($take, $skip)
     {
         /** @var EntityManagerInterface $objectManager */

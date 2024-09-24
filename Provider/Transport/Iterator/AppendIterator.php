@@ -12,6 +12,7 @@ class AppendIterator extends \AppendIterator
      *
      * @param \Iterator $iterator Iterator to append
      */
+    #[\Override]
     public function append(\Iterator $iterator): void
     {
         $this->getArrayIterator()->append($iterator);

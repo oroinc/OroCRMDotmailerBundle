@@ -11,9 +11,7 @@ class AddressBookSelectType extends CreateOrSelectInlineChannelAwareType
 {
     const NAME = 'oro_dotmailer_address_book_list_select';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired(['marketing_list_id']);
@@ -29,9 +27,7 @@ class AddressBookSelectType extends CreateOrSelectInlineChannelAwareType
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
@@ -41,25 +37,19 @@ class AddressBookSelectType extends CreateOrSelectInlineChannelAwareType
         $view->vars['component_options']['marketing_list_id'] = $view->vars['marketing_list_id'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getParent(): ?string
     {
         return CreateOrSelectInlineChannelAwareType::class;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getName()
     {
         return $this->getBlockPrefix();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return self::NAME;

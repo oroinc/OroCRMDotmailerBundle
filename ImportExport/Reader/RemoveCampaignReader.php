@@ -7,6 +7,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemoveCampaignIterato
 
 class RemoveCampaignReader extends AbstractReader
 {
+    #[\Override]
     protected function initializeReader()
     {
         $this->logger->info('Importing Removed Campaigns');
