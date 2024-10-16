@@ -18,9 +18,7 @@ class LoadMarketingListRemovedData extends AbstractFixture implements DependentF
         ]
     ];
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function load(ObjectManager $manager)
     {
         foreach ($this->data as $item) {
@@ -37,9 +35,7 @@ class LoadMarketingListRemovedData extends AbstractFixture implements DependentF
         $manager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getDependencies()
     {
         return [

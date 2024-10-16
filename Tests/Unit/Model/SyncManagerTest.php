@@ -30,6 +30,7 @@ class SyncManagerTest extends \PHPUnit\Framework\TestCase
     /** @var SyncManager */
     private $syncManager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->doctrineHelper = $this->createMock(DoctrineHelper::class);

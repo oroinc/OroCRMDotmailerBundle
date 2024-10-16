@@ -10,6 +10,7 @@ class DateTimeNormalizerTest extends \PHPUnit\Framework\TestCase
 {
     private DateTimeNormalizer $normalizer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->normalizer = new DateTimeNormalizer();

@@ -22,9 +22,7 @@ class LoadBusinessUnitData extends AbstractFixture implements DependentFixtureIn
         ],
     ];
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function load(ObjectManager $manager)
     {
         foreach ($this->data as $data) {
@@ -41,9 +39,7 @@ class LoadBusinessUnitData extends AbstractFixture implements DependentFixtureIn
         $manager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getDependencies()
     {
         return ['Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadOrganizationData'];

@@ -41,9 +41,7 @@ class RemoveWriter implements ItemWriterInterface, StepExecutionAwareInterface
         $this->logHelper = $logHelper;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function write(array $items)
     {
         $itemsCount = count($items);
@@ -69,6 +67,7 @@ class RemoveWriter implements ItemWriterInterface, StepExecutionAwareInterface
         }
     }
 
+    #[\Override]
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;

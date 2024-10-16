@@ -72,9 +72,7 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
         $this->logHelper = $logHelper;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function write(array $items)
     {
         /**
@@ -172,6 +170,7 @@ class RemovedContactsExportWriter implements ItemWriterInterface, StepExecutionA
             ->getOrLoadById($this->context->getOption('channel'));
     }
 
+    #[\Override]
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;

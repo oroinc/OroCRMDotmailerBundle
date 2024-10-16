@@ -21,6 +21,7 @@ class NavigationListenerTest extends TestCase
     /** @var NavigationListener */
     private $listener;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->registry = $this->createMock(ManagerRegistry::class);

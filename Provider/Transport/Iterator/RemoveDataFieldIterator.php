@@ -33,9 +33,7 @@ class RemoveDataFieldIterator extends AbstractIterator
         $this->keepDataFieldsNames = $keepDataFieldsNames;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getItems($take, $skip)
     {
         if (!$this->keepDataFieldsNames) {

@@ -58,9 +58,7 @@ class LoadUserData extends AbstractFixture implements DependentFixtureInterface
         ],
     ];
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function load(ObjectManager $manager)
     {
         /** @var UserManager $userManager */
@@ -102,9 +100,7 @@ class LoadUserData extends AbstractFixture implements DependentFixtureInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getDependencies()
     {
         return ['Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadBusinessUnitData'];

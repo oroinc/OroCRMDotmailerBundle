@@ -36,6 +36,7 @@ class CacheAwareClient implements DotmailerClientInterface
         $this->namespace = $username;
     }
 
+    #[\Override]
     public function setLogger(LoggerInterface $logger): void
     {
         $this->logger = $logger;
@@ -52,11 +53,13 @@ class CacheAwareClient implements DotmailerClientInterface
         return $this->logger;
     }
 
+    #[\Override]
     public function setBaseUrl(string $url): void
     {
         $this->getClient()->setBaseUrl($url);
     }
 
+    #[\Override]
     public function execute($paramArr, $responses = []): ?string
     {
         list(, $requestMethod) = array_pad(array_values($paramArr), 2, null);

@@ -27,9 +27,7 @@ class ConfigurableEntityNormalizer extends BaseNormalizer
         $this->registry = $registry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function denormalize($data, string $type, string $format = null, array $context = [])
     {
         $object = parent::denormalize($data, $type, $format, $context);
@@ -64,9 +62,7 @@ class ConfigurableEntityNormalizer extends BaseNormalizer
         return $object;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function supportsDenormalization($data, string $type, string $format = null, array $context = []): bool
     {
         $channelType = empty($context['channelType']) ? null : $context['channelType'];
@@ -74,9 +70,7 @@ class ConfigurableEntityNormalizer extends BaseNormalizer
         return parent::supportsDenormalization($data, $type, $format, $context) && $channelType == ChannelType::TYPE;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function supportsNormalization($data, string $format = null, array $context = []): bool
     {
         return false;

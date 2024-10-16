@@ -30,9 +30,7 @@ class ContactIterator extends OverlapIterator
         $this->addressBookOriginId = $addressBookOriginId;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getItems($take, $skip)
     {
         if (is_null($this->addressBookOriginId)) {

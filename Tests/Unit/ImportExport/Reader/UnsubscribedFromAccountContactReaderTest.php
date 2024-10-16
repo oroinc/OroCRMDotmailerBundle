@@ -38,6 +38,7 @@ class UnsubscribedFromAccountContactReaderTest extends TestCase
     /** @var UnsubscribedFromAccountContactReader */
     private $reader;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->contextRegistry = $this->createMock(ContextRegistry::class);

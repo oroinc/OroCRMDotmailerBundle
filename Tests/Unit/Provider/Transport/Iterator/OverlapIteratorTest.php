@@ -8,6 +8,7 @@ class OverlapIteratorTest extends \PHPUnit\Framework\TestCase
 {
     private StubOverlapIterator $iterator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->iterator = new StubOverlapIterator();

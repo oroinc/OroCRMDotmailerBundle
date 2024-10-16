@@ -22,6 +22,7 @@ class ExportContactProcessor extends ExportProcessor implements StepExecutionAwa
      */
     protected $stepExecution;
 
+    #[\Override]
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;

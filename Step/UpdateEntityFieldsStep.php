@@ -33,9 +33,7 @@ class UpdateEntityFieldsStep extends ItemStep
      */
     protected $entityListener;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function doExecute(StepExecution $stepExecution)
     {
         if ($this->entityListener) {

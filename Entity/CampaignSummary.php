@@ -260,6 +260,7 @@ class CampaignSummary implements ChannelAwareInterface
     /**
      * @return Channel
      */
+    #[\Override]
     public function getChannel()
     {
         return $this->channel;
@@ -270,6 +271,7 @@ class CampaignSummary implements ChannelAwareInterface
      *
      * @return CampaignSummary
      */
+    #[\Override]
     public function setChannel(Channel $channel = null)
     {
         $this->channel = $channel;

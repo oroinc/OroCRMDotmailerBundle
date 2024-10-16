@@ -7,6 +7,7 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReportIterator;
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 /**
  * Responsibility:
@@ -18,9 +19,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ExportFaultsReportIte
  */
 class NotExportedContactStrategy extends AbstractImportStrategy
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function process($entity)
     {
         if (!$entity instanceof AddressBookContact) {
@@ -73,7 +72,7 @@ class NotExportedContactStrategy extends AbstractImportStrategy
             $addressBookContact->setChannel($this->getChannel());
         }
 
-        $reason = $this->getEnumValue('dm_cnt_status', Contact::STATUS_SUPPRESSED);
+        $reason = $this->getEnumValue(ExtendHelper::buildEnumOptionId('dm_cnt_status', Contact::STATUS_SUPPRESSED));
         $currentDate = new \DateTime('now', new \DateTimeZone('UTC'));
 
         $addressBookContact->setStatus($reason);

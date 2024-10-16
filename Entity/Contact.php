@@ -10,7 +10,7 @@ use Extend\Entity\Autocomplete\OroDotmailerBundle_Entity_Contact;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\ContactRepository;
 use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\ConfigField;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOptionInterface;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityTrait;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
@@ -20,12 +20,12 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  * Entity which represents contacts synced with dotmailer
  * @SuppressWarnings(PHPMD.TooManyFields)
  *
- * @method AbstractEnumValue getOptInType()
- * @method Contact setOptInType(AbstractEnumValue $enumValue)
- * @method AbstractEnumValue getEmailType()
- * @method Contact setEmailType(AbstractEnumValue $enumValue)
- * @method AbstractEnumValue getStatus()
- * @method Contact setStatus(AbstractEnumValue $enumValue)
+ * @method EnumOptionInterface getOptInType()
+ * @method Contact setOptInType(EnumOptionInterface $enumOption)
+ * @method EnumOptionInterface getEmailType()
+ * @method Contact setEmailType(EnumOptionInterface $enumOption)
+ * @method EnumOptionInterface getStatus()
+ * @method Contact setStatus(EnumOptionInterface $enumOption)
  * @mixin OroDotmailerBundle_Entity_Contact
  */
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
@@ -50,33 +50,34 @@ class Contact implements OriginAwareInterface, ExtendEntityInterface
     use ExtendEntityTrait;
 
     /** constant for enum dm_cnt_opt_in_type */
-    const OPT_IN_TYPE_UNKNOWN                       = 'Unknown';
-    const OPT_IN_TYPE_SINGLE                        = 'Single';
-    const OPT_IN_TYPE_DOUBLE                        = 'Double';
-    const OPT_IN_TYPE_VERIFIEDDOUBLE                = 'VerifiedDouble';
-    const OPT_IN_TYPE_NOTAVAILABLEINTHISVERSION     = 'NotAvailableInThisVersion';
+    public const OPT_IN_TYPE_UNKNOWN                       = 'Unknown';
+    public const OPT_IN_TYPE_SINGLE                        = 'Single';
+    public const OPT_IN_TYPE_DOUBLE                        = 'Double';
+    public const OPT_IN_TYPE_VERIFIEDDOUBLE                = 'VerifiedDouble';
+    public const OPT_IN_TYPE_NOTAVAILABLEINTHISVERSION     = 'NotAvailableInThisVersion';
 
     /** constant for enum dm_cnt_email_type */
-    const EMAIL_TYPE_PLAINTEXT                      = 'PlainText';
-    const EMAIL_TYPE_HTML                           = 'Html';
-    const EMAIL_TYPE_NOTAVAILABLEINTHISVERSION      = 'NotAvailableInThisVersion';
+    public const EMAIL_TYPE_PLAINTEXT                      = 'PlainText';
+    public const EMAIL_TYPE_HTML                           = 'Html';
+    public const EMAIL_TYPE_NOTAVAILABLEINTHISVERSION      = 'NotAvailableInThisVersion';
 
     /** constant for enum dm_cnt_status */
-    const STATUS_SUBSCRIBED                         = 'Subscribed';
-    const STATUS_UNSUBSCRIBED                       = 'Unsubscribed';
-    const STATUS_SOFTBOUNCED                        = 'SoftBounced';
-    const STATUS_HARDBOUNCED                        = 'HardBounced';
-    const STATUS_ISPCOMPLAINED                      = 'IspComplained';
-    const STATUS_MAILBLOCKED                        = 'MailBlocked';
-    const STATUS_PENDINGOPTIN                       = 'PendingOptIn';
-    const STATUS_DIRECTCOMPLAINT                    = 'DirectComplaint';
-    const STATUS_DELETED                            = 'Deleted';
-    const STATUS_SHAREDSUPPRESSION                  = 'SharedSuppression';
-    const STATUS_SUPPRESSED                         = 'Suppressed';
-    const STATUS_NOTALLOWED                         = 'NotAllowed';
-    const STATUS_DOMAINSUPPRESSION                  = 'DomainSuppression';
-    const STATUS_NOMXRECORD                         = 'NoMxRecord';
-    const STATUS_NOTAVAILABLEINTHISVERSION          = 'NotAvailableInThisVersion';
+    public const STATUS_SUBSCRIBED                         = 'Subscribed';
+    public const STATUS_UNSUBSCRIBED                       = 'Unsubscribed';
+    public const STATUS_SOFTBOUNCED                        = 'SoftBounced';
+    public const STATUS_HARDBOUNCED                        = 'HardBounced';
+    public const STATUS_ISPCOMPLAINED                      = 'IspComplained';
+    public const STATUS_MAILBLOCKED                        = 'MailBlocked';
+    public const STATUS_PENDINGOPTIN                       = 'PendingOptIn';
+    public const STATUS_DIRECTCOMPLAINT                    = 'DirectComplaint';
+    public const STATUS_DELETED                            = 'Deleted';
+    public const STATUS_SHAREDSUPPRESSION                  = 'SharedSuppression';
+    public const STATUS_SUPPRESSED                         = 'Suppressed';
+    public const STATUS_NOTALLOWED                         = 'NotAllowed';
+    public const STATUS_DOMAINSUPPRESSION                  = 'DomainSuppression';
+    public const STATUS_NOMXRECORD                         = 'NoMxRecord';
+    public const STATUS_NOTAVAILABLEINTHISVERSION          = 'NotAvailableInThisVersion';
+    public const STATUS_ENUM_CODE                          = 'dm_cnt_status';
 
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]
@@ -155,6 +156,7 @@ class Contact implements OriginAwareInterface, ExtendEntityInterface
     /**
      * @return Channel
      */
+    #[\Override]
     public function getChannel()
     {
         return $this->channel;
@@ -165,6 +167,7 @@ class Contact implements OriginAwareInterface, ExtendEntityInterface
      *
      * @return Contact
      */
+    #[\Override]
     public function setChannel(Channel $channel)
     {
         $this->channel = $channel;

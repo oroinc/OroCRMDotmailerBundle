@@ -38,12 +38,10 @@ class ContactRepository extends EntityRepository
                     'contact.email',
                     'contact.originId',
                     'contact.dataFields',
-                    'opt_in_type.id as optInType',
-                    'email_type.id as emailType',
+                    "JSON_EXTRACT(contact.serialized_data, 'opt_in_type') as optInType",
+                    "JSON_EXTRACT(contact.serialized_data, 'email_type') as emailType",
                 ]
             )
-            ->leftJoin('contact.opt_in_type', 'opt_in_type')
-            ->leftJoin('contact.email_type', 'email_type')
             ->innerJoin(
                 'contact.addressBookContacts',
                 'addressBookContacts',

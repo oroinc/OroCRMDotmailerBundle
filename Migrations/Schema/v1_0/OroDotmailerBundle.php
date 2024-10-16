@@ -12,9 +12,7 @@ use Oro\Bundle\MigrationBundle\Migration\QueryBag;
  */
 class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getOrder()
     {
         return 0;
@@ -22,8 +20,8 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
 
     /**
      * @SuppressWarnings(PHPMD.ShortMethodName)
-     * {@inheritdoc}
      */
+    #[\Override]
     public function up(Schema $schema, QueryBag $queries)
     {
         /** Tables generation **/

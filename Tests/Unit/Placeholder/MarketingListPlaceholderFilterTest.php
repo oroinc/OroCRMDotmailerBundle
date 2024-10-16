@@ -18,6 +18,7 @@ class MarketingListPlaceholderFilterTest extends \PHPUnit\Framework\TestCase
     /** @var MarketingListPlaceholderFilter */
     private $target;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->registry = $this->createMock(ManagerRegistry::class);

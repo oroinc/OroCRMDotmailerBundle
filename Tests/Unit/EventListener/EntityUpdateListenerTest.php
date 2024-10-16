@@ -24,6 +24,7 @@ class EntityUpdateListenerTest extends \PHPUnit\Framework\TestCase
     /** @var EntityUpdateListener */
     private $listener;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->doctrineHelper = $this->createMock(DoctrineHelper::class);

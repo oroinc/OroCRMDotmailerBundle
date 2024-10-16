@@ -4,8 +4,8 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\DotmailerBundle\Provider\CacheProvider;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
-use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOption;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOptionInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextAwareInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Strategy\StrategyInterface;
@@ -57,21 +57,16 @@ abstract class AbstractImportStrategy implements StrategyInterface, ContextAware
     }
 
     /**
-     * @param string $enumCode
      * @param string $id
      *
-     * @return AbstractEnumValue
+     * @return EnumOptionInterface
      */
-    protected function getEnumValue($enumCode, $id)
+    protected function getEnumValue(string $id): EnumOptionInterface
     {
-        $className = ExtendHelper::buildEnumValueClassName($enumCode);
-        return $this->registry->getRepository($className)
-            ->find($id);
+        return $this->registry->getRepository(EnumOption::class)->find($id);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function setImportExportContext(ContextInterface $context)
     {
         $this->context = $context;

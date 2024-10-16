@@ -6,6 +6,7 @@ use Oro\Bundle\DotmailerBundle\ImportExport\Processor\UnsubscribedContactSyncPro
 
 class UnsubscribedContactSyncWriter extends ImportWriter
 {
+    #[\Override]
     protected function logBatchInfo(array $items)
     {
         $itemsCount = count($items);
@@ -18,9 +19,7 @@ class UnsubscribedContactSyncWriter extends ImportWriter
         $this->logger->info($message);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function write(array $items)
     {
         $context = $this->contextRegistry

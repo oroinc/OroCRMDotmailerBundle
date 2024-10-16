@@ -54,18 +54,14 @@ abstract class AbstractReader extends IteratorBasedReader
         $this->logger = $logger;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->jobContext = new JobContextComposite($stepExecution, $this->contextRegistry);
         parent::setStepExecution($stepExecution);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function initializeFromContext(ContextInterface $context)
     {
         $this->context = $context;

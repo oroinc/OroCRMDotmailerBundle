@@ -18,11 +18,7 @@ class StateAwareCacheProvider extends CacheProvider
         $this->doctrineHelper = $doctrineHelper;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * If entity is detached refresh it together with all related entities (some kind of lazy loading)
-     */
+    #[\Override]
     public function getCachedItem($scopeKey, $itemKey)
     {
         if (!isset($this->itemsCache[$scopeKey][$itemKey])) {
@@ -47,11 +43,7 @@ class StateAwareCacheProvider extends CacheProvider
         return $item;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * Do not store entity itself, save reference only
-     */
+    #[\Override]
     public function setCachedItem($scopeKey, $itemKey, $value)
     {
         if (!is_object($value)) {

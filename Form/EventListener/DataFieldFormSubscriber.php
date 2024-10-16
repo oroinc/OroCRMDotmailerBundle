@@ -10,11 +10,12 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 
+/**
+ * Changing Default Value Based On Type
+ */
 class DataFieldFormSubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [
@@ -35,7 +36,7 @@ class DataFieldFormSubscriber implements EventSubscriberInterface
         }
 
         if ($data->getType()) {
-            $this->changeDefaultValueBasedOnType($data->getType()->getId(), $form);
+            $this->changeDefaultValueBasedOnType($data->getType()->getInternalId(), $form);
         }
     }
 
@@ -46,6 +47,7 @@ class DataFieldFormSubscriber implements EventSubscriberInterface
     {
         $form = $event->getForm();
         $data = $event->getData();
+
         if (!empty($data['type'])) {
             $this->changeDefaultValueBasedOnType($data['type'], $form);
         }

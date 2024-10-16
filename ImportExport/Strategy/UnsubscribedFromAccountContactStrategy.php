@@ -10,9 +10,7 @@ use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
  */
 class UnsubscribedFromAccountContactStrategy extends AbstractImportStrategy
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function process($entity)
     {
         if (!$entity instanceof Contact) {
@@ -38,7 +36,7 @@ class UnsubscribedFromAccountContactStrategy extends AbstractImportStrategy
             return null;
         }
 
-        $reason = $this->getEnumValue('dm_cnt_status', $entity->getStatus()->getId());
+        $reason = $this->getEnumValue($entity->getStatus()->getId());
         foreach ($contact->getAddressBookContacts() as $addressBookContact) {
             $addressBookContact->setStatus($reason);
             $addressBookContact->setUnsubscribedDate($entity->getUnsubscribedDate());

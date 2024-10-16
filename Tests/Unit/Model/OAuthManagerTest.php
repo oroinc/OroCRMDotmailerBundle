@@ -21,6 +21,7 @@ class OAuthManagerTest extends \PHPUnit\Framework\TestCase
     /** @var OAuthManager */
     private $oAuthManager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->router = $this->createMock(RouterInterface::class);

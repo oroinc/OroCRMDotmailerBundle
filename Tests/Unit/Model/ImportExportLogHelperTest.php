@@ -9,6 +9,7 @@ class ImportExportLogHelperTest extends \PHPUnit\Framework\TestCase
 {
     private ImportExportLogHelper $target;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->target = new ImportExportLogHelper();

@@ -4,9 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Processor;
 
 class CampaignActivityProcessor extends ImportProcessor
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function process($item)
     {
         if (!$item) {

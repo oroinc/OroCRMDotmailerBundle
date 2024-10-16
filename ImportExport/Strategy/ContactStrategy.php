@@ -27,9 +27,7 @@ class ContactStrategy extends AddOrReplaceStrategy
         $this->mappingProvider = $mappingProvider;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function afterProcessEntity($entity)
     {
         /** @var Contact $entity */
@@ -77,9 +75,7 @@ class ContactStrategy extends AddOrReplaceStrategy
         return parent::afterProcessEntity($entity);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function importExistingEntity(
         $entity,
         $existingEntity,
@@ -106,9 +102,7 @@ class ContactStrategy extends AddOrReplaceStrategy
         parent::importExistingEntity($entity, $existingEntity, $itemData, $excludedFields);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function findProcessedEntity($entity, array $searchContext = [])
     {
         if (!$entity instanceof Contact) {
@@ -196,9 +190,7 @@ class ContactStrategy extends AddOrReplaceStrategy
         return $this->getAddressBookByOriginId($addressBookOriginId);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function assertEnvironment($entity)
     {
         if (!$this->mappingProvider) {

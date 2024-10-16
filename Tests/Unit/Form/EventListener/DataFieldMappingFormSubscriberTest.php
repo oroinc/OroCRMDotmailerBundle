@@ -15,6 +15,7 @@ class DataFieldMappingFormSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     private DataFieldMappingFormSubscriber $subscriber;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->subscriber = new DataFieldMappingFormSubscriber();

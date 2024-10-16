@@ -15,6 +15,7 @@ class DataFieldFormSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     private DataFieldFormSubscriber $subscriber;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->subscriber = new DataFieldFormSubscriber();

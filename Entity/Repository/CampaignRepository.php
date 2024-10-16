@@ -6,8 +6,12 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\BatchBundle\ORM\Query\BufferedQueryResultIterator;
 use Oro\Bundle\DotmailerBundle\Entity\Campaign;
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
+/**
+ * ORM repository for Campaign entity.
+ */
 class CampaignRepository extends EntityRepository
 {
     /**
@@ -18,14 +22,19 @@ class CampaignRepository extends EntityRepository
     public function getCampaignsToSyncStatistic(Channel $channel)
     {
         $invalidCampaignStatuses = [
-            Campaign::STATUS_SENDING,
-            Campaign::STATUS_UNSENT
+            ExtendHelper::buildEnumOptionId('dm_cmp_reply_action', Campaign::STATUS_SENDING),
+            ExtendHelper::buildEnumOptionId('dm_cmp_reply_action', Campaign::STATUS_UNSENT)
         ];
         $qb = $this->createQueryBuilder('campaign');
         $expression = $qb->expr();
         $qb->where('campaign.channel =:channel and campaign.deleted <> TRUE')
-            ->leftJoin('campaign.status', 'campaignStatus')
-            ->andWhere($expression->notIn('campaignStatus.id', $invalidCampaignStatuses));
+            ->andWhere(
+                $expression->notIn(
+                    "JSON_EXTRACT(campaign.serialized_data, 'status')",
+                    $invalidCampaignStatuses
+                )
+            )
+        ;
 
         return $qb->getQuery()
             ->execute(['channel' => $channel]);

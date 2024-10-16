@@ -8,10 +8,12 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Provider\Connector\ContactConnector;
 use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadDotmailerContactData;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOption;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 class ContactImportTest extends AbstractImportExportTestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -47,15 +49,7 @@ class ContactImportTest extends AbstractImportExportTestCase
 
         $contactRepository = $this->managerRegistry->getRepository(Contact::class);
         $addressBookRepository = $this->managerRegistry->getRepository(AddressBook::class);
-        $optInTypeRepository = $this->managerRegistry->getRepository(
-            ExtendHelper::buildEnumValueClassName('dm_cnt_opt_in_type')
-        );
-        $emailTypeRepository = $this->managerRegistry->getRepository(
-            ExtendHelper::buildEnumValueClassName('dm_cnt_email_type')
-        );
-        $statusRepository = $this->managerRegistry->getRepository(
-            ExtendHelper::buildEnumValueClassName('dm_cnt_status')
-        );
+        $enumOptionRepository = $this->managerRegistry->getRepository(EnumOption::class);
 
         foreach ($expected as $contact) {
             $searchCriteria = [
@@ -78,21 +72,28 @@ class ContactImportTest extends AbstractImportExportTestCase
             if (empty($contact['optInType'])) {
                 $this->assertNull($contactEntity->getOptInType());
             } else {
-                $optInType = $optInTypeRepository->find($contact['optInType']);
+                $optInType = $enumOptionRepository->find(
+                    ExtendHelper::buildEnumOptionId('dm_cnt_opt_in_type', $contact['optInType'])
+                )
+                ;
                 $this->assertEquals($optInType, $contactEntity->getOptInType());
             }
 
             if (empty($contact['emailType'])) {
                 $this->assertNull($contactEntity->getEmailType());
             } else {
-                $emailType = $emailTypeRepository->find($contact['emailType']);
+                $emailType = $enumOptionRepository->find(
+                    ExtendHelper::buildEnumOptionId('dm_cnt_email_type', $contact['emailType'])
+                );
                 $this->assertEquals($emailType, $contactEntity->getEmailType());
             }
 
             if (empty($contact['status'])) {
                 $this->assertNull($contactEntity->getStatus());
             } else {
-                $status = $statusRepository->find($contact['status']);
+                $status = $enumOptionRepository->find(
+                    ExtendHelper::buildEnumOptionId('dm_cnt_status', $contact['status'])
+                );
                 $this->assertEquals($status, $contactEntity->getStatus());
                 /** @var AddressBookContact $addressBookContact */
                 $addressBookContact = $contactEntity->getAddressBookContacts()->first();

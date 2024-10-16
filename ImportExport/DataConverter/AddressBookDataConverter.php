@@ -6,9 +6,7 @@ use Oro\Bundle\ImportExportBundle\Converter\AbstractTableDataConverter;
 
 class AddressBookDataConverter extends AbstractTableDataConverter
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getHeaderConversionRules()
     {
         return [
@@ -24,6 +22,7 @@ class AddressBookDataConverter extends AbstractTableDataConverter
      *
      * @return array
      */
+    #[\Override]
     protected function getBackendHeader()
     {
         return ['id', 'name', 'visibility', 'contacts'];

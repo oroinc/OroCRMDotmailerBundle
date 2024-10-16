@@ -4,9 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
 class CampaignOpenDataConverter extends AbstractCampaignActivityDataConverter
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getSpecificHeaderConversionRules()
     {
         return [

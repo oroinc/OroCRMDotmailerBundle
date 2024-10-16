@@ -11,6 +11,7 @@ class ContactExportQBAdapterRegistryTest extends \PHPUnit\Framework\TestCase
 {
     private ContactExportQBAdapterRegistry $target;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->target = new ContactExportQBAdapterRegistry();

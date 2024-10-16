@@ -19,9 +19,7 @@ class AddContactExportConnectorToExistedIntegrationsQuery implements MigrationQu
 {
     use ConnectionAwareTrait;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getDescription()
     {
         $integrations = $this->getDotmailerIntegrations();
@@ -41,6 +39,7 @@ class AddContactExportConnectorToExistedIntegrationsQuery implements MigrationQu
      *
      * @param LoggerInterface $logger A logger which can be used to log details of an execution process
      */
+    #[\Override]
     public function execute(LoggerInterface $logger)
     {
         $integrations = $this->getDotmailerIntegrations();

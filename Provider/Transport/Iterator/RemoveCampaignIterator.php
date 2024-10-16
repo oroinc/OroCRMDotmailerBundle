@@ -33,9 +33,7 @@ class RemoveCampaignIterator extends AbstractIterator
         $this->keepCampaigns = $keepCampaigns;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getItems($take, $skip)
     {
         $campaignsForRemoveQB = $this->registry

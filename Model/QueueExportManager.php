@@ -10,7 +10,7 @@ use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactsExportReposi
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOptionInterface;
 use Oro\Bundle\ImportExportBundle\Job\JobResult;
 use Oro\Bundle\ImportExportBundle\Processor\ProcessorRegistry;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
@@ -216,12 +216,12 @@ class QueueExportManager implements LoggerAwareInterface
 
     /**
      * @param AddressBook       $addressBook
-     * @param AbstractEnumValue $status
+     * @param EnumOptionInterface $status
      * @param bool              $updateLastExportedAt
      */
     protected function updateAddressBookSyncStatus(
         AddressBook $addressBook,
-        AbstractEnumValue $status,
+        EnumOptionInterface $status,
         $updateLastExportedAt
     ) {
         $addressBook->setSyncStatus($status);

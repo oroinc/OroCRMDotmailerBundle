@@ -25,17 +25,13 @@ class UpdateEntityFieldsFromContactDataConverter extends AbstractDataConverter i
     /** @var ContextInterface */
     protected $context;
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function setEntityName(string $entityName): void
     {
         $this->entityName = $entityName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function setImportExportContext(ContextInterface $context)
     {
         $this->context = $context;
@@ -51,9 +47,7 @@ class UpdateEntityFieldsFromContactDataConverter extends AbstractDataConverter i
         $this->emailProvider = $emailProvider;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getHeaderConversionRules()
     {
         if (!$this->mappingProvider) {
@@ -72,9 +66,7 @@ class UpdateEntityFieldsFromContactDataConverter extends AbstractDataConverter i
         return $mapping;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function receiveBackendToFrontendHeader()
     {
         /**
@@ -86,9 +78,7 @@ class UpdateEntityFieldsFromContactDataConverter extends AbstractDataConverter i
         return $this->backendToFrontendHeader;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function receiveHeaderConversionRules()
     {
         /**
@@ -99,9 +89,7 @@ class UpdateEntityFieldsFromContactDataConverter extends AbstractDataConverter i
         return $this->headerConversionRules;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function convertToImportFormat(array $importedRecord, $skipNullValues = true)
     {
         $header = array_keys($this->getHeaderConversionRules());
@@ -134,9 +122,7 @@ class UpdateEntityFieldsFromContactDataConverter extends AbstractDataConverter i
         return parent::convertToImportFormat($importedRecord, $skipNullValues);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getBackendHeader()
     {
         return [];

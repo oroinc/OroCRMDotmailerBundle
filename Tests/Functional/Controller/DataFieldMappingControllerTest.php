@@ -10,6 +10,7 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
 {
     protected bool $isRealGridRequest = false;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -110,9 +111,7 @@ class DataFieldMappingControllerTest extends AbstractDatagridTestCase
         $this->assertHtmlResponseStatusCodeEquals($result, 404);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function gridProvider(): array
     {
         return [

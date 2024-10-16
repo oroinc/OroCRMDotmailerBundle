@@ -13,6 +13,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Status;
 
 class DataFieldImportTest extends AbstractImportExportTestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -45,24 +46,28 @@ class DataFieldImportTest extends AbstractImportExportTestCase
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $dataFieldRepository = $this->managerRegistry->getRepository(DataField::class);
-        $visibilityRepository = $this->managerRegistry->getRepository(
-            ExtendHelper::buildEnumValueClassName('dm_df_visibility')
-        );
-        $typeRepository = $this->managerRegistry->getRepository(
-            ExtendHelper::buildEnumValueClassName('dm_df_type')
-        );
 
         foreach ($expected as $dataField) {
-            $searchCriteria = [
-                'channel' => $channel,
-                'name' => $dataField['name'],
-                'visibility' => $visibilityRepository->find($dataField['visibility']),
-                'type' => $typeRepository->find($dataField['type'])
-            ];
+            $queryBuilder = $dataFieldRepository->createQueryBuilder('df');
+            $queryBuilder
+                ->andWhere('df.channel = :channel')
+                ->andWhere('df.name = :name')
+                ->andWhere("JSON_EXTRACT(df.serialized_data, 'visibility') = :visibility")
+                ->andWhere("JSON_EXTRACT(df.serialized_data, 'type') = :type")
+                ->setParameter('channel', $channel)
+                ->setParameter('name', $dataField['name'])
+                ->setParameter(
+                    'visibility',
+                    ExtendHelper::buildEnumOptionId('dm_df_visibility', $dataField['visibility'])
+                )
+                ->setParameter(
+                    'type',
+                    ExtendHelper::buildEnumOptionId('dm_df_type', $dataField['type'])
+                );
 
-            $dataField = $dataFieldRepository->findBy($searchCriteria);
+            $dataFieldEntities = $queryBuilder->getQuery()->getResult();
 
-            $this->assertCount(1, $dataField);
+            $this->assertCount(1, $dataFieldEntities);
         }
         //check that connector was skipped during second import and last sync date was not updated
         $lastSyncDate = $this->getLastSyncDate($channel);

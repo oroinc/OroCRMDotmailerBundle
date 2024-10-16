@@ -204,6 +204,7 @@ class AddDefaultMappingListener extends AbstractImportExportListener
      *
      * @return bool
      */
+    #[\Override]
     protected function isApplicable(SyncEvent $syncEvent, $job)
     {
         $isApplicable = parent::isApplicable($syncEvent, $job)
@@ -243,9 +244,7 @@ class AddDefaultMappingListener extends AbstractImportExportListener
         return $fields;
     }
 
-    /**
-    * {@inheritdoc}
-    */
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return array(

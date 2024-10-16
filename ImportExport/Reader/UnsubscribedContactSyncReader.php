@@ -10,6 +10,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\OutOfSyncMarketingLis
  */
 class UnsubscribedContactSyncReader extends AbstractExportReader
 {
+    #[\Override]
     protected function initializeReader()
     {
         $this->logger->info('Sync Marketing List Item State');

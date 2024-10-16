@@ -37,9 +37,7 @@ class UpdateAddressBookLastImportDateListener extends AbstractImportExportListen
             ->bulkUpdateLastImportedAt($contactConnectorLastSyncDate, $addressBookIds);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return array(

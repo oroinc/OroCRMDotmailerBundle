@@ -42,6 +42,7 @@ class UnsubscribedContactIterator extends OverlapIterator
      *
      * @return array
      */
+    #[\Override]
     protected function getItems($take, $skip)
     {
         /** @var ApiContactSuppressionList $contacts */

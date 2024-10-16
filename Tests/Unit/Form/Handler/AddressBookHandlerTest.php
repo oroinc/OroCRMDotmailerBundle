@@ -44,6 +44,7 @@ class AddressBookHandlerTest extends \PHPUnit\Framework\TestCase
     /** @var AddressBookHandler */
     private $handler;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->manager = $this->createMock(ObjectManager::class);

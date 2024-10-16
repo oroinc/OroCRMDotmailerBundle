@@ -70,9 +70,6 @@ class DataFieldMapping implements ExtendEntityInterface
     #[ORM\JoinColumn(name: 'owner_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     protected ?Organization $owner = null;
 
-    /**
-     * {@inheritdoc}
-     */
     public function __construct()
     {
         $this->configs  = new ArrayCollection();

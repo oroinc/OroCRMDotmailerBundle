@@ -63,9 +63,7 @@ class ExportFaultsReportIterator implements \Iterator
         $this->options = $options;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function rewind(): void
     {
         $this->offset  = -1;
@@ -74,9 +72,7 @@ class ExportFaultsReportIterator implements \Iterator
         $this->next();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function current(): mixed
     {
         $item = $this->current;
@@ -87,9 +83,7 @@ class ExportFaultsReportIterator implements \Iterator
         return $item;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function next(): void
     {
         $this->current = $this->getReader()->read();
@@ -98,17 +92,13 @@ class ExportFaultsReportIterator implements \Iterator
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function key(): mixed
     {
         return $this->offset;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function valid(): bool
     {
         return !is_null($this->current);

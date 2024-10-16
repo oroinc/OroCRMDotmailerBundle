@@ -22,9 +22,7 @@ class MarketingListStateItemCreateAction extends AbstractMarketingListEntitiesAc
         $this->marketingListStateItemClassName = $marketingListStateItemClassName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function executeAction($context)
     {
         $entities = $this->getMarketingListStateItems($context->getEntity());
@@ -40,9 +38,7 @@ class MarketingListStateItemCreateAction extends AbstractMarketingListEntitiesAc
         $em->flush($entities);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function initialize(array $options)
     {
         if (!$this->doctrineHelper) {
@@ -85,9 +81,7 @@ class MarketingListStateItemCreateAction extends AbstractMarketingListEntitiesAc
         return $entities;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getMarketingListEntitiesByEmailQueryBuilder(MarketingList $marketingList, $email)
     {
         $qb = parent::getMarketingListEntitiesByEmailQueryBuilder($marketingList, $email);

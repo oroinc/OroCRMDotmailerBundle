@@ -23,9 +23,7 @@ class IntegrationSettingsSubscriber implements EventSubscriberInterface
         $this->encoder = $encoder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [

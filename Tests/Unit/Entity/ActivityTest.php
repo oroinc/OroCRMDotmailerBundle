@@ -12,6 +12,7 @@ class ActivityTest extends \PHPUnit\Framework\TestCase
 {
     private Activity $entity;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->entity = new Activity();

@@ -39,6 +39,7 @@ class AddMarketingActivitiesActionTest extends \PHPUnit\Framework\TestCase
     /** @var AddMarketingActivitesAction */
     private $action;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->contextAccessor = $this->createMock(ContextAccessor::class);

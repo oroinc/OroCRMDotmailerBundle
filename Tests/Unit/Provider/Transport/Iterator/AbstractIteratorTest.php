@@ -8,6 +8,7 @@ class AbstractIteratorTest extends \PHPUnit\Framework\TestCase
 {
     protected StubAbstractIterator $iterator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->iterator = new StubAbstractIterator();

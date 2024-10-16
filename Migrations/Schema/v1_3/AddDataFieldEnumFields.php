@@ -28,8 +28,8 @@ class AddDataFieldEnumFields implements Migration, ExtendExtensionAwareInterface
 
     /**
      * @SuppressWarnings(PHPMD.ShortMethodName)
-     * {@inheritdoc}
      */
+    #[\Override]
     public function up(Schema $schema, QueryBag $queries)
     {
         // add private single-values enums
@@ -65,9 +65,7 @@ class AddDataFieldEnumFields implements Migration, ExtendExtensionAwareInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getOrder()
     {
         return 10;

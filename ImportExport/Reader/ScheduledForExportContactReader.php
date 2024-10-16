@@ -10,6 +10,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ScheduledForExportCon
  */
 class ScheduledForExportContactReader extends AbstractExportReader
 {
+    #[\Override]
     protected function initializeReader()
     {
         $this->logger->info('Exporting Contacts');

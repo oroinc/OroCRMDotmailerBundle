@@ -13,6 +13,7 @@ class RemovedContactsExportIterator extends AbstractMarketingListItemIterator
      *
      * @return QueryBuilder
      */
+    #[\Override]
     protected function getIteratorQueryBuilder(AddressBook $addressBook)
     {
         $currentItemsInBatch = $this->importExportContext

@@ -7,7 +7,8 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\ChannelAwareInterface;
 use Oro\Bundle\DotmailerBundle\Entity\OriginAwareInterface;
 use Oro\Bundle\DotmailerBundle\Provider\CacheProvider;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOption;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOptionInterface;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\ImportExportBundle\Strategy\Import\ConfigurableAddOrReplaceStrategy;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
@@ -61,6 +62,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
      *
      * @return object
      */
+    #[\Override]
     protected function beforeProcessEntity($entity)
     {
         $entity = parent::beforeProcessEntity($entity);
@@ -73,9 +75,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
         return $entity;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function findExistingEntity($entity, array $searchContext = [])
     {
         $entityName = $this->entityName;
@@ -125,9 +125,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function validateAndUpdateContext($entity)
     {
         if (!$entity) {
@@ -156,9 +154,7 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function assertEnvironment($entity)
     {
         if ($entityName = $this->context->getOption('entityName')) {
@@ -202,14 +198,12 @@ class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
      * @param string $enumCode
      * @param string $id
      *
-     * @return AbstractEnumValue
+     * @return EnumOptionInterface
      */
     protected function getEnumValue($enumCode, $id)
     {
-        $className = ExtendHelper::buildEnumValueClassName($enumCode);
-
-        return $this->getRepository($className)
-            ->find($id);
+        return $this->getRepository(EnumOption::class)
+            ->find(ExtendHelper::buildEnumOptionId($enumCode, $id));
     }
 
     /**

@@ -9,17 +9,13 @@ class ChannelType implements ChannelInterface, IconAwareIntegrationInterface
 {
     const TYPE = 'dotmailer';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getLabel()
     {
         return 'oro.dotmailer.channel_type.label';
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getIcon()
     {
         return 'bundles/orodotmailer/img/dotmailer.ico';

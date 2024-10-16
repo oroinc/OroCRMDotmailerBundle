@@ -28,9 +28,7 @@ class DropDeprecatedColumnsForContact implements Migration
         'mergeVarValues'
     ];
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function up(Schema $schema, QueryBag $queries): void
     {
         $table = $schema->getTable('orocrm_dm_contact');

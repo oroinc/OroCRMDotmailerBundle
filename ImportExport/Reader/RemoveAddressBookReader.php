@@ -7,6 +7,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemoveAddressBookIter
 
 class RemoveAddressBookReader extends AbstractReader
 {
+    #[\Override]
     protected function initializeReader()
     {
         $this->logger->info('Importing Removed Address Books');

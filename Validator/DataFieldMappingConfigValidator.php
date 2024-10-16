@@ -50,8 +50,8 @@ class DataFieldMappingConfigValidator extends ConstraintValidator
      * @param DataFieldMappingConfig             $entity
      * @param DataFieldMappingConfigConstraint $constraint
      *
-     * {@inheritdoc}
      */
+    #[\Override]
     public function validate($entity, Constraint $constraint)
     {
         if (!$entity instanceof DataFieldMappingConfig) {
@@ -76,7 +76,7 @@ class DataFieldMappingConfigValidator extends ConstraintValidator
     protected function isFieldsTypeCompatible(DataFieldMappingConfig $entity)
     {
         $fields = explode(',', $entity->getEntityFields());
-        $type = $entity->getDataField()->getType()->getId();
+        $type = $entity->getDataField()->getType()->getInternalId();
         if (count($fields) > 1 && $type !== DataField::FIELD_TYPE_STRING) {
             //multiple fields can be mapped to the string data field only
             return $this->translator->trans('oro.dotmailer.datafieldmappingconfig.validation.multiple');

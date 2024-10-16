@@ -17,9 +17,7 @@ class ContactSyncWriter extends ImportWriter
         $this->optionalListenerManager = $optionalListenerManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function write(array $items)
     {
         $context = $this->contextRegistry

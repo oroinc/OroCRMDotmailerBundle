@@ -10,6 +10,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
 {
     protected bool $isRealGridRequest = false;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -68,9 +69,7 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
         self::assertStringContainsString($returnValue['name'], $crawler->html());
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function gridProvider(): array
     {
         return [
@@ -126,8 +125,8 @@ class DataFieldControllerTest extends AbstractDatagridTestCase
         $form = $crawler->selectButton('Save and Close')->form();
         $form['oro_dotmailer_data_field_form[channel]'] = $this->getReference('oro_dotmailer.channel.first')->getId();
         $form['oro_dotmailer_data_field_form[name]'] = 'test_name';
-        $form['oro_dotmailer_data_field_form[type]'] = 'String';
-        $form['oro_dotmailer_data_field_form[visibility]'] = 'Private';
+        $form['oro_dotmailer_data_field_form[type]'] = 'dm_df_type.String';
+        $form['oro_dotmailer_data_field_form[visibility]'] = 'dm_df_visibility.Private';
         $form['oro_dotmailer_data_field_form[defaultValue]'] = 'test';
         $form['oro_dotmailer_data_field_form[notes]'] = 'test note';
 

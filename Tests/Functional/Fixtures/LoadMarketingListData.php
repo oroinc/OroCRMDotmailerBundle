@@ -88,9 +88,7 @@ class LoadMarketingListData extends AbstractFixture implements DependentFixtureI
         ],
     ];
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function load(ObjectManager $manager)
     {
         $listTypeRepository = $manager->getRepository(MarketingListType::class);
@@ -110,9 +108,7 @@ class LoadMarketingListData extends AbstractFixture implements DependentFixtureI
         $manager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getDependencies()
     {
         return [

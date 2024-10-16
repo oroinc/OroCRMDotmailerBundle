@@ -10,9 +10,7 @@ class CampaignClickConnector extends AbstractActivityConnector
     const TYPE = 'campaign_click';
     const JOB_IMPORT = 'dotmailer_campaign_click_import';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getConnectorSource()
     {
         if (!$this->isFeaturesEnabled()) {
@@ -28,25 +26,19 @@ class CampaignClickConnector extends AbstractActivityConnector
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getLabel(): string
     {
         return 'oro.dotmailer.connector.campaign_click.label';
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getImportJobName()
     {
         return self::JOB_IMPORT;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getType()
     {
         return self::TYPE;

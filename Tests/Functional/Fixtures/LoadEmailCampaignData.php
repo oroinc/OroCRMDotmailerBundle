@@ -29,9 +29,7 @@ class LoadEmailCampaignData extends AbstractFixture implements DependentFixtureI
         ],
     ];
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function load(ObjectManager $manager)
     {
         foreach ($this->data as $data) {
@@ -55,6 +53,7 @@ class LoadEmailCampaignData extends AbstractFixture implements DependentFixtureI
      *
      * @return array
      */
+    #[\Override]
     public function getDependencies()
     {
         return [

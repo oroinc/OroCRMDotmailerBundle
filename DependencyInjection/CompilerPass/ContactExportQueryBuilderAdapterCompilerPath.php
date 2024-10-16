@@ -12,9 +12,7 @@ class ContactExportQueryBuilderAdapterCompilerPath implements CompilerPassInterf
     const REGISTRY = 'oro_dotmailer.contact.export.query_builder_adapter.registry';
     const ADD_ADAPTER_METHOD = 'addAdapter';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function process(ContainerBuilder $container)
     {
         $adapters = $container->findTaggedServiceIds(self::ADAPTERS_TAG);

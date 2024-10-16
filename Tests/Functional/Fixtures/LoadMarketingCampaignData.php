@@ -23,9 +23,7 @@ class LoadMarketingCampaignData extends AbstractFixture implements DependentFixt
         ],
     ];
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function load(ObjectManager $manager)
     {
         foreach ($this->data as $data) {
@@ -46,6 +44,7 @@ class LoadMarketingCampaignData extends AbstractFixture implements DependentFixt
      *
      * @return array
      */
+    #[\Override]
     public function getDependencies()
     {
         return [

@@ -11,6 +11,7 @@ use Oro\Bundle\DotmailerBundle\Tests\Functional\Fixtures\LoadCampaignData;
 
 class RemoveCampaignsImportTest extends AbstractImportExportTestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

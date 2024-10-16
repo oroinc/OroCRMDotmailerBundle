@@ -13,6 +13,7 @@ class DataFieldTest extends \PHPUnit\Framework\TestCase
 
     private DataField $entity;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->entity = new DataField();

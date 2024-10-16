@@ -26,17 +26,13 @@ class ContactDataConverter extends AbstractDataConverter implements ContextAware
         $this->mappingProvider = $mappingProvider;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function setImportExportContext(ContextInterface $context)
     {
         $this->context = $context;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getHeaderConversionRules()
     {
         return [
@@ -49,9 +45,7 @@ class ContactDataConverter extends AbstractDataConverter implements ContextAware
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getBackendHeader()
     {
         $backendHeader = [
@@ -66,9 +60,7 @@ class ContactDataConverter extends AbstractDataConverter implements ContextAware
         return $backendHeader;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function convertToImportFormat(array $importedRecord, $skipNullValues = true)
     {
         if (!empty($importedRecord['datafields'])) {
@@ -99,9 +91,7 @@ class ContactDataConverter extends AbstractDataConverter implements ContextAware
         return parent::convertToImportFormat($importedRecord, $skipNullValues);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    #[\Override]
     public function convertToExportFormat(array $exportedRecord, $skipNullValues = true)
     {
         $entityClass = !empty($exportedRecord['entityClass']) ? $exportedRecord['entityClass'] : false;

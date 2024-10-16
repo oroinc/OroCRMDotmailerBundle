@@ -182,9 +182,7 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
         ]
     ];
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function load(ObjectManager $manager)
     {
         foreach ($this->data as $data) {
@@ -203,9 +201,7 @@ class LoadSegmentData extends AbstractFixture implements DependentFixtureInterfa
         $manager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getDependencies()
     {
         return [

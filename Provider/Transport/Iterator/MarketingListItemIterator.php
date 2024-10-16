@@ -10,9 +10,7 @@ use Oro\Bundle\DotmailerBundle\ImportExport\Processor\ContactSyncProcessor;
  */
 class MarketingListItemIterator extends AbstractMarketingListItemIterator
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getIteratorQueryBuilder(AddressBook $addressBook)
     {
         $currentItemsInBatch = $this->importExportContext
@@ -28,6 +26,7 @@ class MarketingListItemIterator extends AbstractMarketingListItemIterator
     /**
      * Clear cache after Append Iterator starts to iterate new iterator with different Address Book
      */
+    #[\Override]
     public function rewind(): void
     {
         $this->importExportContext

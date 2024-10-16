@@ -10,6 +10,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UpdateEntityFieldsFro
  */
 class UpdateEntityFieldsFromContactReader extends AbstractExportReader
 {
+    #[\Override]
     protected function initializeReader()
     {
         $this->logger->info('Updating entities data with contacts data fields based on mapping');

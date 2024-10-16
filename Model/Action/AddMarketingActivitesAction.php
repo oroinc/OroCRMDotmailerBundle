@@ -39,9 +39,7 @@ class AddMarketingActivitesAction extends AbstractMarketingListEntitiesAction im
         $this->activityFactory = $activityFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function isAllowed($context)
     {
         if (!$this->isFeaturesEnabled()) {
@@ -61,9 +59,7 @@ class AddMarketingActivitesAction extends AbstractMarketingListEntitiesAction im
         return $isAllowed && parent::isAllowed($context);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function initialize(array $options)
     {
         $this->options = $options;
@@ -71,9 +67,7 @@ class AddMarketingActivitesAction extends AbstractMarketingListEntitiesAction im
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function executeAction($context)
     {
         $changeSet = $this->contextAccessor->getValue($context, $this->options[self::OPTION_KEY_CHANGESET]);

@@ -30,9 +30,7 @@ class RejectedContactExportIterator extends AbstractIterator
         $this->exportId = $exportId;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getItems($take, $skip)
     {
         $items = $this->managerRegistry

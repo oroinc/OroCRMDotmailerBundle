@@ -124,6 +124,7 @@ class Activity implements ChannelAwareInterface
     /**
      * @return Channel
      */
+    #[\Override]
     public function getChannel()
     {
         return $this->channel;
@@ -134,6 +135,7 @@ class Activity implements ChannelAwareInterface
      *
      * @return Activity
      */
+    #[\Override]
     public function setChannel(Channel $channel = null)
     {
         $this->channel = $channel;

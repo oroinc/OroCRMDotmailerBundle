@@ -12,9 +12,7 @@ class CampaignConnector extends AbstractDotmailerConnector
     const TYPE = 'campaign';
     const JOB_IMPORT = 'dotmailer_campaign_import';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getConnectorSource()
     {
         $this->logger->info('Importing Campaigns.');
@@ -25,25 +23,19 @@ class CampaignConnector extends AbstractDotmailerConnector
         return $this->transport->getCampaigns($aBooksToSynchronize);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getLabel(): string
     {
         return 'oro.dotmailer.connector.campaign.label';
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getImportJobName()
     {
         return self::JOB_IMPORT;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getType()
     {
         return self::TYPE;

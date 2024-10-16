@@ -97,9 +97,7 @@ class LoadAddressBookData extends AbstractFixture implements DependentFixtureInt
         ],
     ];
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function load(ObjectManager $manager)
     {
         foreach ($this->data as $data) {
@@ -121,9 +119,7 @@ class LoadAddressBookData extends AbstractFixture implements DependentFixtureInt
         $manager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getDependencies()
     {
         return [

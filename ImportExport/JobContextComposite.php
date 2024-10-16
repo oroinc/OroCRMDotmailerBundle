@@ -41,177 +41,133 @@ class JobContextComposite implements ContextInterface
         $this->contexts = $contexts;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function addError($message)
     {
         $this->currentStepContext->addError($message);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function addErrors(array $messages)
     {
         $this->currentStepContext->addErrors($messages);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getErrors()
     {
         return $this->mergeValuesFromContexts('getErrors');
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function addPostponedRow(array $row)
     {
         $this->currentStepContext->addPostponedRow($row);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function addPostponedRows(array $rows)
     {
         $this->currentStepContext->addPostponedRows($rows);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getPostponedRows()
     {
         return $this->mergeValuesFromContexts('getPostponedRows');
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getFailureExceptions()
     {
         return $this->mergeValuesFromContexts('getFailureExceptions');
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function incrementReadCount($incrementBy = 1)
     {
         $this->currentStepContext->incrementReadCount($incrementBy);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getReadCount()
     {
         return $this->sumCountsFromContexts('getReadCount');
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function incrementReadOffset()
     {
         $this->currentStepContext->incrementReadOffset();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getReadOffset()
     {
         return $this->sumCountsFromContexts('getReadOffset');
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function incrementAddCount($incrementBy = 1)
     {
         $this->currentStepContext->incrementAddCount($incrementBy);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getAddCount()
     {
         return $this->sumCountsFromContexts('getAddCount');
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function incrementUpdateCount($incrementBy = 1)
     {
         $this->currentStepContext->incrementUpdateCount($incrementBy);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getUpdateCount()
     {
         return $this->sumCountsFromContexts('getUpdateCount');
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function incrementReplaceCount($incrementBy = 1)
     {
         $this->currentStepContext->incrementReplaceCount($incrementBy);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getReplaceCount()
     {
         return $this->sumCountsFromContexts('getReplaceCount');
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function incrementDeleteCount($incrementBy = 1)
     {
         $this->currentStepContext->incrementDeleteCount($incrementBy);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getDeleteCount()
     {
         return $this->sumCountsFromContexts('getDeleteCount');
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function incrementErrorEntriesCount($incrementBy = 1)
     {
         $this->currentStepContext->incrementErrorEntriesCount($incrementBy);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getErrorEntriesCount()
     {
         return $this->sumCountsFromContexts('getErrorEntriesCount');
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function setValue($name, $value)
     {
         foreach ($this->contexts as $context) {
@@ -221,9 +177,7 @@ class JobContextComposite implements ContextInterface
         $this->currentStepContext->setValue($name, $value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getValue($name)
     {
         $value = null;
@@ -243,17 +197,13 @@ class JobContextComposite implements ContextInterface
         return $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getConfiguration()
     {
         return $this->currentStepContext->getConfiguration();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function hasOption($name)
     {
         foreach ($this->contexts as $context) {
@@ -265,9 +215,7 @@ class JobContextComposite implements ContextInterface
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getOption($name, $default = null)
     {
         $option = $default;
@@ -287,9 +235,7 @@ class JobContextComposite implements ContextInterface
         return $option;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function removeOption($name)
     {
         foreach ($this->contexts as $context) {

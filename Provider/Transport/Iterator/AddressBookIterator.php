@@ -6,9 +6,6 @@ use DotMailer\Api\Resources\IResources;
 
 class AddressBookIterator extends AbstractIterator
 {
-    /**
-     * {@inheritdoc}
-     */
     protected $batchSize = 100;
 
     /**
@@ -21,9 +18,7 @@ class AddressBookIterator extends AbstractIterator
         $this->resources = $resources;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getItems($take, $skip)
     {
         $apiAddressBookList = $this->resources->GetAddressBooks($take, $skip)

@@ -44,6 +44,7 @@ class OAuth implements ChannelAwareInterface
     /**
      * @return Channel
      */
+    #[\Override]
     public function getChannel()
     {
         return $this->channel;
@@ -54,6 +55,7 @@ class OAuth implements ChannelAwareInterface
      *
      * @return OAuth
      */
+    #[\Override]
     public function setChannel(Channel $channel = null)
     {
         $this->channel = $channel;

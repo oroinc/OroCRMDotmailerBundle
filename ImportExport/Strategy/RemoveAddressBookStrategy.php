@@ -10,9 +10,7 @@ use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
  */
 class RemoveAddressBookStrategy extends AbstractImportStrategy
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function process($entity)
     {
         if ($entity instanceof AddressBook) {

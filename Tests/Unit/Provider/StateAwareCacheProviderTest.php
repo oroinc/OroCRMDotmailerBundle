@@ -17,6 +17,7 @@ class StateAwareCacheProviderTest extends \PHPUnit\Framework\TestCase
     /** @var StateAwareCacheProvider */
     private $provider;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->doctrineHelper = $this->createMock(DoctrineHelper::class);

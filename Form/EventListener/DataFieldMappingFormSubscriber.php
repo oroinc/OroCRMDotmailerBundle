@@ -12,9 +12,7 @@ use Symfony\Component\Form\FormEvents;
  */
 class DataFieldMappingFormSubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [

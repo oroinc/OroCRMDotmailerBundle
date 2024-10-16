@@ -3,13 +3,15 @@
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 
+/**
+ * CampaignClickIterator class
+ */
 class CampaignClickIterator extends AbstractActivityIterator
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getAllActivities($take, $skip)
     {
         $items = $this->dotmailerResources->GetCampaignClicks($this->campaignOriginId, $take, $skip);
@@ -17,9 +19,7 @@ class CampaignClickIterator extends AbstractActivityIterator
         return $items;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getActivitiesSinceDate($take, $skip)
     {
         if (!$this->additionalResource) {
@@ -35,11 +35,12 @@ class CampaignClickIterator extends AbstractActivityIterator
         return $items;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getMarketingActivityType()
+    #[\Override]
+    protected function getMarketingActivityType(): string
     {
-        return MarketingActivity::TYPE_CLICK;
+        return ExtendHelper::buildEnumOptionId(
+            MarketingActivity::TYPE_ENUM_CODE,
+            MarketingActivity::TYPE_CLICK
+        );
     }
 }

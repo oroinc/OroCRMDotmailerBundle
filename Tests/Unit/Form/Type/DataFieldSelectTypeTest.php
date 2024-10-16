@@ -12,9 +12,7 @@ use Symfony\Component\Form\FormView;
 
 class DataFieldSelectTypeTest extends FormIntegrationTestCase
 {
-    /**
-     * {@inheritDoc}
-     */
+    #[\Override]
     protected function getExtensions(): array
     {
         return [

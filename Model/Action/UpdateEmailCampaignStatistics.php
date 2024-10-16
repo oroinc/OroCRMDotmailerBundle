@@ -27,9 +27,7 @@ class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function isAllowed($context)
     {
         $isAllowed = false;
@@ -46,9 +44,7 @@ class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
         return $isAllowed && parent::isAllowed($context);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function executeAction($context)
     {
         $this->updateStatistics($context->getEntity());
@@ -78,9 +74,7 @@ class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function initialize(array $options)
     {
         return $this;

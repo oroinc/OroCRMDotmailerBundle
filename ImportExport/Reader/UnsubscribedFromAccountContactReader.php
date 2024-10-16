@@ -15,6 +15,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Status;
  */
 class UnsubscribedFromAccountContactReader extends AbstractReader
 {
+    #[\Override]
     protected function initializeReader()
     {
         $this->logger->info('Importing Unsubscribed from Account Contacts');

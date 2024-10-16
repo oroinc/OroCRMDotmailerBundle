@@ -7,6 +7,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemoveDataFieldIterat
 
 class RemoveDataFieldReader extends AbstractReader
 {
+    #[\Override]
     protected function initializeReader()
     {
         $this->logger->info('Importing Removed Data Fields');

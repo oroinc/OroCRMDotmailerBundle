@@ -77,9 +77,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
         $this->encryptor = $encryptor;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function init(Transport $transportEntity)
     {
         $settings = $transportEntity->getSettingsBag();
@@ -481,25 +479,19 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
         return $this->dotmailerResources->GetContactsImportByImportId($importId);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getLabel()
     {
         return 'oro.dotmailer.integration_transport.label';
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getSettingsFormType()
     {
         return IntegrationSettingsType::class;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getSettingsEntityFQCN()
     {
         return 'Oro\\Bundle\\DotmailerBundle\\Entity\\DotmailerTransport';

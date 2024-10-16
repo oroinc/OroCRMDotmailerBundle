@@ -11,6 +11,7 @@ use Oro\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem;
 
 class ExportSyncsUnsubscribedDMContactsWithMarketingListTest extends AbstractImportExportTestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -12,6 +12,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AppendIterator;
  */
 class NotExportedContactReader extends AbstractReader
 {
+    #[\Override]
     protected function initializeReader()
     {
         if (!$channel = $this->getChannel()) {

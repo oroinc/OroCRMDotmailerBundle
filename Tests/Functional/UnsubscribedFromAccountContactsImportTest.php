@@ -13,6 +13,7 @@ use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 
 class UnsubscribedFromAccountContactsImportTest extends AbstractImportExportTestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -49,19 +50,19 @@ class UnsubscribedFromAccountContactsImportTest extends AbstractImportExportTest
         $this->assertTrue($result, "Job Failed with output:\n $log");
 
         $contactRepository = $this->managerRegistry->getRepository(Contact::class);
-        $statusRepository = $this->managerRegistry->getRepository(
-            ExtendHelper::buildEnumValueClassName('dm_cnt_status')
-        );
-
         foreach ($expected as $expectedContact) {
-            $expectedStatus = $statusRepository->find($expectedContact['status']);
-            $searchCriteria = [
-                'originId' => $expectedContact['originId'],
-                'status'   => $expectedStatus,
-                'channel'  => $this->getReference($expectedContact['channel'])
-            ];
+            $expectedStatus = ExtendHelper::buildEnumOptionId('dm_cnt_status', $expectedContact['status']);
 
-            $actualContacts = $contactRepository->findBy($searchCriteria);
+            $actualContacts = $contactRepository->createQueryBuilder('st')
+                ->andWhere('st.originId = :originId')
+                ->andWhere("JSON_EXTRACT(st.serialized_data, 'status') = :statusId")
+                ->andWhere('st.channel = :channel')
+                ->setParameter('originId', $expectedContact['originId'])
+                ->setParameter('statusId', $expectedStatus)
+                ->setParameter('channel', $this->getReference($expectedContact['channel']))
+                ->getQuery()
+                ->getResult();
+
             $this->assertCount(1, $actualContacts);
             /** @var Contact $actualContact */
             $actualContact = $actualContacts[0];
@@ -69,7 +70,7 @@ class UnsubscribedFromAccountContactsImportTest extends AbstractImportExportTest
             $actualAddressBooks = $actualContact->getAddressBookContacts();
             foreach ($actualAddressBooks as $actualAddressBook) {
                 $this->assertEquals($expectedContact['unsubscribedDate'], $actualAddressBook->getUnsubscribedDate());
-                $this->assertEquals($expectedStatus, $actualAddressBook->getStatus());
+                $this->assertEquals($expectedStatus, $actualAddressBook->getStatus()->getId());
             }
             $this->assertEquals($expectedContact['unsubscribedDate'], $actualContact->getUnsubscribedDate());
         }

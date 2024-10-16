@@ -25,6 +25,7 @@ class MarketingListStateItemVoterTest extends \PHPUnit\Framework\TestCase
     /** @var MarketingListStateItemVoter */
     private $voter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->doctrineHelper = $this->createMock(DoctrineHelper::class);

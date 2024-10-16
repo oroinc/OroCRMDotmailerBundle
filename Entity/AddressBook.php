@@ -10,7 +10,7 @@ use Extend\Entity\Autocomplete\OroDotmailerBundle_Entity_AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookRepository;
 use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\ConfigField;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOptionInterface;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityTrait;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
@@ -20,10 +20,10 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
 /**
  * Address book entity.
  *
- * @method AbstractEnumValue getVisibility()
- * @method AddressBook       setVisibility(AbstractEnumValue $enumValue)
- * @method AbstractEnumValue getSyncStatus()
- * @method AddressBook       setSyncStatus(AbstractEnumValue $enumValue)
+ * @method EnumOptionInterface getVisibility()
+ * @method AddressBook setVisibility(EnumOptionInterface $enumOption)
+ * @method EnumOptionInterface getSyncStatus()
+ * @method AddressBook setSyncStatus(EnumOptionInterface $enumOption)
  * @mixin OroDotmailerBundle_Entity_AddressBook
  */
 #[ORM\Entity(repositoryClass: AddressBookRepository::class)]
@@ -148,6 +148,7 @@ class AddressBook implements OriginAwareInterface, ExtendEntityInterface
     /**
      * @return Channel
      */
+    #[\Override]
     public function getChannel()
     {
         return $this->channel;
@@ -158,6 +159,7 @@ class AddressBook implements OriginAwareInterface, ExtendEntityInterface
      *
      * @return AddressBook
      */
+    #[\Override]
     public function setChannel(Channel $channel)
     {
         $this->channel = $channel;

@@ -10,9 +10,7 @@ class AddressBookConnector extends AbstractDotmailerConnector
     const TYPE = 'address_book';
     const IMPORT_JOB = 'dotmailer_address_book_import';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getConnectorSource()
     {
         $this->logger->info('Importing Address Books.');
@@ -20,25 +18,19 @@ class AddressBookConnector extends AbstractDotmailerConnector
         return $this->transport->getAddressBooks();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getLabel(): string
     {
         return 'oro.dotmailer.connector.address_book.label';
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getImportJobName()
     {
         return self::IMPORT_JOB;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getType()
     {
         return self::TYPE;

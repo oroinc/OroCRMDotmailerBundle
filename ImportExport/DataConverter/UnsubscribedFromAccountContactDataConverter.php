@@ -8,9 +8,7 @@ class UnsubscribedFromAccountContactDataConverter extends AbstractTableDataConve
 {
     const CONTACT_EMAIL = 'email';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getHeaderConversionRules()
     {
         return [
@@ -20,9 +18,7 @@ class UnsubscribedFromAccountContactDataConverter extends AbstractTableDataConve
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function convertToImportFormat(array $importedRecord, $skipNullValues = true)
     {
         if (is_array($importedRecord['suppressedcontact'])) {
@@ -32,9 +28,7 @@ class UnsubscribedFromAccountContactDataConverter extends AbstractTableDataConve
         return parent::convertToImportFormat($importedRecord, $skipNullValues);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function getBackendHeader()
     {
         throw new \Exception('Normalization is not implemented!');

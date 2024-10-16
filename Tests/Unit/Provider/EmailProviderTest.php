@@ -17,6 +17,7 @@ class EmailProviderTest extends \PHPUnit\Framework\TestCase
     /** @var EmailProvider */
     private $emailProvider;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->contactInformationFieldHelper = $this->createMock(ContactInformationFieldHelper::class);

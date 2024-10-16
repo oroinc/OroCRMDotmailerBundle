@@ -16,9 +16,7 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
 {
     const CACHED_CAMPAIGN_ENTITIES = 'cachedCampaignEntities';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     protected function beforeProcessEntity($entity)
     {
         $entity = parent::beforeProcessEntity($entity);
@@ -59,6 +57,7 @@ class ActivityContactStrategy extends AddOrReplaceStrategy
      *
      * @return string
      */
+    #[\Override]
     protected function getCurrentBatchItemsCacheKey($entity)
     {
         return "{$entity->getCampaign()->getId()}_{$entity->getContact()->getId()}";

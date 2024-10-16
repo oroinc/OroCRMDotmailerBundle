@@ -54,6 +54,7 @@ class Client implements DotmailerClientInterface
         );
     }
 
+    #[\Override]
     public function setBaseUrl(string $url): void
     {
         $this->restClient->setOption(Request::BASE_URL_KEY, $url);
@@ -68,6 +69,7 @@ class Client implements DotmailerClientInterface
      * @return string|null
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
+    #[\Override]
     public function execute($paramArr, $responses = [])
     {
         // when only url is supplied

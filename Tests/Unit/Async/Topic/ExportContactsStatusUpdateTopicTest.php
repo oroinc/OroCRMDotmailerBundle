@@ -11,11 +11,13 @@ use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 
 class ExportContactsStatusUpdateTopicTest extends AbstractTopicTestCase
 {
+    #[\Override]
     protected function getTopic(): TopicInterface
     {
         return new ExportContactsStatusUpdateTopic();
     }
 
+    #[\Override]
     public function validBodyDataProvider(): array
     {
         $requiredOptionsSet = [
@@ -30,6 +32,7 @@ class ExportContactsStatusUpdateTopicTest extends AbstractTopicTestCase
         ];
     }
 
+    #[\Override]
     public function invalidBodyDataProvider(): array
     {
         return [

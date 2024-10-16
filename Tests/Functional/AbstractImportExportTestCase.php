@@ -25,6 +25,7 @@ abstract class AbstractImportExportTestCase extends WebTestCase
     /** @var ManagerRegistry */
     protected $managerRegistry;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->initClient();

@@ -6,9 +6,7 @@ class ContactSyncProcessor extends ImportProcessor
 {
     const CURRENT_BATCH_READ_ITEMS = 'currentBatchReadItems';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function process($item)
     {
         $items = $this->context->getValue(self::CURRENT_BATCH_READ_ITEMS) ?: [];

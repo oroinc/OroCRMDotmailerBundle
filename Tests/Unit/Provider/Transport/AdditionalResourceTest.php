@@ -16,6 +16,7 @@ class AdditionalResourceTest extends \PHPUnit\Framework\TestCase
     /** @var AdditionalResource */
     private $additionalResource;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->restClient = $this->createMock(IClient::class);

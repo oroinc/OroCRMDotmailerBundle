@@ -11,7 +11,7 @@ use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\CampaignRepository;
 use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\ConfigField;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOptionInterface;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityTrait;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
@@ -23,10 +23,10 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.TooManyFields)
  *
- * @method AbstractEnumValue getReplyAction()
- * @method Campaign setReplyAction(AbstractEnumValue $enumValue)
- * @method AbstractEnumValue getStatus()
- * @method Campaign setStatus(AbstractEnumValue $enumValue)
+ * @method EnumOptionInterface getReplyAction()
+ * @method Campaign setReplyAction(EnumOptionInterface $enumOption)
+ * @method EnumOptionInterface getStatus()
+ * @method Campaign setStatus(EnumOptionInterface $enumOption)
  * @mixin OroDotmailerBundle_Entity_Campaign
  */
 #[ORM\Entity(repositoryClass: CampaignRepository::class)]
@@ -168,6 +168,7 @@ class Campaign implements OriginAwareInterface, ExtendEntityInterface
     /**
      * @return Channel
      */
+    #[\Override]
     public function getChannel()
     {
         return $this->channel;
@@ -178,6 +179,7 @@ class Campaign implements OriginAwareInterface, ExtendEntityInterface
      *
      * @return Campaign
      */
+    #[\Override]
     public function setChannel(Channel $channel)
     {
         $this->channel = $channel;

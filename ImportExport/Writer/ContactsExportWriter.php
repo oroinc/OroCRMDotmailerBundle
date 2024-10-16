@@ -14,7 +14,8 @@ use Oro\Bundle\DotmailerBundle\ImportExport\DataConverter\ContactDataConverter;
 use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\DotmailerTransport;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemovedContactsExportIterator;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOption;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOptionInterface;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextRegistry;
@@ -78,9 +79,7 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
         $this->logHelper = $logHelper;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function write(array $items)
     {
         /** @var EntityManager $manager */
@@ -164,9 +163,12 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
             ->findOneBy(['originId' => $addressBookOriginId, 'channel' => $channel]);
         $exportEntity->setAddressBook($addressBook);
 
-        $className = ExtendHelper::buildEnumValueClassName('dm_import_status');
-        /** @var AbstractEnumValue $status */
-        $status = $manager->find($className, (string)$importStatus->status);
+        /** @var EnumOptionInterface $status */
+        $importStatusId = (string)$importStatus->status;
+        $status = $manager->find(
+            EnumOption::class,
+            ExtendHelper::buildEnumOptionId('dm_import_status', $importStatusId)
+        );
         $exportEntity->setStatus($status);
         $exportEntity->setChannel($channel);
 
@@ -195,6 +197,7 @@ class ContactsExportWriter extends CsvEchoWriter implements StepExecutionAwareIn
         $this->logger->info($message);
     }
 
+    #[\Override]
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;

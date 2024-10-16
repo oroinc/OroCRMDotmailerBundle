@@ -54,17 +54,13 @@ class RejectedContactExportWriter implements ItemWriterInterface, StepExecutionA
         $this->logHelper = $logHelper;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->context = $this->contextRegistry->getByStepExecution($stepExecution);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function write(array $items)
     {
         /** @var EntityManager $em */

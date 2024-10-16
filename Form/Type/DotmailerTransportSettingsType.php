@@ -10,9 +10,7 @@ class DotmailerTransportSettingsType extends AbstractTransportSettingsType
 {
     const NAME = 'oro_dotmailer_email_transport_settings';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -28,9 +26,7 @@ class DotmailerTransportSettingsType extends AbstractTransportSettingsType
         parent::buildForm($builder, $options);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
@@ -40,17 +36,12 @@ class DotmailerTransportSettingsType extends AbstractTransportSettingsType
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->getBlockPrefix();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return self::NAME;

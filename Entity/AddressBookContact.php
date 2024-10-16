@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Extend\Entity\Autocomplete\OroDotmailerBundle_Entity_AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactRepository;
 use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\Config;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOptionInterface;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityTrait;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
@@ -15,10 +15,10 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 /**
  * Address book contact entity.
  *
- * @method AbstractEnumValue getStatus()
- * @method AddressBookContact setStatus(AbstractEnumValue $enumValue)
- * @method AbstractEnumValue getExportOperationType()
- * @method AddressBookContact setExportOperationType(AbstractEnumValue $enumValue)
+ * @method EnumOptionInterface getStatus()
+ * @method AddressBookContact setStatus(EnumOptionInterface $enumOption)
+ * @method EnumOptionInterface getExportOperationType()
+ * @method AddressBookContact setExportOperationType(EnumOptionInterface $enumOption)
  * @mixin OroDotmailerBundle_Entity_AddressBookContact
  */
 #[ORM\Entity(repositoryClass: AddressBookContactRepository::class)]
@@ -271,6 +271,7 @@ class AddressBookContact implements ChannelAwareInterface, ExtendEntityInterface
     /**
      * @return Channel
      */
+    #[\Override]
     public function getChannel()
     {
         return $this->channel;
@@ -281,6 +282,7 @@ class AddressBookContact implements ChannelAwareInterface, ExtendEntityInterface
      *
      * @return AddressBookContact
      */
+    #[\Override]
     public function setChannel(Channel $channel = null)
     {
         $this->channel = $channel;

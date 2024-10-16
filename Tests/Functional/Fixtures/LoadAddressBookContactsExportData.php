@@ -51,9 +51,7 @@ class LoadAddressBookContactsExportData extends AbstractFixture implements Depen
         ],
     ];
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function load(ObjectManager $manager)
     {
         foreach ($this->data as $item) {
@@ -86,9 +84,7 @@ class LoadAddressBookContactsExportData extends AbstractFixture implements Depen
         $manager->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getDependencies()
     {
         return [
