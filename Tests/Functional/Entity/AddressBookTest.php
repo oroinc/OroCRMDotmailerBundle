@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\DotmailerBundle\Tests\Functional;
+namespace Oro\Bundle\DotmailerBundle\Tests\Functional\Entity;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
