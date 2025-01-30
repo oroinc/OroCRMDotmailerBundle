@@ -136,7 +136,7 @@ class Activity implements ChannelAwareInterface
      * @return Activity
      */
     #[\Override]
-    public function setChannel(Channel $channel = null)
+    public function setChannel(?Channel $channel = null)
     {
         $this->channel = $channel;
 
@@ -156,7 +156,7 @@ class Activity implements ChannelAwareInterface
      *
      * @return Activity
      */
-    public function setContact(Contact $contact = null)
+    public function setContact(?Contact $contact = null)
     {
         $this->contact = $contact;
 
@@ -316,7 +316,7 @@ class Activity implements ChannelAwareInterface
      *
      * @return Activity
      */
-    public function setDateSent(\DateTime $dateSent = null)
+    public function setDateSent(?\DateTime $dateSent = null)
     {
         $this->dateSent = $dateSent;
 
@@ -336,7 +336,7 @@ class Activity implements ChannelAwareInterface
      *
      * @return Activity
      */
-    public function setDateFirstOpened(\DateTime $dateFirstOpened = null)
+    public function setDateFirstOpened(?\DateTime $dateFirstOpened = null)
     {
         $this->dateFirstOpened = $dateFirstOpened;
 
@@ -356,7 +356,7 @@ class Activity implements ChannelAwareInterface
      *
      * @return Activity
      */
-    public function setDateLastOpened(\DateTime $dateLastOpened = null)
+    public function setDateLastOpened(?\DateTime $dateLastOpened = null)
     {
         $this->dateLastOpened = $dateLastOpened;
 
@@ -456,7 +456,7 @@ class Activity implements ChannelAwareInterface
      *
      * @return Activity
      */
-    public function setCreatedAt(\DateTime $createdAt = null)
+    public function setCreatedAt(?\DateTime $createdAt = null)
     {
         $this->createdAt = $createdAt;
 
@@ -476,7 +476,7 @@ class Activity implements ChannelAwareInterface
      *
      * @return Activity
      */
-    public function setUpdatedAt(\DateTime $updatedAt = null)
+    public function setUpdatedAt(?\DateTime $updatedAt = null)
     {
         $this->updatedAt = $updatedAt;
 
@@ -496,7 +496,7 @@ class Activity implements ChannelAwareInterface
      *
      * @return Activity
      */
-    public function setOwner(Organization $owner = null)
+    public function setOwner(?Organization $owner = null)
     {
         $this->owner = $owner;
 
@@ -516,7 +516,7 @@ class Activity implements ChannelAwareInterface
      *
      * @return Activity
      */
-    public function setCampaign(Campaign $campaign = null)
+    public function setCampaign(?Campaign $campaign = null)
     {
         $this->campaign = $campaign;
 

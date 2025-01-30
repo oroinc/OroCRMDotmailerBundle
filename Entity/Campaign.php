@@ -539,7 +539,7 @@ class Campaign implements OriginAwareInterface, ExtendEntityInterface
      *
      * @return Campaign
      */
-    public function setEmailCampaign(EmailCampaign $emailCampaign = null)
+    public function setEmailCampaign(?EmailCampaign $emailCampaign = null)
     {
         $this->emailCampaign = $emailCampaign;
 
@@ -559,7 +559,7 @@ class Campaign implements OriginAwareInterface, ExtendEntityInterface
      *
      * @return Campaign
      */
-    public function setCampaignSummary(CampaignSummary $campaignSummary = null)
+    public function setCampaignSummary(?CampaignSummary $campaignSummary = null)
     {
         $this->campaignSummary = $campaignSummary;
 

@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 class DateTimeNormalizer implements ContextAwareNormalizerInterface, ContextAwareDenormalizerInterface
 {
     #[\Override]
-    public function denormalize($data, string $type, string $format = null, array $context = [])
+    public function denormalize($data, string $type, ?string $format = null, array $context = [])
     {
         if (empty($data)) {
             return null;
@@ -26,20 +26,20 @@ class DateTimeNormalizer implements ContextAwareNormalizerInterface, ContextAwar
     }
 
     #[\Override]
-    public function normalize($object, string $format = null, array $context = array())
+    public function normalize($object, ?string $format = null, array $context = array())
     {
         throw new RuntimeException('Do not support normalization.');
     }
 
     #[\Override]
-    public function supportsDenormalization($data, string $type, string $format = null, array $context = []): bool
+    public function supportsDenormalization($data, string $type, ?string $format = null, array $context = []): bool
     {
         return is_string($data) && $type === 'DateTime' && !empty($context['channelType'])
             && $context['channelType'] === ChannelType::TYPE;
     }
 
     #[\Override]
-    public function supportsNormalization($data, string $format = null, array $context = []): bool
+    public function supportsNormalization($data, ?string $format = null, array $context = []): bool
     {
         return false;
     }

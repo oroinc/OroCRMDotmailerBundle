@@ -220,7 +220,7 @@ class AddressBook implements OriginAwareInterface, ExtendEntityInterface
      *
      * @return AddressBook
      */
-    public function setLastExportedAt(\DateTime $lastExportedAt = null)
+    public function setLastExportedAt(?\DateTime $lastExportedAt = null)
     {
         $this->lastExportedAt = $lastExportedAt;
 
@@ -240,7 +240,7 @@ class AddressBook implements OriginAwareInterface, ExtendEntityInterface
      *
      * @return AddressBook
      */
-    public function setLastImportedAt(\DateTime $lastImportedAt = null)
+    public function setLastImportedAt(?\DateTime $lastImportedAt = null)
     {
         $this->lastImportedAt = $lastImportedAt;
 
@@ -388,7 +388,7 @@ class AddressBook implements OriginAwareInterface, ExtendEntityInterface
      *
      * @return AddressBook
      */
-    public function setMarketingList(MarketingList $marketingList = null)
+    public function setMarketingList(?MarketingList $marketingList = null)
     {
         $this->marketingList = $marketingList;
 

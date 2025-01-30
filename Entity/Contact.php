@@ -393,7 +393,7 @@ class Contact implements OriginAwareInterface, ExtendEntityInterface
      *
      * @return Contact
      */
-    public function setUnsubscribedDate(\DateTime $unsubscribedDate = null)
+    public function setUnsubscribedDate(?\DateTime $unsubscribedDate = null)
     {
         $this->unsubscribedDate = $unsubscribedDate;
 
@@ -413,7 +413,7 @@ class Contact implements OriginAwareInterface, ExtendEntityInterface
      *
      * @return Contact
      */
-    public function setLastSubscribedDate(\DateTime $lastSubscribedDate = null)
+    public function setLastSubscribedDate(?\DateTime $lastSubscribedDate = null)
     {
         $this->lastSubscribedDate = $lastSubscribedDate;
 

@@ -25,7 +25,7 @@ class DotmailerResourcesFactory
      *
      * @return IResources
      */
-    public function createResources($username, $password, LoggerInterface $logger = null)
+    public function createResources($username, $password, ?LoggerInterface $logger = null)
     {
         $restClient = $this->initClient($username, $password, $logger);
 
@@ -44,7 +44,7 @@ class DotmailerResourcesFactory
      *
      * @return AdditionalResource
      */
-    public function createAdditionalResource($username, $password, LoggerInterface $logger = null)
+    public function createAdditionalResource($username, $password, ?LoggerInterface $logger = null)
     {
         $restClient = $this->initClient($username, $password, $logger);
 
@@ -62,7 +62,7 @@ class DotmailerResourcesFactory
      * @param LoggerInterface|null $logger
      * @return IClient|DotmailerClientInterface
      */
-    protected function initClient($username, $password, LoggerInterface $logger = null)
+    protected function initClient($username, $password, ?LoggerInterface $logger = null)
     {
         $restClient = new Client($username, $password);
         $cacheClient = new CacheAwareClient($username);

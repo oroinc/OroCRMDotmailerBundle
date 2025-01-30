@@ -45,7 +45,7 @@ class ImportRejectedExportsStep extends ItemStep
      *
      * @return ExportItemStep
      */
-    public function setRegistry(ManagerRegistry $registry = null)
+    public function setRegistry(?ManagerRegistry $registry = null)
     {
         $this->registry = $registry;
 
@@ -57,7 +57,7 @@ class ImportRejectedExportsStep extends ItemStep
      *
      * @return ExportItemStep
      */
-    public function setContextRegistry(ContextRegistry $contextRegistry = null)
+    public function setContextRegistry(?ContextRegistry $contextRegistry = null)
     {
         $this->contextRegistry = $contextRegistry;
 

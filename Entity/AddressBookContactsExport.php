@@ -108,7 +108,7 @@ class AddressBookContactsExport implements ChannelAwareInterface, ExtendEntityIn
      *
      * @return AddressBookContactsExport
      */
-    public function setCreatedAt(\DateTime $createdAt = null)
+    public function setCreatedAt(?\DateTime $createdAt = null)
     {
         $this->createdAt = $createdAt;
 
@@ -128,7 +128,7 @@ class AddressBookContactsExport implements ChannelAwareInterface, ExtendEntityIn
      *
      * @return AddressBookContactsExport
      */
-    public function setAddressBook(AddressBook $addressBook = null)
+    public function setAddressBook(?AddressBook $addressBook = null)
     {
         $this->addressBook = $addressBook;
 
@@ -148,7 +148,7 @@ class AddressBookContactsExport implements ChannelAwareInterface, ExtendEntityIn
      *
      * @return AddressBookContactsExport
      */
-    public function setUpdatedAt(\DateTime $updatedAt = null)
+    public function setUpdatedAt(?\DateTime $updatedAt = null)
     {
         $this->updatedAt = $updatedAt;
 
@@ -170,7 +170,7 @@ class AddressBookContactsExport implements ChannelAwareInterface, ExtendEntityIn
      * @return AddressBookContactsExport
      */
     #[\Override]
-    public function setChannel(Channel $channel = null)
+    public function setChannel(?Channel $channel = null)
     {
         $this->channel = $channel;
 

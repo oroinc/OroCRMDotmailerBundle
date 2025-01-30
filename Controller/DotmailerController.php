@@ -126,7 +126,7 @@ class DotmailerController extends AbstractController
         defaults: ['id' => 0]
     )]
     #[Template('@OroDotmailer/Dotmailer/integrationConnection.html.twig')]
-    public function integrationConnectionAction(Request $request, Channel $channel = null)
+    public function integrationConnectionAction(Request $request, ?Channel $channel = null)
     {
         if (!$channel) {
             $channel = $this->getCurrentChannel($request);

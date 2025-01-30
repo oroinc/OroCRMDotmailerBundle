@@ -75,7 +75,7 @@ class LoadTransportData extends BaseAbstractFixture implements ContainerAwareInt
     }
 
     #[\Override]
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(?ContainerInterface $container = null)
     {
         $this->encoder = $container->get('oro_security.encoder.default');
     }

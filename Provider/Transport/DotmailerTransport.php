@@ -178,7 +178,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
      *
      * @return UnsubscribedFromAccountContactIterator
      */
-    public function getUnsubscribedFromAccountsContacts(\DateTime $lastSyncDate = null)
+    public function getUnsubscribedFromAccountsContacts(?\DateTime $lastSyncDate = null)
     {
         if (!$lastSyncDate) {
             return new \EmptyIterator();
@@ -220,7 +220,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
      *
      * @return \Iterator
      */
-    public function getActivityContacts(array $campaignsToSynchronize = [], \DateTime $lastSyncDate = null)
+    public function getActivityContacts(array $campaignsToSynchronize = [], ?\DateTime $lastSyncDate = null)
     {
         $iterator = new AppendIterator();
         foreach ($campaignsToSynchronize as $campaign) {
@@ -247,7 +247,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     public function getCampaignClicks(
         ManagerRegistry $registry,
         array $campaignsToSynchronize = [],
-        \DateTime $lastSyncDate = null
+        ?\DateTime $lastSyncDate = null
     ) {
         $iterator = new AppendIterator();
         foreach ($campaignsToSynchronize as $campaign) {
@@ -279,7 +279,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
     public function getCampaignOpens(
         ManagerRegistry $registry,
         array $campaignsToSynchronize = [],
-        \DateTime $lastSyncDate = null
+        ?\DateTime $lastSyncDate = null
     ) {
         $iterator = new AppendIterator();
         foreach ($campaignsToSynchronize as $campaign) {

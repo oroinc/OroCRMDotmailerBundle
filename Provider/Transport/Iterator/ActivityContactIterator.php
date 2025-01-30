@@ -40,7 +40,7 @@ class ActivityContactIterator extends AbstractIterator
         IResources $dotmailerResources,
         $campaignOriginId,
         $isInit = false,
-        \DateTime $lastSyncDate = null
+        ?\DateTime $lastSyncDate = null
     ) {
         $this->dotmailerResources = $dotmailerResources;
         $this->campaignOriginId = $campaignOriginId;

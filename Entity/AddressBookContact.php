@@ -143,7 +143,7 @@ class AddressBookContact implements ChannelAwareInterface, ExtendEntityInterface
      *
      * @return AddressBookContact
      */
-    public function setUnsubscribedDate(\DateTime $unsubscribedDate = null)
+    public function setUnsubscribedDate(?\DateTime $unsubscribedDate = null)
     {
         $this->unsubscribedDate = $unsubscribedDate;
 
@@ -283,7 +283,7 @@ class AddressBookContact implements ChannelAwareInterface, ExtendEntityInterface
      * @return AddressBookContact
      */
     #[\Override]
-    public function setChannel(Channel $channel = null)
+    public function setChannel(?Channel $channel = null)
     {
         $this->channel = $channel;
 

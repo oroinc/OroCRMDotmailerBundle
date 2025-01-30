@@ -42,7 +42,7 @@ class ChannelConnectorsExtension extends AbstractTypeExtension
      * @param Channel|null $data
      * @return bool
      */
-    public function isApplicable(Channel $data = null)
+    public function isApplicable(?Channel $data = null)
     {
         return $data && $data->getType() === ChannelTypeProvider::TYPE;
     }

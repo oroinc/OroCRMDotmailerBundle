@@ -65,7 +65,7 @@ class UpdateEntityFieldsStep extends ItemStep
      *
      * @return UpdateEntityFieldsStep
      */
-    public function setRegistry(ManagerRegistry $registry = null)
+    public function setRegistry(?ManagerRegistry $registry = null)
     {
         $this->registry = $registry;
 
@@ -77,7 +77,7 @@ class UpdateEntityFieldsStep extends ItemStep
      *
      * @return UpdateEntityFieldsStep
      */
-    public function setContextRegistry(ContextRegistry $contextRegistry = null)
+    public function setContextRegistry(?ContextRegistry $contextRegistry = null)
     {
         $this->contextRegistry = $contextRegistry;
 
@@ -88,7 +88,7 @@ class UpdateEntityFieldsStep extends ItemStep
      * @param EntityUpdateListener|null $listener
      * @return UpdateEntityFieldsStep
      */
-    public function setEntityListener(EntityUpdateListener $listener = null)
+    public function setEntityListener(?EntityUpdateListener $listener = null)
     {
         $this->entityListener = $listener;
 
