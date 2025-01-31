@@ -85,14 +85,14 @@ abstract class AbstractActivityIterator extends AbstractIterator
      * @param AdditionalResource|null $additionalResource
      */
     public function __construct(
-        IResources          $dotmailerResources,
-        ManagerRegistry     $registry,
-                            $campaignOriginId,
-                            $emailCampaignId,
-                            $campaignId,
-                            $addressBooks,
-                            $isInit = false,
-        ?\DateTime          $lastSyncDate = null,
+        IResources $dotmailerResources,
+        ManagerRegistry $registry,
+        $campaignOriginId,
+        $emailCampaignId,
+        $campaignId,
+        $addressBooks,
+        $isInit = false,
+        ?\DateTime $lastSyncDate = null,
         ?AdditionalResource $additionalResource = null
     ) {
         $this->dotmailerResources = $dotmailerResources;
