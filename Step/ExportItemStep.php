@@ -63,7 +63,7 @@ class ExportItemStep extends ItemStep
      *
      * @return ExportItemStep
      */
-    public function setRegistry(ManagerRegistry $registry = null)
+    public function setRegistry(?ManagerRegistry $registry = null)
     {
         $this->registry = $registry;
 
@@ -75,7 +75,7 @@ class ExportItemStep extends ItemStep
      *
      * @return ExportItemStep
      */
-    public function setContextRegistry(ContextRegistry $contextRegistry = null)
+    public function setContextRegistry(?ContextRegistry $contextRegistry = null)
     {
         $this->contextRegistry = $contextRegistry;
 

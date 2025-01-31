@@ -37,7 +37,7 @@ class ActivityStep extends ItemStep
      * @param ProcessLogger|null $logger
      * @return self
      */
-    public function setProcessLogger(ProcessLogger $logger = null)
+    public function setProcessLogger(?ProcessLogger $logger = null)
     {
         $this->processLogger = $logger;
 

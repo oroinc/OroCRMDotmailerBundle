@@ -272,7 +272,7 @@ class CampaignSummary implements ChannelAwareInterface
      * @return CampaignSummary
      */
     #[\Override]
-    public function setChannel(Channel $channel = null)
+    public function setChannel(?Channel $channel = null)
     {
         $this->channel = $channel;
 
@@ -1332,7 +1332,7 @@ class CampaignSummary implements ChannelAwareInterface
      *
      * @return CampaignSummary
      */
-    public function setCreatedAt(\DateTime $createdAt = null)
+    public function setCreatedAt(?\DateTime $createdAt = null)
     {
         $this->createdAt = $createdAt;
 
@@ -1352,7 +1352,7 @@ class CampaignSummary implements ChannelAwareInterface
      *
      * @return CampaignSummary
      */
-    public function setUpdatedAt(\DateTime $updatedAt = null)
+    public function setUpdatedAt(?\DateTime $updatedAt = null)
     {
         $this->updatedAt = $updatedAt;
 
@@ -1372,7 +1372,7 @@ class CampaignSummary implements ChannelAwareInterface
      *
      * @return CampaignSummary
      */
-    public function setOwner(Organization $owner = null)
+    public function setOwner(?Organization $owner = null)
     {
         $this->owner = $owner;
 
@@ -1392,7 +1392,7 @@ class CampaignSummary implements ChannelAwareInterface
      *
      * @return CampaignSummary
      */
-    public function setCampaign(Campaign $campaign = null)
+    public function setCampaign(?Campaign $campaign = null)
     {
         $this->campaign = $campaign;
 

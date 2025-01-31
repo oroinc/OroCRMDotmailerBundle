@@ -14,13 +14,13 @@ class EnumNormalizer implements ContextAwareNormalizerInterface, ContextAwareDen
 {
     /**
      * @param EnumOptionInterface $object
-     * @param null|string $format
+     * @param string|null $format
      * @param array $context
      *
      * @return array
      */
     #[\Override]
-    public function normalize($object, string $format = null, array $context = [])
+    public function normalize($object, ?string $format = null, array $context = [])
     {
         return [
             'id' => $object->getId(),
@@ -31,7 +31,7 @@ class EnumNormalizer implements ContextAwareNormalizerInterface, ContextAwareDen
     }
 
     #[\Override]
-    public function denormalize($data, string $type, string $format = null, array $context = [])
+    public function denormalize($data, string $type, ?string $format = null, array $context = [])
     {
         $reflection = new \ReflectionClass($type);
 
@@ -46,7 +46,7 @@ class EnumNormalizer implements ContextAwareNormalizerInterface, ContextAwareDen
     }
 
     #[\Override]
-    public function supportsDenormalization($data, string $type, string $format = null, array $context = []): bool
+    public function supportsDenormalization($data, string $type, ?string $format = null, array $context = []): bool
     {
         $channelType = empty($context['channelType']) ? null : $context['channelType'];
 
@@ -55,7 +55,7 @@ class EnumNormalizer implements ContextAwareNormalizerInterface, ContextAwareDen
     }
 
     #[\Override]
-    public function supportsNormalization($data, string $format = null, array $context = []): bool
+    public function supportsNormalization($data, ?string $format = null, array $context = []): bool
     {
         return $data instanceof EnumOptionInterface;
     }

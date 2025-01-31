@@ -109,7 +109,7 @@ abstract class AbstractDotmailerConnector extends AbstractConnector
     /**
      * Updates last sync date in execution context with current date and time (now)
      */
-    protected function updateContextLastSyncDate(\DateTime $date = null)
+    protected function updateContextLastSyncDate(?\DateTime $date = null)
     {
         $context = $this->getStepExecution()->getExecutionContext();
         $data = $context->get(ConnectorInterface::CONTEXT_CONNECTOR_DATA_KEY) ?: [];

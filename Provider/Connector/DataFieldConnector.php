@@ -26,7 +26,7 @@ class DataFieldConnector extends AbstractDotmailerConnector
      * If no sync was running, keep previous sync date
      */
     #[\Override]
-    protected function updateContextLastSyncDate(\DateTime $date = null)
+    protected function updateContextLastSyncDate(?\DateTime $date = null)
     {
         if ($this->getSourceIterator() instanceof \EmptyIterator) {
             $date = $this->getLastSyncDate();

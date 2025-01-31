@@ -273,7 +273,7 @@ class QueueExportManager implements LoggerAwareInterface
      */
     private function processAttempts(
         AddressBookContactsExport $export,
-        int $numberOfAttempts = null
+        ?int $numberOfAttempts = null
     ) {
         if (null === $numberOfAttempts) {
             $numberOfAttempts = $this->totalErroneousAttempts;

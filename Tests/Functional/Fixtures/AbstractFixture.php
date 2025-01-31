@@ -91,7 +91,7 @@ abstract class AbstractFixture extends BaseFixture implements ContainerAwareInte
     }
 
     #[\Override]
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(?ContainerInterface $container = null)
     {
         $this->container = $container;
         $this->manager = $container->get('doctrine')->getManager();

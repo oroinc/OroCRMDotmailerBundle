@@ -82,7 +82,7 @@ abstract class AbstractExportReader extends AbstractReader
     }
 
     #[\Override]
-    public function setSourceIterator(\Iterator $sourceIterator = null)
+    public function setSourceIterator(?\Iterator $sourceIterator = null)
     {
         parent::setSourceIterator($sourceIterator);
         $this->rewound        = false;

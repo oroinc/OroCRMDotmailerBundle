@@ -92,8 +92,8 @@ abstract class AbstractActivityIterator extends AbstractIterator
         $campaignId,
         $addressBooks,
         $isInit = false,
-        \DateTime $lastSyncDate = null,
-        AdditionalResource $additionalResource = null
+        ?\DateTime $lastSyncDate = null,
+        ?AdditionalResource $additionalResource = null
     ) {
         $this->dotmailerResources = $dotmailerResources;
         $this->registry = $registry;

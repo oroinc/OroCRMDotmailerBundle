@@ -92,7 +92,7 @@ class ExportContactConnector extends AbstractDotmailerConnector implements Allow
      * @return ExportContactConnector
      */
     public function setMarketingListItemsQueryBuilderProvider(
-        MarketingListItemsQueryBuilderProvider $marketingListItemsQueryBuilderProvider = null
+        ?MarketingListItemsQueryBuilderProvider $marketingListItemsQueryBuilderProvider = null
     ) {
         $this->marketingListItemsQueryBuilderProvider = $marketingListItemsQueryBuilderProvider;
 

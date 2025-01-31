@@ -56,7 +56,7 @@ class OAuth implements ChannelAwareInterface
      * @return OAuth
      */
     #[\Override]
-    public function setChannel(Channel $channel = null)
+    public function setChannel(?Channel $channel = null)
     {
         $this->channel = $channel;
 
@@ -76,7 +76,7 @@ class OAuth implements ChannelAwareInterface
      *
      * @return OAuth
      */
-    public function setUser(User $user = null)
+    public function setUser(?User $user = null)
     {
         $this->user = $user;
 
