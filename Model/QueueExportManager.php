@@ -157,7 +157,7 @@ class QueueExportManager implements LoggerAwareInterface
             }
         }
 
-        return  $this->processExportFaults($channel) && $isExportFinished;
+        return $this->processExportFaults($channel) && $isExportFinished;
     }
 
     public function processExportFaults(Channel $channel)
