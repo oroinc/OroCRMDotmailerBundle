@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {"Oro\\Bundle\\DotmailerBundle\\": ""},
-        "exclude-from-classmap": ["/Tests/"]
+        "exclude-from-classmap": ["**/Tests/"]
     },
     "require": {
         "ext-curl": "*",
