@@ -40,7 +40,7 @@ class ExportContactsStatusUpdateProcessorTest extends WebTestCase
         $sentMessage = self::sendMessage(
             ExportContactsStatusUpdateTopic::getName(),
             [
-                'integrationId' => PHP_INT_MAX,
+                'integrationId' => self::BIGINT,
             ]
         );
         self::consumeMessage($sentMessage);
@@ -51,7 +51,7 @@ class ExportContactsStatusUpdateProcessorTest extends WebTestCase
             $sentMessage
         );
         self::assertTrue(
-            self::getLoggerTestHandler()->hasError('The integration not found: ' . PHP_INT_MAX)
+            self::getLoggerTestHandler()->hasError('The integration not found: ' . self::BIGINT)
         );
     }
 
