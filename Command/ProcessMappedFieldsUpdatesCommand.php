@@ -9,6 +9,7 @@ use Oro\Bundle\CronBundle\Command\CronCommandActivationInterface;
 use Oro\Bundle\CronBundle\Command\CronCommandScheduleDefinitionInterface;
 use Oro\Bundle\DotmailerBundle\Entity\ChangedFieldLog;
 use Oro\Bundle\DotmailerBundle\Processor\MappedFieldsChangeProcessor;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -16,13 +17,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Processes changed mapped entity field log and marks affected contacts for export.
  */
+#[AsCommand(
+    name: 'oro:cron:dotmailer:mapped-fields-updates:process',
+    description: 'Processes changed mapped entity field log and marks affected contacts for export.'
+)]
 class ProcessMappedFieldsUpdatesCommand extends Command implements
     CronCommandScheduleDefinitionInterface,
     CronCommandActivationInterface
 {
-    /** @var string */
-    protected static $defaultName = 'oro:cron:dotmailer:mapped-fields-updates:process';
-
     private ManagerRegistry $doctrine;
     private MappedFieldsChangeProcessor $processor;
 
@@ -49,15 +51,6 @@ class ProcessMappedFieldsUpdatesCommand extends Command implements
             ->getSingleScalarResult();
 
         return ($count > 0);
-    }
-
-    /** @noinspection PhpMissingParentCallCommonInspection */
-    #[\Override]
-    protected function configure()
-    {
-        $this->setDescription(
-            'Processes changed mapped entity field log and marks affected contacts for export.'
-        );
     }
 
     /**
