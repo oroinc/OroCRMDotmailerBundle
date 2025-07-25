@@ -1,6 +1,6 @@
 oro_dotmailer_bundle:
     resource:     "@OroDotmailerBundle/Controller"
-    type:         annotation
+    type:         attribute
     prefix:       /dotmailer
 
 oro_dotmailer_oauth_callback:

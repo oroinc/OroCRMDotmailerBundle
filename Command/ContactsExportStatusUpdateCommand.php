@@ -14,6 +14,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Repository\ChannelRepository;
 use Oro\Component\MessageQueue\Client\MessageProducerInterface;
 use Oro\Component\MessageQueue\Job\Job;
 use Oro\Component\MessageQueue\Job\JobProcessor;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,13 +23,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Schedules status updates of dotdigital contact export operations.
  */
+#[AsCommand(
+    name: 'oro:cron:dotmailer:export-status:update',
+    description: 'Schedules status updates of dotdigital contact export operations.'
+)]
 class ContactsExportStatusUpdateCommand extends Command implements
     CronCommandScheduleDefinitionInterface,
     CronCommandActivationInterface
 {
-    /** @var string */
-    protected static $defaultName = 'oro:cron:dotmailer:export-status:update';
-
     private TranslatorInterface $translator;
     private JobProcessor $jobProcessor;
     private ManagerRegistry $doctrine;
@@ -65,7 +67,7 @@ class ContactsExportStatusUpdateCommand extends Command implements
     #[\Override]
     protected function configure()
     {
-        $this->setDescription('Schedules status updates of dotdigital contact export operations.')
+        $this
             ->setHelp(
                 <<<'HELP'
 The <info>%command.name%</info> command schedules status updates of dotdigital contact export operations.

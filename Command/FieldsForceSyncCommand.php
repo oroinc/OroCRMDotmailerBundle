@@ -11,6 +11,7 @@ use Oro\Bundle\DotmailerBundle\Model\SyncManager;
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
 use Oro\Bundle\IntegrationBundle\Entity\Repository\ChannelRepository;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -18,13 +19,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Marks address book contacts as updated to ensure that updated virtual field values are synced to dotdigital.
  */
+#[AsCommand(
+    name: 'oro:cron:dotmailer:force-fields-sync',
+    description: 'Marks address book contacts as updated to ensure virtual fields sync.'
+)]
 class FieldsForceSyncCommand extends Command implements
     CronCommandScheduleDefinitionInterface,
     CronCommandActivationInterface
 {
-    /** @var string */
-    protected static $defaultName = 'oro:cron:dotmailer:force-fields-sync';
-
     private ManagerRegistry $doctrine;
     private SyncManager $syncManager;
 
@@ -54,7 +56,6 @@ class FieldsForceSyncCommand extends Command implements
     protected function configure()
     {
         $this
-            ->setDescription('Marks address book contacts as updated to ensure virtual fields sync.')
             ->setHelp(
                 <<<'HELP'
 The <info>%command.name%</info> command marks address book contacts as updated to ensure that updated
