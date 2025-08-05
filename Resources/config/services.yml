@@ -203,7 +203,6 @@ services:
 
     oro_dotmailer.transport.cache:
         parent: oro.data.cache
-        public: false
         tags:
             - { name: 'cache.pool', namespace: 'oro_dotmailer_rest' }
 
@@ -296,7 +295,6 @@ services:
         public: true
 
     oro_dotmailer.cache:
-        public: false
         parent: oro.data.cache
         tags:
             - { name: 'cache.pool', namespace: 'oro_dotmailer' }
