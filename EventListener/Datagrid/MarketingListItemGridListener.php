@@ -20,6 +20,7 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\DotmailerBundle\Model\FieldHelper;
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MarketingListBundle\Model\MarketingListHelper;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
@@ -179,7 +180,7 @@ class MarketingListItemGridListener implements ServiceSubscriberInterface
         )
             ->setParameter('aBookFilter', $addressBook)
             ->setParameter('channel', $addressBook->getChannel())
-            ->addSelect('IDENTITY(dm_ab_contact.status) as addressBookSubscribedStatus');
+            ->addSelect("JSON_EXTRACT(dm_ab_contact.serialized_data, 'status') as addressBookSubscribedStatus");
     }
 
     private function rewriteActionConfiguration(DatagridInterface $datagrid)
@@ -226,12 +227,12 @@ class MarketingListItemGridListener implements ServiceSubscriberInterface
         $subscriberStatus = $record->getValue('addressBookSubscribedStatus');
         $syncedWithDotmailer = $subscriberStatus !== null;
 
-        // treat as unsubscribed all statuses except these
-        $wasUnsubscribed = !in_array(
-            $subscriberStatus,
-            [Contact::STATUS_SUBSCRIBED, Contact::STATUS_SOFTBOUNCED],
-            true
+        $statusList = ExtendHelper::mapToEnumOptionIds(
+            Contact::STATUS_ENUM_CODE,
+            [Contact::STATUS_SUBSCRIBED, Contact::STATUS_SOFTBOUNCED]
         );
+        // treat as unsubscribed all statuses except these
+        $wasUnsubscribed = !in_array($subscriberStatus, $statusList, true);
 
         $permissions['subscribe'] = !$isSubscribed && (!$syncedWithDotmailer || !$wasUnsubscribed);
         $permissions['unsubscribe'] = $isSubscribed;
