@@ -15,7 +15,7 @@ use Oro\Bundle\SecurityBundle\Attribute\AclAncestor;
 use Oro\Bundle\SecurityBundle\Attribute\CsrfProtection;
 use Oro\Bundle\UIBundle\Route\Router;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -36,7 +36,7 @@ class DataFieldController extends AbstractController
      * @return array
      */
     #[Route(path: '/view/{id}', name: 'oro_dotmailer_datafield_view', requirements: ['id' => '\d+'])]
-    #[Template]
+    #[Template('@OroDotmailer/DataField/view.html.twig')]
     #[Acl(id: 'oro_dotmailer_datafield_view', type: 'entity', class: DataField::class, permission: 'VIEW')]
     public function viewAction(DataField $field)
     {
@@ -50,7 +50,7 @@ class DataFieldController extends AbstractController
      * @return array
      */
     #[Route(path: '/info/{id}', name: 'oro_dotmailer_datafield_info', requirements: ['id' => '\d+'])]
-    #[Template]
+    #[Template('@OroDotmailer/DataField/info.html.twig')]
     #[AclAncestor('oro_dotmailer_datafield_view')]
     public function infoAction(DataField $field)
     {
@@ -105,7 +105,7 @@ class DataFieldController extends AbstractController
         requirements: ['_format' => 'html|json'],
         defaults: ['_format' => 'html']
     )]
-    #[Template]
+    #[Template('@OroDotmailer/DataField/index.html.twig')]
     #[AclAncestor('oro_dotmailer_datafield_view')]
     public function indexAction()
     {

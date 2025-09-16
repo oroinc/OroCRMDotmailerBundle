@@ -8,7 +8,7 @@ use Oro\Bundle\EntityBundle\Provider\EntityProvider;
 use Oro\Bundle\FormBundle\Model\UpdateHandlerFacade;
 use Oro\Bundle\SecurityBundle\Attribute\Acl;
 use Oro\Bundle\SecurityBundle\Attribute\AclAncestor;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,7 +27,7 @@ class DataFieldMappingController extends AbstractController
         requirements: ['_format' => 'html|json'],
         defaults: ['_format' => 'html']
     )]
-    #[Template]
+    #[Template('@OroDotmailer/DataFieldMapping/index.html.twig')]
     #[AclAncestor('oro_dotmailer_datafield_mapping_update')]
     public function indexAction(): array
     {

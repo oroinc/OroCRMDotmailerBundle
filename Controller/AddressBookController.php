@@ -16,8 +16,8 @@ use Oro\Bundle\SecurityBundle\Attribute\Acl;
 use Oro\Bundle\SecurityBundle\Attribute\AclAncestor;
 use Oro\Bundle\SecurityBundle\Attribute\CsrfProtection;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -165,10 +165,11 @@ class AddressBookController extends AbstractController
         name: 'oro_dotmailer_marketing_list_buttons',
         requirements: ['entity' => '\d+']
     )]
-    #[ParamConverter('marketingList', class: MarketingList::class, options: ['id' => 'entity'])]
-    #[Template]
-    public function connectionButtonsAction(MarketingList $marketingList): array
-    {
+    #[Template('@OroDotmailer/AddressBook/connectionButtons.html.twig')]
+    public function connectionButtonsAction(
+        #[MapEntity(id: 'entity')]
+        MarketingList $marketingList
+    ): array {
         if (!$this->isGranted('orocrm_marketing_list_update') ||
             !$this->isGranted('orocrm_dotmailer_address_book_update')
         ) {

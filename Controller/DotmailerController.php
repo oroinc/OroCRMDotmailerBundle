@@ -16,8 +16,8 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\SecurityBundle\Attribute\AclAncestor;
 use Oro\Bundle\SecurityBundle\Attribute\CsrfProtection;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,11 +43,12 @@ class DotmailerController extends AbstractController
         name: 'oro_dotmailer_email_campaign_status',
         requirements: ['entity' => '\d+']
     )]
-    #[ParamConverter('emailCampaign', class: EmailCampaign::class, options: ['id' => 'entity'])]
-    #[Template]
+    #[Template('@OroDotmailer/Dotmailer/emailCampaignStats.html.twig')]
     #[AclAncestor('oro_email_campaign_view')]
-    public function emailCampaignStatsAction(EmailCampaign $emailCampaign)
-    {
+    public function emailCampaignStatsAction(
+        #[MapEntity(id: 'entity')]
+        EmailCampaign $emailCampaign
+    ) {
         $campaign = $this->container->get('doctrine')
             ->getRepository(CampaignSummary::class)
             ->getSummaryByEmailCampaign($emailCampaign);
@@ -64,11 +65,12 @@ class DotmailerController extends AbstractController
         name: 'oro_dotmailer_sync_status',
         requirements: ['marketingList' => '\d+']
     )]
-    #[ParamConverter('marketingList', class: MarketingList::class, options: ['id' => 'marketingList'])]
-    #[Template]
+    #[Template('@OroDotmailer/Dotmailer/marketingListSyncStatus.html.twig')]
     #[AclAncestor('oro_marketing_list_view')]
-    public function marketingListSyncStatusAction(MarketingList $marketingList)
-    {
+    public function marketingListSyncStatusAction(
+        #[MapEntity(id: 'marketingList')]
+        MarketingList $marketingList
+    ) {
         $addressBook = $this->container->get('doctrine')->getRepository(AddressBook::class)
             ->findOneBy(['marketingList' => $marketingList]);
 
