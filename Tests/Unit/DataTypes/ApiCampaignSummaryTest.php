@@ -65,7 +65,8 @@ class ApiCampaignSummaryTest extends TestCase
             'Revenue' => '$0.00',
             'ConversionRate' => 2.0,
             'AssistedRevenue' => '$0.00',
-            'NumOrders' => 1
+            'NumOrders' => 1,
+            'NumAssistedOrders' => 1
         ];
 
         $summary = new ApiCampaignSummary($values);
