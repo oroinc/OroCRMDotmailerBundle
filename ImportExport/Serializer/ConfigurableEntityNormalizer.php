@@ -28,7 +28,7 @@ class ConfigurableEntityNormalizer extends BaseNormalizer
     }
 
     #[\Override]
-    public function denormalize($data, string $type, ?string $format = null, array $context = [])
+    public function denormalize($data, string $type, ?string $format = null, array $context = []): mixed
     {
         $object = parent::denormalize($data, $type, $format, $context);
 

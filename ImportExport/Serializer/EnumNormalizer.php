@@ -4,13 +4,13 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Serializer;
 
 use Oro\Bundle\DotmailerBundle\Provider\ChannelType;
 use Oro\Bundle\EntityExtendBundle\Entity\EnumOptionInterface;
-use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * Normalizes/denormalizes enum values.
  */
-class EnumNormalizer implements ContextAwareNormalizerInterface, ContextAwareDenormalizerInterface
+class EnumNormalizer implements NormalizerInterface, DenormalizerInterface
 {
     /**
      * @param EnumOptionInterface $object
@@ -20,8 +20,11 @@ class EnumNormalizer implements ContextAwareNormalizerInterface, ContextAwareDen
      * @return array
      */
     #[\Override]
-    public function normalize($object, ?string $format = null, array $context = [])
-    {
+    public function normalize(
+        mixed $object,
+        ?string $format = null,
+        array $context = []
+    ): float|int|bool|\ArrayObject|array|string|null {
         return [
             'id' => $object->getId(),
             'name' => $object->getName(),
@@ -31,7 +34,7 @@ class EnumNormalizer implements ContextAwareNormalizerInterface, ContextAwareDen
     }
 
     #[\Override]
-    public function denormalize($data, string $type, ?string $format = null, array $context = [])
+    public function denormalize($data, string $type, ?string $format = null, array $context = []): mixed
     {
         $reflection = new \ReflectionClass($type);
 
@@ -58,5 +61,10 @@ class EnumNormalizer implements ContextAwareNormalizerInterface, ContextAwareDen
     public function supportsNormalization($data, ?string $format = null, array $context = []): bool
     {
         return $data instanceof EnumOptionInterface;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [EnumOptionInterface::class => true];
     }
 }
