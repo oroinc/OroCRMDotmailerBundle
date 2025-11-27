@@ -7,6 +7,9 @@ namespace Oro\Bundle\DotmailerBundle\Provider;
  */
 class CsvStringReader
 {
+    /** @var resource|false */
+    private $fileHandle;
+
     /**
      * @var \SplFileInfo
      */
@@ -48,17 +51,21 @@ class CsvStringReader
      */
     public function __construct($csv, array $options = [])
     {
-        $tempFile = tempnam(sys_get_temp_dir(), 'dm_export');
-        fwrite(fopen($tempFile, 'r+'), $csv);
+        $this->fileHandle = tmpfile();
+        if (!$this->fileHandle) {
+            throw new \RuntimeException('Cannot create a temporary file to store CSV data.');
+        }
 
-        $this->setFilePath($tempFile);
+        fwrite($this->fileHandle, $csv);
+
+        $this->setFilePath(stream_get_meta_data($this->fileHandle)['uri']);
         $this->initialize($options);
     }
 
     public function __destruct()
     {
-        if ($this->fileInfo && $this->fileInfo->isFile()) {
-            @unlink($this->fileInfo->getRealPath());
+        if ($this->fileHandle && \is_resource($this->fileHandle)) {
+            @fclose($this->fileHandle);
         }
     }
 
@@ -71,7 +78,8 @@ class CsvStringReader
         $this->fileInfo = new \SplFileInfo($filePath);
         if (!$this->fileInfo->isFile()) {
             throw new \InvalidArgumentException(sprintf('File "%s" does not exists.', $filePath));
-        } elseif (!$this->fileInfo->isReadable()) {
+        }
+        if (!$this->fileInfo->isReadable()) {
             throw new \InvalidArgumentException(sprintf('File "%s" is not readable.', $this->fileInfo->getRealPath()));
         }
     }
@@ -103,6 +111,7 @@ class CsvStringReader
         if ($this->getFile()->eof()) {
             return null;
         }
+
         $data = $this->getFile()->fgetcsv();
         if (false !== $data) {
             if (null === $data || [null] === $data) {
@@ -123,6 +132,7 @@ class CsvStringReader
         } else {
             throw new \RuntimeException('An error occurred while reading the csv.');
         }
+
         return $data;
     }
 
@@ -147,6 +157,7 @@ class CsvStringReader
                 $this->header = $this->file->fgetcsv();
             }
         }
+
         return $this->file;
     }
 }
