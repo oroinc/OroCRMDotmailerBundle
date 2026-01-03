@@ -41,9 +41,9 @@ class LoadActivityData extends AbstractFixture implements DependentFixtureInterf
         foreach ($this->data as $item) {
             $activity = new Activity();
 
-            $item['dateSent'] = new  \DateTime($item['dateSent'], new \DateTimeZone('UTC'));
-            $item['dateFirstOpened'] = new  \DateTime($item['dateFirstOpened'], new \DateTimeZone('UTC'));
-            $item['dateLastOpened'] = new  \DateTime($item['dateLastOpened'], new \DateTimeZone('UTC'));
+            $item['dateSent'] = new \DateTime($item['dateSent'], new \DateTimeZone('UTC'));
+            $item['dateFirstOpened'] = new \DateTime($item['dateFirstOpened'], new \DateTimeZone('UTC'));
+            $item['dateLastOpened'] = new \DateTime($item['dateLastOpened'], new \DateTimeZone('UTC'));
 
             $this->resolveReferenceIfExist($item, 'contact');
             $this->resolveReferenceIfExist($item, 'channel');
