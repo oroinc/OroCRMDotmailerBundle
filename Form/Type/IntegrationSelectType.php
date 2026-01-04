@@ -11,8 +11,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class IntegrationSelectType extends AbstractType
 {
-    const NAME = 'oro_dotmailer_integration_select';
-    const ENTITY = 'Oro\Bundle\IntegrationBundle\Entity\Channel';
+    public const NAME = 'oro_dotmailer_integration_select';
+    public const ENTITY = 'Oro\Bundle\IntegrationBundle\Entity\Channel';
 
     /**
      * @var ManagerRegistry

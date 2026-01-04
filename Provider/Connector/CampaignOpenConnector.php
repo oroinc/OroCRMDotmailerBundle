@@ -7,8 +7,8 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
  */
 class CampaignOpenConnector extends AbstractActivityConnector
 {
-    const TYPE = 'campaign_open';
-    const JOB_IMPORT = 'dotmailer_campaign_open_import';
+    public const TYPE = 'campaign_open';
+    public const JOB_IMPORT = 'dotmailer_campaign_open_import';
 
     #[\Override]
     protected function getConnectorSource()

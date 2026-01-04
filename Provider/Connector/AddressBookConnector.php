@@ -7,8 +7,8 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Connector;
  */
 class AddressBookConnector extends AbstractDotmailerConnector
 {
-    const TYPE = 'address_book';
-    const IMPORT_JOB = 'dotmailer_address_book_import';
+    public const TYPE = 'address_book';
+    public const IMPORT_JOB = 'dotmailer_address_book_import';
 
     #[\Override]
     protected function getConnectorSource()

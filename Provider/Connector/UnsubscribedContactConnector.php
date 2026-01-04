@@ -9,8 +9,8 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
  */
 class UnsubscribedContactConnector extends AbstractDotmailerConnector
 {
-    const TYPE = 'unsubscribed_contact';
-    const IMPORT_JOB = 'dotmailer_unsubscribed_contact_import';
+    public const TYPE = 'unsubscribed_contact';
+    public const IMPORT_JOB = 'dotmailer_unsubscribed_contact_import';
 
     #[\Override]
     protected function getConnectorSource()

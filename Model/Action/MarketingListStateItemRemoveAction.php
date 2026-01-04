@@ -9,7 +9,7 @@ use Oro\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface;
 
 class MarketingListStateItemRemoveAction extends AbstractMarketingListEntitiesAction
 {
-    const MARKETING_LIST_STATE_ITEM_ID_ALIAS = 'marketingListStateItemId';
+    public const MARKETING_LIST_STATE_ITEM_ID_ALIAS = 'marketingListStateItemId';
 
     /**
      * @var string

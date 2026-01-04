@@ -11,7 +11,7 @@ use Oro\Bundle\DotmailerBundle\Entity\Campaign;
  */
 class CampaignSummaryIterator implements \Iterator
 {
-    const CAMPAIGN_KEY = 'related_campaign';
+    public const CAMPAIGN_KEY = 'related_campaign';
 
     /**
      * @var array

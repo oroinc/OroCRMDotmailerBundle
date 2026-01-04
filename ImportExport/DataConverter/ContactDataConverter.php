@@ -13,7 +13,7 @@ use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
  */
 class ContactDataConverter extends AbstractDataConverter implements ContextAwareInterface
 {
-    const ADDRESS_BOOK_CONTACT_ID = 'addressBookContactId';
+    public const ADDRESS_BOOK_CONTACT_ID = 'addressBookContactId';
 
     /** @var MappingProvider */
     protected $mappingProvider;

@@ -8,7 +8,7 @@ use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 
 class MarketingActivityStrategy extends AddOrReplaceStrategy
 {
-    const CACHED_ACTIVITY_TYPE = 'cachedActivityType';
+    public const CACHED_ACTIVITY_TYPE = 'cachedActivityType';
 
     /** @var  string */
     protected $campaignClassName;

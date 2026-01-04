@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DotmailerTransportSettingsType extends AbstractTransportSettingsType
 {
-    const NAME = 'oro_dotmailer_email_transport_settings';
+    public const NAME = 'oro_dotmailer_email_transport_settings';
 
     #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options)

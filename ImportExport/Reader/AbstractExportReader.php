@@ -11,7 +11,7 @@ use Oro\Bundle\ImportExportBundle\Exception\LogicException;
  */
 abstract class AbstractExportReader extends AbstractReader
 {
-    const ADDRESS_BOOK_RESTRICTION_OPTION = 'address-book';
+    public const ADDRESS_BOOK_RESTRICTION_OPTION = 'address-book';
 
     /**
      * @var MarketingListItemsQueryBuilderProvider

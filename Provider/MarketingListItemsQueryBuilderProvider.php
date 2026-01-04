@@ -23,9 +23,9 @@ use Oro\Component\DoctrineUtils\ORM\QueryBuilderUtil;
  */
 class MarketingListItemsQueryBuilderProvider
 {
-    const CONTACT_ALIAS = 'dm_contact';
-    const MARKETING_LIST_ITEM_ID = 'marketingListItemId';
-    const ADDRESS_BOOK_CONTACT_ALIAS = 'addressBookContacts';
+    public const CONTACT_ALIAS = 'dm_contact';
+    public const MARKETING_LIST_ITEM_ID = 'marketingListItemId';
+    public const ADDRESS_BOOK_CONTACT_ALIAS = 'addressBookContacts';
 
     /**
      * @var MarketingListProvider

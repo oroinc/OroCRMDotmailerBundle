@@ -16,9 +16,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class SyncManager
 {
-    const FORCE_SYNC_NONE = 'None';
-    const FORCE_SYNC_VIRTUALS_ONLY = 'VirtualOnly';
-    const FORCE_SYNC_ALWAYS = 'Always';
+    public const FORCE_SYNC_NONE = 'None';
+    public const FORCE_SYNC_VIRTUALS_ONLY = 'VirtualOnly';
+    public const FORCE_SYNC_ALWAYS = 'Always';
 
     /** @var DoctrineHelper  */
     protected $doctrineHelper;

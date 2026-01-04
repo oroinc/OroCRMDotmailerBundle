@@ -7,8 +7,8 @@ use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 
 class ContactExportQBAdapterRegistry
 {
-    const ADAPTER_PRIORITY_KEY = 'priority';
-    const ADAPTER_SERVICE_KEY = 'adapter';
+    public const ADAPTER_PRIORITY_KEY = 'priority';
+    public const ADAPTER_SERVICE_KEY = 'adapter';
     /**
      * @var array
      */

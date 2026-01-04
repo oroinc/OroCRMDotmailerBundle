@@ -4,7 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Processor;
 
 class UpdateEntityFieldsFromContactProcessor extends ImportProcessor
 {
-    const PROCESSED_CONTACT_IDS = 'processedContactIds';
+    public const PROCESSED_CONTACT_IDS = 'processedContactIds';
 
     #[\Override]
     public function process($item)

@@ -9,7 +9,7 @@ use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 
 abstract class AbstractMarketingListItemIterator extends AbstractIterator
 {
-    const ADDRESS_BOOK_KEY = 'related_address_book';
+    public const ADDRESS_BOOK_KEY = 'related_address_book';
 
     /**
      * @var int

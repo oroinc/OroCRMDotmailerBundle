@@ -15,12 +15,12 @@ use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
  */
 class ContactSyncDataConverter extends AbstractDataConverter implements ContextAwareInterface
 {
-    const EMAIL_FIELD = 'email';
-    const OPT_IN_TYPE_FIELD = 'optInType';
-    const EMAIL_TYPE_FIELD = 'emailType';
-    const DATAFIELDS_FIELD = 'dataFields';
+    public const EMAIL_FIELD = 'email';
+    public const OPT_IN_TYPE_FIELD = 'optInType';
+    public const EMAIL_TYPE_FIELD = 'emailType';
+    public const DATAFIELDS_FIELD = 'dataFields';
 
-    const CACHED_DATAFIELDS = 'cachedDatafields';
+    public const CACHED_DATAFIELDS = 'cachedDatafields';
 
     /** @var ContextInterface */
     protected $context;

@@ -7,7 +7,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DotmailerTransportCheckButtonType extends ButtonType
 {
-    const NAME = 'oro_dotmailer_transport_check_button';
+    public const NAME = 'oro_dotmailer_transport_check_button';
 
     public function getName()
     {

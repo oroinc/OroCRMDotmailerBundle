@@ -8,9 +8,9 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class ContactExportQueryBuilderAdapterCompilerPath implements CompilerPassInterface
 {
-    const ADAPTERS_TAG = 'oro_dotmailer.contact.export.query_builder_adapter';
-    const REGISTRY = 'oro_dotmailer.contact.export.query_builder_adapter.registry';
-    const ADD_ADAPTER_METHOD = 'addAdapter';
+    public const ADAPTERS_TAG = 'oro_dotmailer.contact.export.query_builder_adapter';
+    public const REGISTRY = 'oro_dotmailer.contact.export.query_builder_adapter.registry';
+    public const ADD_ADAPTER_METHOD = 'addAdapter';
 
     #[\Override]
     public function process(ContainerBuilder $container)

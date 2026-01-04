@@ -7,7 +7,7 @@ use DotMailer\Api\Resources\IResources;
 
 class ContactIterator extends OverlapIterator
 {
-    const ADDRESS_BOOK_KEY = 'related_address_book';
+    public const ADDRESS_BOOK_KEY = 'related_address_book';
 
     /** @var IResources */
     protected $resources;

@@ -7,7 +7,7 @@ use Oro\Bundle\IntegrationBundle\Provider\IconAwareIntegrationInterface;
 
 class ChannelType implements ChannelInterface, IconAwareIntegrationInterface
 {
-    const TYPE = 'dotmailer';
+    public const TYPE = 'dotmailer';
 
     #[\Override]
     public function getLabel()

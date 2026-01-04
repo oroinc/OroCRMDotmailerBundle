@@ -7,7 +7,7 @@ use Oro\Bundle\ImportExportBundle\Converter\AbstractTableDataConverter;
 
 class DataFieldDataConverter extends AbstractTableDataConverter
 {
-    const EMPTY_DEFAULT_VALUE = 'null';
+    public const EMPTY_DEFAULT_VALUE = 'null';
 
     #[\Override]
     protected function getHeaderConversionRules()

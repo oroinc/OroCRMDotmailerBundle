@@ -12,7 +12,7 @@ use Oro\Bundle\DotmailerBundle\Entity\Contact;
  */
 class ScheduledForExportContactIterator extends AbstractIterator
 {
-    const ADDRESS_BOOK_KEY = 'related_address_book';
+    public const ADDRESS_BOOK_KEY = 'related_address_book';
     /**
      * @var ManagerRegistry
      */

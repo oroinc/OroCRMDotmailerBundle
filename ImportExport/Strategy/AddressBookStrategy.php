@@ -7,7 +7,7 @@ use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 
 class AddressBookStrategy extends AddOrReplaceStrategy
 {
-    const EXISTING_ADDRESS_BOOKS_ORIGIN_IDS = 'existingAddressBooksOriginIds';
+    public const EXISTING_ADDRESS_BOOKS_ORIGIN_IDS = 'existingAddressBooksOriginIds';
 
     #[\Override]
     public function beforeProcessEntity($entity)

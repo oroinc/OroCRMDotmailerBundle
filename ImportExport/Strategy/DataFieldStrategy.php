@@ -6,7 +6,7 @@ use Oro\Bundle\DotmailerBundle\Entity\DataField;
 
 class DataFieldStrategy extends AddOrReplaceStrategy
 {
-    const EXISTING_DATAFIELDS_NAMES = 'existingDataFieldsNames';
+    public const EXISTING_DATAFIELDS_NAMES = 'existingDataFieldsNames';
 
     #[\Override]
     protected function findExistingEntity($entity, array $searchContext = [])

@@ -15,15 +15,15 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class OAuthManager
 {
-    const API_ENDPOINT   = 'https://r1-app.dotmailer.com/';
-    const AUTHORISE_URL  = 'https://login.dotmailer.com/OAuth2/authorise.aspx?';
-    const TOKEN_URL      = 'OAuth2/Tokens.ashx';
-    const LOGIN_USER_URL = '?oauthtoken=';
+    public const API_ENDPOINT   = 'https://r1-app.dotmailer.com/';
+    public const AUTHORISE_URL  = 'https://login.dotmailer.com/OAuth2/authorise.aspx?';
+    public const TOKEN_URL      = 'OAuth2/Tokens.ashx';
+    public const LOGIN_USER_URL = '?oauthtoken=';
 
-    const GRANT_TYPE_AUTHORIZATION_CODE = 'authorization_code';
-    const GRANT_TYPE_REFRESH_TOKEN      = 'refresh_token';
+    public const GRANT_TYPE_AUTHORIZATION_CODE = 'authorization_code';
+    public const GRANT_TYPE_REFRESH_TOKEN      = 'refresh_token';
 
-    const RETRY_TIMES = 3;
+    public const RETRY_TIMES = 3;
 
     /** @var RouterInterface */
     protected $router;

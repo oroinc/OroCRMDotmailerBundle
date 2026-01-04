@@ -10,7 +10,7 @@ use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 
 class CampaignStatisticProvider
 {
-    const CAMPAIGN_STATISTIC_CACHE = 'campaignStatisticCache';
+    public const CAMPAIGN_STATISTIC_CACHE = 'campaignStatisticCache';
 
     /**
      * @var CacheProvider

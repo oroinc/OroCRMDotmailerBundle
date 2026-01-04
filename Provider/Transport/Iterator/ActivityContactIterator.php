@@ -6,7 +6,7 @@ use DotMailer\Api\Resources\IResources;
 
 class ActivityContactIterator extends AbstractIterator
 {
-    const CAMPAIGN_KEY = 'related_campaign';
+    public const CAMPAIGN_KEY = 'related_campaign';
 
     /**
      * @var IResources

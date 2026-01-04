@@ -19,7 +19,7 @@ class AddMarketingActivitesAction extends AbstractMarketingListEntitiesAction im
 {
     use FeatureCheckerHolderTrait;
 
-    const OPTION_KEY_CHANGESET = 'changeSet';
+    public const OPTION_KEY_CHANGESET = 'changeSet';
 
     /**
      * @var array

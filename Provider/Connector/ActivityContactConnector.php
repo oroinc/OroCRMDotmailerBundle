@@ -10,8 +10,8 @@ use Oro\Bundle\DotmailerBundle\Entity\Campaign;
  */
 class ActivityContactConnector extends AbstractDotmailerConnector
 {
-    const TYPE = 'activity_contact';
-    const JOB_IMPORT = 'dotmailer_activity_contact_import';
+    public const TYPE = 'activity_contact';
+    public const JOB_IMPORT = 'dotmailer_activity_contact_import';
 
     #[\Override]
     protected function getConnectorSource()

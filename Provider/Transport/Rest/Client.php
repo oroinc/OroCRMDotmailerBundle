@@ -15,8 +15,8 @@ class Client implements DotmailerClientInterface
 {
     use LoggerAwareTrait;
 
-    const CONNECT_TIMEOUT = 300;
-    const EXECUTE_TIMEOUT = 360;
+    public const CONNECT_TIMEOUT = 300;
+    public const EXECUTE_TIMEOUT = 360;
 
     /** @var int */
     protected $attempted = 0;

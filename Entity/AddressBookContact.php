@@ -34,9 +34,9 @@ class AddressBookContact implements ChannelAwareInterface, ExtendEntityInterface
 {
     use ExtendEntityTrait;
 
-    const EXPORT_NEW_CONTACT = 'new';
-    const EXPORT_ADD_TO_ADDRESS_BOOK = 'add';
-    const EXPORT_UPDATE_CONTACT = 'update';
+    public const EXPORT_NEW_CONTACT = 'new';
+    public const EXPORT_ADD_TO_ADDRESS_BOOK = 'add';
+    public const EXPORT_UPDATE_CONTACT = 'update';
 
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]

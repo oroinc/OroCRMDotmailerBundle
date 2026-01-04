@@ -14,7 +14,7 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel as Integration;
  */
 class ActivityContactStrategy extends AddOrReplaceStrategy
 {
-    const CACHED_CAMPAIGN_ENTITIES = 'cachedCampaignEntities';
+    public const CACHED_CAMPAIGN_ENTITIES = 'cachedCampaignEntities';
 
     #[\Override]
     protected function beforeProcessEntity($entity)

@@ -20,9 +20,9 @@ use Psr\Log\LoggerInterface;
  */
 class AddOrReplaceStrategy extends ConfigurableAddOrReplaceStrategy
 {
-    const BATCH_ITEMS = 'batchItems';
-    const CACHED_ADDRESS_BOOK = 'cachedAddressBook';
-    const CACHED_CHANNEL = 'cachedChannel';
+    public const BATCH_ITEMS = 'batchItems';
+    public const CACHED_ADDRESS_BOOK = 'cachedAddressBook';
+    public const CACHED_CHANNEL = 'cachedChannel';
 
     /**
      * @var DefaultOwnerHelper

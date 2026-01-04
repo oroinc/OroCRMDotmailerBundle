@@ -21,7 +21,7 @@ class MappingUpdateListener implements OptionalListenerInterface
 {
     use OptionalListenerTrait;
 
-    const MAPPING_CONFIGS_FIELD = 'configs';
+    public const MAPPING_CONFIGS_FIELD = 'configs';
 
     /** @var array  */
     protected $entityUpdateScheduled = [];
