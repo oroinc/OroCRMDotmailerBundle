@@ -15,7 +15,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DataFieldMappingType extends AbstractType
 {
-    const NAME = 'oro_dotmailer_datafield_mapping';
+    public const NAME = 'oro_dotmailer_datafield_mapping';
 
     /** @var string */
     protected $dataClass;

@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class MarketingListConnectionType extends AbstractType
 {
-    const NAME = 'oro_dotmailer_marketing_list_connection';
+    public const NAME = 'oro_dotmailer_marketing_list_connection';
 
     #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options)

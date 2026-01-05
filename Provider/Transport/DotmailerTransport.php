@@ -47,7 +47,7 @@ class DotmailerTransport implements TransportInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    const DEFAULT_START_SYNC_DATE = '1971';
+    public const DEFAULT_START_SYNC_DATE = '1971';
 
     /**
      * @var IResources

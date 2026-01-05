@@ -7,7 +7,7 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
  */
 abstract class AbstractIterator implements \Iterator
 {
-    const DEFAULT_BATCH_SIZE = 1000;
+    public const DEFAULT_BATCH_SIZE = 1000;
 
     /**
      * @var array

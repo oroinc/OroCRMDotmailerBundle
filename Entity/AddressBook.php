@@ -48,9 +48,9 @@ class AddressBook implements OriginAwareInterface, ExtendEntityInterface
     use ExtendEntityTrait;
 
     /** constant for enum dm_ab_visibility */
-    const VISIBILITY_PRIVATE                    = 'Private';
-    const VISIBILITY_PUBLIC                     = 'Public';
-    const VISIBILITY_NOTAVAILABLEINTHISVERSION  = 'NotAvailableInThisVersion';
+    public const VISIBILITY_PRIVATE                    = 'Private';
+    public const VISIBILITY_PUBLIC                     = 'Public';
+    public const VISIBILITY_NOTAVAILABLEINTHISVERSION  = 'NotAvailableInThisVersion';
 
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]

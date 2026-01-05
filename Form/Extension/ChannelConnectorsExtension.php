@@ -17,7 +17,7 @@ use Symfony\Component\Form\FormEvents;
  */
 class ChannelConnectorsExtension extends AbstractTypeExtension
 {
-    const CLASS_PATH = '[attr][class]';
+    public const CLASS_PATH = '[attr][class]';
 
     #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options)

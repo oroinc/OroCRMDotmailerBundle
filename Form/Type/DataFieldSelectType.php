@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DataFieldSelectType extends CreateOrSelectInlineChannelAwareType
 {
-    const NAME = 'oro_dotmailer_datafield_select';
+    public const NAME = 'oro_dotmailer_datafield_select';
 
     #[\Override]
     public function configureOptions(OptionsResolver $resolver)

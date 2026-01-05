@@ -12,7 +12,7 @@ use Oro\Bundle\ImportExportBundle\Processor\StepExecutionAwareProcessor;
  */
 class RemovedExportProcessor implements StepExecutionAwareProcessor
 {
-    const CURRENT_BATCH_READ_ITEMS = 'currentBatchReadItems';
+    public const CURRENT_BATCH_READ_ITEMS = 'currentBatchReadItems';
 
     /**
      * @var ContextRegistry

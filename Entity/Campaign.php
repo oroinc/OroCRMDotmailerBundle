@@ -50,23 +50,23 @@ class Campaign implements OriginAwareInterface, ExtendEntityInterface
     use ExtendEntityTrait;
 
     /** constant for enum dm_cmp_reply_action */
-    const REPLY_ACTION_UNSET                        = 'Unset';
-    const REPLY_ACTION_WEBMAILFORWARD               = 'WebMailForward';
-    const REPLY_ACTION_WEBMAIL                      = 'Webmail';
-    const REPLY_ACTION_DELETE                       = 'Delete';
-    const REPLY_ACTION_NOTAVAILABLEINTHISVERSION    = 'NotAvailableInThisVersion';
+    public const REPLY_ACTION_UNSET                        = 'Unset';
+    public const REPLY_ACTION_WEBMAILFORWARD               = 'WebMailForward';
+    public const REPLY_ACTION_WEBMAIL                      = 'Webmail';
+    public const REPLY_ACTION_DELETE                       = 'Delete';
+    public const REPLY_ACTION_NOTAVAILABLEINTHISVERSION    = 'NotAvailableInThisVersion';
 
     /** constant for enum dm_cmp_status */
-    const STATUS_UNSENT                             = 'Unsent';
-    const STATUS_SENDING                            = 'Sending';
-    const STATUS_SENT                               = 'Sent';
-    const STATUS_PAUSED                             = 'Paused';
-    const STATUS_CANCELLED                          = 'Cancelled';
-    const STATUS_REQUIRESSYSTEMAPPROVAL             = 'RequiresSystemApproval';
-    const STATUS_REQUIRESSMSAPPROVAL                = 'RequiresSMSApproval';
-    const STATUS_REQUIRESWORKFLOWAPPROVAL           = 'RequiresWorkflowApproval';
-    const STATUS_TRIGGERED                          = 'Triggered';
-    const STATUS_NOTAVAILABLEINTHISVERSION          = 'NotAvailableInThisVersion';
+    public const STATUS_UNSENT                             = 'Unsent';
+    public const STATUS_SENDING                            = 'Sending';
+    public const STATUS_SENT                               = 'Sent';
+    public const STATUS_PAUSED                             = 'Paused';
+    public const STATUS_CANCELLED                          = 'Cancelled';
+    public const STATUS_REQUIRESSYSTEMAPPROVAL             = 'RequiresSystemApproval';
+    public const STATUS_REQUIRESSMSAPPROVAL                = 'RequiresSMSApproval';
+    public const STATUS_REQUIRESWORKFLOWAPPROVAL           = 'RequiresWorkflowApproval';
+    public const STATUS_TRIGGERED                          = 'Triggered';
+    public const STATUS_NOTAVAILABLEINTHISVERSION          = 'NotAvailableInThisVersion';
 
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]

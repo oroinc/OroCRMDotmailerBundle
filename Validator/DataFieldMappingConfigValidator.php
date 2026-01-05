@@ -21,7 +21,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class DataFieldMappingConfigValidator extends ConstraintValidator
 {
-    const ALIAS = 'oro_dotmailer.validator.datafield_mapping_config';
+    public const ALIAS = 'oro_dotmailer.validator.datafield_mapping_config';
 
     /**
      * @var EntityFieldProvider

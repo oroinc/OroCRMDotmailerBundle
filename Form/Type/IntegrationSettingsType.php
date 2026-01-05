@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class IntegrationSettingsType extends AbstractType
 {
-    const NAME = 'oro_dotmailer_transport_setting_type';
+    public const NAME = 'oro_dotmailer_transport_setting_type';
 
     /**
      * @var IntegrationSettingsSubscriber

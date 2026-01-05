@@ -18,7 +18,7 @@ use Oro\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem;
  */
 class UnsubscribedContactSyncProcessor implements ItemProcessorInterface, StepExecutionAwareInterface
 {
-    const CURRENT_BATCH_READ_ITEMS = 'currentBatchReadItems';
+    public const CURRENT_BATCH_READ_ITEMS = 'currentBatchReadItems';
 
     /**
      * @var ContextInterface

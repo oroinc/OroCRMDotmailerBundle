@@ -9,10 +9,10 @@ use Oro\Bundle\ConfigBundle\Config\ConfigManager;
  */
 class DataFieldConnector extends AbstractDotmailerConnector
 {
-    const TYPE = 'datafield';
-    const IMPORT_JOB = 'dotmailer_datafield_import';
+    public const TYPE = 'datafield';
+    public const IMPORT_JOB = 'dotmailer_datafield_import';
 
-    const FORCE_SYNC_FLAG = 'datafields-force-sync';
+    public const FORCE_SYNC_FLAG = 'datafields-force-sync';
 
     /** @var  ConfigManager */
     protected $configManager;

@@ -16,8 +16,8 @@ use Oro\Bundle\IntegrationBundle\Provider\AllowedConnectorInterface;
  */
 class ExportContactConnector extends AbstractDotmailerConnector implements AllowedConnectorInterface
 {
-    const TYPE = 'contact_export';
-    const EXPORT_JOB = 'dotmailer_contact_export';
+    public const TYPE = 'contact_export';
+    public const EXPORT_JOB = 'dotmailer_contact_export';
 
     /**
      * @var MarketingListItemsQueryBuilderProvider

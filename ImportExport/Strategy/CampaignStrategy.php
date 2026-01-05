@@ -9,7 +9,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
 
 class CampaignStrategy extends AddOrReplaceStrategy
 {
-    const EXISTING_CAMPAIGNS_ORIGIN_IDS = 'existingCampaignsOriginIds';
+    public const EXISTING_CAMPAIGNS_ORIGIN_IDS = 'existingCampaignsOriginIds';
 
     #[\Override]
     public function beforeProcessEntity($entity)

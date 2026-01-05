@@ -4,7 +4,7 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Processor;
 
 class ContactSyncProcessor extends ImportProcessor
 {
-    const CURRENT_BATCH_READ_ITEMS = 'currentBatchReadItems';
+    public const CURRENT_BATCH_READ_ITEMS = 'currentBatchReadItems';
 
     #[\Override]
     public function process($item)

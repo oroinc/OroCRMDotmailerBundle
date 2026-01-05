@@ -9,7 +9,7 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class ForceSyncEvent extends Event
 {
-    const NAME = 'oro_dotmailer.on_force_datafields_sync';
+    public const NAME = 'oro_dotmailer.on_force_datafields_sync';
 
     /**
      * @var array

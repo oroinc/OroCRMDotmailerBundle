@@ -43,18 +43,18 @@ class DataField implements ChannelAwareInterface, ExtendEntityInterface
     use ExtendEntityTrait;
 
     /** constant for enum dm_df_visibility */
-    const VISIBILITY_PRIVATE                    = 'Private';
-    const VISIBILITY_PUBLIC                     = 'Public';
+    public const VISIBILITY_PRIVATE                    = 'Private';
+    public const VISIBILITY_PUBLIC                     = 'Public';
 
     /** constant for enum dm_df_field_type */
-    const FIELD_TYPE_STRING                     = 'String';
-    const FIELD_TYPE_NUMERIC                    = 'Numeric';
-    const FIELD_TYPE_DATE                       = 'Date';
-    const FIELD_TYPE_BOOLEAN                    = 'Boolean';
+    public const FIELD_TYPE_STRING                     = 'String';
+    public const FIELD_TYPE_NUMERIC                    = 'Numeric';
+    public const FIELD_TYPE_DATE                       = 'Date';
+    public const FIELD_TYPE_BOOLEAN                    = 'Boolean';
 
     //default values for Boolean field type
-    const DEFAULT_BOOLEAN_YES = 'Yes';
-    const DEFAULT_BOOLEAN_NO = 'No';
+    public const DEFAULT_BOOLEAN_YES = 'Yes';
+    public const DEFAULT_BOOLEAN_NO = 'No';
 
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]

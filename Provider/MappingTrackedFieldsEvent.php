@@ -11,7 +11,7 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class MappingTrackedFieldsEvent extends Event
 {
-    const NAME = 'oro_dotmailer.on_build_mapping_tracked_fields';
+    public const NAME = 'oro_dotmailer.on_build_mapping_tracked_fields';
 
     /**
      * @var array

@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DataFieldType extends AbstractType
 {
-    const NAME = 'oro_dotmailer_data_field';
+    public const NAME = 'oro_dotmailer_data_field';
 
     /** @var string */
     protected $dataClass;

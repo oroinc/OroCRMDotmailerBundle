@@ -17,7 +17,7 @@ use Psr\Log\LoggerInterface;
  */
 abstract class AbstractImportStrategy implements StrategyInterface, ContextAwareInterface
 {
-    const CACHED_CHANNEL = 'cachedChannel';
+    public const CACHED_CHANNEL = 'cachedChannel';
     /**
      * @var ContextInterface
      */

@@ -9,9 +9,9 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
  */
 class ContactConnector extends AbstractDotmailerConnector
 {
-    const TYPE = 'contact';
-    const IMPORT_JOB = 'dotmailer_new_contacts';
-    const PROCESSED_ADDRESS_BOOK_IDS = 'processed_address_book_ids';
+    public const TYPE = 'contact';
+    public const IMPORT_JOB = 'dotmailer_new_contacts';
+    public const PROCESSED_ADDRESS_BOOK_IDS = 'processed_address_book_ids';
 
     #[\Override]
     protected function getConnectorSource()

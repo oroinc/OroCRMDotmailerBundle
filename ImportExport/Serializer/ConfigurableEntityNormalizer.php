@@ -14,8 +14,8 @@ use Oro\Bundle\ImportExportBundle\Serializer\Normalizer\ConfigurableEntityNormal
  */
 class ConfigurableEntityNormalizer extends BaseNormalizer
 {
-    const XS_BOOLEAN_TRUE = 'true';
-    const XS_BOOLEAN_FALSE = 'false';
+    public const XS_BOOLEAN_TRUE = 'true';
+    public const XS_BOOLEAN_FALSE = 'false';
 
     /**
      * @var ManagerRegistry

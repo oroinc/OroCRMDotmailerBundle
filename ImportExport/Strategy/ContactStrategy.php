@@ -14,7 +14,7 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\ContactIterator;
  */
 class ContactStrategy extends AddOrReplaceStrategy
 {
-    const CACHED_ADDRESS_BOOK_ENTITIES = 'cachedAddressBookEntities';
+    public const CACHED_ADDRESS_BOOK_ENTITIES = 'cachedAddressBookEntities';
 
     /** @var MappingProvider */
     protected $mappingProvider;

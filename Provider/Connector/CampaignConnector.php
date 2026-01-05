@@ -9,8 +9,8 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
  */
 class CampaignConnector extends AbstractDotmailerConnector
 {
-    const TYPE = 'campaign';
-    const JOB_IMPORT = 'dotmailer_campaign_import';
+    public const TYPE = 'campaign';
+    public const JOB_IMPORT = 'dotmailer_campaign_import';
 
     #[\Override]
     protected function getConnectorSource()

@@ -9,8 +9,8 @@ use Oro\Bundle\DotmailerBundle\Entity\Campaign;
  */
 class CampaignSummaryConnector extends AbstractDotmailerConnector
 {
-    const TYPE = 'campaign_summary';
-    const JOB_IMPORT = 'dotmailer_campaign_summary_import';
+    public const TYPE = 'campaign_summary';
+    public const JOB_IMPORT = 'dotmailer_campaign_summary_import';
 
     #[\Override]
     protected function getConnectorSource()

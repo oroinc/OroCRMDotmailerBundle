@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AddressBookSelectType extends CreateOrSelectInlineChannelAwareType
 {
-    const NAME = 'oro_dotmailer_address_book_list_select';
+    public const NAME = 'oro_dotmailer_address_book_list_select';
 
     #[\Override]
     public function configureOptions(OptionsResolver $resolver)

@@ -31,7 +31,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[Route(path: '/dotmailer')]
 class DotmailerController extends AbstractController
 {
-    const CHANNEL_SESSION_KEY = 'selected-integration-channel';
+    public const CHANNEL_SESSION_KEY = 'selected-integration-channel';
 
     /**
      *

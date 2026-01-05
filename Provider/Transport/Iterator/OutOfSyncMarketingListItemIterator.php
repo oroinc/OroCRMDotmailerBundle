@@ -11,7 +11,7 @@ use Oro\Bundle\DotmailerBundle\ImportExport\Processor\UnsubscribedContactSyncPro
  */
 class OutOfSyncMarketingListItemIterator extends AbstractMarketingListItemIterator
 {
-    const MARKETING_LIST = 'marketingList';
+    public const MARKETING_LIST = 'marketingList';
 
     #[\Override]
     protected function getItems($take, $skip)

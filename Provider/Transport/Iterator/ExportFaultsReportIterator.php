@@ -11,8 +11,8 @@ use Oro\Bundle\DotmailerBundle\Provider\CsvStringReader;
  */
 class ExportFaultsReportIterator implements \Iterator
 {
-    const ADDRESS_BOOK_ID = 'address_book_id';
-    const IMPORT_ID = 'import_id';
+    public const ADDRESS_BOOK_ID = 'address_book_id';
+    public const IMPORT_ID = 'import_id';
 
     /**
      * @var IResources

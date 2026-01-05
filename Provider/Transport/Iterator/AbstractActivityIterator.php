@@ -13,12 +13,12 @@ use Oro\Bundle\DotmailerBundle\Provider\Transport\AdditionalResource;
  */
 abstract class AbstractActivityIterator extends AbstractIterator
 {
-    const CAMPAIGN_KEY = 'related_campaign';
-    const EMAIL_CAMPAIGN_KEY = 'related_email_campaign';
-    const MARKETING_CAMPAIGN_KEY = 'related_marketing_campaign';
-    const MARKETING_ACTIVITY_TYPE_KEY = 'marketing_ac_type';
-    const ENTITY_CLASS_KEY = 'entity_class';
-    const ENTITY_ID_KEY = 'entity_id';
+    public const CAMPAIGN_KEY = 'related_campaign';
+    public const EMAIL_CAMPAIGN_KEY = 'related_email_campaign';
+    public const MARKETING_CAMPAIGN_KEY = 'related_marketing_campaign';
+    public const MARKETING_ACTIVITY_TYPE_KEY = 'marketing_ac_type';
+    public const ENTITY_CLASS_KEY = 'entity_class';
+    public const ENTITY_ID_KEY = 'entity_id';
 
     /**
      * @var ManagerRegistry

@@ -6,7 +6,7 @@ use Oro\Bundle\ImportExportBundle\Converter\AbstractTableDataConverter;
 
 class UnsubscribedFromAccountContactDataConverter extends AbstractTableDataConverter
 {
-    const CONTACT_EMAIL = 'email';
+    public const CONTACT_EMAIL = 'email';
 
     #[\Override]
     protected function getHeaderConversionRules()

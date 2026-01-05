@@ -12,7 +12,7 @@ use Oro\Bundle\DotmailerBundle\Form\Type\DotmailerTransportSettingsType;
  */
 class DotmailerEmailCampaignTransport implements TransportInterface, VisibilityTransportInterface
 {
-    const NAME = 'dotmailer';
+    public const NAME = 'dotmailer';
 
     #[\Override]
     public function send(EmailCampaign $campaign, object $entity, array $from, array $to)

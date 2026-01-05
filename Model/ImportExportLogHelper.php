@@ -9,7 +9,7 @@ use Oro\Bundle\BatchBundle\Entity\StepExecution;
  */
 class ImportExportLogHelper
 {
-    const MEGABYTE = 1048576;
+    public const MEGABYTE = 1048576;
 
     /**
      * Return Memory Consumption in MB

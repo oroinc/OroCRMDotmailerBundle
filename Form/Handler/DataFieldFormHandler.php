@@ -18,7 +18,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class DataFieldFormHandler
 {
-    const UPDATE_MARKER = 'formUpdateMarker';
+    public const UPDATE_MARKER = 'formUpdateMarker';
 
     /** @var LoggerInterface */
     protected $logger;

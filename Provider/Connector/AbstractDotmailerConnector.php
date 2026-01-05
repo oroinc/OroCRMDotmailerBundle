@@ -23,7 +23,7 @@ use Oro\Bundle\IntegrationBundle\Provider\ConnectorInterface;
  */
 abstract class AbstractDotmailerConnector extends AbstractConnector
 {
-    const LAST_SYNC_DATE_KEY = 'lastSyncDate';
+    public const LAST_SYNC_DATE_KEY = 'lastSyncDate';
 
     /**
      * @var ManagerRegistry

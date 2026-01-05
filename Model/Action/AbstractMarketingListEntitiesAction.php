@@ -21,9 +21,9 @@ use Oro\Component\DoctrineUtils\ORM\QueryBuilderUtil;
  */
 abstract class AbstractMarketingListEntitiesAction extends AbstractAction
 {
-    const MARKETING_LIST_ENTITY_QB_ALIAS = 'marketingListEntity';
+    public const MARKETING_LIST_ENTITY_QB_ALIAS = 'marketingListEntity';
 
-    const CACHE_SCOPE = 'ml_contact_fields';
+    public const CACHE_SCOPE = 'ml_contact_fields';
 
     /**
      * @var ContactInformationFieldsProvider

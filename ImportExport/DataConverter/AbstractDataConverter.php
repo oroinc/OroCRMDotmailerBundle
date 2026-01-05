@@ -6,7 +6,7 @@ use Oro\Bundle\ImportExportBundle\Converter\AbstractTableDataConverter;
 
 abstract class AbstractDataConverter extends AbstractTableDataConverter
 {
-    const NULL_VALUE = 'null';
+    public const NULL_VALUE = 'null';
 
     #[\Override]
     protected function removeEmptyColumns(array $data, $skipNullValues)
