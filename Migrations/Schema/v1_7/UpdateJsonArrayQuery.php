@@ -18,7 +18,7 @@ class UpdateJsonArrayQuery extends ParametrizedMigrationQuery
     {
         $logger = new ArrayLogger();
         $logger->info(
-            'Convert a column with "DC2Type:json_array" type to "JSON" type on MySQL >= 5.7.8 and Doctrine 2.7'
+            'Convert a column with "DC2Type:json" type to "JSON" type on MySQL >= 5.7.8 and Doctrine 2.7'
         );
         $this->doExecute($logger, true);
 
@@ -37,9 +37,9 @@ class UpdateJsonArrayQuery extends ParametrizedMigrationQuery
         if ($platform instanceof MySQL57Platform) {
             $updateSqls = [
                 "ALTER TABLE orocrm_dm_contact " .
-                "CHANGE merge_var_values merge_var_values JSON DEFAULT NULL COMMENT '(DC2Type:json_array)'",
+                "CHANGE merge_var_values merge_var_values JSON DEFAULT NULL COMMENT '(DC2Type:json)'",
                 "ALTER TABLE orocrm_dm_contact " .
-                "CHANGE data_fields data_fields JSON DEFAULT NULL COMMENT '(DC2Type:json_array)'",
+                "CHANGE data_fields data_fields JSON DEFAULT NULL COMMENT '(DC2Type:json)'",
             ];
 
             foreach ($updateSqls as $updateSql) {

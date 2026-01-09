@@ -6,7 +6,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture as BaseAbstractFixture;
 use Doctrine\Persistence\ObjectManager;
 use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport;
 use Oro\Bundle\SecurityBundle\Encoder\SymmetricCrypterInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Oro\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class LoadTransportData extends BaseAbstractFixture implements ContainerAwareInterface

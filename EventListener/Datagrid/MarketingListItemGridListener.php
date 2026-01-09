@@ -2,6 +2,7 @@
 
 namespace Oro\Bundle\DotmailerBundle\EventListener\Datagrid;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -178,8 +179,8 @@ class MarketingListItemGridListener implements ServiceSubscriberInterface
             Join::WITH,
             'IDENTITY(dm_ab_contact.contact) = dm_contact_subscriber.id AND dm_ab_contact.addressBook = :aBookFilter'
         )
-            ->setParameter('aBookFilter', $addressBook)
-            ->setParameter('channel', $addressBook->getChannel())
+            ->setParameter('aBookFilter', $addressBook->getId(), Types::INTEGER)
+            ->setParameter('channel', $addressBook->getChannel()?->getId(), Types::INTEGER)
             ->addSelect("JSON_EXTRACT(dm_ab_contact.serialized_data, 'status') as addressBookSubscribedStatus");
     }
 

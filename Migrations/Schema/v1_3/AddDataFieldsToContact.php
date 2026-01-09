@@ -17,6 +17,6 @@ class AddDataFieldsToContact implements Migration
     protected function addDataFieldsToContact(Schema $schema)
     {
         $table = $schema->getTable('orocrm_dm_contact');
-        $table->addColumn('data_fields', 'json_array', ['notnull' => false, 'comment' => '(DC2Type:json_array)']);
+        $table->addColumn('data_fields', 'json', ['notnull' => false, 'comment' => '(DC2Type:json)']);
     }
 }

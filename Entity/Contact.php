@@ -103,8 +103,8 @@ class Contact implements OriginAwareInterface, ExtendEntityInterface
     /**
      * @var array
      */
-    #[ORM\Column(name: 'data_fields', type: 'json_array', nullable: true)]
-    protected $dataFields;
+    #[ORM\Column(name: 'data_fields', type: 'json', nullable: true)]
+    protected $dataFields = [];
 
     /**
      * @var Collection<int, Activity>
