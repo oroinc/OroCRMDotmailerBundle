@@ -36,7 +36,7 @@ class NotExportedContactStrategy extends AbstractImportStrategy
         }
 
         if (!$email = $entity->getContact()->getEmail()) {
-            $this->context->addError('Email field required for import '. $this->getImport());
+            $this->context->addError('Email field required for import ' . $this->getImport());
 
             return null;
         }

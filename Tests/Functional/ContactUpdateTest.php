@@ -70,7 +70,7 @@ class ContactUpdateTest extends AbstractImportExportTestCase
             ];
 
             $contactEntity = $contactRepository->findOneBy($searchCriteria);
-            $this->assertNotNull($contactEntity, 'Failed asserting that contact updated.'. $log);
+            $this->assertNotNull($contactEntity, 'Failed asserting that contact updated.' . $log);
 
             $this->assertEquals($contact['dataFields'], $contactEntity->getDataFields());
 

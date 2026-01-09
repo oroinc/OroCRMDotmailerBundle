@@ -101,7 +101,8 @@ class DotmailerController extends AbstractController
             ];
         } catch (\Exception $exception) {
             $message = $exception->getMessage();
-            if ($exception instanceof RestClientException &&
+            if (
+                $exception instanceof RestClientException &&
                 $exception->getPrevious() &&
                 $exception->getPrevious()->getMessage()
             ) {

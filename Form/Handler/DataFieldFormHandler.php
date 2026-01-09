@@ -59,7 +59,8 @@ class DataFieldFormHandler
     {
         if ($request->isMethod(Request::METHOD_POST)) {
             $this->form->handleRequest($request);
-            if (!$request->get(self::UPDATE_MARKER, false)
+            if (
+                !$request->get(self::UPDATE_MARKER, false)
                 && $this->form->isSubmitted()
                 && $this->form->isValid()
             ) {

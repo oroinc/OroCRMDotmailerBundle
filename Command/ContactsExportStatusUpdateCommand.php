@@ -106,7 +106,7 @@ HELP
             // check if the integration job with `new` or `in progress` status already exists.
             // Temporary solution. should be refacored during BAP-14803.
             $existingJob = $this->jobProcessor->findRootJobByJobNameAndStatuses(
-                'oro_dotmailer:export_contacts_status_update:'.$integration->getId(),
+                'oro_dotmailer:export_contacts_status_update:' . $integration->getId(),
                 [Job::STATUS_NEW, Job::STATUS_RUNNING]
             );
             if ($existingJob) {
@@ -122,7 +122,7 @@ HELP
             }
 
             $existingJob = $this->jobProcessor->findRootJobByJobNameAndStatuses(
-                'oro_integration:sync_integration:'.$integration->getId(),
+                'oro_integration:sync_integration:' . $integration->getId(),
                 [Job::STATUS_NEW, Job::STATUS_RUNNING]
             );
             if ($existingJob) {
