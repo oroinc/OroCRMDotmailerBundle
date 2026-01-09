@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\Form\Type;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Provides a button form type for Dotmailer transport connection checks.
+ */
 class DotmailerTransportCheckButtonType extends ButtonType
 {
     public const NAME = 'oro_dotmailer_transport_check_button';
@@ -21,7 +24,7 @@ class DotmailerTransportCheckButtonType extends ButtonType
     }
 
     #[\Override]
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 

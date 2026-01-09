@@ -153,7 +153,7 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
         $table->addColumn('updated_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->addColumn('unsubscribed_date', 'datetime', ['notnull' => false]);
         $table->addColumn('last_subscribed_date', 'datetime', ['notnull' => false]);
-        $table->addColumn('data_fields', 'json_array', ['notnull' => false, 'comment' => '(DC2Type:json_array)']);
+        $table->addColumn('data_fields', 'json', ['notnull' => false, 'comment' => '(DC2Type:json)']);
         $table->setPrimaryKey(['id']);
         $table->addIndex(['owner_id'], 'IDX_6D7FB88E7E3C61F9');
         $table->addIndex(['channel_id'], 'IDX_6D7FB88E72F5A1AA');

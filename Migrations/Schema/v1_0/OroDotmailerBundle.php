@@ -128,7 +128,7 @@ class OroDotmailerBundle implements Migration, OrderedMigrationInterface
         $table->addColumn('full_name', 'string', ['notnull' => false, 'length' => 255]);
         $table->addColumn('gender', 'string', ['notnull' => false, 'length' => 6]);
         $table->addColumn('postcode', 'string', ['notnull' => false, 'length' => 12]);
-        $table->addColumn('merge_var_values', 'json_array', ['notnull' => false, 'comment' => '(DC2Type:json_array)']);
+        $table->addColumn('merge_var_values', 'json', ['notnull' => false, 'comment' => '(DC2Type:json)']);
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->addColumn('updated_at', 'datetime', ['comment' => '(DC2Type:datetime)']);
         $table->addColumn('unsubscribed_date', 'datetime', ['notnull' => false]);
