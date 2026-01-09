@@ -8,6 +8,9 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Provides form fields for configuring how Dotmailer data fields map to entity fields.
+ */
 class DataFieldMappingConfigType extends AbstractType
 {
     public const NAME = 'oro_dotmailer_datafield_mapping_config';

@@ -4,6 +4,9 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use DotMailer\Api\Resources\IResources;
 
+/**
+ * Iterates over campaign records from Dotmailer.
+ */
 class CampaignIterator extends AbstractIterator
 {
     public const ADDRESS_BOOK_KEY = 'related_address_book';

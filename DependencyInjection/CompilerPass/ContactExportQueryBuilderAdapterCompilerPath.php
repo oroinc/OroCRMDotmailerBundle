@@ -6,6 +6,11 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
+/**
+ * Compiler pass for registering contact export query builder adapters.
+ *
+ * Collects and registers all services tagged with `oro_dotmailer.contact_export_qb_adapter` into the adapter registry.
+ */
 class ContactExportQueryBuilderAdapterCompilerPath implements CompilerPassInterface
 {
     public const ADAPTERS_TAG = 'oro_dotmailer.contact.export.query_builder_adapter';

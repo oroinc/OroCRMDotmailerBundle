@@ -2,6 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
+/**
+ * Data converter for activity contact import/export.
+ *
+ * Converts activity contact data between Dotmailer format and internal representation.
+ */
 class ActivityContactDataConverter extends AbstractDataConverter
 {
     #[\Override]

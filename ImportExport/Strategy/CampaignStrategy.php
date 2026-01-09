@@ -7,6 +7,9 @@ use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignIterator;
 
+/**
+ * Handles the import strategy for campaign entities from Dotmailer.
+ */
 class CampaignStrategy extends AddOrReplaceStrategy
 {
     public const EXISTING_CAMPAIGNS_ORIGIN_IDS = 'existingCampaignsOriginIds';

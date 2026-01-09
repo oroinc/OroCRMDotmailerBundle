@@ -2,6 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\Exception;
 
+/**
+ * Indicates that a required option for Dotmailer integration was not provided.
+ */
 class RequiredOptionException extends \Exception implements DotmailerException
 {
     /**

@@ -2,6 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
+/**
+ * Iterates over items per page with overlap to handle pagination edge cases.
+ */
 abstract class OverlapIterator extends AbstractIterator
 {
     /**

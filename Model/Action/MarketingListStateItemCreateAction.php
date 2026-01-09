@@ -7,6 +7,9 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface;
 
+/**
+ * Handles creation of marketing list state items.
+ */
 class MarketingListStateItemCreateAction extends AbstractMarketingListEntitiesAction
 {
     /**

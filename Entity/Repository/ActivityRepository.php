@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\DotmailerBundle\Entity\Campaign;
 
 /**
- * Dotmailer activity repository
+ * Repository for {@see Activity} entities.
  */
 class ActivityRepository extends EntityRepository
 {

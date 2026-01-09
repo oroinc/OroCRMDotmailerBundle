@@ -7,6 +7,9 @@ use Oro\Bundle\DotmailerBundle\Entity\OAuth;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\UserBundle\Entity\User;
 
+/**
+ * Repository for {@see OAuth} entities.
+ */
 class OAuthRepository extends EntityRepository
 {
     /**

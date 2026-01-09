@@ -13,6 +13,9 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Provides form fields for selecting and configuring data field mappings.
+ */
 class DataFieldMappingType extends AbstractType
 {
     public const NAME = 'oro_dotmailer_datafield_mapping';

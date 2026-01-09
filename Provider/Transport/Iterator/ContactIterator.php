@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 use DotMailer\Api\DataTypes\ApiContactList;
 use DotMailer\Api\Resources\IResources;
 
+/**
+ * Iterates over contact records from Dotmailer.
+ */
 class ContactIterator extends OverlapIterator
 {
     public const ADDRESS_BOOK_KEY = 'related_address_book';

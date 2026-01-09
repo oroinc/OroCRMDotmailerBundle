@@ -6,6 +6,9 @@ use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\QueryDesigner\MappingQueryConverter;
 
+/**
+ * Adapts query builders for contact export operations in Dotmailer integration.
+ */
 class ContactExportQBAdapter implements ContactExportQBAdapterInterface
 {
     /** @var MappingProvider */

@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\Provider;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 
+/**
+ * Manages and provides access to contact export query builder adapters.
+ */
 class ContactExportQBAdapterRegistry
 {
     public const ADAPTER_PRIORITY_KEY = 'priority';

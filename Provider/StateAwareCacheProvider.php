@@ -6,6 +6,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\UnitOfWork;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 
+/**
+ * State-aware cache provider for Dotmailer data.
+ */
 class StateAwareCacheProvider extends CacheProvider
 {
     /**

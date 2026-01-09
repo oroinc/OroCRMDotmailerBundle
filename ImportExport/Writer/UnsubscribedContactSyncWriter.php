@@ -4,6 +4,9 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Writer;
 
 use Oro\Bundle\DotmailerBundle\ImportExport\Processor\UnsubscribedContactSyncProcessor;
 
+/**
+ * Handles synchronization of unsubscribed contact records during import processing.
+ */
 class UnsubscribedContactSyncWriter extends ImportWriter
 {
     #[\Override]

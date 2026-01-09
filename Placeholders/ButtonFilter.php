@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\Placeholders;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 
+/**
+ * Filters button placeholders based on Dotmailer configuration.
+ */
 class ButtonFilter
 {
     /**

@@ -9,6 +9,9 @@ use Oro\Bundle\DotmailerBundle\Entity\Contact;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Component\DoctrineUtils\ORM\QueryBuilderUtil;
 
+/**
+ * Repository for {@see AddressBookContact} entities.
+ */
 class AddressBookContactRepository extends EntityRepository
 {
     /**

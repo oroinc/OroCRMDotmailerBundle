@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Reader;
 use Oro\Bundle\DotmailerBundle\ImportExport\Strategy\AddressBookStrategy;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemoveAddressBookIterator;
 
+/**
+ * Reads address book data for removal operations during import processing.
+ */
 class RemoveAddressBookReader extends AbstractReader
 {
     #[\Override]

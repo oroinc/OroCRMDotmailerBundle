@@ -4,6 +4,9 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
 use Oro\Bundle\ImportExportBundle\Converter\AbstractTableDataConverter;
 
+/**
+ * Data converter for unsubscribed from account contact import/export.
+ */
 class UnsubscribedFromAccountContactDataConverter extends AbstractTableDataConverter
 {
     public const CONTACT_EMAIL = 'email';

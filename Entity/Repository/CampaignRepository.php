@@ -10,7 +10,7 @@ use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 /**
- * ORM repository for Campaign entity.
+ * Repository for {@see Campaign} entities.
  */
 class CampaignRepository extends EntityRepository
 {

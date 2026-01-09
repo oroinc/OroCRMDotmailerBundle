@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 
+/**
+ * Handles the import strategy for address book entities from Dotmailer.
+ */
 class AddressBookStrategy extends AddOrReplaceStrategy
 {
     public const EXISTING_ADDRESS_BOOKS_ORIGIN_IDS = 'existingAddressBooksOriginIds';
