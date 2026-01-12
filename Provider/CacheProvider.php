@@ -2,6 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider;
 
+/**
+ * Manages caching of Dotmailer API responses and other data.
+ */
 class CacheProvider
 {
     /**

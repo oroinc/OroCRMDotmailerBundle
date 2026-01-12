@@ -2,6 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
+/**
+ * Data converter for campaign import/export.
+ *
+ * Converts campaign data between Dotmailer format and internal representation.
+ */
 class CampaignDataConverter extends AbstractDataConverter
 {
     #[\Override]

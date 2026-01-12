@@ -9,6 +9,9 @@ use Oro\Bundle\ImportExportBundle\Context\ContextAwareInterface;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Processor\EntityNameAwareInterface;
 
+/**
+ * Converts contact data to update entity fields during import/export operations.
+ */
 class UpdateEntityFieldsFromContactDataConverter extends AbstractDataConverter implements
     EntityNameAwareInterface,
     ContextAwareInterface

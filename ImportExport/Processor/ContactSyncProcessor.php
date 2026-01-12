@@ -2,6 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Processor;
 
+/**
+ * Processor for syncing contact data.
+ */
 class ContactSyncProcessor extends ImportProcessor
 {
     public const CURRENT_BATCH_READ_ITEMS = 'currentBatchReadItems';

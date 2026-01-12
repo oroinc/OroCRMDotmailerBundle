@@ -6,6 +6,9 @@ use Oro\Bundle\EntityBundle\Provider\VirtualFieldProviderInterface;
 use Oro\Bundle\MarketingListBundle\Model\ContactInformationFieldHelper;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 
+/**
+ * Provides access to email addresses and related information from Dotmailer.
+ */
 class EmailProvider
 {
     /** @var ContactInformationFieldHelper */

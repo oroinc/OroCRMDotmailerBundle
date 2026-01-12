@@ -7,6 +7,9 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * Processes form submissions for updating Dotmailer integration connection settings.
+ */
 class ConnectionUpdateFormHandler
 {
     /**

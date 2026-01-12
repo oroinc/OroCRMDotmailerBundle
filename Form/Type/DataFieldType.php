@@ -10,6 +10,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Provides a form field for selecting Dotmailer data fields.
+ */
 class DataFieldType extends AbstractType
 {
     public const NAME = 'oro_dotmailer_data_field';

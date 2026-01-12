@@ -4,6 +4,9 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use DotMailer\Api\Resources\IResources;
 
+/**
+ * Iterates over data field records from Dotmailer.
+ */
 class DataFieldIterator extends AbstractIterator
 {
     /**

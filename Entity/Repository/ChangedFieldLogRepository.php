@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\Entity\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * Repository for {@see ChangedFieldLog} entities.
+ */
 class ChangedFieldLogRepository extends EntityRepository
 {
     /**

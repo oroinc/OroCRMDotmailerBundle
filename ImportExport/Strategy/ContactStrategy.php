@@ -84,8 +84,10 @@ class ContactStrategy extends AddOrReplaceStrategy
     ) {
         //if data fields changed in Dotmailer, schedule fields sync with entities
         /** @var  Contact $existingEntity */
-        if ($existingEntity->getDataFields() &&
-            array_diff_assoc((array) $entity->getDataFields(), (array) $existingEntity->getDataFields())) {
+        if (
+            $existingEntity->getDataFields() &&
+            array_diff_assoc((array) $entity->getDataFields(), (array) $existingEntity->getDataFields())
+        ) {
             $entitiesWithTwoWaySync = $this->mappingProvider
                 ->getEntitiesQualifiedForTwoWaySync($existingEntity->getChannel());
             $scheduled = [];

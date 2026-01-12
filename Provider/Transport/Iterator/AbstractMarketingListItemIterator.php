@@ -7,6 +7,9 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\Provider\MarketingListItemsQueryBuilderProvider;
 use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 
+/**
+ * Provides common functionality for iterating over marketing list items during export.
+ */
 abstract class AbstractMarketingListItemIterator extends AbstractIterator
 {
     public const ADDRESS_BOOK_KEY = 'related_address_book';

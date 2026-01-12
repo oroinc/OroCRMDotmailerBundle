@@ -7,6 +7,11 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Form type for selecting Dotmailer data fields.
+ *
+ * Provides a form field for selecting from available Dotmailer data fields.
+ */
 class DataFieldSelectType extends CreateOrSelectInlineChannelAwareType
 {
     public const NAME = 'oro_dotmailer_datafield_select';

@@ -51,7 +51,7 @@ class ContactsExportStatusUpdateCommandTest extends WebTestCase
         $jobProcessor = self::getContainer()->get('oro_message_queue.job.processor');
         $job = $jobProcessor->findOrCreateRootJob(
             uniqid('dm', true),
-            'oro_integration:sync_integration:'.$integration->getId(),
+            'oro_integration:sync_integration:' . $integration->getId(),
             true
         );
 

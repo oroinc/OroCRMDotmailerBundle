@@ -7,6 +7,9 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Provides a form field for selecting from available Dotmailer address books.
+ */
 class AddressBookSelectType extends CreateOrSelectInlineChannelAwareType
 {
     public const NAME = 'oro_dotmailer_address_book_list_select';

@@ -4,6 +4,9 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Strategy;
 
 use Oro\Bundle\ImportExportBundle\Strategy\Import\ConfigurableAddOrReplaceStrategy;
 
+/**
+ * Handles the import strategy for updating entity fields based on contact data.
+ */
 class UpdateEntityFieldsFromContactStrategy extends AddOrReplaceStrategy
 {
     #[\Override]

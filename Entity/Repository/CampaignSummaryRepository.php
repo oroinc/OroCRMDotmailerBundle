@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\Entity\Repository;
 use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\CampaignBundle\Entity\EmailCampaign;
 
+/**
+ * Repository for {@see CampaignSummary} entities.
+ */
 class CampaignSummaryRepository extends EntityRepository
 {
     /**

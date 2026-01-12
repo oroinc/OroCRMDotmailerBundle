@@ -10,6 +10,9 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+/**
+ * Provides form fields for configuring marketing list connections to Dotmailer.
+ */
 class MarketingListConnectionType extends AbstractType
 {
     public const NAME = 'oro_dotmailer_marketing_list_connection';

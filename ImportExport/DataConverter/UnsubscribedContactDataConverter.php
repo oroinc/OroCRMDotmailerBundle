@@ -5,6 +5,11 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\UnsubscribedContactIterator;
 use Oro\Bundle\ImportExportBundle\Converter\DataConverterInterface;
 
+/**
+ * Data converter for unsubscribed contact import/export.
+ *
+ * Converts unsubscribed contact data between Dotmailer format and internal representation.
+ */
 class UnsubscribedContactDataConverter implements DataConverterInterface
 {
     #[\Override]

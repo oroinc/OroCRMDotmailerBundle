@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Writer;
 use Oro\Bundle\DotmailerBundle\ImportExport\Processor\ContactSyncProcessor;
 use Oro\Bundle\PlatformBundle\Manager\OptionalListenerManager;
 
+/**
+ * Handles synchronization of contact records during import processing.
+ */
 class ContactSyncWriter extends ImportWriter
 {
     /**

@@ -6,6 +6,9 @@ use Oro\Bundle\ImportExportBundle\Context\ContextInterface;
 use Oro\Bundle\ImportExportBundle\Strategy\Import\ImportStrategyHelper;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Extends import strategy helper to add logging for import operations.
+ */
 class ImportStrategyHelperWithLog extends ImportStrategyHelper
 {
     /**

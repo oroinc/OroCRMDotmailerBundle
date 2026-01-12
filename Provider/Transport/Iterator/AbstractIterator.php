@@ -3,7 +3,9 @@
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 /**
- * Iterates over items per page
+ * Abstract base class for Dotmailer data iterators.
+ *
+ * Iterates over items per page and provides common functionality for iterating over Dotmailer API data.
  */
 abstract class AbstractIterator implements \Iterator
 {

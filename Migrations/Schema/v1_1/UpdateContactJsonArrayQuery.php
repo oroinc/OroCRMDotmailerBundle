@@ -31,7 +31,7 @@ class UpdateContactJsonArrayQuery extends ParametrizedMigrationQuery
     {
         $platform = $this->connection->getDatabasePlatform();
         if ($platform instanceof PostgreSQL92Platform) {
-            $updateSql = 'ALTER TABLE orocrm_dm_contact '.
+            $updateSql = 'ALTER TABLE orocrm_dm_contact ' .
                          'ALTER COLUMN merge_var_values TYPE JSON USING merge_var_values::JSON';
 
             $this->logQuery($logger, $updateSql);

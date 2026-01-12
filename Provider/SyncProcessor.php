@@ -46,7 +46,7 @@ class SyncProcessor implements SyncProcessorInterface, LoggerStrategyAwareInterf
         }
 
         $existingJob = $this->jobProcessor->findRootJobByJobNameAndStatuses(
-            'oro_dotmailer:export_contacts_status_update:'.$integration->getId(),
+            'oro_dotmailer:export_contacts_status_update:' . $integration->getId(),
             [Job::STATUS_NEW, Job::STATUS_RUNNING]
         );
         if ($existingJob) {

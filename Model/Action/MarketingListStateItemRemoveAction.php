@@ -7,6 +7,9 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBookContact;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingListStateItemInterface;
 
+/**
+ * Handles removal of marketing list state items.
+ */
 class MarketingListStateItemRemoveAction extends AbstractMarketingListEntitiesAction
 {
     public const MARKETING_LIST_STATE_ITEM_ID_ALIAS = 'marketingListStateItemId';

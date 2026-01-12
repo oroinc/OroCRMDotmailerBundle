@@ -5,6 +5,11 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\ImportExportBundle\Converter\AbstractTableDataConverter;
 
+/**
+ * Data converter for data field import/export.
+ *
+ * Converts data field data between Dotmailer format and internal representation.
+ */
 class DataFieldDataConverter extends AbstractTableDataConverter
 {
     public const EMPTY_DEFAULT_VALUE = 'null';

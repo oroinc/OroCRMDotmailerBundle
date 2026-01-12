@@ -6,6 +6,9 @@ use Oro\Bundle\CampaignBundle\Form\Type\AbstractTransportSettingsType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Provides form fields for configuring Dotmailer email transport settings.
+ */
 class DotmailerTransportSettingsType extends AbstractTransportSettingsType
 {
     public const NAME = 'oro_dotmailer_email_transport_settings';

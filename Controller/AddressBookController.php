@@ -170,7 +170,8 @@ class AddressBookController extends AbstractController
         #[MapEntity(id: 'entity')]
         MarketingList $marketingList
     ): array {
-        if (!$this->isGranted('orocrm_marketing_list_update') ||
+        if (
+            !$this->isGranted('orocrm_marketing_list_update') ||
             !$this->isGranted('orocrm_dotmailer_address_book_update')
         ) {
             throw new AccessDeniedException();

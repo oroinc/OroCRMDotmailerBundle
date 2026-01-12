@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\Provider;
 use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 
+/**
+ * Defines the contract for adapting query builders for contact export operations.
+ */
 interface ContactExportQBAdapterInterface
 {
     /**

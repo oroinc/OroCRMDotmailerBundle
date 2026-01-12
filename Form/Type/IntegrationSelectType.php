@@ -9,6 +9,9 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Provides a form field for selecting from available Dotmailer integrations.
+ */
 class IntegrationSelectType extends AbstractType
 {
     public const NAME = 'oro_dotmailer_integration_select';

@@ -2,6 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Processor;
 
+/**
+ * Handles updating entity fields based on contact data during import operations.
+ */
 class UpdateEntityFieldsFromContactProcessor extends ImportProcessor
 {
     public const PROCESSED_CONTACT_IDS = 'processedContactIds';

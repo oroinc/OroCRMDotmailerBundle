@@ -6,6 +6,9 @@ use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\ImportExportBundle\Strategy\Import\ConfigurableAddOrReplaceStrategy;
 use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 
+/**
+ * Handles the import strategy for marketing activity entities from Dotmailer.
+ */
 class MarketingActivityStrategy extends AddOrReplaceStrategy
 {
     public const CACHED_ACTIVITY_TYPE = 'cachedActivityType';

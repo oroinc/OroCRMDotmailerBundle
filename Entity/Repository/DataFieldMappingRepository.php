@@ -6,6 +6,9 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
+/**
+ * Repository for {@see DataFieldMapping} entities.
+ */
 class DataFieldMappingRepository extends EntityRepository
 {
     /**

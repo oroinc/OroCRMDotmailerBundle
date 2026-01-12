@@ -9,6 +9,9 @@ use Oro\Bundle\DotmailerBundle\QueryDesigner\ParentEntityFindQueryConverter;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Processes changes to mapped fields in Dotmailer integration.
+ */
 class MappedFieldsChangeProcessor
 {
     /** @var DoctrineHelper  */

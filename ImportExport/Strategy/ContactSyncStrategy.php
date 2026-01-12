@@ -103,8 +103,10 @@ class ContactSyncStrategy extends AddOrReplaceStrategy
 
     protected function processAbContactStateFlags(AddressBookContact $addressBookContact)
     {
-        if ($this->scheduleForExport ||
-            $addressBookContact->getExportOperationType()->getId() !== AddressBookContact::EXPORT_UPDATE_CONTACT) {
+        if (
+            $this->scheduleForExport ||
+            $addressBookContact->getExportOperationType()->getId() !== AddressBookContact::EXPORT_UPDATE_CONTACT
+        ) {
             $addressBookContact->setScheduledForExport(true);
         }
         //reset export flag

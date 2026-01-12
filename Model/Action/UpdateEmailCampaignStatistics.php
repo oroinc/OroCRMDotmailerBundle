@@ -7,6 +7,9 @@ use Oro\Bundle\DotmailerBundle\Entity\Activity;
 use Oro\Bundle\DotmailerBundle\Provider\CampaignStatisticProvider;
 use Oro\Bundle\WorkflowBundle\Model\EntityAwareInterface;
 
+/**
+ * Handles updating of email campaign statistics.
+ */
 class UpdateEmailCampaignStatistics extends AbstractMarketingListEntitiesAction
 {
     /**
