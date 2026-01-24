@@ -4,6 +4,11 @@ namespace Oro\Bundle\DotmailerBundle\Exception;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
+/**
+ * Exception thrown for bad request errors from the Dotmailer REST API.
+ *
+ * Indicates that the request was malformed or contained invalid parameters.
+ */
 class BadRequestException extends HttpException implements DotmailerException
 {
     /**

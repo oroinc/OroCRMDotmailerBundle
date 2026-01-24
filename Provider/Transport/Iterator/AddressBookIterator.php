@@ -4,6 +4,9 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
 use DotMailer\Api\Resources\IResources;
 
+/**
+ * Iterates over address book records from Dotmailer.
+ */
 class AddressBookIterator extends AbstractIterator
 {
     protected $batchSize = 100;

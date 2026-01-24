@@ -7,6 +7,9 @@ use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
+/**
+ * Repository for {@see DataField} entities.
+ */
 class DataFieldRepository extends EntityRepository
 {
     /**

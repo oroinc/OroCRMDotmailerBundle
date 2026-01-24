@@ -8,7 +8,7 @@ use Oro\Bundle\QueryDesignerBundle\QueryDesigner\QueryBuilderGroupingOrmQueryCon
 use Oro\Component\DoctrineUtils\ORM\QueryBuilderUtil;
 
 /**
- * Converts column definitions to an ORM query.
+ * Converts column definitions to an ORM query for finding parent entities in Dotmailer integration.
  */
 class ParentEntityFindQueryConverter extends QueryBuilderGroupingOrmQueryConverter
 {

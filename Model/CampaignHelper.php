@@ -2,6 +2,11 @@
 
 namespace Oro\Bundle\DotmailerBundle\Model;
 
+/**
+ * Helper for campaign-related operations.
+ *
+ * Provides utility methods for working with Dotmailer campaigns.
+ */
 class CampaignHelper
 {
     /**

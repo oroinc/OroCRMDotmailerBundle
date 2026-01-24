@@ -8,6 +8,9 @@ use Oro\Bundle\CampaignBundle\Entity\EmailCampaignStatistics;
 use Oro\Bundle\CampaignBundle\Model\EmailCampaignStatisticsConnector;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 
+/**
+ * Provides access to campaign statistics from Dotmailer.
+ */
 class CampaignStatisticProvider
 {
     const CAMPAIGN_STATISTIC_CACHE = 'campaignStatisticCache';

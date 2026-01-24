@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\Provider;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Oro\Bundle\EntityBundle\Provider\EntityFieldProvider;
 
+/**
+ * Provides access to Dotmailer data fields and their properties.
+ */
 class FieldProvider extends EntityFieldProvider
 {
     #[\Override]

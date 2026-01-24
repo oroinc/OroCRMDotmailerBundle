@@ -6,6 +6,9 @@ use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\DotmailerBundle\ImportExport\Processor\RemovedExportProcessor;
 
+/**
+ * Iterates over removed contacts for export operations.
+ */
 class RemovedContactsExportIterator extends AbstractMarketingListItemIterator
 {
     /**

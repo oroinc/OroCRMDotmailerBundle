@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Reader;
 use Oro\Bundle\DotmailerBundle\ImportExport\Strategy\DataFieldStrategy;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\RemoveDataFieldIterator;
 
+/**
+ * Reads data field data for removal operations during import processing.
+ */
 class RemoveDataFieldReader extends AbstractReader
 {
     #[\Override]

@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
+/**
+ * Provides form fields for configuring Dotmailer integration connections.
+ */
 class IntegrationConnectionType extends AbstractType
 {
     #[\Override]

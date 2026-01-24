@@ -7,6 +7,9 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBookContactsExport;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactsExportRepository;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
+/**
+ * Handles export of data to Dotmailer.
+ */
 class ExportManager
 {
     /**

@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 use DotMailer\Api\DataTypes\ApiContactSuppressionList;
 use DotMailer\Api\Resources\IResources;
 
+/**
+ * Iterates over unsubscribed contact records from Dotmailer.
+ */
 class UnsubscribedContactIterator extends OverlapIterator
 {
     const ADDRESS_BOOK_KEY = 'related_address_book';

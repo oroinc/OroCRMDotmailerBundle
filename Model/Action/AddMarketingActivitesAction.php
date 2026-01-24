@@ -15,6 +15,9 @@ use Oro\Bundle\MarketingActivityBundle\Entity\MarketingActivity;
 use Oro\Bundle\MarketingActivityBundle\Model\ActivityFactory;
 use Oro\Bundle\WorkflowBundle\Model\EntityAwareInterface;
 
+/**
+ * Handles addition of marketing activities.
+ */
 class AddMarketingActivitesAction extends AbstractMarketingListEntitiesAction implements FeatureToggleableInterface
 {
     use FeatureCheckerHolderTrait;

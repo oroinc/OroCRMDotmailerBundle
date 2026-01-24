@@ -4,6 +4,11 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\CampaignSummaryIterator;
 
+/**
+ * Data converter for campaign summary import/export.
+ *
+ * Converts campaign summary data between Dotmailer format and internal representation.
+ */
 class CampaignSummaryDataConverter extends AbstractDataConverter
 {
     #[\Override]

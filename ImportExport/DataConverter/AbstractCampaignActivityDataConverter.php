@@ -4,6 +4,13 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator\AbstractActivityIterator;
 
+/**
+ * Provides common functionality for converting Dotmailer campaign activity data.
+ *
+ * This base class implements the core header conversion rules shared across different campaign activity types
+ * (e.g., opens, clicks, bounces). It maps activity data fields to the internal entity structure.
+ * Subclasses must implement activity-specific header conversion rules.
+ */
 abstract class AbstractCampaignActivityDataConverter extends AbstractDataConverter
 {
     #[\Override]

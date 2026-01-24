@@ -2,6 +2,10 @@
 
 namespace Oro\Bundle\DotmailerBundle\Entity;
 
+/**
+ * Extends {@see ChannelAwareInterface} to add origin ID tracking for entities
+ * from a specific Dotmailer integration channel.
+ */
 interface OriginAwareInterface extends ChannelAwareInterface
 {
     /**

@@ -10,7 +10,7 @@ use Oro\Bundle\DotmailerBundle\Entity\AddressBook;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 /**
- * Doctrine repository for AddressBook entity.
+ * Repository for {@see AddressBook} entities.
  */
 class AddressBookRepository extends EntityRepository
 {

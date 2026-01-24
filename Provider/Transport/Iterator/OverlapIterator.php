@@ -2,6 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Iterator;
 
+/**
+ * Iterates over items per page with overlap to handle pagination edge cases.
+ */
 abstract class OverlapIterator extends AbstractIterator
 {
     /**
@@ -15,13 +18,11 @@ abstract class OverlapIterator extends AbstractIterator
         $overlap = $this->getOverlapSize();
 
         /**
-         * Overlap necessary because during import some records can be removed or added and it causes shift of records
-         * during iteration over them when records are loaded with  batches.
+         * Overlap necessary because during import some records can be removed or added, and it causes shift of records
+         * during iteration over them when records are loaded with batches.
          *
-         * At the moment Dotmailer API does not support any filtering or ordering, so overlap is an only workaround
-         * solution.
-         *
-         * @todo Fix in CRM-4627 as soon as Dotmailer API will be updated.
+         * At the moment Dotmailer API does not support any filtering or ordering, so overlap is the only workaround
+         * solution - see CRM-4627
          */
         if ($skip > $overlap) {
             $this->currentItemIndex -= $overlap;

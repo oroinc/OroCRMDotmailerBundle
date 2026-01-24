@@ -4,6 +4,11 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\DataConverter;
 
 use Oro\Bundle\ImportExportBundle\Converter\AbstractTableDataConverter;
 
+/**
+ * Data converter for address book import/export.
+ *
+ * Converts address book data between Dotmailer format and internal representation.
+ */
 class AddressBookDataConverter extends AbstractTableDataConverter
 {
     #[\Override]

@@ -2,6 +2,9 @@
 
 namespace Oro\Bundle\DotmailerBundle\ImportExport\Writer;
 
+/**
+ * Handles removal of campaign records during import processing.
+ */
 class RemoveCampaignWriter extends ImportWriter
 {
     #[\Override]

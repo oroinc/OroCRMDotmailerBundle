@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\Validator\Constraints;
 use Oro\Bundle\DotmailerBundle\Validator\DataFieldMappingConfigValidator;
 use Symfony\Component\Validator\Constraint;
 
+/**
+ * Validates that data field mappings are properly configured in Dotmailer integration.
+ */
 class DataFieldMappingConfigConstraint extends Constraint
 {
     public $errorPath = null;

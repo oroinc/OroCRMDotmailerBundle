@@ -5,6 +5,9 @@ namespace Oro\Bundle\DotmailerBundle\ImportExport\Writer;
 use Oro\Bundle\DotmailerBundle\Model\ImportExportLogHelper;
 use Oro\Bundle\IntegrationBundle\ImportExport\Writer\PersistentBatchWriter;
 
+/**
+ * Handles writing of imported data during import processing.
+ */
 class ImportWriter extends PersistentBatchWriter
 {
     /**
