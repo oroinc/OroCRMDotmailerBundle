@@ -11,19 +11,16 @@ use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem;
 use Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider;
 use Oro\Component\Testing\Unit\TestContainerBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class MarketingListStateItemVoterTest extends \PHPUnit\Framework\TestCase
+class MarketingListStateItemVoterTest extends TestCase
 {
-    /** @var DoctrineHelper|\PHPUnit\Framework\MockObject\MockObject */
-    private $doctrineHelper;
-
-    /** @var ContactInformationFieldsProvider|\PHPUnit\Framework\MockObject\MockObject */
-    private $contactInformationFieldsProvider;
-
-    /** @var MarketingListStateItemVoter */
-    private $voter;
+    private DoctrineHelper&MockObject $doctrineHelper;
+    private ContactInformationFieldsProvider&MockObject $contactInformationFieldsProvider;
+    private MarketingListStateItemVoter $voter;
 
     #[\Override]
     protected function setUp(): void
@@ -32,7 +29,7 @@ class MarketingListStateItemVoterTest extends \PHPUnit\Framework\TestCase
         $this->contactInformationFieldsProvider = $this->createMock(ContactInformationFieldsProvider::class);
 
         $container = TestContainerBuilder::create()
-            ->add('oro_marketing_list.provider.contact_information_fields', $this->contactInformationFieldsProvider)
+            ->add(ContactInformationFieldsProvider::class, $this->contactInformationFieldsProvider)
             ->getContainer($this);
 
         $this->voter = new MarketingListStateItemVoter($this->doctrineHelper, $container);
