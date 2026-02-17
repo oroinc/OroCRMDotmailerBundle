@@ -33,30 +33,21 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
  */
 class MarketingListItemGridListener implements ServiceSubscriberInterface
 {
-    /** @var ManagerRegistry */
-    private $doctrine;
-
-    /** @var ContainerInterface */
-    private $container;
-
-    /** @var array */
-    private $addressBookByML = [];
+    private array $addressBookByML = [];
 
     public function __construct(
-        ManagerRegistry $doctrine,
-        ContainerInterface $container
+        private readonly ManagerRegistry $doctrine,
+        private readonly ContainerInterface $container
     ) {
-        $this->doctrine = $doctrine;
-        $this->container = $container;
     }
 
     #[\Override]
     public static function getSubscribedServices(): array
     {
         return [
-            'oro_marketing_list.provider.contact_information_fields' => ContactInformationFieldsProvider::class,
-            'oro_marketing_list.model.helper'                        => MarketingListHelper::class,
-            'oro_dotmailer.model.field_helper'                       => FieldHelper::class
+            ContactInformationFieldsProvider::class,
+            MarketingListHelper::class,
+            FieldHelper::class
         ];
     }
 
@@ -126,7 +117,7 @@ class MarketingListItemGridListener implements ServiceSubscriberInterface
         }
 
         /** @var MarketingListHelper $marketingListHelper */
-        $marketingListHelper = $this->container->get('oro_marketing_list.model.helper');
+        $marketingListHelper = $this->container->get(MarketingListHelper::class);
 
         return (bool)$marketingListHelper->getMarketingListIdByGridName($gridName);
     }
@@ -137,20 +128,21 @@ class MarketingListItemGridListener implements ServiceSubscriberInterface
     private function joinSubscriberStatus(MarketingList $marketingList, QueryBuilder $queryBuilder)
     {
         /** @var ContactInformationFieldsProvider $contactInformationProvider */
-        $contactInformationProvider = $this->container->get('oro_marketing_list.provider.contact_information_fields');
+        $contactInformationProvider = $this->container->get(ContactInformationFieldsProvider::class);
         $contactInformationFields = $contactInformationProvider->getMarketingListTypedFields(
             $marketingList,
             ContactInformationFieldsProvider::CONTACT_INFORMATION_SCOPE_EMAIL
         );
 
-        if (!$contactInformationField = reset($contactInformationFields)) {
+        $contactInformationField = reset($contactInformationFields);
+        if (!$contactInformationField) {
             throw new \RuntimeException('Contact information is not provided');
         }
 
         $expr = $queryBuilder->expr();
 
         /** @var FieldHelper $fieldHelper */
-        $fieldHelper = $this->container->get('oro_dotmailer.model.field_helper');
+        $fieldHelper = $this->container->get(FieldHelper::class);
         $contactInformationFieldExpr = $fieldHelper
             ->getFieldExpr($marketingList->getEntity(), $queryBuilder, $contactInformationField);
         $queryBuilder->addSelect($expr->lower($contactInformationFieldExpr) . ' AS entityEmail');
