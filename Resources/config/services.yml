@@ -964,7 +964,7 @@ services:
             - [setClassName, ['Oro\Bundle\MarketingListBundle\Entity\MarketingListUnsubscribedItem']]
         tags:
             - { name: security.voter, priority: 500 }
-            - { name: container.service_subscriber, id: oro_marketing_list.provider.contact_information_fields }
+            - { name: container.service_subscriber, id: oro_marketing_list.provider.contact_information_fields, key: Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider }
 
     #listeners
     oro_dotmailer.listener.datagrid.marketing_list_item:
@@ -974,9 +974,9 @@ services:
             - '@Psr\Container\ContainerInterface'
         tags:
             - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.after, method: onBuildAfter }
-            - { name: container.service_subscriber, id: oro_marketing_list.provider.contact_information_fields }
-            - { name: container.service_subscriber, id: oro_marketing_list.model.helper }
-            - { name: container.service_subscriber, id: oro_dotmailer.model.field_helper }
+            - { name: container.service_subscriber, id: oro_marketing_list.provider.contact_information_fields, key: Oro\Bundle\MarketingListBundle\Provider\ContactInformationFieldsProvider }
+            - { name: container.service_subscriber, id: oro_marketing_list.model.helper, key: Oro\Bundle\MarketingListBundle\Model\MarketingListHelper }
+            - { name: container.service_subscriber, id: oro_dotmailer.model.field_helper, key: Oro\Bundle\DotmailerBundle\Model\FieldHelper }
 
     oro_dotmailer.listener.cache_clear:
         class: Oro\Bundle\DotmailerBundle\EventListener\CacheClearListener
