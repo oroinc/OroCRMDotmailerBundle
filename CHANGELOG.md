@@ -4,6 +4,7 @@ The current file describes significant changes in the code that may affect the u
 
 ## Changes in the Dotdigital package versions
 
+- [7.0.0](#700-2026-03-31)
 - [6.1.0](#610-2025-03-31)
 - [6.0.0](#600-2024-03-30)
 - [5.1.0](#510-2023-03-31)
@@ -18,6 +19,9 @@ The current file describes significant changes in the code that may affect the u
 - [2.3.0](#230-2017-07-28)
 - [2.2.0](#220-2017-05-31)
 - [2.1.0](#210-2017-03-30)
+
+## 7.0.0 (2026-03-31)
+[Show detailed list of changes](incompatibilities-7-0.md)
 
 ## 6.1.0 (2025-03-31)
 [Show detailed list of changes](incompatibilities-6-1.md)
