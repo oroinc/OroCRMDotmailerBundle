@@ -136,9 +136,6 @@ class Contact implements OriginAwareInterface, ExtendEntityInterface
     #[ORM\Column(name: 'last_subscribed_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     protected ?\DateTimeInterface $lastSubscribedDate = null;
 
-    /**
-     * Initialize collections
-     */
     public function __construct()
     {
         $this->activities = new ArrayCollection();

@@ -148,9 +148,6 @@ class Campaign implements OriginAwareInterface, ExtendEntityInterface
     #[ORM\Column(name: 'is_deleted', type: Types::BOOLEAN)]
     protected ?bool $deleted = false;
 
-    /**
-     * Initialize collections
-     */
     public function __construct()
     {
         $this->addressBooks = new ArrayCollection();
