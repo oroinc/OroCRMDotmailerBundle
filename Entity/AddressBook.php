@@ -127,9 +127,6 @@ class AddressBook implements OriginAwareInterface, ExtendEntityInterface
     #[ORM\Column(name: 'create_entities', type: Types::BOOLEAN, nullable: true)]
     protected ?bool $createEntities = false;
 
-    /**
-     * Initialize collections
-     */
     public function __construct()
     {
         $this->campaigns = new ArrayCollection();

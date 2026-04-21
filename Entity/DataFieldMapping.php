@@ -209,9 +209,6 @@ class DataFieldMapping implements ExtendEntityInterface
         return $this;
     }
 
-    /**
-     * Pre persist event handler
-     */
     #[ORM\PrePersist]
     public function prePersist()
     {
@@ -219,9 +216,6 @@ class DataFieldMapping implements ExtendEntityInterface
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
     }
 
-    /**
-     * Pre update event handler
-     */
     #[ORM\PreUpdate]
     public function preUpdate()
     {
