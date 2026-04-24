@@ -1,6 +1,6 @@
 <?php
 
-namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Validators;
+namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Validator;
 
 use Doctrine\DBAL\Types\Types;
 use Oro\Bundle\DotmailerBundle\Entity\DataField;
