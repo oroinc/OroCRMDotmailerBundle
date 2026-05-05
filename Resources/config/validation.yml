@@ -11,6 +11,15 @@ Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport:
             - Length:
                 min: 8
                 max: 255
+        clientId:
+            - Length:
+                max: 255
+        clientKey:
+            - Length:
+                max: 255
+        customDomain:
+            - Length:
+                max: 255
 
 Oro\Bundle\DotmailerBundle\Entity\AddressBook:
     constraints:
