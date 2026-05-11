@@ -17,13 +17,13 @@ class DotmailerTransport extends Transport
     #[ORM\Column(name: 'orocrm_dm_api_username', type: Types::STRING, length: 255, nullable: false)]
     protected ?string $username = null;
 
-    #[ORM\Column(name: 'orocrm_dm_api_password', type: Types::STRING, length: 255, nullable: false)]
+    #[ORM\Column(name: 'orocrm_dm_api_password', type: Types::TEXT, nullable: false)]
     protected ?string $password = null;
 
     #[ORM\Column(name: 'orocrm_dm_api_client_id', type: Types::STRING, length: 255, nullable: true)]
     protected ?string $clientId = null;
 
-    #[ORM\Column(name: 'orocrm_dm_api_client_key', type: Types::STRING, length: 255, nullable: true)]
+    #[ORM\Column(name: 'orocrm_dm_api_client_key', type: Types::TEXT, nullable: true)]
     protected ?string $clientKey = null;
 
     #[ORM\Column(name: 'orocrm_dm_api_custom_domain', type: Types::STRING, length: 255, nullable: true)]

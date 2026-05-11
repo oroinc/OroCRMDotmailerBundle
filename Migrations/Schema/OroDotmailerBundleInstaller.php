@@ -21,7 +21,7 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
     #[\Override]
     public function getMigrationVersion(): string
     {
-        return 'v1_9';
+        return 'v1_9_1';
     }
 
     #[\Override]
@@ -69,9 +69,9 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
     {
         $table = $schema->getTable('oro_integration_transport');
         $table->addColumn('orocrm_dm_api_username', 'string', ['notnull' => false, 'length' => 255]);
-        $table->addColumn('orocrm_dm_api_password', 'string', ['notnull' => false, 'length' => 255]);
+        $table->addColumn('orocrm_dm_api_password', 'text', ['notnull' => false]);
         $table->addColumn('orocrm_dm_api_client_id', 'string', ['notnull' => false, 'length' => 255]);
-        $table->addColumn('orocrm_dm_api_client_key', 'string', ['notnull' => false, 'length' => 255]);
+        $table->addColumn('orocrm_dm_api_client_key', 'text', ['notnull' => false]);
         $table->addColumn('orocrm_dm_api_custom_domain', 'string', ['notnull' => false, 'length' => 255]);
     }
 
