@@ -39,9 +39,10 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
         'ownership' => [
             'owner_type' => 'ORGANIZATION',
             'owner_field_name' => 'owner',
-            'owner_column_name' => 'owner_id'
+            'owner_column_name' => 'owner_id',
         ],
-        'security' => ['type' => 'ACL', 'group_name' => '', 'category' => 'marketing']
+        'security' => ['type' => 'ACL', 'group_name' => '', 'category' => 'marketing'],
+        'email' => ['available_in_template' => true]
     ]
 )]
 class Contact implements OriginAwareInterface, ExtendEntityInterface
@@ -50,54 +51,64 @@ class Contact implements OriginAwareInterface, ExtendEntityInterface
     use ExtendEntityTrait;
 
     /** constant for enum dm_cnt_opt_in_type */
-    public const OPT_IN_TYPE_UNKNOWN                       = 'Unknown';
-    public const OPT_IN_TYPE_SINGLE                        = 'Single';
-    public const OPT_IN_TYPE_DOUBLE                        = 'Double';
-    public const OPT_IN_TYPE_VERIFIEDDOUBLE                = 'VerifiedDouble';
-    public const OPT_IN_TYPE_NOTAVAILABLEINTHISVERSION     = 'NotAvailableInThisVersion';
+    public const OPT_IN_TYPE_UNKNOWN = 'Unknown';
+    public const OPT_IN_TYPE_SINGLE = 'Single';
+    public const OPT_IN_TYPE_DOUBLE = 'Double';
+    public const OPT_IN_TYPE_VERIFIEDDOUBLE = 'VerifiedDouble';
+    public const OPT_IN_TYPE_NOTAVAILABLEINTHISVERSION = 'NotAvailableInThisVersion';
 
     /** constant for enum dm_cnt_email_type */
-    public const EMAIL_TYPE_PLAINTEXT                      = 'PlainText';
-    public const EMAIL_TYPE_HTML                           = 'Html';
-    public const EMAIL_TYPE_NOTAVAILABLEINTHISVERSION      = 'NotAvailableInThisVersion';
+    public const EMAIL_TYPE_PLAINTEXT = 'PlainText';
+    public const EMAIL_TYPE_HTML = 'Html';
+    public const EMAIL_TYPE_NOTAVAILABLEINTHISVERSION = 'NotAvailableInThisVersion';
 
     /** constant for enum dm_cnt_status */
-    public const STATUS_SUBSCRIBED                         = 'Subscribed';
-    public const STATUS_UNSUBSCRIBED                       = 'Unsubscribed';
-    public const STATUS_SOFTBOUNCED                        = 'SoftBounced';
-    public const STATUS_HARDBOUNCED                        = 'HardBounced';
-    public const STATUS_ISPCOMPLAINED                      = 'IspComplained';
-    public const STATUS_MAILBLOCKED                        = 'MailBlocked';
-    public const STATUS_PENDINGOPTIN                       = 'PendingOptIn';
-    public const STATUS_DIRECTCOMPLAINT                    = 'DirectComplaint';
-    public const STATUS_DELETED                            = 'Deleted';
-    public const STATUS_SHAREDSUPPRESSION                  = 'SharedSuppression';
-    public const STATUS_SUPPRESSED                         = 'Suppressed';
-    public const STATUS_NOTALLOWED                         = 'NotAllowed';
-    public const STATUS_DOMAINSUPPRESSION                  = 'DomainSuppression';
-    public const STATUS_NOMXRECORD                         = 'NoMxRecord';
-    public const STATUS_NOTAVAILABLEINTHISVERSION          = 'NotAvailableInThisVersion';
-    public const STATUS_ENUM_CODE                          = 'dm_cnt_status';
+    public const STATUS_SUBSCRIBED = 'Subscribed';
+    public const STATUS_UNSUBSCRIBED = 'Unsubscribed';
+    public const STATUS_SOFTBOUNCED = 'SoftBounced';
+    public const STATUS_HARDBOUNCED = 'HardBounced';
+    public const STATUS_ISPCOMPLAINED = 'IspComplained';
+    public const STATUS_MAILBLOCKED = 'MailBlocked';
+    public const STATUS_PENDINGOPTIN = 'PendingOptIn';
+    public const STATUS_DIRECTCOMPLAINT = 'DirectComplaint';
+    public const STATUS_DELETED = 'Deleted';
+    public const STATUS_SHAREDSUPPRESSION = 'SharedSuppression';
+    public const STATUS_SUPPRESSED = 'Suppressed';
+    public const STATUS_NOTALLOWED = 'NotAllowed';
+    public const STATUS_DOMAINSUPPRESSION = 'DomainSuppression';
+    public const STATUS_NOMXRECORD = 'NoMxRecord';
+    public const STATUS_NOTAVAILABLEINTHISVERSION = 'NotAvailableInThisVersion';
+    public const STATUS_ENUM_CODE = 'dm_cnt_status';
 
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Channel::class)]
     #[ORM\JoinColumn(name: 'channel_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['identity' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?Channel $channel = null;
 
     #[ORM\Column(name: 'email', type: Types::STRING, length: 255)]
-    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['identity' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?string $email = null;
 
     /**
      * @var Collection<int, AddressBookContact>
      **/
     #[ORM\OneToMany(mappedBy: 'contact', targetEntity: AddressBookContact::class, cascade: ['remove'])]
-    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['excluded' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?Collection $addressBookContacts = null;
 
     /**
@@ -115,25 +126,38 @@ class Contact implements OriginAwareInterface, ExtendEntityInterface
 
     #[ORM\ManyToOne(targetEntity: Organization::class)]
     #[ORM\JoinColumn(name: 'owner_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['excluded' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?Organization $owner = null;
 
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE)]
     #[ConfigField(
-        defaultValues: ['entity' => ['label' => 'oro.ui.created_at'], 'importexport' => ['excluded' => true]]
+        defaultValues: [
+            'entity' => ['label' => 'oro.ui.created_at'],
+            'importexport' => ['excluded' => true],
+            'email' => ['available_in_template' => true],
+        ],
     )]
     protected ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE)]
     #[ConfigField(
-        defaultValues: ['entity' => ['label' => 'oro.ui.updated_at'], 'importexport' => ['excluded' => true]]
+        defaultValues: [
+            'entity' => ['label' => 'oro.ui.updated_at'],
+            'importexport' => ['excluded' => true],
+            'email' => ['available_in_template' => true],
+        ],
     )]
     protected ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(name: 'unsubscribed_date', type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?\DateTimeInterface $unsubscribedDate = null;
 
     #[ORM\Column(name: 'last_subscribed_date', type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?\DateTimeInterface $lastSubscribedDate = null;
 
     /**

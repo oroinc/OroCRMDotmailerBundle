@@ -6,6 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\EntityBundle\EntityProperty\DatesAwareTrait;
 use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\Config;
+use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\ConfigField;
 
 /**
  * Data field mapping config entity
@@ -22,13 +23,16 @@ class DataFieldMappingConfig
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $id = null;
 
     #[ORM\Column(name: 'entity_field', type: Types::TEXT)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?string $entityFields = null;
 
     #[ORM\ManyToOne(targetEntity: DataField::class)]
     #[ORM\JoinColumn(name: 'datafield_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?DataField $dataField = null;
 
     /**
@@ -37,10 +41,12 @@ class DataFieldMappingConfig
      * @var bool
      */
     #[ORM\Column(name: 'is_two_way_sync', type: Types::BOOLEAN, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?bool $isTwoWaySync = null;
 
     #[ORM\ManyToOne(targetEntity: DataFieldMapping::class, inversedBy: 'configs')]
     #[ORM\JoinColumn(name: 'mapping_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?DataFieldMapping $mapping = null;
 
     /**
