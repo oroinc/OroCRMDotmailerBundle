@@ -743,7 +743,7 @@ class OroDotmailerBundleInstaller implements Installation, ExtendExtensionAwareI
             $enumCode,
             false,
             true,
-            ['extend' => ['owner' => ExtendScope::OWNER_CUSTOM] ]
+            ['extend' => ['owner' => ExtendScope::OWNER_CUSTOM], 'email' => ['available_in_template' => true]]
         );
     }
 }
