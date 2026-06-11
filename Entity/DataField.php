@@ -33,9 +33,9 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
         'ownership' => [
             'owner_type' => 'ORGANIZATION',
             'owner_field_name' => 'owner',
-            'owner_column_name' => 'owner_id'
+            'owner_column_name' => 'owner_id',
         ],
-        'security' => ['type' => 'ACL', 'group_name' => '', 'category' => 'marketing']
+        'security' => ['type' => 'ACL', 'group_name' => '', 'category' => 'marketing'],
     ]
 )]
 class DataField implements ChannelAwareInterface, ExtendEntityInterface
@@ -43,41 +43,52 @@ class DataField implements ChannelAwareInterface, ExtendEntityInterface
     use ExtendEntityTrait;
 
     /** constant for enum dm_df_visibility */
-    const VISIBILITY_PRIVATE                    = 'Private';
-    const VISIBILITY_PUBLIC                     = 'Public';
+    public const VISIBILITY_PRIVATE = 'Private';
+    public const VISIBILITY_PUBLIC = 'Public';
 
     /** constant for enum dm_df_field_type */
-    const FIELD_TYPE_STRING                     = 'String';
-    const FIELD_TYPE_NUMERIC                    = 'Numeric';
-    const FIELD_TYPE_DATE                       = 'Date';
-    const FIELD_TYPE_BOOLEAN                    = 'Boolean';
+    public const FIELD_TYPE_STRING = 'String';
+    public const FIELD_TYPE_NUMERIC = 'Numeric';
+    public const FIELD_TYPE_DATE = 'Date';
+    public const FIELD_TYPE_BOOLEAN = 'Boolean';
 
     //default values for Boolean field type
-    const DEFAULT_BOOLEAN_YES = 'Yes';
-    const DEFAULT_BOOLEAN_NO = 'No';
+    public const DEFAULT_BOOLEAN_YES = 'Yes';
+    public const DEFAULT_BOOLEAN_NO = 'No';
 
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    #[ConfigField(defaultValues: ['importexport' => ['excluded' => false]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['excluded' => false],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Channel::class)]
     #[ORM\JoinColumn(name: 'channel_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['identity' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?Channel $channel = null;
 
     #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
-    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['identity' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?string $name = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(name: 'default_value', type: Types::STRING, length: 255, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected $defaultValue;
 
     #[ORM\Column(name: 'notes', type: Types::TEXT, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?string $notes = null;
 
     /**
@@ -89,12 +100,19 @@ class DataField implements ChannelAwareInterface, ExtendEntityInterface
 
     #[ORM\ManyToOne(targetEntity: Organization::class)]
     #[ORM\JoinColumn(name: 'owner_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['excluded' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?Organization $owner = null;
 
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE)]
     #[ConfigField(
-        defaultValues: ['entity' => ['label' => 'oro.ui.created_at'], 'importexport' => ['excluded' => true]]
+        defaultValues: [
+            'entity' => ['label' => 'oro.ui.created_at'],
+            'importexport' => ['excluded' => true],
+            'email' => ['available_in_template' => true],
+        ],
     )]
     protected ?\DateTimeInterface $createdAt = null;
 

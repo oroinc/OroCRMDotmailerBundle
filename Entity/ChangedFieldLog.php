@@ -6,6 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\ChangedFieldLogRepository;
 use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\Config;
+use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\ConfigField;
 
 /**
  * Changed field log entity
@@ -18,27 +19,32 @@ class ChangedFieldLog
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $id = null;
 
     #[ORM\Column(name: 'channel_id', type: Types::INTEGER)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $channelId = null;
 
     /**
      * Entity, which was used in mapping configuration
      */
     #[ORM\Column(name: 'parent_entity', type: Types::STRING, length: 255)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?string $parentEntity = null;
 
     /**
      * Relation path to the modified field
      */
     #[ORM\Column(name: 'related_field_path', type: Types::TEXT)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?string $relatedFieldPath = null;
 
     /**
      * Id of related entity which was changed
      */
     #[ORM\Column(name: 'related_id', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $relatedId = null;
 
     /**
