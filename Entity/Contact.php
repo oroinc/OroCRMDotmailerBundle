@@ -39,9 +39,10 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
         'ownership' => [
             'owner_type' => 'ORGANIZATION',
             'owner_field_name' => 'owner',
-            'owner_column_name' => 'owner_id'
+            'owner_column_name' => 'owner_id',
         ],
-        'security' => ['type' => 'ACL', 'group_name' => '', 'category' => 'marketing']
+        'security' => ['type' => 'ACL', 'group_name' => '', 'category' => 'marketing'],
+        'email' => ['available_in_template' => true]
     ]
 )]
 class Contact implements OriginAwareInterface, ExtendEntityInterface
@@ -81,22 +82,32 @@ class Contact implements OriginAwareInterface, ExtendEntityInterface
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Channel::class)]
     #[ORM\JoinColumn(name: 'channel_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['identity' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?Channel $channel = null;
 
     #[ORM\Column(name: 'email', type: Types::STRING, length: 255)]
-    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['identity' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?string $email = null;
 
     /**
      * @var Collection<int, AddressBookContact>
      **/
     #[ORM\OneToMany(mappedBy: 'contact', targetEntity: AddressBookContact::class, cascade: ['remove'])]
-    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['excluded' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?Collection $addressBookContacts = null;
 
     /**
@@ -114,25 +125,38 @@ class Contact implements OriginAwareInterface, ExtendEntityInterface
 
     #[ORM\ManyToOne(targetEntity: Organization::class)]
     #[ORM\JoinColumn(name: 'owner_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['excluded' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?Organization $owner = null;
 
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE)]
     #[ConfigField(
-        defaultValues: ['entity' => ['label' => 'oro.ui.created_at'], 'importexport' => ['excluded' => true]]
+        defaultValues: [
+            'entity' => ['label' => 'oro.ui.created_at'],
+            'importexport' => ['excluded' => true],
+            'email' => ['available_in_template' => true],
+        ],
     )]
     protected ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE)]
     #[ConfigField(
-        defaultValues: ['entity' => ['label' => 'oro.ui.updated_at'], 'importexport' => ['excluded' => true]]
+        defaultValues: [
+            'entity' => ['label' => 'oro.ui.updated_at'],
+            'importexport' => ['excluded' => true],
+            'email' => ['available_in_template' => true],
+        ],
     )]
     protected ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(name: 'unsubscribed_date', type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?\DateTimeInterface $unsubscribedDate = null;
 
     #[ORM\Column(name: 'last_subscribed_date', type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?\DateTimeInterface $lastSubscribedDate = null;
 
     /**

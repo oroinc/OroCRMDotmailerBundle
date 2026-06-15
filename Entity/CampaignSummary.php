@@ -27,9 +27,9 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
         'ownership' => [
             'owner_type' => 'ORGANIZATION',
             'owner_field_name' => 'owner',
-            'owner_column_name' => 'owner_id'
+            'owner_column_name' => 'owner_id',
         ],
-        'security' => ['type' => 'ACL', 'group_name' => '', 'category' => 'marketing']
+        'security' => ['type' => 'ACL', 'group_name' => '', 'category' => 'marketing'],
     ]
 )]
 class CampaignSummary implements ChannelAwareInterface
@@ -37,215 +37,285 @@ class CampaignSummary implements ChannelAwareInterface
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Channel::class)]
     #[ORM\JoinColumn(name: 'channel_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['identity' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?Channel $channel = null;
 
     #[ORM\OneToOne(inversedBy: 'campaignSummary', targetEntity: Campaign::class)]
     #[ORM\JoinColumn(name: 'campaign_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['identity' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?Campaign $campaign = null;
 
     #[ORM\Column(name: 'date_sent', type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?\DateTimeInterface $dateSent = null;
 
     #[ORM\Column(name: 'num_unique_opens', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numUniqueOpens = null;
 
     #[ORM\Column(name: 'num_unique_text_opens', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numUniqueTextOpens = null;
 
     #[ORM\Column(name: 'num_total_unique_opens', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTotalUniqueOpens = null;
 
     #[ORM\Column(name: 'num_opens', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numOpens = null;
 
     #[ORM\Column(name: 'num_text_opens', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTextOpens = null;
 
     #[ORM\Column(name: 'num_total_opens', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTotalOpens = null;
 
     #[ORM\Column(name: 'num_clicks', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numClicks = null;
 
     #[ORM\Column(name: 'num_text_clicks', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTextClicks = null;
 
     #[ORM\Column(name: 'num_total_clicks', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTotalClicks = null;
 
     #[ORM\Column(name: 'num_page_views', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numPageViews = null;
 
     #[ORM\Column(name: 'num_total_page_views', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTotalPageViews = null;
 
     #[ORM\Column(name: 'num_text_page_views', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTextPageViews = null;
 
     #[ORM\Column(name: 'num_forwards', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numForwards = null;
 
     #[ORM\Column(name: 'num_text_forwards', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTextForwards = null;
 
     #[ORM\Column(name: 'num_estimated_forwards', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numEstimatedForwards = null;
 
     #[ORM\Column(name: 'num_text_estimated_forwards', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTextEstimatedForwards = null;
 
     #[ORM\Column(name: 'num_total_estimated_forwards', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTotalEstimatedForwards = null;
 
     #[ORM\Column(name: 'num_replies', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numReplies = null;
 
     #[ORM\Column(name: 'num_text_replies', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTextReplies = null;
 
     #[ORM\Column(name: 'num_total_replies', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTotalReplies = null;
 
     #[ORM\Column(name: 'num_hard_bounces', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numHardBounces = null;
 
     #[ORM\Column(name: 'num_text_hard_bounces', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTextHardBounces = null;
 
     #[ORM\Column(name: 'num_total_hard_bounces', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTotalHardBounces = null;
 
     #[ORM\Column(name: 'num_soft_bounces', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numSoftBounces = null;
 
     #[ORM\Column(name: 'num_text_soft_bounces', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTextSoftBounces = null;
 
     #[ORM\Column(name: 'num_total_soft_bounces', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTotalSoftBounces = null;
 
     #[ORM\Column(name: 'num_unsubscribes', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numUnsubscribes = null;
 
     #[ORM\Column(name: 'num_text_unsubscribes', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTextUnsubscribes = null;
 
     #[ORM\Column(name: 'num_total_unsubscribes', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTotalUnsubscribes = null;
 
     #[ORM\Column(name: 'num_isp_complaints', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numIspComplaints = null;
 
     #[ORM\Column(name: 'num_text_isp_complaints', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTextIspComplaints = null;
 
     #[ORM\Column(name: 'num_total_isp_complaints', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTotalIspComplaints = null;
 
     #[ORM\Column(name: 'num_mail_blocks', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numMailBlocks = null;
 
     #[ORM\Column(name: 'num_text_mail_blocks', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTextMailBlocks = null;
 
     #[ORM\Column(name: 'num_total_mail_blocks', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTotalMailBlocks = null;
 
     #[ORM\Column(name: 'num_sent', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numSent = null;
 
     #[ORM\Column(name: 'num_text_sent', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTextSent = null;
 
     #[ORM\Column(name: 'num_total_sent', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTotalSent = null;
 
     #[ORM\Column(name: 'num_recipients_clicked', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numRecipientsClicked = null;
 
     #[ORM\Column(name: 'num_delivered', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numDelivered = null;
 
     #[ORM\Column(name: 'num_text_delivered', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTextDelivered = null;
 
     #[ORM\Column(name: 'num_total_delivered', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numTotalDelivered = null;
 
     /**
      * @return float|null
      */
     #[ORM\Column(name: 'percentage_delivered', type: Types::FLOAT, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected $percentageDelivered;
 
     /**
      * @return float|null
      */
     #[ORM\Column(name: 'percentage_unique_opens', type: Types::FLOAT, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected $percentageUniqueOpens;
 
     /**
      * @return float|null
      */
     #[ORM\Column(name: 'percentage_opens', type: Types::FLOAT, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected $percentageOpens;
 
     /**
      * @return float|null
      */
     #[ORM\Column(name: 'percentage_unsubscribes', type: Types::FLOAT, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected $percentageUnsubscribes;
 
     /**
      * @return float|null
      */
     #[ORM\Column(name: 'percentage_replies', type: Types::FLOAT, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected $percentageReplies;
 
     /**
      * @return float|null
      */
     #[ORM\Column(name: 'percentage_hard_bounces', type: Types::FLOAT, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected $percentageHardBounces;
 
     /**
      * @return float|null
      */
     #[ORM\Column(name: 'percentage_soft_bounces', type: Types::FLOAT, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected $percentageSoftBounces;
 
     /**
      * @return float|null
      */
     #[ORM\Column(name: 'percentage_users_clicked', type: Types::FLOAT, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected $percentageUsersClicked;
 
     /**
      * @return float|null
      */
     #[ORM\Column(name: 'percentage_clicks_to_opens', type: Types::FLOAT, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected $percentageClicksToOpens;
 
     #[ORM\ManyToOne(targetEntity: Organization::class)]
     #[ORM\JoinColumn(name: 'owner_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['excluded' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?Organization $owner = null;
 
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE)]
     #[ConfigField(
-        defaultValues: ['entity' => ['label' => 'oro.ui.created_at'], 'importexport' => ['excluded' => true]]
+        defaultValues: [
+            'entity' => ['label' => 'oro.ui.created_at'],
+            'importexport' => ['excluded' => true],
+            'email' => ['available_in_template' => true],
+        ],
     )]
     protected ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE)]
     #[ConfigField(
-        defaultValues: ['entity' => ['label' => 'oro.ui.updated_at'], 'importexport' => ['excluded' => true]]
+        defaultValues: [
+            'entity' => ['label' => 'oro.ui.updated_at'],
+            'importexport' => ['excluded' => true],
+            'email' => ['available_in_template' => true],
+        ],
     )]
     protected ?\DateTimeInterface $updatedAt = null;
 

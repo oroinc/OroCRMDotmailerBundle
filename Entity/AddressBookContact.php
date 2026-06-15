@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Extend\Entity\Autocomplete\OroDotmailerBundle_Entity_AddressBookContact;
 use Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactRepository;
 use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\Config;
+use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\ConfigField;
 use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityInterface;
 use Oro\Bundle\EntityExtendBundle\Entity\ExtendEntityTrait;
@@ -29,7 +30,11 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
     name: 'IDX_MARKETING_LIST_ITEM_CLASS_ID'
 )]
 #[ORM\UniqueConstraint(name: 'orocrm_dm_ab_cnt_unq', columns: ['address_book_id', 'contact_id'])]
-#[Config]
+#[Config(
+    defaultValues: [
+        'email' => ['available_in_template' => true]
+    ]
+)]
 class AddressBookContact implements ChannelAwareInterface, ExtendEntityInterface
 {
     use ExtendEntityTrait;
@@ -41,45 +46,57 @@ class AddressBookContact implements ChannelAwareInterface, ExtendEntityInterface
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: AddressBook::class, inversedBy: 'addressBookContacts')]
     #[ORM\JoinColumn(name: 'address_book_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?AddressBook $addressBook = null;
 
     #[ORM\ManyToOne(targetEntity: Contact::class, inversedBy: 'addressBookContacts')]
     #[ORM\JoinColumn(name: 'contact_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?Contact $contact = null;
 
     #[ORM\Column(name: 'unsubscribed_date', type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?\DateTimeInterface $unsubscribedDate = null;
 
     #[ORM\Column(name: 'marketing_list_item_id', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $marketingListItemId = null;
 
     #[ORM\Column(name: 'marketing_list_item_class', type: Types::STRING, length: 255, unique: false, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?string $marketingListItemClass = null;
 
     #[ORM\Column(name: 'scheduled_for_export', type: Types::BOOLEAN)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?bool $scheduledForExport = false;
 
     #[ORM\Column(name: 'scheduled_for_fields_update', type: Types::BOOLEAN, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?bool $scheduledForFieldsUpdate = false;
 
     #[ORM\Column(name: 'new_entity', type: Types::BOOLEAN, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?bool $newEntity = false;
 
     #[ORM\Column(name: 'entity_updated', type: Types::BOOLEAN, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?bool $entityUpdated = false;
 
     #[ORM\ManyToOne(targetEntity: Channel::class)]
     #[ORM\JoinColumn(name: 'channel_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?Channel $channel = null;
 
     /**
      * @var string|null Dotmailer import Id
      */
     #[ORM\Column(name: 'export_id', type: Types::STRING, length: 36, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?string $exportId = null;
 
     /**

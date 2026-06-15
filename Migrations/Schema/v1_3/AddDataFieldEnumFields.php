@@ -47,7 +47,8 @@ class AddDataFieldEnumFields implements Migration, ExtendExtensionAwareInterface
 
                 $options = array_merge(
                     [
-                        'extend' => ['owner' => ExtendScope::OWNER_CUSTOM]
+                        'extend' => ['owner' => ExtendScope::OWNER_CUSTOM],
+                        'email' => ['available_in_template' => true],
                     ],
                     $options
                 );

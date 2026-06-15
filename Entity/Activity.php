@@ -27,9 +27,10 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
         'ownership' => [
             'owner_type' => 'ORGANIZATION',
             'owner_field_name' => 'owner',
-            'owner_column_name' => 'owner_id'
+            'owner_column_name' => 'owner_id',
         ],
-        'security' => ['type' => 'ACL', 'group_name' => '', 'category' => 'marketing']
+        'security' => ['type' => 'ACL', 'group_name' => '', 'category' => 'marketing'],
+        'email' => ['available_in_template' => true]
     ]
 )]
 class Activity implements ChannelAwareInterface
@@ -37,79 +38,114 @@ class Activity implements ChannelAwareInterface
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Channel::class)]
     #[ORM\JoinColumn(name: 'channel_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['identity' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?Channel $channel = null;
 
     #[ORM\Column(name: 'email', type: Types::STRING, length: 255)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?string $email = null;
 
     #[ORM\Column(name: 'num_opens', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numOpens = null;
 
     #[ORM\Column(name: 'num_page_views', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numPageViews = null;
 
     #[ORM\Column(name: 'num_clicks', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numClicks = null;
 
     #[ORM\Column(name: 'num_forwards', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numForwards = null;
 
     #[ORM\Column(name: 'num_estimated_forwards', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numEstimatedForwards = null;
 
     #[ORM\Column(name: 'num_replies', type: Types::INTEGER, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?int $numReplies = null;
 
     #[ORM\Column(name: 'date_sent', type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?\DateTimeInterface $dateSent = null;
 
     #[ORM\Column(name: 'date_first_opened', type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?\DateTimeInterface $dateFirstOpened = null;
 
     #[ORM\Column(name: 'date_last_opened', type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?\DateTimeInterface $dateLastOpened = null;
 
     #[ORM\Column(name: 'first_open_ip', type: Types::STRING, length: 255, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?string $firstOpenIp = null;
 
     #[ORM\Column(name: 'unsubscribed', type: Types::BOOLEAN, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?bool $unsubscribed = null;
 
     #[ORM\Column(name: 'soft_bounced', type: Types::BOOLEAN, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?bool $softBounced = null;
 
     #[ORM\Column(name: 'hard_bounced', type: Types::BOOLEAN, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?bool $hardBounced = null;
 
     #[ORM\ManyToOne(targetEntity: Organization::class)]
     #[ORM\JoinColumn(name: 'owner_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['excluded' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?Organization $owner = null;
 
     #[ORM\ManyToOne(targetEntity: Campaign::class, inversedBy: 'activities')]
     #[ORM\JoinColumn(name: 'campaign_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['identity' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?Campaign $campaign = null;
 
     #[ORM\ManyToOne(targetEntity: Contact::class, inversedBy: 'activities')]
     #[ORM\JoinColumn(name: 'contact_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['identity' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?Contact $contact = null;
 
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE)]
     #[ConfigField(
-        defaultValues: ['entity' => ['label' => 'oro.ui.created_at'], 'importexport' => ['excluded' => true]]
+        defaultValues: [
+            'entity' => ['label' => 'oro.ui.created_at'],
+            'importexport' => ['excluded' => true],
+            'email' => ['available_in_template' => true],
+        ],
     )]
     protected ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE)]
     #[ConfigField(
-        defaultValues: ['entity' => ['label' => 'oro.ui.updated_at'], 'importexport' => ['excluded' => true]]
+        defaultValues: [
+            'entity' => ['label' => 'oro.ui.updated_at'],
+            'importexport' => ['excluded' => true],
+            'email' => ['available_in_template' => true],
+        ],
     )]
     protected ?\DateTimeInterface $updatedAt = null;
 
