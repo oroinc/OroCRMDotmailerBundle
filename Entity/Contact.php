@@ -38,6 +38,9 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  *          "type"="ACL",
  *          "group_name"="",
  *          "category"="marketing"
+ *      },
+ *      "email"={
+ *          "available_in_template"=true
  *      }
  *  }
  * )

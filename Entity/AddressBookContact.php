@@ -26,7 +26,13 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
  *          ),
  *     }
  * )
- * @Config()
+ * @Config(
+ *      defaultValues={
+ *          "email"={
+ *              "available_in_template"=true
+ *          }
+ *      }
+ * )
  * @method AbstractEnumValue getStatus()
  * @method AddressBookContact setStatus(AbstractEnumValue $enumValue)
  * @method AbstractEnumValue getExportOperationType()
