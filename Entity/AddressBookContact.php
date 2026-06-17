@@ -8,6 +8,8 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\IntegrationBundle\Entity\Channel;
 
 /**
+ * Address book contact entity.
+ *
  * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookContactRepository")
  * @ORM\Table(
  *      name="orocrm_dm_ab_contact",
@@ -22,7 +24,13 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
  *          ),
  *     }
  * )
- * @Config()
+ * @Config(
+ *      defaultValues={
+ *          "email"={
+ *              "available_in_template"=true
+ *          }
+ *      }
+ * )
  */
 class AddressBookContact extends ExtendAddressBookContact implements ChannelAwareInterface
 {

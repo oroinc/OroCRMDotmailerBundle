@@ -12,6 +12,8 @@ use Oro\Bundle\IntegrationBundle\Entity\Channel;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 /**
+ * Store data field mapping in a database.
+ *
  * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\DataFieldMappingRepository")
  * @ORM\Table(
  *      name="orocrm_dm_df_mapping",

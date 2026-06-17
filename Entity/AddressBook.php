@@ -13,6 +13,8 @@ use Oro\Bundle\MarketingListBundle\Entity\MarketingList;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 /**
+ * Address book entity.
+ *
  * @ORM\Entity(repositoryClass="Oro\Bundle\DotmailerBundle\Entity\Repository\AddressBookRepository")
  * @ORM\Table(
  *      name="orocrm_dm_address_book",
@@ -38,6 +40,9 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
  *          "type"="ACL",
  *          "group_name"="",
  *          "category"="marketing"
+ *      },
+ *      "email"={
+ *          "available_in_template"=true
  *      }
  *  }
  * )
