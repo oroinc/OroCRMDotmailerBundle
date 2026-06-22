@@ -39,9 +39,10 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
         'ownership' => [
             'owner_type' => 'ORGANIZATION',
             'owner_field_name' => 'owner',
-            'owner_column_name' => 'owner_id'
+            'owner_column_name' => 'owner_id',
         ],
-        'security' => ['type' => 'ACL', 'group_name' => '', 'category' => 'marketing']
+        'security' => ['type' => 'ACL', 'group_name' => '', 'category' => 'marketing'],
+        'email' => ['available_in_template' => true]
     ]
 )]
 class Campaign implements OriginAwareInterface, ExtendEntityInterface
@@ -50,73 +51,98 @@ class Campaign implements OriginAwareInterface, ExtendEntityInterface
     use ExtendEntityTrait;
 
     /** constant for enum dm_cmp_reply_action */
-    public const REPLY_ACTION_UNSET                        = 'Unset';
-    public const REPLY_ACTION_WEBMAILFORWARD               = 'WebMailForward';
-    public const REPLY_ACTION_WEBMAIL                      = 'Webmail';
-    public const REPLY_ACTION_DELETE                       = 'Delete';
-    public const REPLY_ACTION_NOTAVAILABLEINTHISVERSION    = 'NotAvailableInThisVersion';
+    public const REPLY_ACTION_UNSET = 'Unset';
+    public const REPLY_ACTION_WEBMAILFORWARD = 'WebMailForward';
+    public const REPLY_ACTION_WEBMAIL = 'Webmail';
+    public const REPLY_ACTION_DELETE = 'Delete';
+    public const REPLY_ACTION_NOTAVAILABLEINTHISVERSION = 'NotAvailableInThisVersion';
 
     /** constant for enum dm_cmp_status */
-    public const STATUS_UNSENT                             = 'Unsent';
-    public const STATUS_SENDING                            = 'Sending';
-    public const STATUS_SENT                               = 'Sent';
-    public const STATUS_PAUSED                             = 'Paused';
-    public const STATUS_CANCELLED                          = 'Cancelled';
-    public const STATUS_REQUIRESSYSTEMAPPROVAL             = 'RequiresSystemApproval';
-    public const STATUS_REQUIRESSMSAPPROVAL                = 'RequiresSMSApproval';
-    public const STATUS_REQUIRESWORKFLOWAPPROVAL           = 'RequiresWorkflowApproval';
-    public const STATUS_TRIGGERED                          = 'Triggered';
-    public const STATUS_NOTAVAILABLEINTHISVERSION          = 'NotAvailableInThisVersion';
+    public const STATUS_UNSENT = 'Unsent';
+    public const STATUS_SENDING = 'Sending';
+    public const STATUS_SENT = 'Sent';
+    public const STATUS_PAUSED = 'Paused';
+    public const STATUS_CANCELLED = 'Cancelled';
+    public const STATUS_REQUIRESSYSTEMAPPROVAL = 'RequiresSystemApproval';
+    public const STATUS_REQUIRESSMSAPPROVAL = 'RequiresSMSApproval';
+    public const STATUS_REQUIRESWORKFLOWAPPROVAL = 'RequiresWorkflowApproval';
+    public const STATUS_TRIGGERED = 'Triggered';
+    public const STATUS_NOTAVAILABLEINTHISVERSION = 'NotAvailableInThisVersion';
 
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['excluded' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Channel::class)]
     #[ORM\JoinColumn(name: 'channel_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ConfigField(defaultValues: ['importexport' => ['identity' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['identity' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?Channel $channel = null;
 
     #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?string $name = null;
 
     #[ORM\Column(name: 'subject', type: Types::STRING, length: 255, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?string $subject = null;
 
     #[ORM\Column(name: 'from_name', type: Types::STRING, length: 255, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?string $fromName = null;
 
     #[ORM\Column(name: 'from_address', type: Types::STRING, length: 255, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?string $fromAddress = null;
 
     #[ORM\Column(name: 'html_content', type: Types::TEXT, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?string $htmlContent = null;
 
     #[ORM\Column(name: 'plain_text_content', type: Types::TEXT, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?string $plainTextContent = null;
 
     #[ORM\Column(name: 'reply_to_address', type: Types::STRING, length: 255, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?string $replyToAddress = null;
 
     #[ORM\Column(name: 'is_split_test', type: Types::BOOLEAN, nullable: true)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?bool $isSplitTest = null;
 
     #[ORM\ManyToOne(targetEntity: Organization::class)]
     #[ORM\JoinColumn(name: 'owner_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['excluded' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?Organization $owner = null;
 
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE)]
     #[ConfigField(
-        defaultValues: ['entity' => ['label' => 'oro.ui.created_at'], 'importexport' => ['excluded' => true]]
+        defaultValues: [
+            'entity' => ['label' => 'oro.ui.created_at'],
+            'importexport' => ['excluded' => true],
+            'email' => ['available_in_template' => true],
+        ],
     )]
     protected ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE)]
     #[ConfigField(
-        defaultValues: ['entity' => ['label' => 'oro.ui.updated_at'], 'importexport' => ['excluded' => true]]
+        defaultValues: [
+            'entity' => ['label' => 'oro.ui.updated_at'],
+            'importexport' => ['excluded' => true],
+            'email' => ['available_in_template' => true],
+        ],
     )]
     protected ?\DateTimeInterface $updatedAt = null;
 
@@ -127,7 +153,10 @@ class Campaign implements OriginAwareInterface, ExtendEntityInterface
     #[ORM\JoinTable(name: 'orocrm_dm_campaign_to_ab')]
     #[ORM\JoinColumn(name: 'campaign_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'address_book_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ConfigField(defaultValues: ['importexport' => ['excluded' => true]])]
+    #[ConfigField(defaultValues: [
+        'importexport' => ['excluded' => true],
+        'email' => ['available_in_template' => true],
+    ])]
     protected ?Collection $addressBooks = null;
 
     /**
@@ -139,13 +168,16 @@ class Campaign implements OriginAwareInterface, ExtendEntityInterface
 
     #[ORM\OneToOne(targetEntity: EmailCampaign::class)]
     #[ORM\JoinColumn(name: 'email_campaign_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?EmailCampaign $emailCampaign = null;
 
     #[ORM\OneToOne(mappedBy: 'campaign', targetEntity: CampaignSummary::class, cascade: ['persist'])]
     #[ORM\JoinColumn(name: 'campaign_summary_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?CampaignSummary $campaignSummary = null;
 
     #[ORM\Column(name: 'is_deleted', type: Types::BOOLEAN)]
+    #[ConfigField(defaultValues: ['email' => ['available_in_template' => true]])]
     protected ?bool $deleted = false;
 
     public function __construct()
