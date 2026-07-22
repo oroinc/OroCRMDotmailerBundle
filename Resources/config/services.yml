@@ -332,13 +332,22 @@ services:
             - "@oro_entity.virtual_relation_provider"
             - "@oro_entity.doctrine_helper"
 
+    # the hwi_oauth.http_client service is a Symfony HTTP client since HWIOAuthBundle 2.0 and is not
+    # compatible with the HTTPlug client required by OAuthManager, a dedicated HTTPlug client is used instead
+    oro_dotmailer.oauth.http_methods_client:
+        class: Http\Client\Common\HttpMethodsClient
+        arguments:
+            - '@httplug.client.default'
+            - '@httplug.psr17_request_factory.default'
+            - '@httplug.psr17_stream_factory.default'
+
     oro_dotmailer.oauth_manager:
         class: Oro\Bundle\DotmailerBundle\Model\OAuthManager
         public: true
         arguments:
             - "@router"
             - "@oro_security.encoder.default"
-            - "@hwi_oauth.http_client"
+            - "@oro_dotmailer.oauth.http_methods_client"
 
     Oro\Bundle\DotmailerBundle\Model\OAuthManager:
         alias: oro_dotmailer.oauth_manager
