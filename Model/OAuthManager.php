@@ -2,13 +2,13 @@
 
 namespace Oro\Bundle\DotmailerBundle\Model;
 
-use Http\Client\Common\HttpMethodsClientInterface;
 use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport;
 use Oro\Bundle\DotmailerBundle\Exception\RuntimeException;
 use Oro\Bundle\SecurityBundle\Encoder\SymmetricCrypterInterface;
-use Psr\Http\Message\MessageInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
  * This class provides ability to handle OAuth interaction with dotmailer API
@@ -31,17 +31,17 @@ class OAuthManager
     /** @var SymmetricCrypterInterface */
     protected $encryptor;
 
-    /** @var HttpMethodsClientInterface */
-    protected $curlClient;
+    /** @var HttpClientInterface */
+    protected $httpClient;
 
     public function __construct(
         RouterInterface $router,
         SymmetricCrypterInterface $encryptor,
-        HttpMethodsClientInterface $curlClient
+        HttpClientInterface $httpClient
     ) {
         $this->router = $router;
         $this->encryptor = $encryptor;
-        $this->curlClient = $curlClient;
+        $this->httpClient = $httpClient;
     }
 
     /**
@@ -205,7 +205,7 @@ class OAuthManager
     }
 
     /**
-     * Perform a cUrl request
+     * Perform an HTTP request
      *
      * @param string $url
      * @param array  $params
@@ -216,12 +216,15 @@ class OAuthManager
     {
         $content = http_build_query($params, '', '&');
         $headers = [
-            'Content-length: ' . strlen($content),
-            'content-type: application/x-www-form-urlencoded',
-            'user-agent: oro-oauth'
+            'content-length' => strlen($content),
+            'content-type'   => 'application/x-www-form-urlencoded',
+            'user-agent'     => 'oro-oauth'
         ];
 
-        $response = $this->curlClient->post($url, $headers, $content);
+        $response = $this->httpClient->request('POST', $url, [
+            'headers' => $headers,
+            'body'    => $content,
+        ]);
         $responseContent = $this->getResponseContent($response);
 
         if (isset($responseContent['error_description'])) {
@@ -237,13 +240,13 @@ class OAuthManager
     /**
      * Get the 'parsed' content based on the response headers
      *
-     * @param MessageInterface $response
+     * @param ResponseInterface $response
      *
      * @return array
      */
-    protected function getResponseContent(MessageInterface $response)
+    protected function getResponseContent(ResponseInterface $response)
     {
-        $content = $response->getBody();
+        $content = $response->getContent(false);
         if (!$content) {
             return [];
         }

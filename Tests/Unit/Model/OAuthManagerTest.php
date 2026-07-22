@@ -2,13 +2,13 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Model;
 
-use Http\Client\Common\HttpMethodsClientInterface;
 use Oro\Bundle\DotmailerBundle\Entity\DotmailerTransport;
 use Oro\Bundle\DotmailerBundle\Model\OAuthManager;
 use Oro\Bundle\SecurityBundle\Encoder\SymmetricCrypterInterface;
-use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class OAuthManagerTest extends \PHPUnit\Framework\TestCase
 {
@@ -27,12 +27,17 @@ class OAuthManagerTest extends \PHPUnit\Framework\TestCase
         $this->router = $this->createMock(RouterInterface::class);
         $this->encryptor = $this->createMock(SymmetricCrypterInterface::class);
 
-        $curlClient = $this->createMock(HttpMethodsClientInterface::class);
-        $curlClient->expects($this->any())
-            ->method('post')
-            ->willReturn($this->createMock(ResponseInterface::class));
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects($this->any())
+            ->method('getContent')
+            ->willReturn('');
 
-        $this->oAuthManager = new OAuthManager($this->router, $this->encryptor, $curlClient);
+        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient->expects($this->any())
+            ->method('request')
+            ->willReturn($response);
+
+        $this->oAuthManager = new OAuthManager($this->router, $this->encryptor, $httpClient);
     }
 
     public function testGetApiEndpoint()
