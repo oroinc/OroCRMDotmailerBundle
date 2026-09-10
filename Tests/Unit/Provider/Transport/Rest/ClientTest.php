@@ -2,56 +2,83 @@
 
 namespace Oro\Bundle\DotmailerBundle\Tests\Unit\Provider\Transport\Rest;
 
+use Oro\Bundle\DotmailerBundle\Exception\RestClientAttemptException;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 use Oro\Bundle\DotmailerBundle\Provider\Transport\Rest\Client;
 use Oro\Component\Testing\ReflectionUtil;
-use PHPUnit\Framework\MockObject\Stub\ReturnCallback;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use RestClient\Request;
-use RestClient\Response;
+use Symfony\Component\HttpClient\Exception\TransportException;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
-class ClientTest extends \PHPUnit\Framework\TestCase
+class ClientTest extends TestCase
 {
-    /** @var Response|\PHPUnit\Framework\MockObject\MockObject */
-    private $response;
+    private const DEFAULT_URL = 'https://api.dotmailer.com/v2/testCall';
 
-    /** @var \stdClass */
-    private $info;
+    private ResponseInterface|MockObject $response;
 
-    /** @var LoggerInterface|\PHPUnit\Framework\MockObject\MockObject */
-    private $logger;
+    private HttpClientInterface|MockObject $httpClient;
 
-    /** @var Client */
-    private $client;
+    private LoggerInterface|MockObject $logger;
+
+    private Client $client;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->response = $this->createMock(Response::class);
-        $this->info = new \stdClass();
+        $this->response = $this->createMock(ResponseInterface::class);
+        $this->httpClient = $this->createMock(HttpClientInterface::class);
         $this->logger = $this->createMock(LoggerInterface::class);
 
         $this->client = new Client('username', 'password');
+        ReflectionUtil::setPropertyValue($this->client, 'httpClient', $this->httpClient);
         $this->client->setLogger($this->logger);
     }
 
-    private function initClient(): void
+    private function initClient(int $statusCode, string $body = ''): void
     {
-        $restClient = $this->createMock(\RestClient\Client::class);
-
-        ReflectionUtil::setPropertyValue($this->client, 'restClient', $restClient);
-
-        $request = $this->createMock(Request::class);
-
-        $restClient->expects($this->once())
-            ->method('newRequest')
-            ->willReturn($request);
-        $request->expects($this->once())
-            ->method('getResponse')
+        $this->httpClient->expects(self::once())
+            ->method('request')
+            ->with(Request::METHOD_GET, self::DEFAULT_URL, [])
             ->willReturn($this->response);
-        $this->response->expects($this->once())
-            ->method('getInfo')
-            ->willReturn($this->info);
+        $this->response->expects(self::once())
+            ->method('getStatusCode')
+            ->willReturn($statusCode);
+        $this->response->expects(self::once())
+            ->method('getContent')
+            ->with(false)
+            ->willReturn($body);
+    }
+
+    public function testExecuteBuildsRequestFromParams()
+    {
+        $this->client->setBaseUrl('https://r1-api.dotmailer.com/v2');
+
+        $requestData = '{"name":"Test address book"}';
+        $this->httpClient->expects(self::once())
+            ->method('request')
+            ->with(
+                Request::METHOD_POST,
+                'https://r1-api.dotmailer.com/v2/address-books',
+                ['body' => $requestData]
+            )
+            ->willReturn($this->response);
+        $this->response->expects(self::once())
+            ->method('getStatusCode')
+            ->willReturn(Response::HTTP_CREATED);
+        $this->response->expects(self::once())
+            ->method('getContent')
+            ->with(false)
+            ->willReturn('{"id":1}');
+
+        $this->assertEquals(
+            '{"id":1}',
+            $this->client->execute(['/address-books', Request::METHOD_POST, $requestData])
+        );
     }
 
     /**
@@ -59,14 +86,8 @@ class ClientTest extends \PHPUnit\Framework\TestCase
      */
     public function testExecuteOk($code)
     {
-        $this->initClient();
-
         $result = 'Ok';
-        $this->response->expects($this->once())
-            ->method('getParsedResponse')
-            ->willReturn($result);
-
-        $this->info->http_code = $code;
+        $this->initClient($code, $result);
 
         $this->assertEquals($result, $this->client->execute('testCall'));
     }
@@ -83,84 +104,72 @@ class ClientTest extends \PHPUnit\Framework\TestCase
 
     public function testExecute204()
     {
-        $this->initClient();
-
-        $this->response->expects($this->once())
-            ->method('getParsedResponse');
-
-        $this->info->http_code = 204;
+        $this->initClient(204);
 
         $this->assertNull($this->client->execute('testCall'));
     }
 
     public function testExecuteSpecialFunction()
     {
-        $this->initClient();
+        $this->httpClient->expects(self::once())
+            ->method('request')
+            ->willReturn($this->response);
+        $this->response->expects(self::once())
+            ->method('getStatusCode')
+            ->willReturn(301);
+        $this->response->expects(self::exactly(2))
+            ->method('getContent')
+            ->willReturn('Ok');
 
-        $result = 'Ok';
-        $this->response->expects($this->exactly(2))
-            ->method('getParsedResponse')
-            ->willReturn($result);
+        $params = [301 => static fn (ResponseInterface $r) => $r->getContent()];
 
-        $this->info->http_code = 301;
-        $params = [301 => [$this->response, 'getParsedResponse']];
-
-        $this->assertEquals($result, $this->client->execute('testCall', $params));
+        $this->assertEquals('Ok', $this->client->execute('testCall', $params));
     }
 
     /**
      * @dataProvider executeAttemptsFailedDataProvider
      */
-    public function testExecuteAttemptsFailed(string $responseBody, int $responseCode, string $expectedMessage)
+    public function testExecuteAttemptsFailed(int $responseCode, string $exceptionMessage)
     {
-        $exceptionMessage = 'Dotmailer REST client exception:' . PHP_EOL .
-            '[exception type] Oro\Bundle\DotmailerBundle\Exception\RestClientAttemptException' . PHP_EOL .
-            '[exception message] ' . $expectedMessage . PHP_EOL .
+        $thrownException = new \RuntimeException($exceptionMessage);
+
+        $errorMessage = 'Dotmailer REST client exception:' . PHP_EOL .
+            '[exception type] RuntimeException' . PHP_EOL .
+            '[exception message] ' . $exceptionMessage . PHP_EOL .
             '[request url] testCall' . PHP_EOL .
-            '[request method] ' . PHP_EOL .
+            '[request method] GET' . PHP_EOL .
             '[request data] ' . PHP_EOL .
             '[response code] ' . $responseCode . PHP_EOL .
-            '[response body] ' . $responseBody;
+            '[response body] ';
 
         $this->expectException(RestClientException::class);
-        $this->expectExceptionMessage($exceptionMessage);
+        $this->expectExceptionMessage($errorMessage);
 
-        $restClient = $this->createMock(\RestClient\Client::class);
+        ReflectionUtil::setPropertyValue($this->client, 'sleepBetweenAttempt', [0, 0, 0, 0]);
 
-        ReflectionUtil::setPropertyValue($this->client, 'restClient', $restClient);
-        ReflectionUtil::setPropertyValue($this->client, 'sleepBetweenAttempt', [0.1, 0.2, 0.3, 0.4]);
-
-        $request = $this->createMock(Request::class);
-
-        $restClient->expects($this->exactly(5))
-            ->method('newRequest')
-            ->willReturn($request);
-
-        $request->expects($this->exactly(5))
-            ->method('getResponse')
+        $this->httpClient->expects(self::exactly(5))
+            ->method('request')
             ->willReturn($this->response);
 
-        $this->response->expects($this->exactly(5))
-            ->method('getInfo')
-            ->willReturn($this->info);
+        $this->response->expects(self::exactly(5))
+            ->method('getStatusCode')
+            ->willReturn($responseCode);
 
-        $this->info->http_code = $responseCode;
+        $this->response->expects(self::exactly(5))
+            ->method('getContent')
+            ->willThrowException($thrownException);
 
-        $this->response->expects($this->exactly(5))
-            ->method('getParsedResponse')
-            ->willReturn($responseBody);
-
-        $this->logger->expects($this->exactly(8))
+        $this->logger->expects(self::exactly(8))
             ->method('warning')
             ->withConsecutive(
-                ['[Warning] Attempt failed. Error message:' . PHP_EOL . $exceptionMessage],
-                ['[Warning] Attempt number 1 with 0.1 sec delay.'],
-                ['[Warning] Attempt failed. Error message:' . PHP_EOL . $exceptionMessage],
-                ['[Warning] Attempt number 2 with 0.2 sec delay.'],
-                ['[Warning] Attempt failed. Error message:' . PHP_EOL . $exceptionMessage],
-                ['[Warning] Attempt number 3 with 0.3 sec delay.'],
-                ['[Warning] Attempt failed. Error message:' . PHP_EOL . $exceptionMessage],
-                ['[Warning] Attempt number 4 with 0.4 sec delay.']
+                ['[Warning] Attempt failed. Error message:' . PHP_EOL . $errorMessage],
+                ['[Warning] Attempt number 1 with 0 sec delay.'],
+                ['[Warning] Attempt failed. Error message:' . PHP_EOL . $errorMessage],
+                ['[Warning] Attempt number 2 with 0 sec delay.'],
+                ['[Warning] Attempt failed. Error message:' . PHP_EOL . $errorMessage],
+                ['[Warning] Attempt number 3 with 0 sec delay.'],
+                ['[Warning] Attempt failed. Error message:' . PHP_EOL . $errorMessage],
+                ['[Warning] Attempt number 4 with 0 sec delay.']
             );
 
         $this->client->execute('testCall');
@@ -169,92 +178,154 @@ class ClientTest extends \PHPUnit\Framework\TestCase
     public function executeAttemptsFailedDataProvider(): array
     {
         return [
-            [
-                'response_body' => '{"message": "Some error"}',
-                'response_code' => 500,
-                'expected_message' => 'Some error'
-            ],
-            [
-                'response_body' => 'Some error',
-                'response_code' => 500,
-                'expected_message' => 'Unexpected response'
-            ],
-            [
-                'response_body' => '{"error":"Some error"}',
-                'response_code' => 500,
-                'expected_message' => 'Unexpected response'
-            ]
+            [500, 'Internal Server Error'],
+            [503, 'Service Unavailable'],
         ];
     }
 
-    public function testExecuteAttemptsPassed()
+    /**
+     * A transport level failure - an unreachable proxy, a refused connection, a TLS or DNS error - leaves
+     * the response code unset. The attempts must still be made and the failure must surface as
+     * a RestClientException.
+     */
+    public function testExecuteTransportFailure()
     {
-        $restClient = $this->createMock(\RestClient\Client::class);
+        ReflectionUtil::setPropertyValue($this->client, 'sleepBetweenAttempt', [0, 0, 0, 0]);
 
-        ReflectionUtil::setPropertyValue($this->client, 'restClient', $restClient);
-        ReflectionUtil::setPropertyValue($this->client, 'sleepBetweenAttempt', [0.1, 0.2, 0.3, 0.4]);
-
-        $request = $this->createMock(Request::class);
-
-        $exceptionMessagePattern = 'Dotmailer REST client exception:' . PHP_EOL .
-            '[exception type] Exception' . PHP_EOL .
-            '[exception message] %s' . PHP_EOL .
+        $exceptionMessage = 'Failed to connect to proxy: Connection refused';
+        $errorMessage = 'Dotmailer REST client exception:' . PHP_EOL .
+            '[exception type] ' . TransportException::class . PHP_EOL .
+            '[exception message] ' . $exceptionMessage . PHP_EOL .
             '[request url] testCall' . PHP_EOL .
-            '[request method] ' . PHP_EOL .
+            '[request method] GET' . PHP_EOL .
             '[request data] ' . PHP_EOL .
             '[response code] ' . PHP_EOL .
             '[response body] ';
 
-        $this->logger->expects($this->exactly(6))
+        $this->httpClient->expects(self::exactly(5))
+            ->method('request')
+            ->with(Request::METHOD_GET, self::DEFAULT_URL, [])
+            ->willThrowException(new TransportException($exceptionMessage));
+
+        $this->response->expects(self::never())
+            ->method('getStatusCode');
+
+        $this->logger->expects(self::exactly(8))
+            ->method('warning')
+            ->withConsecutive(
+                ['[Warning] Attempt failed. Error message:' . PHP_EOL . $errorMessage],
+                ['[Warning] Attempt number 1 with 0 sec delay.'],
+                ['[Warning] Attempt failed. Error message:' . PHP_EOL . $errorMessage],
+                ['[Warning] Attempt number 2 with 0 sec delay.'],
+                ['[Warning] Attempt failed. Error message:' . PHP_EOL . $errorMessage],
+                ['[Warning] Attempt number 3 with 0 sec delay.'],
+                ['[Warning] Attempt failed. Error message:' . PHP_EOL . $errorMessage],
+                ['[Warning] Attempt number 4 with 0 sec delay.']
+            );
+
+        $this->expectException(RestClientException::class);
+        $this->expectExceptionMessage($errorMessage);
+
+        $this->client->execute('testCall');
+    }
+
+    public function testExecuteAttemptsPassed()
+    {
+        ReflectionUtil::setPropertyValue($this->client, 'sleepBetweenAttempt', [0, 0, 0, 0]);
+
+        $exceptionMessagePattern = 'Dotmailer REST client exception:' . PHP_EOL .
+            '[exception type] %s' . PHP_EOL .
+            '[exception message] Unexpected response' . PHP_EOL .
+            '[request url] testCall' . PHP_EOL .
+            '[request method] GET' . PHP_EOL .
+            '[request data] ' . PHP_EOL .
+            '[response code] 500' . PHP_EOL .
+            '[response body] ';
+
+        $this->logger->expects(self::exactly(8))
             ->method('warning')
             ->withConsecutive(
                 [
                     '[Warning] Attempt failed. Error message:' . PHP_EOL .
-                    sprintf($exceptionMessagePattern, 'Exception A')
+                    sprintf($exceptionMessagePattern, RestClientAttemptException::class),
                 ],
-                ['[Warning] Attempt number 1 with 0.1 sec delay.'],
+                ['[Warning] Attempt number 1 with 0 sec delay.'],
                 [
                     '[Warning] Attempt failed. Error message:' . PHP_EOL .
-                    sprintf($exceptionMessagePattern, 'Exception B')
+                    sprintf($exceptionMessagePattern, RestClientAttemptException::class),
                 ],
-                ['[Warning] Attempt number 2 with 0.2 sec delay.'],
+                ['[Warning] Attempt number 2 with 0 sec delay.'],
                 [
                     '[Warning] Attempt failed. Error message:' . PHP_EOL .
-                    sprintf($exceptionMessagePattern, 'Exception C')
+                    sprintf($exceptionMessagePattern, RestClientAttemptException::class),
                 ],
-                ['[Warning] Attempt number 3 with 0.3 sec delay.']
+                ['[Warning] Attempt number 3 with 0 sec delay.'],
+                [
+                    '[Warning] Attempt failed. Error message:' . PHP_EOL .
+                    sprintf($exceptionMessagePattern, RestClientAttemptException::class),
+                ],
+                ['[Warning] Attempt number 4 with 0 sec delay.'],
             );
 
-        $restClient->expects($this->exactly(4))
-            ->method('newRequest')
+        $expectedResult = 'Expected content';
+        $this->response->expects(self::exactly(5))
+            ->method('getStatusCode')
             ->willReturnOnConsecutiveCalls(
-                new ReturnCallback(function () {
-                    throw new \Exception('Exception A');
-                }),
-                new ReturnCallback(function () {
-                    throw new \Exception('Exception B');
-                }),
-                new ReturnCallback(function () {
-                    throw new \Exception('Exception C');
-                }),
-                $request
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                Response::HTTP_OK
             );
+        $this->response->expects(self::exactly(5))
+            ->method('getContent')
+            ->willReturnOnConsecutiveCalls('', '', '', '', $expectedResult);
 
-        $request->expects($this->once())
-            ->method('getResponse')
+        $this->httpClient->expects(self::exactly(5))
+            ->method('request')
             ->willReturn($this->response);
 
-        $this->response->expects($this->once())
-            ->method('getInfo')
-            ->willReturn($this->info);
-
-        $this->info->http_code = 200;
-
-        $expectedResult = 'Some result';
-        $this->response->expects($this->once())
-            ->method('getParsedResponse')
-            ->willReturn($expectedResult);
-
         $this->assertEquals($expectedResult, $this->client->execute('testCall'));
+    }
+
+    /**
+     * @dataProvider executeExceptionMessageDataProvider
+     */
+    public function testExecuteExceptionMessage(int $responseCode, string $responseBody, string $expectedMessage): void
+    {
+        $this->httpClient->expects(self::once())
+            ->method('request')
+            ->willReturn($this->response);
+        $this->response->expects(self::once())
+            ->method('getStatusCode')
+            ->willReturn($responseCode);
+        $this->response->expects(self::once())
+            ->method('getContent')
+            ->with(false)
+            ->willReturn($responseBody);
+
+        $errorMessage = 'Dotmailer REST client exception:' . PHP_EOL .
+            '[exception type] Oro\Bundle\DotmailerBundle\Exception\RestClientAttemptException' . PHP_EOL .
+            '[exception message] ' . $expectedMessage . PHP_EOL .
+            '[request url] testCall' . PHP_EOL .
+            '[request method] GET' . PHP_EOL .
+            '[request data] ' . PHP_EOL .
+            '[response code] ' . $responseCode . PHP_EOL .
+            '[response body] ' . $responseBody;
+
+        $this->expectException(RestClientException::class);
+        $this->expectExceptionMessage($errorMessage);
+
+        $this->client->execute('testCall');
+    }
+
+    public function executeExceptionMessageDataProvider(): array
+    {
+        return [
+            'JSON body with message key' => [401, '{"message": "Custom error"}', 'Custom error'],
+            'JSON body without message key' => [401, '{"error": "Custom error"}', 'Unexpected response'],
+            'non-JSON body' => [401, 'Some text', 'Unexpected response'],
+            'non-JSON body with 404 code' => [404, 'Some text', 'Not Found'],
+        ];
     }
 }
