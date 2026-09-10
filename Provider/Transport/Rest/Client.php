@@ -5,7 +5,10 @@ namespace Oro\Bundle\DotmailerBundle\Provider\Transport\Rest;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientAttemptException;
 use Oro\Bundle\DotmailerBundle\Exception\RestClientException;
 use Psr\Log\LoggerAwareTrait;
-use RestClient\Request;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Override Rest Client class from romanpitak/dotmailer-api-v2-php-client bundle is not possible because of
@@ -27,8 +30,17 @@ class Client implements DotmailerClientInterface
     /** @var array */
     protected $sleepBetweenAttempt = [5, 10, 20, 40];
 
-    /** @var \RestClient\Client */
+    /**
+     * The transport moved off romanpitak/php-rest-client, so the property no longer holds
+     * a \RestClient\Client. It is kept under its old name for backward compatibility.
+     *
+     * @var HttpClientInterface
+     */
     protected $restClient;
+
+    private const BASE_URL = 'https://api.dotmailer.com/v2/';
+
+    private string $baseUrl = self::BASE_URL;
 
     /**
      * @param string $username
@@ -36,91 +48,62 @@ class Client implements DotmailerClientInterface
      */
     public function __construct($username, $password)
     {
-        $this->restClient = new \RestClient\Client(
-            [
-                Request::BASE_URL_KEY => 'https://api.dotmailer.com/v2/',
-                Request::USERNAME_KEY => $username,
-                Request::PASSWORD_KEY => $password,
-                Request::USER_AGENT_KEY => 'romanpitak/dotmailer-api-v2-php-client',
-                Request::HEADERS_KEY => [
-                    'Content-Type' => 'application/json',
-                ],
-                Request::CURL_OPTIONS_KEY => [
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_CONNECTTIMEOUT => self::CONNECT_TIMEOUT,
-                    CURLOPT_TIMEOUT => self::EXECUTE_TIMEOUT,
-                ],
-            ]
-        );
+        // Symfony HttpClient splits the former curl budget in two: `timeout` caps the wait for any
+        // progress on the connection, `max_duration` caps the whole request the way CURLOPT_TIMEOUT did.
+        $this->restClient = HttpClient::create([
+            'auth_basic'   => [$username, $password],
+            'verify_peer'  => false,
+            'timeout'      => self::CONNECT_TIMEOUT,
+            'max_duration' => self::EXECUTE_TIMEOUT,
+            'headers'      => ['Content-Type' => 'application/json'],
+        ]);
     }
 
     #[\Override]
     public function setBaseUrl(string $url): void
     {
-        $this->restClient->setOption(Request::BASE_URL_KEY, $url);
+        $this->baseUrl = $url;
     }
 
     /**
      * @param array|string $paramArr
-     * @param array        $responses
-     * @throws RestClientAttemptException
-     * @throws RestClientException
-     *
+     * @param array $responses
      * @return string|null
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     #[\Override]
     public function execute($paramArr, $responses = [])
     {
         // when only url is supplied
-        if (is_string($paramArr)) {
-            $paramArr = [$paramArr];
-        }
+        $paramArr = (array) $paramArr;
 
-        list($requestUrl, $requestMethod, $requestData) = array_pad(array_values($paramArr), 3, null);
-        $responseCode = null;
-        $responseBody = null;
+        [$requestUrl, $requestMethod, $requestData] = array_pad(array_values($paramArr), 3, null);
+        $requestUrl = $requestUrl ?? '';
+        $requestMethod = $requestMethod ?? Request::METHOD_GET;
+        $responseCode = $responseBody = null;
 
         try {
-            $callback = [$this->restClient, 'newRequest'];
-            /** @var Request $request */
-            $request = call_user_func_array($callback, $paramArr);
+            $url = sprintf('%s/%s', rtrim($this->baseUrl, '/'), ltrim($requestUrl, '/'));
+            $options = $requestData !== null ? ['body' => $requestData] : [];
 
-            $response = $request->getResponse();
-            $responseCode = $response->getInfo()->http_code;
-            $responseBody = $response->getParsedResponse();
+            $response = $this->restClient->request($requestMethod, $url, $options);
+            $responseCode = $response->getStatusCode();
+            $responseBody = $response->getContent(false);
 
             // is there a special action to be done?
             if (isset($responses[$responseCode])) {
                 return call_user_func($responses[$responseCode], $response);
             }
 
-            switch ((int)$responseCode) {
-                case 200:
-                case 201:
-                case 202:
-                case 409:
-                    $result = $responseBody;
-                    break;
-                case 204:
-                    $result = null;
-                    break;
-                default:
-                    $message = $this->getExceptionMessage($responseBody, $responseCode);
-                    throw new RestClientAttemptException($message);
-            }
+            $result = $this->getResult($responseCode, $responseBody);
         } catch (\Exception $exception) {
-            $errorMessage = implode(
-                PHP_EOL,
+            $errorMessage = $this->getFormattedErrorMessage(
+                $exception,
                 [
-                    'Dotmailer REST client exception:',
-                    '[exception type] ' . get_class($exception),
-                    '[exception message] ' . $exception->getMessage(),
-                    '[request url] ' . $requestUrl,
-                    '[request method] ' . $requestMethod,
-                    '[request data] ' . $requestData,
-                    '[response code] ' . $responseCode,
-                    '[response body] ' . $responseBody,
+                    $requestUrl,
+                    $requestMethod,
+                    $requestData,
+                    $responseCode,
+                    $responseBody
                 ]
             );
 
@@ -141,7 +124,7 @@ class Client implements DotmailerClientInterface
 
     /**
      * @param string $responseBodyString
-     * @param string|null $returnCode
+     * @param int|null $returnCode
      * @return string
      */
     protected function getExceptionMessage($responseBodyString, $returnCode = null)
@@ -150,12 +133,11 @@ class Client implements DotmailerClientInterface
         if (is_array($decoded) && isset($decoded['message'])) {
             return $decoded['message'];
         }
-        switch ((int)$returnCode) {
-            case 404:
-                return 'NOT FOUND';
-            default:
-                return 'Unexpected response';
-        }
+
+        return match ($returnCode) {
+            Response::HTTP_NOT_FOUND => Response::$statusTexts[Response::HTTP_NOT_FOUND],
+            default => 'Unexpected response'
+        };
     }
 
     /**
@@ -165,7 +147,7 @@ class Client implements DotmailerClientInterface
     protected function isAttemptNecessary($responseCode)
     {
         return
-            !in_array($responseCode, [401, 404]) &&
+            !in_array($responseCode, [Response::HTTP_UNAUTHORIZED, Response::HTTP_NOT_FOUND]) &&
             $this->multipleAttemptsEnabled &&
             ($this->attempted <= count($this->sleepBetweenAttempt) - 1);
     }
@@ -188,7 +170,7 @@ class Client implements DotmailerClientInterface
      */
     protected function makeNewAttempt($paramArr, $responses = [])
     {
-        sleep((int)$this->getSleepBetweenAttempt());
+        sleep($this->getSleepBetweenAttempt());
         ++$this->attempted;
 
         return $this->execute($paramArr, $responses);
@@ -224,5 +206,36 @@ class Client implements DotmailerClientInterface
         }
 
         return end($this->sleepBetweenAttempt);
+    }
+
+    private function getResult(int $responseCode, ?string $responseBody): ?string
+    {
+        return match ($responseCode) {
+            Response::HTTP_OK,
+            Response::HTTP_CREATED,
+            Response::HTTP_ACCEPTED,
+            Response::HTTP_CONFLICT => $responseBody,
+            Response::HTTP_NO_CONTENT => null,
+            default => throw new RestClientAttemptException($this->getExceptionMessage($responseBody, $responseCode))
+        };
+    }
+
+    private function getFormattedErrorMessage(\Exception $e, array $args): string
+    {
+        [$requestUrl, $requestMethod, $requestData, $responseCode, $responseBody] = $args;
+
+        return implode(
+            PHP_EOL,
+            [
+                'Dotmailer REST client exception:',
+                '[exception type] ' . get_class($e),
+                '[exception message] ' . $e->getMessage(),
+                '[request url] ' . $requestUrl,
+                '[request method] ' . $requestMethod,
+                '[request data] ' . $requestData,
+                '[response code] ' . $responseCode,
+                '[response body] ' . $responseBody,
+            ]
+        );
     }
 }
