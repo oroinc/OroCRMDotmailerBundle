@@ -169,8 +169,8 @@ class AddressBookController extends AbstractController
     #[Template]
     public function connectionButtonsAction(MarketingList $marketingList): array
     {
-        if (!$this->isGranted('orocrm_marketing_list_update') ||
-            !$this->isGranted('orocrm_dotmailer_address_book_update')
+        if (!$this->isGranted('oro_marketing_list_update') ||
+            !$this->isGranted('oro_dotmailer_address_book_update')
         ) {
             throw new AccessDeniedException();
         }
