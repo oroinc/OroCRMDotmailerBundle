@@ -171,8 +171,8 @@ class AddressBookController extends AbstractController
         MarketingList $marketingList
     ): array {
         if (
-            !$this->isGranted('orocrm_marketing_list_update') ||
-            !$this->isGranted('orocrm_dotmailer_address_book_update')
+            !$this->isGranted('oro_marketing_list_update') ||
+            !$this->isGranted('oro_dotmailer_address_book_update')
         ) {
             throw new AccessDeniedException();
         }
