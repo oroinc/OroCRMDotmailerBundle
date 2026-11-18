@@ -30,14 +30,17 @@ class ImportExportLogHelperTest extends \PHPUnit\Framework\TestCase
             new \DateTimeZone('UTC')
         );
 
-        $stampOfTestBeginning = round(microtime(true)) - $stepExecutionStartDate->getTimestamp();
-        $expectedTime = gmdate('H:i:s', $stampOfTestBeginning);
-
         $stepExecution->expects($this->once())
             ->method('getStartTime')
             ->willReturn($stepExecutionStartDate);
 
+        $minTimeSpent = (int)round(microtime(true)) - $stepExecutionStartDate->getTimestamp();
         $stepExecutionTime = $this->target->getFormattedTimeOfStepExecution($stepExecution);
-        $this->assertEquals($expectedTime, $stepExecutionTime);
+        $maxTimeSpent = (int)round(microtime(true)) - $stepExecutionStartDate->getTimestamp();
+
+        $this->assertContains(
+            $stepExecutionTime,
+            array_map(static fn (int $timeSpent) => gmdate('H:i:s', $timeSpent), range($minTimeSpent, $maxTimeSpent))
+        );
     }
 }
